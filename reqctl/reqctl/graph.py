@@ -14,8 +14,7 @@ def trace(tree, root, uid=None):
         corpus.find(tree, uid)
     known = {str(item.uid) for item in corpus.items(tree)}
 
-    rows, problems, unimplemented, stale = [], list(cited_problems), [], []
-    deprecated = []
+    rows, problems, unimplemented, stale, deprecated = [], list(cited_problems), [], [], []
     for item in corpus.items(tree):
         current = str(item.uid)
         # @req> REQ-64570886@39w5gpQE9c9Z jzenja
