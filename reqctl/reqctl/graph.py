@@ -1,6 +1,11 @@
 from . import cite, corpus
 
 
+def unstamped(uid, path):
+    return (f"{uid}: {path} cites it without the stamp it was written "
+            "against -- cite it again with reqctl tag")
+
+
 def trace(tree, root, uid=None):
     citations, cited_problems = cite.read(root)
     tags = cite.cited(citations)
@@ -10,6 +15,7 @@ def trace(tree, root, uid=None):
     known = {str(item.uid) for item in corpus.items(tree)}
 
     rows, problems, unimplemented, stale = [], list(cited_problems), [], []
+    deprecated = []
     for item in corpus.items(tree):
         current = str(item.uid)
         # @req> REQ-64570886@39w5gpQE9c9Z jzenja
@@ -39,6 +45,14 @@ def trace(tree, root, uid=None):
                 f"is {holds}; nothing implements it. Tag the requirement "
                 "stated against it instead"
             )
+        # @req> REQ-35979865@-t3USRO-BKGk iz2v2g
+        if (current.startswith(("REQ-", "GUARD-"))
+                and data.get("status") == "deprecated" and cited):
+            deprecated += [{"uid": current, "path": path} for path
+                           in dict.fromkeys(p for p, pinned in cited if pinned)]
+            problems += [unstamped(current, path)
+                         for path, pinned in cited if not pinned]
+            continue
         if data.get("status") != "approved":
             if files:
                 problems.append(
@@ -51,10 +65,7 @@ def trace(tree, root, uid=None):
             for path, pinned in cited:
                 # @req> REQ-75161909@bnqFzGCM1y16 7df3my
                 if not pinned:
-                    problems.append(
-                        f"{current}: {path} cites it without the stamp it was "
-                        "written against -- cite it again with reqctl tag"
-                    )
+                    problems.append(unstamped(current, path))
                 elif pinned != held:
                     stale.append({"uid": current, "path": path,
                                   "pinned": pinned, "held": held})
@@ -79,5 +90,5 @@ def trace(tree, root, uid=None):
                 )
 
     return {"rows": rows, "problems": problems, "stale": stale,
-            "unimplemented": sorted(unimplemented),
+            "deprecated": deprecated, "unimplemented": sorted(unimplemented),
             "citations": [c for c in citations if not uid or c["uid"] == uid]}
