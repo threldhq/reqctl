@@ -1,0 +1,7 @@
+assessed: {}
+entries:
+  project_root:
+    definition: The folder the agent's host names as the project a session works in.
+    word: project root
+kind: term
+status: approved

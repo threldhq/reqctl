@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  tool_call:
+    aliases:
+    - tool calls
+    definition: 'A request from an agent to run one of its tools, as the product receives
+      it before the tool runs: the tool''s name and the input the tool is given.'
+    word: tool call
+kind: term
+status: approved

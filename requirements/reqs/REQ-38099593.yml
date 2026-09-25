@@ -1,0 +1,40 @@
+acceptance_criteria:
+- given: an edit, multi-edit or write that adds, removes or changes a comment carrying
+    a [statement citation](statement_citation), including by deleting cited code together
+    with its citation
+  then: the product refuses it and names reqctl tag, repin and untag as the route
+  when: the [tool call](tool_call) is made
+- given: a shell command that names the text opening a [statement citation](statement_citation)
+    other than to read it, however that text is quoted, split or continued across
+    lines
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: an edit that carries every comment carrying a [statement citation](statement_citation)
+    through unchanged
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+- given: a shell command that searches for [statement citations](statement_citation)
+  then: the product does not refuse it
+  when: the [tool call](tool_call) is made
+- given: reqctl citing, re-pinning or removing a [statement citation](statement_citation)
+  then: the product does not refuse it
+  when: the [tool call](tool_call) running reqctl is made
+assessed:
+  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-18833394: depends_on
+  REQ-26984738: depends_on
+  REQ-38288492: depends_on
+  REQ-60346603: depends_on
+status: approved
+text: If a [tool call](tool_call) other than one running reqctl would add, remove
+  or change a comment that carries a [statement citation](statement_citation), then
+  the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

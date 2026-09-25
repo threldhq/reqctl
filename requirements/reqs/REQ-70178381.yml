@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a [tool call](tool_call) running git apply, git am or patch, including one
+    reading the patch from standard input, whatever paths the patch writes
+  then: the product refuses it and names the editing tools and reqctl as the route
+  when: the [tool call](tool_call) is made
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) would apply a patch file, then the product shall
+  refuse the [tool call](tool_call).
+type: functional
+verification: inspection

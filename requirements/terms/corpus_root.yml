@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  corpus_root:
+    definition: 'The folder named requirements that holds a repository''s corpus:
+      its folders of items, its schemas and its baseline.'
+    word: corpus root
+kind: term
+status: approved

@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: hook input that does not parse as a JSON object, including input cut off
+    part way
+  then: the product refuses the [tool call](tool_call) rather than crash
+  when: the product reads it
+- given: a [tool call](tool_call) whose input is not an object, or whose file path,
+    notebook path, command or edit text is not a string
+  then: the product refuses it
+  when: the product reads it
+- given: a [tool call](tool_call) whose path field holds a number
+  then: the product refuses it
+  when: the product reads it
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) is malformed, then the product shall refuse the
+  [tool call](tool_call) rather than crash.
+type: functional
+verification: inspection

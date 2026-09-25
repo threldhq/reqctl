@@ -1,0 +1,16 @@
+assessed: {}
+entries:
+  checkout:
+    definition: git checkout
+  clean:
+    definition: git clean
+  reset:
+    definition: git reset
+  restore:
+    definition: git restore
+  switch:
+    definition: git switch
+kind: data
+name: worktree_commands
+status: approved
+text: the git subcommands that can discard uncommitted or untracked work

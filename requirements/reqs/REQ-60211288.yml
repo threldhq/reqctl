@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a [tool call](tool_call) the product refuses
+  then: its standard output holds a deny decision in the form the host reads, with
+    the refusal as its reason
+  when: the hook exits
+- given: a [tool call](tool_call) the product does not refuse
+  then: it states no decision, which lets the call through
+  when: the hook exits
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: When the product refuses a [tool call](tool_call), the product shall state a
+  deny decision in the output that the host of the [tool call](tool_call) reads.
+type: functional
+verification: inspection

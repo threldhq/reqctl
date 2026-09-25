@@ -1,0 +1,53 @@
+acceptance_criteria:
+- given: a [tool call](tool_call) that edits, writes or notebook-edits a corpus item's
+    file, or a connector call whose path, file, destination, output or folder field
+    names one
+  then: the product refuses it and names reqctl as the route
+  when: the [tool call](tool_call) is made
+- given: a shell command that names a corpus item's file to a redirect, tee, sed -i,
+    an editor, a copy, move, removal, truncation, download or archive extraction
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a shell command that removes, moves, links, archives or changes the mode
+    of the [corpus root](corpus_root)
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a shell command that names the corpus through quoting, escaping, a doubled
+    slash, a dot or parent segment, a glob, a brace, a variable, a heredoc or a change
+    of directory
+  then: the product refuses it as it refuses the path spelled plainly
+  when: the [tool call](tool_call) is made
+- given: a shell command that names the corpus to a program the product cannot tell
+    only reads, such as python, node, perl or tar
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a shell command whose pipeline names the corpus and holds a command substitution,
+    a process substitution, an in-place flag or an output flag
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a shell command that lists or stats the corpus, or runs git add, git commit
+    or one of git's own read forms on it
+  then: the product does not refuse it
+  when: the [tool call](tool_call) is made
+- given: a path in the corpus schemas, or in a folder whose name only resembles a
+    folder of corpus items or the [corpus root](corpus_root)
+  then: the product does not refuse it
+  when: the [tool call](tool_call) is made
+- given: reqctl writing a corpus item's file or the baseline
+  then: the product does not refuse it
+  when: the [tool call](tool_call) running reqctl is made
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) names the path of a corpus item's file, a folder
+  of corpus items, the baseline or the [corpus root](corpus_root), then the product
+  shall refuse the [tool call](tool_call), however the path is spelled, unless each
+  command or tool in the call that names the path is reqctl or one the product can
+  tell only reads.
+type: functional
+verification: inspection

@@ -1,0 +1,19 @@
+assessed:
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+entries:
+  blame:
+    definition: git blame
+  diff:
+    definition: git diff
+  log:
+    definition: git log
+  ls_files:
+    definition: git ls-files
+  show:
+    definition: git show
+  status:
+    definition: git status
+kind: data
+name: git_read_forms
+status: approved
+text: the git subcommands through which a [tool call](tool_call) may read the corpus
