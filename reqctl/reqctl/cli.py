@@ -731,6 +731,11 @@ def cmd_trace(args):
                 print(f"    test  {path}")
         if data["unimplemented"]:
             print("\nawaiting implementation: " + ", ".join(data["unimplemented"]))
+        # @req> REQ-35979865@-t3USRO-BKGk wht4dr
+        if data["deprecated"]:
+            print("\ncited though deprecated")
+            for row in data["deprecated"]:
+                print(f"  {row['uid']}  {row['path']}")
         if data["stale"]:
             print("\nbehind the corpus", file=sys.stderr)
             for row in data["stale"]:
