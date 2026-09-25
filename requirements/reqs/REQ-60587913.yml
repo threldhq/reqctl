@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a git push carrying --force, -f or a flag cluster holding f such as -uf
+  then: the product refuses it and names the flag
+  when: the [tool call](tool_call) is made
+- given: a git push carrying --force-with-lease or --force-if-includes
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a git push carrying --mirror, --delete or -d
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a git push naming a refspec that begins with + or :, quoted or not
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a force push inside sh -c, or after an env, command or assignment prefix
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a git push carrying -u, -n or --follow-tags, or naming a refspec with a colon
+    inside it
+  then: the product does not refuse it
+  when: the [tool call](tool_call) is made
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) would make a force push in any spelling, then the
+  product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

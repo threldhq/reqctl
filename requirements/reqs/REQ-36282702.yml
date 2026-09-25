@@ -1,0 +1,35 @@
+acceptance_criteria:
+- given: a tracked file holding uncommitted changes
+  then: the product refuses it and lists the changes
+  when: a [tool call](tool_call) runs git checkout or git restore naming it, git checkout
+    ., git checkout -f, git switch -f, git switch --discard-changes or git reset --hard
+- given: an untracked file
+  then: the product refuses it and lists the file
+  when: a [tool call](tool_call) runs a forced git clean that would delete it
+- given: an ignored file
+  then: the product refuses it
+  when: a [tool call](tool_call) runs a forced git clean with -x or -X
+- given: a working tree holding nothing the command would discard
+  then: the product does not refuse it on that ground
+  when: a [tool call](tool_call) runs git checkout, switch, reset, clean or restore
+- given: uncommitted changes
+  then: the product does not refuse it
+  when: a [tool call](tool_call) runs git reset --soft, git restore --staged, git
+    clean -n or a git checkout that only switches branch
+- given: a repository the product cannot read
+  then: the product refuses it
+  when: a [tool call](tool_call) runs git checkout, switch, reset, clean or restore
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+  worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
+  worktree_commands.*: EiAhLq9p9eimxUhOO9ezdNB_wt99GSc_rRj2fmIFYiY
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) would run one of the git ${worktree_commands} in
+  a way that discards uncommitted or untracked work, then the product shall refuse
+  the [tool call](tool_call).
+type: functional
+verification: inspection

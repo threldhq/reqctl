@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a [tool call](tool_call) running rm with -r, -R, --recursive or a flag cluster
+    holding r on the [project root](project_root) or a parent of it, named absolutely
+    or relatively
+  then: the product refuses it and names the target
+  when: the [tool call](tool_call) is made
+- given: a [tool call](tool_call) running a recursive rm on ., .., ~, / or *
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a [tool call](tool_call) running a recursive rm on a target that begins with
+    a variable or a command substitution
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a [tool call](tool_call) running a recursive rm on a folder beside or outside
+    the [project root](project_root), or on a glob inside such a folder
+  then: the product does not refuse it
+  when: the [tool call](tool_call) is made
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) would run a recursive rm whose target is, or could
+  expand to, the [project root](project_root) or a parent of the [project root](project_root),
+  then the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

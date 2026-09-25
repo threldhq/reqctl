@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a requirement file, an editable package or a pip flag that CI installs with
+    and the session-start hook does not
+  then: the build refuses
+  when: the build runs
+- given: a requirement file, an editable package or a pip flag that the session-start
+    hook installs with and CI does not
+  then: the build refuses
+  when: the build runs
+- given: installs that differ only in --quiet or --disable-pip-version-check
+  then: the build does not refuse on that ground
+  when: the build runs
+- given: no pip install found in the session-start hook or in CI
+  then: the build refuses
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: The build shall install through the session-start hook exactly the Python requirement
+  files, editable packages and pip flags that CI installs with.

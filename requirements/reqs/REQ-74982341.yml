@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: the default branch checked out
+  then: the product refuses it and names creating a branch as the route
+  when: a [tool call](tool_call) runs git commit, including git commit --amend
+- given: the default branch checked out
+  then: the product refuses it
+  when: a [tool call](tool_call) runs git commit through env, command, an assignment
+    prefix or git -C
+- given: a branch other than the default branch checked out
+  then: the product does not refuse it
+  when: a [tool call](tool_call) runs git commit
+- given: a repository the product cannot read
+  then: the product refuses it
+  when: a [tool call](tool_call) runs git commit
+- given: a repository whose origin remote names no default branch
+  then: the product refuses it and names git remote set-head origin as the route
+  when: a [tool call](tool_call) runs git commit
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) would make a commit on the default branch, then
+  the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

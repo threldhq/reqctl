@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a fault inside the hook while it judges a [tool call](tool_call)
+  then: it exits zero with a deny decision stated
+  when: the hook exits
+- given: the hook's source
+  then: it holds no exit other than a zero exit and raises no exit of its own
+  when: it is read
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.requirements_guard_hook: bsEpBlz70dMjs201-N7cgF_Jh9EiOlUA0xppZa1HcrE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall end every run of the ${plugin_components.requirements_guard_hook}
+  with a zero exit status.
+type: functional
+verification: inspection

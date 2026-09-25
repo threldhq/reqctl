@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a [tool call](tool_call) the product refuses
+  then: it states the rule that refused the call, and names the flag, target or files
+    the rule turned on where it turned on one
+  when: the refusal is returned
+assessed:
+  REQ-18701923: 7CvKXOjSI6KbwyAtwC8InqBDV8Mr9hZebo4uSiEe2s0
+  REQ-21901290: fc_rdI5ms5IC2-KRZdrVTbrllETYrUITwJin0IA3YTc
+  REQ-22704490: -kCeQBvIuODsCc_p8P4hVtaPX7Qc9mup1e3NazrswkA
+  REQ-36282702: sK_P4PZZM9_wx7CR1rOdHhaH0uJGAgyiyCxA10Oub1Q
+  REQ-38099593: DiCRfDZFomPBaORqysVr57uicsoo7VUs09IjfwtNeMM
+  REQ-54260750: a1hvDVKkO8Iw1pPl1pU5JktGWH7JOzLhmupF8-HTMZk
+  REQ-60587913: a-D0sKfFEs62Jac_QzVhIoT9TAK2dlfdzsXx3jUcnqM
+  REQ-70178381: 2GE_TPwGTZKUXOdQLkRk_snwp88Ig8YbmO-_Fa1WkDw
+  REQ-74982341: IIwAqzZV1bP38NHqXLXpGbdbA7tUIoqD6Upg6wk7gaE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-18701923: constrains
+  REQ-21901290: constrains
+  REQ-22704490: constrains
+  REQ-36282702: constrains
+  REQ-38099593: constrains
+  REQ-54260750: constrains
+  REQ-60587913: constrains
+  REQ-70178381: constrains
+  REQ-74982341: constrains
+status: approved
+text: When the product refuses a [tool call](tool_call), the product shall name the
+  fault in the refusal.
+type: functional
+verification: inspection
