@@ -9,4 +9,4 @@ actionlint-py==1.7.12.24
 shellcheck-py==0.11.0.1
 typos==1.50.2
 types-jsonschema==4.26.0.20260518
-types-PyYAML==6.0.12.20260815
+types-PyYAML==6.0.12.20260906
