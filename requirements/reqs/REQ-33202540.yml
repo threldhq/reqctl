@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a line covered by a [statement citation](statement_citation) written as [exclusive](exclusive)
+    and by a [statement citation](statement_citation) not written as [exclusive](exclusive)
+  then: the line is in the [exclusive](exclusive) citation's [citation digest](citation_digest)
+    and not in the other's
+  when: the product takes the [citation digest](citation_digest) of each
+assessed:
+  citation_digest: yUtHPh3P6LiNmqFT4sIGkjvhZMI4ND46hzVgOHdSyrU
+  exclusive: ftFiuRgKKCdydqi1cV1oWJ4T-OQSgt0UuIcMGh19S6o
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: Where a [statement citation](statement_citation) is written as [exclusive](exclusive),
+  the product shall take a line the [exclusive](exclusive) citation covers as covered
+  by no [statement citation](statement_citation) that is not written as [exclusive](exclusive).
+type: functional
+verification: inspection

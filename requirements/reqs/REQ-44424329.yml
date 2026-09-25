@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: two [statement citations](statement_citation) naming one [citation identity](citation_identity)
+    in one code base
+  then: the product refuses the code
+  when: the product reads the code
+assessed:
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: If two [statement citations](statement_citation) the code base holds name one
+  [citation identity](citation_identity), then the product shall refuse the code.
+type: functional
+verification: inspection

@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: recall returns from two shards naming two items for one proposal
+  then: the prompt states both items in full, each with its status and edges
+  when: the judge prompt is built
+- given: a recall return naming an item for another proposal
+  then: the prompt does not state that item
+  when: the judge prompt is built
+assessed:
+  REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
+priority: medium
+relations:
+  REQ-18405752: derives_from
+status: approved
+text: When a judge prompt is built for a proposal, the product shall state in full
+  every item a recall return or the floor named for that proposal, with the status
+  of each item and the edges each item carries.
+type: functional
+verification: inspection

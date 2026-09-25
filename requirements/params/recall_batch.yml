@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  '40': {}
+kind: parameter
+name: recall_batch
+status: approved
+text: The most proposals one recall prompt carries
+value_type: count

@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a corpus stating two binding dimensions
+  then: the product refuses and names the dimension that disagrees
+  when: a proposal's record matches its text for one and not the other
+- given: a corpus stating one binding dimension
+  then: the product accepts the proposal
+  when: a proposal's record matches its text
+- given: a proposal referencing a member the dimension's item does not define
+  then: the product refuses and names the members the item defines
+  when: the run is built
+assessed:
+  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+priority: high
+rationale: The record and the text are two statements of the same fact, and a proposal
+  where they disagree is approved meaning one thing and implemented meaning another.
+relations:
+  REQ-68873210: depends_on
+status: approved
+text: Where the corpus states a binding dimension, the product shall refuse a proposal
+  whose recorded binding for that dimension does not name the members its statement
+  references.
+type: functional
+verification: inspection

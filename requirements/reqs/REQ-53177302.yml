@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a dictionary item carrying a name
+  then: the product refuses and names the item already answering to the name
+  when: a second dictionary item is minted under that name
+- given: a corpus holding a parameter and a data item that carry one name
+  then: the product refuses and names both items
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If more than one dictionary item carries one name, then the product shall refuse
+  the item.
+type: functional
+verification: inspection

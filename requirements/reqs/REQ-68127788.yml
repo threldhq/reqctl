@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a corpus holding no challenge roles item
+  then: each role uses the model the product ships for it
+  when: the challenge is prepared
+- given: a corpus stating a model for one role only
+  then: that role uses the stated model and every other uses the one the product ships
+  when: the challenge is prepared
+assessed: {}
+priority: high
+rationale: Which model plays a role is the tool's own operating configuration, not
+  a statement about any product, so a repository adopting the tool inherits one rather
+  than writing one.
+relations: {}
+status: approved
+text: Where the corpus states no model for a challenge role, the product shall use
+  the model it ships for that role.
+type: functional
+verification: inspection

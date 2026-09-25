@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a repository and a token are remembered and no change is queued
+  then: the setup screen asks for the repository
+  when: the Change repository control is used
+assessed:
+  REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+priority: medium
+relations:
+  REQ-38789214: depends_on
+status: approved
+text: When the Change repository control is used, the product shall forget the remembered
+  repository.
+type: functional
+verification: inspection

@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: an unapproved item, stated by no baseline and reached by no other item
+  then: the product removes the item file
+  when: removal of the unapproved item is requested
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the removal of an unapproved item that no baseline states and no other
+  item reaches is requested, the product shall remove the item.
+type: functional
+verification: inspection

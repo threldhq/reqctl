@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run whose export is written, and a write that fails partway
+  then: the export holds what the export held before the product
+  when: the run is built
+- given: a run holding no export
+  then: the export holds the whole of what was written
+  when: the run is built and not refused
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the product writes a run's export, the product shall leave the export holding
+  either the whole of what was written or what the export held before.
+type: functional
+verification: inspection

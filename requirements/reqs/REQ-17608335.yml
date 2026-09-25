@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a line falling within the lines of two [statement citations](statement_citation)
+    neither written as [exclusive](exclusive)
+  then: the line is in both [citation digests](citation_digest)
+  when: the product takes the [citation digest](citation_digest) of each
+assessed:
+  citation_digest: yUtHPh3P6LiNmqFT4sIGkjvhZMI4ND46hzVgOHdSyrU
+  exclusive: ftFiuRgKKCdydqi1cV1oWJ4T-OQSgt0UuIcMGh19S6o
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: Where no [statement citation](statement_citation) covering a line is written
+  as [exclusive](exclusive), the product shall take the line as covered by every [statement
+  citation](statement_citation) the line falls within.
+type: functional
+verification: inspection

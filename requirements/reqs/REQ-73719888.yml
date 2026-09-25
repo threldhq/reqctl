@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: an item whose field holds a list of citations
+  then: no value in the export is written in the notation of the language the product
+    is written in
+  when: the corpus is exported
+- given: an item whose field holds a list of citations
+  then: no value shown is written in the notation of the language the product is written
+    in
+  when: the item's context is read
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the product shows an item, the product shall show no value in the notation
+  of the language the product is written in.
+type: functional
+verification: inspection

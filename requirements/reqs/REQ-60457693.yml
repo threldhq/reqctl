@@ -1,0 +1,35 @@
+acceptance_criteria:
+- given: a baseline whose supersedes names a number earlier than the immediately preceding
+    baseline
+  then: the product reports what the baseline supersedes and what stands immediately
+    before
+  when: baseline --check is run
+- given: a baseline whose supersedes names a number later than the immediately preceding
+    baseline
+  then: the product reports what the baseline supersedes and what stands immediately
+    before
+  when: baseline --check is run
+- given: a baseline that follows another baseline and supersedes no number at all
+  then: the product reports what the baseline supersedes and what stands immediately
+    before
+  when: baseline --check is run
+- given: a baseline whose supersedes names the immediately preceding baseline
+  then: the product reports no fault on the supersedes
+  when: baseline --check is run
+- given: a first baseline, before which no baseline stands, whose supersedes names
+    a number
+  then: the product reports what the baseline supersedes and what stands immediately
+    before
+  when: baseline --check is run
+- given: a first baseline, before which no baseline stands, whose supersedes names
+    no number
+  then: the product reports no fault on the supersedes
+  when: baseline --check is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the number a baseline supersedes is not the number of the immediately preceding
+  baseline, then the product shall report the supersedes.
+type: functional
+verification: inspection

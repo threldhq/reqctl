@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) citing a requirement the corpus
+    has deprecated
+  then: the product refuses and the code base is unchanged
+  when: the product is asked to re-pin the citation
+assessed:
+  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-18833394: constrains
+status: approved
+text: If a re-pin names a [statement citation](statement_citation) that cites a requirement
+  the corpus has deprecated, then the product shall refuse the re-pin.
+type: functional
+verification: inspection

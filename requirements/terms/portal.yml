@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  portal:
+    definition: The browser page through which a person reads the requirements of
+      a repository and proposes changes to them.
+    unclaimed:
+      reqctl portal: the command name
+    word: portal
+kind: term
+status: approved

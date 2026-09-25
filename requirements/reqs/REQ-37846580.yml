@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a one-comment [statement citation](statement_citation) followed by a blank
+    line and then a line of code, in code that cannot be read as [tokens](code_token)
+  then: the citation covers that line of code and no other
+  when: the product reads the citation
+- given: two one-comment [statement citations](statement_citation) on consecutive
+    lines above one line of code that cannot be read as [tokens](code_token)
+  then: each citation covers that line of code
+  when: the product reads the citations
+assessed:
+  REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
+  code_token: RKSwa_7GLOrcUd7V_FstnVgDVX3CvlQnuD650a2b5qs
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-42668747: constrains
+status: approved
+text: Where the lines after a one-comment [statement citation](statement_citation)
+  cannot be read as [tokens](code_token), the product shall take the citation as covering
+  the next line after the comment that holds a character other than white space and
+  carries no [statement citation](statement_citation).
+type: functional
+verification: inspection

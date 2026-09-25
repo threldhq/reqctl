@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: an approved requirement whose verification is automated_test, cited outside
+    every [test](test) and cited by no [test](test)
+  then: the product reports a problem naming the requirement and stating that no [test](test)
+    cites it
+  when: trace is run
+- given: an approved requirement whose verification is automated_test, cited outside
+    every [test](test) and cited in a [test](test) by a [statement citation](statement_citation)
+    carrying a stamp
+  then: the product reports no problem for want of a [test](test)
+  when: trace is run
+- given: an approved requirement whose verification is automated_test, cited outside
+    every [test](test) and cited by a [test](test) carrying a stamp the requirement
+    no longer holds
+  then: the product reports the [test](test) citation as behind the corpus and reports
+    no problem for want of a [test](test)
+  when: trace is run
+assessed:
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+priority: medium
+relations: {}
+status: approved
+text: When trace is run, the product shall report as a problem an approved requirement
+  whose verification is automated_test that code outside every [test](test) cites
+  and no [test](test) cites.
+type: functional
+verification: inspection

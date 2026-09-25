@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a uid no item in the corpus carries
+  then: the product refuses and names the uid
+  when: trace names the uid
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a trace is asked for a uid the corpus does not hold, then the product shall
+  refuse the trace.
+type: functional
+verification: inspection

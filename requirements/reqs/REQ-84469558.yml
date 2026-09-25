@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation)
+  then: the code holds no [citation digest](citation_digest) of the lines the citation
+    covers
+  when: the product stamps the code
+assessed:
+  citation_digest: yUtHPh3P6LiNmqFT4sIGkjvhZMI4ND46hzVgOHdSyrU
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: The product shall write no [citation digest](citation_digest) of the lines a
+  [statement citation](statement_citation) covers into the code.
+type: functional
+verification: inspection

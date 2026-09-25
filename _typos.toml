@@ -1,0 +1,9 @@
+[files]
+extend-exclude = ["requirements/"]
+
+[default]
+extend-ignore-re = ["@req[+>-] [^\\n]*"]
+
+[default.extend-words]
+objekt = "objekt"
+relativiser = "relativiser"

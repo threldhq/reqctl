@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a recall return that stopped at the output bound with forty proposals in
+    the batch
+  then: the shard's prompts are rebuilt carrying at most twenty proposals each, and
+    the stopped return is retired
+  when: the returns are read
+assessed:
+  REQ-94426583: robFmbw2ht7IlAltCYRS9ZBd2bKMAF5O9JJ7vubNIy8
+priority: medium
+relations:
+  REQ-94426583: constrains
+status: approved
+text: If a recall return stops at the output bound, then the product shall halve the
+  batch for that shard and build the shard's prompts again.
+type: functional
+verification: inspection

@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a corpus whose schemas mark no item as a binding dimension
+  then: the run is built and records no binding
+  when: a run is built
+- given: a corpus holding no data item at all
+  then: the run is built
+  when: a run is built
+assessed:
+  REQ-54045696: 1SxHcbQUMTJjnChXjdz6ILVvkDa-FY_LaXKHPtayH84
+priority: high
+rationale: A project that binds statements to nothing is the ordinary case, not a
+  misconfiguration. Refusing it is what kept the tool from running in a repository
+  holding no data item at all.
+relations:
+  REQ-54045696: constrains
+status: approved
+text: Where the corpus states no binding dimension, the product shall build a run
+  recording no binding.
+type: functional
+verification: inspection

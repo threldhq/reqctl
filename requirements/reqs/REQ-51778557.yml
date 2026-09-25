@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a [citation identity](citation_identity) no [statement citation](statement_citation)
+    the code base holds names
+  then: the product refuses and the code base is unchanged
+  when: the product is asked to remove the citation naming it
+assessed:
+  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-26984738: constrains
+status: approved
+text: If a removal names a [citation identity](citation_identity) that no [statement
+  citation](statement_citation) the code base holds names, then the product shall
+  refuse the removal.
+type: functional
+verification: inspection

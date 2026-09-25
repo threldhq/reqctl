@@ -1,0 +1,11 @@
+assessed: {}
+entries:
+  coverage_agent: {}
+  elucidate_skill: {}
+  implement_skill: {}
+  pre_pr_skill: {}
+  requirements_guard_hook: {}
+kind: data
+name: plugin_components
+status: approved
+text: what reqctl ships as its Claude Code plugin

@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a data item whose entries carry fields
+  then: the prompt names the item and states no field of any entry
+  when: the run is built
+- given: a term holding aliases
+  then: the prompt states the term's word, aliases and definition
+  when: the run is built
+assessed:
+  REQ-90454282: Hn_cCdBHt6FCgTVr7h_FwY_DQr1NfJSmIlaX7gNlDxM
+priority: medium
+relations:
+  REQ-90454282: constrains
+status: approved
+text: When a challenge prompt is built, the product shall state each term, parameter
+  and data item by name and definition alone, and no entry field.
+type: functional
+verification: inspection

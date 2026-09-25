@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: the Claude Code plugin as shipped
+  then: it holds each of the plugin components, and may hold more
+  when: its contents are read
+assessed:
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.*: gwzqi8r54gDMNQt8rHK8DEWXlQNHjbBbSQtovuVRu-s
+priority: medium
+relations: {}
+status: approved
+text: The product shall ship a Claude Code plugin holding each of the ${plugin_components}.
+type: functional
+verification: automated_test

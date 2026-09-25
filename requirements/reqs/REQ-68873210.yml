@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a schema marking the item it governs as one statements bind to
+  then: the item is among them
+  when: the binding dimensions are asked for
+- given: a repository whose schemas mark no item
+  then: none is reported
+  when: the binding dimensions are asked for
+- given: a repository marking two items
+  then: both are reported
+  when: the binding dimensions are asked for
+assessed: {}
+priority: high
+rationale: The product names no dimension of its own. A repository nominates each
+  one by marking its schema, so a project may have none, one or many.
+relations: {}
+status: approved
+text: Where a schema marks the item it governs as one statements bind to, the product
+  shall report that item as a binding dimension.
+type: functional
+verification: inspection

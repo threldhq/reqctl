@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a proposal linking two terms and a corpus obligation linking both that no
+    recall return named
+  then: the prompt states that obligation
+  when: the judge prompt is built
+- given: a proposal whose recall returns named an obligation the floor also ranks
+  then: the prompt states that obligation once
+  when: the judge prompt is built
+assessed:
+  REQ-30631052: upW72WeLPoHTMqWypF3S5AEi-KCa_mJBG-_MUtD1YHk
+  floor_k: Y60hYNprE2sXUQCOJsLezPtg2qROMZUx5sML6tLezHY
+  floor_k.*: 4ZM45m1qKuiwlqW5GFPPaal40iT8uQw9R6B1DmFdkqs
+priority: medium
+relations:
+  REQ-30631052: constrains
+status: approved
+text: When a judge prompt is built for a proposal, the product shall state in the
+  prompt, beyond the items recall named, the ${floor_k} obligations ranked highest
+  by the term, parameter and data references held in common with the proposal.
+type: functional
+verification: inspection

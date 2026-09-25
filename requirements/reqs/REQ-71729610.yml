@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: a repository is remembered
+  then: the product sends it to that repository and no other
+  when: a proposed change is sent
+assessed:
+  REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+priority: medium
+relations:
+  REQ-38789214: depends_on
+status: approved
+text: The product shall send proposed corpus changes only to the remembered repository.
+type: functional
+verification: inspection

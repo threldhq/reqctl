@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: an approved requirement whose verification is inspection, cited by a [statement
+    citation](statement_citation) carrying a stamp and cited by no [test](test)
+  then: the product reports no problem for the requirement
+  when: trace is run
+- given: an approved requirement whose verification is inspection, cited only by code
+    carrying a stamp the requirement no longer holds
+  then: the product reports the citation as behind the corpus and reports no problem
+    for want of a [test](test)
+  when: trace is run
+assessed:
+  REQ-76258226: 8oshGhfGWgBFGznGPQjp4TUQB00QeANN6QlKdQho8ew
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+priority: medium
+relations:
+  REQ-76258226: constrains
+status: approved
+text: When trace is run, the product shall not report an approved requirement whose
+  verification is inspection as a problem on the ground that no [test](test) cites
+  the requirement.
+type: functional
+verification: inspection

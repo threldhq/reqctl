@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a corpus in which validation finds a problem
+  then: the product refuses and names the problem
+  when: removal of an item is requested
+- given: a corpus in which validation finds no problem
+  then: the product removes the item
+  when: removal of an unapproved item no baseline states and no other item reaches
+    is requested
+assessed:
+  REQ-42065260: f4qBCU4zNhSmNcw1Pa1IGyx18LGUvtLxrXylzCb8cpY
+priority: medium
+relations:
+  REQ-42065260: constrains
+status: approved
+text: If the removal of an item is requested over a corpus in which validation finds
+  a problem, then the product shall refuse the removal.
+type: functional
+verification: inspection

@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a line covered by two [statement citations](statement_citation) written as
+    [exclusive](exclusive)
+  then: the line is in the [citation digest](citation_digest) of the citation opened
+    last and not in the other's
+  when: the product takes the [citation digest](citation_digest) of each
+assessed:
+  citation_digest: yUtHPh3P6LiNmqFT4sIGkjvhZMI4ND46hzVgOHdSyrU
+  exclusive: ftFiuRgKKCdydqi1cV1oWJ4T-OQSgt0UuIcMGh19S6o
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: Where several [statement citations](statement_citation) written as [exclusive](exclusive)
+  cover one line, the product shall take the line as covered by the [statement citation](statement_citation)
+  opened last.
+type: functional
+verification: inspection

@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a parameter
+  then: the product refuses and names rename as the route
+  when: revise is run naming a new name for the parameter
+- given: a data item
+  then: the product refuses and names rename as the route
+  when: revise is run naming a new name for the data item
+- given: a term
+  then: the product refuses and names rename as the route
+  when: revise is run naming a new handle for the term
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a revision would change the field that forms the address of an item, then
+  the product shall refuse the revision.
+type: functional
+verification: inspection

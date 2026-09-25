@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a baseline file holding an unresolved merge between two baselines
+  then: the product writes the baseline rather than refusing, and says it was regenerated
+    rather than merged
+  when: baseline --generate is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a baseline would be generated over a baseline file holding an unresolved
+  merge between two baselines, the product shall state that the generated baseline
+  was regenerated rather than merged.
+type: functional
+verification: inspection

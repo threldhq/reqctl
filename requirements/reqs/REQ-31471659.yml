@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) whose covered lines are respaced
+    and rewrapped
+  then: the [citation digest](citation_digest) is the one it took before
+  when: the product takes the [citation digest](citation_digest)
+- given: a [statement citation](statement_citation) in which a name is changed
+  then: the [citation digest](citation_digest) is not the one it took before
+  when: the product takes the [citation digest](citation_digest)
+- given: a [statement citation](statement_citation) whose covered lines are reordered
+  then: the [citation digest](citation_digest) is not the one it took before
+  when: the product takes the [citation digest](citation_digest)
+assessed:
+  citation_digest: yUtHPh3P6LiNmqFT4sIGkjvhZMI4ND46hzVgOHdSyrU
+  code_token: RKSwa_7GLOrcUd7V_FstnVgDVX3CvlQnuD650a2b5qs
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: The product shall take the [citation digest](citation_digest) of the lines a
+  [statement citation](statement_citation) covers over the kinds, the text and the
+  order of the [tokens](code_token) the covered lines hold, and over neither the spacing
+  between the [tokens](code_token) nor the place the [tokens](code_token) fall.
+type: functional
+verification: inspection

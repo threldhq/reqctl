@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: an approved item the baseline does not state
+  then: the product reports the item as approved but absent from the baseline
+  when: baseline --check is run
+- given: an item the baseline states that the corpus no longer approves
+  then: the product reports the item as no longer approved
+  when: baseline --check is run
+- given: an item whose stamp differs from the stamp the baseline states
+  then: the product reports the item as changed since the baseline
+  when: baseline --check is run
+- given: a baseline stating every approved item at the stamp the corpus holds
+  then: the product reports no disagreement
+  when: baseline --check is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the baseline is checked, the product shall report every disagreement between
+  the baseline and the approved corpus.
+type: functional
+verification: inspection

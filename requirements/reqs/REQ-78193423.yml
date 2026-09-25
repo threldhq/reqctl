@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: a service catalogued with no required field
+  then: the service is named as not declaring required
+  when: the corpus is validated
+assessed:
+  content: J-RIVEkmLo57lOgGHrdpNwU2FeoSe9is0FLJFpJNGXw
+priority: medium
+relations: {}
+status: deprecated
+text: The product shall refuse a service that does not declare whether it is required
+  and whether it handles [content](content).
+type: functional
+verification: automated_test

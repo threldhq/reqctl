@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: fifty-five items named for one proposal and a group bound of twenty
+  then: three group prompts are built, none holding more than twenty items, and every
+    item appears in exactly one
+  when: the judge prompts are built
+- given: thirty items named for one proposal and a judge bound of forty
+  then: one judge prompt holds all thirty
+  when: the judge prompts are built
+assessed:
+  REQ-30631052: upW72WeLPoHTMqWypF3S5AEi-KCa_mJBG-_MUtD1YHk
+  judge_bound: 3maLw8ZObEPGYPE0kzB90tHHBWjSVnInVCdjM5bV1Ew
+  judge_bound.*: lWSgiNX2uk-eYOImP3gRJZK7SamL2l5iUtUZGXA5yWY
+  judge_group: OAcH6zP2t55_EISeDTUz1Pfhz8zIZyYWffPmKEYdLFo
+  judge_group.*: MOdB_cGmXg6hVQMxXJFxELytsu7PAyXoUwbDAdrrle8
+priority: medium
+relations:
+  REQ-30631052: constrains
+status: approved
+text: If the items named for a proposal exceed ${judge_bound}, then the product shall
+  split the named items into judge prompts holding at most ${judge_group} items each.
+type: functional
+verification: inspection

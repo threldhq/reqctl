@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: an approved term and prose stating the word the term defines outside a link
+  then: the product refuses and states writing the link or rewording as the fix
+  when: the prose is written
+- given: an approved term and prose on disk stating the word the term defines outside
+    a link
+  then: the product refuses and states writing the link or rewording as the fix
+  when: the corpus is validated
+- given: an approved term carrying an alias and prose stating that alias outside a
+    link
+  then: the product refuses and states writing the link or rewording as the fix
+  when: the corpus is validated
+- given: a draft term and prose stating the word the draft term defines outside a
+    link
+  then: the product accepts the prose
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an item's prose states the word or an alias of an approved term without linking
+  that term, then the product shall refuse the prose.
+type: functional
+verification: inspection

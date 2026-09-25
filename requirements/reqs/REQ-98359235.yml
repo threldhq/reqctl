@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: an item file holding an unresolved merge
+  then: the product names the merge and the command that settles it
+  when: the corpus is validated
+- given: an item file unreadable for any other reason
+  then: the product states the fault it found
+  when: the corpus is validated
+assessed:
+  REQ-19913588: zNetOTQBhHYZABdjZtnyiFSArbPbBq73Woovl3UokrE
+priority: medium
+relations:
+  REQ-19913588: constrains
+status: approved
+text: If an item file holding an unresolved merge would be validated, then the product
+  shall refuse the file, naming the merge rather than the fault that reading the file
+  raises.
+type: functional
+verification: inspection

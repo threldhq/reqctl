@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run whose job judges a corpus shard
+  then: the job prompt states neither the owner words nor the declined list
+  when: the run is built
+- given: a run whose job judges the run other proposals
+  then: the job prompt states the owner words and the declined list
+  when: the run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a prompt is built for a job judging a corpus shard, the product shall state
+  in the prompt neither the owner's words nor the declined list.
+type: functional
+verification: inspection

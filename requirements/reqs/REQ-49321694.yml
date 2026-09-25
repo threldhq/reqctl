@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: two terms whose definitions each link the other term
+  then: the product refuses and names the terms in the cycle
+  when: either definition is written
+- given: three terms whose definitions link in a ring
+  then: the product refuses and names the terms in the cycle
+  when: the corpus is validated
+- given: terms whose definitions link one another without closing a cycle
+  then: the product accepts the definitions
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the links a term's definition makes would close a cycle among the definitions
+  of terms, then the product shall refuse the definition.
+type: functional
+verification: inspection

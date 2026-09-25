@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a repository whose requirements folder holds no schema file
+  then: each item is read through the kind schema the package ships and the corpus
+    validates
+  when: the corpus is validated
+- given: a repository holding no schema file and no packaged schema of that name
+  then: the product refuses and names the path the repository would state it at
+  when: a schema of that name is asked for
+assessed: {}
+priority: high
+rationale: A repository adopting reqctl as an installed package holds no schema of
+  its own until it writes one. Shipping the kind schemas with the package is what
+  lets the corpus be read there at all.
+relations: {}
+status: approved
+text: Where a repository states no schema for a kind, the product shall read the kind
+  schema it ships with.
+type: functional
+verification: inspection

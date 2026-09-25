@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a requirement that records a link toward a uid the corpus does not hold
+  then: the product refuses and names the uid
+  when: the corpus is validated
+- given: a guard that records a link toward a uid the corpus does not hold
+  then: the product refuses and names the uid
+  when: the corpus is validated
+- given: a link requested toward a uid the corpus does not hold
+  then: the product refuses and names the uid
+  when: the link is written
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a link an item records toward another item names an item the corpus does
+  not hold, then the product shall refuse the link.
+type: functional
+verification: inspection

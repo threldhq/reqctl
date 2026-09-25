@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: an approved item and a still-approved item the approved item would supersede
+  then: the product refuses and names superseded or deprecated as the revision that
+    settles the pair
+  when: relate is run to record the supersedes
+- given: an approved item already superseding an item
+  then: the product refuses and names superseded or deprecated as the revision that
+    settles the pair
+  when: revise is run to set the superseded item to approved
+- given: a draft item superseding an approved item
+  then: the product refuses and names superseded or deprecated as the revision that
+    settles the pair
+  when: revise is run to approve the superseding item
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a change would leave an approved item superseding an item that is still approved,
+  then the product shall refuse the change.
+type: functional
+verification: inspection

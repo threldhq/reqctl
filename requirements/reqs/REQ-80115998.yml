@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: no repository is remembered in the browser
+  then: the setup screen asks for the repository as owner/repo beside the token
+  when: the [portal](portal) is opened
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations: {}
+status: approved
+text: When the browser holds no remembered repository, the product shall ask for the
+  repository, as owner/repo, on the setup screen beside the token.
+type: functional
+verification: inspection

@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) carried in a pair of comments
+  then: the [citation identity](citation_identity), the closing comment and every
+    line the citation covers are unchanged
+  when: the product re-pins the citation
+assessed:
+  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  REQ-54851939: Iw_Sa4bHHJhi7YAvxvfvfhnK8zGwvVQyh8XONls3_GY
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-18833394: constrains
+  REQ-54851939: depends_on
+status: approved
+text: When the product re-pins a [statement citation](statement_citation), the product
+  shall change no character the code base holds other than the stamp the citation
+  names.
+type: functional
+verification: inspection

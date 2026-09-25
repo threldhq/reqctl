@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a rationale written with an authoring form naming one item the corpus holds
+  then: the stored rationale carries the resolved link
+  when: the item is written
+- given: a rationale written with a parameter reference the corpus resolves
+  then: the stored rationale carries the resolved address
+  when: the item is written
+assessed:
+  REQ-97543346: PsO_rDObX2nfPUKa_GS6rAVEiltdOQaV8LEj5qfyTOM
+priority: medium
+relations:
+  REQ-97543346: depends_on
+status: deprecated
+text: When an item's rationale is written, the product shall resolve the authoring
+  forms the rationale states.
+type: functional
+verification: automated_test

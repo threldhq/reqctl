@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a parameter whose value type is text and whose value is a set
+  then: the product refuses and names the member
+  when: a member that reads as a number is stated
+- given: a parameter whose value type is text and whose value is a set
+  then: the product refuses and names the member
+  when: a revision states a member that reads as a quantity
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a member that reads as a number or a quantity would enter a set whose value
+  type is text, then the product shall refuse the member.
+type: functional
+verification: inspection

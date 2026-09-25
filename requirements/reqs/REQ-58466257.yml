@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: given a browser remembering no repository
+  then: then the [portal](portal) opens on owner/repo without showing the repository
+    box of the setup screen
+  when: when reqctl portal is run in a git repository whose origin remote names owner/repo
+assessed:
+  REQ-53764133: hNDAdKGPLVUD6mqWyUsmz56iDb8_rol-_PGHehx6P8I
+  REQ-80115998: 5Q31K4gVM_b7814S0s7RqdPwYFiAEpqF6SqJLiWlcJU
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-53764133: depends_on
+  REQ-80115998: constrains
+status: approved
+text: When the [portal](portal) is opened by reqctl portal, the product shall not
+  ask for the repository.
+type: functional
+verification: automated_test

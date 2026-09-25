@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: a repository and a token are remembered
+  then: the repository stays remembered and the setup screen asks only for the token
+  when: the token is forgotten
+assessed:
+  REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+priority: medium
+relations:
+  REQ-38789214: depends_on
+status: approved
+text: When the token is forgotten, the product shall keep the remembered repository.
+type: functional
+verification: inspection

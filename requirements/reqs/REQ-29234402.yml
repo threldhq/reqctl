@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: input an elucidate script cannot read
+  then: the output is the single line naming the script followed by the message
+  when: the fault reaches the caller
+- given: a run directory holding a file that is not the JSON the script reads
+  then: the output is the single line naming the script followed by the message
+  when: the fault reaches the caller
+- given: a destination the script cannot write
+  then: the output is the single line naming the script followed by the message
+  when: the fault reaches the caller
+- given: the environment does not hold a program the script runs
+  then: the output is the single line naming the script followed by the message
+  when: the fault reaches the caller
+- given: a defect in the script itself rather than in what the script reads or writes
+    or in the environment the script runs in
+  then: the traceback stands rather than a single line
+  when: the fault reaches the caller
+- given: a self-test beside the scripts, which states no command line
+  then: the traceback stands rather than a single line
+  when: the fault reaches the caller
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a fault in what an elucidate script that states a command line reads or writes,
+  or in the environment the script runs in, reaches the caller, then the product shall
+  state the fault as one line naming the script and the message, rather than as a
+  traceback.
+type: functional
+verification: inspection

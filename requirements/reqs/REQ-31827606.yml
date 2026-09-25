@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: an item stating a quantity and a unit that another item already states
+  then: the product names both items and states that a single parameter both reference
+    is where the quantity belongs
+  when: the item is written
+- given: two items each stating the same quantity with no unit
+  then: the product refuses and names both items
+  when: the corpus is validated
+- given: an item stating a quantity with a unit and another item stating the same
+    number with no unit
+  then: the product accepts both items
+  when: the corpus is validated
+- given: two items stating the same quantity in different units
+  then: the product accepts the items
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If more than one item states the same quantity in the same unit, then the product
+  shall refuse the item.
+type: functional
+verification: inspection

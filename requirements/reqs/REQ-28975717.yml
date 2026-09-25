@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: an entry of a dictionary item stating a field as text
+  then: the product refuses and names the value the entry states
+  when: a statement addressing the item by that field is written
+assessed:
+  REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+priority: medium
+relations:
+  REQ-79222815: constrains
+status: approved
+text: If a statement addresses a dictionary item by a field an entry of the item states
+  as neither true nor false, then the product shall refuse the statement.
+type: functional
+verification: inspection

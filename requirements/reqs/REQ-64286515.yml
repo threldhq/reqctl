@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a corpus in which validation finds a problem
+  then: the product refuses and names the problem
+  when: baseline --generate is run
+- given: a corpus in which validation finds no problem
+  then: the product writes the baseline
+  when: baseline --generate is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a baseline would be generated over a corpus in which validation finds a problem,
+  then the product shall refuse the generation.
+type: functional
+verification: inspection

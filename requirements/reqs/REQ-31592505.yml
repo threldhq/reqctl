@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: an approved term, and an entry field named for the word the term defines
+    whose value links no term
+  then: the product names the field and states writing the link or renaming the field
+    as the fix
+  when: the corpus is validated
+- given: a draft term, and an entry field named for the word the term defines whose
+    value links no term
+  then: the product accepts the field
+  when: the corpus is validated
+- given: an entry field named for a word an approved term defines, whose value the
+    governing schema bars from carrying a term link
+  then: the product accepts the field
+  when: the corpus is validated
+- given: an approved term carrying an alias, and an entry field named for the alias
+    whose value may carry a term link and carries none
+  then: the product names the field as not linking the term
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an entry field is named for a word an approved term defines, and the governing
+  schema admits a term link in the field's value, and the value does not link that
+  term, then the product shall refuse the field.
+type: functional
+verification: inspection

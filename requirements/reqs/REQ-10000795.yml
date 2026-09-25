@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a dictionary item whose entries carry a field and none states it true
+  then: the product refuses and states that no entry of the item states the field
+    true
+  when: a statement addressing the item by that field is written
+- given: a corpus holding a statement addressing a dictionary item by a field no entry
+    states true
+  then: the statement is named as selecting no entry
+  when: the corpus is validated
+assessed:
+  REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+priority: medium
+relations:
+  REQ-79222815: constrains
+status: approved
+text: If a statement addresses a dictionary item by a field the item's entries carry
+  and no entry states the field true, then the product shall refuse the statement.
+type: functional
+verification: inspection

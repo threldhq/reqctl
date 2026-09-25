@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a service stating serving single
+  then: the product refuses and states that the service names the one supplier chosen
+  when: chosen is stated as a list
+- given: a service stating serving many
+  then: the product refuses and states that the service names every supplier chosen,
+    as a list
+  when: chosen is stated other than as a list of names
+- given: a service stating no chosen
+  then: the product accepts the service
+  when: the corpus is validated
+assessed:
+  REQ-89136453: 9zgkG2NvrTMUuwuL9GQaVep7C1bctxVNiNxSpulg_a4
+priority: medium
+relations:
+  REQ-89136453: depends_on
+status: deprecated
+text: If a service states chosen in a shape other than the shape the service's serving
+  declares, then the product shall refuse the service.
+type: functional
+verification: automated_test

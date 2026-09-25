@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  code_token:
+    aliases:
+    - code tokens
+    definition: A lexical unit the code reads as, carrying a kind and text.
+    word: code token
+kind: term
+status: approved

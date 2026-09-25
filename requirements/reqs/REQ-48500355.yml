@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a field the governing schema states records a value observed outside the
+    corpus, holding a quantity another item states
+  then: the product accepts both items
+  when: the corpus is validated
+- given: a field the governing schema states records a value observed outside the
+    corpus, holding the word of an approved term outside a link
+  then: the product accepts the field
+  when: the corpus is validated
+- given: a field the governing schema does not state records a value observed outside
+    the corpus, holding a quantity another item states
+  then: the product refuses the item
+  when: the corpus is validated
+assessed:
+  REQ-31827606: 1tyZUHjYl_sV4i0yQaZ_ZicBMOyorn7fBbNxeU1cFRU
+  REQ-83702299: IgLtX0BfZTksPIEqT99UOB-9FZ_Zv9UHjv-slw_7VrQ
+priority: medium
+relations:
+  REQ-31827606: constrains
+  REQ-83702299: constrains
+status: approved
+text: Where the governing schema states a field records a value observed outside the
+  corpus, the product shall exclude that field from every check that reads prose as
+  the item's own words.
+type: functional
+verification: inspection

@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: an item whose unresolved merge reaches a field other than its pins
+  then: the product refuses and names the field it will not resolve
+  when: that item is resolved
+- given: an item whose unresolved merge falls within its pins alone
+  then: the item holds what both sides state alike and every pin the merge conflicted
+    is gone
+  when: that item is resolved
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an item holding an unresolved merge outside its pins would be resolved, then
+  the product shall refuse the resolution.
+type: functional
+verification: inspection

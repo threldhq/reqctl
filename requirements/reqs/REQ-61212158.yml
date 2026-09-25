@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a git repository with no requirements folder
+  then: the install completes and the plugin's hook and skills run there without failing
+  when: the Claude Code plugin is installed into it
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-44451070: depends_on
+status: approved
+text: The product shall let the Claude Code plugin be installed into any git repository,
+  including one that holds no requirements folder.
+type: functional
+verification: automated_test

@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a corpus holding prose that states a phrase recorded on an approved term,
+    with the word the term defines unlinked
+  then: the product names the occurrence, the term and the phrase, and does not refuse
+  when: the corpus is validated
+assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+priority: medium
+relations:
+  REQ-24481048: depends_on
+status: approved
+text: When the corpus is validated, the product shall state every occurrence of an
+  approved term's word or alias that it accepts without a link because a phrase recorded
+  on that term covers it.
+type: functional
+verification: inspection

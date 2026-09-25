@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a requirement whose text names the build as the subject
+  then: the product refuses and states that a rule about what makes or checks the
+    product is a guard
+  when: the statement is written
+- given: a guard whose text names the product as the subject
+  then: the product refuses and states that a statement about what a user can do is
+    a requirement
+  when: the statement is written
+- given: a statement whose text names a subject that is neither the product nor the
+    build
+  then: the product refuses and names the subject the statement's kind requires
+  when: the statement is written
+- given: a requirement naming the product and a guard naming the build
+  then: the product accepts the statement
+  when: either statement is written
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the text of a requirement does not name the product as the subject, or the
+  text of a guard does not name the build as the subject, then the product shall refuse
+  the statement.
+type: functional
+verification: inspection

@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: an item file placed directly under the requirements directory rather than
+    in a kind folder
+  then: the product reports the file
+  when: validate is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an item file sits directly under the requirements directory, then the product
+  shall report the file.
+type: functional
+verification: inspection

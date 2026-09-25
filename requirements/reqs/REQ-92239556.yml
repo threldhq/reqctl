@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: an [citation identity](citation_identity) a [statement citation](statement_citation)
+    now in the code names
+  then: the product mints one that is not it
+  when: the product mints an [citation identity](citation_identity)
+assessed:
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: When the product mints a [citation identity](citation_identity) for the lines
+  a [statement citation](statement_citation) covers, the product shall mint one that
+  no [statement citation](statement_citation) the code base holds names.
+type: functional
+verification: inspection

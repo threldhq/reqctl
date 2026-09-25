@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  content:
+    definition: What a user creates or uploads, and anything the product derives from
+      it. As distinct from the records the product keeps about operating the service.
+    word: content
+kind: term
+status: deprecated

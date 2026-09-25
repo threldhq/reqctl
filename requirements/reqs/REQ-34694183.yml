@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a statement holding a pinned link toward another statement
+  then: the product keeps the link pinned
+  when: the text of the holding statement is rewritten
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the text of a statement is rewritten, the product shall keep every link
+  the statement holds pinned.
+type: functional
+verification: inspection

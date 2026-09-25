@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a statement whose text states no obligation, or states two
+  then: the product refuses and shows the five forms
+  when: the statement is written
+- given: a statement whose text states an obligation and no response after the obligation
+  then: the product refuses and shows the five forms
+  when: the statement is written
+- given: a statement whose text opens with a word other than When, While, Where, If
+    or The
+  then: the product refuses and shows the five forms
+  when: the statement is written
+- given: a statement whose text opens with If and reaches a then with no comma before
+    the then
+  then: the product refuses and shows the five forms
+  when: the statement is written
+- given: a statement whose text takes one of the five forms
+  then: the product accepts the statement
+  when: the statement is written
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the text of a statement does not state exactly one obligation, states no
+  response after the obligation, opens with a word other than When, While, Where,
+  If or The, or opens with If without continuing with a comma and a then, then the
+  product shall refuse the statement.
+type: functional
+verification: inspection

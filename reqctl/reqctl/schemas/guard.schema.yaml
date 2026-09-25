@@ -1,0 +1,101 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "reqctl/guard.schema.yaml"
+title: Guard item
+description: >-
+  A GUARD item file. The UID is the filename (GUARD-NNNNNNNN.yml), not a field.
+
+  A guard governs what builds and checks the product -- the hooks, CI wiring,
+  dependency pins. A requirement governs what the product does. The two are
+  separate kinds because the corpus answers a different question about each:
+  a requirement awaits implementation until code satisfies it, a guard awaits
+  a gate until CI enforces it.
+
+  Promote a guard to this corpus when a rule of ours is enforced by a gate and
+  held by a test. A third-party ruleset states no rule of ours to lift, and
+  stays code; a rule of ours configured into one is still ours.
+type: object
+additionalProperties: false
+
+required: [text, status, acceptance_criteria, relations, assessed]
+
+properties:
+
+  text:
+    type: string
+    minLength: 1
+    x-prose: true
+    description: >-
+      The rule the build obeys. Atomic, verifiable, no rationale.
+
+      Follows EARS, checked by `reqctl validate`, in one of five forms:
+      "The build shall <response>." /
+      "When <trigger>, the build shall <response>." /
+      "While <state>, the build shall <response>." /
+      "If <condition>, then the build shall <response>." /
+      "Where <feature>, the build shall <response>."
+
+      The subject is always the build: what makes, checks and governs the
+      product, never the product itself. A statement about what a user can do
+      is a requirement and belongs in REQ. The subject is fixed here rather
+      than as a term for the same reason it is fixed there -- every statement
+      uses it, so a term would police a link on all of them and index nothing.
+
+  status:
+    enum: [draft, approved, deprecated, superseded]
+    description: >-
+      Lifecycle. Excluded from the stamp, so a transition never makes dependants
+      suspect.
+
+  acceptance_criteria:
+    type: array
+    description: >-
+      What enforcing this guard means, in testable form. In the stamp: criteria
+      define the obligation as much as the statement does, so changing one must
+      make dependants reassess. May be empty -- a guard whose statement is its
+      own criterion does not need them restated.
+    items:
+      type: object
+      additionalProperties: false
+      required: [given, when, then]
+      properties:
+        given: {type: string, minLength: 1, x-prose: true}
+        when: {type: string, minLength: 1, x-prose: true}
+        then: {type: string, minLength: 1, x-prose: true}
+
+  rationale:
+    type: string
+    x-prose: true
+    description: >-
+      Why this guard exists, where that is not evident from the statement.
+      May link a term or reference a parameter, exactly as the statement does.
+      Excluded from the stamp. Optional; omit rather than pad.
+
+  relations:
+    type: object
+    description: >-
+      Edges to other guards, target to kind. A guard may not relate to a
+      requirement: the build serves the product, but a rule about the build
+      makes no claim on what the product does, and an edge across the two would
+      make a product baseline move when a gate changed.
+
+      Excluded from the stamp, and carried by `assessed` until `reqctl relate`
+      pins it, exactly as a requirement's edges are.
+    propertyNames:
+      pattern: "^GUARD-[0-9]{8}$"
+    additionalProperties:
+      enum: [derives_from, depends_on, constrains, supersedes, conflicts_with]
+
+  assessed:
+    type: object
+    description: >-
+      Pins, dependency address to the stamp it was assessed against. A
+      dependency is a relations target, a parameter or data entry the prose
+      references, or a term it links; an address is a guard's UID or the name a
+      dictionary item carries, either one optionally dot an entry key for that
+      entry's stamp. Absent or stale means SUSPECT. Written by tooling, never
+      by hand.
+    propertyNames:
+      pattern: "^(GUARD-[0-9]{8}|[a-z][a-z0-9_]*)(\\..+)?$"
+    additionalProperties:
+      type: string
+      minLength: 1

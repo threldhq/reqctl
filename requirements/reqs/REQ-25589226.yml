@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a term
+  then: the product refuses and states that --default does not apply to a term
+  when: a default is named for the term
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a request would give a term a default, then the product shall refuse the
+  request.
+type: functional
+verification: inspection

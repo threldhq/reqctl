@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a run whose corpus moved under one proposal's set
+  then: that proposal's verdict is retired
+  when: the run is judged again
+- given: a run whose corpus moved under no part of a proposal's set
+  then: that proposal's verdict stands
+  when: the run is judged again
+- given: a verdict for a slot the run no longer holds
+  then: that verdict is retired
+  when: the run is judged again
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the prompt a verdict was judged against has moved, then the product shall
+  retire that verdict, and no other.
+type: functional
+verification: inspection

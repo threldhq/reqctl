@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: an item stating a default and a statement selecting default on the item
+  then: the product finds the reference resolved
+  when: the reference is checked for resolution
+- given: an item stating no default and a statement selecting default on the item
+  then: the product names the item as stating no default
+  when: the reference is checked for resolution
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a reference is checked for resolution against the members an item carries,
+  the product shall count default among the members only where the item states a default.
+type: functional
+verification: inspection

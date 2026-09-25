@@ -1,0 +1,10 @@
+acceptance_criteria:
+- given: a build in which the Claude Code plugin states a version other than the reqctl
+    wheel's
+  then: the build refuses
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: The build shall refuse a Claude Code plugin whose version differs from the version
+  of the reqctl wheel.

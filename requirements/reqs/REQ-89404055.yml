@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a shard holding a requirement that relates to a requirement the shard does
+    not hold
+  then: the block does not list that requirement
+  when: the run is built
+- given: a shard holding a term that a requirement outside the shard references
+  then: the block does not list that requirement
+  when: the run is built
+assessed:
+  REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
+priority: medium
+relations:
+  REQ-18405752: constrains
+status: approved
+text: When a shard states an item's block, the product shall list under the item only
+  the other items that shard holds.
+type: functional
+verification: inspection

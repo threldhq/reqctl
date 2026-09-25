@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a run whose words file is empty or holds only whitespace
+  then: the product refuses the run
+  when: the run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the file stating the owner's words holds no word, then the product shall
+  refuse the run.
+type: functional
+verification: inspection

@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: an approved term recording a phrase it does not claim, with a reason, and
+    prose stating that phrase with the word the term defines unlinked
+  then: the product accepts the prose
+  when: the corpus is validated
+- given: an approved term recording a phrase it does not claim, with a reason, and
+    prose stating that phrase with an alias the term carries unlinked
+  then: the product accepts the prose
+  when: the corpus is validated
+- given: an approved term recording a phrase it does not claim, and prose stating
+    the word the term defines unlinked outside any recorded phrase
+  then: the product refuses the prose
+  when: the corpus is validated
+assessed:
+  REQ-83702299: IgLtX0BfZTksPIEqT99UOB-9FZ_Zv9UHjv-slw_7VrQ
+priority: medium
+relations:
+  REQ-83702299: constrains
+status: approved
+text: Where an approved term records a phrase that contains its word or an alias,
+  and that it does not claim, with a reason, the product shall accept an occurrence
+  of the word or alias inside that phrase without a link.
+type: functional
+verification: inspection

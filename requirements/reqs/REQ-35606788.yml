@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a term
+  then: the product refuses and states that a term is bound by linking the term in
+    the statement
+  when: relate names the term as the target
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a link would target a term, then the product shall refuse the link.
+type: functional
+verification: inspection

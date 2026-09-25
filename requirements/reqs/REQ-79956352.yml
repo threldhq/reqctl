@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a value whose first character is hidden
+  then: the product refuses the value
+  when: the value is written
+- given: a value whose last character is hidden
+  then: the product refuses the value
+  when: the value is written
+- given: a value carrying a hidden character that is neither first nor last
+  then: the product refuses the value
+  when: the value is written
+- given: a value carrying no hidden character
+  then: the product writes the value
+  when: the value is written
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a value carries a hidden character, then the product shall refuse the value.
+type: functional
+verification: inspection

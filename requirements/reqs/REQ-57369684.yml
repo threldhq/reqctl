@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: two approved terms defining one word
+  then: the product refuses and names both terms
+  when: a statement links that word
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a statement links a word more than one approved term defines, then the product
+  shall refuse the statement.
+type: functional
+verification: inspection

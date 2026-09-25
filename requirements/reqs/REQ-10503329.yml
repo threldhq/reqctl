@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a parameter
+  then: the product refuses and names the target
+  when: relate names the parameter as the target
+- given: a data item
+  then: the product refuses and names the target
+  when: relate names the data item as the target
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a link would target a parameter or a data item, then the product shall refuse
+  the link.
+type: functional
+verification: inspection

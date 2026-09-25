@@ -1,0 +1,118 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "reqctl/requirement.schema.yaml"
+title: Requirement item
+description: >-
+  A REQ item file. The UID is the filename (REQ-NNNNNNNN.yml), not a field.
+type: object
+additionalProperties: false
+
+required: [text, type, status, verification, priority, acceptance_criteria, relations, assessed]
+
+properties:
+
+  text:
+    type: string
+    minLength: 1
+    x-prose: true
+    description: >-
+      The requirement statement. Atomic, verifiable, no rationale. Parameter
+      references are written ${name}, the name the parameter or data item
+      carries; the reference is the binding, and each one needs a current pin
+      in `assessed`.
+
+      Follows EARS, checked by `reqctl validate`, in one of five forms:
+      "The <product> shall <response>." /
+      "When <trigger>, the <product> shall <response>." /
+      "While <state>, the <product> shall <response>." /
+      "If <condition>, then the <product> shall <response>." /
+      "Where <feature>, the <product> shall <response>."
+
+      The subject is always the product: whatever this repository ships to
+      its users. What makes and checks it -- the build, its gates, its
+      tooling -- is not the product; a rule about those is a GUARD, stated
+      about the build and held in its own kind. The subject is fixed here
+      rather than as a term because every statement uses it, so a term would
+      police a link on all of them and index nothing.
+
+      The check is on shape, not sense -- it forces the trigger to be stated
+      rather than implied. Whether the statement means anything is elucidation's
+      job, and a human's.
+
+  type:
+    enum: [functional, non_functional, constraint]
+
+  status:
+    enum: [draft, approved, deprecated, superseded]
+    description: >-
+      Lifecycle. Excluded from the stamp, so a transition never makes dependants
+      suspect. Proposed-change, impact-assessed and under-review are carried by
+      the pull request, not by this field.
+
+  verification:
+    enum: [automated_test, inspection, analysis, demonstration]
+
+  acceptance_criteria:
+    type: array
+    description: >-
+      What satisfying this requirement means, in testable form. In the stamp:
+      criteria define the obligation as much as the statement does, so changing
+      one must make dependants reassess. May be empty -- a requirement whose
+      statement is its own criterion does not need them restated.
+    items:
+      type: object
+      additionalProperties: false
+      required: [given, when, then]
+      properties:
+        given: {type: string, minLength: 1, x-prose: true}
+        when: {type: string, minLength: 1, x-prose: true}
+        then: {type: string, minLength: 1, x-prose: true}
+
+  priority:
+    enum: [high, medium, low]
+    description: >-
+      In the stamp: reprioritising an approved requirement changes its meaning
+      to whoever ordered work by it, so dependants reassess.
+
+  rationale:
+    type: string
+    x-prose: true
+    description: >-
+      Why this requirement exists, where that is not evident from the statement.
+      May link a term or reference a parameter, exactly as the statement does.
+      Excluded from the stamp. Optional; omit rather than pad.
+
+  relations:
+    type: object
+    description: >-
+      Edges to other requirements, target to kind. Parameters are not related;
+      a ${name} reference in text is the whole relationship.
+
+      Excluded from the stamp: an edge is the graph around a requirement, not
+      what it demands, and a new or changed edge is carried by `assessed` until
+      `reqctl relate` pins it. Changing an edge therefore changes no stamp, and
+      `baseline --check` does not report it.
+
+      conflicts_with records that two requirements disagree. It is not a label:
+      a corpus may not hold two approved requirements that declare a conflict,
+      so declaring one obliges someone to resolve it -- by deprecating one, by
+      superseding both, or by rewriting until they no longer disagree.
+    propertyNames:
+      pattern: "^REQ-[0-9]{8}$"
+    additionalProperties:
+      enum: [derives_from, depends_on, constrains, supersedes, conflicts_with]
+
+  assessed:
+    type: object
+    description: >-
+      Pins, dependency address to the stamp it was assessed against. A
+      dependency is a relations target, a parameter or data entry the prose
+      references, or a term it links; an address is a requirement's UID or the
+      name a dictionary item carries, either one optionally dot an entry key
+      for that entry's stamp. Absent or stale means SUSPECT: reread both, then
+      re-run `reqctl relate` for a requirement, or `reqctl revise UID --ack`
+      for the rest. Written by tooling, never by hand.
+    propertyNames:
+      pattern: "^(REQ-[0-9]{8}|[a-z][a-z0-9_]*)(\\..+)?$"
+    additionalProperties:
+      type: string
+      minLength: 1

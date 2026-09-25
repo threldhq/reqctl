@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a parameter the corpus resolves, cited by a statement
+  then: the product shows the parameter's value
+  when: the statement is exported
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a statement citing a parameter is exported, the product shall show the
+  parameter's value in place of the citation.
+type: functional
+verification: inspection

@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: the Claude Code plugin as shipped
+  then: it holds a script for each synthesis step, and the elucidate skill calls those
+    scripts
+  when: its contents are read
+- given: the reqctl wheel as built
+  then: it holds none of the synthesis steps
+  when: its contents are read
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  synthesis_steps: xe3OiAl6nX8ClNv6lrdaSi-ccSt2HzKlLO0VZefN0SI
+  synthesis_steps.*: pHxyKCUFQeLD6Hie1LISaDsf8z40gaH7YRmYuHTgs3M
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall ship each of the ${synthesis_steps} that the elucidate skill
+  calls as a script in the Claude Code plugin.
+type: functional
+verification: automated_test

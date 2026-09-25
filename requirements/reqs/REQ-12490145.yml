@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) whose covered lines are changed
+  then: the product takes the [citation identity](citation_identity) the citation
+    named before
+  when: the product reads the citation again
+assessed:
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: The product shall take the [citation identity](citation_identity) a [statement
+  citation](statement_citation) names as unchanged by what the lines the citation
+  covers hold.
+type: functional
+verification: inspection

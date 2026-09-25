@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: given a directory that is not a git repository, or a git repository whose
+    origin remote is absent or not a GitHub owner/repo
+  then: then the product opens nothing and prints one line stating why
+  when: when reqctl portal is run
+assessed:
+  REQ-53764133: hNDAdKGPLVUD6mqWyUsmz56iDb8_rol-_PGHehx6P8I
+priority: medium
+relations:
+  REQ-53764133: constrains
+status: approved
+text: If reqctl portal is run where no origin remote names a GitHub owner/repo, then
+  the product shall refuse and state the reason in one line.
+type: functional
+verification: automated_test

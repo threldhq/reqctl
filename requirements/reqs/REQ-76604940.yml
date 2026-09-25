@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a rationale written with an authoring form naming one item the corpus holds
+  then: the stored rationale carries the resolved link
+  when: the item is written
+- given: an entry field the schema declares as prose written with an authoring form
+  then: the stored field carries the resolved link
+  when: the item is written
+- given: a field the schema does not declare as prose written with an authoring form
+  then: the stored field carries the form unchanged
+  when: the item is written
+assessed:
+  REQ-77158001: R7FsOlV5L_rO_9fZ2osiXtC-_I4Q7HjQuiD_-Yh924o
+priority: medium
+relations:
+  REQ-77158001: supersedes
+status: approved
+text: When an item is written, the product shall resolve each field the schema declares
+  as prose exactly as the product resolves a statement's text.
+type: functional
+verification: inspection

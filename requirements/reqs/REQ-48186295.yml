@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a named item in the folder for one kind
+  then: the product refuses and states the kind the folder holds
+  when: the item states another kind
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a named item states a kind other than the kind of the folder holding the
+  item, then the product shall refuse the item.
+type: functional
+verification: inspection

@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a run holding more proposals than the batch
+  then: each shard has one recall prompt per batch, none carrying more than the batch
+  when: the run is built
+assessed:
+  REQ-32866040: hD5N5WdHBdwH2BNabKtTxhtIFcEXt7Oap2leCJtcCDs
+  recall_batch: YWoEFqqQvRgdxU-ZG7OGU8ey4lS_dVOuf75swngCeU4
+  recall_batch.*: BNBsm1L3xwEZkqyI6iEnYP8WXmdTGm0w9TbEBvswfxM
+priority: medium
+relations:
+  REQ-32866040: derives_from
+status: approved
+text: When a run is built, the product shall carry at most ${recall_batch} proposals
+  in one recall prompt.
+type: functional
+verification: inspection

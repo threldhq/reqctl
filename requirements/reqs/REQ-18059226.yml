@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a term the corpus holds
+  then: the product refuses and names both terms
+  when: a second term claiming the word that term defines is minted
+- given: a corpus holding a term whose alias is a word another term claims
+  then: the product refuses and names both terms
+  when: the corpus is validated
+- given: two draft terms whose words differ only in case or in surrounding whitespace
+  then: the product refuses and names both terms
+  when: the corpus is validated
+assessed:
+  REQ-79013939: bHJwWtA0cgeGylANm5kpe06YlFr6uZuhEb2AQRL_7gQ
+priority: medium
+relations:
+  REQ-79013939: depends_on
+status: approved
+text: If more than one term claims one word, then the product shall refuse the term.
+type: functional
+verification: inspection

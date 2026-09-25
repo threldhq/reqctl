@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: code carrying one [statement citation](statement_citation) with a stamp and
+    one [statement citation](statement_citation) without a stamp
+  then: the product reports the citation without a stamp
+  when: trace is run
+assessed:
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: If code carries a [statement citation](statement_citation) that names no stamp,
+  then the product shall report the citation even where a pinned citation stands beside
+  the unpinned citation.
+type: functional
+verification: inspection

@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run whose job judges a shard of guards
+  then: the job prompt states the verdict shape cut for guards
+  when: the run is built
+- given: a run whose job judges the run other proposals
+  then: the job prompt states the verdict shape cut for siblings
+  when: the run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a job prompt is built, the product shall state in the prompt the verdict
+  shape the job's scope is cut to.
+type: functional
+verification: inspection

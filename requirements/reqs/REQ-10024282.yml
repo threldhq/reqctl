@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a baseline file holding an unresolved merge one of whose sides does not read
+    as a baseline
+  then: the product refuses and states resolving the conflict by hand
+  when: the baseline is checked
+- given: a baseline file holding an unresolved merge whose two sides both read as
+    baselines
+  then: the product reports the number each side claims
+  when: the baseline is checked
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a baseline file holding an unresolved merge whose side does not read as a
+  baseline would be checked, then the product shall refuse the check.
+type: functional
+verification: inspection

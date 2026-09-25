@@ -1,0 +1,11 @@
+assessed: {}
+entries:
+  test:
+    aliases:
+    - tests
+    definition: 'A file the product reads as a test: one under a folder named test
+      or tests, one whose name begins test_, or one whose name, before its extension,
+      ends in .test, _test, .spec or _spec.'
+    word: test
+kind: term
+status: approved

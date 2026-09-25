@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: an item whose rationale references a parameter the corpus resolves
+  then: the export shows the parameter value in place of the reference
+  when: the corpus is exported
+- given: a term whose definition links another term
+  then: the export renders the link as it renders a statement link
+  when: the corpus is exported
+- given: a parameter whose own text links a term
+  then: the export renders the link
+  when: the corpus is exported
+- given: an item whose rationale cites a parameter the corpus cannot resolve
+  then: the export shows the citation unchanged
+  when: the corpus is exported
+- given: a data item whose entry field the schema declares as prose links a term
+  then: the export renders the link
+  when: the corpus is exported
+assessed:
+  REQ-22770949: PusYHlDuBxL4Wh4WZZbOfKJexIqh6Ao8si3EY4ty9Ds
+  REQ-70783238: WJenY0g8kyTEGjWITwyXEeboTpqINsjZyLz405ijjHk
+  REQ-76604940: HbN3En3lfKzDguCuVTqqz7x8g4sbMMQt8fAtE0E4Pf8
+priority: medium
+relations:
+  REQ-22770949: depends_on
+  REQ-70783238: depends_on
+  REQ-76604940: depends_on
+status: approved
+text: When an item is exported, the product shall resolve each field the schema declares
+  as prose exactly as the product resolves a statement's text.
+type: functional
+verification: inspection

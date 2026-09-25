@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: prose carrying a parameter reference no item the corpus holds resolves
+  then: the product refuses and names the reference
+  when: the prose is written
+- given: prose carrying a link no item the corpus holds resolves
+  then: the product refuses and names the link
+  when: the prose is written
+- given: an item whose rationale carries a reference no item the corpus holds resolves
+  then: the product refuses and names the reference
+  when: the rationale is written
+- given: an item on disk whose prose carries a reference or a link resolving to no
+    item
+  then: the product refuses and names the reference or the link
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an item's prose carries a reference or a link that resolves to no item the
+  corpus holds, then the product shall refuse the prose.
+type: functional
+verification: inspection

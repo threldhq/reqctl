@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: two items, one binding an entry of a dictionary item and one binding a different
+    entry of the same item
+  then: the product makes the binder of the revised entry suspect and leaves the other
+    binder pinned
+  when: the first entry is revised
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When an entry of a dictionary item is revised, the product shall make suspect
+  every item binding that entry and no other item.
+type: functional
+verification: inspection

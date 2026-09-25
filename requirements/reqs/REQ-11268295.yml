@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a comment carrying a [statement citation](statement_citation) and naming
+    no [citation identity](citation_identity)
+  then: the product refuses the citation
+  when: the product reads the code
+- given: a comment carrying a [statement citation](statement_citation) whose [citation
+    identity](citation_identity) holds no character
+  then: the product refuses the citation
+  when: the product reads the code
+assessed:
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: If a comment carrying a [statement citation](statement_citation) names no [citation
+  identity](citation_identity) for the lines the citation covers, or names a [citation
+  identity](citation_identity) holding no character, then the product shall refuse
+  the citation.
+type: functional
+verification: inspection

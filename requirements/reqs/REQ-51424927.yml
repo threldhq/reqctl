@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a corpus whose default branch carries no baseline
+  then: the generated baseline carries the first number
+  when: a baseline is generated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a baseline would be generated while the default branch carries no baseline,
+  the product shall give the generated baseline the first number.
+type: functional
+verification: inspection

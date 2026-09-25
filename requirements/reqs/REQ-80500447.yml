@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run whose proposals carry criteria
+  then: the prompt states the criteria each proposal carries
+  when: the coverage prompt is built
+- given: a run whose proposals carry no criteria
+  then: the product builds the prompt
+  when: the coverage prompt is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the coverage prompt is built, the product shall state in the prompt the
+  criteria each proposal carries.
+type: functional
+verification: inspection

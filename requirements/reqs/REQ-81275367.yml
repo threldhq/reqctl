@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) carried in a pair of comments
+  then: every line between the comments is unchanged
+  when: the product removes the citation
+assessed:
+  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-61906662: vIt4Qdb6Q01LJ5VHMe8kkG9Wsh5fJEM0IPWOAXSSzsU
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-26984738: constrains
+  REQ-60346603: depends_on
+  REQ-61906662: depends_on
+status: approved
+text: When the product removes a [statement citation](statement_citation), the product
+  shall leave unchanged every line the code base holds other than the lines holding
+  a comment that carries the citation.
+type: functional
+verification: inspection

@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a baseline file stating no baseline number
+  then: the product refuses and names the baseline file
+  when: baseline --generate is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a baseline would be generated over a baseline file that states no baseline
+  number, then the product shall refuse the generation.
+type: functional
+verification: inspection

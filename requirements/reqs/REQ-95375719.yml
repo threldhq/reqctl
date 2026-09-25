@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run whose coverage findings file was written by an earlier attempt
+  then: the product removes the file before the spawn
+  when: the coverage agent is spawned
+- given: a run holding no coverage findings file
+  then: the product spawns the agent
+  when: the coverage agent is spawned
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a coverage agent would be spawned for a run whose findings file already exists,
+  then the product shall remove that file before spawning.
+type: functional
+verification: inspection

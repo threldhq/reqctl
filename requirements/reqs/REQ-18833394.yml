@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) naming a stamp the requirement
+    it names no longer carries
+  then: the citation names the stamp the requirement carries
+  when: the product re-pins the citation by its [citation identity](citation_identity)
+assessed:
+  REQ-44424329: --ePOFus7t2HMD_69LLBgqXqfpK4lhrNikDYNlXE3H8
+  REQ-54851939: Iw_Sa4bHHJhi7YAvxvfvfhnK8zGwvVQyh8XONls3_GY
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-44424329: depends_on
+  REQ-54851939: depends_on
+  REQ-60346603: depends_on
+status: approved
+text: When the product re-pins the [statement citation](statement_citation) naming
+  a [citation identity](citation_identity), the product shall replace the stamp the
+  citation names with the stamp the requirement the citation names carries.
+type: functional
+verification: inspection

@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a dictionary item holding an entry keyed for a field the item's entries carry
+  then: the product refuses and names renaming one of the two as the fix
+  when: a statement addressing the item by that name is written
+assessed:
+  REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+priority: medium
+relations:
+  REQ-79222815: constrains
+status: approved
+text: If a statement addresses a dictionary item by a name that is both an entry of
+  the item and a field the item's entries carry, then the product shall refuse the
+  statement.
+type: functional
+verification: inspection

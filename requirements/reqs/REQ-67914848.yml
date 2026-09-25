@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a parameter whose value is a set
+  then: the product refuses and states that the default is not a member of the set
+  when: a default naming no member of the set is stated
+- given: a data item
+  then: the product refuses and states that the default is not an entry
+  when: a default naming no entry of the data item is stated
+- given: a corpus holding an item whose default names no entry of that item
+  then: the product refuses and names the default
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an item states a default naming no entry the item holds, then the product
+  shall refuse the item.
+type: functional
+verification: inspection

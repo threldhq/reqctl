@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a run whose coverage prompt is built
+  then: the prompt states every one of them
+  when: the names the findings check accepts are compared against the prompt
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the coverage prompt is built, the product shall state in the prompt every
+  name the findings are read by.
+type: functional
+verification: inspection

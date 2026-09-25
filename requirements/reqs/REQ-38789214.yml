@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: owner/repo was submitted on the setup screen
+  then: the product uses that repository without asking for it
+  when: the [portal](portal) is opened again in the same browser
+assessed:
+  REQ-80115998: 5Q31K4gVM_b7814S0s7RqdPwYFiAEpqF6SqJLiWlcJU
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-80115998: depends_on
+status: approved
+text: When the setup screen is submitted with a repository, the product shall remember
+  the repository in the browser alongside the token.
+type: functional
+verification: inspection

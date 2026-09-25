@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: an item holding more characters than the size bound
+  then: the shard holding that item holds no other item
+  when: a run is built
+assessed:
+  REQ-43761464: pFlii3nabPOTuWWSHzIo1C68Txtw5FfEGYZqOyxB-7U
+priority: medium
+relations:
+  REQ-43761464: constrains
+status: approved
+text: If an item holds more characters than a shard is bound by, then the product
+  shall hold that item alone in a shard.
+type: functional
+verification: inspection

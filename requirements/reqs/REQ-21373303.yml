@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a run holding a proposal whose verdict names a covering obligation
+  then: the description states the obligation under that proposal with the verdict
+    and the reason the verdict gives
+  when: the description is rendered
+- given: a run holding a declined line
+  then: the description states the line and the reason it was declined
+  when: the description is rendered
+- given: a run holding a proposal traced to a passage of the owner's words
+  then: the description quotes the passage under that proposal
+  when: the description is rendered
+assessed:
+  REQ-83939497: SjYhKgxzDeHvaZO85LmDL5c2Tz7ZgnGZUpz5QiavoHc
+priority: medium
+relations:
+  REQ-83939497: depends_on
+status: approved
+text: When a run's pull request description is rendered, the product shall state for
+  each proposal the owner's words the proposal traces to, each item the proposal's
+  verdict names with the verdict on that item, and the run's declined list.
+type: functional
+verification: inspection

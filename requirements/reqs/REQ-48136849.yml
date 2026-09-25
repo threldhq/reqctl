@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a repository stating a schema named for an item the corpus does not hold
+  then: the product refuses and names the schema and the item it found none of
+  when: the corpus is validated
+- given: a repository stating a schema named for an item the corpus holds
+  then: the product accepts it
+  when: the corpus is validated
+- given: a repository stating only the kind schemas
+  then: the product accepts it, a kind schema naming no item
+  when: the corpus is validated
+assessed: {}
+priority: high
+rationale: A schema named for an item is the repository saying its corpus holds one.
+  Holding it to that is how a project requires a data item to exist without the product
+  naming the item.
+relations: {}
+status: approved
+text: Where a repository states a schema named for an item, the product shall refuse
+  a corpus holding no item of that name.
+type: functional
+verification: inspection

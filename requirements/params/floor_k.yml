@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  '10': {}
+kind: parameter
+name: floor_k
+status: approved
+text: The obligations the floor adds to a judge prompt beyond what recall named
+value_type: count

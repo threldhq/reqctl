@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a term whose alias holds a comma
+  then: the item is refused
+  when: the corpus is validated
+- given: a term whose wordings are written one to an alias
+  then: the item stands
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a term's alias holds the character the corpus separates an alias list with,
+  then the product shall refuse the item.
+type: functional
+verification: inspection

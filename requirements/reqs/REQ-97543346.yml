@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a statement linking a term
+  then: the product moves the link to the new name and shows the new word
+  when: the term is renamed
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a term is renamed, the product shall move every resolved link that showed
+  the word the term carried.
+type: functional
+verification: inspection

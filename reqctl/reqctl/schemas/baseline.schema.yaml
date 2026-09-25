@@ -1,0 +1,61 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "reqctl/baseline.schema.yaml"
+title: Baseline
+description: >-
+  What was approved at a point in git history: each item's uid and content
+  stamp. Generated, never hand-written: CI re-derives it from the corpus and
+  fails on any difference.
+
+  One file, requirements/baseline.yml, rewritten by each cut. A file has one
+  final state, so a branch cannot hold two baselines and a premature cut is
+  fixable by cutting again; two branches racing produce a merge conflict, which
+  stops the collision rather than reporting it. Earlier baselines are the git
+  history of this file.
+
+  Contains no timestamp and no author. Anything that is not a pure function of
+  the corpus would make re-derivation non-deterministic and defeat the check.
+type: object
+additionalProperties: false
+
+required: [baseline, commit, items, supersedes]
+
+properties:
+
+  baseline:
+    type: integer
+    minimum: 1
+    description: >-
+      How many cuts this file has had, counting from one. A name for the
+      current state, not an identity -- the commit below is what pins it, and
+      only `main` says which cut is approved.
+
+  commit:
+    type: string
+    pattern: "^[0-9a-f]{40}$"
+    description: >-
+      The commit `--generate` ran on top of. Full SHA-1. It names the corpus
+      this baseline states only when the items were committed before it was
+      generated.
+
+  supersedes:
+    type: [integer, "null"]
+    description: >-
+      The count this cut replaced, or null for the first. Redundant once the
+      baseline is one file -- it is always one less -- and kept only because
+      removing it is a schema change that would travel apart from the code
+      that writes it.
+
+  items:
+    type: object
+    minProperties: 1
+    description: >-
+      Every approved item, mapped to its reqctl content stamp. Draft,
+      deprecated and superseded items are excluded -- a baseline states what is
+      approved, not what exists. The stamp is the pin: it is what a dependent
+      link was assessed against, so a baseline plus these stamps fully determines
+      whether any relationship has since gone suspect.
+    propertyNames:
+      pattern: "^((REQ|GUARD|PARAM|TERM|DATA)-[0-9]{8}|[a-z][a-z0-9_]*)$"
+    additionalProperties:
+      type: string
+      minLength: 1

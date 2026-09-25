@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: an approved statement leaning on a draft statement
+  then: the product reports the approved statement and names the status of the statement
+    leaned on
+  when: the corpus is validated
+- given: an approved statement leaning on a deprecated or a superseded statement
+  then: the product reports the approved statement and names the status of the statement
+    leaned on
+  when: the corpus is validated
+- given: an approved statement superseding a deprecated statement
+  then: the product accepts the statement
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an approved statement leans on a statement the corpus has not approved, then
+  the product shall report the approved statement.
+type: functional
+verification: inspection

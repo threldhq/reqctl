@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: an item another item binds
+  then: the product makes the binder suspect
+  when: the text, the value type, the unit, the default or the handles-content field
+    of the bound item is changed
+- given: an item another item binds
+  then: the product leaves the binder pinned
+  when: a field the stamp does not cover is changed on the bound item
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a field the stamp covers is changed on an item, the product shall make
+  suspect every item binding the changed item.
+type: functional
+verification: inspection

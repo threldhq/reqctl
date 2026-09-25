@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a change deleting a [statement citation](statement_citation) that names a
+    requirement
+  then: the product names the requirement
+  when: the product states what the change touches
+assessed:
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: When the product states what a change touches, the product shall name every
+  requirement any [statement citation](statement_citation) of which the product states
+  as changed, as added or as deleted.
+type: functional
+verification: inspection

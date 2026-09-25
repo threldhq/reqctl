@@ -1,0 +1,10 @@
+acceptance_criteria:
+- given: a change that moves the Claude Code plugin's sources out of the repository
+    holding reqctl's sources
+  then: the build refuses
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: The build shall keep the sources of the Claude Code plugin in the repository
+  that holds the sources of reqctl.

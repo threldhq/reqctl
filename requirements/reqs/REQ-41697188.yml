@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a parameter whose value type is count
+  then: the product refuses and names the key as not parsing as count
+  when: an entry key stating a sign or a fraction is written
+- given: a parameter whose value type is duration or size
+  then: the product refuses and names the key as not parsing as that value type
+  when: an entry key stating a sign is written
+- given: a parameter whose value type is ratio, percentage or currency
+  then: the product accepts the key
+  when: an entry key stating a sign is written
+- given: a parameter whose value type is boolean
+  then: the product refuses and names the key as not parsing as boolean
+  when: an entry key other than true or false is written
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an entry key of a parameter does not parse as the parameter's value type,
+  then the product shall refuse the parameter.
+type: functional
+verification: inspection

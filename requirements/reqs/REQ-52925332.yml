@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: code carrying a comment that opens a [statement citation](statement_citation)
+    and a comment that closes it
+  then: the product takes the lines between the two comments as the lines the citation
+    covers
+  when: the product reads the citation
+- given: code carrying two [statement citations](statement_citation) open at once
+  then: the product closes the citation naming the [citation identity](citation_identity)
+    that comment names
+  when: the product reads a closing comment
+assessed:
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: The product shall take a [statement citation](statement_citation) carried in
+  a comment as covering the lines that fall between that comment and the comment that
+  closes the citation by naming the [citation identity](citation_identity) the citation
+  names.
+type: functional
+verification: inspection

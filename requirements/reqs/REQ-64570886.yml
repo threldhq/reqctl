@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a corpus in which two items each carry a problem
+  then: the product withholds the problem belonging to the item trace did not name
+  when: trace names one of the two
+- given: a file the product cannot read while scanning citations
+  then: the product reports the unreadable file, which belongs to no item and so is
+    withheld from no report
+  when: trace names one item
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When trace is asked for one item, the product shall withhold every problem belonging
+  to another item.
+type: functional
+verification: inspection

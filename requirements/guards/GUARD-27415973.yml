@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: an edit made other than through reqctl that adds a comment carrying a [statement
+    citation](statement_citation)
+  then: the build refuses it and the file is unchanged
+  when: the edit is attempted
+- given: an edit made other than through reqctl that removes or changes a comment
+    carrying a [statement citation](statement_citation), including by deleting or
+    moving the code the citation covers
+  then: the build refuses it and the file is unchanged
+  when: the edit is attempted
+- given: an edit made other than through reqctl that carries a comment carrying a
+    [statement citation](statement_citation) through unchanged
+  then: the build does not refuse it on that ground
+  when: the edit is attempted
+- given: reqctl writing, re-pinning or removing a [statement citation](statement_citation)
+  then: the build does not refuse it
+  when: reqctl runs
+assessed:
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+relations: {}
+status: approved
+text: If an edit made other than through reqctl would add, remove or change a comment
+  that carries a [statement citation](statement_citation), then the build shall refuse
+  the edit.

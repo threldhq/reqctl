@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a coverage finding whose reason is longer than the coverage shape allows
+  then: the product refuses the findings
+  when: the findings are checked
+- given: a coverage finding whose owner word is longer than the coverage shape allows
+  then: the product refuses the findings
+  when: the findings are checked
+- given: a coverage finding whose reason is exactly the length the coverage shape
+    allows
+  then: the product accepts the findings
+  when: the findings are checked
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a coverage finding states a field longer than the coverage shape allows,
+  then the product shall refuse the findings.
+type: functional
+verification: inspection

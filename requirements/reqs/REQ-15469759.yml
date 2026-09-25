@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a term recording a phrase it does not claim, with no reason
+  then: the product refuses the term and names the phrase
+  when: the corpus is validated
+assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+priority: medium
+relations:
+  REQ-24481048: constrains
+status: approved
+text: If a term records a phrase it does not claim and gives no reason for it, then
+  the product shall refuse the term.
+type: functional
+verification: automated_test

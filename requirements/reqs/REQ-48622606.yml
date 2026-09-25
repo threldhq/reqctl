@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run whose proposal holds a fault the lint reports
+  then: the product refuses the run, naming the proposal and the fault, and writes
+    no prompt
+  when: the run is built
+assessed:
+  REQ-85308584: uUWJjK4FALNIooqhPRrnCzbChHGhOVxP0-yobiyLPJ8
+priority: medium
+relations:
+  REQ-85308584: depends_on
+status: approved
+text: If a proposal holds a fault the lint reports, then the product shall refuse
+  the run before any prompt is written.
+type: functional
+verification: inspection

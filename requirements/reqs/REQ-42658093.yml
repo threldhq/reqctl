@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a term no link of which shows the word a reword replaces
+  then: the product states that the reword placed no word
+  when: revise is run with the reword
+- given: a term no link of which shows the word a reword replaces
+  then: the product names the reword in the message
+  when: revise is run with the reword
+- given: a term whose link shows the word a reword replaces
+  then: the product does not state that the reword placed no word
+  when: revise is run with the reword
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a reword changes no link, then the product shall state that the reword placed
+  no word.
+type: functional
+verification: inspection

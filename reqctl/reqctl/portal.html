@@ -1,0 +1,1228 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>requirements</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #fbfbfa; --panel: #fff; --line: #e4e2dd; --ink: #1a1917;
+  --mut: #565049; --dim: #8a8279; --accent: #00a4a4; --warn: #be7c1c;
+  --bad: #b4392f; --ok: #3f7d3a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16161a; --panel: #1e1e24; --line: #2f2f38; --ink: #e8e6e1;
+    --mut: #a8a29a; --dim: #736d65; --accent: #4fd0d0; --warn: #d99a3e;
+    --bad: #e0685c; --ok: #6fbf68;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 14px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+button, input, select, textarea {
+  font: inherit; color: inherit; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px;
+}
+button { cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.go { background: var(--accent); color: #08201f; border-color: var(--accent);
+            font-weight: 600; }
+button.go:disabled { opacity: .5; cursor: default; }
+header {
+  position: sticky; top: 0; z-index: 5; background: var(--panel);
+  border-bottom: 1px solid var(--line); padding: 10px 14px;
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+header h1 { font-size: 14px; margin: 0; font-weight: 650; letter-spacing: .02em; }
+header .grow { flex: 1 1 160px; }
+header input[type=search] { width: 100%; }
+.facets { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 14px 0; }
+.facet {
+  border: 1px solid var(--line); background: var(--panel); border-radius: 999px;
+  padding: 4px 11px; font-size: 12px; color: var(--mut);
+}
+.facet[aria-pressed=true] { border-color: var(--accent); color: var(--ink); font-weight: 600; }
+main { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 12px 14px 40px; }
+@media (min-width: 900px) {
+  main { grid-template-columns: minmax(280px, 380px) 1fr; align-items: start; }
+  #detail { position: sticky; top: 62px; max-height: calc(100vh - 76px); overflow: auto; }
+}
+.rows { display: flex; flex-direction: column; gap: 6px; }
+.row {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 11px; cursor: pointer; text-align: left; width: 100%;
+}
+.row:hover, .row[aria-current=true] { border-color: var(--accent); }
+.row .uid { font-size: 11px; color: var(--dim); }
+.row .txt {
+  margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.row.gone .txt { text-decoration: line-through; color: var(--dim); }
+#detail { background: var(--panel); border: 1px solid var(--line);
+          border-radius: 10px; padding: 16px; }
+.label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+         color: var(--dim); margin: 16px 0 6px; }
+.card { border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px;
+        margin-bottom: 6px; }
+.chip { display: inline-block; font-size: 11px; border-radius: 999px;
+        padding: 1px 8px; border: 1px solid var(--line); color: var(--mut); }
+.chip.suspect { border-color: var(--warn); color: var(--warn); }
+.chip.missing { border-color: var(--bad); color: var(--bad); }
+.crit { border-left: 2px solid var(--line); padding-left: 10px; margin-bottom: 8px; }
+.crit div { display: flex; gap: 8px; }
+.crit b { color: var(--dim); font-size: 11px; min-width: 44px; }
+a { color: var(--accent); }
+.uidlink { cursor: pointer; text-decoration: underline dotted; }
+.empty { color: var(--dim); }
+.setup { max-width: 620px; margin: 8vh auto; padding: 0 18px; }
+.setup ol { padding-left: 20px; color: var(--mut); }
+.setup li { margin-bottom: 7px; }
+.setup input { width: 100%; margin: 10px 0; }
+.note { border-left: 3px solid var(--warn); padding: 8px 12px; color: var(--mut);
+        background: var(--panel); border-radius: 0 7px 7px 0; margin: 14px 0; }
+dialog {
+  border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
+  color: var(--ink); max-width: 620px; width: calc(100vw - 28px); padding: 18px;
+}
+dialog::backdrop { background: rgba(0,0,0,.5); }
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 12px; color: var(--mut); margin-bottom: 4px; }
+.field input, .field select, .field textarea { width: 100%; }
+.field textarea { min-height: 80px; resize: vertical; }
+.status { padding: 10px 14px; font-size: 13px; color: var(--mut); }
+.status.bad { color: var(--bad); }
+button.thin { padding: 2px 8px; font-size: 11px; }
+.pair { display: flex; gap: 6px; margin-bottom: 6px; }
+.pair input { flex: 1 1 0; min-width: 0; }
+.pick { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+dialog.wide { max-width: none; height: calc(100vh - 28px);
+              display: flex; flex-direction: column; }
+.treebox { flex: 1 1 auto; overflow: auto; margin-top: 10px; }
+.tree { position: relative; }
+.tree svg { position: absolute; inset: 0; pointer-events: none; }
+.tree svg > path { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.tree svg > path.side { stroke: var(--warn); stroke-dasharray: 4 3; }
+.tree marker path { fill: var(--warn); }
+.node { position: absolute; width: 168px; height: 54px; padding: 5px 7px;
+        text-align: left; overflow: hidden; }
+.node .uid { display: block; font-size: 10px; color: var(--dim); }
+.node .txt { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+             overflow: hidden; font-size: 11px; line-height: 1.35; }
+.node.here { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.node.gone .txt { text-decoration: line-through; color: var(--dim); }
+</style>
+
+<div id="app"></div>
+
+<script>
+const VIEW = "corpus-view";
+const FLOW = "corpus-write.yml";
+const KEY = "reqportal-token";
+const PLACE = "reqportal-repo";
+const REPO_FORM = /^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/;
+const BATCH = "reqportal-batch";
+const KINDS = ["requirement", "term", "parameter", "data"];
+
+let corpus = [];
+let byUid = {};
+let kind = "requirement";
+let query = "";
+let chosen = null;
+let batch = [];
+let notice = "";
+let showLinks = false;
+
+const MINTED = /^\$(\d+)$/;
+
+const shifted = (held, by) => {
+  const found = MINTED.exec(String(held));
+  return found ? `$${Number(found[1]) + by}` : held;
+};
+
+const offsetSteps = (steps, by) => steps.map((step) => step.args
+  ? { ...step, args: step.args.map((each) => shifted(each, by)) }
+  : step);
+
+const batched = () => batch.flatMap((held, at) =>
+  offsetSteps(held.steps, batch.slice(0, at).reduce((n, e) => n + e.steps.length, 0)));
+
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+const token = () => localStorage.getItem(KEY) || "";
+<!-- @req> REQ-90709998@VH8IkfXENTM5 yh7ilp -->
+const repo = () => localStorage.getItem(PLACE) || "";
+function keepBatch() {
+  try {
+    localStorage.setItem(BATCH, JSON.stringify(batch));
+    return "";
+  } catch (broken) {
+    return batch.length
+      ? `the browser would not keep the batch, so a reload loses it: ${broken.message}`
+      : `the browser would not clear the batch, so a reload brings back what was `
+        + `already sent or discarded: ${broken.message}`;
+  }
+}
+
+async function api(path, options = {}) {
+  const sent = await fetch(`https://api.github.com${path}`, {
+    ...options,
+    headers: {
+      Accept: options.raw ? "application/vnd.github.raw" : "application/vnd.github+json",
+      Authorization: `Bearer ${token()}`,
+      "X-GitHub-Api-Version": "2022-11-28",
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...options.headers,
+    },
+  });
+  if (sent.status === 401 || sent.status === 403) {
+    throw new Error(`GitHub refused the token (${sent.status}). Check its scopes and expiry.`);
+  }
+  if (!sent.ok) {
+    throw new Error(`${path}: ${sent.status} ${sent.statusText}`);
+  }
+  if (sent.status === 204) return null;
+  return options.raw ? sent.text() : sent.json();
+}
+
+const LINKED = /\[([^\]]+)\]\((?:#)?([a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)?)\)/g;
+
+function prose(text) {
+  return esc(text ?? "").replace(LINKED,
+    (_, word, uid) => `<span class="uidlink" data-uid="${esc(uid)}">${word}</span>`);
+}
+
+const plain = (text) => String(text ?? "").replace(LINKED, "$1");
+
+const word = (held) => Object.keys(held.entries ?? {})[0] ?? "";
+const handle = (item) => item.kind === "requirement" ? "" : (item.name ?? item.term ?? word(item));
+
+function summary(item) {
+  if (item.kind === "term") return item.definition ?? item.text ?? "";
+  return item.text ?? "";
+}
+
+function matches(item) {
+  if (item.kind !== kind) return false;
+  const hay = `${item.uid} ${handle(item)} ${summary(item)} ${item.status ?? ""}`;
+  return !query || hay.toLowerCase().includes(query.toLowerCase());
+}
+
+function drawFacets() {
+  return `<div class="facets">${KINDS.map((k) => {
+    const n = corpus.filter((i) => i.kind === k).length;
+    return `<button class="facet" data-kind="${k}" aria-pressed="${k === kind}">${k} ${n}</button>`;
+  }).join("")}</div>`;
+}
+
+function drawRows() {
+  const shown = corpus.filter(matches);
+  if (!shown.length) return `<p class="empty">Nothing matches.</p>`;
+  return shown.map((item) => `
+    <button class="row ${item.status === "deprecated" ? "gone" : ""}"
+            data-uid="${esc(item.uid)}" aria-current="${item.uid === chosen}">
+      <div class="uid mono">${esc(item.uid)} &middot; ${esc(item.status ?? "")}${
+        item.suspect_links ? ` &middot; <span class="chip suspect">${item.suspect_links} suspect</span>` : ""
+      }</div>
+      <div class="txt">${esc(handle(item) ? `${handle(item)} — ` : "")}${prose(summary(item))}</div>
+    </button>`).join("");
+}
+
+const flags = (row) =>
+  `${row.missing ? `<span class="chip missing">missing</span>` : ""}${
+    row.suspect ? `<span class="chip suspect">suspect</span>` : ""}`;
+
+// Offered only where it is earned. Acknowledging asserts the statement still
+// holds against what the reference now says, so it is one reference at a time
+// and never a sweep over all of them.
+const acking = (row) => row.suspect
+  ? ` <button class="thin" data-act="ack" data-ack="${esc(row.uid)}">Still holds</button>`
+  : "";
+
+const empty = (v) => v == null || v === "" || (Array.isArray(v) && !v.length)
+  || (typeof v === "object" && !Array.isArray(v) && !Object.keys(v).length);
+
+function render(value) {
+  if (Array.isArray(value)) return prose(value.join(", "));
+  if (value && typeof value === "object") {
+    return `<span class="mono">${esc(JSON.stringify(value))}</span>`;
+  }
+  return prose(value);
+}
+
+const SHOWN = new Set(["uid", "kind", "status", "text", "name", "term",
+  "definition",
+  "aliases", "tag", "type", "verification", "priority", "acceptance_criteria",
+  "rationale", "value", "unit", "value_type", "default", "entries",
+  "references", "parameters", "concepts", "outgoing", "incoming",
+  "implementation", "tests", "stamp", "suspect_links"]);
+
+function chips(held) {
+  return Object.entries(held ?? {})
+    .filter(([, value]) => !empty(value))
+    .map(([name, value]) => `<span class="chip">${esc(name)}: ${
+      Array.isArray(value) ? esc(value.join(", ")) : esc(String(value))}</span>`)
+    .join(" ");
+}
+
+function entries(item) {
+  const all = item.entries ?? {};
+  const names = item.value ?? Object.keys(all);
+  return names.map((name) => `
+    <div class="card">
+      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+        <b class="mono">${esc(name)}</b> ${chips(all[name])}
+        <span style="margin-left:auto;display:flex;gap:6px">
+          <button class="thin" data-act="entry" data-entry="${esc(name)}">Edit</button>
+          <button class="thin" data-act="drop-entry" data-entry="${esc(name)}">Drop</button>
+        </span>
+      </div>
+      ${all[name]?.text ? `<div style="color:var(--mut);margin-top:4px">${prose(all[name].text)}</div>` : ""}
+    </div>`).join("");
+}
+
+function drawDetail() {
+  const item = byUid[chosen];
+  if (!item) return `<p class="empty">Select an item.</p>`;
+  const part = (name, body) => body ? `<div class="label">${name}</div>${body}` : "";
+  const links = (rows, key) => rows?.length ? rows.map((r) => `
+    <div class="card"><span class="uidlink mono" data-uid="${esc(r[key])}">${esc(r[key])}</span>
+      &middot; ${esc(r.relation)} ${flags(r)}${key === "target"
+        ? ` <button class="thin" data-act="unrelate" data-target="${esc(r.target)}">Drop</button>`
+        : ""}</div>`).join("") : "";
+  const rest = Object.entries(item).filter(([k, v]) => !SHOWN.has(k) && !empty(v));
+
+  return `
+    <div class="mono" style="font-size:11px;color:var(--dim)">
+      ${esc(item.uid)} &middot; ${esc(item.status ?? "")}
+      ${item.stamp ? `&middot; ${esc(String(item.stamp).slice(0, 12))}` : ""}
+    </div>
+    ${handle(item) ? `<h2 style="margin:6px 0 0;font-size:17px">${esc(handle(item))}</h2>` : ""}
+    <p style="margin:8px 0 0">${prose(summary(item))}</p>
+    <div style="margin-top:10px">${chips({
+      type: item.type, verification: item.verification, priority: item.priority,
+      value_type: item.value_type, unit: item.unit, default: item.default,
+      aliases: item.aliases,
+    })}</div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button data-act="revise">Revise</button>
+      ${item.kind === "requirement" ? `<button data-act="relate">Relate</button>
+        <button data-act="family">Family</button>` : ""}
+      <button data-act="deprecate">Deprecate</button>
+      ${item.status === "draft" ? `<button data-act="delete">Delete</button>` : ""}
+    </div>
+    ${part("Rationale", item.rationale ? `<p>${prose(item.rationale)}</p>` : "")}
+    ${part("Acceptance criteria", (item.acceptance_criteria ?? []).map((c) => `
+      <div class="crit">
+        <div><b>GIVEN</b><span>${prose(c.given)}</span></div>
+        <div><b>WHEN</b><span>${prose(c.when)}</span></div>
+        <div><b>THEN</b><span>${prose(c.then)}</span></div>
+      </div>`).join(""))}
+    ${part("Members", item.entries || item.value
+      ? `${entries(item)}<button data-act="new-entry">Add a member</button>`
+      : "")}
+    ${part("Leans on", links(item.outgoing, "target"))}
+    ${part("Leaned on by", links(item.incoming, "source"))}
+    ${part("Concepts", (item.concepts ?? []).map((t) => `
+      <div class="card"><span class="uidlink mono" data-uid="${esc(t.uid)}">${esc(t.uid)}</span>
+        &mdash; <b>${esc(t.word)}</b> ${flags(t)}${acking(t)}
+        <div style="color:var(--mut);margin-top:4px">${prose(t.definition)}</div></div>`).join(""))}
+    ${part("Parameters", (item.parameters ?? []).map((p) => `
+      <div class="card"><span class="uidlink mono" data-uid="${esc(p.uid)}">${esc(p.uid)}</span>
+        &mdash; <b>${esc(p.name)}</b> ${flags(p)}${acking(p)}</div>`).join(""))}
+    ${part("Implemented by", (item.implementation ?? []).map((p) =>
+      `<div class="card mono">${esc(typeof p === "string" ? p : JSON.stringify(p))}</div>`).join(""))}
+    ${part("Verified by", (item.tests ?? []).map((p) =>
+      `<div class="card mono">${esc(typeof p === "string" ? p : JSON.stringify(p))}</div>`).join(""))}
+    ${part("References", (item.references ?? []).map((r) =>
+      `<div class="card">${render(r)}</div>`).join(""))}
+    ${rest.map(([k, v]) => part(k, `<div class="card">${render(v)}</div>`)).join("")}
+  `;
+}
+
+const CHOICES = {
+  type: ["", "functional", "non_functional", "constraint"],
+  verification: ["", "automated_test", "inspection", "analysis", "demonstration"],
+  priority: ["", "high", "medium", "low"],
+  status: ["", "draft", "approved", "deprecated", "superseded"],
+  relation: ["derives_from", "depends_on", "constrains", "supersedes", "conflicts_with"],
+  "value-type": ["", "duration", "size", "count", "ratio", "percentage",
+                 "currency", "boolean", "text"],
+  kind: ["requirement", "term", "parameter", "data"],
+};
+
+const kindOf = (uid) => byUid[uid]?.kind;
+
+// SHAPE mirrors reqctl's write.FIELDS and NEEDED its write.REQUIRED. A flag
+const SHAPE = {
+  requirement: [["text", "textarea"], ["status", "select"], ["type", "select"],
+                ["verification", "select"], ["priority", "select"],
+                ["rationale", "textarea"], ["criterion", "textarea"]],
+  term: [["status", "select"], ["term", "text"], ["definition", "textarea"],
+         ["alias", "textarea"]],
+  parameter: [["text", "textarea"], ["status", "select"], ["name", "text"],
+              ["value", "text"], ["value-type", "select"], ["unit", "text"],
+              ["default", "text"], ["rationale", "textarea"]],
+  data: [["text", "textarea"], ["status", "select"], ["name", "text"],
+         ["default", "text"], ["rationale", "textarea"]],
+};
+
+const NEEDED = {
+  requirement: ["text"],
+  term: ["term", "definition"],
+  parameter: ["text", "name", "value", "value-type"],
+  data: ["name"],
+};
+
+const REPEATED = new Set(["criterion", "alias"]);
+
+const MINTED_STATUS = ["approved", "draft"];
+
+const FORMS = {
+  revise: { title: "Revise" },
+  relate: { title: "Relate", fields: [["relation", "select"], ["target", "text"]] },
+  deprecate: { title: "Deprecate", fields: [] },
+  new: { title: "New" },
+  entry: { title: "Edit member", fields: [] },
+  "new-entry": { title: "Add a member", fields: [] },
+  "drop-entry": { title: "Drop member", fields: [] },
+  ack: { title: "Acknowledge", fields: [] },
+  unrelate: { title: "Drop relation", fields: [] },
+  delete: { title: "Delete", fields: [] },
+};
+
+const ENTRY_ACTS = new Set(["entry", "new-entry", "drop-entry"]);
+
+const fieldText = (value) =>
+  typeof value === "string" ? value : JSON.stringify(value);
+
+function pairsHtml(held) {
+  const rows = Object.entries(held ?? {});
+  if (!rows.length) rows.push(["", ""]);
+  return rows.map(([name, value]) => `
+    <div class="pair">
+      <input value="${esc(name)}" placeholder="field">
+      <input value="${esc(fieldText(value))}" placeholder="value">
+      <button type="button" class="thin drop" title="drop this field">&times;</button>
+    </div>`).join("");
+}
+
+function shapeOf(act, kind) {
+  return FORMS[act].fields ?? SHAPE[kind];
+}
+
+const HINTS = {
+  criterion: "GIVEN | WHEN | THEN, one per line",
+  alias: "one wording per line",
+};
+
+const criteriaText = (item) => (item?.acceptance_criteria ?? [])
+  .map((c) => `${c.given} | ${c.when} | ${c.then}`).join("\n");
+
+const HOLDS = { alias: "aliases", "value-type": "value_type" };
+
+const CLEARS = { rationale: "no-rationale", unit: "no-unit",
+                 default: "no-default", alias: "no-alias",
+                 criterion: "no-criteria" };
+
+const valueText = (held) =>
+  held.length === 1 ? String(held[0]) : `[${held.join(", ")}]`;
+
+function heldBy(item, name) {
+  if (!item) return "";
+  if (name === "criterion") return criteriaText(item);
+  const held = item[HOLDS[name] ?? name];
+  if (held === null || held === undefined) return "";
+  if (Array.isArray(held)) {
+    return name === "value" ? valueText(held) : held.join("\n");
+  }
+  return String(held);
+}
+
+const LINKED_WORD = /\[([^\]\n]+)\]\(([a-z][a-z0-9_]*)\)/g;
+
+function proseOf(item) {
+  const held = [item.text, item.definition, item.rationale];
+  held.push(criteriaText(item));
+  for (const fields of Object.values(item.entries ?? {})) {
+    for (const [name, value] of Object.entries(fields ?? {})) {
+      if (name !== "aliases") held.push(...(Array.isArray(value) ? value : [value]));
+    }
+  }
+  return held.filter((each) => typeof each === "string");
+}
+
+function wordsShown(uid) {
+  const seen = new Map();
+  for (const item of corpus) {
+    for (const text of proseOf(item)) {
+      for (const [, word, target] of text.matchAll(LINKED_WORD)) {
+        if (target === uid) seen.set(word, (seen.get(word) ?? 0) + 1);
+      }
+    }
+  }
+  return seen;
+}
+
+const PICKING = /\/([\w -]*)$/;
+
+function pickable() {
+  return corpus.flatMap((item) => {
+    if (item.kind === "term") {
+      return [item.term, ...(item.aliases ?? [])].filter(Boolean)
+        .map((word) => ({ show: word, insert: `[[${word}]]`, kind: item.kind }));
+    }
+    if (!item.name) return [];
+    return [{ show: item.name, insert: `\${${item.name}}`, kind: item.kind }];
+  });
+}
+
+function rewordHtml(uid, item) {
+  const own = item?.term ?? "";
+  const sentence = own && own[0].toUpperCase() + own.slice(1);
+  const rows = [...wordsShown(uid)]
+    .filter(([word]) => word !== own && word !== sentence);
+  if (!rows.length) return "";
+  return `<div class="field"><label>other words these links show</label>
+      ${rows.map(([word, count]) => `
+        <div class="pair">
+          <div class="mono" style="flex:1 1 0;min-width:0">${esc(word)}
+            <span class="chip">${count}</span></div>
+          <input data-word="${esc(word)}" placeholder="leave blank to keep it">
+        </div>`).join("")}</div>`;
+}
+
+function fieldsHtml(act, kind, item) {
+  return shapeOf(act, kind).map(([name, shape]) => {
+    const needed = act === "new" && (NEEDED[kind] ?? []).includes(name);
+    const label = `<label for="f-${name}">${esc(name)}${
+      needed ? ` <span style="color:var(--warn)">required</span>` : ""}</label>`;
+    const held = heldBy(item, name);
+    if (shape === "select") {
+      const blank = act === "new" ? "(default)" : "(none)";
+      const offered = act === "new" && name === "status" ? MINTED_STATUS
+        : (CHOICES[name] ?? [""]).filter((v) => v !== "" || !held);
+      const list = held && !offered.includes(held) ? [held, ...offered] : offered;
+      return `<div class="field">${label}<select id="f-${name}">${
+        list.map((v) => `<option value="${esc(v)}"${v === held ? " selected" : ""}>${
+          esc(v || blank)}</option>`).join("")
+      }</select></div>`;
+    }
+    if (shape === "textarea") {
+      const hint = HINTS[name] ? ` placeholder="${esc(HINTS[name])}"` : "";
+      return `<div class="field">${label}<textarea id="f-${name}"${hint}>${
+        esc(held)}</textarea></div>`;
+    }
+    return `<div class="field">${label}<input id="f-${name}" value="${esc(held)}"></div>`;
+  }).join("");
+}
+
+function formHtml(act, uid, kind, entry) {
+  const heading = act === "new" ? "New"
+    : ENTRY_ACTS.has(act) ? FORMS[act].title
+    : `${FORMS[act].title} this ${kind}`;
+  const picker = act !== "new" ? "" : `
+      <div class="field"><label for="f-kind">kind</label>
+        <select id="f-kind">${CHOICES.kind.map((k) =>
+          `<option value="${esc(k)}"${k === kind ? " selected" : ""}>${esc(k)}</option>`
+        ).join("")}</select></div>`;
+  return `
+    <form method="dialog">
+      <h3 style="margin:0 0 4px">${esc(heading)}</h3>
+      <div class="mono" style="font-size:11px;color:var(--dim);margin-bottom:12px">${
+        esc(uid ?? "reqctl mints the uid")}</div>
+      ${picker}
+      ${act === "deprecate"
+        ? `<p>Mark <span class="mono">${esc(uid)}</span> deprecated. The corpus states it; nothing is removed.</p>`
+        : act === "unrelate"
+        ? `<p>Remove the relation from <span class="mono">${esc(uid)}</span> to
+             <span class="mono">${esc(entry)}</span>. Both statements stay; only the
+             claim that one leans on the other goes.</p>`
+        : act === "delete"
+        ? `<p>Remove <span class="mono">${esc(uid)}</span> entirely. reqctl allows this
+             only while it is a draft nothing points at; once the corpus has stated
+             something, it is deprecated rather than removed.</p>`
+        : act === "ack"
+        ? `<p>Pin <span class="mono">${esc(entry)}</span> at what it now says, and
+             record that <span class="mono">${esc(uid)}</span> still holds against it.</p>
+           <p class="status">The suspicion is there because the reference moved. Read
+             it first: if the statement no longer holds, revise the statement instead.</p>`
+        : act === "drop-entry"
+        ? `<p>Remove <span class="mono">${esc(entry)}</span> from <span class="mono">${esc(uid)}</span>. Its fields go with it.</p>`
+        : ENTRY_ACTS.has(act)
+        ? `${act === "new-entry"
+             ? `<div class="field"><label for="f-entry-key">member</label>
+                  <input id="f-entry-key" placeholder="a name for it"></div>`
+             : `<div class="field"><label>member</label>
+                  <div class="mono">${esc(entry)}</div></div>`}
+           <div class="field"><label>fields</label>
+             <div id="pairs">${pairsHtml(byUid[uid]?.entries?.[entry])}</div>
+             <button type="button" id="another" class="thin">Another field</button></div>`
+        : `<div id="fields">${fieldsHtml(act, kind, byUid[uid])}</div>`}
+      ${act === "revise" ? rewordHtml(uid, byUid[uid]) : ""}
+      ${act === "revise" ? `<p class="status">Criteria are replaced by what is written
+        above, not added to; emptying the box removes them all.</p>` : ""}
+      ${act === "new" ? `<p class="status">Everything reqctl mints is a draft. Approved
+        here means this same pull request approves it.</p>` : ""}
+      <div class="field"><label for="f-title">pull request title</label>
+        <input id="f-title" value="${esc(defaultTitle(act, uid, kind, entry))}"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button value="close">Close</button>
+        <button id="hold" value="hold">Add to batch</button>
+        <button class="go" id="send" value="send">Open a pull request</button>
+      </div>
+    </form>`;
+}
+
+const defaultTitle = (act, uid, kind, entry) => ({
+  revise: `refactor(${uid}): revise the ${kind}`,
+  relate: `feat(${uid}): record a relation`,
+  deprecate: `refactor(${uid}): deprecate`,
+  new: `feat(corpus): propose a ${kind}`,
+  entry: `refactor(${uid}): revise ${entry}`,
+  "new-entry": `feat(${uid}): add a member`,
+  "drop-entry": `refactor(${uid}): drop ${entry}`,
+  ack: `refactor(${uid}): pin ${entry} where it now stands`,
+  unrelate: `refactor(${uid}): drop the relation to ${entry}`,
+  delete: `refactor(${uid}): remove the draft`,
+})[act];
+
+function payloadFor(act, uid, read, held) {
+  if (act === "unrelate") {
+    return { steps: [{ command: "unrelate", args: [uid, held.entry] }] };
+  }
+  if (act === "delete") {
+    return { steps: [{ command: "delete", args: [uid] }] };
+  }
+  if (act === "ack") {
+    return { steps: [{ command: "revise", args: [uid],
+                       options: { ack: held.entry } }] };
+  }
+  if (act === "drop-entry") {
+    return { steps: [{ command: "revise", args: [uid],
+                       options: { "drop-entry": held.entry } }] };
+  }
+  if (ENTRY_ACTS.has(act)) {
+    const key = act === "new-entry" ? read("entry-key").trim() : held.entry;
+    if (!key) throw new Error("the member needs a name");
+    const before = act === "new-entry" ? {} : (byUid[uid]?.entries?.[key] ?? {});
+    const named = held.pairs().map(([name]) => name).filter(Boolean);
+    const twice = named.find((name, at) => named.indexOf(name) !== at);
+    if (twice) throw new Error(`${twice} is listed twice`);
+    const now = new Map(held.pairs().filter(([name]) => name));
+    const set = [...now]
+      .filter(([name, value]) => !(name in before)
+                                 || fieldText(before[name]) !== value)
+      .map(([name, value]) => `${name}=${value}`);
+    const unset = Object.keys(before).filter((name) => !now.has(name));
+    if (!set.length && !unset.length) throw new Error("nothing was changed");
+    const flag = act === "new-entry" ? "new-entry" : "entry";
+    return { steps: [{ command: "revise", args: [uid],
+                       options: { [flag]: key, ...(set.length ? { set } : {}),
+                                  ...(unset.length ? { unset } : {}) } }] };
+  }
+  if (act === "deprecate") {
+    return { steps: [{ command: "revise", args: [uid], options: { status: "deprecated" } }] };
+  }
+  if (act === "relate") {
+    const target = read("target").trim();
+    if (!/^REQ-\d+$/.test(target)) throw new Error("only a requirement carries relations");
+    return { steps: [{ command: "relate", args: [uid, read("relation"), target] }] };
+  }
+  const kind = act === "new" ? read("kind") : kindOf(uid);
+  const item = act === "new" ? undefined : byUid[uid];
+  const options = {};
+  const stuck = [];
+  for (const [name] of shapeOf(act, kind)) {
+    const typed = read(name).trim();
+    if (item && typed === heldBy(item, name).trim()) continue;
+    if (!typed) {
+      if (item && CLEARS[name]) options[CLEARS[name]] = null;
+      else if (item) stuck.push(name);
+      continue;
+    }
+    options[name] = REPEATED.has(name)
+      ? typed.split("\n").map((line) => line.trim()).filter(Boolean)
+      : typed;
+  }
+  if (act === "new") {
+    const missing = NEEDED[kind].filter((name) => !options[name]);
+    if (missing.length) throw new Error(`a ${kind} needs ${missing.join(", ")}`);
+    const { status, ...rest } = options;
+    const steps = [{ command: "new", args: [kind], options: rest }];
+    if (status === "approved") {
+      steps.push({ command: "revise", args: ["$0"], options: { status } });
+    }
+    return { steps };
+  }
+  if (stuck.length) {
+    throw new Error(`reqctl cannot empty ${stuck.join(", ")}; put ${
+      stuck.length > 1 ? "those" : "that"} back, or deprecate the item`);
+  }
+  const reword = held.rewords().map(([word, becomes]) => {
+    if (word.includes("=")) {
+      throw new Error(`${word} cannot be reworded: reqctl reads old=new up to `
+                      + `the first =, and this word carries one`);
+    }
+    return `${word}=${becomes}`;
+  });
+  if (reword.length) options.reword = reword;
+  if (!Object.keys(options).length) throw new Error("nothing was changed");
+  return { steps: [{ command: "revise", args: [uid], options }] };
+}
+<!-- @req+ REQ-71729610@6No-zvUcqtY0 duwcld -->
+const runs = (query) =>
+  api(`/repos/${repo()}/actions/workflows/${FLOW}/runs?${query}`);
+
+async function dispatch(change, title, say) {
+  const seen = await runs("per_page=1");
+  const floor = seen.workflow_runs?.[0]?.id ?? 0;
+  say("Dispatching…");
+  await api(`/repos/${repo()}/actions/workflows/${FLOW}/dispatches`, {
+    method: "POST",
+    body: JSON.stringify({ ref: "main", inputs: { change: JSON.stringify(change), title } }),
+  });
+  say("Waiting for the run to start…");
+  let run = null;
+  for (let tries = 0; tries < 40 && !run; tries++) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const found = await runs("event=workflow_dispatch&per_page=10");
+    run = (found.workflow_runs ?? []).find((r) => r.id > floor) ?? null;
+  }
+  if (!run) throw new Error("the run never appeared; check the Actions tab");
+  say(`Run ${run.id} started. reqctl is writing the corpus…`);
+  for (let tries = 0; tries < 100; tries++) {
+    run = await api(`/repos/${repo()}/actions/runs/${run.id}`);
+    if (run.status === "completed") break;
+    await new Promise((r) => setTimeout(r, 4000));
+  }
+  if (run.conclusion !== "success") {
+    throw new Error(`the run ${run.conclusion ?? "did not finish"} — ${run.html_url}`);
+  }
+  const pulls = await api(
+    `/repos/${repo()}/pulls?state=open&head=${repo().split("/")[0]}:corpus/${run.id}`);
+  if (!pulls.length) {
+    throw new Error(`the run succeeded but opened no pull request — ${run.html_url}`);
+  }
+  return pulls[0].html_url;
+}
+<!-- @req- duwcld -->
+
+const KIN = { w: 168, h: 54, gapx: 20, gapy: 46 };
+
+function kinship() {
+  const up = {}, down = {}, side = {};
+  for (const item of corpus) {
+    for (const link of item.outgoing ?? []) {
+      if (link.relation === "derives_from") {
+        (up[item.uid] ??= []).push(link.target);
+        (down[link.target] ??= []).push(item.uid);
+      } else (side[item.uid] ??= []).push(link);
+    }
+  }
+  return { up, down, side };
+}
+
+function family(uid, { up, down }) {
+  const seen = new Set(), stack = [uid];
+  while (stack.length) {
+    const at = stack.pop();
+    if (seen.has(at)) continue;
+    seen.add(at);
+    stack.push(...(up[at] ?? []), ...(down[at] ?? []));
+  }
+  return seen;
+}
+
+function generations(clan, up) {
+  const gen = Object.fromEntries([...clan].map((at) => [at, 0]));
+  for (let pass = 0; pass < clan.size; pass++) {
+    let moved = false;
+    for (const at of clan) {
+      for (const over of up[at] ?? []) {
+        if (clan.has(over) && gen[over] + 1 > gen[at]) {
+          gen[at] = gen[over] + 1;
+          moved = true;
+        }
+      }
+    }
+    if (!moved) break;
+  }
+  return gen;
+}
+
+function arrange(clan, up) {
+  const gen = generations(clan, up);
+  const under = {}, roots = [];
+  for (const at of [...clan].sort()) {
+    const over = (up[at] ?? []).filter((p) => clan.has(p) && gen[p] < gen[at])
+      .sort((a, b) => gen[b] - gen[a] || a.localeCompare(b))[0];
+    if (over) (under[over] ??= []).push(at);
+    else roots.push(at);
+  }
+  const x = {};
+  let slot = 0;
+  const place = (at) => {
+    const kids = under[at] ?? [];
+    if (!kids.length) return void (x[at] = slot++);
+    kids.forEach((kid) => place(kid));
+    x[at] = (x[kids[0]] + x[kids[kids.length - 1]]) / 2;
+  };
+  for (const root of roots) {
+    place(root);
+    slot++;
+  }
+  return { gen, x };
+}
+
+function familyHtml(uid) {
+  const kin = kinship();
+  const clan = family(uid, kin);
+  const { gen, x } = arrange(clan, kin.up);
+  const { w, h, gapx, gapy } = KIN;
+  const spot = (at) => [x[at] * (w + gapx), gen[at] * (h + gapy)];
+  const wide = Math.max(...[...clan].map((at) => spot(at)[0])) + w;
+  const elbow = (over, under) => {
+    const [ax, ay] = spot(over), [bx, by] = spot(under);
+    return `M${ax + w / 2} ${ay + h} V${ay + h + gapy / 2} H${bx + w / 2} V${by}`;
+  };
+  const arc = (from, to) => {
+    const [ax, ay] = spot(from), [bx, by] = spot(to);
+    const [x1, y1] = [ax + w / 2, ay + h], [x2, y2] = [bx + w / 2, by + h];
+    const cy = Math.max(y1, y2) + Math.min(160, gapy / 2 + Math.abs(x2 - x1) / 5);
+    const at = (cy - y1) / (2 * cy - y1 - y2);
+    return [`M${x1} ${y1} Q${(x1 + x2) / 2} ${cy} ${x2} ${y2}`,
+            (1 - at) ** 2 * y1 + 2 * at * (1 - at) * cy + at ** 2 * y2];
+  };
+  const lines = [...clan].flatMap((at) => (kin.up[at] ?? [])
+    .filter((over) => clan.has(over))
+    .map((over) => `<path d="${elbow(over, at)}"/>`));
+  const sides = [];
+  let low = 0;
+  for (const at of showLinks ? clan : []) {
+    for (const link of kin.side[at] ?? []) {
+      if (!clan.has(link.target)) continue;
+      const [drawn, reach] = arc(at, link.target);
+      low = Math.max(low, reach);
+      sides.push(`<path class="side" marker-end="url(#tip)" d="${drawn}"
+        ><title>${esc(at)} ${esc(link.relation)} ${esc(link.target)}</title></path>`);
+    }
+  }
+  const tall = Math.max(low + 4, ...[...clan].map((at) => spot(at)[1] + h));
+  const away = corpus.flatMap((item) => (kin.side[item.uid] ?? [])
+      .map((link) => [item.uid, link.target]))
+    .filter(([from, to]) => clan.has(from) !== clan.has(to)).length;
+  const deep = Math.max(...Object.values(gen)) + 1;
+  const box = (at) => {
+    const item = byUid[at];
+    const [left, top] = spot(at);
+    return `<button class="node${at === uid ? " here" : ""}${
+        item.status === "deprecated" ? " gone" : ""}" data-uid="${esc(at)}"
+        style="left:${left}px;top:${top}px">
+        <span class="uid mono">${esc(at)} &middot; ${esc(item.status ?? "")}</span>
+        <span class="txt">${esc(plain(summary(item)))}</span>
+      </button>`;
+  };
+
+  return `
+    <form method="dialog" style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap">
+      <b class="mono">${esc(uid)}</b>
+      <span style="color:var(--mut)">${clan.size} in this family &middot; ${
+        deep} generation${deep === 1 ? "" : "s"}</span>
+      <button type="button" class="facet" id="sidelinks" aria-pressed="${showLinks}"
+        >depends_on and constrains</button>
+      <span style="margin-left:auto"><button value="close">Close</button></span>
+    </form>
+    ${clan.size === 1
+      ? `<p class="status">Nothing derives from this, and it derives from nothing.</p>`
+      : ""}
+    ${showLinks && away
+      ? `<p class="status">Not drawn: ${away} joining this family to a requirement outside it.</p>`
+      : ""}
+    <div class="treebox"><div class="tree" style="width:${wide}px;height:${tall}px">
+      <svg width="${wide}" height="${tall}"><defs><marker id="tip" viewBox="0 0 8 8"
+        refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"
+        ><path d="M0 0 L8 4 L0 8 z"/></marker></defs>${lines.join("")}${sides.join("")}</svg>
+      ${[...clan].map(box).join("")}
+    </div></div>`;
+}
+
+function openFamily() {
+  const box = document.createElement("dialog");
+  box.className = "wide";
+  document.body.append(box);
+  const paint = () => {
+    box.innerHTML = familyHtml(chosen);
+    box.querySelector(".node.here").scrollIntoView({ block: "center", inline: "center" });
+  };
+  box.addEventListener("click", (event) => {
+    if (event.target.id === "sidelinks") {
+      showLinks = !showLinks;
+      return paint();
+    }
+    const one = event.target.closest(".node");
+    if (!one || one.dataset.uid === chosen) return;
+    event.stopPropagation();
+    chosen = one.dataset.uid;
+    draw();
+    paint();
+  });
+  box.addEventListener("close", () => box.remove());
+  paint();
+  box.showModal();
+}
+
+function openForm(act, entry) {
+  const uid = act === "new" ? null : chosen;
+  let making = act === "new" ? kind : kindOf(uid);
+  const box = document.createElement("dialog");
+  box.innerHTML = formHtml(act, uid, making, entry);
+  document.body.append(box);
+  const pairs = () => [...box.querySelectorAll(".pair")].map((row) => {
+    const [name, value] = row.querySelectorAll("input");
+    return [name.value.trim(), value.value];
+  });
+  const rewords = () => [...box.querySelectorAll("[data-word]")]
+    .map((held) => [held.dataset.word, held.value.trim()])
+    .filter(([, becomes]) => becomes);
+  box.querySelector("#another")?.addEventListener("click", () => {
+    box.querySelector("#pairs").insertAdjacentHTML("beforeend", pairsHtml(null));
+  });
+  box.querySelector("#pairs")?.addEventListener("click", (event) => {
+    if (event.target.classList.contains("drop")) event.target.closest(".pair").remove();
+  });
+  const offer = (area) => {
+    if (area?.tagName !== "TEXTAREA") return;
+    const panel = area.nextElementSibling?.classList.contains("pick")
+      ? area.nextElementSibling
+      : area.insertAdjacentElement("afterend",
+          Object.assign(document.createElement("div"), { className: "pick" }));
+    const asked = PICKING.exec(area.value.slice(0, area.selectionStart));
+    const found = !asked ? [] : pickable()
+      .filter((held) => held.show.toLowerCase().includes(asked[1].toLowerCase()))
+      .slice(0, 8);
+    panel.hidden = !found.length;
+    panel.innerHTML = found.map((held) =>
+      `<button type="button" class="thin pickone" data-insert="${esc(held.insert)}"
+        >${esc(held.show)} <span class="chip">${esc(held.kind)}</span></button>`
+    ).join("");
+  };
+  for (const when of ["input", "keyup", "click"]) {
+    box.addEventListener(when, (event) => offer(event.target));
+  }
+  box.addEventListener("click", (event) => {
+    const one = event.target.closest(".pickone");
+    if (!one) return;
+    const panel = one.closest(".pick");
+    const area = panel.previousElementSibling;
+    const at = area.selectionStart;
+    const asked = PICKING.exec(area.value.slice(0, at));
+    panel.hidden = true;
+    if (!asked) return area.focus();
+    const kept = area.value.slice(0, asked.index) + one.dataset.insert;
+    area.value = kept + area.value.slice(at);
+    area.selectionStart = area.selectionEnd = kept.length;
+    area.focus();
+  });
+  box.querySelector("#f-kind")?.addEventListener("change", (event) => {
+    making = event.target.value;
+    box.querySelector("#fields").innerHTML = fieldsHtml(act, making, byUid[uid]);
+    box.querySelector("#f-title").value = defaultTitle(act, uid, making);
+  });
+  const note = document.createElement("p");
+  note.className = "status";
+  note.id = "say";
+  box.append(note);
+  const say = (text, bad = false) => {
+    note.textContent = text;
+    note.classList.toggle("bad", bad);
+  };
+  box.addEventListener("close", () => box.remove());
+  const read = (name) => box.querySelector(`#f-${name}`)?.value ?? "";
+  const composed = () => payloadFor(act, uid, read, { pairs, entry, rewords });
+  box.querySelector("#hold").addEventListener("click", (event) => {
+    event.preventDefault();
+    let change;
+    try {
+      change = composed();
+    } catch (broken) {
+      return say(broken.message, true);
+    }
+    batch.push({ uid, stamp: uid ? byUid[uid]?.stamp : null,
+                 title: read("title") || defaultTitle(act, uid, making, entry),
+                 steps: change.steps });
+    notice = keepBatch();
+    box.close();
+    draw();
+  });
+  const send = box.querySelector("#send");
+  send.addEventListener("click", async (event) => {
+    event.preventDefault();
+    let change;
+    try {
+      change = composed();
+    } catch (broken) {
+      return say(broken.message, true);
+    }
+    send.disabled = true;
+    try {
+      const url = await dispatch(
+        change, read("title") || defaultTitle(act, uid, making, entry), say);
+      note.innerHTML = `Opened: <a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(url)}</a>`;
+    } catch (broken) {
+      say(broken.message, true);
+      send.disabled = false;
+    }
+  });
+  box.showModal();
+}
+function queued() {
+  if (batch.length) return batch.length;
+  try {
+    const waiting = JSON.parse(localStorage.getItem(BATCH) || "[]");
+    return Array.isArray(waiting) ? waiting.length : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function changeRepo(onRefusal) {
+  const waiting = queued();
+  <!-- @req+ REQ-83258052@QganBESCAGJe i3og6d -->
+  if (waiting) {
+    return onRefusal(`${repo()} has ${waiting} queued change${waiting > 1 ? "s" : ""}: `
+      + "open the pull request or discard them before changing the repository");
+  }
+  <!-- @req- i3og6d -->
+  <!-- @req+ REQ-12062416@zyf6QGAMGROf gm2ond -->
+  <!-- @req> REQ-17728624@TD_EImR1TLzY 7mbb2p -->
+  localStorage.removeItem(PLACE);
+  setupScreen("");
+  <!-- @req- gm2ond -->
+}
+
+function handed() {
+  const given = new URLSearchParams(location.search).get("repo");
+  if (given === null) return "";
+  history.replaceState(null, "", location.pathname);
+  if (!REPO_FORM.test(given) || given === repo()) return "";
+  <!-- @req+ REQ-83258052@QganBESCAGJe xyjt53 -->
+  const waiting = queued();
+  if (waiting) {
+    return `${repo()} has ${waiting} queued change${waiting > 1 ? "s" : ""}: `
+      + `open the pull request or discard them before opening ${given}`;
+  }
+  <!-- @req- xyjt53 -->
+  <!-- @req> REQ-53764133@hNDAdKGPLVUD vuiash -->
+  try { localStorage.setItem(PLACE, given); } catch (broken) {
+    return `the browser would not remember ${given}: ${broken.message}`;
+  }
+  return "";
+}
+
+function forgetToken() {
+  <!-- @req> REQ-45005873@aGI8YILcA3YW poosiz -->
+  localStorage.removeItem(KEY);
+  setupScreen("The token was forgotten.");
+}
+
+function setupScreen(problem) {
+  const place = repo();
+  <!-- @req+ REQ-80115998@5Q31K4gVM_b7 rhi3cu -->
+  document.getElementById("app").innerHTML = `
+    <div class="setup">
+      <h1 style="font-size:18px">requirements</h1>
+      <p style="color:var(--mut)">This page reads the corpus and proposes changes to it.
+        Every change is written by <span class="mono">reqctl</span> in CI and arrives as a
+        pull request you review. Nothing here edits a requirement file.</p>
+      ${problem ? `<div class="note" id="problem">${esc(problem)}</div>` : ""}
+      ${place ? `<p>Repository: <span class="mono">${esc(place)}</span>
+        <button class="thin" id="change">Change repository</button></p>` : `
+      <input id="place" placeholder="owner/repo" autocomplete="off" spellcheck="false">`}
+      ${token() ? `<p>A token is saved in this browser.
+        <button class="thin" id="forget">Forget token</button></p>` : `<ol>
+        <li>On any account that can reach ${place ? `<span class="mono">${esc(place)}</span>`
+          : "the repository"}, create a fine-grained personal access token scoped to it.</li>
+        <li>Give it exactly three repository permissions:
+          <b>Contents: read</b>, <b>Actions: read and write</b>, <b>Pull requests: read</b>.</li>
+        <li>Paste it below. It is kept in this browser only and never leaves it
+          except as an <span class="mono">Authorization</span> header to GitHub.</li>
+      </ol>
+      <input id="tok" type="password" placeholder="github_pat_…" autocomplete="off">`}
+      <button class="go" id="save">Save and load the corpus</button>
+      <div class="note">Anyone with this device can use this token to dispatch a change.
+        What that opens is a pull request authored by the app, not by you, and it still
+        needs a review before anything merges.</div>
+    </div>`;
+  <!-- @req- rhi3cu -->
+  const tok = document.getElementById("tok");
+  const entry = document.getElementById("place");
+  const save = () => {
+    const named = entry ? entry.value.trim() : place;
+    const held = tok ? tok.value.trim() : token();
+    if (!named || !held) {
+      return setupScreen(`Enter ${named ? "the token" : "the repository as owner/repo"} to continue`);
+    }
+    <!-- @req+ REQ-89638829@KyTuFztut6dw vcqk3a -->
+    if (!REPO_FORM.test(named)) {
+      return setupScreen(`${named} is not a repository: write it as owner/repo`);
+    }
+    <!-- @req- vcqk3a -->
+    <!-- @req+ REQ-38789214@OMx9lVswwRCe xqb2qr -->
+    localStorage.setItem(PLACE, named);
+    localStorage.setItem(KEY, held);
+    <!-- @req- xqb2qr -->
+    start();
+  };
+  document.getElementById("save").addEventListener("click", save);
+  document.getElementById("change")?.addEventListener("click", () => changeRepo(setupScreen));
+  document.getElementById("forget")?.addEventListener("click", forgetToken);
+  for (const field of [tok, entry]) {
+    field?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") save();
+    });
+  }
+}
+
+function drawBatch() {
+  if (!batch.length) return "";
+  return `<div class="note" id="tray" style="margin:10px 14px 0">
+      <b>${batch.length} change${batch.length > 1 ? "s" : ""} waiting</b>
+      <ol style="margin:6px 0 8px;padding-left:20px">${
+        batch.map((held) => `<li>${esc(held.title)}</li>`).join("")}</ol>
+      <div style="display:flex;gap:8px">
+        <button class="go" id="send-batch">Open one pull request</button>
+        <button class="thin" id="drop-batch">Discard</button>
+      </div>
+      <p class="status" id="tray-say" style="padding:8px 0 0"></p>
+    </div>`;
+}
+
+function draw() {
+  document.getElementById("app").innerHTML = `
+    <header>
+      <h1>requirements</h1>
+      <div class="grow"><input type="search" id="q" value="${esc(query)}"
+        placeholder="search statements, uids, handles"></div>
+      <button id="new">New</button>
+      <button id="reload">Reload</button>
+      <button id="change">Change repository</button>
+      <button id="forget">Forget token</button>
+    </header>
+    ${notice ? `<div class="note" id="notice" style="margin:10px 14px 0">${esc(notice)}</div>` : ""}
+    ${drawBatch()}
+    ${drawFacets()}
+    <main>
+      <div class="rows" id="rows">${drawRows()}</div>
+      <aside id="detail">${drawDetail()}</aside>
+    </main>`;
+
+  const q = document.getElementById("q");
+  q.addEventListener("input", () => {
+    query = q.value;
+    document.getElementById("rows").innerHTML = drawRows();
+  });
+  document.getElementById("reload").addEventListener("click", () => start());
+  document.getElementById("new").addEventListener("click", () => openForm("new"));
+  document.getElementById("change").addEventListener("click", () => changeRepo((said) => {
+    notice = said;
+    draw();
+  }));
+  document.getElementById("forget").addEventListener("click", forgetToken);
+  document.getElementById("drop-batch")?.addEventListener("click", () => {
+    batch = [];
+    notice = keepBatch();
+    draw();
+  });
+  const send = document.getElementById("send-batch");
+  send?.addEventListener("click", async () => {
+    const note = document.getElementById("tray-say");
+    const say = (text, bad = false) => {
+      note.textContent = text;
+      note.classList.toggle("bad", bad);
+    };
+    const stale = batch.filter((held) =>
+      held.uid && held.stamp && byUid[held.uid]?.stamp !== held.stamp);
+    if (stale.length) {
+      return say(`${stale.map((held) => held.uid).join(", ")} moved since `
+                 + `${stale.length > 1 ? "these were" : "this was"} held; reload `
+                 + `and compose against what the corpus says now`, true);
+    }
+    send.disabled = true;
+    const title = batch.length === 1 ? batch[0].title
+      : `feat(corpus): ${batch.length} changes from the portal`;
+    try {
+      const url = await dispatch({ steps: batched() }, title, say);
+      batch = [];
+      const kept = keepBatch();
+      document.getElementById("tray").innerHTML =
+        `Opened: <a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(url)}</a>`
+        + (kept ? `<p class="status bad">${esc(kept)}</p>` : "");
+    } catch (broken) {
+      say(broken.message, true);
+      send.disabled = false;
+    }
+  });
+}
+
+function onClick(event) {
+  const facet = event.target.closest("[data-kind]");
+  if (facet) {
+    kind = facet.dataset.kind;
+    return draw();
+  }
+  const act = event.target.closest("[data-act]");
+  if (act?.dataset.act === "family") return openFamily();
+  if (act) return openForm(act.dataset.act,
+                             act.dataset.entry ?? act.dataset.ack ?? act.dataset.target);
+  const holder = event.target.closest("[data-uid]");
+  const at = holder ? holder.dataset.uid.split(".")[0] : "";
+  if (byUid[at]) {
+    chosen = at;
+    if (byUid[chosen].kind !== kind) kind = byUid[chosen].kind;
+    draw();
+    document.getElementById("detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+}
+async function start(said = "") {
+  <!-- @req> REQ-16910419@bcXxnTl6FuGy 2luwj6 -->
+  if (!token() || !repo()) return setupScreen(said);
+  notice = said;
+  document.getElementById("app").innerHTML =
+    `<p class="status">Loading the corpus…</p>`;
+  try {
+    <!-- @req> REQ-16910419@bcXxnTl6FuGy lobaq4 -->
+    const raw = await api(`/repos/${repo()}/contents/corpus.json?ref=${VIEW}`, { raw: true });
+    corpus = JSON.parse(raw);
+  } catch (broken) {
+    return setupScreen(`${broken.message} — if the ${VIEW} branch does not exist yet, merge to main once to publish it.`);
+  }
+  corpus.sort((a, b) => a.uid.localeCompare(b.uid));
+  byUid = Object.fromEntries(corpus.map((i) => [i.uid, i]));
+  if (!byUid[chosen]) chosen = null;
+  try {
+    const waiting = JSON.parse(localStorage.getItem(BATCH) || "[]");
+    batch = Array.isArray(waiting) ? waiting : [];
+  } catch (broken) {
+    batch = [];
+    notice = broken instanceof SyntaxError
+      ? `The waiting batch was unreadable, so it was discarded: ${broken.message}`
+      : `The browser would not open its storage, so nothing was waiting or was `
+        + `discarded: ${broken.message}`;
+    try {
+      localStorage.removeItem(BATCH);
+    } catch (worse) {
+      notice += ` It could not be cleared either: ${worse.message}`;
+    }
+  }
+  draw();
+}
+
+document.body.addEventListener("click", onClick);
+<!-- @req> REQ-58466257@mDNTJurzxVOx clfbsa -->
+start(handed());
+</script>

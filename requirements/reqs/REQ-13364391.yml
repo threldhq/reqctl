@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a link naming an entry the item does not hold
+  then: the product shows the link as written
+  when: the statement is exported
+- given: a link naming an entry of an item that holds no entries
+  then: the product shows the link as written
+  when: the statement is exported
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a statement carrying a link the corpus cannot resolve is exported, the
+  product shall show the link unchanged.
+type: functional
+verification: inspection

@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a term the corpus holds, renamed and then renamed again
+  then: the item records both names the term carried
+  when: the corpus is read
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When an item is renamed, the product shall record on the item every name the
+  item has carried.
+type: functional
+verification: inspection

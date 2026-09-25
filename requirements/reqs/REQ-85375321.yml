@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: two items the corpus holds, each having carried one name
+  then: the product refuses the generation
+  when: a baseline is generated
+assessed:
+  REQ-94917590: UDuLOE8d-fQZFA_CiyI7B_S8kBHUl4qYGonNRQX4EhQ
+priority: medium
+relations:
+  REQ-94917590: depends_on
+status: approved
+text: If a baseline would be generated while more than one item the corpus holds has
+  carried the same name, then the product shall refuse the generation.
+type: functional
+verification: inspection

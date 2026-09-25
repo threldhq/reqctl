@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) whose covered lines have moved
+    to another file and changed
+  then: the product matches it to the citation naming the same [citation identity](citation_identity)
+  when: the product compares the code against the newest state the branch and the
+    default branch both carry
+assessed:
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: When the product compares the code against the newest state the branch and the
+  default branch both carry, the product shall match each [statement citation](statement_citation)
+  to the [statement citation](statement_citation) naming the same [citation identity](citation_identity)
+  where that state carries one.
+type: functional
+verification: inspection

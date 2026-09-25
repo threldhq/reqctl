@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a repository stating its own schema for a kind
+  then: each item of that kind is read through the repository's schema and not the
+    packaged one
+  when: the corpus is validated
+- given: a repository whose own schema for a kind does not compile
+  then: the product reports that schema as broken rather than falling back to the
+    packaged one
+  when: the corpus is validated
+assessed:
+  REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
+priority: high
+rationale: The packaged schema is a default, not a fixture. A repository whose corpus
+  needs a field the default does not state writes its own and is governed by it.
+relations:
+  REQ-44451070: constrains
+status: approved
+text: Where a repository states a schema for a kind, the product shall read that schema
+  in place of the kind schema it ships with.
+type: functional
+verification: inspection

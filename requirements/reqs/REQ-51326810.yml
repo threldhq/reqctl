@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: an entry field the governing schema does not declare as prose, whose value
+    links a term the field is not named for
+  then: the product names the field and states renaming the field or unlinking the
+    term as the fix
+  when: the corpus is validated
+- given: an entry field the governing schema declares as prose, whose value links
+    a term the field is not named for
+  then: the product accepts the field
+  when: the corpus is validated
+- given: an entry field named definition that the governing schema does not declare
+    as prose, whose value links a term the field is not named for
+  then: the product refuses the field
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the value of an entry field the governing schema does not declare as prose
+  links a term the field is not named for, then the product shall refuse the field.
+type: functional
+verification: inspection

@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) carried in a pair of comments
+  then: neither line holding one of the comments remains
+  when: the product removes the citation by its [citation identity](citation_identity)
+- given: a [statement citation](statement_citation) carried in one comment
+  then: the line holding the comment no longer remains
+  when: the product removes the citation by its [citation identity](citation_identity)
+assessed:
+  REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
+  REQ-44424329: --ePOFus7t2HMD_69LLBgqXqfpK4lhrNikDYNlXE3H8
+  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-42668747: depends_on
+  REQ-44424329: depends_on
+  REQ-52925332: depends_on
+status: approved
+text: When the product removes the [statement citation](statement_citation) naming
+  a [citation identity](citation_identity), the product shall delete every line holding
+  a comment that carries the citation.
+type: functional
+verification: inspection

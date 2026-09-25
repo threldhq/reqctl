@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a coverage finding quoting a fragment that falls inside one of the owner's
+    words
+  then: the product refuses the findings
+  when: the findings are checked
+- given: a coverage finding quoting the owner's words with a curly apostrophe where
+    the owner typed a straight one
+  then: the product accepts the findings
+  when: the findings are checked
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a coverage finding is checked against the owner's words, the product shall
+  match the quote at word boundaries and with punctuation normalised.
+type: functional
+verification: inspection

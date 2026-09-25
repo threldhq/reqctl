@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a dictionary item two of whose entries state a field true
+  then: the address shows both entries
+  when: context is asked for a statement addressing the item by that field
+- given: a dictionary item holding one entry that states a field true, one that states
+    the field false and one that does not carry the field
+  then: the address shows the entry stating the field true and neither of the others
+  when: context is asked for a statement addressing the item by that field
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: Where a statement addresses a dictionary item by a field the item's entries
+  carry, the product shall resolve the address to the entries that state the field
+  true.
+type: functional
+verification: inspection

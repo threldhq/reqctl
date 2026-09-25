@@ -1,0 +1,11 @@
+assessed:
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+entries:
+  citation_digest:
+    aliases:
+    - citation digests
+    definition: A value the product takes over the lines a [statement citation](statement_citation)
+      covers when it reads the code, and writes nowhere.
+    word: citation digest
+kind: term
+status: approved

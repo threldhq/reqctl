@@ -1,0 +1,12 @@
+{
+  "name": "reqctl",
+  "owner": {
+    "name": "reqctl"
+  },
+  "plugins": [
+    {
+      "name": "reqctl",
+      "source": "./.claude"
+    }
+  ]
+}

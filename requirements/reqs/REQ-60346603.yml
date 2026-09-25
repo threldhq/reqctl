@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: lines a [statement citation](statement_citation) is to cover
+  then: the product writes the comments carrying the citation
+  when: the product cites the requirement at the lines
+assessed:
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: When the product cites a requirement at lines of code, the product shall write
+  the comments that carry the [statement citation](statement_citation).
+type: functional
+verification: inspection

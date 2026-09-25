@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: code opening a pair of comments carrying a [statement citation](statement_citation)
+    that no comment closes
+  then: the product refuses the code
+  when: the product reads the code
+- given: code closing a [statement citation](statement_citation) that no comment opens
+  then: the product refuses the code
+  when: the product reads the code
+- given: code carrying a [statement citation](statement_citation) in one comment with
+    a [code statement](code_statement) after it
+  then: the product refuses nothing for want of a closing comment
+  when: the product reads the code
+assessed:
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: If the code opens a pair of comments carrying a [statement citation](statement_citation)
+  and no comment closes it, or closes a [statement citation](statement_citation) no
+  comment opens, then the product shall refuse the code.
+type: functional
+verification: inspection

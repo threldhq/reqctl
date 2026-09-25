@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a corpus stating a default model and no model for a role
+  then: that role uses the default model rather than the one the product ships
+  when: the challenge is prepared
+- given: a corpus stating a default model and a model for one role
+  then: that role uses its own model and every other uses the default
+  when: the challenge is prepared
+assessed:
+  REQ-68127788: bLvPproYZMB0vf0e7UaFGU1sLk-Lr1PtgMv6wvQRhSc
+priority: high
+rationale: A repository overriding every role writes one model rather than repeating
+  it per role, and may still name one role's model on its own.
+relations:
+  REQ-68127788: constrains
+status: approved
+text: Where the corpus states a default model for challenge roles, the product shall
+  use it for every role the corpus states no model for.
+type: functional
+verification: inspection

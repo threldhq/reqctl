@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run
+  then: the prompt states that the findings file is the agent only output
+  when: the coverage prompt is built
+- given: a run
+  then: the prompt states that no note per item is written
+  when: the coverage prompt is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the coverage prompt is built, the product shall state in the prompt that
+  the findings file is the agent's only output.
+type: functional
+verification: inspection

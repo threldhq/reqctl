@@ -1,0 +1,179 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "reqctl/dictionary.schema.yaml"
+title: Dictionary item
+description: >-
+  A TERM, PARAM or DATA item file: a dictionary of entries, the entry key its
+  identity. What prose may do with an entry is decided by its fields -- a
+  renderable value substitutes through ${...}, a definition annotates through
+  [...](...). The per-kind rules are reqctl's checks: a term holds exactly
+  one entry; a parameter's keys parse as its value_type; a default names an
+  existing entry; an entry
+  key may not shadow an item-level field name; a parameter or data item
+  carries a name, a term never does -- a term states the word it is known by,
+  and its entry key is the handle that addresses it.
+type: object
+additionalProperties: false
+
+required: [kind, status, entries]
+
+properties:
+
+  status:
+    enum: [draft, approved, deprecated, superseded]
+
+  kind:
+    enum: [term, parameter, data]
+    description: >-
+      What the item is. A named item carries no prefix to say it, so the file
+      states it and the folder it sits in holds the statement to that: an item
+      in params/ that states data is refused, not judged as one. An item still
+      named for a UID is said by the prefix, which answers first. Not in the
+      item stamp: it selects which rules apply. A parameter that is a data
+      item is refiled with `reqctl refile`, which moves the file and the
+      statement together and drops the value_type the other kind does not
+      carry; the name is the identity, so nothing addressing it moves.
+
+  name:
+    type: string
+    pattern: "^[a-z][a-z0-9_]*$"
+    description: >-
+      The name the item answers to and the address prose carries: ${name} is
+      stored as it is written. It is the filename too, so renaming is `reqctl
+      rename`, which moves the file and rewrites every reference with it. The
+      field is not in the item stamp; the identity it forms is.
+
+  carried:
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      pattern: "^[a-z][a-z0-9_]*$"
+    description: >-
+      Every name this item answered to before the one it carries now, written
+      by `reqctl rename` and never by hand. A baseline states a named item by
+      its name, so a rename leaves every earlier baseline stating a name the
+      corpus no longer holds; this is what reads such a name back to the item
+      that wore it. A term carries the field too, its name being its sole entry
+      key. Not in the item stamp: what the item used to be called does not
+      change what it states, and stamping it would make every citation suspect
+      for a rename.
+
+  text:
+    type: string
+    minLength: 1
+    x-prose: true
+    description: >-
+      What the item as a whole denotes, in one line, where the entries alone
+      do not say it. May link a term or reference a parameter, exactly as a
+      statement does. In the item stamp.
+
+  value_type:
+    enum: [duration, size, count, ratio, percentage, currency, boolean, text]
+    description: >-
+      Parameters only: the kind every entry key parses as. In the item stamp.
+
+  unit:
+    type: string
+    minLength: 1
+    description: >-
+      Parameters only. Required for duration, size, percentage and currency;
+      forbidden for the rest. SI or ISO-4217 symbol. One unit for the whole
+      item, carried by every entry key: 5s in a set whose unit is ms is
+      written 5000. In the item stamp.
+
+  default:
+    type: string
+    minLength: 1
+    description: >-
+      The entry ${name.default} selects. Must name an existing entry, and no
+      entry may be keyed default, so the flag cannot dangle. In the item
+      stamp.
+
+  rationale:
+    type: string
+    x-prose: true
+    description: >-
+      Where the item comes from -- a contract, a benchmark, an incident.
+      May link a term or reference a parameter, exactly as the text does.
+      Excluded from the stamps.
+
+  entries:
+    type: object
+    minProperties: 1
+    description: >-
+      Identity to fields. reqctl writes every key as a string; propertyNames
+      carries type string because an unquoted YAML key arrives as a number
+      and would skip a bare check. A key may not shadow a name reqctl
+      reserves -- default, pinned, text, name --
+      reqctl's check. An entry's fields are in its entry stamp -- except a term's
+      word and aliases, which are display and policing, not meaning. A field
+      may hold a reference or a list of them: prose() walks entries, so
+      ${...} inside a field binds exactly as it does in a sentence. A field may
+      also hold entries of its own, addressed name.entry.field.key, for a
+      subject whose parts are entries rather than values -- the properties a
+      type carries. What a field may hold does not change with how deep it
+      sits.
+    propertyNames:
+      type: string
+      minLength: 1
+    additionalProperties: {$ref: "#/$defs/entry"}
+
+  assessed:
+    type: object
+    description: >-
+      Pins, dependency address to the stamp it was assessed against. An
+      address is the name the item carries, or that name dot an entry key for
+      the entry's stamp; a term is pinned by its bare name, its sole entry
+      implied. Absent or stale means SUSPECT: reread both, then `reqctl revise
+      UID --ack`. Written by tooling, never by hand.
+    propertyNames:
+      pattern: "^[a-z][a-z0-9_]*(\\..+)?$"
+    additionalProperties:
+      type: string
+      minLength: 1
+
+$defs:
+
+  entry:
+    type: object
+    additionalProperties: {$ref: "#/$defs/field"}
+    properties:
+      definition:
+        type: string
+        minLength: 1
+        x-prose: true
+        description: >-
+          What the entry means, in prose. May link a term or reference a
+          parameter; a chain of definitions may not circle back on itself.
+      aliases:
+        type: array
+        uniqueItems: true
+        items: {type: string, minLength: 1}
+        description: >-
+          Other wordings of a term's word, including plurals. Terms only.
+      unclaimed:
+        type: object
+        additionalProperties: {type: string}
+        description: >-
+          Phrases holding the term's word or an alias that do not state the
+          term, each to its reason. Prose may state them unlinked. Terms only.
+      name:
+        type: string
+        minLength: 1
+        maxLength: 40
+        description: >-
+          The string the product shows for this entry. A designation, not
+          prose: the glossary does not police it, so a sentence written here
+          would carry a term past the link it owes. The bound is what stops
+          that -- the longest label the corpus holds is ten characters.
+
+  field:
+    type: [string, number, boolean, array, object]
+    items: {type: [string, number, boolean]}
+    propertyNames:
+      type: string
+      minLength: 1
+    additionalProperties: {$ref: "#/$defs/entry"}
+    description: >-
+      A value, a list of values, or entries the field holds in its own right.
+      Which it is, is read from what is written: only an object is entries.

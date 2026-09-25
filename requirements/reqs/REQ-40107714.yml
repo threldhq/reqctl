@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: the folder the numbered layout used holding one baseline file
+  then: the product names the file
+  when: baseline --check is run
+- given: the folder the numbered layout used holding two baseline files
+  then: the product names both files
+  when: baseline --check is run
+- given: a corpus holding no baseline file of the numbered layout
+  then: the product names no such file
+  when: baseline --check is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the baseline is checked while the corpus holds a baseline file of the numbered
+  layout, then the product shall name every such file.
+type: functional
+verification: inspection

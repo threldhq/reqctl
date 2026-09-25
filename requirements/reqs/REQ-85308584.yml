@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a draft statement carrying a word an approved term defines, unlinked
+  then: the fault validate states for an unlinked term is reported
+  when: the statement is linted
+- given: a draft statement carrying two shalls
+  then: the fault validate states for more than one shall is reported
+  when: the statement is linted
+- given: any draft statement
+  then: the corpus is unchanged
+  when: the statement is linted
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a draft statement is linted, the product shall report, without writing
+  to the corpus, every fault for which validate would refuse the statement.
+type: functional
+verification: inspection

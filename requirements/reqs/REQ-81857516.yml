@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a corpus holding a symlink pointing at a directory that contains the symlink
+  then: the product walks the directory once
+  when: the corpus is walked
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the product walks a corpus holding a symlink that closes a cycle, the product
+  shall walk each directory once.
+type: functional
+verification: inspection

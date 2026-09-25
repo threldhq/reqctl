@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run whose shard holds corpus items
+  then: the job prompt states every item that shard holds
+  when: the run is built
+- given: a run whose shard holds an item larger than the shard bound
+  then: the job prompt states that item whole
+  when: the run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a job prompt is built, the product shall state in the prompt every corpus
+  item the job is judged against.
+type: functional
+verification: inspection

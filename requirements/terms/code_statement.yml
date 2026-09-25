@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  code_statement:
+    aliases:
+    - code statements
+    definition: A unit the language the code is written in reads as one statement,
+      together with every line a block the unit opens holds.
+    word: code statement
+kind: term
+status: approved

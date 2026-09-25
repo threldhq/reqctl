@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a run holding three proposals
+  then: one recall prompt states the three proposals as the shard, so that each is
+    recalled against the other two
+  when: the run is built
+- given: a run holding one proposal
+  then: no sibling shard is built
+  when: the run is built
+assessed:
+  REQ-90454282: Hn_cCdBHt6FCgTVr7h_FwY_DQr1NfJSmIlaX7gNlDxM
+priority: medium
+relations:
+  REQ-90454282: derives_from
+status: approved
+text: When a run is built, the product shall state the run's proposals as one recall
+  shard apart from the corpus.
+type: functional
+verification: inspection

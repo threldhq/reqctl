@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a repository is remembered
+  then: the product reads it from that repository and no other
+  when: the corpus is loaded
+- given: no repository is remembered
+  then: the product reads no repository until one is entered
+  when: the [portal](portal) is opened
+assessed:
+  REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-38789214: depends_on
+status: approved
+text: The product shall read the corpus only from the remembered repository.
+type: functional
+verification: inspection

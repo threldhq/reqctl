@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a baseline stating a name, and a corpus holding exactly one item that records
+    that name as a name the item carried
+  then: the product does not refuse
+  when: a baseline is generated
+assessed:
+  REQ-44642786: TqRUT-VDn-ps_LzEHAIHw9Dtkpqnw8r02ffj22913E4
+  REQ-60430571: hgaKmodLJQdGahO5_r15MnxDafoE1KVigi8X6RypMwM
+  REQ-80226740: PZjI5BrUS5hqmfMUgoT6TSIUyFbu9MT_JM0W8qyM5Nk
+  REQ-94917590: UDuLOE8d-fQZFA_CiyI7B_S8kBHUl4qYGonNRQX4EhQ
+priority: medium
+relations:
+  REQ-44642786: constrains
+  REQ-60430571: constrains
+  REQ-80226740: constrains
+  REQ-94917590: depends_on
+status: approved
+text: Where a baseline states a name exactly one item the corpus holds records as
+  a name the item carried, the product shall take the baseline as stating that item.
+type: functional
+verification: inspection

@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a corpus in which no item is approved
+  then: the product refuses and states that a baseline of no item states no obligation
+  when: baseline --generate is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a baseline would be generated over a corpus holding no approved item, then
+  the product shall refuse the generation.
+type: functional
+verification: inspection

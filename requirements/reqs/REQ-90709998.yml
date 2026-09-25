@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: the [portal](portal) as bundled in the reqctl wheel
+  then: no owner/repo is written in it
+  when: its source is read
+assessed:
+  REQ-80115998: 5Q31K4gVM_b7814S0s7RqdPwYFiAEpqF6SqJLiWlcJU
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-80115998: constrains
+status: approved
+text: The product shall fix no repository in the source of the [portal](portal).
+type: functional
+verification: automated_test

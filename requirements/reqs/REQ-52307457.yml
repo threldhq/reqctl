@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a baseline file holding an unresolved merge between two baselines
+  then: the product refuses and names the number each side of the merge claims
+  when: baseline --check is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a baseline file holding an unresolved merge between two baselines would be
+  checked, then the product shall refuse the check.
+type: functional
+verification: inspection

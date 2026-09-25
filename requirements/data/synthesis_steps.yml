@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  coverage: {}
+  plan: {}
+  probe: {}
+  verdicts: {}
+kind: data
+name: synthesis_steps
+status: approved
+text: the synthesis steps the elucidate skill calls

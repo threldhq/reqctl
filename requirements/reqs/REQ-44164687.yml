@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: 'code carrying a comment that names a requirement and its stamp in the @req:
+    form'
+  then: the product reports a problem naming the file and the item, directing the
+    reader to cite it with reqctl tag
+  when: trace is run
+- given: 'code carrying a module-level mapping whose values name items in the @req:
+    form'
+  then: the product reports a problem for each value
+  when: trace is run
+- given: 'a [test](test) carrying the @req: form'
+  then: the product reports the problem as it does outside every [test](test)
+  when: trace is run
+- given: 'code naming an item''s identifier without the @req: form, as data or in
+    a string'
+  then: the product reports no problem for it
+  when: trace is run
+- given: code citing items only through [statement citations](statement_citation)
+  then: the product reports no problem for the form of any citation
+  when: trace is run
+assessed:
+  REQ-26361925: EMfIgZyFH4bwCJ6XlwRevmD8BpdHDPqYs6-o8Dtmgt8
+  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
+  REQ-76258226: 8oshGhfGWgBFGznGPQjp4TUQB00QeANN6QlKdQho8ew
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+priority: medium
+relations:
+  REQ-26361925: constrains
+  REQ-52925332: depends_on
+  REQ-76258226: constrains
+status: approved
+text: 'When trace is run, the product shall report as a problem every place where
+  code names an item in the @req: form rather than by a [statement citation](statement_citation).'
+type: functional
+verification: inspection

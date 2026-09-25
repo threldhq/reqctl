@@ -1,0 +1,11 @@
+acceptance_criteria:
+- given: an item the corpus holds
+  then: the product refuses the revision
+  when: revise is run naming no field
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a revision names no field to change, then the product shall refuse the revision.
+type: functional
+verification: inspection

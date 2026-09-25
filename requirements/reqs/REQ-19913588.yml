@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: input reqctl cannot read
+  then: 'the output is the single line reqctl: followed by the message'
+  when: the fault reaches the caller
+- given: a defect in reqctl itself rather than in what it reads
+  then: the traceback stands rather than a single line
+  when: the fault reaches the caller
+- given: a fault raised by a library reqctl calls rather than by reqctl
+  then: 'the output is the single line reqctl: followed by the message'
+  when: the fault reaches the caller
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a fault in what reqctl reads or in the environment it runs in reaches the
+  caller, then the product shall state the fault as one line naming reqctl and the
+  message, rather than as a traceback.
+type: functional
+verification: inspection

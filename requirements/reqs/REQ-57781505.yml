@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a uid given for a mint that is not the kind of the item followed by eight
+    digits
+  then: the product refuses the mint
+  when: the item is minted
+assessed:
+  REQ-73115701: e51Qp8vDbDXd9r9g1x11auhgdfz3p1C6bqxMeAuvYRk
+priority: medium
+relations:
+  REQ-73115701: constrains
+status: approved
+text: If the uid given for a mint is not the kind of the item followed by eight digits,
+  then the product shall refuse the mint.
+type: functional
+verification: inspection

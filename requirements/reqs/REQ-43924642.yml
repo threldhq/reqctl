@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a corpus whose default branch carries a baseline
+  then: the generated baseline carries the number that follows the baseline the default
+    branch carries
+  when: a baseline is generated
+- given: a branch holding a baseline the default branch does not carry, and a default
+    branch that has since cut a baseline of that number
+  then: the generated baseline carries the number that follows the default branch
+    baseline
+  when: a baseline is generated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a baseline would be generated while the default branch carries a baseline,
+  the product shall give the generated baseline the number that follows that baseline.
+type: functional
+verification: inspection

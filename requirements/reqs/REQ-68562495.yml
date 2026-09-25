@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a citation naming no item the corpus holds
+  then: the product shows the citation as written
+  when: the statement is exported
+- given: a citation naming an item that carries no entries
+  then: the product shows the citation as written
+  when: the statement is exported
+- given: a citation selecting the default of an item that names no default
+  then: the product shows the citation as written
+  when: the statement is exported
+- given: a citation naming an entry the item does not hold
+  then: the product shows the citation as written
+  when: the statement is exported
+- given: a citation naming a field the named entry does not hold
+  then: the product shows the citation as written
+  when: the statement is exported
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a statement citing a parameter the corpus cannot resolve is exported, the
+  product shall show the citation unchanged.
+type: functional
+verification: inspection

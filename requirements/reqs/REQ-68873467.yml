@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: two groups each returning one part finding for the same proposal
+  then: the prompt states both findings with their quoted clauses
+  when: the final judge prompt is built
+- given: a group that returned nothing
+  then: the prompt names that group as returning nothing
+  when: the final judge prompt is built
+assessed:
+  REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+priority: medium
+relations:
+  REQ-48762557: depends_on
+status: approved
+text: When the items named for a proposal were split into groups, the product shall
+  state every group's findings, each with the clause the finding quotes, to one final
+  judge prompt for that proposal.
+type: functional
+verification: inspection

@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a baseline file holding an unresolved merge one side of which does not read
+    as a baseline
+  then: the product refuses and asks for the conflict to be resolved by hand
+  when: baseline --generate is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a baseline would be generated over a baseline file holding an unresolved
+  merge whose side does not read as a baseline, then the product shall refuse the
+  generation.
+type: functional
+verification: inspection

@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a check validate runs that raises a fault of the check's own
+  then: the product reports a corpus problem naming the check
+  when: the corpus is validated
+- given: a check validate runs that finds a fault in the corpus
+  then: the product reports the corpus fault rather than a failed check
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a check validate runs fails unexpectedly, then the product shall report the
+  failure as a corpus problem naming the check.
+type: functional
+verification: inspection

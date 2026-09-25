@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a service stating serving as neither single nor many
+  then: the product refuses and states that serving is single or many
+  when: the corpus is validated
+- given: a service stating no serving
+  then: the product refuses and states that serving is single or many
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: deprecated
+text: The product shall refuse a service that does not state serving as single or
+  many.
+type: functional
+verification: automated_test

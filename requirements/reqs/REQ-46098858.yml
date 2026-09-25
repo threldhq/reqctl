@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a proposal naming neither subject
+  then: the product refuses the run and names the proposal
+  when: the run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a proposal names neither the product nor the build as the subject of the
+  obligation, then the product shall refuse the run.
+type: functional
+verification: inspection

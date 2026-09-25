@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a recall prompt carrying three proposals and a return holding entries for
+    two
+  then: the product refuses the return, naming the missing proposal
+  when: the return is read
+- given: a return naming an item the prompt did not state
+  then: the product refuses the return, naming the item
+  when: the return is read
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a recall return omits an entry for a proposal the prompt carried or names
+  an item the prompt did not state, then the product shall refuse the return.
+type: functional
+verification: inspection

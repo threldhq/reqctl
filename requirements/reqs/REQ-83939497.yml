@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a run whose trace for a proposal quotes words the owner did not write
+  then: the product refuses the run, naming the proposal and the passage
+  when: the run is built
+assessed:
+  REQ-12032769: 1Km3PLqZHCDuV9kvCUqnJuU2P1mQdROcvfm6hg4k4QI
+priority: medium
+relations:
+  REQ-12032769: derives_from
+status: approved
+text: If a proposal's trace quotes a passage the owner's words do not hold, then the
+  product shall refuse the run.
+type: functional
+verification: inspection

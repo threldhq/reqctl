@@ -1,0 +1,265 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: What this change touches
+        id: touched
+        env:
+          BASE: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            changed=$(git diff --name-only "origin/$BASE...HEAD")
+          else
+            changed=$(git ls-files)
+          fi
+          mark() {
+            if printf '%s\n' "$changed" | grep -qE "$2"; then held=true; else held=false; fi
+            echo "$1=$held" | tee -a "$GITHUB_OUTPUT"
+          }
+          mark deps '^reqctl/requirements'
+          mark corpus '^requirements/'
+
+      - name: No credential in the change
+        env:
+          BASE: ${{ github.base_ref }}
+        run: |
+          .github/install-gitleaks.sh "$RUNNER_TEMP/bin"
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            "$RUNNER_TEMP/bin/gitleaks" git . --no-banner \
+              --log-opts="origin/$BASE..HEAD"
+          else
+            "$RUNNER_TEMP/bin/gitleaks" dir . --no-banner
+          fi
+
+      - name: Requirements guard self-test
+        run: python .claude/hooks/tests/test_requirements_guard.py
+
+      - name: Hook exits are explicit decisions
+        run: python .claude/hooks/tests/check_exit_paths.py
+
+      - name: Session start installs what CI installs
+        run: python .claude/hooks/tests/check_install_parity.py
+
+      - name: Owned paths still need the owner
+        run: python .github/tests/test_codeowners.py
+
+      - name: Plugin build self-test
+        run: python .github/tests/test_plugin_build.py
+
+      - name: The plugin ships from this repository at the wheel's version
+        run: python .github/guards/plugin_build.py
+
+      - name: No dead identifiers
+        run: |
+          if grep -rInE '@lat\b' --exclude-dir=.git --exclude-dir=node_modules \
+               --exclude-dir=.venv --exclude-dir=.claude --exclude-dir=.github . ; then
+            echo "::error::@lat belongs to the removed knowledge graph"
+            exit 1
+          fi
+          if [ -d docs/adr ] || [ -d docs/decisions ]; then
+            echo "::error::decision records do not persist; put the constraint in a requirement, a schema or a test"
+            exit 1
+          fi
+
+      - name: Help budget self-test
+        run: python .github/tests/test_help_budget.py
+
+      - name: Help budget, what a session reads through reqctl --help
+        run: python .github/guards/help_budget.py --max 57
+
+      - name: Reference self-test
+        run: python .github/tests/test_references.py
+
+      - name: Names resolve
+        run: python .github/guards/references.py
+
+      - name: Lockfile inputs state their versions
+        run: |
+          python3 - <<'CHECK'
+          import re, sys
+
+          def norm(name):
+              return re.sub(r"[-_.]+", "-", name).lower()
+
+          lock = {}
+          for line in open("reqctl/requirements-dev-lock.txt"):
+              found = re.match(r"([A-Za-z0-9_.\-]+)(\[[^\]]+\])?==([^\s\\]+)", line)
+              if found:
+                  lock[norm(found.group(1))] = found.group(3)
+
+          fails, checked = [], 0
+          for line in open("reqctl/requirements-dev.in"):
+              stated = line.split("#", 1)[0].strip()
+              if not stated or stated.startswith("-c"):
+                  continue
+              checked += 1
+              if "==" not in stated:
+                  fails.append(f"{stated}: names no version")
+                  continue
+              name, want = stated.split("==", 1)
+              held = lock.get(norm(re.sub(r"\[[^\]]+\]", "", name)))
+              if held is None:
+                  fails.append(f"{name}: pinned but absent from the lock")
+              elif held != want.strip():
+                  fails.append(f"{name}: input says {want.strip()}, lock says {held}")
+          if not checked:
+              fails.append("reqctl/requirements-dev.in: nothing left to check")
+
+          for fault in fails:
+              print(f"::error::{fault}")
+          sys.exit(1 if fails else 0)
+          CHECK
+
+      - name: Install
+        run: |
+          pip install --require-hashes -r reqctl/requirements-lock.txt -r reqctl/requirements-dev-lock.txt
+          pip install -e reqctl --no-deps --no-build-isolation
+
+      - name: Workflow shape self-test
+        run: python .github/tests/test_workflow_shape.py
+
+      - name: Workflow shape
+        run: python .github/guards/workflow_shape.py
+
+      - name: Workflow syntax
+        run: actionlint
+
+      - name: Workflow security
+        run: zizmor --offline .github/workflows
+
+      - name: Rules scope self-test
+        run: python .github/tests/test_rules_scope.py
+
+      - name: Rules scope
+        run: python .github/guards/rules_scope.py
+
+      - name: CI gating self-test
+        run: python .github/tests/test_ci_gating.py
+
+      - name: Verify self-test
+        run: python .github/tests/test_verify.py
+
+      - name: Corpus write self-test
+        run: python .github/tests/test_corpus_write.py
+
+      - name: Baseline settling self-test
+        run: python .github/tests/test_corpus_settle.py
+
+      - name: Travel-alone guard self-test
+        run: python .github/tests/test_travel_alone.py
+
+      - name: Baseline number guard self-test
+        run: python .github/tests/test_baseline_number.py
+
+      - name: The secret scan admits what reqctl stamps
+        run: python .github/tests/test_gitleaks_stamps.py
+
+      - name: Requirement changes travel alone
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: python .github/travel_alone.py "origin/$BASE_REF"
+
+      - name: A changed baseline follows the one it supersedes
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: python .github/baseline_number.py "origin/$BASE_REF"
+
+      - name: Corpus is valid
+        run: reqctl validate
+
+      - name: Unclaimed phrases self-test
+        run: python .github/tests/test_unclaimed_phrases.py
+
+      - name: Comment budget self-test
+        run: python .github/tests/test_comment_budget.py
+
+      - name: Comment budget
+        run: python .github/guards/comment_budget.py --max 0
+
+      - name: Taxonomy
+        run: |
+          python .github/tests/test_taxonomy.py
+          python .github/guards/taxonomy.py
+
+      - name: A skill mints what the corpus accepts
+        run: python .github/tests/test_skill_minting.py
+
+      - name: Baseline matches the corpus
+        run: reqctl baseline --check
+
+      - name: Citations self-test
+        run: python .github/tests/test_citations.py
+
+      - name: Traceability
+        env:
+          SETTLING: ${{ steps.touched.outputs.corpus }}
+        run: python .github/guards/citations.py
+
+      - name: Citations this change touches
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          {
+            echo '```'
+            reqctl compare --base "origin/$BASE_REF"
+            echo '```'
+          } >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+
+      - name: Portal offers what reqctl accepts
+        run: python .github/tests/test_portal_binding.py
+
+      - name: The portal opens on the repository origin names
+        run: python .github/tests/test_portal.py
+
+      - name: Guard binding self-test
+        run: python .github/tests/test_guard_binding.py
+
+      - name: A guard binds to no nominated dimension
+        run: python .github/guards/guard_binding.py
+
+      - name: Elucidate synthesis self-tests
+        run: |
+          python .claude/skills/elucidate/synthesis/test_coverage.py
+          python .claude/skills/elucidate/synthesis/test_verdicts.py
+          python .claude/skills/elucidate/synthesis/test_plan.py
+          python .claude/skills/elucidate/harness/test_probe.py
+
+      - name: The plugin holds its components and runs in any repository
+        run: python .github/tests/test_plugin.py
+
+      - name: Lint
+        run: ruff check reqctl
+
+      - name: Spelling
+        run: typos
+
+      - name: Types
+        run: mypy --config-file reqctl/pyproject.toml reqctl/reqctl
+
+      - name: Dependencies have no known vulnerabilities
+        if: steps.touched.outputs.deps == 'true'
+        run: pip-audit -r reqctl/requirements-lock.txt -r reqctl/requirements-dev-lock.txt --progress-spinner off
+

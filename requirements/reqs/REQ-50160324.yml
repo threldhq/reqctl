@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: an item whose dependency cannot be read
+  then: the product names the dependency once
+  when: validate is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a dependency the product cannot read is reported, the product shall name
+  the dependency once.
+type: functional
+verification: inspection

@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a parameter whose value type is count, ratio, boolean or text
+  then: the product refuses and states that a unit does not apply to that value type
+  when: a unit is stated
+- given: a parameter whose value type is duration, size, percentage or currency
+  then: the product refuses and states that the value type carries a unit
+  when: the parameter states no unit
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a parameter states a unit where the parameter's value type carries no unit,
+  or states no unit where the value type requires one, then the product shall refuse
+  the parameter.
+type: functional
+verification: inspection

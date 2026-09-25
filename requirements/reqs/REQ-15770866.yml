@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) whose covered lines cannot be
+    read as [code tokens](code_token)
+  then: the [citation digest](citation_digest) is taken over the text of the covered
+    lines
+  when: the product takes the [citation digest](citation_digest)
+assessed:
+  citation_digest: yUtHPh3P6LiNmqFT4sIGkjvhZMI4ND46hzVgOHdSyrU
+  code_token: RKSwa_7GLOrcUd7V_FstnVgDVX3CvlQnuD650a2b5qs
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: Where the lines a [statement citation](statement_citation) covers cannot be
+  read as [tokens](code_token), the product shall take the [citation digest](citation_digest)
+  of the covered lines over the text the covered lines hold.
+type: functional
+verification: inspection

@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a statement carrying a link that addresses an entry of a dictionary item
+  then: the rendered link names that entry
+  when: the corpus is exported
+- given: a statement carrying a link that addresses an entry of a dictionary item
+  then: the export carries an anchor at that entry
+  when: the corpus is exported
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a statement carrying a link that addresses an entry of a dictionary item
+  is exported, the product shall resolve the link to that entry.
+type: functional
+verification: inspection

@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  '150': {}
+kind: parameter
+name: agent_ceiling
+status: approved
+text: The most agents one run spawns before the build refuses the run
+value_type: count

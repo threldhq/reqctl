@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a shard whose prompt would hold more lines than the line bound
+  then: the product refuses the run, naming the job and a smaller shard bound as the
+    remedy
+  when: the run is built
+- given: a run whose every job prompt is within the line bound
+  then: the product builds the run
+  when: the run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a job prompt holds more lines than the line bound, then the product shall
+  refuse the run.
+type: functional
+verification: inspection

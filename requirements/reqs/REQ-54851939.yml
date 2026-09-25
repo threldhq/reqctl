@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: an approved requirement cited by code carrying its stamp
+  then: trace reports nothing behind the corpus for the citation
+  when: the requirement's verification, type or priority is revised
+- given: an approved requirement cited by code carrying its stamp
+  then: trace reports the citation as behind the corpus
+  when: the requirement's text or an acceptance criterion is revised
+- given: an item binding an approved requirement
+  then: the product leaves the binder pinned
+  when: the requirement's verification, type, priority or rationale is revised
+- given: an item binding an approved requirement
+  then: the product makes the binder suspect
+  when: an acceptance criterion of the requirement is revised
+assessed:
+  REQ-56581795: IfY71qSXm5yzdJhrIab5R58OCkQ67bgFgfywbhXqqPw
+priority: medium
+relations:
+  REQ-56581795: constrains
+status: approved
+text: The product shall derive a requirement's stamp from the requirement's text and
+  acceptance criteria and from no other field the requirement states.
+type: functional
+verification: inspection

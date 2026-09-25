@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a corpus holding a term renamed since the superseded baseline was cut
+  then: the product writes the baseline
+  when: a baseline is generated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a baseline would be generated over a corpus that no longer holds an item
+  the superseded baseline states, the product shall generate the baseline.
+type: functional
+verification: inspection

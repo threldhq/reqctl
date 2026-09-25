@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a parameter minted with a bracketed set
+  then: the product refuses and states that a set member is duplicated
+  when: the set states one member more than once
+- given: a parameter whose value is revised to a bracketed set
+  then: the product refuses and states that a set member is duplicated
+  when: the set states one member more than once
+- given: a data item
+  then: the product refuses and names the key given more than once
+  when: an entry list names one key more than once
+- given: a parameter whose value type is duration
+  then: the product refuses and states that a set member is duplicated
+  when: the set states one number in two spellings
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a set or an entry list states one member more than once, then the product
+  shall refuse the item.
+type: functional
+verification: inspection

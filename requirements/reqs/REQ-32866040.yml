@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: eight proposals alternating between the two obligation kinds and a batch
+    of two
+  then: each shard's first job holds two proposals of that shard
+  when: a run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: The product shall fill a job with proposals of a single shard up to the batch
+  before opening another job.
+type: functional
+verification: inspection

@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) whose covered lines have moved
+    and changed
+  then: the product states that the lines moved and that the lines changed
+  when: the product compares the code against the newest state the branch and the
+    default branch both carry
+- given: a [statement citation](statement_citation) the newest state the branch and
+    the default branch both carry holds and the code does not
+  then: the product states that the citation was deleted
+  when: the product compares the code against that state
+assessed:
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: When the product compares the code against the newest state the branch and the
+  default branch both carry, the product shall state of every [statement citation](statement_citation)
+  that the code or that state carries whether the citation was added, whether the
+  citation was deleted, and, where the code and that state both carry the citation,
+  whether the lines the citation covers moved and whether the covered lines changed.
+type: functional
+verification: inspection

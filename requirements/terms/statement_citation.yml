@@ -1,0 +1,12 @@
+assessed:
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+entries:
+  statement_citation:
+    aliases:
+    - statement citations
+    definition: 'A comment, or a pair of comments, in code naming a requirement and
+      an identity: a pair covers the lines between its comments, and a single comment
+      covers the [code statement](code_statement) that follows it.'
+    word: statement citation
+kind: term
+status: approved

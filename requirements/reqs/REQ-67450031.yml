@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a dictionary item
+  then: the product refuses and names the key it will not accept
+  when: an entry keyed default, pinned, handles_content, serving, text or name is
+    minted or revised into it
+- given: a dictionary item whose governing schema declares no field of that name
+  then: the product refuses the entry just the same
+  when: an entry keyed for one of those names
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an entry of a dictionary item would be keyed for a name reqctl reserves,
+  then the product shall refuse the entry.
+type: functional
+verification: inspection

@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a revision naming a value the product rejects
+  then: the refusal names the item and states the item was not changed
+  when: revise is run
+- given: a revision naming no field at all
+  then: the refusal names the item and states the item was not changed
+  when: revise is run
+- given: a revision that would leave an approved item superseding an approved item
+  then: the refusal names the item and states the item was not changed
+  when: revise is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a revision is refused, the product shall state that the item was not changed.
+type: functional
+verification: inspection

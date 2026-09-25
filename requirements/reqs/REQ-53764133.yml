@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: given a git repository whose origin remote names owner/repo, and a browser
+    remembering another repository
+  then: then the [portal](portal) remembers owner/repo in place of the other and reads
+    the corpus from it
+  when: when reqctl portal is run in it
+assessed:
+  REQ-49576265: TZb-gviCuP5YoreZuR-DpCD14zDAOXTH3QmbqBJlzFE
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-49576265: depends_on
+status: approved
+text: When reqctl portal is run, the product shall remember the repository named by
+  the origin remote of the current git repository as the repository of the [portal](portal).
+type: functional
+verification: automated_test

@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  nest_level:
+    aliases:
+    - nest levels
+    definition: The depth of the block a line of code sits within, as the language
+      that code is written in fixes it.
+    word: nest level
+kind: term
+status: approved

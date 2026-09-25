@@ -1,0 +1,90 @@
+{
+  "autoMemoryEnabled": false,
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    },
+    "trailofbits": {
+      "source": {
+        "source": "github",
+        "repo": "trailofbits/skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "mutation-testing@trailofbits": true,
+    "plugin-dev@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "property-based-testing@trailofbits": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "spec-to-code-compliance@trailofbits": true,
+    "static-analysis@trailofbits": true
+  },
+  "permissions": {
+    "allow": [
+      "Bash(claude plugin:*)",
+      "Bash(claude mcp:*)",
+      "Bash(reqctl:*)",
+      "Bash(ruff check:*)",
+      "Bash(mypy:*)",
+      "Bash(pip-audit:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": [
+      "Read(requirements/reqs/**)",
+      "Read(requirements/guards/**)",
+      "Read(requirements/params/**)",
+      "Read(requirements/terms/**)",
+      "Read(requirements/data/**)",
+      "Read(requirements/baseline.yml)",
+      "Edit(requirements/reqs/**)",
+      "Edit(requirements/guards/**)",
+      "Edit(requirements/params/**)",
+      "Edit(requirements/terms/**)",
+      "Edit(requirements/data/**)",
+      "Edit(requirements/baseline.yml)",
+      "Write(requirements/reqs/**)",
+      "Write(requirements/guards/**)",
+      "Write(requirements/params/**)",
+      "Write(requirements/terms/**)",
+      "Write(requirements/data/**)",
+      "Write(requirements/baseline.yml)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/requirements-guard.py"
+          }
+        ]
+      }
+    ]
+  }
+}

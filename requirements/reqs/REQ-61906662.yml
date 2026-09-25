@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: lines holding exactly one [code statement](code_statement)
+  then: the product writes one comment
+  when: the product cites a requirement at them
+- given: lines holding more than one [code statement](code_statement)
+  then: the product writes a pair of comments
+  when: the product cites a requirement at them
+assessed:
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-60346603: derives_from
+status: approved
+text: When the product cites a requirement at exactly one [code statement](code_statement),
+  the product shall write the [statement citation](statement_citation) as one comment.
+type: functional
+verification: inspection

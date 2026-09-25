@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: code citing a statement the corpus has deprecated
+  then: the product reports the citation and names no problem
+  when: trace is run
+- given: code citing a statement the corpus has deprecated
+  then: the gate passes
+  when: the citations gate runs
+- given: code citing a statement the corpus has deprecated and a second citation naming
+    no stamp
+  then: the product names the citation without a stamp a problem
+  when: trace is run
+- given: code citing no statement the corpus has deprecated
+  then: the product reports no citation as deprecated
+  when: trace is run
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If code cites a statement the corpus has deprecated, then the product shall
+  report the citation.
+type: functional
+verification: inspection

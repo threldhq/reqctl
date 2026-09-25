@@ -1,0 +1,29 @@
+acceptance_criteria:
+- given: a run holding a proposal naming the product
+  then: every requirement the corpus holds appears in exactly one recall prompt, with
+    its status, and no guard appears
+  when: the run is built
+- given: a run holding a proposal naming the product
+  then: every guard the corpus holds appears in exactly one recall prompt, with its
+    status, and no requirement appears
+  when: the run is built
+- given: a corpus holding a draft obligation left by an earlier run
+  then: the draft appears in one recall prompt as draft
+  when: the run is built
+assessed:
+  REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
+  REQ-46098858: bag6NDybL_bpoymac3a-PC6WPPlTWuBxTgd585bJ-Ak
+  REQ-65835654: 6lJRH2MRhAwwB_ULCjalIqerLHe8o_jfQ1SFRBzwGaQ
+  REQ-89295483: n_8TgPn69NOB4jFBD9oBibvGqayPg4QGg-7xthV-UmE
+priority: medium
+relations:
+  REQ-18405752: derives_from
+  REQ-46098858: depends_on
+  REQ-65835654: supersedes
+  REQ-89295483: supersedes
+status: approved
+text: When a run is built, the product shall state every obligation of a proposal's
+  kind that the corpus holds in exactly one recall prompt of that run, with the status
+  of each.
+type: functional
+verification: inspection

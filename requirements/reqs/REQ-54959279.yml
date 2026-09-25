@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run holding verdicts and coverage findings, and a corpus that outgrows
+    the shard bound
+  then: the product refuses and the verdicts, the coverage findings and the export
+    are as they were before the product
+  when: the run is built
+- given: a run holding verdicts, and an export the corpus has moved past
+  then: the verdicts are retired and the retirement is reported
+  when: the run is built and not refused
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the product refuses a run, then the product shall leave the run's verdicts,
+  export and coverage findings unchanged.
+type: functional
+verification: inspection

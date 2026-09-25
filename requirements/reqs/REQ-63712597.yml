@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a statement pinned to an address naming a field a dictionary item's entries
+    carry
+  then: the pin stands
+  when: an entry that does not state the field true is added to the item
+- given: a statement pinned to an address naming a field a dictionary item's entries
+    carry
+  then: the pin is suspect
+  when: a further entry is revised to state the field true
+assessed:
+  REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+priority: medium
+relations:
+  REQ-79222815: depends_on
+status: approved
+text: The product shall take the stamp of an address naming a field a dictionary item's
+  entries carry from only the entries that state the field true.
+type: functional
+verification: inspection

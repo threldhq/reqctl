@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a proposed change is queued and not yet sent
+  then: the product keeps the remembered repository and states that queued changes
+    must be sent first
+  when: the Change repository control is used
+assessed:
+  REQ-12062416: zyf6QGAMGROfFKOxmJl1TjV_G28lGFVCIGgU2bozq4o
+priority: medium
+relations:
+  REQ-12062416: constrains
+status: approved
+text: While a proposed change is queued and not yet sent, the product shall refuse
+  a change of repository.
+type: functional
+verification: inspection

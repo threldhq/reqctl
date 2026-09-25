@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a dictionary item and an entry keyed for the membership address
+  then: the product refuses and states that address pins the item's membership
+  when: the entry is minted or revised into the item
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an entry would be keyed for the address that pins an item's membership, then
+  the product shall refuse the entry.
+type: functional
+verification: inspection

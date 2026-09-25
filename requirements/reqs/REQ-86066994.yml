@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a coverage document carrying a name the findings are not read by
+  then: the product refuses the document
+  when: the findings are checked
+- given: a coverage document carrying only names the findings are read by
+  then: the product accepts the document
+  when: the findings are checked
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a coverage document states a name the findings are not read by, then the
+  product shall refuse the document.
+type: functional
+verification: inspection

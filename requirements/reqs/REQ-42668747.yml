@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: code carrying a one-comment [statement citation](statement_citation) above
+    a [code statement](code_statement) that spans several lines
+  then: the citation covers every line of that [code statement](code_statement) and
+    no line after it
+  when: the product reads the citation
+- given: code carrying a one-comment [statement citation](statement_citation) above
+    a [code statement](code_statement) that opens a block
+  then: the citation covers every line the block holds
+  when: the product reads the citation
+assessed:
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: The product shall take a [statement citation](statement_citation) carried in
+  one comment as covering the whole [code statement](code_statement) that follows
+  the comment.
+type: functional
+verification: inspection

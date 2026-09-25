@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: an item file stating one top-level key twice
+  then: the product refuses and names every repeated key
+  when: the corpus is validated
+- given: an item file stating two different top-level keys twice each
+  then: the product refuses and names both repeated keys
+  when: the corpus is validated
+- given: an item file stating one top-level key twice
+  then: the product refuses and names every repeated key
+  when: the item is exported
+- given: an item file stating every top-level key once
+  then: the product reads the file
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an item file states a top-level key more than once, then the product shall
+  refuse the file.
+type: functional
+verification: inspection

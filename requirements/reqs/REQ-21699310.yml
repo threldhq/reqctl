@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a guard carrying a parameter reference to a nominated dimension's item, whole
+    or by member
+  then: the guard is named as binding to that dimension
+  when: the corpus is validated
+- given: a guard carrying a concept link to a nominated dimension's item, whole or
+    by member
+  then: the guard is named as binding to that dimension
+  when: the corpus is validated
+- given: a corpus nominating no dimension
+  then: no guard is named, there being no dimension for one to bind to
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: The product shall refuse a guard that binds to a dimension the corpus nominates.
+type: functional
+verification: inspection

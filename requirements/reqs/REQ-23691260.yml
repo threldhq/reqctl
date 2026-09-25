@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a check validate runs that raises a fault of the check's own
+  then: the product runs every remaining check and reports what the remaining checks
+    find
+  when: the corpus is validated
+- given: a check raising a fault of the check's own, with checks standing before and
+    after
+  then: the product reports what the earlier checks found and what the later checks
+    find
+  when: the corpus is validated
+- given: the last check validate runs raising a fault of the check's own
+  then: the product reports what the earlier checks found
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a check validate runs fails unexpectedly, then the product shall run the
+  checks that remain.
+type: functional
+verification: inspection

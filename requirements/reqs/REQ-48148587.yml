@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a run whose shards and proposals would spawn more agents than the ceiling
+  then: the product refuses the run, stating the count, and writes no prompt
+  when: the run is built
+assessed:
+  REQ-90454282: Hn_cCdBHt6FCgTVr7h_FwY_DQr1NfJSmIlaX7gNlDxM
+  agent_ceiling: s6ylQPWOuN97qlZEEoQggtg3aQiSeApfZ28e6AA_dAQ
+  agent_ceiling.*: I8Fho96MvFvxDN5bGsKZ0_jrsEBScIVjBW5iA6lenqI
+priority: medium
+relations:
+  REQ-90454282: constrains
+status: approved
+text: If a run would spawn more than ${agent_ceiling} agents, then the product shall
+  refuse the run before any prompt is written.
+type: functional
+verification: inspection

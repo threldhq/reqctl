@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a field within an entry holds a mapping
+  then: each field of the mapping stands on a separate line
+  when: the corpus is exported
+- given: a field of that mapping holds a mapping of its own
+  then: each field of the deeper mapping stands on a separate line
+  when: the corpus is exported
+- given: an entry whose fields hold no mapping
+  then: the export writes the entry on one line
+  when: the corpus is exported
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a field at any depth within an item's entry holds a mapping, the product
+  shall export each field of that mapping on a separate line.
+type: functional
+verification: inspection

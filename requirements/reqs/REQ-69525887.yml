@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a corpus holding one item the product cannot read and other items carrying
+    problems
+  then: the product reports every problem belonging to an item it could read
+  when: the corpus is validated
+- given: a check that cannot finish because one item cannot be read
+  then: the product reports what that check found for the items it could read
+  when: the corpus is validated
+assessed:
+  REQ-39368456: fHW3SvGcMIr_v4Kf3BJrNebhowS0MNxZvXJyM0hMIOg
+priority: medium
+relations:
+  REQ-39368456: constrains
+status: approved
+text: When validation cannot read an item, the product shall report the problems found
+  in each item the product can read.
+type: functional
+verification: inspection
