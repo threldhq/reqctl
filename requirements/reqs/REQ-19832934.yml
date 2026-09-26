@@ -4,13 +4,20 @@ acceptance_criteria:
   then: the shard's prompts are rebuilt carrying at most twenty proposals each, and
     the stopped return is retired
   when: the returns are read
+- given: a recall return that does not fit the recall shape
+  then: the shard's prompts are rebuilt in batches of half the size
+  when: the returns are read
+- given: a recall agent that wrote no return
+  then: the shard's prompts are rebuilt in batches of half the size
+  when: the returns are read
 assessed:
   REQ-94426583: robFmbw2ht7IlAltCYRS9ZBd2bKMAF5O9JJ7vubNIy8
 priority: medium
 relations:
   REQ-94426583: constrains
 status: approved
-text: If a recall return stops at the output bound, then the product shall halve the
-  batch for that shard and build the shard's prompts again.
+text: If a recall return is missing, does not parse or does not fit the shape its
+  prompt states, then the product shall halve the batch for that shard and build the
+  shard's prompts again.
 type: functional
 verification: inspection

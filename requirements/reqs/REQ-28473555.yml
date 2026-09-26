@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run recording a trace as one passage rather than a list
+  then: the product refuses the run and states that a trace is a list of passages
+  when: the run is built
+- given: a run recording a blank passage in a trace
+  then: the product refuses the run
+  when: the run is built
+assessed:
+  REQ-83939497: SjYhKgxzDeHvaZO85LmDL5c2Tz7ZgnGZUpz5QiavoHc
+priority: medium
+relations:
+  REQ-83939497: constrains
+status: approved
+text: If a run records a proposal's trace as other than a list of passages, none of
+  them blank, then the product shall refuse the run.
+type: functional
+verification: inspection

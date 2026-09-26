@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a judge return whose reason is longer than the judge shape allows
+  then: the product refuses the return
+  when: the verdicts are read
+- given: a group judge's return that does not parse
+  then: the product refuses the return
+  when: the final judges are built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a return from a group judge or a judge does not parse or does not fit the
+  shape its prompt states, then the product shall refuse the return.
+type: functional
+verification: inspection

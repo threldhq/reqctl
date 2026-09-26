@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a recall return naming an item its prompt did not state
+  then: the product reports the return and the item, and lists that return's agent
+    to spawn again
+  when: the recall returns are read
+- given: a recall return that does not parse
+  then: the product reports the return and why, and lists the agents of the rebuilt
+    shard to spawn
+  when: the recall returns are read
+- given: a judge whose verdict never returned
+  then: the product reports the proposal and lists its judge to spawn again
+  when: the verdicts are read
+- given: a recall return from a batch of one proposal that does not parse
+  then: the product refuses the run and lists no agent to spawn
+  when: the recall returns are read
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the product accepts no return from a recall agent, group judge or judge and
+  does not refuse the run, then the product shall report that return with its reason
+  and list the agents to spawn in its place.
+type: functional
+verification: inspection

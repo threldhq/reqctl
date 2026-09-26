@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: an accepted verdict raising a question
+  then: the report lists the question under its proposal
+  when: the verdicts are read
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When verdicts are read, the product shall list under each accepted proposal
+  the values, words, faults and questions its verdict raises.
+type: functional
+verification: inspection

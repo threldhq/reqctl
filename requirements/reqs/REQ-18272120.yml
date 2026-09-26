@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a corpus holding no parameter named recall_batch
+  then: the product refuses the run and names recall_batch
+  when: a run is built
+- given: a corpus whose judge_group parameter holds a value that is not one whole
+    number
+  then: the product refuses the run
+  when: a run is built
+assessed:
+  REQ-48148587: rCLPkcgXvhNjzyFugDWOEji1GGqNqUF7_houYMMThXo
+  REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+priority: medium
+relations:
+  REQ-48148587: constrains
+  REQ-48762557: constrains
+status: approved
+text: If any of the parameters recall_batch, judge_bound, judge_group, floor_k and
+  agent_ceiling is missing from the corpus or holds other than one whole number, then
+  the product shall refuse the run.
+type: functional
+verification: inspection

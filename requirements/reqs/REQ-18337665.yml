@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a proposal whose named items were split into three groups
+  then: the report states the items named for it and three groups
+  when: the judge prompts are built
+- given: a proposal whose named items were not split
+  then: the report states the items named for it and no group
+  when: the judge prompts are built
+assessed:
+  REQ-30631052: upW72WeLPoHTMqWypF3S5AEi-KCa_mJBG-_MUtD1YHk
+  REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+priority: medium
+relations:
+  REQ-30631052: depends_on
+  REQ-48762557: depends_on
+status: approved
+text: When judge prompts are built, the product shall report how many judge agents
+  to spawn and, for each proposal, how many items were named for it and into how many
+  groups they were split.
+type: functional
+verification: inspection

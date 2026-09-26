@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a probe's verdict that answers another proposal
+  then: the product refuses to score the run
+  when: the run is scored
+- given: a probe whose verdict never returned
+  then: the product scores the run and counts the probe as missing
+  when: the run is scored
+assessed:
+  REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
+  REQ-62710822: voiCNXQxSuF9uFQKT0n8bC1O84NXYp9BZFlua-_jzIY
+  REQ-75438506: GIywOiWYUqgHSl1TAe7_XUF_YpwOWZZrWPqOPGuhdFc
+priority: medium
+relations:
+  REQ-46162234: depends_on
+  REQ-62710822: depends_on
+  REQ-75438506: constrains
+status: approved
+text: If a probe's verdict does not parse, does not fit the shape its judge prompt
+  states or answers a proposal other than its probe, then the product shall refuse
+  to score the run.
+type: functional
+verification: inspection

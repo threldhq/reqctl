@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a proposal whose text references the dimension's data item without naming
+    a member
+  then: the product refuses the run
+  when: the run is built
+assessed:
+  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+priority: medium
+relations:
+  REQ-68873210: depends_on
+status: approved
+text: Where the corpus states a binding dimension, the product shall refuse a run
+  whose proposal references the dimension's data item without naming a member.
+type: functional
+verification: inspection

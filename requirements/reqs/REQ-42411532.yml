@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: five agents spawned together, one of which returns nothing
+  then: the report states five spawned, four returned and the label of the one that
+    did not
+  when: the agents have all finished
+assessed:
+  REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
+priority: medium
+relations:
+  REQ-29203000: depends_on
+status: approved
+text: When the agents the product spawned together have all finished, the product
+  shall report how many it spawned, how many returned, and the label of each that
+  did not.
+type: functional
+verification: inspection

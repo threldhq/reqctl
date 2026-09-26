@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a run recording a binding as an empty list
+  then: the product refuses the run and states that the form is a list of members
+    or all
+  when: the run is built
+- given: a run recording one proposal twice under a dimension, once as 3 and once
+    as "3"
+  then: the product refuses the run
+  when: the run is built
+- given: a run recording its bindings as a list rather than by dimension
+  then: the product refuses the run and states the form
+  when: the run is built
+assessed:
+  REQ-54045696: 1SxHcbQUMTJjnChXjdz6ILVvkDa-FY_LaXKHPtayH84
+  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+priority: medium
+relations:
+  REQ-54045696: constrains
+  REQ-68873210: depends_on
+status: approved
+text: Where the corpus states a binding dimension, the product shall refuse a run
+  that records a proposal's binding under it as other than one list of members or
+  all.
+type: functional
+verification: inspection

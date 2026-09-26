@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: an approved requirement
+  then: it may be drawn as a probe's source
+  when: probes are minted
+- given: a draft requirement
+  then: it is drawn as no probe's source
+  when: probes are minted
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When probes are minted, the product shall draw each probe's source from the
+  approved requirements.
+type: functional
+verification: inspection

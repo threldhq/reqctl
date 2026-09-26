@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: a recall return over the run's proposals naming proposal 2 as bearing on
+    proposal 2
+  then: the product refuses the return
+  when: the recall returns are read
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a recall return names a proposal as bearing on itself, then the product shall
+  refuse the return.
+type: functional
+verification: inspection

@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: an item whose related requirements reqctl export lists differently from those
+    the corpus records for it
+  then: the product refuses the run, naming the item and both lists
+  when: a run is built
+- given: an item whose related requirements reqctl export lists as the corpus records
+    them
+  then: the product builds the run
+  when: a run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the requirements reqctl export lists as an item's relations differ from the
+  requirements the corpus records the item as related to, then the product shall refuse
+  the run.
+type: functional
+verification: inspection

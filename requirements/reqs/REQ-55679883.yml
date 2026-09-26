@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: three judges, one returning a verdict that answers another proposal and one
+    never returning
+  then: the report states one accepted, one refused and one never returned
+  when: the verdicts are read
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When verdicts are read, the product shall report how many were accepted, how
+  many it refused and how many never returned.
+type: functional
+verification: inspection

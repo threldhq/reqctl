@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a run that records a binding for a guard it proposes
+  then: the product refuses the run
+  when: the run is built
+- given: a guard whose text references the dimension
+  then: the product refuses the run
+  when: the run is built
+assessed:
+  REQ-21699310: XKeWkfefGruJjoLqEt3Ike69aKvNUkYHX-ifNPVZv7o
+priority: medium
+relations:
+  REQ-21699310: derives_from
+status: approved
+text: Where the corpus states a binding dimension, the product shall refuse a run
+  that binds a guard it proposes to the dimension, by its record or by a reference
+  in the guard's text.
+type: functional
+verification: inspection

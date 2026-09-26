@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: an unclaimed entry whose quote is empty
+  then: the product refuses the findings
+  when: the findings are checked
+- given: a renamed entry stating no owner word
+  then: the product refuses the findings
+  when: the findings are checked
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If an unclaimed finding quotes nothing, or a renamed finding names no owner
+  word, then the product shall refuse the findings.
+type: functional
+verification: inspection

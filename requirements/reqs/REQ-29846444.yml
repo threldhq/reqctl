@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a corpus stating a binding dimension whose data item defines no member
+  then: the product refuses the run
+  when: a run is built
+assessed:
+  REQ-54045696: 1SxHcbQUMTJjnChXjdz6ILVvkDa-FY_LaXKHPtayH84
+  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+priority: medium
+relations:
+  REQ-54045696: constrains
+  REQ-68873210: depends_on
+status: approved
+text: If the data item of a binding dimension the corpus states defines no member,
+  then the product shall refuse the run.
+type: functional
+verification: inspection

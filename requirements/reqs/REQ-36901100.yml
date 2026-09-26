@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run whose trace records no passage for a proposal
+  then: the product refuses, naming the proposal
+  when: the description is rendered
+- given: a run whose every proposal traces to a passage
+  then: the product renders it
+  when: the description is rendered
+assessed:
+  REQ-21373303: o72_uf6TKporHATCb5jpf7bLJ9nnShCh_gA4aGNZ5dA
+priority: medium
+relations:
+  REQ-21373303: derives_from
+status: approved
+text: If a proposal traces to no passage of the owner's words, then the product shall
+  refuse to render the run's pull request description.
+type: functional
+verification: inspection

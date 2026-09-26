@@ -2,8 +2,8 @@ acceptance_criteria:
 - given: two groups each returning one part finding for the same proposal
   then: the prompt states both findings with their quoted clauses
   when: the final judge prompt is built
-- given: a group that returned nothing
-  then: the prompt names that group as returning nothing
+- given: a group whose return holds no finding
+  then: the prompt names that group as returning no finding
   when: the final judge prompt is built
 assessed:
   REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk

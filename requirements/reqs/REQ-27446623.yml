@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a corpus in which no approved requirement derives from, depends on or constrains
+    another approved requirement
+  then: the product refuses to mint probes
+  when: probes are minted
+assessed:
+  REQ-23706540: e-JqhR3Ui-keWIPxNZLUjlVjA3fPWTM1awZuzyA7rJk
+priority: medium
+relations:
+  REQ-23706540: constrains
+status: approved
+text: If no approved requirement derives from, depends on or constrains another approved
+  requirement, then the product shall refuse to mint probes.
+type: functional
+verification: inspection

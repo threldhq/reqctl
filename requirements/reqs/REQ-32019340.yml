@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a run that was never built
+  then: the product refuses and names the build as the step to run first
+  when: its judges, final judges or description are asked for
+- given: a run whose judge prompts were never built
+  then: the product refuses and names the judge step as the step to run first
+  when: its verdicts are read
+- given: a run whose verdicts were never read
+  then: the product refuses and names reading the verdicts as the step to run first
+  when: its description is asked for
+- given: a probe folder holding no key
+  then: the product refuses and names minting the probes as the step to run first
+  when: the run is scored
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a step of a run is asked for before the step whose output it reads has run,
+  then the product shall refuse the step.
+type: functional
+verification: inspection
