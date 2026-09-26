@@ -18,21 +18,23 @@ MARKER = re.compile(
     rf"\A@req(?P<sign>[+>-])(?:\s+(?P<uid>(?:{corpus.KINDS})-\d+)"
     r"(?:@(?P<stamp>\S*))?)?(?:\s+(?P<id>\S+))?(?:\s+(?P<exclusive>exclusive))?\Z")
 FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
-# @req> REQ-52925332@wlFlbfJQbQ2g obdue5
-DELIMITERS = re.compile(r"\A\s*(?:#+|//|<!--)\s*|\s*-->\s*\Z")
+# @req+ REQ-52925332@wlFlbfJQbQ2g tup4w2
+MARKUP = re.compile(r"\A\s*<!--\s*|\s*-->\s*\Z")
+DELIMITERS = {".py": re.compile(r"\A\s*#+\s*"), ".js": re.compile(r"\A\s*//\s*")}
+# @req- tup4w2
 ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
 # @req> REQ-60346603@eKFixVFgV9Xt ulk4ve
 COMMENTS = {".py": ("# ", ""), ".md": ("<!-- ", " -->"),
             ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
 
 
-def markers(text):
+def markers(text, suffix):
     for number, line in enumerate(text.splitlines(), start=1):
         # @req+ REQ-52925332@wlFlbfJQbQ2g yuyqhd
         # @req+ REQ-12490145@DQLuzMctTPb5 dsvgt4
         if not SIGN.search(line):
             continue
-        body = DELIMITERS.sub("", line).strip()
+        body = DELIMITERS.get(suffix, MARKUP).sub("", line).strip()
         yield number, body, MARKER.match(body)
         # @req- dsvgt4
         # @req- yuyqhd
@@ -114,7 +116,7 @@ def parse(sources):
             problems.append(f"{relative}: unreadable while scanning for "
                             "statement citations")
             continue
-        found = list(markers(text))
+        found = list(markers(text, Path(relative).suffix))
         if not found:
             continue
         if Path(relative).suffix not in COMMENTS:
