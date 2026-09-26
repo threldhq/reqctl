@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a file holding a comment line that is neither a [statement citation](statement_citation)
+    nor a tool directive the comment budget names against the file
+  then: the build refuses the change
+  when: the build runs
+- given: a comment holding commented-out code
+  then: the build refuses the change
+  when: the build runs
+- given: a comment holding a [statement citation](statement_citation) and other words
+  then: the build refuses the change
+  when: the build runs
+- given: a directive the comment budget names against one file, written in another
+    file
+  then: the build refuses the change
+  when: the build runs
+- given: a binary file, or a file whose first five lines say the file is generated
+  then: the build counts nothing in the file
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+relations: {}
+status: approved
+text: If a file outside the [corpus root](corpus_root) holds a comment or docstring
+  line other than a [statement citation](statement_citation) or a tool directive the
+  comment budget names against that file, then the build shall refuse the change.

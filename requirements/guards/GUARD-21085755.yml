@@ -1,0 +1,10 @@
+acceptance_criteria:
+- given: a file of a type the comment budget states no comment rule for
+  then: the build refuses the change and names the type
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+relations: {}
+status: approved
+text: If a file outside the [corpus root](corpus_root) is of a type the comment budget
+  states no comment rule for, then the build shall refuse the change.

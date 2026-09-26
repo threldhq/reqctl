@@ -1,0 +1,26 @@
+assessed: {}
+entries:
+  html:
+    definition: .html
+  in:
+    definition: .in
+  json:
+    definition: .json
+  md:
+    definition: .md
+  mjs:
+    definition: .mjs
+  py:
+    definition: .py
+  sh:
+    definition: .sh
+  txt:
+    definition: .txt
+  yaml:
+    definition: .yaml
+  yml:
+    definition: .yml
+kind: data
+name: path_suffixes
+status: approved
+text: the endings a name in markdown carries to be read as a file path

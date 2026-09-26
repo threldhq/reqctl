@@ -1,0 +1,9 @@
+acceptance_criteria:
+- given: a rule stating a pattern and no owner
+  then: the build refuses the change and names the line of the rule
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a rule in the CODEOWNERS file names no owner, then the build shall refuse
+  the change.

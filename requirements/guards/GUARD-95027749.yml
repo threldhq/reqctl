@@ -1,0 +1,10 @@
+acceptance_criteria:
+- given: a rules file whose path patterns together match every tracked file, though
+    no one pattern does
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If the path patterns that a rules file states together match every file the
+  repository tracks, then the build shall refuse the change.

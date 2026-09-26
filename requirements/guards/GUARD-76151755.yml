@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a tool directive the comment budget names against a file that no longer holds
+    the directive as a comment
+  then: the build refuses the change and names the directive
+  when: the build runs
+assessed:
+  GUARD-27671623: 3zDwoF3LwQkwJfjcvT7R9thCsV14lyaaD-cA12PDExA
+relations:
+  GUARD-27671623: constrains
+status: approved
+text: If no comment in a file reads as a tool directive the comment budget names against
+  that file, then the build shall refuse the change.
