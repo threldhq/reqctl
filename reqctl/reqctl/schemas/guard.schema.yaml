@@ -10,9 +10,9 @@ description: >-
   a requirement awaits implementation until code satisfies it, a guard awaits
   a gate until CI enforces it.
 
-  Promote a guard to this corpus when a rule of ours is enforced by a gate and
-  held by a test. A third-party ruleset states no rule of ours to lift, and
-  stays code; a rule of ours configured into one is still ours.
+  Promote a guard to this corpus when a rule of ours is enforced by a gate. A
+  third-party ruleset states no rule of ours to lift, and stays code; a rule of
+  ours configured into one is still ours.
 type: object
 additionalProperties: false
 
@@ -49,10 +49,10 @@ properties:
   acceptance_criteria:
     type: array
     description: >-
-      What enforcing this guard means, in testable form. In the stamp: criteria
-      define the obligation as much as the statement does, so changing one must
-      make dependants reassess. May be empty -- a guard whose statement is its
-      own criterion does not need them restated.
+      What enforcing this guard means, as given, when and then. In the stamp:
+      criteria define the obligation as much as the statement does, so changing
+      one must make dependants reassess. May be empty -- a guard whose statement
+      is its own criterion does not need them restated.
     items:
       type: object
       additionalProperties: false
