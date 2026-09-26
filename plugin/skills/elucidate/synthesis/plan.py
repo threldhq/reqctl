@@ -974,7 +974,7 @@ def recalled(run, state_held):
 
 def halved(run, state_held, stopped, held, words, declined, dictionary_text,
            records, shards, total):
-    # @req+ REQ-19832934@NQYD1mbl6hP2 moar22
+    # @req+ REQ-19832934@CAEeElFyXNOg moar22
     for name, why in sorted(stopped.items()):
         batch = state_held["shards"][name]["batch"]
         if batch < 2:
@@ -1213,7 +1213,7 @@ def group_returns(run, number, groups):
 
 def final_prompt(run, number, spec, lines, dictionary_text):
     out = run / "returns" / "final" / f"{number}.json"
-    # @req> REQ-68873467@DVaY-QhIIXE3 4eflcn
+    # @req> REQ-68873467@8njvorO8kPuj 4eflcn
     return FINAL.format(
         number=number, statement=spec["statement"], binding=binding_text(spec),
         decide=DECIDE, write=written(out, shapes.JUDGE),
