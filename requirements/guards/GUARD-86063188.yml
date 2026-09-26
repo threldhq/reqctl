@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a change that adds a [test](test)
+  then: the build refuses the change and names the [test](test)
+  when: the build runs
+- given: a change that leaves in place a [test](test) the repository already holds
+  then: the build refuses the change and names the [test](test)
+  when: the build runs
+- given: a change leaving no [test](test) in the repository
+  then: the build refuses nothing on that ground
+  when: the build runs
+assessed:
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+relations: {}
+status: approved
+text: If a change leaves the repository that holds the sources of reqctl holding a
+  [test](test), then the build shall refuse the change.

@@ -12,4 +12,4 @@ status: approved
 text: If reqctl portal is run where no origin remote names a GitHub owner/repo, then
   the product shall refuse and state the reason in one line.
 type: functional
-verification: automated_test
+verification: inspection

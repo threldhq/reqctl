@@ -11,4 +11,4 @@ status: approved
 text: When reqctl portal is run, the product shall serve the [portal](portal) bundled
   in the reqctl wheel at a local address and open the browser at it.
 type: functional
-verification: automated_test
+verification: demonstration

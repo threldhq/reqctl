@@ -13,4 +13,4 @@ status: approved
 text: The product shall let the Claude Code plugin be installed into any git repository,
   including one that holds no requirements folder.
 type: functional
-verification: automated_test
+verification: demonstration

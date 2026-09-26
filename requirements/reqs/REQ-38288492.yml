@@ -10,4 +10,4 @@ relations: {}
 status: approved
 text: The product shall ship a Claude Code plugin holding each of the ${plugin_components}.
 type: functional
-verification: automated_test
+verification: inspection

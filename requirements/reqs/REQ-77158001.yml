@@ -14,4 +14,4 @@ status: deprecated
 text: When an item's rationale is written, the product shall resolve the authoring
   forms the rationale states.
 type: functional
-verification: automated_test
+verification: inspection

@@ -19,16 +19,12 @@ acceptance_criteria:
   then: the product reports no problem for the form of any citation
   when: trace is run
 assessed:
-  REQ-26361925: EMfIgZyFH4bwCJ6XlwRevmD8BpdHDPqYs6-o8Dtmgt8
   REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
-  REQ-76258226: 8oshGhfGWgBFGznGPQjp4TUQB00QeANN6QlKdQho8ew
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 priority: medium
 relations:
-  REQ-26361925: constrains
   REQ-52925332: depends_on
-  REQ-76258226: constrains
 status: approved
 text: 'When trace is run, the product shall report as a problem every place where
   code names an item in the @req: form rather than by a [statement citation](statement_citation).'

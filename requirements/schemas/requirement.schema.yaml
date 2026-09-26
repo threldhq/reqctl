@@ -27,12 +27,12 @@ properties:
       "If <condition>, then the <product> shall <response>." /
       "Where <feature>, the <product> shall <response>."
 
-      The subject is always the product: reqctl, reqportal and the elucidate
-      skill, which are what this repository builds. The hooks and CI are not
-      the product; a rule about what builds and checks the product is a GUARD,
-      stated about the build and held in its own kind. The subject is fixed
-      here rather than as a term because every statement uses it, so a term
-      would police a link on all of them and index nothing.
+      The subject is always the product: whatever this repository ships to
+      its users. What makes and checks it -- the build, its gates, its
+      tooling -- is not the product; a rule about those is a GUARD, stated
+      about the build and held in its own kind. The subject is fixed here
+      rather than as a term because every statement uses it, so a term would
+      police a link on all of them and index nothing.
 
       The check is on shape, not sense -- it forces the trigger to be stated
       rather than implied. Whether the statement means anything is elucidation's
@@ -49,7 +49,7 @@ properties:
       the pull request, not by this field.
 
   verification:
-    enum: [automated_test, inspection, analysis, demonstration]
+    enum: [inspection, analysis, demonstration]
 
   acceptance_criteria:
     type: array

@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a branch changing code that a [statement citation](statement_citation) covers
+  then: the body names the requirement the citation names and the finding of reading
+    the code citing the requirement against the requirement
+  when: the pre-pr skill prepares the pull request
+- given: a branch that touches no requirement
+  then: the body states that no requirement was touched
+  when: the pre-pr skill prepares the pull request
+- given: the pre-pr skill as shipped
+  then: no step re-runs the [tests](test) a branch adds or changes
+  when: the steps of the skill are read
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  REQ-56906371: rALaP5YBvHg7rld_RJyzT5l1PbgVp-KmltaXTAHGWKk
+  REQ-70581878: 7_JGPxsumznGr8336FUF8nnr_zkrH4f-_0DjqeVLhzk
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-56906371: depends_on
+  REQ-70581878: depends_on
+status: approved
+text: When the pre-pr skill prepares a pull request, the product shall list in the
+  pull request body every requirement the product names as touched by the branch,
+  each with the finding of reading the code citing the requirement against the requirement.
+type: functional
+verification: inspection

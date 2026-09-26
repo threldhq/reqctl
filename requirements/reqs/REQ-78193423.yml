@@ -10,4 +10,4 @@ status: deprecated
 text: The product shall refuse a service that does not declare whether it is required
   and whether it handles [content](content).
 type: functional
-verification: automated_test
+verification: inspection
