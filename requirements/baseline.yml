@@ -1,5 +1,5 @@
-baseline: 19
-commit: 7931db4758122ed4a61fb8741a16d39c6a5bc277
+baseline: 20
+commit: 0a9d00e63c278bb90230be5b18c80db01934ee4a
 items:
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-21085755: Bvdj7QwEiK0Xp7MSYZMUMLK111XaQfDlifO9DNFfpSU
@@ -31,6 +31,7 @@ items:
   REQ-11268295: pg6jZYgo_ewwlsjsguS9V3q1k1B7GlITXpMjSuNEtMs
   REQ-12032769: 1Km3PLqZHCDuV9kvCUqnJuU2P1mQdROcvfm6hg4k4QI
   REQ-12062416: zyf6QGAMGROfFKOxmJl1TjV_G28lGFVCIGgU2bozq4o
+  REQ-12222066: KVMqlUhM4uwvrl2w0oEnKSc0Xz3R1gDORN2BqDklWow
   REQ-12490145: DQLuzMctTPb5k2grmnHbqjLRKJ-55niDYF953efRJ1c
   REQ-13148397: HGLj8b_6v-PVolRAcaFdJcDs_UjovUXrV-kbm7aGioo
   REQ-13364391: 5PrBNXcQy-FocKyKq9ZdZmi5TM3jz-TGiVXFVCk98PY
@@ -136,6 +137,7 @@ items:
   REQ-51326810: s0ZUNLc4g3Ekg_-kfDlUX21UAq4Eb2Y2mY7cMKidwr0
   REQ-51424927: vQb-YtKja6pqE_TcCEGCnXaQ8ZT0dg7meNKih38TtMk
   REQ-51778557: u-lwJ0bB2TxgSw4Y4p58VkapMrjD7TneHkEfAz942rQ
+  REQ-52114263: 1mdLRnEmqKbu9UzqteWYcXNoe0zB2suklZA1dIvgQ-I
   REQ-52307457: 2GAIsxcSUISqg6Ripq4zD6E7VoiX3TW1HULkEdkXzYs
   REQ-52825760: jDH6bX-ZLOJ_fTk1UDNwK2rVPaRhTOo_eZNbUUJAFrw
   REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
@@ -225,6 +227,7 @@ items:
   REQ-88221320: tXvROEk2-d6rfc6wtCknhz0rA9e48ELzSz8KGkMkpqo
   REQ-89404055: Nsbb0X-z5HuMDsyLcOvtv-5ViV6dJfiDQCTkLZIjlbM
   REQ-89638829: KyTuFztut6dw6FoHm9U9gVDCpklcPNFH57NkB0nZ8vY
+  REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM
   REQ-90454282: Hn_cCdBHt6FCgTVr7h_FwY_DQr1NfJSmIlaX7gNlDxM
   REQ-90709998: VH8IkfXENTM52AdYI1HhuuoCMS2Nk1QGVnE9DN8CMTM
   REQ-92239556: w0fSOmsCa6TA7eG4Pu986puzbfrheHoxMBn-lz0gK18
@@ -259,10 +262,11 @@ items:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
   project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
+  question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
   recall_batch: YWoEFqqQvRgdxU-ZG7OGU8ey4lS_dVOuf75swngCeU4
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
   synthesis_steps: xe3OiAl6nX8ClNv6lrdaSi-ccSt2HzKlLO0VZefN0SI
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
-supersedes: 18
+supersedes: 19

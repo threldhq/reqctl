@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  question_for_the_owner:
+    aliases:
+    - questions for the owner
+    definition: A question a skill raises that no item of the corpus settles, which
+      only the owner's answer settles.
+    word: question for the owner
+kind: term
+status: approved
