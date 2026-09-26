@@ -1,0 +1,8 @@
+acceptance_criteria:
+- given: a step that runs no gate setting continue-on-error
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a workflow step continues on error, then the build shall refuse the change.

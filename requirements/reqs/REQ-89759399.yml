@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a pattern admitting the stamp an item carries that also admits a string one
+    character longer or shorter
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+- given: a pattern admitting a uid that also admits a kind the product does not mint
+    or a number of other than eight digits
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+- given: an allowlist for stamps joining its paths and its pattern other than with
+    AND
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+assessed:
+  REQ-57781505: JeDsR_YIG2WdJKc2JzcjhVOVUIqiIzaZZl1orDOqIjQ
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.stamp_admission: E62zb0qgo3sf0OgKcFWjYdcAUcak-IBB9NM3c8BVqeA
+priority: medium
+relations:
+  REQ-57781505: depends_on
+status: approved
+text: If the repository's secret scan admits a uid, or the stamp an item or an entry
+  of one carries, by a pattern wider than the shape the product gives it, then the
+  product shall report a problem when the ${corpus_gates.stamp_admission} gate runs.
+type: functional
+verification: inspection

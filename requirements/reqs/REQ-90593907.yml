@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a pattern for stamps that misses the stamp a requirement, a parameter, a
+    term or an entry of one carries
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+- given: an allowlist for stamps whose paths admit no file under the [corpus root](corpus_root)
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+- given: an allowlist for stamps whose pattern is matched against the line rather
+    than the value the scan captured
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+assessed:
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.stamp_admission: E62zb0qgo3sf0OgKcFWjYdcAUcak-IBB9NM3c8BVqeA
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+priority: medium
+relations: {}
+status: approved
+text: If the repository's secret scan would report the stamp an item, or an entry
+  of one, carries in a file under the [corpus root](corpus_root) as a secret, then
+  the product shall report a problem when the ${corpus_gates.stamp_admission} gate
+  runs.
+type: functional
+verification: inspection

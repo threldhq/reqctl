@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: git status failing with a message
+  then: the build stops .github/verify.py and names the message
+  when: .github/verify.py runs
+- given: git status failing without a message
+  then: the build stops .github/verify.py and names the exit status git gave
+  when: .github/verify.py runs
+assessed: {}
+relations: {}
+status: approved
+text: If git cannot report whether the working tree holds uncommitted changes when
+  .github/verify.py runs, then the build shall stop .github/verify.py and name the
+  error git gave.

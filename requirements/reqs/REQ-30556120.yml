@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: the reqctl wheel stating a project name
+  then: it lists the Claude Code plugin under that name
+  when: the plugin marketplace of the repository is read
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall list the Claude Code plugin it ships in the plugin marketplace
+  of the repository that holds its sources, under the project name the reqctl wheel
+  states.
+type: functional
+verification: inspection

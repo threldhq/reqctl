@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a manually started run on a branch that changes a file under the [corpus
+    root](corpus_root), over a [statement citation](statement_citation) naming a stamp
+    that the approved requirement it names no longer carries
+  then: the build refuses the change
+  when: the build runs
+assessed:
+  GUARD-12397751: ZZpZOVKQVB3u8515qCOsND-187sMqV_SPBN85IW9_Qw
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+relations:
+  GUARD-12397751: constrains
+status: approved
+text: If a change the build checks is not a pull request, then the build shall run
+  reqctl trace without giving it a base branch.

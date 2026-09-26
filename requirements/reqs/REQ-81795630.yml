@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: one of the ${secret_workflows} triggered by pull_request_target
+  then: it has a pull request event as a trigger of its own
+  when: its triggers are read
+assessed:
+  secret_workflows: PW2CLrlroB71sEBcwMYJBOg9VMzy6swAxvG8nYPYTWw
+  secret_workflows.*: KP2-zqLaL5Ly3qNr7ibTn9sdEkeZMyw_URquouxKYWk
+priority: medium
+relations: {}
+status: approved
+text: The product shall give none of the ${secret_workflows} a pull request event
+  as a trigger of its own.
+type: constraint
+verification: inspection

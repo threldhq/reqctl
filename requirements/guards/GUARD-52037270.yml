@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: a workflow stating no permissions
+  then: the build refuses the change
+  when: the build runs
+- given: a workflow granting read access to contents with a job in it granting write
+    access to contents
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If the permissions of a workflow, or of a job in a workflow, are other than
+  read access to contents alone, then the build shall refuse the change.

@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  REQ-40026456: 0TcrYIFnppsz-W0d434vItuWyJru2uqC10rkA93mUfc
+priority: medium
+relations:
+  REQ-38288492: constrains
+  REQ-40026456: depends_on
+status: approved
+text: The product shall ship no skill that shows a --value example that would mint
+  a parameter of text holding more than one member.
+type: constraint
+verification: inspection

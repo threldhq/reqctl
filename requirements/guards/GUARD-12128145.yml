@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a job running a gate that reads the corpus before the step running reqctl
+    validate
+  then: the build refuses the change and names the step
+  when: the build runs
+- given: a job running a reqctl command before the step running reqctl validate
+  then: the build refuses the change
+  when: the build runs
+- given: a job holding no step that runs reqctl validate and a step running a gate
+    that reads the corpus
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a workflow runs a step that reads the corpus before the step that runs reqctl
+  validate, then the build shall refuse the change.

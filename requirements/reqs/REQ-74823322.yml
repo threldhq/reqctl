@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: 'a workflow of the product, other than one of the ${secret_workflows}, that
+    passes secrets: inherit to a reusable workflow'
+  then: it names the secrets context
+  when: its text is read
+assessed:
+  secret_workflows: PW2CLrlroB71sEBcwMYJBOg9VMzy6swAxvG8nYPYTWw
+  secret_workflows.*: KP2-zqLaL5Ly3qNr7ibTn9sdEkeZMyw_URquouxKYWk
+priority: medium
+relations: {}
+status: approved
+text: The product shall name the secrets context in none of its workflows other than
+  the ${secret_workflows}.
+type: constraint
+verification: inspection
