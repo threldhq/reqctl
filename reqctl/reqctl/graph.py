@@ -70,13 +70,6 @@ def trace(tree, root, uid=None):
                                   "pinned": pinned, "held": held})
             if not implementation:
                 unimplemented.append(current)
-            # @req+ REQ-26361925@EMfIgZyFH4bw soom6a
-            # @req> REQ-76258226@8oshGhfGWgBF kmi47r
-            elif data.get("verification") == "automated_test" and not tests:
-                problems.append(
-                    f"{current}: verification is automated_test but no test references it"
-                )
-            # @req- soom6a
 
     if not uid:
         for tagged in sorted(tags):
