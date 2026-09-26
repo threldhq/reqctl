@@ -1,5 +1,5 @@
-baseline: 24
-commit: c6ae9d1e1aef0088e157592512905392ec783b1f
+baseline: 25
+commit: d103609b3bdfd2b3f490c199443b438d63794f6f
 items:
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-12128145: mFuOqNbkyV1oY-6soAHFUkqGN-yitkrFm5SThHXJEzo
@@ -42,6 +42,7 @@ items:
   REQ-10024282: x7WPiNHGRX8ny-DvA24VwPZpFoAMXhHsP_AY-388Wko
   REQ-10470323: qHJTwBVi_HZun8QqqiuhYxmy8SjSSlxW7GEqthbFnh8
   REQ-10503329: WLWOt9-DSU1S9QN-22p8RcAPaXQmp5Erc-Uk4SAm5po
+  REQ-10966072: RC1_0V_R-34UHxOpvgnMzjMqgTefxbfnAoJHekdYS1U
   REQ-11268295: pg6jZYgo_ewwlsjsguS9V3q1k1B7GlITXpMjSuNEtMs
   REQ-12032769: 1Km3PLqZHCDuV9kvCUqnJuU2P1mQdROcvfm6hg4k4QI
   REQ-12062416: zyf6QGAMGROfFKOxmJl1TjV_G28lGFVCIGgU2bozq4o
@@ -348,4 +349,4 @@ items:
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
-supersedes: 23
+supersedes: 24
