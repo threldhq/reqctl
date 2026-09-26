@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: the elucidate skill as shipped
+  then: it sorts a rule a behaviour of the governed software depends on as a requirement,
+    even where only one repository runs that behaviour today
+  when: its passage sorting product from build is read
+- given: the elucidate skill as shipped
+  then: it sorts a rule only the repository's own check depends on as a guard
+  when: its passage sorting product from build is read
+- given: the elucidate skill as shipped
+  then: it sorts a rule both depend on as a requirement for the behaviour and a guard
+    for the repository's wiring
+  when: its passage sorting product from build is read
+- given: the elucidate skill as shipped
+  then: no passage sorts a rule by where the rule is enforced
+  when: its passage sorting product from build is read
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+priority: medium
+relations:
+  REQ-38288492: derives_from
+status: approved
+text: The product shall ship an elucidate skill that sorts a rule a behaviour of the
+  governed software depends on as a requirement, a rule only the repository's own
+  check depends on as a guard, and a rule both depend on as one of each.
+type: functional
+verification: inspection
