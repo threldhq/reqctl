@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: each skill the Claude Code plugin ships
+  then: every passage raising a [question for the owner](question_for_the_owner) asks
+    it in a Claude Code session, and none asks it in a pull request body
+  when: the text of the skill is read
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: When a skill the product ships raises a [question for the owner](question_for_the_owner),
+  the product shall ask the owner the question only in a Claude Code session.
+type: functional
+verification: inspection
