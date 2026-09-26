@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a proposal whose recorded binding names a member the dimension does not define
+  then: the product refuses the run, naming the member and the members defined
+  when: the run is built
+- given: a proposal whose text references a member the dimension's data item does
+    not define
+  then: the product refuses the run
+  when: the run is built
+assessed:
+  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+priority: medium
+relations:
+  REQ-68873210: depends_on
+status: approved
+text: Where the corpus states a binding dimension, the product shall refuse a run
+  that records a binding naming a member the dimension's data item does not define.
+type: functional
+verification: inspection

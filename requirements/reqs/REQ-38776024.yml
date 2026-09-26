@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run holding no proposal
+  then: the product refuses the run
+  when: the run is built
+assessed:
+  REQ-83103011: wwcaVYzdMPrFtG_vjYOYld1mrO6RFB68poHCROe5TUk
+  REQ-90454282: Hn_cCdBHt6FCgTVr7h_FwY_DQr1NfJSmIlaX7gNlDxM
+priority: medium
+relations:
+  REQ-83103011: constrains
+  REQ-90454282: constrains
+status: approved
+text: If a run holds no proposal, then the product shall refuse the run.
+type: functional
+verification: inspection

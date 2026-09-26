@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a corpus from which four duplicate, two fault and two sibling probes are
+    minted
+  then: the report states four duplicate, two fault and two sibling probes
+  when: probes are minted
+- given: a folder holding the proposals and verdicts of an earlier probe run
+  then: the report states how many of them were retired
+  when: probes are minted into it
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When probes are minted, the product shall report how many duplicate, fault and
+  sibling probes it minted and how many proposals and verdicts of the replaced run
+  were retired.
+type: functional
+verification: inspection

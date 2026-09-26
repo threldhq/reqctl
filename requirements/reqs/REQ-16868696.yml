@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a run of three proposals over two shards in batches of two
+  then: the report states three proposals, two shards, batches of two and how many
+    recall agents to spawn
+  when: the run is built
+assessed:
+  REQ-32866040: hD5N5WdHBdwH2BNabKtTxhtIFcEXt7Oap2leCJtcCDs
+  REQ-43761464: pFlii3nabPOTuWWSHzIo1C68Txtw5FfEGYZqOyxB-7U
+  REQ-83103011: wwcaVYzdMPrFtG_vjYOYld1mrO6RFB68poHCROe5TUk
+  REQ-94426583: robFmbw2ht7IlAltCYRS9ZBd2bKMAF5O9JJ7vubNIy8
+priority: medium
+relations:
+  REQ-32866040: depends_on
+  REQ-43761464: depends_on
+  REQ-83103011: depends_on
+  REQ-94426583: depends_on
+status: approved
+text: When a run is built, the product shall report how many proposals it holds, over
+  how many shards and in batches of how many proposals, and how many recall agents
+  to spawn.
+type: functional
+verification: inspection

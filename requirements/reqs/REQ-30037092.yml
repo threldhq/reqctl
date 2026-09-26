@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a corpus stating a binding dimension and a run recording no binding under
+    it for a proposed requirement
+  then: the product refuses the run, naming the proposal and the dimension
+  when: the run is built
+- given: a proposed requirement whose text references no member and whose binding
+    is recorded as all
+  then: the product builds the run
+  when: the run is built
+assessed:
+  REQ-29846444: iGWqcEzs6s52xVYwT50drAGnMzrNvkfAKADoRzuEkco
+  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+priority: medium
+relations:
+  REQ-29846444: depends_on
+  REQ-68873210: depends_on
+status: approved
+text: Where the corpus states a binding dimension, the product shall refuse a run
+  that records no binding under the dimension for a requirement it proposes, even
+  one whose text references no member.
+type: functional
+verification: inspection

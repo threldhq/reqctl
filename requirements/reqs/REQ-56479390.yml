@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a run with one proposal split into groups whose group returns are all accepted
+  then: the report states one final judge to spawn
+  when: the final judges are built
+- given: a run whose proposals were never split into groups
+  then: the report states that no proposal was split into groups
+  when: the final judges are built
+assessed:
+  REQ-20121033: ilM5nhktsDvFBNZrKbkTZOWmSf-m-_ehiq3NfxUU8Ks
+  REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+priority: medium
+relations:
+  REQ-20121033: depends_on
+  REQ-48762557: depends_on
+status: approved
+text: When final judge prompts are built, the product shall report how many final
+  judges to spawn, or that no proposal was split into groups.
+type: functional
+verification: inspection

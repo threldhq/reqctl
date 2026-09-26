@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: two accepted verdicts naming one item as covering
+  then: the report lists the item once, under it both proposals with their reasons
+  when: the verdicts are read
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When verdicts are read, the product shall list each item the accepted verdicts
+  name as covering, conflicting, related or nearest, and under it every proposal that
+  named it so, with the reason given.
+type: functional
+verification: inspection

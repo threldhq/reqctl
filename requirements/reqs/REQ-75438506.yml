@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a duplicate probe whose source recall reached, the judge prompt carried and
+    the verdict found
+  then: its row reads yes, yes and source found, and the totals count it
+  when: the run is scored
+- given: a fault probe
+  then: its row states whether its fault was named and leaves the recall and judge
+    prompt columns empty
+  when: the run is scored
+assessed:
+  REQ-20722175: BniiLBiwu3XL-OhaDgg_A3XrIhmW5BwHw2OyAx5lDWQ
+  REQ-23706540: e-JqhR3Ui-keWIPxNZLUjlVjA3fPWTM1awZuzyA7rJk
+priority: medium
+relations:
+  REQ-20722175: depends_on
+  REQ-23706540: depends_on
+status: approved
+text: When a run is scored, the product shall report for each probe what its verdict
+  found and how many citations fell outside the key, and for each probe expecting
+  an item whether recall reached it and the judge prompt carried it, with totals across
+  the run.
+type: functional
+verification: inspection

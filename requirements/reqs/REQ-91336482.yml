@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a run whose every figure passes
+  then: the report closes by stating that a passing run says nothing has regressed
+    and not that the skill is accurate
+  when: the run is scored
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a run is scored, the product shall close its report with the harness's
+  limitation, that a passing run says nothing has regressed and not that the skill
+  is accurate.
+type: functional
+verification: inspection

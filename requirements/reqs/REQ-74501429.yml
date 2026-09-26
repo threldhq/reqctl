@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: findings holding two unclaimed entries and one renamed entry, every quote
+    the owner's own
+  then: the report states two unclaimed and one renamed
+  when: the findings are checked
+- given: findings quoting what the owner did not write
+  then: the report states that fault
+  when: the findings are checked
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When coverage findings are checked, the product shall state each fault it finds,
+  or, where it finds none, how many unclaimed entries and how many renamed entries
+  they hold.
+type: functional
+verification: inspection

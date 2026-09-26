@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a probe whose verdict never returned
+  then: the report states that the figures are not comparable with a complete run
+  when: the run is scored
+- given: a recall return the product could not read
+  then: the report names the return and states that its recall column reads no for
+    a return never read
+  when: the run is scored
+- given: a duplicate probe that did not find its source
+  then: the report states that the run did not work rather than measuring badly
+  when: the run is scored
+assessed:
+  REQ-75438506: GIywOiWYUqgHSl1TAe7_XUF_YpwOWZZrWPqOPGuhdFc
+priority: medium
+relations:
+  REQ-75438506: depends_on
+status: approved
+text: 'When a run is scored, the product shall state after its figures each reason
+  they cannot be read as measured: a verdict that never returned, a recall return
+  it could not read, or a duplicate probe that did not find its source.'
+type: functional
+verification: inspection

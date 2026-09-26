@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: an approved requirement that constrains another approved requirement
+  then: a probe drawn from it expects the other as a neighbour
+  when: probes are minted
+- given: an approved requirement whose only relation targets a deprecated requirement
+  then: a probe drawn from it expects no neighbour
+  when: probes are minted
+- given: an approved requirement that another approved requirement derives from
+  then: a probe drawn from it does not expect the other as a neighbour
+  when: probes are minted
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When probes are minted, the product shall expect as a probe's neighbours the
+  approved requirements its source derives from, depends on or constrains.
+type: functional
+verification: inspection

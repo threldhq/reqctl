@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a challenge_roles data item whose entry for the judge role names an empty
+    model
+  then: the product refuses the run
+  when: a run is built
+- given: a challenge_roles data item stating no model for the judge role and no default
+  then: the product builds the run on the model it ships for that role
+  when: a run is built
+assessed:
+  REQ-10470323: qHJTwBVi_HZun8QqqiuhYxmy8SjSSlxW7GEqthbFnh8
+  REQ-68127788: bLvPproYZMB0vf0e7UaFGU1sLk-Lr1PtgMv6wvQRhSc
+priority: medium
+relations:
+  REQ-10470323: constrains
+  REQ-68127788: constrains
+status: approved
+text: If the corpus states for a challenge role a model that is empty or is not text,
+  then the product shall refuse the run.
+type: functional
+verification: inspection

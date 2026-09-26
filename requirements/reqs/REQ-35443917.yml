@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a requirement minted or revised with --verification automated_test
+  then: the product refuses
+  when: the command runs
+- given: a requirement file stating automated_test as its verification
+  then: the product refuses the item
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: The product shall offer no verification method named automated_test.
+type: functional
+verification: inspection

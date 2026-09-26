@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a verdict for proposal 3 that answers proposal 4
+  then: the product refuses the verdict
+  when: the verdicts are read
+- given: a verdict naming an item its judge prompt did not state
+  then: the product refuses the verdict
+  when: the verdicts are read
+assessed:
+  REQ-30631052: upW72WeLPoHTMqWypF3S5AEi-KCa_mJBG-_MUtD1YHk
+  REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
+priority: medium
+relations:
+  REQ-30631052: depends_on
+  REQ-46162234: derives_from
+status: approved
+text: If a judge's verdict answers a proposal other than the one its judge prompt
+  carried, or cites an item its prompt did not state, then the product shall refuse
+  the verdict.
+type: functional
+verification: inspection

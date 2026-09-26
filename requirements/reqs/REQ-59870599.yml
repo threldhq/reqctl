@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a coverage document holding no renamed list
+  then: the product refuses the findings
+  when: the findings are checked
+- given: a coverage document that is a list
+  then: the product refuses the findings
+  when: the findings are checked
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a coverage document is not a mapping holding an unclaimed list and a renamed
+  list, then the product shall refuse the findings.
+type: functional
+verification: inspection

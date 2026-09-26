@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a run recording a proposal's criteria as one string rather than a list
+  then: the product refuses the run and states that criteria are a list of strings
+  when: the run is built
+- given: a run recording no criteria for a proposal
+  then: the product builds the run
+  when: the run is built
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a run records a proposal's criteria as other than a list of strings, then
+  the product shall refuse the run.
+type: functional
+verification: inspection

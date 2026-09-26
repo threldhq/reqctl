@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a run with two proposals split into groups, one of whose group returns is
+    refused
+  then: the product writes no final judge prompt for either proposal and lists the
+    group judge to spawn again
+  when: the final judges are built
+- given: a run with a proposal split into groups, one of whose group judges has written
+    no return
+  then: the product writes no final judge prompt
+  when: the final judges are built
+assessed:
+  REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+  REQ-68873467: 8njvorO8kPujWZNoyjDZJ7-X-DJrYHhIoaEDMDwKzi8
+priority: medium
+relations:
+  REQ-48762557: depends_on
+  REQ-68873467: constrains
+status: approved
+text: While a group judge of a run has written no return, or its return stands refused,
+  the product shall write no final judge prompt for the run.
+type: functional
+verification: inspection
