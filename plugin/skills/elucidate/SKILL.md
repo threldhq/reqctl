@@ -27,9 +27,7 @@ merge is the approval, and only the owner merges.
 This file says only what is not already said elsewhere. EARS shape, the
 schema, parameter references and relations are enforced by `reqctl validate`,
 which prints the five forms when a statement misses the shape. Atomicity,
-verifiability and no-rationale are stated in
-`requirements/schemas/requirement.schema.yaml` as prose -- the drafter's to
-check, not validate's. Read them there.
+verifiability and no-rationale are the drafter's to check, not validate's.
 
 A run leaves its state under `.elucidate/<run>/`, never committed. You write
 `words.md`, `declined.md` and `proposals/NN.md`, each proposal its own file
