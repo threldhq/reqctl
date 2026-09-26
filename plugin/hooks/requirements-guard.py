@@ -484,7 +484,7 @@ def edited(tool, args):
     return before, after
 
 
-# @req> GUARD-27415973@LyBZRXU1yogK amplla
+# @req> REQ-38099593@DiCRfDZFomPB 3yvytz
 def judge_citation_edit(tool, args):
     if tool not in ("Edit", "MultiEdit", "Write"):
         return
@@ -495,7 +495,7 @@ def judge_citation_edit(tool, args):
         deny(HAND_CITATION)
 
 
-# @req> GUARD-27415973@LyBZRXU1yogK hs7agh
+# @req> REQ-38099593@DiCRfDZFomPB cebvfg
 def judge_citation_shell(raw):
     for pipeline in scan(AMP_REDIRECT.sub(" ", flatten(ESCAPE.sub("", raw)))):
         if not any(CITATION.search(part.translate(UNQUOTED)) for part in pipeline):
