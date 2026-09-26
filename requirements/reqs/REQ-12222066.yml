@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a run of the elucidate skill holding a [question for the owner](question_for_the_owner)
+    that the owner has not answered
+  then: the product blocks the run there instead of deciding the question on its own
+    reading
+  when: the run reaches the challenge step
+- given: a run of the elucidate skill whose verdict raises a [question for the owner](question_for_the_owner)
+  then: the product blocks the run before any item is minted
+  when: the challenge ends
+- given: a skill carried out unattended under a goal, holding a [question for the
+    owner](question_for_the_owner) that the owner has not answered
+  then: the product blocks the step until the owner answers
+  when: the skill would take its next step
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: While a [question for the owner](question_for_the_owner) is unanswered, the
+  product shall block every further step of the skill that raised the question.
+type: functional
+verification: inspection

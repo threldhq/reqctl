@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a run whose verdict raises a question the owner answered
+  then: the description states the question with the owner's answer
+  when: the description is rendered
+- given: a run whose verdict raises a question the corpus settled
+  then: the description states the question with the uid of each item that settled
+    it and the clause quoted from that item
+  when: the description is rendered
+- given: a run whose verdict raises a question that neither the owner's answer nor
+    corpus evidence settled
+  then: the product refuses and names the question, and states no question on its
+    own
+  when: the description is rendered
+assessed:
+  REQ-21373303: o72_uf6TKporHATCb5jpf7bLJ9nnShCh_gA4aGNZ5dA
+priority: medium
+relations:
+  REQ-21373303: derives_from
+status: approved
+text: When a run's pull request description is rendered, the product shall state each
+  question a verdict raises together with the owner's answer or the corpus evidence
+  that settled the question.
+type: functional
+verification: inspection
