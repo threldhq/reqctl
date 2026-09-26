@@ -7,6 +7,6 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 relations: {}
-status: approved
+status: draft
 text: If a skill shows a --value example that would mint a parameter of text holding
   more than one member, then the build shall refuse the change.

@@ -13,6 +13,6 @@ assessed:
   GUARD-56838909: thIjmFd7Wvy9mCXKuc9YQFNqxbnPNTu0ZrBVmxzAo3w
 relations:
   GUARD-56838909: constrains
-status: approved
+status: draft
 text: If the plugin marketplace of the repository lists no plugin under the project
   name the reqctl wheel states, then the build shall refuse the change.

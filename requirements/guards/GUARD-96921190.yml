@@ -25,7 +25,7 @@ assessed:
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 relations: {}
-status: approved
+status: draft
 text: If a pull request changes a file under the [corpus root](corpus_root) other
   than the baseline, in more than the pins the file records as assessed, and also
   changes a file outside the [corpus root](corpus_root) in more than the stamps its

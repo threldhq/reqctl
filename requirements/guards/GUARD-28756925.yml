@@ -18,6 +18,6 @@ acceptance_criteria:
   when: a pull request adds one
 assessed: {}
 relations: {}
-status: approved
+status: draft
 text: If a pull request changes the baseline to a number that does not exceed the
   number the base branch states, then the build shall refuse the change.

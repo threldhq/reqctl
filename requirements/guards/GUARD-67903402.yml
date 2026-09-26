@@ -15,7 +15,7 @@ assessed:
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 relations: {}
-status: approved
+status: draft
 text: If reqctl trace reports a [statement citation](statement_citation) as behind
   the corpus, then the build shall refuse the change unless the change is a pull request
   that changes a file under the [corpus root](corpus_root).
