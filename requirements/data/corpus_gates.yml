@@ -1,0 +1,13 @@
+assessed: {}
+entries:
+  baseline_match: {}
+  baseline_numbering: {}
+  corpus_validity: {}
+  stamp_admission: {}
+  taxonomy: {}
+  traceability: {}
+  travel_alone: {}
+kind: data
+name: corpus_gates
+status: approved
+text: the corpus gates a calling repository can run

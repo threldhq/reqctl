@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a repository the Claude Code plugin is installed into
+  then: the session's context holds reqctl's rules for working a corpus
+  when: a session starts in that repository
+- given: a session whose context holds reqctl's rules for working a corpus
+  then: the compacted context holds reqctl's rules for working a corpus
+  when: the session's context is compacted
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.session_rules_hook: Aby-oraGtVIEvqLlMcW-v2zKxBaNntB6FsnV1w5Y9no
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: When a session starts or a session's context is compacted, the product shall
+  add reqctl's rules for working a corpus to the session's context through the ${plugin_components.session_rules_hook}.
+type: functional
+verification: demonstration
