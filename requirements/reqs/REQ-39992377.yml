@@ -1,7 +1,7 @@
 acceptance_criteria: []
 assessed:
   REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
-  REQ-40026456: Q6exvjmqItjXoEIh_bpH5WUHnRFYoHQNRWc0tNuG3wc
+  REQ-40026456: 0TcrYIFnppsz-W0d434vItuWyJru2uqC10rkA93mUfc
 priority: medium
 relations:
   REQ-38288492: constrains

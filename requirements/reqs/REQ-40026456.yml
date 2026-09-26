@@ -9,7 +9,12 @@ acceptance_criteria:
 - given: a parameter whose value type is count holding two members
   then: the product does not refuse the parameter
   when: the corpus is validated
-assessed: {}
+- given: a pull request adding a parameter whose value type is text holding two members
+  then: the product refuses the pull request
+  when: the ${corpus_gates.taxonomy} gate runs
+assessed:
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.taxonomy: 1-kPwGhwdiAZiu29Q4Yq5wdClFdIclFkPvK4znC_dTU
 priority: medium
 relations: {}
 status: approved
