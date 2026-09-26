@@ -49,7 +49,7 @@ properties:
       the pull request, not by this field.
 
   verification:
-    enum: [inspection, analysis, demonstration]
+    enum: [automated_test, inspection, analysis, demonstration]
 
   acceptance_criteria:
     type: array
