@@ -7,6 +7,7 @@ from pathlib import Path
 
 SINKS = ("help", "description", "epilog")
 GOVERNED = "requirements/"
+CLI = "reqctl/reqctl/cli.py"
 
 
 def scanned():
@@ -100,11 +101,20 @@ def survey(paths):
 
 
 def main(ceiling):
-    counted, refused = survey(scanned())
+    counted, refused, strays = 0, [], []
+    for path in scanned():
+        held, why = survey([path])
+        counted += held
+        refused += why
+        if held and path != CLI:
+            strays.append(path)
     for path, line, why in refused:
         print(f"::error file={path},line={line}::{why}")
+    for path in strays:
+        print(f"::error file={path}::gives an argument parser help text, "
+              f"which only {CLI} may; delete it")
     print(f"{counted} help strings")
-    if refused:
+    if refused or strays:
         return 1
     if counted != ceiling:
         fix = ("Delete it, or raise the ceiling in ci.yml and say who "
