@@ -11,7 +11,10 @@ def tracked():
         capture_output=True, text=True, check=False)
     if found.returncode != 0:
         raise SystemExit(f"cannot list files: {found.stderr.strip()}")
-    return sorted({path for path in found.stdout.split("\0") if path})
+    held = sorted({path for path in found.stdout.split("\0") if path})
+    if not held:
+        raise SystemExit("cannot list files: git lists none")
+    return held
 
 
 def main():
