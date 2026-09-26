@@ -12,14 +12,14 @@ of them. What reaches the owner is the pull request body, the reply in session,
 and what `reqctl` prints: those are written for a person, and nothing in the
 tree is. The reader is a session that starts with no memory of this repository,
 so legibility is owed more here than to a colleague who remembers. It belongs in
-names, structure and tests, each of which fails when it goes stale, and never in
-prose beside the code, which cannot.
+names, structure and statement citations, each of which fails when it goes
+stale, and never in prose beside the code, which cannot.
 
 Two accounts hold the repository and there will never be a third. Claude pushes
-as its own account; the owner reviews, approves and merges as theirs. That is
-what `CODEOWNERS` encodes by putting the owner on `*`: with two identities,
-keeping the one that writes out of the one that approves is the entire
-separation.
+and opens pull requests as `dill-eng`; the owner reviews, approves and merges as
+`threld-dev`. That is what `CODEOWNERS` encodes by putting `@threld-dev` on `*`:
+with two identities, keeping the one that writes out of the one that approves is
+the entire separation.
 
 ## Priority order
 
@@ -40,17 +40,20 @@ governing approved requirement. If none exists, **stop** and ask the owner to
 create one. No exceptions, including fixes.
 
 `reqctl` is the product this repository builds, so a statement about what it
-does states "the product shall" and is a `REQ`. That is what this corpus holds.
-A `GUARD` states "the build shall" and is reserved for what makes and checks
-reqctl rather than for reqctl itself; none is minted yet.
+does states "the product shall" and is a `REQ`. What reqctl ships as its Claude
+Code plugin, the requirements-guard hook included, is product, so its rules are
+`REQ`s too. A `GUARD` states "the build shall" and is reserved for what makes
+and checks reqctl rather than for reqctl itself; it is minted, approved and
+baselined like a requirement, and cited at the code that enforces it.
 
 What carries the build rather than stating a rule of ours -- dependency pins, CI
-wiring, lockfiles -- is governed by the gates in CI. The hook and the CI
-mechanics -- workflow shape, the comment and help budgets, lockfile checks,
-CODEOWNERS, travel-alone -- are code held by their self-tests, and a rule of
-ours lifted out of one would be the first `GUARD` here. A third-party ruleset --
-`ruff`, `mypy`, `actionlint` -- states no rule of ours to lift, and stays code;
-a rule of ours configured into one is still ours.
+wiring, lockfiles -- is governed by the gates in CI. The CI mechanics --
+workflow shape, the comment and help budgets, lockfile checks, CODEOWNERS,
+travel-alone -- are build, and a rule of ours lifted out of one is a `GUARD`.
+The session-start hook is wired by the repository's own settings rather than
+the plugin, so it is build, and its install parity is GUARD-93589588. A
+third-party ruleset -- `ruff`, `mypy`, `actionlint` -- states no rule of ours to
+lift, and stays code; a rule of ours configured into one is still ours.
 
 `reqctl` is the only way the corpus is touched. Never hand-edit an item or
 baseline file, never read one except through `reqctl`, and never reach one with
@@ -92,7 +95,7 @@ incidental code. A stale citation is re-pinned by reading the code against the
 statement that now stands, then `reqctl repin ID`; one that no longer governs
 goes with `reqctl untag ID`, and a region that moved is untagged and cited again.
 The hook refuses an edit, or a shell command naming a citation, that adds,
-removes or changes a citation comment (GUARD-27415973); a script that writes one
+removes or changes a citation comment (REQ-38099593); a script that writes one
 without naming it is beyond a hook that sees only the command text.
 
 A statement citation is the only form `reqctl trace` accepts: it refuses the
@@ -137,7 +140,7 @@ Write succinctly — in files, in commits, and in replies to the owner. Write wh
 the next session must act on.
 
 The code says what it does. Write no comments and no docstrings; what one would
-have said belongs in a name, a test, or the commit message.
+have said belongs in a name, the corpus, or the commit message.
 
 The only exception is a directive a tool reads — `zizmor: ignore`, `shellcheck
 disable`, a statement citation. Those are syntax, not prose. A
@@ -153,19 +156,29 @@ of `cli.py`. A script nothing hand-drives carries none: its caller states the
 arguments.
 
 Do not create decision records, ADRs, or design documents. A constraint belongs
-in a requirement, a schema, or a test — if it did not become one of those, it
-does not persist.
+in a `REQ`, a `GUARD`, or a schema — if it did not become one of those, it does
+not persist.
 
 ## Verification
 
-`python .github/verify.py` is the proof: it reads the `check` job from
+Code is verified by reading it against the approved statement it cites.
+`reqctl compare` names every cited region a change touches, and each is read
+again.
+
+A test may be written and run to exercise code while working, and is deleted
+before commit. No test is committed, and no requirement is drafted with
+`automated_test` verification. A pass is never offered as evidence that the code
+does what its statement says, of correctness or against regression, because the
+test and the code come from the same understanding.
+
+`python .github/verify.py` runs the gates: it reads the `check` job from
 `.github/workflows/ci.yml` and runs the steps CI would run for this tree, so a
 session runs what CI runs rather than a subset it recalled. Read what it
 skipped — a step skipped for provisioning is checked only by CI.
 
-Never call a task complete without running something that proves it — tests,
-linter, validator, the application. If it cannot be verified programmatically,
-say so and ask the owner to verify manually.
+A task is called complete only by stating what was checked: the statements the
+code was read against and the gates that ran. Where only use can show it works,
+ask the owner to try it.
 
 Kill background processes and delete temp files before declaring done.
 
@@ -182,8 +195,8 @@ where useful: `feat(REQ-75161909): refuse an unstamped citation`.
 Open a pull request when a coherent unit of work is ready, not on every push —
 CI minutes are finite. Batch related work into one PR.
 
-The owner reads the pull request, not the diff. State what changed and what
-proved it; nothing the body omits is seen.
+The owner reads the pull request, not the diff. State what changed and what was
+checked; nothing the body omits is seen.
 
 Claude may merge a pull request that touches only code — a permission that waits
 on a deliberate `CODEOWNERS` carve-out: `*` owns the repository, so a new path is
