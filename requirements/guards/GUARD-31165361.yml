@@ -13,6 +13,6 @@ acceptance_criteria:
 assessed:
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
 relations: {}
-status: approved
+status: draft
 text: If the secret scan would report the stamp of an item or an entry in a file under
   the [corpus root](corpus_root) as a secret, then the build shall refuse the change.

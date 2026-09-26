@@ -11,6 +11,6 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 relations: {}
-status: approved
+status: draft
 text: If the secret scan would report the uid of an item as a secret, then the build
   shall refuse the change.

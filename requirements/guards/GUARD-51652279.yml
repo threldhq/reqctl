@@ -7,6 +7,6 @@ assessed:
   secret_workflows: PW2CLrlroB71sEBcwMYJBOg9VMzy6swAxvG8nYPYTWw
   secret_workflows.*: KP2-zqLaL5Ly3qNr7ibTn9sdEkeZMyw_URquouxKYWk
 relations: {}
-status: approved
+status: draft
 text: If a workflow other than one of the ${secret_workflows} names the secrets context,
   then the build shall refuse the change.

@@ -13,7 +13,7 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 relations: {}
-status: approved
+status: draft
 text: If the secret scan admits the uid of an item, or the stamp of an item or an
   entry, by a pattern that also admits a string reqctl never writes as either, then
   the build shall refuse the change.
