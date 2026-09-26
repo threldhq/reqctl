@@ -91,22 +91,20 @@ def flags_named(text, holder, defined):
 
 def flags_in_faults(path, defined):
     faults = []
+    # @req> GUARD-50228923@hESHdAl7Kn_w bsr722
     for node in ast.walk(parsed(path)):
         if not isinstance(node, ast.Call):
             continue
-        if getattr(node.func, "id", None) != "ReqctlError":
+        named = getattr(node.func, "id", getattr(node.func, "attr", None))
+        if named != "ReqctlError":
             continue
-        for given in node.args:
-            if isinstance(given, ast.Constant):
-                said = str(given.value)
-            elif isinstance(given, ast.JoinedStr):
-                said = "".join(piece.value for piece in given.values
-                               if isinstance(piece, ast.Constant))
-            else:
+        for piece in (inner for given in node.args for inner in ast.walk(given)):
+            if not (isinstance(piece, ast.Constant)
+                    and isinstance(piece.value, str)):
                 continue
-            for flag in set(BARE_FLAG.findall(said)):
+            for flag in set(BARE_FLAG.findall(piece.value)):
                 if flag not in defined:
-                    faults.append((path, given.lineno,
+                    faults.append((path, piece.lineno,
                                    f"this fault names {flag}, which no parser "
                                    "defines"))
     return faults
