@@ -18,9 +18,12 @@ MARKER = re.compile(
     rf"\A@req(?P<sign>[+>-])(?:\s+(?P<uid>(?:{corpus.KINDS})-\d+)"
     r"(?:@(?P<stamp>\S*))?)?(?:\s+(?P<id>\S+))?(?:\s+(?P<exclusive>exclusive))?\Z")
 FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
-DELIMITERS = re.compile(r"\A\s*(?:#+|<!--)\s*|\s*-->\s*\Z")
+# @req> REQ-52925332@wlFlbfJQbQ2g obdue5
+DELIMITERS = re.compile(r"\A\s*(?:#+|//|<!--)\s*|\s*-->\s*\Z")
 ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
-COMMENTS = {".py": ("# ", ""), ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->")}
+# @req> REQ-60346603@eKFixVFgV9Xt ulk4ve
+COMMENTS = {".py": ("# ", ""), ".md": ("<!-- ", " -->"),
+            ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
 
 
 def markers(text):
