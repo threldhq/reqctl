@@ -65,7 +65,9 @@ def schema_problems(root, uid, data):
         where = ".".join(str(p) for p in error.absolute_path) or "(item)"
         problems.append(f"{uid}: schema: {where}: {error.message}")
     # @req> REQ-35443917@7V3GXXoqruBl znhrrb
-    if data.get("verification") == "automated_test":
+    if data.get("verification") == "automated_test" and not any(
+            problem.startswith(f"{uid}: schema: verification:")
+            for problem in problems):
         problems.append(f"{uid}: verification: automated_test is not a "
                         "verification method; state inspection, analysis or "
                         "demonstration")
