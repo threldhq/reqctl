@@ -13,6 +13,7 @@ PLACEHOLDER = re.compile(r"NN|FILE|DIR|MEMBER|PATH|<[^>]*>")
 QUOTED_FLAG = re.compile(r"`(--[a-z][\w-]*)`")
 SKILL_DIR = "${CLAUDE_SKILL_DIR}"
 BARE_FLAG = re.compile(r"--[a-z][\w-]*")
+LONE_FLAG = re.compile(r"--[a-z][\w-]*(?:=\S*)?")
 
 
 def tracked(*globs):
@@ -45,7 +46,7 @@ def parsed(path):
 
 
 def flags_defined():
-    held = set()
+    held = {"--help"}
     for path in listed("*.py"):
         for node in ast.walk(parsed(path)):
             if not isinstance(node, ast.Call):
@@ -93,20 +94,15 @@ def flags_in_faults(path, defined):
     faults = []
     # @req> GUARD-50228923@hESHdAl7Kn_w bsr722
     for node in ast.walk(parsed(path)):
-        if not isinstance(node, ast.Call):
+        if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
             continue
-        if getattr(node.func, "id",
-                   getattr(node.func, "attr", None)) != "ReqctlError":
+        if LONE_FLAG.fullmatch(node.value):
             continue
-        for piece in ast.walk(node):
-            if not (isinstance(piece, ast.Constant)
-                    and isinstance(piece.value, str)):
-                continue
-            for flag in set(BARE_FLAG.findall(piece.value)):
-                if flag not in defined:
-                    faults.append((path, piece.lineno,
-                                   f"this fault names {flag}, which no parser "
-                                   "defines"))
+        for flag in set(BARE_FLAG.findall(node.value)):
+            if flag not in defined:
+                faults.append((path, node.lineno,
+                               f"this string names {flag}, which no parser "
+                               "defines"))
     return faults
 
 
@@ -118,7 +114,10 @@ def survey():
         text = read(path)
         faults += paths_named(text, path, known)
         faults += flags_named(text, path, defined)
-    for path in listed("reqctl/reqctl/*.py"):
+    modules = listed("reqctl/reqctl/*.py")
+    if not modules:
+        raise SystemExit("no reqctl module is listed under reqctl/reqctl")
+    for path in modules:
         faults += flags_in_faults(path, defined)
     return faults
 
