@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: a base branch carrying baseline 19 and a branch that changes the baseline
+    while still stating 19
+  then: the product reports both numbers and names merging the base branch, then generating
+    the baseline
+  when: the baseline is checked against the base branch
+- given: a base branch carrying baseline 19 and a branch stating baseline 20
+  then: the product reports no problem
+  when: the baseline is checked against the base branch
+- given: a branch whose baseline states a number that is not a whole number
+  then: the product reports a problem
+  when: the baseline is checked against a base branch
+- given: a base branch the repository does not hold
+  then: the product reports a problem and names fetching it
+  when: the baseline is checked against it
+- given: a base branch carrying no baseline
+  then: the product reports no problem
+  when: the baseline is checked against it
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the baseline is checked against a base branch, differs from the baseline
+  that branch carries, and states a number no greater than that branch's baseline
+  number, then the product shall report both numbers.
+type: functional
+verification: inspection
