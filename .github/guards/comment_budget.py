@@ -274,8 +274,8 @@ def main(ceiling):
     if refused:
         return 1
     if counted != ceiling:
-        fix = ("The code says what it does. Delete it, or promote what it "
-               "states to a test." if counted > ceiling else
+        fix = ("The code says what it does. Delete it, or say what it states "
+               "in a name or the commit message." if counted > ceiling else
                "Lower the ceiling in ci.yml to hold the ground.")
         print(f"::error::the comment budget is {ceiling}; this branch has "
               f"{counted}. {fix}")

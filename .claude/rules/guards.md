@@ -1,7 +1,6 @@
 ---
 paths:
   - ".github/guards/**"
-  - ".github/tests/**"
   - ".claude/hooks/**/*.py"
   - ".claude/skills/elucidate/**/*.py"
   - ".github/*.py"

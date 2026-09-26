@@ -7,6 +7,8 @@ from pathlib import Path
 
 SINKS = ("help", "description", "epilog")
 GOVERNED = "requirements/"
+CLI = "reqctl/reqctl/cli.py"
+STRAY = f"gives an argument parser help text, which only {CLI} may; delete it"
 
 
 def scanned():
@@ -76,6 +78,8 @@ def survey(paths):
                     said = node.args[spot]
                     if is_literal(said):
                         counted += 1
+                        if path != CLI:
+                            refused.append((path, said.lineno, STRAY))
                     else:
                         refused.append(
                             (path, said.lineno,
@@ -85,6 +89,8 @@ def survey(paths):
                     continue
                 if is_literal(keyword.value):
                     counted += 1
+                    if path != CLI:
+                        refused.append((path, keyword.value.lineno, STRAY))
                 elif isinstance(keyword.value, ast.Name):
                     if (owners.get(id(node)), keyword.value.id) not in forwarded:
                         refused.append(

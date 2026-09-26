@@ -8,7 +8,7 @@ from reqctl import corpus
 
 CONFIG = Path(".gitleaks.toml")
 RULE = "generic-api-key"
-INSIDE = str(corpus.folder_for(".", "data") / "file_store.yml")
+INSIDE = str(corpus.folder_for(".", "data") / "object_storage.yml")
 OUTSIDE = ".github/workflows/ci.yml"
 
 
@@ -30,13 +30,13 @@ def uids():
 
 def stamps():
     term = {"kind": "term",
-            "entries": {"item_body": {"word": "body",
+            "entries": {"object_body": {"word": "body",
                                         "definition": "The prose it carries."}}}
     parameter = {"kind": "parameter", "text": "How far a path may go.",
                  "value_type": "count", "entries": {"5": {}}}
     return [corpus.stamp_of("REQ-84927103", {"text": "The product shall run."}),
             corpus.stamp_of("hop_limit", parameter),
-            corpus.stamp_of("item_body", term),
+            corpus.stamp_of("object_body", term),
             corpus.address_stamp_of("hop_limit", parameter, "5"),
             corpus.address_stamp_of("hop_limit", parameter, corpus.MEMBERS)]
 
@@ -45,13 +45,13 @@ def named_faults(config):
     admits = admitting(config, uids()[0])
     if len(admits) != 1:
         return [f"{CONFIG}: {len(admits)} {RULE} allowlist(s) admit the shape "
-                "reqctl mints a uid with; one states it, and this test cannot "
+                "reqctl mints a uid with; one states it, and this check cannot "
                 "say which is it"]
     held = admits[0]
     written = held.get("regexes") or []
     if len(written) != 1:
         return [f"{CONFIG}: the {RULE} uid allowlist states {len(written)} "
-                "regex(es); one states the uid shape and this test holds it to "
+                "regex(es); one states the uid shape and this check holds it to "
                 "what reqctl mints"]
     found = []
     if held.get("regexTarget") != "secret":
@@ -63,10 +63,10 @@ def named_faults(config):
     if held.get("paths"):
         found.append(
             f"{CONFIG}: the {RULE} uid allowlist states paths. A uid is cited "
-            "wherever code and tests name one, and gitleaks joins an "
+            "wherever code names one, and gitleaks joins an "
             "allowlist's conditions with OR unless AND is stated, so a path "
             "here would admit every secret in it; drop the paths, or state "
-            "condition = \"AND\" and hold this test to the scope")
+            "condition = \"AND\" and hold this check to the scope")
     shape = re.compile(written[0])
     for uid in uids():
         if not shape.fullmatch(uid):
@@ -87,7 +87,7 @@ def faults(config):
     admits = admitting(config, stamps()[0])
     if len(admits) != 1:
         return [f"{CONFIG}: {len(admits)} {RULE} allowlist(s) admit the shape "
-                "reqctl stamps with; one states it, and this test cannot say "
+                "reqctl stamps with; one states it, and this check cannot say "
                 "which is it"]
     held = admits[0]
     found = named_faults(config)
@@ -95,7 +95,7 @@ def faults(config):
     if len(written) != 1:
         return found + [
             f"{CONFIG}: the {RULE} allowlist states {len(written)} regex(es); "
-            "one states the stamp shape and this test holds it to what "
+            "one states the stamp shape and this check holds it to what "
             "reqctl writes"]
     if held.get("condition") != "AND":
         found.append(

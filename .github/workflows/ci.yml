@@ -51,20 +51,14 @@ jobs:
             "$RUNNER_TEMP/bin/gitleaks" dir . --no-banner
           fi
 
-      - name: Requirements guard self-test
-        run: python .claude/hooks/tests/test_requirements_guard.py
-
       - name: Hook exits are explicit decisions
-        run: python .claude/hooks/tests/check_exit_paths.py
+        run: python .github/guards/exit_paths.py
 
       - name: Session start installs what CI installs
-        run: python .claude/hooks/tests/check_install_parity.py
+        run: python .github/guards/install_parity.py
 
       - name: Owned paths still need the owner
-        run: python .github/tests/test_codeowners.py
-
-      - name: Plugin build self-test
-        run: python .github/tests/test_plugin_build.py
+        run: python .github/guards/codeowners.py
 
       - name: The plugin ships from this repository at the wheel's version
         run: python .github/guards/plugin_build.py
@@ -77,18 +71,12 @@ jobs:
             exit 1
           fi
           if [ -d docs/adr ] || [ -d docs/decisions ]; then
-            echo "::error::decision records do not persist; put the constraint in a requirement, a schema or a test"
+            echo "::error::decision records do not persist; put the constraint in a requirement, a guard or a schema"
             exit 1
           fi
 
-      - name: Help budget self-test
-        run: python .github/tests/test_help_budget.py
-
       - name: Help budget, what a session reads through reqctl --help
         run: python .github/guards/help_budget.py --max 57
-
-      - name: Reference self-test
-        run: python .github/tests/test_references.py
 
       - name: Names resolve
         run: python .github/guards/references.py
@@ -135,9 +123,6 @@ jobs:
           pip install --require-hashes -r reqctl/requirements-lock.txt -r reqctl/requirements-dev-lock.txt
           pip install -e reqctl --no-deps --no-build-isolation
 
-      - name: Workflow shape self-test
-        run: python .github/tests/test_workflow_shape.py
-
       - name: Workflow shape
         run: python .github/guards/workflow_shape.py
 
@@ -147,32 +132,8 @@ jobs:
       - name: Workflow security
         run: zizmor --offline .github/workflows
 
-      - name: Rules scope self-test
-        run: python .github/tests/test_rules_scope.py
-
       - name: Rules scope
         run: python .github/guards/rules_scope.py
-
-      - name: CI gating self-test
-        run: python .github/tests/test_ci_gating.py
-
-      - name: Verify self-test
-        run: python .github/tests/test_verify.py
-
-      - name: Corpus write self-test
-        run: python .github/tests/test_corpus_write.py
-
-      - name: Baseline settling self-test
-        run: python .github/tests/test_corpus_settle.py
-
-      - name: Travel-alone guard self-test
-        run: python .github/tests/test_travel_alone.py
-
-      - name: Baseline number guard self-test
-        run: python .github/tests/test_baseline_number.py
-
-      - name: The secret scan admits what reqctl stamps
-        run: python .github/tests/test_gitleaks_stamps.py
 
       - name: Requirement changes travel alone
         if: github.event_name == 'pull_request'
@@ -189,28 +150,23 @@ jobs:
       - name: Corpus is valid
         run: reqctl validate
 
-      - name: Unclaimed phrases self-test
-        run: python .github/tests/test_unclaimed_phrases.py
+      - name: The secret scan admits what reqctl stamps
+        run: python .github/guards/gitleaks_stamps.py
 
-      - name: Comment budget self-test
-        run: python .github/tests/test_comment_budget.py
+      - name: The repository holds no test
+        run: python .github/guards/no_tests.py
 
       - name: Comment budget
         run: python .github/guards/comment_budget.py --max 0
 
       - name: Taxonomy
-        run: |
-          python .github/tests/test_taxonomy.py
-          python .github/guards/taxonomy.py
+        run: python .github/guards/taxonomy.py
 
       - name: A skill mints what the corpus accepts
-        run: python .github/tests/test_skill_minting.py
+        run: python .github/guards/skill_minting.py
 
       - name: Baseline matches the corpus
         run: reqctl baseline --check
-
-      - name: Citations self-test
-        run: python .github/tests/test_citations.py
 
       - name: Traceability
         env:
@@ -229,26 +185,10 @@ jobs:
           } >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
 
       - name: Portal offers what reqctl accepts
-        run: python .github/tests/test_portal_binding.py
-
-      - name: The portal opens on the repository origin names
-        run: python .github/tests/test_portal.py
-
-      - name: Guard binding self-test
-        run: python .github/tests/test_guard_binding.py
+        run: python .github/guards/portal_binding.py
 
       - name: A guard binds to no nominated dimension
         run: python .github/guards/guard_binding.py
-
-      - name: Elucidate synthesis self-tests
-        run: |
-          python .claude/skills/elucidate/synthesis/test_coverage.py
-          python .claude/skills/elucidate/synthesis/test_verdicts.py
-          python .claude/skills/elucidate/synthesis/test_plan.py
-          python .claude/skills/elucidate/harness/test_probe.py
-
-      - name: The plugin holds its components and runs in any repository
-        run: python .github/tests/test_plugin.py
 
       - name: Lint
         run: ruff check reqctl

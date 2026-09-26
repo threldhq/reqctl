@@ -3,13 +3,10 @@ import ast
 import sys
 from pathlib import Path
 
-TESTS = Path(__file__).resolve().parent
-HOOKS = TESTS.parent
+HOOKS = Path(__file__).resolve().parents[2] / ".claude" / "hooks"
 
 faults, scanned = [], 0
 for path in sorted(HOOKS.rglob("*.py")):
-    if TESTS in path.parents:
-        continue
     scanned += 1
     try:
         tree = ast.parse(path.read_text())
