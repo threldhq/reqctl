@@ -10,7 +10,7 @@ assessed:
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 priority: medium
 relations:
-  REQ-38288492: depends_on
+  REQ-38288492: constrains
 status: approved
 text: The product shall ship no skill that presents a [test](test) as holding a rule.
 type: functional
