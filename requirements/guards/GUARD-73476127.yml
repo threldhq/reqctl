@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a pattern for uids that misses the uid of any kind of item reqctl mints
+  then: the build refuses the change
+  when: the build runs
+- given: an allowlist for uids that states paths
+  then: the build refuses the change
+  when: the build runs
+- given: an allowlist for uids whose pattern is matched against the line rather than
+    the value the scan captured
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If the secret scan would report the uid of an item as a secret, then the build
+  shall refuse the change.

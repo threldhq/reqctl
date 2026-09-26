@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a parameter whose value type is text holding two members
+  then: the product refuses the parameter and names reqctl refile as the way to file
+    it as a data item
+  when: the corpus is validated
+- given: a parameter whose value type is text holding one member
+  then: the product does not refuse the parameter
+  when: the corpus is validated
+- given: a parameter whose value type is count holding two members
+  then: the product does not refuse the parameter
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If a parameter whose value type is text holds more than one member, then the
+  product shall refuse the parameter.
+type: functional
+verification: inspection

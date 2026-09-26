@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a base branch stating baseline 19 and a pull request changing the baseline
+    while still stating 19
+  then: the build refuses the change and names merging the base branch, then generating
+    the baseline
+  when: the build runs
+- given: a base branch stating baseline 19 and a pull request stating baseline 20
+  then: the build does not refuse the change
+  when: the build runs
+- given: a pull request stating a baseline number that is not a whole number
+  then: the build refuses the change
+  when: the build runs
+- given: a base branch the checkout does not hold
+  then: the build refuses the change and names fetching it
+  when: the build runs
+- given: a base branch holding no baseline
+  then: the build does not refuse the change
+  when: a pull request adds one
+assessed: {}
+relations: {}
+status: approved
+text: If a pull request changes the baseline to a number that does not exceed the
+  number the base branch states, then the build shall refuse the change.

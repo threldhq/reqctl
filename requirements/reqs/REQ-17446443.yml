@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: two files in the corpus claiming one uid
+  then: the product refuses and names both files
+  when: the corpus is validated
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If two files in the corpus claim one uid, then the product shall refuse the
+  corpus.
+type: functional
+verification: inspection

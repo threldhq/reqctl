@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) reqctl trace reports as behind
+    the corpus, in a pull request that changes a file under the [corpus root](corpus_root)
+  then: the build names the citation and does not refuse the change
+  when: the build runs
+- given: a [statement citation](statement_citation) reqctl trace reports as behind
+    the corpus, in a pull request that changes no file under the [corpus root](corpus_root)
+  then: the build refuses the change and names the citation
+  when: the build runs
+- given: a [statement citation](statement_citation) reqctl trace reports as behind
+    the corpus, in a run no pull request started
+  then: the build refuses the change and names the citation
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+relations: {}
+status: approved
+text: If reqctl trace reports a [statement citation](statement_citation) as behind
+  the corpus, then the build shall refuse the change unless the change is a pull request
+  that changes a file under the [corpus root](corpus_root).

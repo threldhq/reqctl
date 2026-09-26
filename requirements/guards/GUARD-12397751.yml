@@ -1,0 +1,10 @@
+acceptance_criteria:
+- given: a pull request that changes a file under the [corpus root](corpus_root),
+    over a trace reporting a problem
+  then: the build refuses the change and names the problem
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+relations: {}
+status: approved
+text: If reqctl trace reports a problem, then the build shall refuse the change.

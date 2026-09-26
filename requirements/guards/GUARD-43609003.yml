@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a paragraph of a skill showing --value "[a, b]" beside --value-type text
+  then: the build refuses the change and names the skill and the paragraph
+  when: the build runs
+- given: a paragraph of a skill showing --value "[10, 20]" beside --value-type count
+  then: the build does not refuse the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a skill shows a --value example that would mint a parameter of text holding
+  more than one member, then the build shall refuse the change.

@@ -1,0 +1,33 @@
+acceptance_criteria:
+- given: a pull request changing a requirement's text and a code file
+  then: the build refuses the change and names the files on each side
+  when: the build runs
+- given: a pull request changing a requirement's text and re-pinning a [statement
+    citation](statement_citation) of it
+  then: the build does not refuse the change
+  when: the build runs
+- given: a pull request changing the baseline and a code file
+  then: the build does not refuse the change
+  when: the build runs
+- given: a pull request changing only the pins a corpus item records as assessed and
+    a code file
+  then: the build does not refuse the change
+  when: the build runs
+- given: a pull request changing a requirement's text and adding a [statement citation](statement_citation)
+    of it
+  then: the build refuses the change
+  when: the build runs
+- given: a pull request changing a schema under the [corpus root](corpus_root) and
+    a code file
+  then: the build refuses the change
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+relations: {}
+status: approved
+text: If a pull request changes a file under the [corpus root](corpus_root) other
+  than the baseline, in more than the pins the file records as assessed, and also
+  changes a file outside the [corpus root](corpus_root) in more than the stamps its
+  [statement citations](statement_citation) name, then the build shall refuse the
+  change.
