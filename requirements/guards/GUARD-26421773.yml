@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a workflow running pip install -r without --require-hashes
+  then: the build refuses the change
+  when: the build runs
+- given: a workflow running pip install -r with --require-hashes on a continued line
+  then: the build does not refuse the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a workflow installs from a lockfile without requiring hashes, then the build
+  shall refuse the change.

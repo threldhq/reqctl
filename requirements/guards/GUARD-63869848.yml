@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a working tree holding an uncommitted change
+  then: the build warns that the files it counts as changed were read from committed
+    history only, and names --event workflow_dispatch as the way to run every step
+  when: .github/verify.py runs
+- given: a working tree holding no uncommitted change
+  then: the build gives no such warning
+  when: .github/verify.py runs
+assessed: {}
+relations: {}
+status: approved
+text: When .github/verify.py runs over a working tree holding uncommitted changes,
+  the build shall warn that the files it counts as changed were read from committed
+  history only.

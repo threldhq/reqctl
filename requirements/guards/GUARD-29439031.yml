@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: a step of the check job naming no working directory
+  then: the step runs from the top folder of the repository
+  when: .github/verify.py runs the step
+- given: a step of the check job naming a working directory
+  then: the step runs from that folder
+  when: .github/verify.py runs the step
+assessed: {}
+relations: {}
+status: approved
+text: When .github/verify.py runs a step of the check job in the CI workflow, the
+  build shall run the step from the top folder of the repository unless the step names
+  a working directory.

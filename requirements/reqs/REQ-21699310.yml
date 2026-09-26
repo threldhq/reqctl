@@ -10,6 +10,10 @@ acceptance_criteria:
 - given: a corpus nominating no dimension
   then: no guard is named, there being no dimension for one to bind to
   when: the corpus is validated
+- given: two guards each carrying a parameter reference or a concept link to a nominated
+    dimension's item
+  then: each guard is named as binding to that dimension
+  when: the corpus is validated
 assessed: {}
 priority: medium
 relations: {}

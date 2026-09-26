@@ -1,0 +1,9 @@
+acceptance_criteria:
+- given: a workflow running pip install -e without --no-build-isolation
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a workflow makes an editable install with build isolation, then the build
+  shall refuse the change.

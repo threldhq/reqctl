@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) naming a stamp that the approved
+    requirement it names no longer carries
+  then: the product reports the citation as behind the corpus and reports no problem
+    for it
+  when: trace is given a base branch from which the change touches a file under the
+    [corpus root](corpus_root)
+- given: a [statement citation](statement_citation) naming a stamp that the approved
+    requirement it names no longer carries
+  then: the product reports the citation as a problem
+  when: trace is given a base branch from which the change touches no file under the
+    [corpus root](corpus_root)
+- given: a [statement citation](statement_citation) naming a stamp that the approved
+    requirement it names no longer carries
+  then: the product reports the citation as a problem
+  when: trace is given no base branch
+- given: a pull request that touches no file under the [corpus root](corpus_root)
+    and carries a [statement citation](statement_citation) naming a stamp that the
+    approved requirement it names no longer carries
+  then: the product refuses the pull request
+  when: the ${corpus_gates.traceability} gate runs trace against the pull request's
+    base branch
+assessed:
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.traceability: t2g-SZWxzs7WMpla0grhVUnoKO8CIuhvL89nPt4vwQQ
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: When trace is run, the product shall report as a problem each [statement citation](statement_citation)
+  naming a stamp that the approved requirement it names no longer carries, unless
+  trace is given a base branch from which the change touches a file under the [corpus
+  root](corpus_root).
+type: functional
+verification: inspection

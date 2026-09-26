@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: a change to a requirement's text and to a code file
+  then: the product reports a problem and names the files on each side
+  when: the change is checked against its base branch
+- given: a change to a requirement's text and a re-pin of a [statement citation](statement_citation)
+    of it
+  then: the product reports no problem
+  when: the change is checked against its base branch
+- given: a change to the baseline and to a code file
+  then: the product reports no problem
+  when: the change is checked against its base branch
+- given: a change only to the pins a corpus item holds, and to a code file
+  then: the product reports no problem
+  when: the change is checked against its base branch
+- given: a change to a requirement's text and an added [statement citation](statement_citation)
+    of it
+  then: the product reports a problem
+  when: the change is checked against its base branch
+- given: a change to a schema under the [corpus root](corpus_root) and to a code file
+  then: the product reports a problem
+  when: the change is checked against its base branch
+assessed:
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.travel_alone: xaRPsjgxbPYBMGiOCJLRgvNdNNM9Z_uxjF7sdEvA8XA
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations: {}
+status: approved
+text: If a change touches both a file under the [corpus root](corpus_root) other than
+  the baseline, in more than its pins, and a file outside the [corpus root](corpus_root),
+  in more than the stamps its [statement citations](statement_citation) name, then
+  the product shall report a problem when the ${corpus_gates.travel_alone} gate checks
+  the change against its base branch.
+type: functional
+verification: inspection

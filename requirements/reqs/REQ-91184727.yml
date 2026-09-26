@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a pattern for uids that misses the uid of any kind of item the product mints
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+- given: an allowlist for uids that states paths
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+- given: an allowlist for uids whose pattern is matched against the line rather than
+    the value the scan captured
+  then: the product reports a problem
+  when: the ${corpus_gates.stamp_admission} gate runs
+assessed:
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.stamp_admission: E62zb0qgo3sf0OgKcFWjYdcAUcak-IBB9NM3c8BVqeA
+priority: medium
+relations: {}
+status: approved
+text: If the repository's secret scan would report a uid as a secret, then the product
+  shall report a problem when the ${corpus_gates.stamp_admission} gate runs.
+type: functional
+verification: inspection

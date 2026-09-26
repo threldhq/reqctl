@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a build in which reqctl cannot be run
+  then: the build refuses the change and names why reqctl could not run
+  when: the build runs the trace
+- given: reqctl printing a trace the build cannot read
+  then: the build refuses the change and names what reqctl printed
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If reqctl cannot run, or the build cannot read the trace that reqctl prints,
+  then the build shall refuse the change and name the cause.

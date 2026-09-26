@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a paragraph of a skill showing --value "[a, b]" and no --value-type
+  then: the build refuses the change
+  when: the build runs
+- given: a paragraph of a skill showing a --value list quoted other than in double
+    quotes
+  then: the build refuses the change
+  when: the build runs
+- given: a paragraph of a skill showing a --value list whose members do not read as
+    YAML
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a skill shows a --value example whose value type or members the build cannot
+  read, then the build shall refuse the change.

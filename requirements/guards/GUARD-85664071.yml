@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a workflow using an action pinned to a tag or a branch
+  then: the build refuses the change
+  when: the build runs
+- given: a workflow using an action pinned to an abbreviated commit SHA
+  then: the build refuses the change
+  when: the build runs
+- given: a job using a reusable workflow not pinned to a full commit SHA
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a workflow uses an action or a reusable workflow that is not pinned to a
+  full commit SHA, then the build shall refuse the change.

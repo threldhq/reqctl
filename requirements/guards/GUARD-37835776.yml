@@ -1,0 +1,5 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: If a workflow holds other than one job, then the build shall refuse the change.
