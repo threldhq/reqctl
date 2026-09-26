@@ -54,10 +54,10 @@ properties:
   acceptance_criteria:
     type: array
     description: >-
-      What satisfying this requirement means, in testable form. In the stamp:
-      criteria define the obligation as much as the statement does, so changing
-      one must make dependants reassess. May be empty -- a requirement whose
-      statement is its own criterion does not need them restated.
+      What satisfying this requirement means, as given, when and then. In the
+      stamp: criteria define the obligation as much as the statement does, so
+      changing one must make dependants reassess. May be empty -- a requirement
+      whose statement is its own criterion does not need them restated.
     items:
       type: object
       additionalProperties: false
