@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a requirement cited by a [test](test) and by code outside every [test](test)
+  then: the product names the code outside every [test](test) and names no [test](test)
+  when: reqctl context is run for the requirement
+- given: a requirement cited by a [test](test) and by code outside every [test](test)
+  then: the [portal](portal) names no [test](test) as citing the requirement
+  when: the [portal](portal) shows the requirement
+- given: a requirement cited by a [test](test)
+  then: the product names the [test](test) only in reporting as a problem the [statement
+    citation](statement_citation) the [test](test) carries
+  when: trace is run
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+priority: medium
+relations: {}
+status: approved
+text: When reqctl context, the [portal](portal) or trace shows what cites a requirement,
+  the product shall name no [test](test) among what cites the requirement.
+type: functional
+verification: inspection

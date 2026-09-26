@@ -17,4 +17,4 @@ status: approved
 text: The product shall ship each of the ${synthesis_steps} that the elucidate skill
   calls as a script in the Claude Code plugin.
 type: functional
-verification: automated_test
+verification: inspection

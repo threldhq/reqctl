@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a [test](test) carrying a [statement citation](statement_citation)
+  then: the product reports a problem naming the [test](test) and the item the citation
+    names
+  when: trace is run
+- given: a [test](test) carrying a [statement citation](statement_citation) of a statement
+    the corpus has deprecated
+  then: the product reports the problem
+  when: trace is run
+- given: code outside every [test](test) carrying a [statement citation](statement_citation)
+  then: the product reports no problem on the ground that a [test](test) carries the
+    citation
+  when: trace is run
+assessed:
+  REQ-35979865: -t3USRO-BKGkFmCUvKqJ_cSTwi20euD4Q8IKl-fBNOg
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+priority: medium
+relations:
+  REQ-35979865: constrains
+status: approved
+text: When trace is run, the product shall report as a problem each [statement citation](statement_citation)
+  a [test](test) carries.
+type: functional
+verification: inspection

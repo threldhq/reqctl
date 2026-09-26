@@ -14,4 +14,4 @@ status: approved
 text: When reqctl portal is run, the product shall remember the repository named by
   the origin remote of the current git repository as the repository of the [portal](portal).
 type: functional
-verification: automated_test
+verification: inspection

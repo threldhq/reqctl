@@ -15,4 +15,4 @@ status: approved
 text: When the [portal](portal) is opened by reqctl portal, the product shall not
   ask for the repository.
 type: functional
-verification: automated_test
+verification: demonstration

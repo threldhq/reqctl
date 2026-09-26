@@ -18,4 +18,4 @@ status: deprecated
 text: If a service states chosen in a shape other than the shape the service's serving
   declares, then the product shall refuse the service.
 type: functional
-verification: automated_test
+verification: inspection

@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: the elucidate skill as shipped
+  then: no passage says a [test](test) holds a rule
+  when: the passage sorting product from build is read
+- given: each skill the Claude Code plugin ships
+  then: no passage presents a [test](test) as holding a rule
+  when: the text of the skill is read
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+priority: medium
+relations:
+  REQ-38288492: constrains
+status: approved
+text: The product shall ship no skill that presents a [test](test) as holding a rule.
+type: functional
+verification: inspection

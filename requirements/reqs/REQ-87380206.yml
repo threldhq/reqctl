@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a requirement is minted without a verification, the product shall record
+  inspection as the verification.
+type: functional
+verification: inspection

@@ -15,7 +15,7 @@ assessed:
 priority: medium
 relations:
   REQ-76258226: constrains
-status: approved
+status: deprecated
 text: When trace is run, the product shall not report an approved requirement whose
   verification is inspection as a problem on the ground that no [test](test) cites
   the requirement.

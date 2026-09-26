@@ -20,7 +20,7 @@ assessed:
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 priority: medium
 relations: {}
-status: approved
+status: deprecated
 text: When trace is run, the product shall report as a problem an approved requirement
   whose verification is automated_test that code outside every [test](test) cites
   and no [test](test) cites.

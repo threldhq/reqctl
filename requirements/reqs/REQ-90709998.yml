@@ -11,4 +11,4 @@ relations:
 status: approved
 text: The product shall fix no repository in the source of the [portal](portal).
 type: functional
-verification: automated_test
+verification: inspection

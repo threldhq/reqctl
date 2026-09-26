@@ -12,4 +12,4 @@ status: deprecated
 text: The product shall refuse a service that does not state serving as single or
   many.
 type: functional
-verification: automated_test
+verification: inspection
