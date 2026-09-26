@@ -1,11 +1,15 @@
 acceptance_criteria:
 - given: a Read, Grep or Glob [tool call](tool_call) naming a corpus item's file,
-    a folder of corpus items or the baseline
+    a folder of corpus items, the [corpus root](corpus_root) or the baseline
   then: the product refuses it and names reqctl context and reqctl export as the route
   when: the [tool call](tool_call) is made
 - given: a shell command reading or searching a corpus item's file or the baseline
     through cat, head, tail, wc, jq, grep, diff, cmp or a checksum, alone or piped
     onward
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: a shell command searching the [corpus root](corpus_root) recursively through
+    grep
   then: the product refuses it
   when: the [tool call](tool_call) is made
 - given: a shell command running ls, stat or du on a corpus item's file
@@ -20,6 +24,7 @@ acceptance_criteria:
   when: the [tool call](tool_call) is made
 assessed:
   REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
   git_read_forms: KqdhNS1T-3ElSWF_7yxqSdSuolEKTUV95lMxbe_MlKs
   git_read_forms.*: zK1-V8hs9QJkFFo65BxT1tY5HTUUzcQJC1g-FP5yNcs
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
@@ -28,8 +33,8 @@ relations:
   REQ-38288492: depends_on
 status: approved
 text: If a [tool call](tool_call) reads or searches a corpus item's file, a folder
-  of corpus items or the baseline, other than through reqctl, one of git's ${git_read_forms}
-  or a command that shows only names and file metadata, then the product shall refuse
-  the [tool call](tool_call).
+  of corpus items, the [corpus root](corpus_root) or the baseline, other than through
+  reqctl, one of git's ${git_read_forms} or a command that shows only names and file
+  metadata, then the product shall refuse the [tool call](tool_call).
 type: functional
 verification: inspection

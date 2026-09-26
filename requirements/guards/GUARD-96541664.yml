@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a CODEOWNERS file holding no rule for *
+  then: the build refuses the change
+  when: the build runs
+- given: a CODEOWNERS file holding no rule at all
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If the CODEOWNERS file holds no rule for *, then the build shall refuse the
+  change.

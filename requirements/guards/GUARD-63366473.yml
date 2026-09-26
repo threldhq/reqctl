@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a comment holding TODO, FIXME, XXX or HACK
+  then: the build refuses the change and names the marker
+  when: the build runs
+- given: a comment holding TO DO, TO_DO or TO-DO
+  then: the build refuses the change
+  when: the build runs
+- given: a [statement citation](statement_citation) holding a marker
+  then: the build refuses the change
+  when: the build runs
+assessed:
+  comment_markers: fC-ZQ7s7HpanLYOaaakUXhqSF11L78s-JFC1FY5etyA
+  comment_markers.*: sKVxZqeKEsdmvnSvKzQK3c2emeFoUWxgNGlWTZKxnGI
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+relations: {}
+status: approved
+text: If a comment or docstring outside the [corpus root](corpus_root) holds one of
+  the ${comment_markers}, then the build shall refuse the change.

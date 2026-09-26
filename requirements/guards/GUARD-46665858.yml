@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a path pattern written with *, **, ? and bracket classes alone
+  then: the build reads the pattern as a glob
+  when: the build runs
+- given: a path pattern expanding braces
+  then: the build refuses the change and says to write each pattern out
+  when: the build runs
+- given: a path pattern holding an unclosed bracket class
+  then: the build refuses the change
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a path pattern that a rules file states does not read as a glob, then the
+  build shall refuse the change.

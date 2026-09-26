@@ -1,0 +1,18 @@
+assessed: {}
+entries:
+  claude:
+    definition: /.claude/
+  claude_md:
+    definition: /CLAUDE.md
+  github:
+    definition: /.github/
+  mcp_json:
+    definition: /.mcp.json
+  reqctl:
+    definition: /reqctl/
+  requirements:
+    definition: /requirements/
+kind: data
+name: owned_paths
+status: approved
+text: the paths the CODEOWNERS file must give a rule of their own

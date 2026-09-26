@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a flag alone between backticks that some argument parser defines
+  then: the build refuses nothing for the flag
+  when: the build runs
+- given: a flag alone between backticks that no argument parser defines
+  then: the build refuses the change and names the flag
+  when: the build runs
+- given: a flag written without backticks
+  then: the build checks nothing for the flag
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+relations: {}
+status: approved
+text: If a markdown file outside the [corpus root](corpus_root) names a flag alone
+  between backticks that no argument parser in the repository defines, then the build
+  shall refuse the change.

@@ -1,0 +1,10 @@
+acceptance_criteria:
+- given: a fault message holding a flag anywhere in the text that no argument parser
+    defines
+  then: the build refuses the change and names the flag
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a fault message that reqctl raises holds a flag that no argument parser in
+  the repository defines, then the build shall refuse the change.

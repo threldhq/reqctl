@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a rule for /reqctl/extra/ below the rule for /requirements/
+  then: the build refuses the change and names the line of the rule
+  when: the build runs
+- given: a rule for * below the rule for /requirements/
+  then: the build refuses the change
+  when: the build runs
+- given: every rule naming none of the owned paths placed above the first rule naming
+    one
+  then: the build refuses nothing on that ground
+  when: the build runs
+assessed:
+  GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
+  owned_paths: 5uBm_4PmH1-c0tHvRRkdcOHNjbipvaGXy4nBbbhG0iY
+  owned_paths.*: NQsnvnfjF2CIy4YOe4lpO7lb9Lc7n8SKOLGRWLstbfg
+relations:
+  GUARD-10823996: derives_from
+status: approved
+text: If a rule in the CODEOWNERS file that names none of the ${owned_paths} follows
+  the first rule that names one, then the build shall refuse the change.

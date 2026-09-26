@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a rules file with no frontmatter, or frontmatter naming no paths
+  then: the build refuses the change
+  when: the build runs
+- given: a rules file whose paths are not a list of strings, or are an empty list
+  then: the build refuses the change
+  when: the build runs
+- given: no .claude/rules folder
+  then: the build refuses the change and names the folder
+  when: the build runs
+assessed: {}
+relations: {}
+status: approved
+text: If a rules file under .claude/rules states no path patterns in the frontmatter
+  of the file, then the build shall refuse the change.

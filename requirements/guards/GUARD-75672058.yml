@@ -1,0 +1,11 @@
+acceptance_criteria:
+- given: a script outside reqctl giving an argument parser a help string
+  then: the build refuses the change and names the script
+  when: the build runs
+assessed:
+  GUARD-21526521: G_BddcqGKnJPYgbJBcuSMquQ5wWClxj7LjSrvaIfn68
+relations:
+  GUARD-21526521: constrains
+status: approved
+text: If a Python file other than reqctl/reqctl/cli.py gives an argument parser a
+  help, description or epilog string, then the build shall refuse the change.

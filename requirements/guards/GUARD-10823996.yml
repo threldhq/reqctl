@@ -1,0 +1,11 @@
+acceptance_criteria:
+- given: a CODEOWNERS file holding no rule for /reqctl/
+  then: the build refuses the change and names /reqctl/
+  when: the build runs
+assessed:
+  owned_paths: 5uBm_4PmH1-c0tHvRRkdcOHNjbipvaGXy4nBbbhG0iY
+  owned_paths.*: NQsnvnfjF2CIy4YOe4lpO7lb9Lc7n8SKOLGRWLstbfg
+relations: {}
+status: approved
+text: If the CODEOWNERS file holds no rule for one of the ${owned_paths}, then the
+  build shall refuse the change.
