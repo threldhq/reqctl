@@ -63,8 +63,10 @@ def scanned():
         capture_output=True, text=True, check=False)
     if found.returncode != 0:
         raise SystemExit(f"cannot list files: {found.stderr.strip()}")
-    return sorted({path for path in found.stdout.split("\0")
-                   if path and not Path(path).is_symlink()})
+    root = Path.cwd().resolve()
+    held = (path for path in found.stdout.split("\0") if path)
+    return sorted({path for path in held if not Path(path).is_symlink()
+                   or not Path(path).resolve().is_relative_to(root)})
 
 
 def read(path):
