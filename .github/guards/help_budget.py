@@ -8,6 +8,7 @@ from pathlib import Path
 SINKS = ("help", "description", "epilog")
 GOVERNED = "requirements/"
 CLI = "reqctl/reqctl/cli.py"
+STRAY = f"gives an argument parser help text, which only {CLI} may; delete it"
 
 
 def scanned():
@@ -77,6 +78,8 @@ def survey(paths):
                     said = node.args[spot]
                     if is_literal(said):
                         counted += 1
+                        if path != CLI:
+                            refused.append((path, said.lineno, STRAY))
                     else:
                         refused.append(
                             (path, said.lineno,
@@ -86,6 +89,8 @@ def survey(paths):
                     continue
                 if is_literal(keyword.value):
                     counted += 1
+                    if path != CLI:
+                        refused.append((path, keyword.value.lineno, STRAY))
                 elif isinstance(keyword.value, ast.Name):
                     if (owners.get(id(node)), keyword.value.id) not in forwarded:
                         refused.append(
@@ -101,20 +106,11 @@ def survey(paths):
 
 
 def main(ceiling):
-    counted, refused, strays = 0, [], []
-    for path in scanned():
-        held, why = survey([path])
-        counted += held
-        refused += why
-        if held and path != CLI:
-            strays.append(path)
+    counted, refused = survey(scanned())
     for path, line, why in refused:
         print(f"::error file={path},line={line}::{why}")
-    for path in strays:
-        print(f"::error file={path}::gives an argument parser help text, "
-              f"which only {CLI} may; delete it")
     print(f"{counted} help strings")
-    if refused or strays:
+    if refused:
         return 1
     if counted != ceiling:
         fix = ("Delete it, or raise the ceiling in ci.yml and say who "
