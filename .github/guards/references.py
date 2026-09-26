@@ -95,10 +95,10 @@ def flags_in_faults(path, defined):
     for node in ast.walk(parsed(path)):
         if not isinstance(node, ast.Call):
             continue
-        named = getattr(node.func, "id", getattr(node.func, "attr", None))
-        if named != "ReqctlError":
+        if getattr(node.func, "id",
+                   getattr(node.func, "attr", None)) != "ReqctlError":
             continue
-        for piece in (inner for given in node.args for inner in ast.walk(given)):
+        for piece in ast.walk(node):
             if not (isinstance(piece, ast.Constant)
                     and isinstance(piece.value, str)):
                 continue
