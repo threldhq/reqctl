@@ -13,6 +13,7 @@ relations:
   REQ-68873210: depends_on
 status: approved
 text: Where the corpus states a binding dimension, the product shall refuse a run
-  that records a binding naming a member the dimension's data item does not define.
+  in which a proposal's binding or text names a member the dimension's data item does
+  not define.
 type: functional
 verification: inspection
