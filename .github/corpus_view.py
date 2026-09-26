@@ -1,24 +1,13 @@
 #!/usr/bin/env python3
 import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
+from corpus_write import Refused, ran
+
 VIEW = "corpus-view"
 HELD = "corpus.json"
-
-
-class Refused(Exception):
-    pass
-
-
-def ran(*made, check=True):
-    done = subprocess.run(made, capture_output=True, text=True, check=False)
-    if check and done.returncode:
-        said = done.stderr.strip() or done.stdout.strip()
-        raise Refused(f"{' '.join(made)}: {said or 'failed silently'}")
-    return done
 
 
 def view():

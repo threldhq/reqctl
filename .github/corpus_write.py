@@ -65,21 +65,25 @@ def argv(step, minted):
     return made
 
 
-def run(made, root):
-    done = subprocess.run(made, cwd=root, capture_output=True, text=True,
-                          check=False)
-    if done.returncode:
+def ran(*made, check=True):
+    done = subprocess.run(made, capture_output=True, text=True, check=False)
+    if check and done.returncode:
         said = done.stderr.strip() or done.stdout.strip()
-        raise Refused(f"{' '.join(made[1:])}: {said or 'failed silently'}")
-    if not done.stdout.strip():
-        raise Refused(f"{' '.join(made[1:])}: said nothing")
+        raise Refused(f"{' '.join(made)}: {said or 'failed silently'}")
+    return done
+
+
+def run(made):
+    said = ran(*made).stdout.strip()
+    if not said:
+        raise Refused(f"{' '.join(made)}: said nothing")
     try:
-        return json.loads(done.stdout)
+        return json.loads(said)
     except json.JSONDecodeError as broken:
-        raise Refused(f"{' '.join(made[1:])}: said no json: {broken}") from broken
+        raise Refused(f"{' '.join(made)}: said no json: {broken}") from broken
 
 
-def apply(payload, root, ran=run):
+def apply(payload):
     steps = payload.get("steps")
     if not isinstance(steps, list) or not steps:
         raise Refused("the change names no steps")
@@ -87,36 +91,26 @@ def apply(payload, root, ran=run):
     for step in steps:
         if not isinstance(step, dict):
             raise Refused(f"{step!r}: a step is a mapping")
-        held = ran(argv(step, minted), root)
+        held = run(argv(step, minted))
         minted.append(held.get("uid", "") if isinstance(held, dict) else "")
     return minted
-
-
-def ran(*made):
-    done = subprocess.run(made, capture_output=True, text=True, check=False)
-    if done.returncode:
-        said = done.stderr.strip() or done.stdout.strip()
-        raise Refused(f"{' '.join(made)}: {said or 'failed silently'}")
-    return done.stdout.strip()
 
 
 def proposed(raw, env):
     ran("reqctl", "validate")
     slug, title, trunk = env["APP_SLUG"], env["TITLE"], env["DEFAULT_BRANCH"]
     bot = f"{slug}[bot]"
-    held = ran("gh", "api", f"/users/{slug}%5Bbot%5D", "--jq", ".id")
+    held = ran("gh", "api", f"/users/{slug}%5Bbot%5D", "--jq", ".id").stdout
     ran("git", "config", "user.name", bot)
     ran("git", "config", "user.email",
-        f"{held}+{bot}@users.noreply.github.com")
+        f"{held.strip()}+{bot}@users.noreply.github.com")
     branch = f"corpus/{env['GITHUB_RUN_ID']}"
     ran("git", "checkout", "-b", branch)
     ran("git", "add", "-A")
-    if not ran("git", "diff", "--cached", "--name-only"):
+    if not ran("git", "diff", "--cached", "--name-only").stdout.strip():
         raise Refused("the change altered nothing")
     ran("git", "commit", "-m", title)
-    settled = subprocess.run(["reqctl", "baseline", "--check"],
-                             capture_output=True, check=False)
-    if settled.returncode:
+    if ran("reqctl", "baseline", "--check", check=False).returncode:
         ran("git", "remote", "set-head", "origin", trunk)
         ran("reqctl", "baseline", "--generate")
         ran("reqctl", "baseline", "--check")
@@ -124,7 +118,7 @@ def proposed(raw, env):
         ran("git", "commit", "-m", f"{title}: cut the baseline")
     ran("git", "push", "-u", "origin", branch)
     return ran("gh", "pr", "create", "--base", trunk, "--head", branch,
-               "--title", title, "--body", BODY.format(raw))
+               "--title", title, "--body", BODY.format(raw)).stdout.strip()
 
 
 def main():
@@ -142,7 +136,7 @@ def main():
         return 1
     try:
         # @req+ REQ-57492239@hvqdee0u96s6 jvrbb3
-        minted = apply(payload, ".")
+        minted = apply(payload)
         opened = proposed(raw, os.environ)
         # @req- jvrbb3
     except Refused as refused:
