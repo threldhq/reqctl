@@ -61,10 +61,11 @@ ARTICLED_LINK = re.compile(r"(?:\b([Aa]n?)(\s+))?" + corpus.CONCEPT_LINK.pattern
 
 PARAMETER_DEFAULTS = {"kind": "parameter", "status": "draft", "assessed": {}}
 TERM_DEFAULTS = {"kind": "term", "status": "draft", "assessed": {}}
+# @req> REQ-87380206@tt4tAqgS8C4_ rw2mmr
 REQUIREMENT_DEFAULTS = {
     "type": "functional",
     "status": "draft",
-    "verification": "automated_test",
+    "verification": "inspection",
     "priority": "medium",
     "acceptance_criteria": [],
     "relations": {},

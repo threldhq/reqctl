@@ -11,11 +11,15 @@ function task(one) {
   ].join('\n')
 }
 
+// @req+ REQ-29203000@rYU8NmxmlHLn o7zxou
 const results = await parallel(args.prompts.map(one => () =>
   agent(task(one), { label: one.label, phase: 'Spawn', schema: args.shapes[one.schema], model: one.model, effort: one.effort })))
+// @req- o7zxou
 
+// @req+ REQ-42411532@ub-n0TKm3ymH na2sto
 return {
   spawned: args.prompts.length,
   returned: results.filter(Boolean).length,
   failed: args.prompts.filter((one, at) => !results[at]).map(one => one.label),
 }
+// @req- na2sto

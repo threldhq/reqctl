@@ -26,11 +26,13 @@ def quoted(said, needle):
 
 
 def faults(found, words):
+    # @req+ REQ-59870599@2h71qdAwEzkC uffga6
     if not isinstance(found, dict):
         return ["the findings are not a mapping"]
     missing = [name for name in LISTS if not isinstance(found.get(name), list)]
     if missing:
         return [f"states no {name} list" for name in missing]
+    # @req- uffga6
 
     said = plain(spoken(words))
     # @req+ REQ-86066994@ZdOflpXK5eCb a4gokv
@@ -42,6 +44,8 @@ def faults(found, words):
     held = [f"states {name!r}, which is not one of {', '.join(NAMES)}"
             for name in sorted(stated - set(NAMES))]
     # @req- a4gokv
+    # @req+ REQ-41361856@4UOkrz1niMIl y4zpw2
+    # @req+ REQ-67248754@f8kUPPzaG_-U c3jev7
     for entry in found["unclaimed"]:
         if not isinstance(entry, dict) or "quote" not in entry:
             held.append(f"an unclaimed entry carries no quote: {entry!r}")
@@ -58,6 +62,8 @@ def faults(found, words):
                         "holds the empty one")
         elif not quoted(said, spoken(entry["owner"])):
             held.append(f"names a word the owner did not use: {entry['owner']!r}")
+    # @req- c3jev7
+    # @req- y4zpw2
     return held
 
 
@@ -70,6 +76,7 @@ def main(argv=None):
     where = Path(args.found)
     found = corpus.loads(corpus.read_text(where), where)
     held = faults(found, corpus.read_text(args.words))
+    # @req+ REQ-74501429@3K-aFi7yo4Cp rzcign
     for fault in held:
         print(f"{where.name}: {fault}")
     if held:
@@ -77,6 +84,7 @@ def main(argv=None):
         return 1
     print(f"{len(found['unclaimed'])} unclaimed, {len(found['renamed'])} renamed, "
           "every quote the owner's own")
+    # @req- rzcign
     return 0
 
 

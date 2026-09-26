@@ -14,6 +14,7 @@ sys.path.insert(0, str(HERE.parent / "synthesis"))
 import plan
 import shapes
 
+# @req> REQ-91336482@TiPdPxI_xFIm 6gegy3
 LIMITATION = """This is a regression guard, not a quality score.
 
 Every probe is a near-verbatim restatement of an approved requirement: its term
@@ -108,6 +109,7 @@ def paired(records, reqs, draw, taken, wanted, start):
 
 
 def neighbours(records, data):
+    # @req> REQ-20722175@BniiLBiwu3XL rgpt75
     return sorted(
         target
         for target, relation in corpus.mapping(data, "relations").items()
@@ -121,12 +123,15 @@ def injected(text, fault):
 
 
 def build(records, count, faults, seed, pairs=2):
+    # @req> REQ-23706540@e-JqhR3Ui-ke g5zodz
     reqs = {uid: data for uid, data in records.items()
             if uid.startswith("REQ-") and data.get("status") == "approved"}
+    # @req+ REQ-27446623@DvVquw4gXGWi 3xjgfd
     with_neighbours = sorted(uid for uid, data in reqs.items()
                              if neighbours(records, data))
     if not with_neighbours:
         raise SystemExit("no approved requirement declares a neighbour to probe")
+    # @req- 3xjgfd
     draw = random.Random(seed)
     chosen = draw.sample(with_neighbours, min(count, len(with_neighbours)))
 
@@ -191,6 +196,7 @@ def returned(run, key):
         number = probe["proposal"]
         path = run / "verdicts" / f"{number}.json"
         data, why = plan.read_return(path, shapes.JUDGE)
+        # @req+ REQ-46371318@bTR5XgyXXjAC tgcyaj
         if data is None:
             if why == "returned nothing":
                 absent.append(number)
@@ -199,11 +205,13 @@ def returned(run, key):
         if data["proposal"] != number:
             raise SystemExit(f"{path}: answers proposal {data['proposal']}, "
                              f"not {number}")
+        # @req- tgcyaj
         held[number] = data
     return held, absent
 
 
 def reach(run, state_held):
+    # @req> REQ-32019340@Ce9zMv1R_f5m xjprat
     if not state_held["recall"]:
         raise SystemExit(
             f"{run / plan.STATE}: the build recorded no recall prompt, and "
@@ -219,6 +227,7 @@ def reach(run, state_held):
 
 
 def measure(key, held, recalled, named):
+    # @req+ REQ-75438506@GIywOiWYUqgH 733yqr
     rows = []
     for probe in key["probes"]:
         verdict = held.get(probe["proposal"])
@@ -264,9 +273,11 @@ def measure(key, held, recalled, named):
                 "outside_the_key": len(said - {probe["fault"]}),
             })
     return rows
+    # @req- 733yqr
 
 
 def _totals(rows):
+    # @req+ REQ-75438506@GIywOiWYUqgH xwdm24
     duplicates = [row for row in rows if row["kind"] == "duplicate"]
     faults = [row for row in rows if row["kind"] == "fault"]
     siblings = [row for row in rows if row["kind"] == "sibling"]
@@ -286,6 +297,7 @@ def _totals(rows):
         "siblings_stated": sum(1 for row in siblings if row["stated"]),
         "siblings_found": sum(1 for row in siblings if row["named"]),
     }
+    # @req- xwdm24
 
 
 def unsound(totals):
@@ -299,6 +311,7 @@ def _line(label, part, whole, note=""):
 
 
 def report(rows, absent, unread, totals):
+    # @req+ REQ-75438506@GIywOiWYUqgH cx4ygh
     lines = [f"{'proposal':>8}  {'kind':<9}  {'recall':<7}{'named':<7}"
              f"{'result':<32}outside the key"]
     for row in rows:
@@ -336,6 +349,8 @@ def report(rows, absent, unread, totals):
                     totals["sibling_probes"]),
               _line("siblings found", totals["siblings_found"],
                     totals["sibling_probes"], "what Pass B alone can see")]
+    # @req- cx4ygh
+    # @req+ REQ-22288699@6DWNPu-0CCxf tdrp6q
     if absent:
         lines.append("")
         lines.append("no verdict returned for proposal "
@@ -354,8 +369,11 @@ def report(rows, absent, unread, totals):
                      "derived from, so the run did not work rather than "
                      "measuring badly -- read its recall and named columns to "
                      "see which pass lost it before quoting any figure above")
+    # @req- tdrp6q
+    # @req+ REQ-91336482@TiPdPxI_xFIm vxxogb
     lines.append("")
     lines.append(LIMITATION)
+    # @req- vxxogb
     return "\n".join(lines)
 
 
@@ -387,14 +405,17 @@ def cmd_mint(args):
                             for probe in key["probes"]}
     (out / "run.yaml").write_text(yaml.safe_dump(recorded, sort_keys=False))
 
+    # @req+ REQ-79267149@1zBteGwniUwU 4avsug
     counted = {kind: sum(1 for probe in key["probes"] if probe["kind"] == kind)
                for kind in ("duplicate", "fault", "sibling")}
     print(f"{counted['duplicate']} duplicate probe(s), {counted['fault']} fault "
           f"probe(s) and {counted['sibling']} sibling probe(s) in {out}")
+    # @req- 4avsug
     print(f"  proposals   {out}/proposals/NN.md, numbered as the proposal number")
     print(f"  words       {out}/words.md, the statements each probe traces to")
     print(f"  run         {out}/run.yaml, each probe's binding and trace")
     print(f"  key         {out}/answers.json")
+    # @req> REQ-79267149@1zBteGwniUwU u3gura
     if stale:
         print(f"  retired     {len(stale)} file(s) of the run this key "
               "replaces, its verdicts among them")
@@ -407,6 +428,7 @@ def cmd_mint(args):
 def cmd_score(args):
     run = Path(args.run)
     where = run / "answers.json"
+    # @req> REQ-32019340@Ce9zMv1R_f5m cwfhxj
     if not where.is_file():
         raise SystemExit(f"{where}: no key here; mint the probes first")
     key = json.loads(where.read_text())

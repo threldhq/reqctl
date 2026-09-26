@@ -880,8 +880,9 @@ def _item_arguments(s):
     s.add_argument("--text", help="the statement, or for a parameter or data "
                                   "item what it denotes")
     s.add_argument("--type", choices=["functional", "non_functional", "constraint"])
+    # @req> REQ-35443917@7V3GXXoqruBl xyvmst
     s.add_argument("--verification",
-                   choices=["automated_test", "inspection", "analysis", "demonstration"])
+                   choices=["inspection", "analysis", "demonstration"])
     s.add_argument("--priority", choices=["high", "medium", "low"])
     s.add_argument("--rationale")
     s.add_argument("--criterion", dest="criteria", action="append",
@@ -934,8 +935,9 @@ def build_parser():
     s.add_argument("--text")
     s.add_argument("--status", choices=["draft", "approved", "deprecated", "superseded"])
     s.add_argument("--type", choices=["functional", "non_functional", "constraint"])
+    # @req> REQ-35443917@7V3GXXoqruBl ep2jqr
     s.add_argument("--verification",
-                   choices=["automated_test", "inspection", "analysis", "demonstration"])
+                   choices=["inspection", "analysis", "demonstration"])
     s.add_argument("--priority", choices=["high", "medium", "low"])
     s.add_argument("--rationale")
     g = s.add_mutually_exclusive_group()
