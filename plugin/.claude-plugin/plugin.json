@@ -1,0 +1,6 @@
+{
+  "name": "reqctl",
+  "version": "0.1.2",
+  "license": "Apache-2.0",
+  "description": "Requirements-first work with reqctl: the elucidate, implement and pre-pr skills, the coverage agent, the hook that keeps the corpus behind reqctl, and the hook that gives each session reqctl's rules."
+}

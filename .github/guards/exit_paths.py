@@ -3,7 +3,7 @@ import ast
 import sys
 from pathlib import Path
 
-HOOKS = Path(__file__).resolve().parents[2] / ".claude" / "hooks"
+HOOKS = Path(__file__).resolve().parents[2] / "plugin" / "hooks"
 
 faults, scanned = [], 0
 for path in sorted(HOOKS.rglob("*.py")):

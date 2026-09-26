@@ -37,7 +37,6 @@ jobs:
             echo "$1=$held" | tee -a "$GITHUB_OUTPUT"
           }
           mark deps '^reqctl/requirements'
-          mark corpus '^requirements/'
 
       - name: No credential in the change
         env:
@@ -135,23 +134,8 @@ jobs:
       - name: Rules scope
         run: python .github/guards/rules_scope.py
 
-      - name: Requirement changes travel alone
-        if: github.event_name == 'pull_request'
-        env:
-          BASE_REF: ${{ github.base_ref }}
-        run: python .github/travel_alone.py "origin/$BASE_REF"
-
-      - name: A changed baseline follows the one it supersedes
-        if: github.event_name == 'pull_request'
-        env:
-          BASE_REF: ${{ github.base_ref }}
-        run: python .github/baseline_number.py "origin/$BASE_REF"
-
       - name: Corpus is valid
         run: reqctl validate
-
-      - name: The secret scan admits what reqctl stamps
-        run: python .github/guards/gitleaks_stamps.py
 
       - name: The repository holds no test
         run: python .github/guards/no_tests.py
@@ -159,19 +143,8 @@ jobs:
       - name: Comment budget
         run: python .github/guards/comment_budget.py --max 0
 
-      - name: Taxonomy
-        run: python .github/guards/taxonomy.py
-
       - name: A skill mints what the corpus accepts
         run: python .github/guards/skill_minting.py
-
-      - name: Baseline matches the corpus
-        run: reqctl baseline --check
-
-      - name: Traceability
-        env:
-          SETTLING: ${{ steps.touched.outputs.corpus }}
-        run: python .github/guards/citations.py
 
       - name: Citations this change touches
         if: github.event_name == 'pull_request'

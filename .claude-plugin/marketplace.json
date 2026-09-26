@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "reqctl",
-      "source": "./.claude"
+      "source": "./plugin"
     }
   ]
 }
