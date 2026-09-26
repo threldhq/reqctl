@@ -34,6 +34,7 @@ SIBLINGS = "siblings"
 SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
+# @req> REQ-18272120@P5XOlho5WrkH o47rwb
 BOUNDS = ("recall_batch", "judge_bound", "judge_group", "floor_k",
           "agent_ceiling")
 PHASES = {"recall": "medium", "judge": "high"}
@@ -246,6 +247,7 @@ def trimmed(uid, block, held, records):
                 continue
             line = USED_BY + ", ".join(inside)
         lines.append(line)
+    # @req+ REQ-67476912@t4G-bPIouCkO 47tdge
     declared = {target for target
                 in corpus.mapping(records.get(uid) or {}, "relations")
                 if target.startswith("REQ-")}
@@ -254,6 +256,7 @@ def trimmed(uid, block, held, records):
             f"{uid}: the export prints the relations {sorted(printed)} where "
             f"the corpus declares {sorted(declared)}. A shard is cut from what "
             "`reqctl export` renders, so a change there is a change here.")
+    # @req- 47tdge
     return "\n".join(lines) + "\n"
 
 
@@ -292,11 +295,13 @@ def named_item(records, kind, name):
 
 
 def parameter(records, name):
+    # @req+ REQ-18272120@P5XOlho5WrkH dyeqka
     _, data = named_item(records, "parameter", name)
     held = list(corpus.entries(data) or {})
     if len(held) != 1 or not str(held[0]).isdigit():
         raise SystemExit(f"{name} states {held}, and the build is bounded by "
                          "one whole number")
+    # @req- dyeqka
     return int(held[0])
 
 
@@ -323,6 +328,7 @@ def roles(records):
             stated = fallback
         if stated is None:
             continue
+        # @req> REQ-82356895@3k-Q_tVhphjY waczui
         if not isinstance(stated, str) or not stated:
             raise SystemExit(f"{ROLES} names no model for {phase}, which the "
                              "build spawns")
@@ -334,12 +340,14 @@ def dimensions(root, records):
     held = {}
     for name in corpus.binding_dimensions(root):
         uid, data = named_item(records, "data", name)
+        # @req+ REQ-29846444@iGWqcEzs6s52 zjcgv2
         members = set(corpus.entries(data) or {})
         if not members:
             raise SystemExit(
                 f"{uid} defines no member, so every proposal binds to all of "
                 "them whatever its text says and the check holds nothing to "
                 "anything.")
+        # @req- zjcgv2
         held[name] = (uid, members)
     return held
 
@@ -379,6 +387,7 @@ def recorded(run):
 def rows(path, name, said, members):
     held = {}
     for number, value in said.items():
+        # @req+ REQ-83454000@2mAdg5ekGPhz 2qoccn
         if value == "all":
             chosen = set()
         elif isinstance(value, list) and value:
@@ -389,12 +398,16 @@ def rows(path, name, said, members):
                 "form is a list of members, as `[<member>]`, or `all`. An "
                 "empty list is not all: a statement binds to at least one "
                 "member of every dimension.")
+        # @req- 2qoccn
+        # @req+ REQ-50522674@snwm856zApjT 6ahzuj
         stray = chosen - members
         if stray:
             raise SystemExit(
                 f"{path}: proposal {number} binds to {', '.join(sorted(stray))}"
                 f", which the {name} data item does not define. The members "
                 f"are {', '.join(sorted(members))}, or `all`.")
+        # @req- 6ahzuj
+        # @req> REQ-83454000@2mAdg5ekGPhz reughj
         if str(number) in held:
             raise SystemExit(
                 f"{path}: {name} records proposal {number} twice -- YAML keeps "
@@ -406,25 +419,30 @@ def rows(path, name, said, members):
 
 def settled(run, dims):
     path, read = recorded(run)
+    # @req> REQ-30037092@q2bg6jcRf_YK 6bxg5g
     if not path.is_file():
         raise SystemExit(
             f"{path}: a run records the members each proposal binds to, under "
             f"`{BINDS}`, keyed by dimension and then by proposal number. "
             "Step 1 asks the owner; nothing else settles it.")
+    # @req+ REQ-83454000@2mAdg5ekGPhz 2uanuo
     said = read.get(BINDS)
     if not isinstance(said, dict):
         raise SystemExit(
             f"{path}: `{BINDS}` maps each of {', '.join(sorted(dims))} to the "
             "proposal numbers and the members each binds to, as "
             "`<dimension>:` then `2: [<member>]`, or `all`.")
+    # @req- 2uanuo
     held = {}
     for name, (_, members) in dims.items():
+        # @req+ REQ-30037092@q2bg6jcRf_YK avbh7j
         stated = said.get(name)
         if not isinstance(stated, dict):
             raise SystemExit(
                 f"{path}: `{BINDS}` records nothing for {name}, which the "
                 "corpus nominates as a dimension. Its members are "
                 f"{', '.join(sorted(members))}.")
+        # @req- avbh7j
         held[name] = rows(path, name, stated, members)
     return held
 
@@ -446,6 +464,7 @@ def binding(run, held, root, records):
     # @req- owkvnp
     chosen = {}
     for number, statement, _, kind in held:
+        # @req+ REQ-58008138@O0-317mnnmhw usq427
         for token in TOKEN.finditer(statement):
             if not corpus.PARAM_REF.fullmatch(token.group()):
                 raise SystemExit(
@@ -460,10 +479,12 @@ def binding(run, held, root, records):
                 "the corpus resolves to no parameter, data item or member of "
                 "one. A reference to nothing binds nothing rather than failing "
                 "to parse, so it reads here as binding to every member.")
+        # @req- usq427
         settled_on = {}
         for name, (uid, members) in dims.items():
             stated = said[name]
             written = bound(name, uid, statement)
+            # @req> REQ-45221432@7p3Uxweu-mBn 2p6w7j
             if kind == "GUARD":
                 if str(number) in stated:
                     raise SystemExit(
@@ -478,18 +499,21 @@ def binding(run, held, root, records):
                         "dimension; reword it, or state the rule as a "
                         "requirement.")
                 continue
+            # @req> REQ-30037092@q2bg6jcRf_YK 5nfu7e
             if str(number) not in stated:
                 raise SystemExit(
                     f"proposal {number}: {run / 'run.yaml'} records no {name} "
                     "for it. Every requirement states one for every dimension, "
                     "and all is an answer rather than a silence.")
             wanted = stated[str(number)]
+            # @req> REQ-16901746@GLAvhbvo-733 7yvsul
             if "" in written:
                 raise SystemExit(
                     f"proposal {number} references the {name} data item "
                     "without naming a member, which states no binding. Name "
                     "the member, or reference nothing and record the proposal "
                     "as all.")
+            # @req> REQ-50522674@snwm856zApjT 2rsevi
             if written - members:
                 raise SystemExit(
                     f"proposal {number} references "
@@ -537,6 +561,7 @@ def proposals(run):
                 "build as the subject of its obligation. State `the product "
                 "shall` or `the build shall`.")
         held.append((number, statement, path, kind))
+    # @req> REQ-38776024@gWRVR1eicTsX trxd62
     if not held:
         raise SystemExit(f"{run / 'proposals'}: no proposal to challenge")
     return held
@@ -573,6 +598,7 @@ def linted(held, store):
 def traced(run, words, held):
     path, read = recorded(run)
     traces = read.get(TRACE) or {}
+    # @req> REQ-28473555@TU3p5DYcYjTU do2uo3
     if not isinstance(traces, dict):
         raise SystemExit(
             f"{path}: `{TRACE}` maps a proposal number to the passages of the "
@@ -580,12 +606,14 @@ def traced(run, words, held):
     spoken = _coverage.plain(_coverage.spoken(words))
     stated = {}
     for number, _, _, _ in held:
+        # @req+ REQ-28473555@TU3p5DYcYjTU fw5ou4
         passages = traces.get(number, traces.get(str(number), []))
         if not isinstance(passages, list) or not all(
                 isinstance(one, str) and one.strip() for one in passages):
             raise SystemExit(
                 f"{path}: `{TRACE}` states {passages!r} for proposal {number}. "
                 "The form is a list of passages quoted from the owner's words.")
+        # @req- fw5ou4
         # @req> REQ-83939497@SjYhKgxzDeHv rfwtjo
         for passage in passages:
             if not _coverage.quoted(spoken, _coverage.spoken(passage)):
@@ -602,6 +630,7 @@ def stated(run):
     held = read.get(CRITERIA)
     if held is None:
         return {}
+    # @req+ REQ-37767588@_49nE3poGyAr viljjd
     if not isinstance(held, dict):
         raise SystemExit(
             f"{path}: `{CRITERIA}` maps a proposal number to the criteria it "
@@ -615,6 +644,7 @@ def stated(run):
                 f"{path}: `{CRITERIA}` states {value!r} for proposal {number}. "
                 "The form is a list of `given | when | then` strings.")
         carried[str(number)] = list(value)
+    # @req- viljjd
     return carried
 
 
@@ -801,6 +831,7 @@ def manifest(run, name, prompts):
 
 def state(run):
     path = run / STATE
+    # @req> REQ-32019340@Ce9zMv1R_f5m fctrpm
     if not path.is_file():
         raise SystemExit(f"{path}: the run was not built; run `plan.py build` "
                          "first")
@@ -835,6 +866,7 @@ def recall_prompts(run, held, state_held, shards, only, words, declined,
 
 def build(run, chars, items, lines=PROMPT_LINES):
     # @req+ REQ-54959279@JYltFTa20G1- rwweso
+    # @req> REQ-36523706@AaQoopUwKA6G 7e7svw
     if chars < 1 or items < 1 or lines < 1:
         raise SystemExit(f"--chars {chars} --items {items} --lines {lines}: a "
                          "shard holds at least one character and one item, and "
@@ -908,6 +940,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
     retired = retire(run, exported_text)
     for name in retired:
         print(f"retired {name}: the export it was judged against has moved")
+    # @req> REQ-16868696@GYtmXbCQKILu js66h5
     print(f"{len(held)} proposal(s) over {len(shards)} shard(s) in batches of "
           f"{batch}: {len(spawned)} recall agent(s), then one judge each")
     print(f"  spawn     {where}")
@@ -952,12 +985,14 @@ def recalled(run, state_held):
         held = set(state_held["shards"][spec["shard"]]["items"])
         for entry in data["results"]:
             for hit in entry["hits"]:
+                # @req+ REQ-94538693@Q40c2VogCp5E 4xyeq2
                 if hit["uid"] not in held:
                     faults.append(f"names {hit['uid']}, which the prompt did "
                                   "not state")
                 elif hit["uid"] == f"proposal {entry['proposal']}":
                     faults.append(f"names proposal {entry['proposal']} as "
                                   "bearing on itself")
+                # @req- 4xyeq2
         if faults:
             refused.append((label, faults))
             continue
@@ -977,6 +1012,7 @@ def halved(run, state_held, stopped, held, words, declined, dictionary_text,
     # @req+ REQ-19832934@CAEeElFyXNOg moar22
     for name, why in sorted(stopped.items()):
         batch = state_held["shards"][name]["batch"]
+        # @req> REQ-33633053@4xh96ub1a3EH mrzj65
         if batch < 2:
             raise SystemExit(
                 f"{why}, and its batch is already one proposal, so the shard "
@@ -997,10 +1033,12 @@ def halved(run, state_held, stopped, held, words, declined, dictionary_text,
     saved(run, state_held)
     where = manifest(run, "recall", spawned)
     # @req- moar22
+    # @req+ REQ-82676674@FK_7la2Hg_XC vpqdb6
     for name, why in sorted(stopped.items()):
         print(f"{why}: {name} is rebuilt in batches of "
               f"{state_held['shards'][name]['batch']}")
     print(f"{len(spawned)} recall agent(s) to spawn again: {where}")
+    # @req- vpqdb6
 
 
 def indexed(records):
@@ -1117,6 +1155,7 @@ def judge(run):
         halved(run, state_held, stopped, held, words, declined, dictionary_text,
                records, shards, len(blocked))
         return 1
+    # @req> REQ-82676674@FK_7la2Hg_XC fzv4pc
     if refused:
         spawned = []
         for label, faults in refused:
@@ -1179,12 +1218,14 @@ def judge(run):
         (run / "prompts" / "judge" / f"{name}.md").write_text(body)
     saved(run, state_held)
     where = manifest(run, "judge", spawned)
+    # @req+ REQ-18337665@WgqhACOIS9SM 5zcmh2
     split = sum(1 for _, groups in plans.values() if groups is not None)
     print(f"{len(plans)} proposal(s): {len(spawned)} judge agent(s), "
           f"{split} split into groups with a final judge to follow")
     for number, (names, groups) in sorted(plans.items(), key=lambda p: int(p[0])):
         print(f"  proposal {number}: {len(names)} item(s)"
               + (f" in {len(groups)} group(s)" if groups else ""))
+    # @req- 5zcmh2
     print(f"  spawn     {where}")
     return 0
 
@@ -1194,15 +1235,18 @@ def group_returns(run, number, groups):
     for at, group in enumerate(groups, 1):
         path = run / "returns" / "judge" / f"{number}-g{at}.json"
         data, why = read_return(path, shapes.GROUP)
+        # @req> REQ-46162234@7Wvh6guc-Moy 4e2mbt
         if data is None:
             refused.append((f"{number}-g{at}", why))
             continue
+        # @req+ REQ-26720462@_I_YaKWEsG65 fdqj6u
         foreign = sorted({finding["uid"] for finding in data["findings"]
                           if finding["uid"] not in group})
         if foreign:
             refused.append((f"{number}-g{at}", (f"names {', '.join(foreign)}, "
                                                 "which the group did not state")))
             continue
+        # @req- fdqj6u
         for finding in data["findings"]:
             lines.append(f"- {finding['uid']} [{finding['kind']}] clause: "
                          f"\"{finding['clause']}\" reason: {finding['reason']}")
@@ -1230,6 +1274,7 @@ def final(run):
         if spec["groups"] is None:
             continue
         lines, refused = group_returns(run, number, spec["groups"])
+        # @req> REQ-82676674@FK_7la2Hg_XC fnjvuz
         for name, why in refused:
             print(f"{name}: {why}")
             (run / "returns" / "judge" / f"{name}.json").unlink(missing_ok=True)
@@ -1243,10 +1288,13 @@ def final(run):
             dictionary_text)
         spawned.append(spawn(run, "final", number, f"final:{number}",
                              shapes.JUDGE, model, PHASES["judge"]))
+    # @req> REQ-20121033@ilM5nhktsDvF zqtqps
+    # @req> REQ-82676674@FK_7la2Hg_XC ukzxgc
     if again:
         print(f"{len(again)} group judge(s) to spawn again, {waiting} final "
               f"prompt(s) waiting on them: {manifest(run, 'judge', again)}")
         return 1
+    # @req> REQ-56479390@PonL-ZUUzxq6 buupgw
     if not prompts:
         print("no proposal was split into groups; nothing to assemble")
         return 0
@@ -1254,6 +1302,7 @@ def final(run):
     for name, body in prompts.items():
         (run / "prompts" / "final" / f"{name}.md").write_text(body)
     where = manifest(run, "final", spawned)
+    # @req> REQ-56479390@PonL-ZUUzxq6 oapzeo
     print(f"{len(spawned)} final judge(s) to spawn: {where}")
     return 0
 
@@ -1268,10 +1317,12 @@ def describe(run):
                                key=lambda pair: int(pair[0])):
         path = run / "verdicts" / f"{number}.json"
         verdict, why = read_return(path, shapes.JUDGE)
+        # @req> REQ-32019340@Ce9zMv1R_f5m zmwc5n
         if verdict is None:
             raise SystemExit(f"{path}: proposal {number}'s verdict {why}; run "
                              "`verdicts.py` once the judges return")
         lines.append(f"### proposal {number}\n\n{spec['statement']}\n")
+        # @req> REQ-36901100@tEyoD1WQpj_b 4flmpq
         if not spec["trace"]:
             raise SystemExit(f"proposal {number} traces to no passage of the "
                              "owner's words; record its `trace` in run.yaml")
