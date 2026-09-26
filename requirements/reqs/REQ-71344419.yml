@@ -1,0 +1,11 @@
+acceptance_criteria: []
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations: {}
+status: approved
+text: When a push is made to the default branch of a calling repository, the product
+  shall publish the calling repository's corpus through a reusable workflow where
+  the [portal](portal) reads the corpus.
+type: functional
+verification: demonstration

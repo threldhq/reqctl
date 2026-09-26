@@ -5,6 +5,7 @@ entries:
   implement_skill: {}
   pre_pr_skill: {}
   requirements_guard_hook: {}
+  session_rules_hook: {}
 kind: data
 name: plugin_components
 status: approved
