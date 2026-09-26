@@ -10,6 +10,9 @@ FLAG = re.compile(r"^[a-z][a-z0-9-]*$")
 WORD = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*$")
 MINTED = re.compile(r"^\$(\d+)$")
 PAYLOAD = "CORPUS_CHANGE"
+BODY = ("Dispatched from the requirements portal.\n\n"
+        "Every item here was written by `reqctl`; nothing hand-edited the "
+        "corpus.\n\nSteps dispatched:\n\n```json\n{}\n```\n")
 
 
 class Refused(Exception):
@@ -89,6 +92,41 @@ def apply(payload, root, ran=run):
     return minted
 
 
+def ran(*made):
+    done = subprocess.run(made, capture_output=True, text=True, check=False)
+    if done.returncode:
+        said = done.stderr.strip() or done.stdout.strip()
+        raise Refused(f"{' '.join(made)}: {said or 'failed silently'}")
+    return done.stdout.strip()
+
+
+def proposed(raw, env):
+    ran("reqctl", "validate")
+    slug, title, trunk = env["APP_SLUG"], env["TITLE"], env["DEFAULT_BRANCH"]
+    bot = f"{slug}[bot]"
+    held = ran("gh", "api", f"/users/{slug}%5Bbot%5D", "--jq", ".id")
+    ran("git", "config", "user.name", bot)
+    ran("git", "config", "user.email",
+        f"{held}+{bot}@users.noreply.github.com")
+    branch = f"corpus/{env['GITHUB_RUN_ID']}"
+    ran("git", "checkout", "-b", branch)
+    ran("git", "add", "-A")
+    if not ran("git", "diff", "--cached", "--name-only"):
+        raise Refused("the change altered nothing")
+    ran("git", "commit", "-m", title)
+    settled = subprocess.run(["reqctl", "baseline", "--check"],
+                             capture_output=True, check=False)
+    if settled.returncode:
+        ran("git", "remote", "set-head", "origin", trunk)
+        ran("reqctl", "baseline", "--generate")
+        ran("reqctl", "baseline", "--check")
+        ran("git", "add", "-A")
+        ran("git", "commit", "-m", f"{title}: cut the baseline")
+    ran("git", "push", "-u", "origin", branch)
+    return ran("gh", "pr", "create", "--base", trunk, "--head", branch,
+               "--title", title, "--body", BODY.format(raw))
+
+
 def main():
     raw = os.environ.get(PAYLOAD)
     if not raw:
@@ -103,13 +141,17 @@ def main():
         print(f"::error::{PAYLOAD} is not a mapping")
         return 1
     try:
-        minted = apply(payload, os.environ.get("GITHUB_WORKSPACE") or ".")
+        # @req+ REQ-57492239@hvqdee0u96s6 jvrbb3
+        minted = apply(payload, ".")
+        opened = proposed(raw, os.environ)
+        # @req- jvrbb3
     except Refused as refused:
         print(f"::error::{refused}")
         return 1
     for uid in minted:
         if uid:
             print(uid)
+    print(opened)
     return 0
 
 

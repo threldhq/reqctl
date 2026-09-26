@@ -11,9 +11,10 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "ci.yml"
+GATES = ROOT / ".github" / "workflows" / "corpus-gates.yml"
 VENV = ROOT / ".venv" / "bin"
 EXPRESSION = re.compile(r"\$\{\{\s*(.+?)\s*\}\}")
-EQUALITY = re.compile(r"^([\w.]+)\s*==\s*'([^']*)'$")
+EQUALITY = re.compile(r"^([\w.]+)\s*(==|!=)\s*'([^']*)'$")
 PROVISIONS = re.compile(
     r"\bpip install\b|\bnpm ci\b|\bpnpm install\b|\bcorepack enable\b"
     r"|playwright install|install-gitleaks")
@@ -34,15 +35,15 @@ def caveat(status):
     return DIRTY if status.stdout.strip() else ""
 
 
-def loaded():
+def loaded(path):
     try:
-        text = WORKFLOW.read_text()
+        text = path.read_text()
     except OSError as unreadable:
-        sys.exit(f"{WORKFLOW.relative_to(ROOT)}: {unreadable}")
+        sys.exit(f"{path.relative_to(ROOT)}: {unreadable}")
     try:
         return yaml.safe_load(text)
     except yaml.YAMLError as unreadable:
-        sys.exit(f"{WORKFLOW.relative_to(ROOT)}: {unreadable}")
+        sys.exit(f"{path.relative_to(ROOT)}: {unreadable}")
 
 
 def steps_of(doc):
@@ -73,7 +74,8 @@ def condition_holds(expression, context):
         return None, f"condition names {', '.join(sorted(set(unresolved)))}"
     match = EQUALITY.match(resolved.strip())
     if match:
-        return context.get(match.group(1), match.group(1)) == match.group(2), ""
+        held = context.get(match.group(1), match.group(1)) == match.group(3)
+        return held if match.group(2) == "==" else not held, ""
     return None, f"condition is not a form this runner evaluates: {resolved}"
 
 
@@ -129,10 +131,11 @@ def main(argv=None):
     parsed.add_argument("--event", default="pull_request", metavar="NAME")
     args = parsed.parse_args(argv)
 
-    doc = loaded()
+    doc, gates = loaded(WORKFLOW), loaded(GATES)
     context = {
         "github.base_ref": args.base,
         "github.event_name": args.event,
+        "inputs.reqctl": "",
     }
     found, trouble = touched_outputs(doc, context)
     if trouble:
@@ -141,7 +144,7 @@ def main(argv=None):
 
     counts = {PASS: 0, FAIL: 0, SKIP: 0}
     failures = []
-    print(f"{WORKFLOW.relative_to(ROOT)}: "
+    print(f"{WORKFLOW.relative_to(ROOT)} and {GATES.relative_to(ROOT)}: "
           f"base={args.base} event={args.event}")
     changed = {key.rsplit(".", 1)[-1] for key, value in found.items()
                if value == "true"}
@@ -149,7 +152,7 @@ def main(argv=None):
     uncommitted = caveat(run("git status --porcelain", {}))
     print(f"{uncommitted}\n" if uncommitted else "")
 
-    for job, step in steps_of(doc):
+    for job, step in steps_of(doc) + steps_of(gates):
         name = step.get("name") or step.get("id") or "unnamed"
         if step.get("id") == "touched":
             counts[PASS] += 1

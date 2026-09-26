@@ -6,7 +6,7 @@ from pathlib import Path
 
 import taxonomy
 
-SKILLS = Path(".claude/skills")
+SKILLS = Path("plugin/skills")
 SET = re.compile(r'--value\s+"\[([^\]]*)\]"')
 LOOSE = re.compile(r"--value\b(?!-)\W{0,3}\[")
 TYPED = re.compile(r"--value-type\s+`?([a-z_]+)`?")
