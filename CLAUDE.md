@@ -196,7 +196,8 @@ Open a pull request when a coherent unit of work is ready, not on every push —
 CI minutes are finite. Batch related work into one PR.
 
 The owner reads the pull request, not the diff. State what changed and what was
-checked; nothing the body omits is seen.
+checked; nothing the body omits is seen. The body puts nothing to the owner: a
+question, a choice or a request to try something goes to them in the session.
 
 Claude may merge a pull request that touches only code — a permission that waits
 on a deliberate `CODEOWNERS` carve-out: `*` owns the repository, so a new path is
