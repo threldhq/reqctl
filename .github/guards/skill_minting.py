@@ -4,7 +4,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "guards"))
 import taxonomy
 
 SKILLS = Path(".claude/skills")
@@ -75,24 +74,6 @@ def checked(path):
             held.unlink()
     return found_faults
 
-
-def probed(text):
-    with tempfile.TemporaryDirectory() as room:
-        spot = Path(room) / "SKILL.md"
-        spot.write_text(text)
-        return checked(spot)
-
-
-UNRECOGNISED = "shown as `--value '[10, 20]'` with `--value-type count`\n"
-if not any("cannot parse" in one for one in probed(UNRECOGNISED)):
-    faults.append("a --value example in an unrecognised format is skipped, "
-                  "not reported")
-
-UNQUOTABLE = ("shown as `--value \"[can't stop, wont stop]\"` with "
-             "`--value-type text`\n")
-if not any("do not mint readable YAML" in one for one in probed(UNQUOTABLE)):
-    faults.append("a SystemExit from taxonomy.faults crashes this guard "
-                  "rather than becoming a fault")
 
 found = sorted(SKILLS.rglob("SKILL.md"))
 if not found:

@@ -5,13 +5,13 @@ useDefault = true
 id = "generic-api-key"
 
 [[rules.allowlists]]
-description = "reqctl stamps, held to reqctl's own by test_gitleaks_stamps.py"
+description = "reqctl stamps, held to reqctl's own by gitleaks_stamps.py"
 condition = "AND"
 paths = ['''^requirements/.*\.yml$''']
 regexTarget = "secret"
 regexes = ['''^[A-Za-z0-9_-]{43}$''']
 
 [[rules.allowlists]]
-description = "reqctl uids, held to reqctl's own by test_gitleaks_stamps.py"
+description = "reqctl uids, held to reqctl's own by gitleaks_stamps.py"
 regexTarget = "secret"
 regexes = ['''^(REQ|GUARD|PARAM|TERM|DATA)-[0-9]{8}$''']

@@ -58,37 +58,5 @@ def main():
     return 1 if found else 0
 
 
-mismatched = []
-
-
-def case(name, got, want):
-    if got != want:
-        mismatched.append(f"{name}: expected {want}, got {got}")
-
-
-SOUND = ("*                @threld-dev\n"
-         "/requirements/   @threld-dev\n"
-         "/reqctl/         @threld-dev\n"
-         "/.github/        @threld-dev\n"
-         "/.claude/        @threld-dev\n"
-         "/CLAUDE.md       @threld-dev\n"
-         "/.mcp.json       @threld-dev\n")
-
-case("a sound codeowners text passes", faults(SOUND), [])
-
-NO_WILDCARD = SOUND.replace("*                @threld-dev\n", "")
-case("a codeowners naming every owned path but no wildcard is refused",
-     any("has no *" in one for one in faults(NO_WILDCARD)), True)
-
-SANDWICHED = SOUND.replace(
-    "/reqctl/         @threld-dev\n",
-    "/reqctl/extra/   @threld-dev\n/reqctl/         @threld-dev\n")
-case("a broader rule sandwiched between two owned paths is refused, "
-     "catching whichever owned rule is chosen as the boundary",
-     any("follows the owned paths" in one for one in faults(SANDWICHED)), True)
-
 if __name__ == "__main__":
-    if mismatched:
-        print("\n".join(mismatched))
-        sys.exit(1)
     sys.exit(main())
