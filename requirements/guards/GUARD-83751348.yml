@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a help string written as a string literal or an f-string
+  then: the build counts the string
+  when: the build runs
+- given: a help string built by joining strings or by calling a function
+  then: the build refuses the change
+  when: the build runs
+- given: a helper function passing on the help text a caller gives, where a caller
+    gives text that is not written out
+  then: the build refuses the change
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+relations: {}
+status: approved
+text: If an argument parser outside the [corpus root](corpus_root) is given a help,
+  description or epilog string that is not written out in the source, directly or
+  through a helper function, then the build shall refuse the change.

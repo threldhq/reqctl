@@ -1,0 +1,14 @@
+assessed: {}
+entries:
+  fixme:
+    definition: FIXME
+  hack:
+    definition: HACK
+  todo:
+    definition: TODO
+  xxx:
+    definition: XXX
+kind: data
+name: comment_markers
+status: approved
+text: the markers a comment or docstring may not hold

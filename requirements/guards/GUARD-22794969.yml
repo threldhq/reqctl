@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a name in a markdown file holding a folder and ending in one of the ${path_suffixes},
+    with or without backticks
+  then: the build checks the name as a file path
+  when: the build runs
+- given: a file path that resolves from the repository root or from the folder of
+    the markdown file
+  then: the build refuses nothing for the path
+  when: the build runs
+- given: a file path that resolves nowhere
+  then: the build refuses the change and names the path
+  when: the build runs
+- given: a placeholder such as NN, or a path inside a URL
+  then: the build checks nothing for the name
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  path_suffixes: Xra8WAFW9yj6q5X3w79Fxzu-ZKQIgGPH3AukLp2J9rs
+  path_suffixes.*: bmng8G3uhq9TttUzoObCrQD3SGwXiZlfYAUswfU4poY
+relations: {}
+status: approved
+text: If a markdown file outside the [corpus root](corpus_root) names a file path
+  that no file the repository tracks answers to, then the build shall refuse the change.

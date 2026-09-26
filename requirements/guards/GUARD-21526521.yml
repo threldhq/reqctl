@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: more help, description and epilog strings than the ceiling
+  then: the build refuses the change and says to delete a string or raise the ceiling
+  when: the build runs
+- given: fewer help, description and epilog strings than the ceiling
+  then: the build refuses the change and says to lower the ceiling
+  when: the build runs
+- given: help text passed to an argument parser through a helper function
+  then: the build counts the text once
+  when: the build runs
+assessed:
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+relations: {}
+status: approved
+text: If the number of help, description and epilog strings given to argument parsers
+  in the Python files outside the [corpus root](corpus_root) differs from the ceiling
+  the CI workflow states, then the build shall refuse the change.

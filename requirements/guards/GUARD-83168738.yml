@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: git unable to list the tracked files
+  then: the build refuses the change and names the fault
+  when: a check runs
+- given: a file that will not decode or parse
+  then: the build refuses the change and names the file
+  when: a check reads the file
+assessed: {}
+relations: {}
+status: approved
+text: If a check the build runs cannot list the files the repository tracks, or cannot
+  decode or parse a file the check reads, then the build shall refuse the change.

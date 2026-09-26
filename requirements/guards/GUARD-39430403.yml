@@ -1,0 +1,11 @@
+acceptance_criteria:
+- given: a rules file one of whose path patterns matches no tracked file
+  then: the build refuses the change and names the pattern
+  when: the build runs
+assessed:
+  GUARD-46665858: h9A_bfvOyNF798rZcGrXlTytNuqPfcYKBwZJph4bO58
+relations:
+  GUARD-46665858: depends_on
+status: approved
+text: If a path pattern that a rules file states matches no file the repository tracks,
+  then the build shall refuse the change.
