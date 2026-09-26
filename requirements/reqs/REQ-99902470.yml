@@ -1,13 +1,15 @@
 acceptance_criteria:
 - given: the Claude Code plugin as shipped
-  then: it holds each of the plugin components, and may hold more
+  then: it holds nothing that is not one of the plugin components
   when: its contents are read
 assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.*: Ye_KVtYX7X_BfcG49QJof6dri6otiAPPi2Hlopy51-I
 priority: medium
-relations: {}
+relations:
+  REQ-38288492: constrains
 status: approved
-text: The product shall ship a Claude Code plugin holding each of the ${plugin_components}.
+text: The product shall ship nothing in the Claude Code plugin beyond the ${plugin_components}.
 type: functional
 verification: inspection

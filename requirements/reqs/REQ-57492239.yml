@@ -1,0 +1,11 @@
+acceptance_criteria: []
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations: {}
+status: approved
+text: When the [portal](portal) sends steps to a calling repository, the product shall
+  apply the steps to the calling repository's corpus through a reusable workflow and
+  open a pull request with the steps.
+type: functional
+verification: demonstration

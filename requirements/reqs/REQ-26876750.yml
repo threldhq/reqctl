@@ -1,0 +1,11 @@
+acceptance_criteria: []
+assessed:
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.*: nFwV7hNjaouDnNxZc8NeimOhYk6YoPo-Ntp3Z7w1Wfs
+priority: medium
+relations: {}
+status: approved
+text: If a pull request of a calling repository fails any of the ${corpus_gates},
+  then the product shall refuse the pull request through a reusable workflow.
+type: functional
+verification: inspection
