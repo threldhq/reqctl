@@ -261,7 +261,7 @@ def text_values(uid, data):
     if corpus.kind_of(uid, data) != "parameter" or data.get("value_type") != "text":
         return []
     problems = []
-    # @req> REQ-83091747@3cl5T4OOlk-t q5fj2f
+    # @req> REQ-83091747@onYntcqXXhk7 q5fj2f
     for member in corpus.entries(data) or {}:
         if not isinstance(member, str):
             continue
