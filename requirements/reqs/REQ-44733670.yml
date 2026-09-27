@@ -10,6 +10,8 @@ assessed:
   REQ-44642786: TqRUT-VDn-ps_LzEHAIHw9Dtkpqnw8r02ffj22913E4
   REQ-64308807: X_7rJjBIYt8CUE-ktXAa7y9c_0CONCW2KFnjxAqXBrw
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  66kdp3: ejzLv9nDHA9sdcB9pBtY6GgtUGfKw5Q9mYvslnUDC5M
 priority: medium
 relations:
   REQ-44642786: depends_on
