@@ -828,7 +828,8 @@ def cmd_unlist(args):
     item = corpus.find(tree, args.uid)
     uid = str(item.uid)
     # @req> REQ-97939970@VFuhEbnLKli1 xrna4u
-    if args.id not in corpus.mapping(item.data, corpus.CITATION_LIST):
+    if (not uid.startswith(("REQ-", "GUARD-"))
+            or args.id not in corpus.mapping(item.data, corpus.CITATION_LIST)):
         raise ReqctlError(f"{uid}: its citation list does not hold {args.id}")
     # @req+ REQ-59136977@RZuxd8I21O4a s3g7ya
     # @req> REQ-81063063@le2DnuXlXsmo rphl5n
