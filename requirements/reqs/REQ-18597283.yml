@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a [question for the owner](question_for_the_owner) the conversion raises
+  then: a recommendation drawn from the run's [best-in-class review](best_in_class_review)
+    is stated with it
+  when: the elucidate skill puts it to the owner
+- given: a [question for the owner](question_for_the_owner) that a coverage finding
+    or a verdict raises
+  then: a recommendation drawn from the review made when the owner's words were first
+    converted is stated with it, and no second review is made
+  when: the elucidate skill puts it to the owner
+- given: a recommendation
+  then: it names the answer it favours and the [practices](practice) of the review
+    it rests on, or states that the review holds nothing bearing on the question
+  when: it is stated with a [question for the owner](question_for_the_owner)
+assessed:
+  REQ-58598892: Ac8QPjjAwTy9U0mrdllRuDfPId5q6TBy6pVCi5AbTXM
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+priority: medium
+relations:
+  REQ-58598892: constrains
+  REQ-82432523: depends_on
+status: approved
+text: When the elucidate skill puts a [question for the owner](question_for_the_owner)
+  to the owner after the run's [best-in-class review](best_in_class_review) is made,
+  the product shall state with the question a recommendation drawn from that review.
+type: functional
+verification: inspection

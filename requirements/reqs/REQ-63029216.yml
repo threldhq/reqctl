@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-28700224: LfiV5W-9N5P28Pea--kU75zKhM3oktm9Gtis0fQZ3h0
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  field_of_the_governed_software: jL-3rawb_a5mG9L4XUWQZxlBCv0zHsaJjJXBbj80Z-4
+priority: medium
+relations:
+  REQ-28700224: depends_on
+  REQ-82432523: depends_on
+status: approved
+text: Where the corpus states the [field of the governed software](field_of_the_governed_software),
+  the product shall state that field in the prompt of the [best-in-class review](best_in_class_review).
+type: functional
+verification: inspection

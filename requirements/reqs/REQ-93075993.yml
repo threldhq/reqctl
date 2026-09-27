@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: an answer naming a [practice](practice) of the table as adopted, whole or
+    changed
+  then: the product proposes the [practice](practice) as the answer states it, and
+    holds the answer among the owner's words the trace quotes
+  when: the owner's words are converted again
+assessed:
+  REQ-28473555: TU3p5DYcYjTUVo_CSQzFHnvaw-7cJKCGgcHaMDKC488
+  REQ-58598892: Ac8QPjjAwTy9U0mrdllRuDfPId5q6TBy6pVCi5AbTXM
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-28473555: depends_on
+  REQ-58598892: depends_on
+  REQ-82432523: depends_on
+status: approved
+text: When the owner adopts a [practice](practice) that the [best-in-class review](best_in_class_review)
+  put to the owner, the product shall propose a statement of the [practice](practice)
+  that traces to the owner's answer.
+type: functional
+verification: inspection

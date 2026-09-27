@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-21373303: o72_uf6TKporHATCb5jpf7bLJ9nnShCh_gA4aGNZ5dA
+  REQ-58598892: Ac8QPjjAwTy9U0mrdllRuDfPId5q6TBy6pVCi5AbTXM
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-21373303: derives_from
+  REQ-58598892: depends_on
+status: approved
+text: When a run's pull request description is rendered, the product shall state in
+  the run's declined list each [practice](practice) of the [best-in-class review](best_in_class_review)
+  that the owner declined.
+type: functional
+verification: inspection

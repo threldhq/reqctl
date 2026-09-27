@@ -1,0 +1,12 @@
+assessed:
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  leader: dm5_xg96tGA19Bo0hQuihnMGrFeIw0IMNirpKcLnBLo
+entries:
+  practice:
+    aliases:
+    - practices
+    definition: A way of doing a thing that the [best-in-class review](best_in_class_review)
+      finds [leaders](leader) show.
+    word: practice
+kind: term
+status: approved
