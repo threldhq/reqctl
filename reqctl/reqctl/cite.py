@@ -19,12 +19,13 @@ MARKER = re.compile(
 FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
 # @req+ REQ-52925332@wlFlbfJQbQ2g tup4w2
 MARKUP = re.compile(r"\A\s*<!--\s*|\s*-->\s*\Z")
-DELIMITERS = {".py": re.compile(r"\A\s*#+\s*"), ".js": re.compile(r"\A\s*//\s*")}
+DELIMITERS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"\A\s*#+\s*")),
+              ".js": re.compile(r"\A\s*//\s*")}
 # @req- tup4w2
 ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
 # @req> REQ-60346603@eKFixVFgV9Xt ulk4ve
-COMMENTS = {".py": ("# ", ""), ".md": ("<!-- ", " -->"),
-            ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
+COMMENTS = {**dict.fromkeys((".py", ".yml", ".yaml"), ("# ", "")),
+            ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
 
 
 def markers(text, suffix):
