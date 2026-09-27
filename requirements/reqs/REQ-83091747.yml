@@ -9,6 +9,8 @@ acceptance_criteria:
   then: the product does not refuse the member
   when: a member that reads as a word is stated
 assessed: {}
+citations:
+  q5fj2f: ZfItPJtHVggfahrD66YKtW72C13fyTee65N_WjsPNAI
 priority: medium
 relations: {}
 status: approved

@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and states that a set separates members with a comma
   when: the value is stated
 assessed: {}
+citations:
+  wfslro: AaO4tREAs10m2z8gZK-patshenFxpVWTa16WwWm7QzQ
 priority: medium
 relations: {}
 status: approved

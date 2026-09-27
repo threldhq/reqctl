@@ -9,6 +9,8 @@ acceptance_criteria:
   then: the export writes the entry on one line
   when: the corpus is exported
 assessed: {}
+citations:
+  s5nw3l: KcJc6mcXVQpWniGmA07uEQ12VQuKV0_ZPnPRiLDcW28
 priority: medium
 relations: {}
 status: approved

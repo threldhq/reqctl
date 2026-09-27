@@ -8,6 +8,8 @@ acceptance_criteria:
     is requested
 assessed:
   REQ-42065260: f4qBCU4zNhSmNcw1Pa1IGyx18LGUvtLxrXylzCb8cpY
+citations:
+  nghnwd: 08EpaWpDuYniZJFhc0LhqVPhMa7djQO4naIz3PNwSm8
 priority: medium
 relations:
   REQ-42065260: constrains

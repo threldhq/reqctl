@@ -7,6 +7,8 @@ assessed:
   REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  cdi6vq: N5OhmYB2s3th665PNUiwT95Dg-ytOyeBPz1T7u79xaA
 priority: medium
 relations:
   REQ-18833394: constrains

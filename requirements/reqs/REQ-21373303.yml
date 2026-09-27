@@ -11,6 +11,8 @@ acceptance_criteria:
   when: the description is rendered
 assessed:
   REQ-83939497: SjYhKgxzDeHvaZO85LmDL5c2Tz7ZgnGZUpz5QiavoHc
+citations:
+  qzk6eu: o5IPSqh-zxzowPNIibV7ziAECeieq7iSnwaKu9rfz-8
 priority: medium
 relations:
   REQ-83939497: depends_on

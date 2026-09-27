@@ -8,6 +8,9 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+citations:
+  2rsevi: qq6_H6ZC602xS0nsn07xwZ1lE6Lg4eyV1YJRRnkWoW8
+  6ahzuj: fd3zj9UQeQhJLcvj3SB1acJDmVxfh6ceUQ_C97B0ImE
 priority: medium
 relations:
   REQ-68873210: depends_on

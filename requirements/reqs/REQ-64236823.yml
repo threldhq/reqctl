@@ -4,6 +4,8 @@ acceptance_criteria:
   when: an item is minted under that uid
 assessed:
   REQ-73115701: e51Qp8vDbDXd9r9g1x11auhgdfz3p1C6bqxMeAuvYRk
+citations:
+  5xsesf: HAxr52QOG-wOZh0dhtSA9tVQyGMqyQnm6UZPu4nAUEI
 priority: medium
 relations:
   REQ-73115701: constrains

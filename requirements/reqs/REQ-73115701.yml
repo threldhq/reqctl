@@ -3,6 +3,9 @@ acceptance_criteria:
   then: the corpus holds the item under that uid
   when: an item whose uid the product would otherwise mint is minted under that uid
 assessed: {}
+citations:
+  j3ijco: rycxiKzO9ksx15Vyrx_rPLocrp_D9xa_GsLoy_HOTdE
+  yorgmf: nQqEjPLBezunffStJMeC9UaOwaKEAWGFKm0C5DY_gls
 priority: medium
 relations: {}
 status: approved

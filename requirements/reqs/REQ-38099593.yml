@@ -26,6 +26,9 @@ assessed:
   REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  3yvytz: qJgqalsuj7jG2WaubHmir6oARN6QBZlujEnENBwwUzw
+  cebvfg: hkcy4vrdQ-Rl3zOWqDpF2qs_pSf_xq57dURi7dCjCb4
 priority: medium
 relations:
   REQ-18833394: depends_on

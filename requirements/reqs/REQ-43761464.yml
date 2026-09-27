@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the shard ends at the item bound
   when: a run is built
 assessed: {}
+citations:
+  n7x4xq: LoTx5rblhrfYFpqGXEKuRJ3ROeplMUmZ5p_7cv5BCQY
 priority: medium
 relations: {}
 status: approved

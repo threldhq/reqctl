@@ -5,6 +5,8 @@ acceptance_criteria:
   when: the item is minted
 assessed:
   REQ-73115701: e51Qp8vDbDXd9r9g1x11auhgdfz3p1C6bqxMeAuvYRk
+citations:
+  cmxvxt: lBA5NIytJQvX8xag2l9vVFwVzNZFTYK0qHtswjdYPSQ
 priority: medium
 relations:
   REQ-73115701: constrains

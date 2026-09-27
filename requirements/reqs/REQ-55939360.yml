@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product reports the corpus fault rather than a failed check
   when: the corpus is validated
 assessed: {}
+citations:
+  yi53ne: BOzA21RVrley5OneHj5J8gF9jdZV_e-wjlPPWdBv58A
 priority: medium
 relations: {}
 status: approved

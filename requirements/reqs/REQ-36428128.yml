@@ -7,6 +7,8 @@ acceptance_criteria:
 assessed:
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  a5i7lc: JxeVovFj710bKpG66TcEGN0oZ_Fp8l1VMvqInKq72No
 priority: medium
 relations: {}
 status: approved

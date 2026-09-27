@@ -8,6 +8,10 @@ acceptance_criteria:
     in
   when: the item's context is read
 assessed: {}
+citations:
+  3wgrmj: N3qKADRDi-fZRoUjQl264-Ms16T704Q3YpJj5YQgWDk
+  5ubj6l: 6HjZVgjDYnIU1tBdoy6Brk3rPt5KKRYc6PCfleNZU-M
+  g5txax: iwHKpAx83cfJfY63lMZah_YO-X--HLqlJDXFgUlTpzU
 priority: medium
 relations: {}
 status: approved

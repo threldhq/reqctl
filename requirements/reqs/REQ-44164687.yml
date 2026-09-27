@@ -22,6 +22,8 @@ assessed:
   REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+citations:
+  q2mqfm: UQTMXGgcSV-sX54e5FYBm9r3QI0GFOpYTzzs5gew07I
 priority: medium
 relations:
   REQ-52925332: depends_on

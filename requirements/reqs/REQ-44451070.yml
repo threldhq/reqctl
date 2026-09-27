@@ -7,6 +7,8 @@ acceptance_criteria:
   then: the product refuses and names the path the repository would state it at
   when: a schema of that name is asked for
 assessed: {}
+citations:
+  idgq2r: 6Q1Kg79u5WC1GmJsEQhoN8YPicAz3s-Un4MtX0zOhlk
 priority: high
 rationale: A repository adopting reqctl as an installed package holds no schema of
   its own until it writes one. Shipping the kind schemas with the package is what

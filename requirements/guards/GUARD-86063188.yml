@@ -10,6 +10,8 @@ acceptance_criteria:
   when: the build runs
 assessed:
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+citations:
+  gcor4z: g2HmcWtCLWefGUjtS1mCVt56prX4w9_SdIOas9FAuRc
 relations: {}
 status: approved
 text: If a change leaves the repository that holds the sources of reqctl holding a

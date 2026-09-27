@@ -9,6 +9,8 @@ assessed:
   REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  62bkhg: 2ski3wA9FuYxvh1NANds_c7GC09r1r3eXyZoCTTKL8g
 priority: medium
 relations:
   REQ-44424329: depends_on

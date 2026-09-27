@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the job prompt states the verdict shape cut for siblings
   when: the run is built
 assessed: {}
+citations:
+  oodadq: D_73fPI9niQ6W3kbOZv_zAbtCRxgoQsLl--ZnIaWy_o
 priority: medium
 relations: {}
 status: approved

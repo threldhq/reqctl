@@ -17,6 +17,8 @@ acceptance_criteria:
   then: the product names the field as not linking the term
   when: the corpus is validated
 assessed: {}
+citations:
+  vtxlpz: 6d6UNweOrpMnZGi7UemMFuG4IHpCxoHlTMipCVxEW_0
 priority: medium
 relations: {}
 status: approved

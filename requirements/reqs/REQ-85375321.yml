@@ -4,6 +4,8 @@ acceptance_criteria:
   when: a baseline is generated
 assessed:
   REQ-94917590: UDuLOE8d-fQZFA_CiyI7B_S8kBHUl4qYGonNRQX4EhQ
+citations:
+  yvehmw: 35-mMLd7WgeoADE-6PohJvGHuULVgTCvpslktYcEJNc
 priority: medium
 relations:
   REQ-94917590: depends_on

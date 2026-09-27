@@ -5,6 +5,9 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+citations:
+  5gpgix: za_ml3gge9130Y1iD59M_gptTXuw7Xj5suFk7imgexA
+  gvnev6: -ZxjMuefiYfUvLP6jxhIWo8B43Go5NpodJBbI8xgMH8
 priority: medium
 relations:
   REQ-24481048: depends_on

@@ -7,6 +7,8 @@ acceptance_criteria:
   then: the product leaves the binder pinned
   when: a field the stamp does not cover is changed on the bound item
 assessed: {}
+citations:
+  s7alzx: 9uUlCXKJ9HERs5RGzmFTNVwLDJve1iAFXU1YA5HYlw4
 priority: medium
 relations: {}
 status: approved

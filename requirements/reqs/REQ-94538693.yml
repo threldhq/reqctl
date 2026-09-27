@@ -4,6 +4,8 @@ acceptance_criteria:
   then: the product refuses the return
   when: the recall returns are read
 assessed: {}
+citations:
+  4xyeq2: g7GvMgUYyffF1BdYMps_b86fFmWJMkEhUXHKC8_V6xs
 priority: medium
 relations: {}
 status: approved

@@ -4,6 +4,8 @@ acceptance_criteria:
     rather than merged
   when: baseline --generate is run
 assessed: {}
+citations:
+  thbrwa: Cvc9oM11DGNoa9zSqP58qNBmahslLzIyBhjmL4_8AVk
 priority: medium
 relations: {}
 status: approved

@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product reports the link
   when: the corpus is validated
 assessed: {}
+citations:
+  v3b5cc: kHi7HHfRgF86sKl0RDWe700Ws6_IM_p3K6VHmZIpgnE
 priority: medium
 relations: {}
 status: approved

@@ -7,6 +7,8 @@ acceptance_criteria:
   then: the report states that fault
   when: the findings are checked
 assessed: {}
+citations:
+  rzcign: SeD9bKTnuHOMr4mYtJozGwaGg8RJyn5v5YS5aN_6wGQ
 priority: medium
 relations: {}
 status: approved

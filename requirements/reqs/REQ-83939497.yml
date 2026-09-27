@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-12032769: 1Km3PLqZHCDuV9kvCUqnJuU2P1mQdROcvfm6hg4k4QI
+citations:
+  rfwtjo: x255__UF6IKsqppX6cuiIGGFF4JnlrCe6rpHZdXsbuQ
 priority: medium
 relations:
   REQ-12032769: derives_from

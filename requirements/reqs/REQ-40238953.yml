@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the export holds the whole of what was written
   when: the run is built and not refused
 assessed: {}
+citations:
+  7jdcpl: dM4spDZcDE89vFCuI1sTfGBewRqK8spMpLr9D1IWv-o
 priority: medium
 relations: {}
 status: approved

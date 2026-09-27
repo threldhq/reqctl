@@ -12,6 +12,8 @@ acceptance_criteria:
   when: the returns are read
 assessed:
   REQ-94426583: robFmbw2ht7IlAltCYRS9ZBd2bKMAF5O9JJ7vubNIy8
+citations:
+  moar22: A8pKCzOe8j64YBewATxUOFBCnSi3IiTUEkarQU0Sxhc
 priority: medium
 relations:
   REQ-94426583: constrains

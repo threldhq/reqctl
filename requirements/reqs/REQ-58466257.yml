@@ -7,6 +7,8 @@ assessed:
   REQ-53764133: hNDAdKGPLVUD6mqWyUsmz56iDb8_rol-_PGHehx6P8I
   REQ-80115998: 5Q31K4gVM_b7814S0s7RqdPwYFiAEpqF6SqJLiWlcJU
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  clfbsa: 2yuiymS47EwICgJU6wOd7ue6u3TWcoPxdE8I4UoQ9yY
 priority: medium
 relations:
   REQ-53764133: depends_on

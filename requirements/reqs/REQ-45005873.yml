@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the token is forgotten
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+citations:
+  poosiz: eOdMno-1CTNEiMa1M9K9yRU6sgFIyDjpk9eUYjQkIhI
 priority: medium
 relations:
   REQ-38789214: depends_on

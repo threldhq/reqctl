@@ -4,6 +4,8 @@ acceptance_criteria:
   then: the report states one accepted, one refused and one never returned
   when: the verdicts are read
 assessed: {}
+citations:
+  u37uos: Rx956bsr_hsxVBDxl7mPSZUDRdGCTvPaau680JXFObY
 priority: medium
 relations: {}
 status: approved

@@ -9,6 +9,9 @@ acceptance_criteria:
   then: the product refuses and names the default
   when: the corpus is validated
 assessed: {}
+citations:
+  fnsqos: XHuzeXuVgZfnLs3xeab3U-mNWEAo4aBsyKOQuvr4Zcc
+  ytoyxl: 7LbGrQ4dJ4-uLDZiUNg0dbmXWLx5CnGPxXadHe-x1xk
 priority: medium
 relations: {}
 status: approved

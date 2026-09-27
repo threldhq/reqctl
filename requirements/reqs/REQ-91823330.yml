@@ -3,6 +3,9 @@ acceptance_criteria:
   then: the report lists the item once, under it both proposals with their reasons
   when: the verdicts are read
 assessed: {}
+citations:
+  7xe5ny: asl74Nqt_sDHNbNN2pgHykA67cFChOGnfY36EvRxwUg
+  ih4cxu: wFc-vsBhpYxy_tHBYYbpRZ6cawtsKaiOVPoYZzln7ok
 priority: medium
 relations: {}
 status: approved

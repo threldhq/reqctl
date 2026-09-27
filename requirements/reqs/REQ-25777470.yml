@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and names the baseline file
   when: baseline --generate is run
 assessed: {}
+citations:
+  lmbowm: _r5QMSHG_jHgoEMiR4dk2u5tl1dtT_ARMQ8J7J4kL24
 priority: medium
 relations: {}
 status: approved

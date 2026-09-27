@@ -6,6 +6,8 @@ acceptance_criteria:
   then: no shard of guards is built
   when: the run is built
 assessed: {}
+citations:
+  kostqz: 4X8E1DXJT1jXbgPu4qJCQocVmCg8eJiwtMCMjYM9dsE
 priority: medium
 relations: {}
 status: approved

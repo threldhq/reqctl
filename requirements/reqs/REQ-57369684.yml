@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and names both terms
   when: a statement links that word
 assessed: {}
+citations:
+  kijh3h: _3zQwSYeHPh51lcb1BZ3bupmyFpn3BBMNTCMIKiNPeM
 priority: medium
 relations: {}
 status: approved

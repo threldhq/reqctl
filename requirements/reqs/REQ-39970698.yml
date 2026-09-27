@@ -4,6 +4,8 @@ acceptance_criteria:
   when: a run is built
 assessed:
   REQ-43761464: pFlii3nabPOTuWWSHzIo1C68Txtw5FfEGYZqOyxB-7U
+citations:
+  s5jtgy: dgShsqz8px4pq_JDv0xC5xMtu6xbhhDyCMMi2l-ILQ8
 priority: medium
 relations:
   REQ-43761464: constrains

@@ -9,6 +9,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+citations:
+  bg3tyu: SwUG96oiTQFhe5VM37gVabAIqqqtD9EeESukcS2OkCQ
 priority: medium
 relations:
   REQ-79222815: constrains

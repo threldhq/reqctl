@@ -33,6 +33,9 @@ assessed:
   corpus_gates.traceability: t2g-SZWxzs7WMpla0grhVUnoKO8CIuhvL89nPt4vwQQ
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  jaw6mg: -Ld3srnmH2_swvmCNtkySQeGGXoJH0geJa983Jpkraw
+  thjjmg: mTCvHx71rCUvNDovtbeV1j2ExRZfQcGgL2R-4QQ7JIE
 priority: medium
 relations:
   REQ-54851939: depends_on

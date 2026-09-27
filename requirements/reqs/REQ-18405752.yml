@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the job prompt states that item whole
   when: the run is built
 assessed: {}
+citations:
+  et2jhv: D_73fPI9niQ6W3kbOZv_zAbtCRxgoQsLl--ZnIaWy_o
 priority: medium
 relations: {}
 status: approved

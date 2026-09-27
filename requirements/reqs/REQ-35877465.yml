@@ -9,6 +9,9 @@ acceptance_criteria:
   then: the product refuses and names the uid
   when: the link is written
 assessed: {}
+citations:
+  cx6r6x: ZbYW42ROI7VQMOICKAJkdA3xFO6nWQzKd0r87fdQpwA
+  r2xftu: u5AUjHR1HOKCNlMC9PMpAzMM3o9wL1yxf19t98A07K8
 priority: medium
 relations: {}
 status: approved

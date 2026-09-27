@@ -9,6 +9,8 @@ acceptance_criteria:
   then: the product accepts the definitions
   when: the corpus is validated
 assessed: {}
+citations:
+  ijccb5: ElWDETbfwQ4eGRtMkze2EtQmVu3KKHRiBNdf0EW3Uw0
 priority: medium
 relations: {}
 status: approved

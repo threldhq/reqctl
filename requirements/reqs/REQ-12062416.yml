@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the Change repository control is used
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+citations:
+  gm2ond: 7Gw2PH_51-PN-Dch9j45Me7S9GJUlJjornLPEGRdDyg
 priority: medium
 relations:
   REQ-38789214: depends_on

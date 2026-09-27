@@ -5,6 +5,8 @@ acceptance_criteria:
   when: the recall returns are read
 assessed:
   REQ-19832934: CAEeElFyXNOgWd7DYggavbvJFpG8enKfJzbw-oE0Rkw
+citations:
+  mrzj65: LoxYNAzgJI1OTX2v0IJOVPckhpcGHDCaoJ_Oi2mG2vc
 priority: medium
 relations:
   REQ-19832934: constrains

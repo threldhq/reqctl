@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product shows the parameter's value
   when: the statement is exported
 assessed: {}
+citations:
+  lxx4c3: CxxK_4pvmZuT9a3V2-UdaKeVmx97eHGqSZ-Zm-b4neE
 priority: medium
 relations: {}
 status: approved

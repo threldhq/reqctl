@@ -10,6 +10,10 @@ acceptance_criteria:
 assessed:
   REQ-29846444: iGWqcEzs6s52xVYwT50drAGnMzrNvkfAKADoRzuEkco
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+citations:
+  5nfu7e: IeQgXHZL6gHJD6rJPynk7M2A4OOfTlakjbG6w__Qx8A
+  6bxg5g: orPDvdPjBf9aaGPj_ttA57wGhw9H8BaRif5uMt93k5g
+  avbh7j: rG7cixLRKqAV0H63eQHyoWhKWDKzQhzN5stny8VaD9o
 priority: medium
 relations:
   REQ-29846444: depends_on
