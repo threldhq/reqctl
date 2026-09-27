@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a source reached only through more than ${review_redirects} redirects
+  then: the product refuses the review, names the source, and follows no more than
+    ${review_redirects} redirects
+  when: the review is checked
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  review_redirects: Ul5oTLdwqPtd4Z9qkcCud4ZvltD3raYEVPzO6PCFzOk
+  review_redirects.*: kQgl2igfAUoACUekhfYuCaVPnXq7P7UPvyoWGAffW5Q
+priority: medium
+relations:
+  REQ-46144308: derives_from
+status: approved
+text: If fetching a source that a [practice](practice) of the [best-in-class review](best_in_class_review)
+  names takes more than ${review_redirects} redirects, then the product shall refuse
+  the review and name the source.
+type: functional
+verification: inspection

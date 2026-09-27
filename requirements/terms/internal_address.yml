@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  internal_address:
+    aliases:
+    - internal addresses
+    definition: An address not reachable from the public internet, such as a loopback,
+      private, link-local, shared or reserved address.
+    word: internal address
+kind: term
+status: approved

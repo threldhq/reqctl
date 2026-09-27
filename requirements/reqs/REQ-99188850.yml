@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a page larger than ${review_page_bytes} bytes as served
+  then: the product refuses the review having read no more of the page than ${review_page_bytes}
+    bytes
+  when: the review is checked
+- given: a page served within ${review_page_bytes} bytes that decompresses past it
+  then: the product refuses the review and names the source, having decompressed no
+    more of it than ${review_page_bytes} bytes
+  when: the review is checked
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  review_page_bytes: 8byjsLX3ASyH4_Zc_WWAPQSRAwOizmU7pDqp7h4API4
+  review_page_bytes.*: WX_pLJ5Q5te-7IkbHsWsq3DH3WqUCwHeu4NWrn4cJAw
+priority: medium
+relations:
+  REQ-46144308: constrains
+status: approved
+text: If the page at a source that a [practice](practice) of the [best-in-class review](best_in_class_review)
+  names is larger than ${review_page_bytes} bytes, as served or once decompressed,
+  then the product shall refuse the review and name the source.
+type: functional
+verification: inspection
