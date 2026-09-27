@@ -161,7 +161,8 @@ def page(url):
     reader = PageText()
     reader.feed(body)
     reader.close()
-    return coverage.plain(coverage.spoken(" ".join(reader.held))), None
+    return coverage.plain(coverage.spoken(" ".join(reader.held))).translate(
+        MARKUP), None
 
 
 def faults(review):
@@ -181,8 +182,7 @@ def faults(review):
             text, why = pages[url]
             if text is None:
                 found.append(f"practice {number}: {url} cannot be read: {why}")
-            elif not holds(text.translate(MARKUP),
-                           source["passage"].translate(MARKUP)):
+            elif not holds(text, source["passage"].translate(MARKUP)):
                 found.append(f"practice {number}: {url} does not hold "
                              f"{source['passage']!r}")
     return found
