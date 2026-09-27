@@ -29,8 +29,13 @@ COMMENTS = {".py": ("# ", ""), ".md": ("<!-- ", " -->"),
             ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
 
 
+# @req> REQ-52925332@wlFlbfJQbQ2g cczml5
+def _feed_lines(text):
+    return io.StringIO(text).readlines()
+
+
 def markers(text, suffix):
-    for number, line in enumerate(text.splitlines(), start=1):
+    for number, line in enumerate(_feed_lines(text), start=1):
         # @req+ REQ-52925332@wlFlbfJQbQ2g yuyqhd
         # @req+ REQ-12490145@DQLuzMctTPb5 dsvgt4
         if not SIGN.search(line):
@@ -130,7 +135,7 @@ def read(root, digested=False):
 def former(sources):
     # @req> REQ-44164687@lSjyIVOw_1BK q2mqfm
     for relative, text in sources:
-        for number, line in enumerate((text or "").splitlines(), start=1):
+        for number, line in enumerate(_feed_lines(text or ""), start=1):
             for uid in FORMER.findall(line):
                 yield (f"{relative}:{number}: names {uid} in a single-line "
                        "tag -- cite it with reqctl tag")
@@ -234,7 +239,7 @@ def following(path, text, number):
             last = max(n for n in depths
                        if first <= n and (not beyond or n < beyond[0]))
             return first, last
-    lines = text.splitlines()
+    lines = _feed_lines(text)
     # @req> REQ-37846580@Hp5GeJsazpl4 lrybex
     for at in range(number, len(lines)):
         if lines[at].strip() and not SIGN.search(lines[at]):
@@ -353,7 +358,7 @@ def write(root, path, asked, exclusive=False):
         raise ReqctlError(f"{path}: citations are written only in "
                           f"{', '.join(sorted(COMMENTS))} files")
     text = target.read_bytes().decode()
-    lines = text.splitlines(keepends=True)
+    lines = _feed_lines(text)
     # @req> REQ-65738797@3jHtqzLVQUal msfg5w
     for first, last, _, _ in asked:
         if not 1 <= first <= last <= len(lines):
@@ -421,7 +426,7 @@ def named(root, identity):
 
 def _lines(root, citation):
     target = Path(root) / citation["path"]
-    return target, target.read_bytes().decode().splitlines(keepends=True)
+    return target, _feed_lines(target.read_bytes().decode())
 
 
 def repin(root, citation, stamp):
@@ -445,7 +450,7 @@ def remove(root, citation):
 
 
 def _statement(path, text, first, last):
-    lines = text.splitlines()
+    lines = _feed_lines(text)
     code = [n for n in range(first, last + 1) if lines[n - 1].strip()]
     if not code or code[0] != first:
         return False
@@ -489,7 +494,7 @@ def digest(path, text, lines):
             held = None
     if held is None:
         # @req+ REQ-15770866@PJj7anRT1m47 soehrs
-        split = text.splitlines()
+        split = [line.rstrip("\r\n") for line in _feed_lines(text)]
         held = [split[n - 1] for n in sorted(wanted)]
         # @req- soehrs
     return corpus.digest(held)
@@ -497,7 +502,7 @@ def digest(path, text, lines):
 
 def _rest(text, citation):
     kept, before = [], 0
-    for number, line in enumerate(text.splitlines(), start=1):
+    for number, line in enumerate(_feed_lines(text), start=1):
         if citation["open"] <= number <= citation["close"] or not line.strip():
             continue
         kept.append(line.strip())
