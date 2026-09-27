@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a change of two steps queued before a change whose step holds a positional
+    argument that is exactly $N with N zero
+  then: that positional argument reaches the batch as $N with N two
+  when: the [portal](portal) sends them as one batch
+- given: a change of two steps queued before a change whose step holds an option value
+    that is exactly $N with N zero
+  then: that option value reaches the batch as $N with N two
+  when: the [portal](portal) sends them as one batch
+assessed:
+  REQ-81313171: 3CV_M8XsRLpdvggL2UlFybaGwYoSfuBaZ68A5wpiMC8
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  nodqc4: ubuPlU15HmjbFD1c_E3y6CpbXHxxkS8ZiKFl4fO-v8s
+priority: medium
+relations:
+  REQ-81313171: depends_on
+status: approved
+text: When the [portal](portal) sends several queued changes as one batch, the product
+  shall renumber each positional argument and each option value that is exactly $N
+  so that it names the same step of its own change.
+type: functional
+verification: inspection
