@@ -28,6 +28,8 @@ CRITERIA = "criteria"
 TRACE = "trace"
 FINDINGS = "coverage.yml"
 STATE = "build.json"
+REVIEWED = "review.json"
+DECLINED = "declined_practices"
 OBLIGATION = {"REQ": "requirements", "GUARD": "guards"}
 KIND_NAME = {"REQ": "requirement", "GUARD": "guard"}
 SIBLINGS = "siblings"
@@ -1349,10 +1351,41 @@ def describe(run):
             lines.append(f"- question: {question}")
         lines.append("")
     lines.append("### declined\n")
-    lines.append(declined or "Nothing was declined in this run.")
+    # @req+ REQ-20454019@BJxxS0ixzdXK vxerce
+    practices = declined_practices(run)
+    if declined:
+        lines.append(declined)
+    elif not practices:
+        lines.append("Nothing was declined in this run.")
+    lines += practices
+    # @req- vxerce
     print("\n".join(lines))
     # @req- qzk6eu
     return 0
+
+
+def declined_practices(run):
+    # @req+ REQ-20454019@BJxxS0ixzdXK mkqci7
+    path, read = recorded(run)
+    numbers = read.get(DECLINED) or []
+    if not numbers:
+        return []
+    review, why = read_return(run / REVIEWED, shapes.REVIEW)
+    if review is None:
+        raise SystemExit(f"{path}: `{DECLINED}` names practices, and "
+                         f"{run / REVIEWED} {why}")
+    held = review["practices"]
+    lines = []
+    for number in numbers:
+        if type(number) is not int or not 1 <= number <= len(held):
+            raise SystemExit(f"{path}: `{DECLINED}` names {number!r}; the review "
+                             f"holds practices 1 to {len(held)}")
+        practice = held[number - 1]
+        lines.append(f"- a practice of the best-in-class review, declined: "
+                     f"{practice['practice']} "
+                     f"({', '.join(practice['leaders'])})")
+    return lines
+    # @req- mkqci7
 
 
 def main(argv=None):

@@ -11,6 +11,8 @@ assessed:
   REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+citations:
+  isjntr: WcRpHbtMSL4qHvwLC4i6SaKKlQWj6zyyKGrqrleHR7Y
 priority: medium
 relations:
   REQ-32352887: constrains

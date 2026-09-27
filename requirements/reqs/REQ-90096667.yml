@@ -8,6 +8,10 @@ assessed:
   REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   field_of_the_governed_software: jL-3rawb_a5mG9L4XUWQZxlBCv0zHsaJjJXBbj80Z-4
+citations:
+  cbcn57: 9VyI8XENYpxjYPz3ObqvPmOwZHmCf7sVeDJcxL-BOVE
+  ebdhuf: w9GcXLiUUinjgSWt_MFSz9-ORmc8xUG2YuVaA_L4oDk
+  ozmc4j: iY7qFqN7AAyIHT-tRX4FQtu9B7HUlL1AacNDKEhBKCw
 priority: medium
 relations:
   REQ-12222066: depends_on

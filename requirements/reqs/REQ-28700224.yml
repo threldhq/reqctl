@@ -7,6 +7,8 @@ assessed:
   REQ-12222066: KVMqlUhM4uwvrl2w0oEnKSc0Xz3R1gDORN2BqDklWow
   REQ-90096667: PunOebgQZAD6zW0Mq815JLkSApJa6lOCsi4YhL7rHjw
   field_of_the_governed_software: jL-3rawb_a5mG9L4XUWQZxlBCv0zHsaJjJXBbj80Z-4
+citations:
+  6n6vna: zWC6p2t8ata55KQ5RiQ5Om2HF45cbK79DgTxVQDvRfg
 priority: medium
 relations:
   REQ-12222066: depends_on

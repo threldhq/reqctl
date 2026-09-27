@@ -15,6 +15,10 @@ assessed:
   leader: dm5_xg96tGA19Bo0hQuihnMGrFeIw0IMNirpKcLnBLo
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+citations:
+  drprho: 0dTeDt4GLaWYSfb5ezlIvHT3DRjBVaAmDrIJnpHqTU0
+  poc76h: BdDugNoHFxrkIFaJnTR34l7Uv6WDqzEB8kI0MiUKg8Q
+  sfrez4: WcRpHbtMSL4qHvwLC4i6SaKKlQWj6zyyKGrqrleHR7Y
 priority: medium
 relations:
   REQ-38288492: depends_on

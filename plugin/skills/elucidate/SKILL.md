@@ -19,7 +19,7 @@ Ideas in, a requirements pull request out. Nothing here approves anything: the
 merge is the approval, and only the owner merges.
 
 ```
-1  convert     the owner's words become EARS statements   inline, no subagent
+1  convert     the owner's words become EARS statements   inline, beside one review agent
 2  challenge   recall over every shard, then one judge each   agents by the corpus's roles
 3  approve     reqctl, then the pull request              owner reviews and merges
 ```
@@ -42,20 +42,25 @@ proposal number, and a corpus nominating no dimension needs no `binds` at
 all. A proposal's criteria are a list of `given | when |
 then` strings, and its trace a list of passages quoted from the owner's words;
 a proposal carrying no criteria is left out of that map rather than written
-empty. `synthesis/plan.py` writes the rest -- `export.md`, `shards/`,
-`dictionary.md`, `prompts/`, `build.json`, `workflow/` -- and the agents fill
-`returns/`, which the scripts read into `verdicts/`. The directory is made
+empty. `run.yaml` also holds `declined_practices`, the numbers of the review's
+practices the owner declined. `synthesis/review.py` writes the review's prompt
+into `prompts/`, and the review agent writes `review.json`. `synthesis/plan.py` writes the rest
+-- `export.md`, `shards/`, `dictionary.md`, `prompts/`, `build.json`,
+`workflow/` -- and the agents fill `returns/`, which the scripts read into
+`verdicts/`. The directory is made
 fresh at the start of a run and goes at the end, so an abandoned one is never
 inherited.
 
 ## 1 -- Convert
 
-Run this yourself. Do not spawn an agent: the owner's words are already here,
-and so is the owner.
+Convert them yourself: the owner's words are already here, and so is the owner.
+The one agent this step spawns makes the best-in-class review, and drafts
+nothing.
 
 Their words are the whole input. Not the README -- it describes an aspiration
 and carries no approval, so feeding it in authors requirements against a second
-statement of what is true. The approved corpus is the only legitimate
+statement of what is true. The review alone reads it, as a source for the field
+of the governed software. The approved corpus is the only legitimate
 background, it enters at step 2, and while it is empty the correct amount of
 background is none. The glossary is the exception: run `reqctl list term` before
 drafting, and `reqctl context` the ones your statements lean on. It is names,
@@ -186,6 +191,37 @@ something the statement does not already say. Then:
   as an established fact, and a check nobody can see you skip is one you skip.
   What survives joins the questions.
 
+<!-- @req+ REQ-82432523@VoDkIJau94BB drprho -->
+**Make the best-in-class review before any question.** The first time you
+convert a run's words, build the review's prompt:
+
+<!-- @req+ REQ-13684791@_iUnF2f3QtDP dyekvt -->
+```bash
+python3 ${CLAUDE_SKILL_DIR}/synthesis/review.py build --run .elucidate/<run>
+```
+
+It states the owner's words, the field of the governed software -- the
+`governed_field` parameter where the corpus states one -- and the repository's
+README where there is one. Spawn one `best-in-class` agent with the prompt it
+names, verbatim, then check what the agent wrote:
+
+```bash
+python3 ${CLAUDE_SKILL_DIR}/synthesis/review.py check --run .elucidate/<run>
+```
+<!-- @req- dyekvt -->
+
+The check fetches every page the review cites. It refuses the review where a
+practice names no source or a page does not hold the passage quoted from it:
+spawn the agent again with the same prompt. A review that passes is the run's
+review; nothing later in the run makes another.
+<!-- @req- drprho -->
+
+<!-- @req+ REQ-90096667@PunOebgQZAD6 cbcn57 -->
+Where the corpus states no field and there is no README, `build` refuses: ask
+the owner for the field of the governed software, then build again with
+`--field` holding their answer.
+<!-- @req- cbcn57 -->
+
 Ask now only what stops a statement being written: a word that could mean two
 things, one thing the owner named twice, a line that may not be the product's at
 all. The members each requirement binds to are the standing exception -- asked
@@ -210,6 +246,33 @@ what hangs on it, what is undecided, what the corpus already says, the
 alternatives stated evenly, and your reading of them, marked as yours.
 Disagreeing stays as easy as agreeing: the owner's first look must not be a
 yes/no on a choice already made.
+
+<!-- @req> REQ-44823271@ecfoMJvhcNBn v2tnmd -->
+State the review's summary in that message, as `check` prints it.
+
+<!-- @req+ REQ-58598892@Ac8QPjjAwTy9 25edfl -->
+Put the table `check` prints to the owner as one question: they adopt or
+decline each practice in it, and each row carries the review's recommendation.
+<!-- @req- 25edfl -->
+
+<!-- @req+ REQ-18597283@h9OoEEN62bql vb4fww -->
+Every question you put the owner -- here, and the coverage and verdict
+questions of step 2 -- carries a recommendation drawn from the run's review:
+the answer it favours and the numbered practices it rests on, or that the
+review holds nothing bearing on the question. It is the review's reading,
+marked as such, beside the alternatives.
+<!-- @req- vb4fww -->
+
+<!-- @req+ REQ-93075993@_Ewq27hRC5AG jt35j6 -->
+An answer adopting a practice joins the owner's words with the rest of their
+answers: propose the practice as the answer states it, traced to that answer.
+<!-- @req- jt35j6 -->
+
+<!-- @req+ REQ-20454019@BJxxS0ixzdXK wquver -->
+Record each practice the owner declines, by its number, under
+`declined_practices` in `run.yaml`; `plan.py describe` states them in the
+declined list.
+<!-- @req- wquver -->
 
 Feed the answers back and convert again.
 
@@ -288,6 +351,15 @@ named in one is linked there like anywhere else.
 The order matters: `baseline --generate` records HEAD as the commit whose
 corpus the baseline states, so generated over an uncommitted corpus the
 manifest points at a tree that lacks its own items.
+
+<!-- @req+ REQ-28700224@LfiV5W-9N5P2 6n6vna -->
+Where step 1 asked the owner for the field of the governed software, mint their
+answer as the parameter the review reads:
+
+```bash
+reqctl new parameter --name governed_field --text "The market the governed software serves" --value "..." --value-type text
+```
+<!-- @req- 6n6vna -->
 
 Relations run from the new statement toward what already exists, and the choice
 comes from the source's own shape. A refinement of an existing requirement
