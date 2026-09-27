@@ -62,11 +62,26 @@ def _depths(text):
     return depths, starts, ends
 
 
+@functools.cache
+def _indents(text):
+    depths = {}
+    for number, line in enumerate(text.splitlines(), start=1):
+        body = line.strip()
+        if body and not body.startswith("#"):
+            depths[number] = (len(line) - len(line.lstrip())
+                              + (body == "-" or body.startswith("- ")))
+    return depths, set(depths), set(depths)
+
+
+NESTS = {".py": _depths, ".yml": _indents, ".yaml": _indents}
+
+
 def cut(path, text, spans):
-    if Path(path).suffix != ".py":
+    read = NESTS.get(Path(path).suffix)
+    if read is None:
         return []
     try:
-        depths, starts, ends = _depths(text)
+        depths, starts, ends = read(text)
     except (tokenize.TokenError, IndentationError, SyntaxError) as broken:
         return [f"{path}: cannot read its nest levels ({broken}), so no "
                 "citation in it can be checked"]
