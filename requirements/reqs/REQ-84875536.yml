@@ -14,8 +14,8 @@ assessed:
   secret_workflows: PW2CLrlroB71sEBcwMYJBOg9VMzy6swAxvG8nYPYTWw
   secret_workflows.*: KP2-zqLaL5Ly3qNr7ibTn9sdEkeZMyw_URquouxKYWk
 citations:
-  ij54a2: vKUMhL7Mme3qPJLEo9YFovx6NsJBfEIHhYcMc-Rz4FU
-  zbm5to: vKUMhL7Mme3qPJLEo9YFovx6NsJBfEIHhYcMc-Rz4FU
+  ffhdmb: vKUMhL7Mme3qPJLEo9YFovx6NsJBfEIHhYcMc-Rz4FU
+  n6bf6a: vKUMhL7Mme3qPJLEo9YFovx6NsJBfEIHhYcMc-Rz4FU
 priority: medium
 relations:
   REQ-57492239: constrains

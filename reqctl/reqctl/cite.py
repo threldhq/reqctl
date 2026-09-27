@@ -8,6 +8,8 @@ import secrets
 import tokenize
 from pathlib import Path
 
+import yaml
+
 from . import corpus
 from .corpus import ReqctlError
 
@@ -64,13 +66,19 @@ def _depths(text):
 
 @functools.cache
 def _indents(text):
+    spans = [range(token.start_mark.line + 1,
+                   token.end_mark.line + 1 + bool(token.end_mark.column))
+             for token in yaml.scan(text, Loader=corpus.Loader)]
+    inside = {n for span in spans for n in span[1:]}
     depths = {}
     for number, line in enumerate(text.splitlines(), start=1):
         body = line.strip()
-        if body and not body.startswith("#"):
-            depths[number] = (len(line) - len(line.lstrip())
-                              + (body == "-" or body.startswith("- ")))
-    return depths, set(depths), set(depths)
+        if body and (number in inside or not body.startswith("#")):
+            depths[number] = len(_indent(line)) + (body == "-" or body.startswith("- "))
+    ends = set(depths)
+    for span in spans:
+        ends.difference_update([n for n in span if n in depths][:-1])
+    return depths, set(depths) - inside, ends
 
 
 NESTS = {".py": _depths, ".yml": _indents, ".yaml": _indents}
@@ -82,7 +90,7 @@ def cut(path, text, spans):
         return []
     try:
         depths, starts, ends = read(text)
-    except (tokenize.TokenError, IndentationError, SyntaxError) as broken:
+    except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
         return [f"{path}: cannot read its nest levels ({broken}), so no "
                 "citation in it can be checked"]
     problems = []
@@ -204,10 +212,11 @@ def _citation(held, relative, start, close, first, last, marks):
 
 
 def following(path, text, number):
-    if Path(path).suffix == ".py":
+    read = NESTS.get(Path(path).suffix)
+    if read is not None:
         try:
-            depths, starts, _ = _depths(text)
-        except (tokenize.TokenError, IndentationError, SyntaxError):
+            depths, starts, _ = read(text)
+        except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError):
             depths = None
         # @req> REQ-42668747@GGAkEqZHFwdI cfabxh
         if depths is not None:

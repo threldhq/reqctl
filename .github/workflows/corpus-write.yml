@@ -40,8 +40,8 @@ jobs:
   write:
     runs-on: ubuntu-latest
     steps:
-      # @req+ REQ-84875536@dj6Y7xTDeN6r zbm5to
-      # @req+ REQ-45437338@K7K_kLnTNJPw 75roge
+      # @req> REQ-84875536@dj6Y7xTDeN6r n6bf6a
+      # @req> REQ-45437338@K7K_kLnTNJPw oot2os
       - name: Stop a pull request caller or an unpinned reqctl before any secret is read
         env:
           EVENT: ${{ github.event_name }}
@@ -59,8 +59,6 @@ jobs:
               exit 1
             fi
           fi
-      # @req- 75roge
-      # @req- zbm5to
 
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         id: app-token
