@@ -1,0 +1,12 @@
+assessed: {}
+entries:
+  actions:
+    access: read and write
+  contents:
+    access: read
+  pull_requests:
+    access: read
+kind: data
+name: portal_token_permissions
+status: draft
+text: the repository permissions the [portal](portal) asks its token to grant

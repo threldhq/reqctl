@@ -1,0 +1,11 @@
+assessed: {}
+entries:
+  delete: {}
+  new: {}
+  relate: {}
+  revise: {}
+  unrelate: {}
+kind: data
+name: portal_commands
+status: draft
+text: the reqctl commands a step the [portal](portal) sends may name
