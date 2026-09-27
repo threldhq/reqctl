@@ -141,7 +141,7 @@ def build(run, answered):
 
 
 def words(text):
-    return " ".join(re.findall(r"\w+", text))
+    return re.sub(r"\W+", " ", text).strip()
 
 
 def page(url):
