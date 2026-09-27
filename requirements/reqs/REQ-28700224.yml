@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: an answer to the question for the [field of the governed software](field_of_the_governed_software)
+  then: the answer is minted in the run's pull request as a parameter of text whose
+    value is the answer
+  when: the run reaches its approve step
+assessed:
+  REQ-12222066: KVMqlUhM4uwvrl2w0oEnKSc0Xz3R1gDORN2BqDklWow
+  REQ-90096667: PunOebgQZAD6zW0Mq815JLkSApJa6lOCsi4YhL7rHjw
+  field_of_the_governed_software: jL-3rawb_a5mG9L4XUWQZxlBCv0zHsaJjJXBbj80Z-4
+priority: medium
+relations:
+  REQ-12222066: depends_on
+  REQ-90096667: depends_on
+status: approved
+text: When the owner answers the question for the [field of the governed software](field_of_the_governed_software),
+  the product shall mint the answer as the [field of the governed software](field_of_the_governed_software).
+type: functional
+verification: inspection

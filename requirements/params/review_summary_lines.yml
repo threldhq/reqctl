@@ -1,0 +1,10 @@
+assessed:
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+entries:
+  '10': {}
+kind: parameter
+name: review_summary_lines
+status: approved
+text: The most lines the summary of a [best-in-class review](best_in_class_review)
+  holds
+value_type: count

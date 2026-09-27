@@ -1,0 +1,12 @@
+assessed: {}
+entries:
+  leader:
+    aliases:
+    - leaders
+    - market leader
+    - market leaders
+    definition: A product or organisation that is best in class in an idea's field,
+      or that leads the market in a field similar to the governed software.
+    word: leader
+kind: term
+status: approved
