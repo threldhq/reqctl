@@ -8,6 +8,8 @@ import secrets
 import tokenize
 from pathlib import Path
 
+import yaml
+
 from . import corpus
 from .corpus import ReqctlError
 
@@ -19,12 +21,13 @@ MARKER = re.compile(
 FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
 # @req+ REQ-52925332@wlFlbfJQbQ2g tup4w2
 MARKUP = re.compile(r"\A\s*<!--\s*|\s*-->\s*\Z")
-DELIMITERS = {".py": re.compile(r"\A\s*#+\s*"), ".js": re.compile(r"\A\s*//\s*")}
+DELIMITERS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"\A\s*#+\s*")),
+              ".js": re.compile(r"\A\s*//\s*")}
 # @req- tup4w2
 ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
 # @req> REQ-60346603@eKFixVFgV9Xt ulk4ve
-COMMENTS = {".py": ("# ", ""), ".md": ("<!-- ", " -->"),
-            ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
+COMMENTS = {**dict.fromkeys((".py", ".yml", ".yaml"), ("# ", "")),
+            ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
 
 
 # @req> REQ-52925332@wlFlbfJQbQ2g cczml5
@@ -66,12 +69,39 @@ def _depths(text):
     return depths, starts, ends
 
 
+@functools.cache
+def _indents(text):
+    spans, flows = [], []
+    for event in yaml.parse(text, Loader=corpus.Loader):
+        start, end = event.start_mark, event.end_mark
+        if isinstance(event, yaml.CollectionStartEvent) and event.flow_style:
+            flows.append(start)
+            continue
+        if isinstance(event, yaml.CollectionEndEvent) and flows:
+            start = flows.pop()
+        spans.append(range(start.line + 1, end.line + 1 + bool(end.column)))
+    inside = {n for span in spans for n in span[1:]}
+    depths = {}
+    for number, line in enumerate(_feed_lines(text), start=1):
+        body = line.strip()
+        if body and (number in inside or not body.startswith("#")):
+            depths[number] = len(_indent(line)) + (body == "-" or body.startswith("- "))
+    ends = set(depths)
+    for span in spans:
+        ends.difference_update([n for n in span if n in depths][:-1])
+    return depths, set(depths) - inside, ends
+
+
+NESTS = {".py": _depths, ".yml": _indents, ".yaml": _indents}
+
+
 def cut(path, text, spans):
-    if Path(path).suffix != ".py":
+    read = NESTS.get(Path(path).suffix)
+    if read is None:
         return []
     try:
-        depths, starts, ends = _depths(text)
-    except (tokenize.TokenError, IndentationError, SyntaxError) as broken:
+        depths, starts, ends = read(text)
+    except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
         return [f"{path}: cannot read its nest levels ({broken}), so no "
                 "citation in it can be checked"]
     problems = []
@@ -193,10 +223,11 @@ def _citation(held, relative, start, close, first, last, marks):
 
 
 def following(path, text, number):
-    if Path(path).suffix == ".py":
+    read = NESTS.get(Path(path).suffix)
+    if read is not None:
         try:
-            depths, starts, _ = _depths(text)
-        except (tokenize.TokenError, IndentationError, SyntaxError):
+            depths, starts, _ = read(text)
+        except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError):
             depths = None
         # @req> REQ-42668747@GGAkEqZHFwdI cfabxh
         if depths is not None:
@@ -413,7 +444,7 @@ def repin(root, citation, stamp):
 def remove(root, citation):
     target, lines = _lines(root, citation)
     marks = set(citation["marks"])
-    # @req> REQ-81275367@LOgwKiOj_0ok 5gkn5k
+    # @req> REQ-81275367@gSHwSanmQ208 5gkn5k
     # @req> REQ-26984738@nD05toE71g-O a4ywox
     target.write_bytes("".join(line for number, line in enumerate(lines, start=1)
                                if number not in marks).encode())
