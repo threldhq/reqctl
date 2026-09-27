@@ -1,9 +1,5 @@
-baseline: 26
-<<<<<<< HEAD
-commit: 84191523abbb750f8a3b554c42295e1a981c5374
-=======
-commit: 70c514f0666c9968a6d1407bebcc1b73ebc29f5f
->>>>>>> origin/main
+baseline: 27
+commit: a712b0cbe2bb247d3a044ab060d002385facb3c4
 items:
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-12128145: mFuOqNbkyV1oY-6soAHFUkqGN-yitkrFm5SThHXJEzo
@@ -296,11 +292,8 @@ items:
   REQ-80500447: lQdaRnU0TPd12n8oKJ5zI1Nz2EsXeGu73bcFE4UJDH0
   REQ-80951798: Yv9lsMtU3XdIOfhWtWTfHptWO9bkmyp3LS4FmYVkfDM
   REQ-81275367: LuNIjqeTrwb4hs5he3XFzCWp9OeXU9-TVSrn5YxahZk
-<<<<<<< HEAD
   REQ-81313171: YxjSwfpdqomtcj7K4pQHlkByZW-jLjWPbqFul2Bp_08
-=======
   REQ-81417723: VpPVJ-iwqhBXf88mbF_fq7oxit7LYAKufZ7rT0VWOj4
->>>>>>> origin/main
   REQ-81795630: 6p2bA0ZHqY-j5V32MmMeP8xGYTf4dD27R6uVWqRuoXc
   REQ-81857516: chYOQDPmuDuWlxUJscM_eIipqHOWLo1OV22axiAUSR0
   REQ-82356895: 3k-Q_tVhphjYcnQbKUcDdTk_MPOs8C9WUTIGe3nE7Jo
@@ -382,4 +375,4 @@ items:
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
-supersedes: 25
+supersedes: 26
