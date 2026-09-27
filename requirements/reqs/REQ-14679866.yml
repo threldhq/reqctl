@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: the form revising a term
+  then: it offers to clear the aliases, which reqctl revise empties with --no-alias
+  when: it is read
+- given: a field no flag of reqctl revise empties, such as a requirement's text
+  then: it offers no clear for the field
+  when: its form is read
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations: {}
+status: approved
+text: The product shall offer in the [portal](portal) to clear a field only where
+  reqctl revise has a flag that empties that field.
+type: functional
+verification: inspection

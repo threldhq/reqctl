@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: the page marking as required other than the fields reqctl requires for a
+    kind of item
+  then: the build refuses the change, naming both sets
+  when: the build runs
+- given: the page not offering a field reqctl requires for a kind of item
+  then: the build refuses the change, naming the field
+  when: the build runs
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+relations: {}
+status: approved
+text: If the fields the [portal](portal) marks as required for a kind of item are
+  other than those reqctl requires to create an item of that kind, then the build
+  shall refuse the change.

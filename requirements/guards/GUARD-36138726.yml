@@ -1,0 +1,10 @@
+acceptance_criteria:
+- given: the page offering a field reqctl refuses for a kind of item
+  then: the build refuses the change, naming the field and the kind
+  when: the build runs
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+relations: {}
+status: approved
+text: If the [portal](portal) offers a field for a kind of item that reqctl does not
+  accept for that kind, then the build shall refuse the change.

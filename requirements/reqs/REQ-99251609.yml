@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: an option whose name holds a capital letter, a space or a leading hyphen
+  then: the product refuses the batch, naming the option
+  when: the batch is applied
+- given: an option named value-type
+  then: the product passes it to reqctl as the value-type flag
+  when: the batch is applied
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: derives_from
+status: approved
+text: If an option of a step of a batch the [portal](portal) sends is named other
+  than by a lowercase letter followed by lowercase letters, digits and hyphens, then
+  the product shall refuse the batch.
+type: functional
+verification: inspection

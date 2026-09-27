@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: the page as the product serves it
+  then: the browser refuses the request
+  when: a script on it requests an address other than GitHub's API
+- given: the page as the product serves it
+  then: the browser refuses it
+  when: it loads an image from, or submits a form to, another address
+- given: the page as the product serves it
+  then: the browser allows the request
+  when: it requests GitHub's API at api.github.com
+assessed:
+  REQ-49576265: TZb-gviCuP5YoreZuR-DpCD14zDAOXTH3QmbqBJlzFE
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-49576265: constrains
+status: approved
+text: The product shall serve the [portal](portal) with a content security policy
+  under which the page can send a request to no address but GitHub's API.
+type: functional
+verification: inspection

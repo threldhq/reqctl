@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a batch of three steps whose second step reqctl refuses
+  then: the third step does not run, no pull request opens, nothing the first step
+    wrote reaches the repository, and the product states the second step's command
+    with reqctl's reason
+  when: the batch is applied
+- given: a step naming an option of the right shape that reqctl does not define
+  then: reqctl refuses the step and the product abandons the batch there
+  when: the batch is applied
+- given: a step whose reqctl run prints nothing, or prints other than JSON
+  then: the product abandons the batch at that step
+  when: the batch is applied
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: derives_from
+status: approved
+text: If reqctl refuses a step of a batch the [portal](portal) sends, or prints other
+  than JSON for it, then the product shall abandon the batch at that step.
+type: functional
+verification: inspection

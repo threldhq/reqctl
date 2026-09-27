@@ -1,0 +1,12 @@
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+entries:
+  delete: {}
+  new: {}
+  relate: {}
+  revise: {}
+  unrelate: {}
+kind: data
+name: portal_commands
+status: approved
+text: the reqctl commands a step the [portal](portal) sends may name

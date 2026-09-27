@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a caller triggered by pull_request_target
+  then: no step that reads a secret runs, and the run states why
+  when: it calls the write workflow
+- given: a caller triggered by pull_request
+  then: no step that reads a secret runs, and the run states why
+  when: it calls the view workflow
+- given: a caller triggered by a push or a workflow dispatch
+  then: the workflow runs its steps
+  when: it calls either workflow
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-71344419: No0izFxAdVKWi2RA4WpKTM99R1YpXTfB-xHQ_uyRK2w
+  secret_workflows: PW2CLrlroB71sEBcwMYJBOg9VMzy6swAxvG8nYPYTWw
+  secret_workflows.*: KP2-zqLaL5Ly3qNr7ibTn9sdEkeZMyw_URquouxKYWk
+priority: medium
+relations:
+  REQ-57492239: constrains
+  REQ-71344419: constrains
+status: approved
+text: If the workflow that calls one of the ${secret_workflows} was triggered by a
+  pull request event, then the product shall stop the called workflow before it reads
+  a secret.
+type: functional
+verification: inspection
