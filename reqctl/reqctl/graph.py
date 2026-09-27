@@ -16,12 +16,11 @@ def listing(tree, citations, uid=None):
     for owner, held in listed.items():
         if uid and owner != uid:
             continue
-        for identity in sorted(held):
-            if (owner, identity) not in named:
-                problems.append(
-                    f"{owner}: its citation list holds {identity}, which no "
-                    f"statement citation names together with {owner} -- "
-                    f"reqctl unlist {owner} {identity}")
+        for identity in sorted(i for i in held if (owner, i) not in named):
+            problems.append(
+                f"{owner}: its citation list holds {identity}, which no "
+                f"statement citation names together with {owner} -- "
+                f"reqctl unlist {owner} {identity}")
     for citation in citations:
         owner, identity = citation["uid"], citation["id"]
         if (uid and owner != uid) or owner not in listed:
