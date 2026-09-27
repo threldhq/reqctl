@@ -13,6 +13,9 @@ assessed:
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   review_page_bytes: 8byjsLX3ASyH4_Zc_WWAPQSRAwOizmU7pDqp7h4API4
   review_page_bytes.*: WX_pLJ5Q5te-7IkbHsWsq3DH3WqUCwHeu4NWrn4cJAw
+citations:
+  4c6q6e: EG6xbSTX9gejtL0DqDPwY0srtL7h5yYWBE4_sLqrJ3g
+  f4kwgo: gFBttjnMYqPNTt0nhvEmeNik-r6LjWQ0bwNIYAZxi_Y
 priority: medium
 relations:
   REQ-46144308: constrains
