@@ -6,6 +6,7 @@ import subprocess
 import sys
 import unicodedata
 
+# @req> REQ-25363659@x2KAEtIScy4m 7h7cpr
 COMMANDS = ("new", "revise", "relate", "unrelate", "delete")
 MINTED = re.compile(r"\$([0-9]+)")
 PAYLOAD = "CORPUS_CHANGE"

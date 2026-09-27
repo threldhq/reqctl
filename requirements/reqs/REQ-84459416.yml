@@ -8,6 +8,8 @@ assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
   portal_token_permissions: gx7wfxrBqtaSYiVl9RtKG_S57wCIbFYcaQc1uXNuoFg
   portal_token_permissions.*: P9Vk9NTmHF_Xqh0DEuNqbm1oqK0YM3EYBrKTa7iTZC0
+citations:
+  uiu4t5: _1nZYIxu5IwJzEtQHawlmbPN022Dpe7jPx9UR81LpEg
 priority: medium
 relations:
   REQ-80115998: constrains

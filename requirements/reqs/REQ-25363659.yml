@@ -12,6 +12,7 @@ assessed:
   portal_commands.*: H5oxUJSwgJ9YPq2M2SOGRU978V54qU0_BczjUaWM1FE
 citations:
   43rpbl: OUZCWh2aseIaqrHltfZleriFFTL8CC5fyXN8zocHU3M
+  7h7cpr: mR8W66IOAhXXIz2LgIk0b-x-0nEMba8hSV88R07ErrU
 priority: medium
 relations:
   REQ-57492239: derives_from
