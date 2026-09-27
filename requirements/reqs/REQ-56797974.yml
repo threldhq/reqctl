@@ -11,6 +11,7 @@ relations:
 status: approved
 text: When the product removes a [citation identity](citation_identity) from a [citation
   list](citation_list), the product shall leave unchanged every line the code base
-  holds other than what that list holds for the identity.
+  holds other than the lines holding what that list holds for the identity, and other
+  than the lines holding that list where it holds nothing for any other identity.
 type: functional
 verification: inspection

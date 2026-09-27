@@ -122,8 +122,8 @@ properties:
     description: >-
       The citation list: the citation identity of each statement citation
       naming this requirement, to the citation digest of the lines it covers.
-      Excluded from the stamp. Written by reqctl tag, repin and untag, never by
-      hand.
+      Excluded from the stamp. Written by reqctl tag, repin, untag and unlist,
+      never by hand.
     propertyNames:
       pattern: "^[a-z2-7]{6}$"
     additionalProperties:
