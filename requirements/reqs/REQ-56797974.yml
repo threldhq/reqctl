@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-59136977: RZuxd8I21O4a8mI67g5zkqxABlkY6DvHir5YRLL9s5U
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+priority: medium
+relations:
+  REQ-59136977: constrains
+status: approved
+text: When the product removes a [citation identity](citation_identity) from a [citation
+  list](citation_list), the product shall leave unchanged every line the code base
+  holds other than what that list holds for the identity.
+type: functional
+verification: inspection
