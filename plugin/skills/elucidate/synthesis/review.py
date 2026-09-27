@@ -180,15 +180,19 @@ def faults(review):
             text, why = pages[url]
             if text is None:
                 found.append(f"practice {number}: {url} cannot be read: {why}")
-            elif not coverage.quoted(text, coverage.spoken(source["passage"])):
+            elif not holds(text, source["passage"]):
                 found.append(f"practice {number}: {url} does not hold "
                              f"{source['passage']!r}")
     return found
 
 
+def holds(text, passage):
+    needle = coverage.spoken(passage or "")
+    return bool(needle) and coverage.quoted(text, needle)
+
+
 def stated(practice, said):
-    return practice["stated"] is not None and coverage.quoted(
-        said, coverage.spoken(practice["stated"]))
+    return holds(said, practice["stated"])
 
 
 def summary(review, said, bound):
