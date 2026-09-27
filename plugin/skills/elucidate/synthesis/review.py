@@ -141,7 +141,8 @@ def build(run, answered):
 
 
 def words(text):
-    return re.sub(r"\W+", " ", text).strip()
+    spaced = re.sub(r"[.,!?;:]", r" \g<0> ", text)
+    return re.sub(r"[^\w.,!?;:]+", " ", spaced).strip()
 
 
 def page(url):
@@ -193,7 +194,7 @@ def faults(review):
 
 def holds(text, passage):
     needle = coverage.spoken(passage or "")
-    return bool(needle) and coverage.quoted(text, needle)
+    return bool(re.search(r"\w", needle)) and coverage.quoted(text, needle)
 
 
 def stated(practice, said):
