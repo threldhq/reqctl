@@ -1364,6 +1364,10 @@ def declined_practices(run):
     # @req+ REQ-20454019@BJxxS0ixzdXK mkqci7
     path, read = recorded(run)
     numbers = read.get(DECLINED) or []
+    if not isinstance(numbers, list):
+        raise SystemExit(f"{path}: `{DECLINED}` states {numbers!r}. The form "
+                         "is a list of the review's practice numbers, as "
+                         "`[1, 3]`.")
     if not numbers:
         return []
     review, why = read_return(run / REVIEWED, shapes.REVIEW)
