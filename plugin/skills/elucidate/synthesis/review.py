@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import http.client
+import re
 import sys
 import urllib.request
 import zlib
@@ -20,7 +21,6 @@ FIELD = "governed_field"
 BOUND = "review_summary_lines"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
-MARKUP = str.maketrans("`*", "  ")
 WAIT = 30
 
 # @req> REQ-79800652@-RuBVIjAa4FV isjntr
@@ -140,6 +140,10 @@ def build(run, answered):
     return 0
 
 
+def words(text):
+    return " ".join(re.findall(r"\w+", text))
+
+
 def page(url):
     request = urllib.request.Request(
         url, headers={"User-Agent": "reqctl-elucidate-review",
@@ -161,8 +165,7 @@ def page(url):
     reader = PageText()
     reader.feed(body)
     reader.close()
-    return coverage.plain(coverage.spoken(
-        " ".join(reader.held).translate(MARKUP))), None
+    return words(" ".join(reader.held)), None
 
 
 def faults(review):
@@ -182,7 +185,7 @@ def faults(review):
             text, why = pages[url]
             if text is None:
                 found.append(f"practice {number}: {url} cannot be read: {why}")
-            elif not holds(text, source["passage"].translate(MARKUP)):
+            elif not holds(text, words(source["passage"])):
                 found.append(f"practice {number}: {url} does not hold "
                              f"{source['passage']!r}")
     return found
