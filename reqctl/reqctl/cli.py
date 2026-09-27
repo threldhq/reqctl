@@ -747,14 +747,48 @@ def cmd_trace(args):
     return EXIT_INVALID if data["problems"] or data["stale"] else EXIT_OK
 
 
+# @req> REQ-78685242@62t3Pc4LqF05 da5qxm
+def _listed(store, uid, entries):
+    if not uid.startswith(("REQ-", "GUARD-")):
+        return
+    item = corpus.find(store, uid)
+    before = corpus.mapping(item.data, corpus.CITATION_LIST)
+    held = dict(before)
+    for identity, taken in entries.items():
+        if taken is None:
+            held.pop(identity, None)
+        else:
+            held[identity] = taken
+    if held == before:
+        return
+    if held:
+        item.data[corpus.CITATION_LIST] = held
+    else:
+        item.data.pop(corpus.CITATION_LIST, None)
+    corpus.save(store, item)
+
+
 def cmd_tag(args):
     tree, root = corpus.load()
-    item = corpus.find(tree, args.req)
-    if not str(item.uid).startswith(("REQ-", "GUARD-")):
-        raise ReqctlError(f"{args.req}: only a requirement or a guard is cited")
-    identity = cite.write(root, args.path, args.first, args.last, str(item.uid),
-                          corpus.tag_stamp(corpus.stamp(item)), args.exclusive)
-    _emit(args, {"id": identity, "path": args.path}, identity)
+    # @req+ REQ-62782894@QlfQx33Br2KT nmyxfc
+    if not len(args.first) == len(args.last) == len(args.req):
+        raise ReqctlError("name --from, --to and --req once for each citation")
+    asked = []
+    for first, last, req in zip(args.first, args.last, args.req):
+        item = corpus.find(tree, req)
+        if not str(item.uid).startswith(("REQ-", "GUARD-")):
+            raise ReqctlError(f"{req}: only a requirement or a guard is cited")
+        asked.append((first, last, str(item.uid),
+                      corpus.tag_stamp(corpus.stamp(item))))
+    written = cite.write(root, args.path, asked, args.exclusive)
+    # @req- nmyxfc
+    # @req> REQ-75539229@OyOJtrpdfVnQ c7r3ff
+    # @req> REQ-89706423@iadxBaGa8VrN wrzqdw
+    for uid in dict.fromkeys(uid for _, uid, _ in written):
+        _listed(tree, uid, {identity: taken for identity, named, taken in written
+                            if named == uid})
+    identities = [identity for identity, _, _ in written]
+    _emit(args, {"ids": identities, "path": args.path}, "\n".join(identities))
     return EXIT_OK
 
 
@@ -768,15 +802,22 @@ def cmd_repin(args):
                           f"is removed, not re-pinned: `reqctl untag {args.id}`")
     stamp = corpus.tag_stamp(corpus.stamp(item))
     cite.repin(root, citation, stamp)
+    # @req> REQ-64846889@pHOO0sEc7V1K 7dhw4d
+    # @req> REQ-17757558@VSn2tRlWyQmF tevb2p
+    _listed(tree, citation["uid"], {args.id: cite.standing(root, citation)})
     _emit(args, {"id": args.id, "path": citation["path"], "stamp": stamp},
           f"{args.id} in {citation['path']} pinned @{stamp}")
     return EXIT_OK
 
 
 def cmd_untag(args):
-    _, root = corpus.load()
+    tree, root = corpus.load()
     citation = cite.named(root, args.id)
     cite.remove(root, citation)
+    # @req> REQ-13298390@OIZCRlURf3pq utmfsc
+    # @req> REQ-81275367@LOgwKiOj_0ok olrtj5
+    if citation["uid"] in {str(item.uid) for item in corpus.items(tree)}:
+        _listed(tree, citation["uid"], {args.id: None})
     _emit(args, {"id": args.id, "path": citation["path"]},
           f"{args.id} removed from {citation['path']}")
     return EXIT_OK
@@ -823,13 +864,18 @@ def cmd_portal(args):
 
 def cmd_resolve(args):
     store, _ = corpus.load()
-    path, dropped = _resolve.resolve(store, args.uid)
+    path, dropped, unlisted = _resolve.resolve(store, args.uid)
     said = f"{args.uid}: resolved"
     if dropped:
         acks = " ".join(f"--ack {gone}" for gone in dropped)
         said += (f"; the merge conflicted {', '.join(dropped)}, now suspect "
                  f"-- reread, then reqctl revise {args.uid} {acks}")
-    _emit(args, {"uid": args.uid, "path": str(path), "dropped": dropped}, said)
+    if unlisted:
+        said += (f"; the merge conflicted citations {', '.join(unlisted)}, now "
+                 f"unlisted -- read each against {args.uid}, then reqctl repin "
+                 "it")
+    _emit(args, {"uid": args.uid, "path": str(path), "dropped": dropped,
+                 "unlisted": unlisted}, said)
     return EXIT_OK
 
 
@@ -1067,11 +1113,16 @@ def build_parser():
 
     s = _command(sub, "tag",
                  "cite a requirement at lines of a file, writing one comment "
-                 "over a single code statement and a pair of comments over more")
+                 "over a single code statement and a pair of comments over "
+                 "more; repeat --from, --to and --req to cite several, each "
+                 "numbered as the file stands before the command")
     s.add_argument("path")
-    s.add_argument("--from", dest="first", type=int, required=True)
-    s.add_argument("--to", dest="last", type=int, required=True)
-    s.add_argument("--req", required=True)
+    # @req+ REQ-62782894@QlfQx33Br2KT ou2zvt
+    s.add_argument("--from", dest="first", type=int, action="append",
+                   required=True)
+    s.add_argument("--to", dest="last", type=int, action="append", required=True)
+    s.add_argument("--req", action="append", required=True)
+    # @req- ou2zvt
     s.add_argument("--exclusive", action="store_true")
     s.set_defaults(func=cmd_tag)
 
@@ -1099,7 +1150,8 @@ def build_parser():
 
     s = _command(sub, "resolve",
                  "settle an item whose unresolved merge falls within its "
-                 "pins, dropping the pins the merge conflicted")
+                 "pins and citation list, dropping the pins and citations the "
+                 "merge conflicted")
     s.add_argument("uid")
     s.set_defaults(func=cmd_resolve)
 

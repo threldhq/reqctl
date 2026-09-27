@@ -6,8 +6,42 @@ def unstamped(uid, path):
             "against -- cite it again with reqctl tag")
 
 
+def listing(tree, citations, uid=None):
+    named = {citation["id"] for citation in citations}
+    listed = {str(item.uid): corpus.mapping(item.data, corpus.CITATION_LIST)
+              for item in corpus.items(tree)
+              if str(item.uid).startswith(("REQ-", "GUARD-"))}
+    problems = []
+    # @req> REQ-13384695@XxffInWogQ4V 3lmvqm
+    for owner, held in listed.items():
+        if uid and owner != uid:
+            continue
+        for identity in sorted(set(held) - named):
+            problems.append(f"{owner}: its citation list holds {identity}, "
+                            "which no statement citation names")
+    for citation in citations:
+        owner, identity = citation["uid"], citation["id"]
+        if (uid and owner != uid) or owner not in listed:
+            continue
+        # @req+ REQ-67655319@ezp6TxUzJ72E wqruf3
+        # @req+ REQ-32191310@ot16I3lSs2Nu pmll7c
+        if identity not in listed[owner]:
+            problems.append(
+                f"{citation['path']}: citation {identity} of {owner} is not in "
+                f"its citation list -- read it against {owner}, then reqctl "
+                f"repin {identity}")
+        elif listed[owner][identity] != citation["digest"]:
+            problems.append(
+                f"{citation['path']}: citation {identity} of {owner} covers "
+                "lines that changed since its citation list took their digest "
+                f"-- read them against {owner}, then reqctl repin {identity}")
+        # @req- pmll7c
+        # @req- wqruf3
+    return problems
+
+
 def trace(tree, root, uid=None):
-    citations, cited_problems = cite.read(root)
+    citations, cited_problems = cite.read(root, digested=True)
     tags = cite.cited(citations)
     # @req> REQ-76962559@j8u3NeYOT_2k dyday2
     if uid:
@@ -80,6 +114,10 @@ def trace(tree, root, uid=None):
                     " but no "
                     "such requirement"
                 )
+    # @req> REQ-67655319@ezp6TxUzJ72E eznv3q
+    # @req> REQ-13384695@XxffInWogQ4V qtu6ly
+    # @req> REQ-32191310@ot16I3lSs2Nu 65dur7
+    problems += listing(tree, citations, uid)
 
     return {"rows": rows, "problems": problems, "stale": stale,
             "deprecated": deprecated, "unimplemented": sorted(unimplemented),
