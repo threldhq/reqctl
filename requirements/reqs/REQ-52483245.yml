@@ -3,18 +3,20 @@ acceptance_criteria:
   then: reqctl receives the value unchanged as that option's value, and nothing in
     it runs as a command
   when: the step runs
-- given: an option value naming $N
+- given: an option value that is exactly $N
   then: reqctl receives the uid that step N minted as that option's value
   when: the step runs
 assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-81313171: 3CV_M8XsRLpdvggL2UlFybaGwYoSfuBaZ68A5wpiMC8
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 priority: medium
 relations:
   REQ-57492239: constrains
+  REQ-81313171: depends_on
 status: approved
 text: The product shall pass each value of an option of a step of a batch the [portal](portal)
   sends to reqctl in one argument with the option's name and through no shell, unchanged
-  unless the value names $N.
+  unless the value is exactly $N.
 type: functional
 verification: inspection
