@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: lines of code whose first line is blank
+  then: the code base gains only the lines holding a comment that carries the [statement
+    citation](statement_citation)
+  when: the product cites a requirement at them
+- given: a file whose lines end in a carriage return and a line feed
+  then: every line ending the file held is unchanged
+  when: the product cites a requirement at lines of it
+- given: a file whose last line ends without a line break
+  then: the text of that line is unchanged and the comment closing the citation stands
+    on a line of its own
+  when: the product cites a requirement at lines ending on that line
+assessed:
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-60346603: constrains
+status: approved
+text: When the product cites a requirement at lines of code, the product shall change
+  the code base only by adding the lines holding a comment that carries the [statement
+  citation](statement_citation).
+type: functional
+verification: inspection
