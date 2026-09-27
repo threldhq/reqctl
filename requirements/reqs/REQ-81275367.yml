@@ -21,7 +21,8 @@ relations:
 status: approved
 text: When the product removes a [statement citation](statement_citation), the product
   shall leave unchanged every line the code base holds other than the lines holding
-  a comment that carries the citation, and other than what the [citation list](citation_list)
-  of the requirement it names holds for the citation.
+  a comment that carries the citation, other than the lines holding what the [citation
+  list](citation_list) of the requirement it names holds for the citation, and other
+  than the lines holding that list where it holds nothing for any other citation.
 type: functional
 verification: inspection
