@@ -1,0 +1,11 @@
+assessed: {}
+entries:
+  citation_list:
+    aliases:
+    - citation lists
+    definition: 'What a requirement holds for the [statement citations](statement_citation)
+      that name it: the [citation identity](citation_identity) of each, and one [citation
+      digest](citation_digest) for each identity.'
+    word: citation list
+kind: term
+status: draft
