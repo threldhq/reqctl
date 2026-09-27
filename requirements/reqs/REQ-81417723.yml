@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: one command names lines of a file for one [statement citation](statement_citation)
+    and lines below them for another
+  then: the citation below covers the lines the command named for it as the file stood
+    before the command
+  when: the product writes both
+- given: one command names lines of a file for one [statement citation](statement_citation)
+    and, for another, lines that overlap or lie within them
+  then: each citation covers the lines the command named for it as the file stood
+    before the command
+  when: the product writes both
+assessed:
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-60346603: depends_on
+  REQ-62782894: constrains
+status: approved
+text: When the product writes several [statement citations](statement_citation) into
+  one file in one command, the product shall take each line number the command names
+  as numbering the file as it stood before the command.
+type: functional
+verification: inspection
