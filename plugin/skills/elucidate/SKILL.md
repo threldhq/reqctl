@@ -81,19 +81,21 @@ something the statement does not already say. Then:
   did.
 - **Keep their nouns.** If they said "note", do not write "document". One thing
   with two names is a question, not a choice you make.
-- **Sort product from build.** A requirement governs what the software does and
-  states "the product shall": here that software is `reqctl`, `reqportal` and
-  the `elucidate` scripts. What builds or checks them -- the hooks, pins, CI
-  wiring, lockfiles -- is a `GUARD` and states "the build shall".
-  `reqctl validate` refuses either subject under the other kind, so the sort is
-  made before minting, not after. The line is what the software does against
-  what builds and checks it, not functional against quality: a latency or
-  security obligation is still product. When you cannot tell, ask.
-  A rule of ours that a gate enforces and a test holds is a guard, and
-  `CLAUDE.md` sets that bar. A third-party ruleset states no rule of ours to
-  lift, and stays code; a rule of ours configured into one is still ours.
-  A guard relates only to guards, so a build rule that seems to lean on a
-  product statement is two rules, not one.
+<!-- @req+ REQ-83468274@0xeqDjC8CkiL dsbvv7 -->
+- **Sort product from build.** A rule a behaviour of the governed software
+  depends on is a requirement and states "the product shall", even where only
+  one repository runs that behaviour today. A rule only the repository's own
+  check depends on is a `GUARD` and states "the build shall". A rule both
+  depend on is one of each: a requirement for the behaviour and a guard for the
+  repository's wiring. Where a rule is enforced -- a hook, a gate, a CI step --
+  does not sort it, and neither does functional against quality: a latency or
+  security obligation a behaviour depends on is product. `reqctl validate`
+  refuses either subject under the other kind, so the sort is made before
+  minting, not after. When you cannot tell, ask. A third-party ruleset states
+  no rule of ours to lift, and stays code; a rule of ours configured into one
+  is still ours. A guard relates only to guards, so a build rule that seems to
+  lean on a product statement is two rules, not one.
+<!-- @req- dsbvv7 -->
 - **A value is a parameter; a record is a data item.** The entry key settles it:
   a parameter's key *is* the value, typed by `--value-type` and carrying
   `--unit` -- `30` is the thirty, `utc` is the fallback zone. A data item's key

@@ -45,7 +45,7 @@ def parsed(path):
 
 
 def flags_defined():
-    held = set()
+    held = {"--help"}
     for path in listed("*.py"):
         for node in ast.walk(parsed(path)):
             if not isinstance(node, ast.Call):
@@ -91,24 +91,23 @@ def flags_named(text, holder, defined):
 
 def flags_in_faults(path, defined):
     faults = []
-    for node in ast.walk(parsed(path)):
-        if not isinstance(node, ast.Call):
+    tree = parsed(path)
+    # @req+ GUARD-50228923@hESHdAl7Kn_w 5hhcee
+    handed = {id(given) for call in ast.walk(tree)
+              if isinstance(call, ast.Call) and getattr(
+                  call.func, "id", getattr(call.func, "attr", None)) == "_git"
+              for given in call.args}
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
             continue
-        if getattr(node.func, "id", None) != "ReqctlError":
+        if id(node) in handed:
             continue
-        for given in node.args:
-            if isinstance(given, ast.Constant):
-                said = str(given.value)
-            elif isinstance(given, ast.JoinedStr):
-                said = "".join(piece.value for piece in given.values
-                               if isinstance(piece, ast.Constant))
-            else:
-                continue
-            for flag in set(BARE_FLAG.findall(said)):
-                if flag not in defined:
-                    faults.append((path, given.lineno,
-                                   f"this fault names {flag}, which no parser "
-                                   "defines"))
+        for flag in set(BARE_FLAG.findall(node.value)):
+            if flag not in defined:
+                faults.append((path, node.lineno,
+                               f"this string names {flag}, which no parser "
+                               "defines"))
+    # @req- 5hhcee
     return faults
 
 
@@ -120,7 +119,10 @@ def survey():
         text = read(path)
         faults += paths_named(text, path, known)
         faults += flags_named(text, path, defined)
-    for path in listed("reqctl/reqctl/*.py"):
+    modules = listed("reqctl/reqctl/*.py")
+    if not modules:
+        raise SystemExit("no reqctl module is listed under reqctl/reqctl")
+    for path in modules:
         faults += flags_in_faults(path, defined)
     return faults
 
