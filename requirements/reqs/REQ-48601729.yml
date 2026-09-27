@@ -16,6 +16,9 @@ acceptance_criteria:
 assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  7ycfsi: hh8g4VwcFi094By1Gi7SvqdGyYuHDU47p5g_hHyS-xQ
+  oxn6if: FY-4sA63OYIOlrpy8yAfpxWQmXWSRBAzYygNd7F4B_A
 priority: medium
 relations:
   REQ-57492239: derives_from
