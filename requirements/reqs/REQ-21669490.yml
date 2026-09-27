@@ -1,19 +1,21 @@
 acceptance_criteria:
-- given: a first step naming $N with N one, a step that has not run
+- given: a first step holding a positional argument that is exactly $N with N one,
+    a step that has not run
   then: the product refuses the batch, naming the reference
   when: the batch is applied
-- given: a step naming the first step as $N when the first step minted nothing, as
-    a relate does
+- given: a step holding an option value that is exactly $N with N zero when the first
+    step minted nothing, as a relate does
   then: the product refuses the batch, naming the reference
   when: the batch is applied
 assessed:
-  REQ-81313171: YxjSwfpdqomtcj7K4pQHlkByZW-jLjWPbqFul2Bp_08
+  REQ-81313171: 3CV_M8XsRLpdvggL2UlFybaGwYoSfuBaZ68A5wpiMC8
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 priority: medium
 relations:
   REQ-81313171: derives_from
 status: approved
-text: If a step of a batch the [portal](portal) sends names $N for a step that has
-  not run, or that minted no uid, then the product shall refuse the batch.
+text: If a positional argument or an option value of a step of a batch the [portal](portal)
+  sends is exactly $N for a step that has not run, or that minted no uid, then the
+  product shall refuse the batch.
 type: functional
 verification: inspection
