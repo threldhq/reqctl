@@ -425,9 +425,11 @@ const criteriaText = (item) => (item?.acceptance_criteria ?? [])
 
 const HOLDS = { alias: "aliases", "value-type": "value_type" };
 
+<!-- @req+ REQ-14679866@V0QsDEPmgOq3 yktaxn -->
 const CLEARS = { rationale: "no-rationale", unit: "no-unit",
                  default: "no-default", alias: "no-alias",
                  criterion: "no-criteria" };
+<!-- @req- yktaxn -->
 
 const valueText = (held) =>
   held.length === 1 ? String(held[0]) : `[${held.join(", ")}]`;
@@ -640,11 +642,13 @@ function payloadFor(act, uid, read, held) {
   for (const [name] of shapeOf(act, kind)) {
     const typed = read(name).trim();
     if (item && typed === heldBy(item, name).trim()) continue;
+    <!-- @req+ REQ-14679866@V0QsDEPmgOq3 c3qlcl -->
     if (!typed) {
       if (item && CLEARS[name]) options[CLEARS[name]] = null;
       else if (item) stuck.push(name);
       continue;
     }
+    <!-- @req- c3qlcl -->
     options[name] = REPEATED.has(name)
       ? typed.split("\n").map((line) => line.trim()).filter(Boolean)
       : typed;
@@ -659,10 +663,12 @@ function payloadFor(act, uid, read, held) {
     }
     return { steps };
   }
+  <!-- @req+ REQ-14679866@V0QsDEPmgOq3 vpkyye -->
   if (stuck.length) {
     throw new Error(`reqctl cannot empty ${stuck.join(", ")}; put ${
       stuck.length > 1 ? "those" : "that"} back, or deprecate the item`);
   }
+  <!-- @req- vpkyye -->
   const reword = held.rewords().map(([word, becomes]) => {
     if (word.includes("=")) {
       throw new Error(`${word} cannot be reworded: reqctl reads old=new up to `
@@ -1033,6 +1039,7 @@ function forgetToken() {
 function setupScreen(problem) {
   const place = repo();
   <!-- @req+ REQ-80115998@5Q31K4gVM_b7 rhi3cu -->
+  <!-- @req+ REQ-84459416@zkSEOhONwdzg uiu4t5 -->
   document.getElementById("app").innerHTML = `
     <div class="setup">
       <h1 style="font-size:18px">requirements</h1>
@@ -1058,6 +1065,7 @@ function setupScreen(problem) {
         What that opens is a pull request authored by the app, not by you, and it still
         needs a review before anything merges.</div>
     </div>`;
+  <!-- @req- uiu4t5 -->
   <!-- @req- rhi3cu -->
   const tok = document.getElementById("tok");
   const entry = document.getElementById("place");
