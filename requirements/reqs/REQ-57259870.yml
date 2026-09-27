@@ -16,6 +16,10 @@ assessed:
   REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   field_of_the_governed_software: jL-3rawb_a5mG9L4XUWQZxlBCv0zHsaJjJXBbj80Z-4
+citations:
+  gummm7: WipkBQDMkdHQNWFdx3EKS45ybWTE11fRzwfPu5WGeS8
+  ssyhle: tMufQb1xkj0RJHjWC4NYbkeAxy9gq2eFTF4HiqEoDyk
+  vmnzm3: iEvrg2evE4-MvldDIM7DbJHh_xCW1ih01-Es3GZFZIQ
 priority: medium
 relations:
   REQ-82432523: depends_on

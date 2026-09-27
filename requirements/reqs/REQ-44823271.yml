@@ -9,6 +9,9 @@ assessed:
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   review_summary_lines: dtKBX566vsVIcESqZuAELUoy59ZCeRpvGS6XE6X0w64
   review_summary_lines.*: rk9qIq3WUW8NcPwK3C3b9nGaa1187erbHjm9gc49lfk
+citations:
+  v2tnmd: fh6dA3XhBdi49049SyO5Yxk4YjTPEog0MARkOYz9K8I
+  yzwezx: _xNyIZlvkH34eflNnTguy1Y28QNszWGwKY22Qmwc0tE
 priority: medium
 relations:
   REQ-82432523: depends_on
