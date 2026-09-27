@@ -312,7 +312,7 @@ def _lines(root, citation):
 
 
 def repin(root, citation, stamp):
-    # @req+ REQ-17757558@9_SHKLed0ssS lqd5pz
+    # @req+ REQ-17757558@VSn2tRlWyQmF lqd5pz
     target, lines = _lines(root, citation)
     at = citation["open"] - 1
     pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['uid'])})(?:@\S*)?")
@@ -325,7 +325,7 @@ def repin(root, citation, stamp):
 def remove(root, citation):
     target, lines = _lines(root, citation)
     marks = set(citation["marks"])
-    # @req> REQ-81275367@LuNIjqeTrwb4 5gkn5k
+    # @req> REQ-81275367@LOgwKiOj_0ok 5gkn5k
     # @req> REQ-26984738@nD05toE71g-O a4ywox
     target.write_bytes("".join(line for number, line in enumerate(lines, start=1)
                                if number not in marks).encode())

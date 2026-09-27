@@ -15,7 +15,6 @@ def _side(text, where):
 
 
 def resolve(store, uid):
-    # @req+ REQ-95299157@ZQGWNBottyNx w4qjbn
     path = path_for(store.root, uid)
     text = read_text(path)
     if not CONFLICTED.search(text):
@@ -40,4 +39,3 @@ def resolve(store, uid):
     held[PINS] = kept
     save(store, Item(uid, path, held))
     return path, sorted((set(mine) | set(yours)) - set(kept))
-# @req- w4qjbn
