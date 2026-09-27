@@ -10,6 +10,8 @@ assessed:
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  s3g7ya: aETMvUlHUZaQZ9fEMylH7G-oZtgWtg7rsQwyDrtwCxQ
 priority: medium
 relations:
   REQ-75539229: depends_on

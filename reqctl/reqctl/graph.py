@@ -7,18 +7,21 @@ def unstamped(uid, path):
 
 
 def listing(tree, citations, uid=None):
-    named = {citation["id"] for citation in citations}
+    named = {(citation["uid"], citation["id"]) for citation in citations}
     listed = {str(item.uid): corpus.mapping(item.data, corpus.CITATION_LIST)
               for item in corpus.items(tree)
               if str(item.uid).startswith(("REQ-", "GUARD-"))}
     problems = []
-    # @req> REQ-13384695@XxffInWogQ4V 3lmvqm
+    # @req> REQ-13384695@P9NXsZKZp683 3lmvqm
     for owner, held in listed.items():
         if uid and owner != uid:
             continue
-        for identity in sorted(set(held) - named):
-            problems.append(f"{owner}: its citation list holds {identity}, "
-                            "which no statement citation names")
+        for identity in sorted(held):
+            if (owner, identity) not in named:
+                problems.append(
+                    f"{owner}: its citation list holds {identity}, which no "
+                    f"statement citation names together with {owner} -- "
+                    f"reqctl unlist {owner} {identity}")
     for citation in citations:
         owner, identity = citation["uid"], citation["id"]
         if (uid and owner != uid) or owner not in listed:
@@ -115,7 +118,7 @@ def trace(tree, root, uid=None):
                     "such requirement"
                 )
     # @req> REQ-67655319@ezp6TxUzJ72E eznv3q
-    # @req> REQ-13384695@XxffInWogQ4V qtu6ly
+    # @req> REQ-13384695@P9NXsZKZp683 qtu6ly
     # @req> REQ-32191310@ot16I3lSs2Nu 65dur7
     problems += listing(tree, citations, uid)
 

@@ -823,6 +823,28 @@ def cmd_untag(args):
     return EXIT_OK
 
 
+def cmd_unlist(args):
+    tree, root = corpus.load()
+    item = corpus.find(tree, args.uid)
+    uid = str(item.uid)
+    # @req> REQ-97939970@VFuhEbnLKli1 xrna4u
+    if args.id not in corpus.mapping(item.data, corpus.CITATION_LIST):
+        raise ReqctlError(f"{uid}: its citation list does not hold {args.id}")
+    # @req+ REQ-59136977@RZuxd8I21O4a s3g7ya
+    # @req> REQ-81063063@le2DnuXlXsmo rphl5n
+    if any(citation["id"] == args.id and citation["uid"] == uid
+           for citation in cite.readable(root)):
+        raise ReqctlError(
+            f"{uid}: a statement citation names {args.id} -- reqctl untag "
+            f"{args.id} removes the citation, reqctl repin {args.id} re-pins it")
+    # @req> REQ-56797974@cr5r6L2UdqJk tn22pk
+    _listed(tree, uid, {args.id: None})
+    # @req- s3g7ya
+    _emit(args, {"uid": uid, "id": args.id},
+          f"{args.id} removed from the citation list of {uid}")
+    return EXIT_OK
+
+
 def cmd_compare(args):
     root = corpus.find_root()
     ref = args.base or _baseline._default_ref(root)
@@ -1135,6 +1157,13 @@ def build_parser():
     s = _command(sub, "untag", "remove a citation")
     s.add_argument("id")
     s.set_defaults(func=cmd_untag)
+
+    s = _command(sub, "unlist",
+                 "remove from a requirement's citation list an identity that "
+                 "no citation of that requirement names")
+    s.add_argument("uid")
+    s.add_argument("id")
+    s.set_defaults(func=cmd_unlist)
 
     s = _command(sub, "compare",
                  "state which citations this branch added, deleted, moved or "

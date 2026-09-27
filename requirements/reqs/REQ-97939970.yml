@@ -7,6 +7,8 @@ assessed:
   REQ-59136977: RZuxd8I21O4a8mI67g5zkqxABlkY6DvHir5YRLL9s5U
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+citations:
+  xrna4u: jRVAj57NdBOilIVy72KtFyUROIDekKouqedqgqFEFKI
 priority: medium
 relations:
   REQ-59136977: constrains
