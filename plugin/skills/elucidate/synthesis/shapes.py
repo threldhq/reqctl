@@ -86,3 +86,21 @@ JUDGE = _object(["proposal", "covered_by", "conflicts", "relations", "nearest",
 
 CITING = {"covered_by": "uids", "conflicts": "uid", "relations": "target",
           "nearest": "uid"}
+
+LABEL = {"type": "string", "minLength": 1, "maxLength": 120}
+
+# @req> REQ-82432523@VoDkIJau94BB poc76h
+REVIEW = _object(["practices"], {
+    "practices": _list(_object(
+        ["practice", "field", "leaders", "sources", "stated", "adopt"], {
+            "practice": REASON,
+            "field": LABEL,
+            "leaders": {"type": "array", "minItems": 1, "items": LABEL},
+            "sources": _list(_object(["url", "passage"], {
+                "url": {"type": "string", "pattern": "^https?://\\S+$"},
+                "passage": REASON,
+            })),
+            "stated": {"anyOf": [REASON, {"type": "null"}]},
+            "adopt": {"type": "boolean"},
+        })),
+})
