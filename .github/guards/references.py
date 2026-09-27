@@ -13,7 +13,6 @@ PLACEHOLDER = re.compile(r"NN|FILE|DIR|MEMBER|PATH|<[^>]*>")
 QUOTED_FLAG = re.compile(r"`(--[a-z][\w-]*)`")
 SKILL_DIR = "${CLAUDE_SKILL_DIR}"
 BARE_FLAG = re.compile(r"--[a-z][\w-]*")
-LONE_FLAG = re.compile(r"--[a-z][\w-]*(?:=\S*)?")
 
 
 def tracked(*globs):
@@ -92,17 +91,23 @@ def flags_named(text, holder, defined):
 
 def flags_in_faults(path, defined):
     faults = []
-    # @req> GUARD-50228923@hESHdAl7Kn_w bsr722
-    for node in ast.walk(parsed(path)):
+    tree = parsed(path)
+    # @req+ GUARD-50228923@hESHdAl7Kn_w 5hhcee
+    handed = {id(given) for call in ast.walk(tree)
+              if isinstance(call, ast.Call) and getattr(
+                  call.func, "id", getattr(call.func, "attr", None)) == "_git"
+              for given in call.args}
+    for node in ast.walk(tree):
         if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
             continue
-        if LONE_FLAG.fullmatch(node.value):
+        if id(node) in handed:
             continue
         for flag in set(BARE_FLAG.findall(node.value)):
             if flag not in defined:
                 faults.append((path, node.lineno,
                                f"this string names {flag}, which no parser "
                                "defines"))
+    # @req- 5hhcee
     return faults
 
 
