@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a [citation list](citation_list) holding a [citation identity](citation_identity)
+    whose [statement citation](statement_citation) names another requirement
+  then: that list no longer holds the identity, and the [citation list](citation_list)
+    of the requirement the citation names is unchanged
+  when: the product is asked to remove the identity from that list
+assessed:
+  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
+  citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  s3g7ya: aETMvUlHUZaQZ9fEMylH7G-oZtgWtg7rsQwyDrtwCxQ
+priority: medium
+relations:
+  REQ-75539229: depends_on
+status: approved
+text: When the product is asked to remove from the [citation list](citation_list)
+  of a requirement a [citation identity](citation_identity) that no [statement citation](statement_citation)
+  the code base holds names together with that requirement, the product shall remove
+  the identity and its [citation digest](citation_digest) from that list.
+type: functional
+verification: inspection

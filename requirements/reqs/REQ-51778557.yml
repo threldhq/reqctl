@@ -13,8 +13,8 @@ priority: medium
 relations:
   REQ-26984738: constrains
 status: approved
-text: If a removal names a [citation identity](citation_identity) that no [statement
-  citation](statement_citation) the code base holds names, then the product shall
-  refuse the removal.
+text: If the product is asked to remove a [statement citation](statement_citation)
+  by a [citation identity](citation_identity) that no citation the code base holds
+  names, then the product shall refuse the removal.
 type: functional
 verification: inspection
