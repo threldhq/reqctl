@@ -20,7 +20,7 @@ FIELD = "governed_field"
 BOUND = "review_summary_lines"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
-MARKUP = str.maketrans("", "", "`*")
+MARKUP = str.maketrans("`*", "  ")
 WAIT = 30
 
 # @req> REQ-79800652@-RuBVIjAa4FV isjntr
@@ -161,8 +161,8 @@ def page(url):
     reader = PageText()
     reader.feed(body)
     reader.close()
-    return coverage.plain(coverage.spoken(" ".join(reader.held))).translate(
-        MARKUP), None
+    return coverage.plain(coverage.spoken(
+        " ".join(reader.held).translate(MARKUP))), None
 
 
 def faults(review):
@@ -243,20 +243,18 @@ def check(run):
                                     "words"))
     path = run / plan.REVIEWED
     review, why = plan.read_return(path, shapes.REVIEW)
+    # @req> REQ-82432523@VoDkIJau94BB 4cioyu
+    again = (f"run `rm -f {path}`, then spawn the best-in-class agent again "
+             "with the same prompt")
     if review is None:
-        # @req> REQ-82432523@VoDkIJau94BB mfyqoy
-        path.unlink(missing_ok=True)
-        print(f"{path}: the review {why}; spawn the best-in-class agent again "
-              "with the same prompt")
+        print(f"{path}: the review {why}; {again}")
         return 1
     found = faults(review)
     for fault in found:
         print(fault)
     if found:
-        # @req> REQ-82432523@VoDkIJau94BB 6hn44p
-        path.unlink(missing_ok=True)
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
-              "spawn the best-in-class agent again with the same prompt")
+              f"{again}")
         return 1
     print("\n".join(summary(review, said,
                             plan.parameter(plan.glossary(), BOUND))))
