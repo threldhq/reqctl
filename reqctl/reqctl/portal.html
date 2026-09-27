@@ -136,7 +136,7 @@ let batch = [];
 let notice = "";
 let showLinks = false;
 
-<!-- @req+ REQ-71407357@n0viDxr-uMmW nodqc4 -->
+<!-- @req+ REQ-71407357@EUXcMYpw10y- nodqc4 -->
 const MINTED = /^\$(\d+)$/;
 
 const shifted = (held, by) => {
@@ -148,8 +148,6 @@ const shifted = (held, by) => {
 const offsetSteps = (steps, by) => steps.map((step) => ({
   ...step,
   ...(step.args && { args: shifted(step.args, by) }),
-  ...(step.options && { options: Object.fromEntries(Object.entries(step.options)
-    .map(([name, value]) => [name, shifted(value, by)])) }),
 }));
 
 const batched = () => batch.flatMap((held, at) =>
