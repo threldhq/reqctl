@@ -7,7 +7,7 @@ import sys
 import unicodedata
 
 COMMANDS = ("new", "revise", "relate", "unrelate", "delete")
-MINTED = re.compile(r"\$(\d+)")
+MINTED = re.compile(r"\$([0-9]+)")
 PAYLOAD = "CORPUS_CHANGE"
 BODY = ("Dispatched from the requirements portal.\n\n"
         "Every item here was written by `reqctl`; nothing hand-edited the "

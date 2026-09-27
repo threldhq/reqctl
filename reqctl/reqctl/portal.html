@@ -136,19 +136,25 @@ let batch = [];
 let notice = "";
 let showLinks = false;
 
+<!-- @req+ REQ-71407357@n0viDxr-uMmW nodqc4 -->
 const MINTED = /^\$(\d+)$/;
 
 const shifted = (held, by) => {
+  if (Array.isArray(held)) return held.map((each) => shifted(each, by));
   const found = MINTED.exec(String(held));
   return found ? `$${Number(found[1]) + by}` : held;
 };
 
-const offsetSteps = (steps, by) => steps.map((step) => step.args
-  ? { ...step, args: step.args.map((each) => shifted(each, by)) }
-  : step);
+const offsetSteps = (steps, by) => steps.map((step) => ({
+  ...step,
+  ...(step.args && { args: shifted(step.args, by) }),
+  ...(step.options && { options: Object.fromEntries(Object.entries(step.options)
+    .map(([name, value]) => [name, shifted(value, by)])) }),
+}));
 
 const batched = () => batch.flatMap((held, at) =>
   offsetSteps(held.steps, batch.slice(0, at).reduce((n, e) => n + e.steps.length, 0)));
+<!-- @req- nodqc4 -->
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
