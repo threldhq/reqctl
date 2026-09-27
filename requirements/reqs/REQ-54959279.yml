@@ -8,6 +8,8 @@ acceptance_criteria:
   then: the verdicts are retired and the retirement is reported
   when: the run is built and not refused
 assessed: {}
+citations:
+  rwweso: Xc4D9PR8g8N_QYLoyAPseMNC0u1D4AH3gX6OyPIyw98
 priority: medium
 relations: {}
 status: approved

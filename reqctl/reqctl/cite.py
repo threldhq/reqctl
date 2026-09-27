@@ -1,7 +1,6 @@
 import difflib
-import hashlib
+import functools
 import io
-import json
 import os
 import subprocess
 import re
@@ -40,6 +39,7 @@ def markers(text, suffix):
         # @req- yuyqhd
 
 
+@functools.cache
 def _depths(text):
     depth, depths, starts, ends = 0, {}, set(), set()
     fresh = True
@@ -86,9 +86,15 @@ def cut(path, text, spans):
     return problems
 
 
-def read(root):
+def read(root, digested=False):
     sources = list(_sources(root))
     citations, problems = parse(sources)
+    # @req> REQ-32191310@ot16I3lSs2Nu yjp5s6
+    if digested:
+        texts = dict(sources)
+        for citation in citations:
+            citation["digest"] = digest(citation["path"], texts[citation["path"]],
+                                        citation["lines"])
     return citations, problems + list(former(sources))
 
 
@@ -261,37 +267,110 @@ def mint(held):
         # @req- uprfcz
 
 
-def write(root, path, first, last, uid, stamp, exclusive=False):
+def _ending(line):
+    return line[len(line.rstrip("\r\n")):]
+
+
+# @req> REQ-89706423@iadxBaGa8VrN rkepcq
+def _indent(line):
+    body = line.rstrip("\r\n")
+    return body[:len(body) - len(body.lstrip())]
+
+
+# @req> REQ-89706423@iadxBaGa8VrN 5nywje
+def _inserted(lines, before, after):
+    ending = next((_ending(line) for line in lines if _ending(line)), "\n")
+    out = []
+    for number, line in enumerate(lines, start=1):
+        out += [marker + (_ending(line) or ending)
+                for _, _, marker in sorted(before.get(number, []))]
+        closings = [marker for _, _, marker in sorted(after.get(number, []))]
+        if closings and not _ending(line):
+            out += [line + ending, ending.join(closings)]
+            continue
+        out.append(line)
+        out += [marker + (_ending(line) or ending) for marker in closings]
+    return "".join(out)
+
+
+# @req> REQ-73851379@mlF6V9oGscj_ 26lc4r
+def _duplicates(path, found, asked):
+    marks = {line for citation in found for line in citation["marks"]}
+    spanned = {citation["id"]: tuple(n for n in range(citation["first"],
+                                                     citation["last"] + 1)
+                                     if n not in marks)
+               for citation in found}
+    order = list(asked)
+    problems = []
+    for identity, (first, last, uid, _) in asked.items():
+        for other in found:
+            earlier = (other["id"] not in asked
+                       or order.index(other["id"]) < order.index(identity))
+            if (other["uid"] == uid and earlier
+                    and spanned[other["id"]] == spanned[identity]):
+                problems.append(
+                    f"{path}: lines {first}-{last} are already cited for {uid}"
+                    + (" by this command" if other["id"] in asked
+                       else f" by citation {other['id']}"))
+                break
+    return problems
+
+
+# @req> REQ-60346603@eKFixVFgV9Xt e2efde
+def write(root, path, asked, exclusive=False):
     target = Path(path)
     if target.suffix not in COMMENTS:
         raise ReqctlError(f"{path}: citations are written only in "
                           f"{', '.join(sorted(COMMENTS))} files")
-    lines = target.read_text().splitlines(keepends=True)
-    if not 1 <= first <= last <= len(lines):
-        raise ReqctlError(f"{path}: lines {first}-{last} are not in the file")
+    text = target.read_bytes().decode()
+    lines = text.splitlines(keepends=True)
+    # @req> REQ-65738797@3jHtqzLVQUal msfg5w
+    for first, last, _, _ in asked:
+        if not 1 <= first <= last <= len(lines):
+            raise ReqctlError(f"{path}: lines {first}-{last} are not in the file")
     held, _ = read(root)
-    identity = mint({c["id"] for c in held})
+    taken = {c["id"] for c in held}
     lead, tail = COMMENTS[target.suffix]
-    indent = re.match(r"\s*", lines[first - 1]).group(0)
     word = " exclusive" if exclusive else ""
-    whole = "".join(lines)
-    single = _statement(path, whole, first, last)
-    # @req+ REQ-60346603@eKFixVFgV9Xt ccwbjy
-    # @req+ REQ-84469558@lQYICZeT2eTO 357m3m
-    # @req+ REQ-61906662@vIt4Qdb6Q01L rr4c2l
-    sign = SINGLE if single else OPEN
-    opening = f"{indent}{lead}@req{sign} {uid}@{stamp} {identity}{word}{tail}\n"
-    closing = [] if single else [f"{indent}{lead}@req{CLOSE} {identity}{tail}\n"]
-    # @req- rr4c2l
-    text = "".join(lines[:first - 1] + [opening] + lines[first - 1:last]
-                   + closing + lines[last:])
-    problems = [] if single else cut(path, text, [(identity, first + 1, last + 1)])
+    # @req+ REQ-81417723@gBALpnqtdVL6 kmbhnk
+    # @req+ REQ-62782894@QlfQx33Br2KT k2lzwu
+    before, after, minted = {}, {}, []
+    for at, (first, last, uid, stamp) in enumerate(asked):
+        identity = mint(taken)
+        taken.add(identity)
+        minted.append(identity)
+        indent = _indent(lines[first - 1])
+        # @req+ REQ-61906662@vIt4Qdb6Q01L 4z5goa
+        single = _statement(path, text, first, last)
+        sign = SINGLE if single else OPEN
+        # @req+ REQ-84469558@lQYICZeT2eTO hp5jwl
+        before.setdefault(first, []).append(
+            (-last, at, f"{indent}{lead}@req{sign} {uid}@{stamp} {identity}{word}{tail}"))
+        if not single:
+            after.setdefault(last, []).append(
+                (-first, -at, f"{indent}{lead}@req{CLOSE} {identity}{tail}"))
+        # @req- hp5jwl
+        # @req- 4z5goa
+    written = _inserted(lines, before, after)
+    # @req- k2lzwu
+    # @req- kmbhnk
+    found, _ = parse([(path, written)])
+    new = [c for identity in minted for c in found if c["id"] == identity]
+    # @req+ REQ-65738797@3jHtqzLVQUal zkxsxx
+    problems = cut(path, written, [(c["id"], c["first"], c["last"])
+                                   for c in new if len(c["marks"]) == 2])
+    problems += _duplicates(path, found, dict(zip(minted, asked)))
     if problems:
         raise ReqctlError("\n".join(problems))
-    target.write_text(text)
-    # @req- 357m3m
-    # @req- ccwbjy
-    return identity
+    target.write_bytes(written.encode())
+    # @req- zkxsxx
+    return [(c["id"], c["uid"], digest(path, written, c["lines"])) for c in new]
+
+
+# @req> REQ-64846889@pHOO0sEc7V1K 6vgx2i
+def standing(root, citation):
+    text = (Path(root) / citation["path"]).read_bytes().decode()
+    return digest(citation["path"], text, citation["lines"])
 
 
 def named(root, identity):
@@ -312,7 +391,7 @@ def _lines(root, citation):
 
 
 def repin(root, citation, stamp):
-    # @req+ REQ-17757558@9_SHKLed0ssS lqd5pz
+    # @req+ REQ-17757558@VSn2tRlWyQmF lqd5pz
     target, lines = _lines(root, citation)
     at = citation["open"] - 1
     pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['uid'])})(?:@\S*)?")
@@ -325,7 +404,7 @@ def repin(root, citation, stamp):
 def remove(root, citation):
     target, lines = _lines(root, citation)
     marks = set(citation["marks"])
-    # @req> REQ-81275367@LuNIjqeTrwb4 5gkn5k
+    # @req> REQ-81275367@LOgwKiOj_0ok 5gkn5k
     # @req> REQ-26984738@nD05toE71g-O a4ywox
     target.write_bytes("".join(line for number, line in enumerate(lines, start=1)
                                if number not in marks).encode())
@@ -342,18 +421,26 @@ def _statement(path, text, first, last):
 UNREAD = (tokenize.NL, tokenize.ENDMARKER, tokenize.INDENT, tokenize.DEDENT)
 
 
-def _tokens(text, wanted):
-    held, depth, first = [], 0, None
+@functools.cache
+def _stream(text):
+    held, depth = [], 0
     for token in tokenize.generate_tokens(io.StringIO(text).readline):
         if token.type == tokenize.INDENT:
             depth += 1
         elif token.type == tokenize.DEDENT:
             depth -= 1
-        if token.start[0] not in wanted or token.type in UNREAD:
+        held.append((token.start[0], token.type, depth, token.string))
+    return held
+
+
+def _tokens(text, wanted):
+    held, first = [], None
+    for line, kind, depth, string in _stream(text):
+        if line not in wanted or kind in UNREAD:
             continue
         first = depth if first is None else first
-        held.append([tokenize.tok_name[token.type], depth - first,
-                     "" if token.type == tokenize.NEWLINE else token.string])
+        held.append([tokenize.tok_name[kind], depth - first,
+                     "" if kind == tokenize.NEWLINE else string])
     return held
 
 
@@ -371,7 +458,7 @@ def digest(path, text, lines):
         split = text.splitlines()
         held = [split[n - 1] for n in sorted(wanted)]
         # @req- soehrs
-    return hashlib.sha256(json.dumps(held).encode()).hexdigest()
+    return corpus.digest(held)
 
 
 def _rest(text, citation):

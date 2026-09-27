@@ -9,6 +9,8 @@ acceptance_criteria:
     baseline
   when: a baseline is generated
 assessed: {}
+citations:
+  bbqmqm: H-xxduVx2-vf0i5Wp0qJtoddsISOCm9AKL4md_EZXGM
 priority: medium
 relations: {}
 status: approved

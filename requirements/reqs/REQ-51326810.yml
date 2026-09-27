@@ -13,6 +13,8 @@ acceptance_criteria:
   then: the product refuses the field
   when: the corpus is validated
 assessed: {}
+citations:
+  xx2sp7: 1gMli6OKlSH3OnHxuBfV6xFxaolMOYUwfZ0gmqnBNXA
 priority: medium
 relations: {}
 status: approved

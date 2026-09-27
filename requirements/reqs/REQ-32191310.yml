@@ -17,6 +17,10 @@ assessed:
   citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  65dur7: ybtLZZjU8jA0jA8g_A-vj38GumO249jzSUEgSmxJv5k
+  pmll7c: tdL0B2NQxiCBk54AF8L1jWi_xmnFUmcoUbGKhZJ8MHk
+  yjp5s6: cRnkYh24YVTNbGfdb9Z6huQNF9iE-qKBIJaJ4USuMd8
 priority: medium
 relations:
   REQ-15770866: depends_on

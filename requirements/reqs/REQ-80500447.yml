@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product builds the prompt
   when: the coverage prompt is built
 assessed: {}
+citations:
+  omzjq4: x5NX0wK-HkVRmLBcHQmADZbxCtcOzT2OQxKvaw41jvs
 priority: medium
 relations: {}
 status: approved

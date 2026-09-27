@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and names the uid
   when: trace names the uid
 assessed: {}
+citations:
+  dyday2: r526ssWNyEA2PdsqD7seO-etXTLtM89qbqktkTVkHPE
 priority: medium
 relations: {}
 status: approved

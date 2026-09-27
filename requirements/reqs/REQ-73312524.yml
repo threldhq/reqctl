@@ -12,6 +12,8 @@ acceptance_criteria:
   then: the product writes the baseline
   when: baseline --generate is run
 assessed: {}
+citations:
+  mgwroy: 9l-GZBVFguHaZE5x3EXM8cEwkTfGGDDcSzy_rzbL3Kw
 priority: medium
 relations: {}
 status: approved

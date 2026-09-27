@@ -9,6 +9,8 @@ acceptance_criteria:
   then: a probe drawn from it does not expect the other as a neighbour
   when: probes are minted
 assessed: {}
+citations:
+  rgpt75: KLon17CTDCuiYAbasDvSbJ0g-Jlm0Afzurv1jh49ewc
 priority: medium
 relations: {}
 status: approved

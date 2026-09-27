@@ -11,6 +11,8 @@ acceptance_criteria:
 assessed:
   REQ-43761464: pFlii3nabPOTuWWSHzIo1C68Txtw5FfEGYZqOyxB-7U
   REQ-80951798: Yv9lsMtU3XdIOfhWtWTfHptWO9bkmyp3LS4FmYVkfDM
+citations:
+  7e7svw: 8NnOHma-AgtQTyh2hlrKK9Se8nWHJxMXp9r-LdNvOSU
 priority: medium
 relations:
   REQ-43761464: constrains

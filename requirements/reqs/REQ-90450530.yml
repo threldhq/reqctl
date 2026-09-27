@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the report lists the question under its proposal
   when: the verdicts are read
 assessed: {}
+citations:
+  v3dvwn: V52E3kyQC7JKv0Nb9PFYIJBucC27MiFsewprI6UB81Q
 priority: medium
 relations: {}
 status: approved

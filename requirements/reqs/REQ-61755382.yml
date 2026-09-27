@@ -9,6 +9,8 @@ acceptance_criteria:
   then: the product refuses and names rename as the route
   when: revise is run naming a new handle for the term
 assessed: {}
+citations:
+  7pv66p: 6rmx2UZPhAgPi1mO4EyrD1ytiidqPuu4q9AriuzbE5A
 priority: medium
 relations: {}
 status: approved

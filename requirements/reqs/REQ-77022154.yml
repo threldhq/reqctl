@@ -11,6 +11,8 @@ acceptance_criteria:
   then: the product accepts the approved item
   when: the corpus is validated
 assessed: {}
+citations:
+  loruif: a8jwodaYsMl8V8v9W8PlMoPj8JnVpFqLmvLuGm-zNnE
 priority: medium
 relations: {}
 status: approved

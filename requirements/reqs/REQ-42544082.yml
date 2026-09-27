@@ -12,6 +12,9 @@ acceptance_criteria:
   then: the product refuses and states that a set member is duplicated
   when: the set states one number in two spellings
 assessed: {}
+citations:
+  4cg2e4: 7LbGrQ4dJ4-uLDZiUNg0dbmXWLx5CnGPxXadHe-x1xk
+  ghvzto: xeW7WcFJRq1UHh_SLLo6MPWUX95hinthQ9h1BZXnUfY
 priority: medium
 relations: {}
 status: approved

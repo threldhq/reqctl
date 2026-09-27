@@ -5,6 +5,12 @@ acceptance_criteria:
 assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.*: zIgHolBY-Ua7Uah3mdgzg-64MX6pbgsm3My1HFjm82g
+citations:
+  46mvef: IAIHgrzCbuyEhbUeT5lhAuADNCxgOqF7Z5y-LL1Ha0E
+  gqyp6i: K1AmWguMbSdXyw4lLDUCJ9P2yJpArHzQMnmVqRKJ2gg
+  qtmeg3: L_OWckpWelHUUTKqNrobSIZO3_mfMlMB9GvnRFhfsgU
+  twgacs: YL3DTO8hbO8pdl5x8txU6JG1TLs5HlVm7z-DzBfZp9s
+  wtuxki: vaPJrNxhSERCBLb_k1VW35QYZQMhbaI2SsTVXJMAMKc
 priority: medium
 relations: {}
 status: approved

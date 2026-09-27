@@ -12,6 +12,8 @@ assessed:
   judge_bound.*: lWSgiNX2uk-eYOImP3gRJZK7SamL2l5iUtUZGXA5yWY
   judge_group: OAcH6zP2t55_EISeDTUz1Pfhz8zIZyYWffPmKEYdLFo
   judge_group.*: MOdB_cGmXg6hVQMxXJFxELytsu7PAyXoUwbDAdrrle8
+citations:
+  5f3ye7: KLI12JslZACTjVYjbr0kMx9_prjdpRWcqm9Njk9FjXs
 priority: medium
 relations:
   REQ-30631052: constrains

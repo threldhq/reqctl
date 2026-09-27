@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.*: nFwV7hNjaouDnNxZc8NeimOhYk6YoPo-Ntp3Z7w1Wfs
+citations:
+  x2zlt2: 6B328iH4o9LU1WTOFylnb1EOcEQAk3jrrypF7xeKN_A
 priority: medium
 relations: {}
 status: approved

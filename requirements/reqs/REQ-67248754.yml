@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product refuses the findings
   when: the findings are checked
 assessed: {}
+citations:
+  c3jev7: SFP8Mb_MKFqBmkvKpPFORNbs1P6gxg1kEF8txRxW6-c
 priority: medium
 relations: {}
 status: approved

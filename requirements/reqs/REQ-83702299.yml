@@ -15,6 +15,9 @@ acceptance_criteria:
   then: the product accepts the prose
   when: the corpus is validated
 assessed: {}
+citations:
+  et7k4t: ImyyU6Y2coFoagbgoS_jV4slw-c4xiQsVG5ODPUet4o
+  tmczgb: U4WJwrZWVJLrU6GFaz1ja05ixmhxlC95UengWp7ZT3M
 priority: medium
 relations: {}
 status: approved

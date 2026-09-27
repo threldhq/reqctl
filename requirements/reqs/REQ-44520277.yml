@@ -9,6 +9,9 @@ acceptance_criteria:
   then: the product treats the loop as no cycle
   when: relate is run for a further constrains or conflicts_with link
 assessed: {}
+citations:
+  2pebps: irAQsPen5YsptXvCRFCivoukF5dMfB3VLzNw0p3DTYw
+  6sepga: 1yn0QJzmQJHCJOmMZdofRTTy0iV98X8C0BpS_7P0nuM
 priority: medium
 relations: {}
 status: approved

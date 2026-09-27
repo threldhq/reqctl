@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product walks the directory once
   when: the corpus is walked
 assessed: {}
+citations:
+  ldlf2u: sV837pbP0aN-Mks3Ger4vNjngtAE-eynhQngnik9B7Y
 priority: medium
 relations: {}
 status: approved

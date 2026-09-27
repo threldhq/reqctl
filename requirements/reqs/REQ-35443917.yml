@@ -6,6 +6,10 @@ acceptance_criteria:
   then: the product refuses the item
   when: the corpus is validated
 assessed: {}
+citations:
+  ep2jqr: MGv3xHlPzmmOHnfNeQHUIgQ5w3Xm9pa1w5XDAMLlr6Q
+  xyvmst: MGv3xHlPzmmOHnfNeQHUIgQ5w3Xm9pa1w5XDAMLlr6Q
+  znhrrb: f5Wxr2gwDnsjObJPexDtOOUunibfzBXJHgrvKMUBSDs
 priority: medium
 relations: {}
 status: approved

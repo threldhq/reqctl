@@ -7,7 +7,9 @@ import yaml
 
 from reqctl import corpus
 
-PINS = "assessed"
+LISTED = (corpus.CITATION_LIST,)
+# @req> REQ-43374441@ycLimfxvD8w2 c6qh2i
+CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
 STAMPED = re.compile(
@@ -20,7 +22,7 @@ def _git(*args):
                           check=False)
 
 
-def without_pins(ref, path):
+def without(ref, path, keys):
     found = _git("show", f"{ref}:{path}")
     if found.returncode != 0:
         return ABSENT
@@ -30,11 +32,11 @@ def without_pins(ref, path):
         return found.stdout
     if not isinstance(held, dict):
         return found.stdout
-    return {key: value for key, value in held.items() if key != PINS}
+    return {key: value for key, value in held.items() if key not in keys}
 
 
-def pins_only(base, path):
-    return without_pins(base, path) == without_pins("HEAD", path)
+def only(base, path, keys):
+    return without(base, path, keys) == without("HEAD", path, keys)
 
 
 def without_stamps(ref, path):
@@ -48,6 +50,7 @@ def repins_only(base, path):
     return without_stamps(base, path) == without_stamps("HEAD", path)
 
 
+# @req+ REQ-43374441@ycLimfxvD8w2 qya7yo
 def classify(base):
     found = _git("diff", "--no-renames", "--name-only", f"{base}...HEAD")
     if found.returncode != 0:
@@ -58,7 +61,7 @@ def classify(base):
     other = [path for path in changed if not path.startswith(GOVERNED)]
     if not governed or not other:
         return [], other, []
-    pinned = ([path for path in governed if pins_only(base, path)]
+    pinned = ([path for path in governed if only(base, path, CARRIED)]
               + [path for path in other if repins_only(base, path)])
     return ([path for path in governed if path not in pinned],
             [path for path in other if path not in pinned], pinned)
@@ -67,7 +70,8 @@ def classify(base):
 def main(base):
     content, other, pinned = classify(base)
     for path in pinned:
-        print(f"pins only, travelling with what moved them: {path}")
+        print(f"pins or citation list only, travelling with what moved them: "
+              f"{path}")
     if not content or not other:
         return 0
     print("::error::this pull request changes requirements and other things; "
@@ -77,6 +81,7 @@ def main(base):
     print("everything else:")
     print("\n".join(f"  {path}" for path in other))
     return 1
+# @req- qya7yo
 
 
 def cli(argv):

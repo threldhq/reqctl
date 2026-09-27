@@ -6,6 +6,8 @@ acceptance_criteria:
   then: it is drawn as no probe's source
   when: probes are minted
 assessed: {}
+citations:
+  g5zodz: GYmN-pqKwfsIayPjX4vm-G_0qeY93ELMo3DTkqpXgGQ
 priority: medium
 relations: {}
 status: approved

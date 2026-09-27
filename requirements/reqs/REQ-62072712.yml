@@ -13,6 +13,9 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-31827606: 1tyZUHjYl_sV4i0yQaZ_ZicBMOyorn7fBbNxeU1cFRU
+citations:
+  hlxm3m: B95nFYCxQwHnth5_Y0Q5FE5AqUNG786dXUzzjj4Hy7Q
+  npwa4k: cirqflN7RohHk0K0c-FcsAJGzabpprIr5g23Du90C_M
 priority: medium
 relations:
   REQ-31827606: constrains

@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product spawns the agent
   when: the coverage agent is spawned
 assessed: {}
+citations:
+  ey5733: lNI2tLC4-99cl0CMyGSuBJo0mWptfNLP5vvw0rtMS8g
 priority: medium
 relations: {}
 status: approved

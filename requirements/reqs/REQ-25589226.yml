@@ -3,6 +3,9 @@ acceptance_criteria:
   then: the product refuses and states that --default does not apply to a term
   when: a default is named for the term
 assessed: {}
+citations:
+  6mn4qt: 6okPA2wQPcPFq-nT5AwEaA4IvDd6n5s9u4V-kAQ-xIk
+  fqpvnt: 7LbGrQ4dJ4-uLDZiUNg0dbmXWLx5CnGPxXadHe-x1xk
 priority: medium
 relations: {}
 status: approved

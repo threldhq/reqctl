@@ -6,6 +6,9 @@ acceptance_criteria:
   then: the product refuses the return
   when: the final judges are built
 assessed: {}
+citations:
+  4e2mbt: 15EUGvinCpAXDXfHls19wZcGyst6jT3vavevkNrDtqs
+  fmxygz: rzPxO_qr98Ka-ipR5zaB4zfYtxSjZD-5fb6y8kaaPSE
 priority: medium
 relations: {}
 status: approved

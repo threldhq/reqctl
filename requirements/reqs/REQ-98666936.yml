@@ -9,6 +9,8 @@ acceptance_criteria:
   then: the refusal names the item and states the item was not changed
   when: revise is run
 assessed: {}
+citations:
+  eo3nl5: MW37GINT0vEPvaAKHIbB69IAoXJF5xWK95Xxguhp4ZE
 priority: medium
 relations: {}
 status: approved

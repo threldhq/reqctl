@@ -4,6 +4,8 @@ acceptance_criteria:
   then: the product refuses and asks for the conflict to be resolved by hand
   when: baseline --generate is run
 assessed: {}
+citations:
+  5k3r7e: ZPtm0e6nsxQU8b49fTBFXlNuvJ81V8BVEtGGlwprgQg
 priority: medium
 relations: {}
 status: approved

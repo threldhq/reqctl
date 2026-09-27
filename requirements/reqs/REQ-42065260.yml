@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product removes the item file
   when: removal of the unapproved item is requested
 assessed: {}
+citations:
+  s7iyuc: gi7Joyx7iQmbGOFFvlJ0bFCL5pHlo8pH8xKIWOyVE8Q
 priority: medium
 relations: {}
 status: approved

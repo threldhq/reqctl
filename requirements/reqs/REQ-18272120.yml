@@ -9,6 +9,9 @@ acceptance_criteria:
 assessed:
   REQ-48148587: rCLPkcgXvhNjzyFugDWOEji1GGqNqUF7_houYMMThXo
   REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+citations:
+  dyeqka: AyqAlYLD5BQZKOIZ41GO26eyJ7luoAPAlwARZ0an0dY
+  o47rwb: reNtrpR4ock1jBKXtgCbn5ZqmP_OTlnO3adYKRH-CAQ
 priority: medium
 relations:
   REQ-48148587: constrains

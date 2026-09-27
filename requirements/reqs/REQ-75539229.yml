@@ -7,6 +7,8 @@ assessed:
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  c7r3ff: yv6IKvfu6r1eD4TZw3XnU4VA6w8S-brgfGlK05Rds2E
 priority: medium
 relations:
   REQ-31471659: depends_on

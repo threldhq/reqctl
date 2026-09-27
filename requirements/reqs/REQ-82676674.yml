@@ -14,6 +14,13 @@ acceptance_criteria:
   then: the product refuses the run and lists no agent to spawn
   when: the recall returns are read
 assessed: {}
+citations:
+  fnjvuz: yePbNZ_gERutqfxYGIx7JtKOcE-LXwPOaDDAXkPd24I
+  fzv4pc: dpoSl_RGzSfG1tYRbXHkuiZUFgSo_19dgMl2ZeDI_u0
+  hbpale: JF6oNhJQhiDiL76xcBZG9YJXSM1bkG7tWHNfBcoQLhE
+  ukzxgc: d1FS0bF2fkTFf1LC-GQCWzl6okzwWqLEY4EqUGaO0pI
+  vpqdb6: X6PCqOOUy8tz68DMvU5TOOhSLh28iPrthCPtu5H3MgA
+  zeg5gl: 9EUSoRUiA17IFRm2Iu6XTS2Cm_25ksr6xNw31gwsgfY
 priority: medium
 relations: {}
 status: approved

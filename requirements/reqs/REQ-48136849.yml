@@ -9,6 +9,8 @@ acceptance_criteria:
   then: the product accepts it, a kind schema naming no item
   when: the corpus is validated
 assessed: {}
+citations:
+  wljy47: J91SKxLGHMwI0zgqnKlqmiRC3TWRgF8rO_0v_SLUTMM
 priority: high
 rationale: A schema named for an item is the repository saying its corpus holds one.
   Holding it to that is how a project requires a data item to exist without the product

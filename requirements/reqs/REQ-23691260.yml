@@ -12,6 +12,8 @@ acceptance_criteria:
   then: the product reports what the earlier checks found
   when: the corpus is validated
 assessed: {}
+citations:
+  kgrg4l: igqPyiSA285nmgSR8ydZzI4S_atazQQ70e6ElZASV_I
 priority: medium
 relations: {}
 status: approved

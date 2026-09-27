@@ -5,6 +5,8 @@ acceptance_criteria:
   when: probes are minted
 assessed:
   REQ-23706540: e-JqhR3Ui-keWIPxNZLUjlVjA3fPWTM1awZuzyA7rJk
+citations:
+  3xjgfd: mqy8DtW5d64q31nqZzKZ6ro0hz_r-cthSz2KfBRgbp4
 priority: medium
 relations:
   REQ-23706540: constrains

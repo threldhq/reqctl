@@ -12,6 +12,8 @@ acceptance_criteria:
   then: the product writes the value
   when: the value is written
 assessed: {}
+citations:
+  7g4u3w: yh0_YslSo9Qvmok59q4u-DHPnHsTLKqoBl7y4SxxUeg
 priority: medium
 relations: {}
 status: approved

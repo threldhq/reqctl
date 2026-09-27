@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the judge prompt is built
 assessed:
   REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
+citations:
+  jyes6a: B4F6suNgcPehOSTAkfleBu2I7MdDd9KY8BP7-cb-yVk
 priority: medium
 relations:
   REQ-18405752: derives_from

@@ -9,6 +9,8 @@ assessed:
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
   REQ-62710822: voiCNXQxSuF9uFQKT0n8bC1O84NXYp9BZFlua-_jzIY
   REQ-75438506: GIywOiWYUqgHSl1TAe7_XUF_YpwOWZZrWPqOPGuhdFc
+citations:
+  tgcyaj: ju5tdJj7ItrRmmPMgYh1ZB-AdizGQAHtd6RbfRW5T-s
 priority: medium
 relations:
   REQ-46162234: depends_on

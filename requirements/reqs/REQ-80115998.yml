@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the [portal](portal) is opened
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  rhi3cu: _1nZYIxu5IwJzEtQHawlmbPN022Dpe7jPx9UR81LpEg
 priority: medium
 relations: {}
 status: approved

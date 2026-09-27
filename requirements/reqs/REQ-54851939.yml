@@ -13,6 +13,8 @@ acceptance_criteria:
   when: an acceptance criterion of the requirement is revised
 assessed:
   REQ-56581795: IfY71qSXm5yzdJhrIab5R58OCkQ67bgFgfywbhXqqPw
+citations:
+  4jhey4: R9WxNDLEm3O_J9lF4gFor6utn83QQzJtV1V0mIiXKJQ
 priority: medium
 relations:
   REQ-56581795: constrains

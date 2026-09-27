@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and states the kind the folder holds
   when: the item states another kind
 assessed: {}
+citations:
+  yvekz4: nzs2vuQpUbjb314coShXmMfS5Co4-3zyyesblNHidMs
 priority: medium
 relations: {}
 status: approved

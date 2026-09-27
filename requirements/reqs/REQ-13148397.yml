@@ -9,6 +9,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
+citations:
+  4fsesd: sWBmKBb8AlLIEHAV49_K9f_rtF85m1B8V5GNVCBdbo0
 priority: high
 rationale: The packaged schema is a default, not a fixture. A repository whose corpus
   needs a field the default does not state writes its own and is governed by it.

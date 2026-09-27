@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and states that address pins the item's membership
   when: the entry is minted or revised into the item
 assessed: {}
+citations:
+  idfqw5: M09JSizVrH5A8nUFH9fubRMW-H6KTSiNOfUxsHDRK5I
 priority: medium
 relations: {}
 status: approved

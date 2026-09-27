@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-19913588: zNetOTQBhHYZABdjZtnyiFSArbPbBq73Woovl3UokrE
+citations:
+  5wu7pz: MHYA3z2PHMHThRKGaxqeyKcyRBgghd8d0sPXjmyEuzo
 priority: medium
 relations:
   REQ-19913588: constrains

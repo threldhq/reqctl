@@ -9,6 +9,8 @@ assessed:
   REQ-29846444: iGWqcEzs6s52xVYwT50drAGnMzrNvkfAKADoRzuEkco
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
   REQ-77623729: IBqRGG8zgX39_nCzqSdXxqBPTEn9_R-EddOqa3DGmMs
+citations:
+  usq427: j5EvGYYBYkmPI7WIiYVVhyoHeIsWB_FDThEJJ4Wm0uU
 priority: medium
 relations:
   REQ-29846444: depends_on

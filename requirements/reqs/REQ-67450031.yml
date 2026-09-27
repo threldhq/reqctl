@@ -7,6 +7,8 @@ acceptance_criteria:
   then: the product refuses the entry just the same
   when: an entry keyed for one of those names
 assessed: {}
+citations:
+  5qg2a5: ExRllE3edj25_ApOCPySqihEerU9b3HcCPI-rDTQD7Y
 priority: medium
 relations: {}
 status: approved

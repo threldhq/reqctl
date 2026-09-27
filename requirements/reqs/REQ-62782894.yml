@@ -8,6 +8,10 @@ assessed:
   REQ-61906662: vIt4Qdb6Q01LJ5VHMe8kkG9Wsh5fJEM0IPWOAXSSzsU
   REQ-92239556: w0fSOmsCa6TA7eG4Pu986puzbfrheHoxMBn-lz0gK18
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  k2lzwu: rbK9mriKB6C3CqS7ZmH2qQJqvwIUb_M4y_kiY_dMmMw
+  nmyxfc: er053O328qRQN4yBBUtauggfmedGYiHyFJQTyGDhKsI
+  ou2zvt: IBbRJp74yaupjrtZ70CNTEvEI3AogyCg8CJVSVjgt6c
 priority: medium
 relations:
   REQ-60346603: derives_from

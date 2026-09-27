@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product accepts the document
   when: the findings are checked
 assessed: {}
+citations:
+  a4gokv: 8L2sSZenmk41U1Ah35zG7B0QJxN95hK4WYmpQUJjdnw
 priority: medium
 relations: {}
 status: approved

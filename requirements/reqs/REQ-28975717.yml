@@ -4,6 +4,8 @@ acceptance_criteria:
   when: a statement addressing the item by that field is written
 assessed:
   REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+citations:
+  p5hfxl: kVpenG54lKeLYFW4dJMkVL7IGBvbXkbTSdN-hO3_8b8
 priority: medium
 relations:
   REQ-79222815: constrains

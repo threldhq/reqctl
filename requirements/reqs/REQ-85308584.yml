@@ -9,6 +9,8 @@ acceptance_criteria:
   then: the corpus is unchanged
   when: the statement is linted
 assessed: {}
+citations:
+  sri72v: QaNYpwHajdo4t8Zc-fG4eCa0zce2tKiRbziktlxySZI
 priority: medium
 relations: {}
 status: approved

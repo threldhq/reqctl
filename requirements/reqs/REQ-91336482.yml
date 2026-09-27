@@ -4,6 +4,9 @@ acceptance_criteria:
     and not that the skill is accurate
   when: the run is scored
 assessed: {}
+citations:
+  6gegy3: 1qiwnvQpvgqWqdblr_tOJuxR2YL8PUGsqMQku2pj7QM
+  vxxogb: IzeeqM1nQJiiFXO4DCWXrANrsslPNeei2JYeBgSSAVY
 priority: medium
 relations: {}
 status: approved

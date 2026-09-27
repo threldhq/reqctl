@@ -9,6 +9,8 @@ acceptance_criteria:
   then: 'the output is the single line reqctl: followed by the message'
   when: the fault reaches the caller
 assessed: {}
+citations:
+  dw57fs: Cve1oicHMgIHziSvIoLLf9KMgefbUJnYZkGFqYeFreg
 priority: medium
 relations: {}
 status: approved

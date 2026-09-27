@@ -99,3 +99,16 @@ properties:
     additionalProperties:
       type: string
       minLength: 1
+
+  citations:
+    type: object
+    description: >-
+      The citation list: the citation identity of each statement citation
+      naming this guard, to the citation digest of the lines it covers.
+      Excluded from the stamp. Written by reqctl tag, repin and untag, never by
+      hand.
+    propertyNames:
+      pattern: "^[a-z2-7]{6}$"
+    additionalProperties:
+      type: string
+      pattern: "^[A-Za-z0-9_-]{43}$"

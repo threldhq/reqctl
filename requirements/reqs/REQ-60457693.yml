@@ -26,6 +26,8 @@ acceptance_criteria:
   then: the product reports no fault on the supersedes
   when: baseline --check is run
 assessed: {}
+citations:
+  43d4hx: L56tPHGoFUL2L_guaZBCjSs42FMBoOQFahU4HoS2XOo
 priority: medium
 relations: {}
 status: approved

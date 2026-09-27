@@ -8,6 +8,9 @@ acceptance_criteria:
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  2luwj6: lvYxPB6ngR5TjqfqQWPja-6899CSFTW0MVUBci86S60
+  lobaq4: -b4j4oLLJkRKuZBX8cHZjgXFzm0dvNQlFo0XFGclIXk
 priority: medium
 relations:
   REQ-38789214: depends_on

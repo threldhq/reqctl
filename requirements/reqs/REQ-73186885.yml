@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses the run and names both files
   when: the run is built
 assessed: {}
+citations:
+  twr3xe: mZnxXNRcjpx5x4xikweLJoM777HzcM0TptmJ3yxfn9M
 priority: medium
 relations: {}
 status: approved

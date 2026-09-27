@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and names every item that reaches the unapproved item
   when: removal of the unapproved item is requested
 assessed: {}
+citations:
+  ebwpu6: waLndohqXGKGkwRjyt7DS6Pi3kpIgKR_vQ6IOK-XREI
 priority: medium
 relations: {}
 status: approved

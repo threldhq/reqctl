@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses the run and names the proposal
   when: the run is built
 assessed: {}
+citations:
+  ny4y6f: OPQgcFZAkZB1vz7oqPH6wfOBNKy88QhDwqI2Rl8Why0
 priority: medium
 relations: {}
 status: approved

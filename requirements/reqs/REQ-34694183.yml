@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product keeps the link pinned
   when: the text of the holding statement is rewritten
 assessed: {}
+citations:
+  i7ubge: RoWyB1D36itX2qQUpPtMtTuT_Fv1xFVLFeyTFJKHIqY
 priority: medium
 relations: {}
 status: approved

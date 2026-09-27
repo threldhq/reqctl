@@ -42,8 +42,9 @@ DATA_KEY = re.compile(r"^[a-z][a-z0-9_]*$")
 STATED_SKIP = ("aliases",)
 POLICED_SKIP = ("aliases", "word", "name", "carried")
 POLICED_ITEM_SKIP = POLICED_SKIP + ("default", "unit")
+CITATION_LIST = "citations"
 ITEM_SKIP = ("entries", "acceptance_criteria", "text",
-             "assessed", "relations", "status")
+             "assessed", "relations", "status", CITATION_LIST)
 MEMBERS = "*"
 ADDRESS = re.compile(rf"^((?:{KINDS})-\d{{8}}|{NAME})(?:\.(.+))?$")
 

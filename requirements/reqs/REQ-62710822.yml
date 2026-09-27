@@ -8,6 +8,9 @@ acceptance_criteria:
 assessed:
   REQ-30631052: upW72WeLPoHTMqWypF3S5AEi-KCa_mJBG-_MUtD1YHk
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
+citations:
+  adhfwh: CfFPCdTQzW44AOvyzRinZrAcxPhzVU1iIsoszchLyp0
+  v3dukx: qtpmsTzgbAzzRNwOXHohL4Ef0QfmvpAcaWI6UBRCXHE
 priority: medium
 relations:
   REQ-30631052: depends_on

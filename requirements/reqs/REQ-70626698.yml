@@ -6,6 +6,8 @@ acceptance_criteria:
 assessed:
   REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  dhjmro: Y1oeK1V0QSXCqBebyFgB0W3ag7vc0FljdDCek2Xrdzk
 priority: medium
 relations:
   REQ-18833394: constrains
