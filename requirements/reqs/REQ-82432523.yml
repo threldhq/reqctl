@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a run whose owner's words hold an idea
+  then: the product makes the [best-in-class review](best_in_class_review) before
+    the skill puts to the owner any [question for the owner](question_for_the_owner)
+    the conversion raises
+  when: the elucidate skill converts the owner's words for the first time in the run
+- given: a [best-in-class review](best_in_class_review)
+  then: it holds each [practice](practice) it found, naming the [leaders](leader)
+    that show the [practice](practice) and the sources it rests on, each source with
+    a passage quoted from it
+  when: it is made
+assessed:
+  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  leader: dm5_xg96tGA19Bo0hQuihnMGrFeIw0IMNirpKcLnBLo
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: When the elucidate skill converts the owner's words for the first time in a
+  run, the product shall make a [best-in-class review](best_in_class_review) of the
+  owner's words.
+type: functional
+verification: inspection

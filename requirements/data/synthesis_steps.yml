@@ -3,6 +3,7 @@ entries:
   coverage: {}
   plan: {}
   probe: {}
+  review: {}
   verdicts: {}
 kind: data
 name: synthesis_steps

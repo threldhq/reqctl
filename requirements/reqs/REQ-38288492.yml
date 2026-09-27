@@ -4,7 +4,7 @@ acceptance_criteria:
   when: its contents are read
 assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
-  plugin_components.*: Ye_KVtYX7X_BfcG49QJof6dri6otiAPPi2Hlopy51-I
+  plugin_components.*: zIgHolBY-Ua7Uah3mdgzg-64MX6pbgsm3My1HFjm82g
 priority: medium
 relations: {}
 status: approved

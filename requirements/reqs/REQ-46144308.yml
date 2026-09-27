@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a [practice](practice) quoting a passage from a source at a web address
+  then: the product fetches the source and refuses the review where the source does
+    not hold the passage, matched at word boundaries with punctuation normalised
+  when: the review is checked
+- given: a source the product cannot fetch or read
+  then: the product refuses the review and names the source
+  when: the review is checked
+assessed:
+  REQ-32352887: xGar-bj5ZAXnFmick-xYAUVwf6Hpp-nZNos4N0ehO8s
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-32352887: depends_on
+  REQ-82432523: constrains
+status: approved
+text: If the source a [practice](practice) of the [best-in-class review](best_in_class_review)
+  names does not hold the passage the [practice](practice) quotes from that source,
+  then the product shall refuse the review.
+type: functional
+verification: inspection

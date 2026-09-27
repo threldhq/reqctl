@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a [best-in-class review](best_in_class_review) holding a [practice](practice)
+    that names no source
+  then: the product refuses the review and names the [practice](practice)
+  when: the review is checked
+assessed:
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-82432523: constrains
+status: approved
+text: If a [practice](practice) of the [best-in-class review](best_in_class_review)
+  names no source, then the product shall refuse the review.
+type: functional
+verification: inspection
