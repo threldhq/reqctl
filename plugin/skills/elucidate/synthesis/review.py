@@ -20,6 +20,7 @@ FIELD = "governed_field"
 BOUND = "review_summary_lines"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
+MARKUP = str.maketrans("", "", "`*")
 WAIT = 30
 
 # @req> REQ-79800652@-RuBVIjAa4FV isjntr
@@ -180,7 +181,8 @@ def faults(review):
             text, why = pages[url]
             if text is None:
                 found.append(f"practice {number}: {url} cannot be read: {why}")
-            elif not holds(text, source["passage"]):
+            elif not holds(text.translate(MARKUP),
+                           source["passage"].translate(MARKUP)):
                 found.append(f"practice {number}: {url} does not hold "
                              f"{source['passage']!r}")
     return found
@@ -242,6 +244,8 @@ def check(run):
     path = run / plan.REVIEWED
     review, why = plan.read_return(path, shapes.REVIEW)
     if review is None:
+        # @req> REQ-82432523@VoDkIJau94BB mfyqoy
+        path.unlink(missing_ok=True)
         print(f"{path}: the review {why}; spawn the best-in-class agent again "
               "with the same prompt")
         return 1
@@ -249,6 +253,8 @@ def check(run):
     for fault in found:
         print(fault)
     if found:
+        # @req> REQ-82432523@VoDkIJau94BB 6hn44p
+        path.unlink()
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
               "spawn the best-in-class agent again with the same prompt")
         return 1
