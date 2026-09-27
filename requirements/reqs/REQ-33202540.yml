@@ -5,7 +5,7 @@ acceptance_criteria:
     and not in the other's
   when: the product takes the [citation digest](citation_digest) of each
 assessed:
-  citation_digest: yUtHPh3P6LiNmqFT4sIGkjvhZMI4ND46hzVgOHdSyrU
+  citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
   exclusive: ftFiuRgKKCdydqi1cV1oWJ4T-OQSgt0UuIcMGh19S6o
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 priority: medium

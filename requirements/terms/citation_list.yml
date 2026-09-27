@@ -1,0 +1,14 @@
+assessed:
+  citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+entries:
+  citation_list:
+    aliases:
+    - citation lists
+    definition: 'What a requirement holds for the [statement citations](statement_citation)
+      that name it: the [citation identity](citation_identity) of each, and one [citation
+      digest](citation_digest) for each identity.'
+    word: citation list
+kind: term
+status: approved

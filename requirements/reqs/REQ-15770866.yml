@@ -5,7 +5,7 @@ acceptance_criteria:
     lines
   when: the product takes the [citation digest](citation_digest)
 assessed:
-  citation_digest: yUtHPh3P6LiNmqFT4sIGkjvhZMI4ND46hzVgOHdSyrU
+  citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
   code_token: RKSwa_7GLOrcUd7V_FstnVgDVX3CvlQnuD650a2b5qs
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 priority: medium
