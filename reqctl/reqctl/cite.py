@@ -373,14 +373,18 @@ def standing(root, citation):
     return digest(citation["path"], text, citation["lines"])
 
 
-def named(root, identity):
+def readable(root):
     held, problems = parse(_sources(root))
     if problems:
         raise ReqctlError("the code's citations do not read:\n" + "\n".join(problems))
-    for citation in held:
+    return held
+
+
+def named(root, identity):
+    for citation in readable(root):
         if citation["id"] == identity:
             return citation
-    # @req> REQ-51778557@u-lwJ0bB2Txg 2j6t3u
+    # @req> REQ-51778557@jyN3eEgJbFAs 2j6t3u
     # @req> REQ-41024637@GwZanwxFaYmM cdi6vq
     raise ReqctlError(f"no statement citation names {identity}")
 

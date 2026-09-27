@@ -1,11 +1,15 @@
-acceptance_criteria: []
+acceptance_criteria:
+- given: a [citation list](citation_list) holding a [citation identity](citation_identity)
+    whose [statement citation](statement_citation) names another requirement
+  then: the product reports the identity as a problem of that list
+  when: trace is run
 assessed:
   REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
-  3lmvqm: x7MYKTflJHEyebMU4v8vc0zRzDJA_nRvhCGRUkC8FKI
+  3lmvqm: EgC_WvodHtTI_Yre67vjQSHZaF26th7nW3I1aZ6eoEk
   qtu6ly: ybtLZZjU8jA0jA8g_A-vj38GumO249jzSUEgSmxJv5k
 priority: medium
 relations:
@@ -13,6 +17,6 @@ relations:
 status: approved
 text: When trace is run, the product shall report as a problem each [citation identity](citation_identity)
   a [citation list](citation_list) holds that no [statement citation](statement_citation)
-  names.
+  names together with the requirement holding the list.
 type: functional
 verification: inspection
