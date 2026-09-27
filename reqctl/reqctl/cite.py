@@ -413,7 +413,7 @@ def repin(root, citation, stamp):
 def remove(root, citation):
     target, lines = _lines(root, citation)
     marks = set(citation["marks"])
-    # @req> REQ-81275367@LOgwKiOj_0ok 5gkn5k
+    # @req> REQ-81275367@gSHwSanmQ208 5gkn5k
     # @req> REQ-26984738@nD05toE71g-O a4ywox
     target.write_bytes("".join(line for number, line in enumerate(lines, start=1)
                                if number not in marks).encode())
