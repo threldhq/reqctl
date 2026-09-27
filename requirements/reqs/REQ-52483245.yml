@@ -10,6 +10,8 @@ assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   REQ-81313171: 3CV_M8XsRLpdvggL2UlFybaGwYoSfuBaZ68A5wpiMC8
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  eburqo: pokhZ1EGyQ-SNUaO9MwLWZUfe21G2QyGgPF8aMaDDMw
 priority: medium
 relations:
   REQ-57492239: constrains
