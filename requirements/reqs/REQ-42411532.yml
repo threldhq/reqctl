@@ -5,6 +5,8 @@ acceptance_criteria:
   when: the agents have all finished
 assessed:
   REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
+citations:
+  na2sto: 1op5MZ-upbj1bYjeArb59TYOkXm5ZQpWiBmfmK7nBio
 priority: medium
 relations:
   REQ-29203000: depends_on

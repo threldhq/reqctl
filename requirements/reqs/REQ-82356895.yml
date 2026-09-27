@@ -9,6 +9,8 @@ acceptance_criteria:
 assessed:
   REQ-10470323: qHJTwBVi_HZun8QqqiuhYxmy8SjSSlxW7GEqthbFnh8
   REQ-68127788: bLvPproYZMB0vf0e7UaFGU1sLk-Lr1PtgMv6wvQRhSc
+citations:
+  waczui: fSK-OMuqpopfUS19Yy1QonTYFUoRVfB2VeacA770GGk
 priority: medium
 relations:
   REQ-10470323: constrains

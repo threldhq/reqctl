@@ -17,6 +17,8 @@ acceptance_criteria:
   then: the product accepts the statement
   when: the statement is written
 assessed: {}
+citations:
+  ey43wr: 3w90MXfrVcs1iulf6bwEo2bhQDa6uEi3aA0X5_G7x64
 priority: medium
 relations: {}
 status: approved

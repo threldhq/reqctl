@@ -4,6 +4,8 @@ acceptance_criteria:
     the statement
   when: relate names the term as the target
 assessed: {}
+citations:
+  kezsvo: Snz7bK22Do64lqSZxw5Fco5IzzdtQs7Eqr6aApysne8
 priority: medium
 relations: {}
 status: approved

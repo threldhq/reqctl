@@ -7,6 +7,8 @@ acceptance_criteria:
     withheld from no report
   when: trace names one item
 assessed: {}
+citations:
+  jzenja: 9P7OdVt6WAWfQGzGQe08NfebS1cpZIJv86dgLcgX6c0
 priority: medium
 relations: {}
 status: approved

@@ -5,6 +5,9 @@ acceptance_criteria:
   when: the Change repository control is used
 assessed:
   REQ-12062416: zyf6QGAMGROfFKOxmJl1TjV_G28lGFVCIGgU2bozq4o
+citations:
+  i3og6d: gz5KpOu1OKZSFgQrS3vRqdK3LIp5Xawa_YYs_lu3nDM
+  xyjt53: 48QOOaF3n9vrpH-kProGcBmLApXqxTLKeTlrLbjnnLQ
 priority: medium
 relations:
   REQ-12062416: constrains

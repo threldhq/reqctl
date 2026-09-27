@@ -8,6 +8,8 @@ assessed:
   REQ-43761464: pFlii3nabPOTuWWSHzIo1C68Txtw5FfEGYZqOyxB-7U
   REQ-83103011: wwcaVYzdMPrFtG_vjYOYld1mrO6RFB68poHCROe5TUk
   REQ-94426583: robFmbw2ht7IlAltCYRS9ZBd2bKMAF5O9JJ7vubNIy8
+citations:
+  js66h5: aeAO8P05vHvNvQRUN_8Yq7Ivv9gnN1lu2MyNfA9Tm_s
 priority: medium
 relations:
   REQ-32866040: depends_on

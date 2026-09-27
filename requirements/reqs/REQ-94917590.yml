@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the item records both names the term carried
   when: the corpus is read
 assessed: {}
+citations:
+  7xvisp: 1WF1KRkdNE82yIBLX0x_k4Os3Abg_xIaak6Zw9REWsY
 priority: medium
 relations: {}
 status: approved

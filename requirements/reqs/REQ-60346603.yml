@@ -4,6 +4,9 @@ acceptance_criteria:
   when: the product cites the requirement at the lines
 assessed:
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  e2efde: rzWv-srqh6KbOHmHDppVwgT6b27mURq8SWfPvwPfBjE
+  ulk4ve: giJFxBESFZOUMqmqiQfDEs1W23TTJjHaPzEbTkOB-w0
 priority: medium
 relations: {}
 status: approved

@@ -10,6 +10,8 @@ assessed:
   REQ-30631052: upW72WeLPoHTMqWypF3S5AEi-KCa_mJBG-_MUtD1YHk
   floor_k: Y60hYNprE2sXUQCOJsLezPtg2qROMZUx5sML6tLezHY
   floor_k.*: 4ZM45m1qKuiwlqW5GFPPaal40iT8uQw9R6B1DmFdkqs
+citations:
+  f4rqof: oLF869QDYPMwflFZsqKGfZ6qNj9AjZTgulkw8tKpMF0
 priority: medium
 relations:
   REQ-30631052: constrains

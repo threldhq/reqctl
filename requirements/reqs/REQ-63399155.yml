@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product refuses the generation
   when: baseline --generate is run
 assessed: {}
+citations:
+  ygxzq3: 9A3sfkDz3w8ti3x3RxLx9Ar0VJ0o1TolSi9Z8NB0Y3w
 priority: medium
 relations: {}
 status: approved

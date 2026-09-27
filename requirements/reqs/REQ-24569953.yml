@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the prompt states every one of them
   when: the names the findings check accepts are compared against the prompt
 assessed: {}
+citations:
+  ssc6p2: x5NX0wK-HkVRmLBcHQmADZbxCtcOzT2OQxKvaw41jvs
 priority: medium
 relations: {}
 status: approved

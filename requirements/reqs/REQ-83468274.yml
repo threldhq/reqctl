@@ -15,6 +15,8 @@ acceptance_criteria:
   when: its passage sorting product from build is read
 assessed:
   REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+citations:
+  dsbvv7: Yq25fD2nl1LSxDbVqe1RW-_FgRBCnUR9dZp3Li7zB-4
 priority: medium
 relations:
   REQ-38288492: derives_from

@@ -26,6 +26,7 @@ def _stale(data):
             f"now @{row['held']}" for row in data["stale"]]
 
 
+# @req+ REQ-37671861@eoVPY6Sstgbe thjjmg
 def faults(data, settling):
     if "problems" not in data or "stale" not in data:
         raise SystemExit(
@@ -36,6 +37,7 @@ def faults(data, settling):
 
 def deferred(data, settling):
     return _stale(data) if settling else []
+# @req- thjjmg
 
 
 def main():

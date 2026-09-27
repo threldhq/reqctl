@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product refuses and names the statement
   when: the field is dropped
 assessed: {}
+citations:
+  qgjwmq: UwMwjGa-no6CueUwoHceOymwoKChA4EcyiI2w3qSPHE
 priority: medium
 relations: {}
 status: approved

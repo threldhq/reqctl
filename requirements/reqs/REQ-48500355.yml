@@ -14,6 +14,10 @@ acceptance_criteria:
 assessed:
   REQ-31827606: 1tyZUHjYl_sV4i0yQaZ_ZicBMOyorn7fBbNxeU1cFRU
   REQ-83702299: IgLtX0BfZTksPIEqT99UOB-9FZ_Zv9UHjv-slw_7VrQ
+citations:
+  f7binw: XDuNOHq9n8m-SJ7kCepqZcCudk2FjxAivHvTu7J4JX0
+  rwffnk: u_uu54xTlcJoqNBR53iNjtQCVHxuYgxAAPjKCAm16QY
+  t3fuqq: 0nQ-KKTTKVvoFzRvRgUzcU3bR_NF_3BnHjyF4DdiOxQ
 priority: medium
 relations:
   REQ-31827606: constrains

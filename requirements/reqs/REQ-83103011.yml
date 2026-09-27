@@ -8,6 +8,8 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-90454282: Hn_cCdBHt6FCgTVr7h_FwY_DQr1NfJSmIlaX7gNlDxM
+citations:
+  6po76w: TuuEQrN2hxONxtOyneS2xqspk5C9Og-2ZWo84OcVAUY
 priority: medium
 relations:
   REQ-90454282: derives_from

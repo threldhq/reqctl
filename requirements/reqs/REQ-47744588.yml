@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the prompt states that no note per item is written
   when: the coverage prompt is built
 assessed: {}
+citations:
+  a7rnsw: x5NX0wK-HkVRmLBcHQmADZbxCtcOzT2OQxKvaw41jvs
 priority: medium
 relations: {}
 status: approved

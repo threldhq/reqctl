@@ -1,5 +1,5 @@
-from .corpus import (CONFLICTED, Item, ReqctlError, loads, mapping, path_for,
-                     read_text, same, save, sides)
+from .corpus import (CITATION_LIST, CONFLICTED, Item, ReqctlError, loads,
+                     mapping, path_for, read_text, same, save, sides)
 
 PINS = "assessed"
 
@@ -15,14 +15,14 @@ def _side(text, where):
 
 
 def resolve(store, uid):
-    # @req+ REQ-95299157@ZQGWNBottyNx w4qjbn
+    # @req+ REQ-95299157@Z_SeD7Nr_zYz w4qjbn
     path = path_for(store.root, uid)
     text = read_text(path)
     if not CONFLICTED.search(text):
         raise ReqctlError(f"{uid} holds no unresolved merge")
     ours, theirs = (_side(side, path) for side in sides(text))
     pinned = all(isinstance(held.get(PINS), dict) for held in (ours, theirs))
-    skipped = {PINS} if pinned else set()
+    skipped = ({PINS} if pinned else set()) | {CITATION_LIST}
     spoken = {key: value for key, value in ours.items() if key not in skipped}
     answered = {key: value for key, value in theirs.items() if key not in skipped}
     gone = object()
@@ -30,14 +30,19 @@ def resolve(store, uid):
                      if not same(spoken.get(key, gone), answered.get(key, gone)))
     if reached:
         raise ReqctlError(
-            f"{uid}: the merge reaches {', '.join(reached)}, which no pin "
-            f"states -- settle {'it' if len(reached) == 1 else 'them'} by hand"
+            f"{uid}: the merge reaches {', '.join(reached)}, outside its pins "
+            f"and citation list -- settle {'it' if len(reached) == 1 else 'them'}"
+            " by hand"
         )
-    mine, yours = mapping(ours, PINS), mapping(theirs, PINS)
-    kept = {key: value for key, value in mine.items()
-            if same(yours.get(key, gone), value)}
     held = dict(spoken)
-    held[PINS] = kept
+    dropped = {}
+    for key in sorted(skipped):
+        mine, yours = mapping(ours, key), mapping(theirs, key)
+        kept = {name: value for name, value in mine.items()
+                if same(yours.get(name, gone), value)}
+        if kept or key == PINS:
+            held[key] = kept
+        dropped[key] = sorted((set(mine) | set(yours)) - set(kept))
     save(store, Item(uid, path, held))
-    return path, sorted((set(mine) | set(yours)) - set(kept))
+    return path, dropped.get(PINS, []), dropped[CITATION_LIST]
 # @req- w4qjbn

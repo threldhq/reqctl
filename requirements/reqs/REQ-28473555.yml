@@ -7,6 +7,9 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-83939497: SjYhKgxzDeHvaZO85LmDL5c2Tz7ZgnGZUpz5QiavoHc
+citations:
+  do2uo3: u-i6nochjxW4-FV2vGDktb6T7bvT72exPdtZFcZN1Go
+  fw5ou4: vXQ2E1L6tq8sx_nMSow2hOxcJ7o5mTqYq3-eqeilKWQ
 priority: medium
 relations:
   REQ-83939497: constrains

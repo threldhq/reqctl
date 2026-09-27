@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product builds the run
   when: the run is built
 assessed: {}
+citations:
+  viljjd: 5AtRN_xAlKgCc1V-EiJ2YNhKjzO765PyfWQW81j6emI
 priority: medium
 relations: {}
 status: approved

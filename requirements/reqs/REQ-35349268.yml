@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and states that a baseline of no item states no obligation
   when: baseline --generate is run
 assessed: {}
+citations:
+  xfjprt: TMWYPUT7Z9HP_LucqAVM6TU1C0ogOcsng62S-mwShtc
 priority: medium
 relations: {}
 status: approved

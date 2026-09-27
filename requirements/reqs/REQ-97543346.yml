@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product moves the link to the new name and shows the new word
   when: the term is renamed
 assessed: {}
+citations:
+  jjk7ud: 0QRWbIJ-8qEfrv37mo2UFR6dOBC_5AOUhHm1q9B17GU
 priority: medium
 relations: {}
 status: approved

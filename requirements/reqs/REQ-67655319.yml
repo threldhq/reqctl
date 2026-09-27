@@ -4,6 +4,9 @@ assessed:
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  eznv3q: ybtLZZjU8jA0jA8g_A-vj38GumO249jzSUEgSmxJv5k
+  wqruf3: tdL0B2NQxiCBk54AF8L1jWi_xmnFUmcoUbGKhZJ8MHk
 priority: medium
 relations:
   REQ-75539229: depends_on

@@ -12,6 +12,8 @@ acceptance_criteria:
   then: the product reads the file
   when: the corpus is validated
 assessed: {}
+citations:
+  pkvikc: 9XQCx2ur6-z5FdgjHFkwpkNYt2kRPilVFxyEk0lFkRo
 priority: medium
 relations: {}
 status: approved

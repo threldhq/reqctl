@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and names the number each side of the merge claims
   when: baseline --check is run
 assessed: {}
+citations:
+  w27scf: LNaV90UcxcreQjvGfY2uOSwuSAxE3vygz7_zfdXfH-M
 priority: medium
 relations: {}
 status: approved

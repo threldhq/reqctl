@@ -13,6 +13,9 @@ acceptance_criteria:
   then: the product reports no citation as deprecated
   when: trace is run
 assessed: {}
+citations:
+  iz2v2g: rVl4Wys-uHdUaxZ5d0gkR1X_bLgARZ-xRYzMjMbCts4
+  wht4dr: vKbALDNrVN1VQNtUXRTYlA4ynPuKbzuaqa8qp1eYHJo
 priority: medium
 relations: {}
 status: approved

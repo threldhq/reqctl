@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the description is rendered
 assessed:
   REQ-21373303: o72_uf6TKporHATCb5jpf7bLJ9nnShCh_gA4aGNZ5dA
+citations:
+  4flmpq: 5UNzLdt0eczsxPNsMTx3qXG0NJkMNKHJ_x-Q0PblxVw
 priority: medium
 relations:
   REQ-21373303: derives_from

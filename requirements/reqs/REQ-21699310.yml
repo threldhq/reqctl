@@ -15,6 +15,8 @@ acceptance_criteria:
   then: each guard is named as binding to that dimension
   when: the corpus is validated
 assessed: {}
+citations:
+  64pj5j: JNrFvYiVWN-Wp_46zrtTgEUkSeJTzkl6c4ddslZFqQM
 priority: medium
 relations: {}
 status: approved

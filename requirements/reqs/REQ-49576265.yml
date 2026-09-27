@@ -5,6 +5,11 @@ acceptance_criteria:
   when: when reqctl portal is run
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  6hnjpw: w7lMDRlJ-Bo8PtqonL8ouJVcuAtY6fuY8JEZXSy9deQ
+  pihyx4: PIopL4uMls1sXsCNTo6p19mYBUX6BRwRUkdJJZhCTf0
+  uor45m: BDC5gMyR8hf8284UtvJZt2VKKPFtgk_Z8E_snK-Cmxc
+  wx5icq: 6HiA8S-lLAC0ZcL-31YKJ7reQ9NI5cyhbI4Iw3Jrmpo
 priority: medium
 relations: {}
 status: approved

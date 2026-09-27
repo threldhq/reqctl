@@ -10,6 +10,8 @@ assessed:
   REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
   synthesis_steps: xe3OiAl6nX8ClNv6lrdaSi-ccSt2HzKlLO0VZefN0SI
   synthesis_steps.*: mytx4Qp5JSaZ10p3r9f0R28mRy5h9hMuVUEfZKSo4Es
+citations:
+  msg57t: BK3Bl0Ydq79UNoVCIEnGmy8wvigWQ5iCzLwKK3bRmHE
 priority: medium
 relations:
   REQ-38288492: depends_on

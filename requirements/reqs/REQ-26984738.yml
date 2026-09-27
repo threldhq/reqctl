@@ -11,6 +11,8 @@ assessed:
   REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  a4ywox: LzczXExPLeS7dhB6fkXuGmfgniZlfmBWk5xxLXyRRac
 priority: medium
 relations:
   REQ-42668747: depends_on

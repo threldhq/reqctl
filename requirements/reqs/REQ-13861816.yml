@@ -8,6 +8,9 @@ assessed:
   REQ-60430571: hgaKmodLJQdGahO5_r15MnxDafoE1KVigi8X6RypMwM
   REQ-80226740: PZjI5BrUS5hqmfMUgoT6TSIUyFbu9MT_JM0W8qyM5Nk
   REQ-94917590: UDuLOE8d-fQZFA_CiyI7B_S8kBHUl4qYGonNRQX4EhQ
+citations:
+  db6w7v: T6MJQgynrOEfjmWhzEbGiIY9Iibf7mg9b7AOn47-BIc
+  nmlqee: FSPKnsIh7cPLPFN9CXtJkDZIcZ2MQmNnDmYlO0N_nrI
 priority: medium
 relations:
   REQ-44642786: constrains

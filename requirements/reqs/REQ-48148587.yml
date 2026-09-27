@@ -6,6 +6,8 @@ assessed:
   REQ-90454282: Hn_cCdBHt6FCgTVr7h_FwY_DQr1NfJSmIlaX7gNlDxM
   agent_ceiling: s6ylQPWOuN97qlZEEoQggtg3aQiSeApfZ28e6AA_dAQ
   agent_ceiling.*: I8Fho96MvFvxDN5bGsKZ0_jrsEBScIVjBW5iA6lenqI
+citations:
+  aky7xw: 75LULcFRHQjSaH1gtmjSRTYudfAkVDFm0AKZ5uhLlYY
 priority: medium
 relations:
   REQ-90454282: constrains

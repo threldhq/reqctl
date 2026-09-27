@@ -9,6 +9,9 @@ assessed:
   REQ-61906662: vIt4Qdb6Q01LJ5VHMe8kkG9Wsh5fJEM0IPWOAXSSzsU
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  5gkn5k: LzczXExPLeS7dhB6fkXuGmfgniZlfmBWk5xxLXyRRac
+  olrtj5: xczswUmo9huoiNNlglhvHX4gD_kQgBNNcWVNrcLIT7Y
 priority: medium
 relations:
   REQ-13298390: depends_on

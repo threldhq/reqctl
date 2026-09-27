@@ -9,6 +9,8 @@ acceptance_criteria:
   when: a further entry is revised to state the field true
 assessed:
   REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+citations:
+  okjacr: jdMWreEog8OIfWl_9vhyG4OI7Zqj9f-0Sb5P-0TfkJQ
 priority: medium
 relations:
   REQ-79222815: depends_on

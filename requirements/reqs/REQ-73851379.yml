@@ -17,6 +17,8 @@ assessed:
   REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
   REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  26lc4r: UWdAUxGk3BwXbGONDZvF_AIzfvR-AnDBJqFDrE_IY6o
 priority: medium
 relations:
   REQ-37846580: depends_on

@@ -31,6 +31,9 @@ assessed:
   corpus_gates.travel_alone: xaRPsjgxbPYBMGiOCJLRgvNdNNM9Z_uxjF7sdEvA8XA
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  c6qh2i: fIcx0gXAAIubm8I4M5fj4fkAvjDJ9WV0Lo-_qRZweAQ
+  qya7yo: LMhL75Dj-xROAoELCPJQieXFvREeXBph8a5hOqLdI1Q
 priority: medium
 relations:
   REQ-64846889: depends_on

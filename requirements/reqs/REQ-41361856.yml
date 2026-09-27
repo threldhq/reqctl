@@ -8,6 +8,8 @@ acceptance_criteria:
   when: the findings are checked
 assessed:
   REQ-12032769: 1Km3PLqZHCDuV9kvCUqnJuU2P1mQdROcvfm6hg4k4QI
+citations:
+  y4zpw2: SFP8Mb_MKFqBmkvKpPFORNbs1P6gxg1kEF8txRxW6-c
 priority: medium
 relations:
   REQ-12032769: depends_on

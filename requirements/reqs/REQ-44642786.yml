@@ -12,6 +12,8 @@ acceptance_criteria:
   then: the product reports no disagreement
   when: baseline --check is run
 assessed: {}
+citations:
+  rfw24o: k9DFW6izFiV2sU2EEEwi0mHU3cjGGhXy4s_NTai-Bz0
 priority: medium
 relations: {}
 status: approved

@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product names the item as stating no default
   when: the reference is checked for resolution
 assessed: {}
+citations:
+  elfpax: WYlpmhMtltgbjcbRCdZ4Idh9sGw8aZpFDS48im9ir9U
 priority: medium
 relations: {}
 status: approved

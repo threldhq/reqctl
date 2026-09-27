@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the final judge prompt is built
 assessed:
   REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+citations:
+  4eflcn: GyrxnLZo_Q3we8Xedb9Dvh9RsfZfAWpHlz6KlUa0oYQ
 priority: medium
 relations:
   REQ-48762557: depends_on

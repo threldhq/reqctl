@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the generated baseline carries the first number
   when: a baseline is generated
 assessed: {}
+citations:
+  4nzywx: om_8Lcft6DS6-dOBJZLMey45m7Cd5JgHYE78uLWWErM
 priority: medium
 relations: {}
 status: approved

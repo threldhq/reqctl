@@ -14,6 +14,8 @@ acceptance_criteria:
   then: the product accepts the items
   when: the corpus is validated
 assessed: {}
+citations:
+  4h2aan: mcQK4NcUK987fIyZSHfkJU9HvkijHZVt3rOV8EtMy_M
 priority: medium
 relations: {}
 status: approved

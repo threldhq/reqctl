@@ -4,6 +4,8 @@ acceptance_criteria:
   then: the product reports the file
   when: validate is run
 assessed: {}
+citations:
+  4ljfwh: uyVP4XbEHUN9VkbKXOFHMNbxcTLvZUHXQQ6oGUWmupU
 priority: medium
 relations: {}
 status: approved

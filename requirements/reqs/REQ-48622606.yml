@@ -5,6 +5,8 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-85308584: uUWJjK4FALNIooqhPRrnCzbChHGhOVxP0-yobiyLPJ8
+citations:
+  kjkm4f: bDmTcocHWFhZXhx9ktuHISWvI95VOvMeJ6cHfFbbymA
 priority: medium
 relations:
   REQ-85308584: depends_on

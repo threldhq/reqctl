@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the entry is checked
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+citations:
+  vcqk3a: hg5w-yIKpr9g6pqt3afoWoJlFri949mLAHBt9IDIhjo
 priority: medium
 relations:
   REQ-38789214: constrains

@@ -8,6 +8,9 @@ acceptance_criteria:
 assessed:
   REQ-20121033: ilM5nhktsDvFBNZrKbkTZOWmSf-m-_ehiq3NfxUU8Ks
   REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+citations:
+  buupgw: khcg8M_2PadaCB4iGd_sZseeDPYnIop698D34euqiqU
+  oapzeo: pewGZoWAqBwQRB7Ctz2a39zifwUmfEyZ0dJ2gSZneGI
 priority: medium
 relations:
   REQ-20121033: depends_on

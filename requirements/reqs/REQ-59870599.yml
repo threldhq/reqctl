@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the product refuses the findings
   when: the findings are checked
 assessed: {}
+citations:
+  uffga6: D2LYVBVF7Fev2CvBPOhVhUReZ8bp4SjdgvtKevF--AQ
 priority: medium
 relations: {}
 status: approved

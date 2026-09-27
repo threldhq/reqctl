@@ -11,6 +11,8 @@ acceptance_criteria:
   then: the product accepts the statement
   when: the corpus is validated
 assessed: {}
+citations:
+  hbpm4t: cA5Bk_4ryVLnOlWY--CBmMrupY9_x8nC1uHC6BsvHNw
 priority: medium
 relations: {}
 status: approved

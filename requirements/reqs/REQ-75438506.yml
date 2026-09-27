@@ -10,6 +10,10 @@ acceptance_criteria:
 assessed:
   REQ-20722175: BniiLBiwu3XL-OhaDgg_A3XrIhmW5BwHw2OyAx5lDWQ
   REQ-23706540: e-JqhR3Ui-keWIPxNZLUjlVjA3fPWTM1awZuzyA7rJk
+citations:
+  733yqr: c8vCIoHU6cg7KVYjLESsTsy_ZGog7DtFU66zaQX10g4
+  cx4ygh: capWh65YHReAgMQlr3P2mhEnsfN5rr3w3GsB8e_ByUk
+  xwdm24: ghgcjhJhFmpGE-Y2d6ui66cppg-8-O4QDhGXNTm4yrs
 priority: medium
 relations:
   REQ-20722175: depends_on

@@ -5,6 +5,8 @@ acceptance_criteria:
     binder pinned
   when: the first entry is revised
 assessed: {}
+citations:
+  nvrect: eCWGmwO2Cw4Y3wFBO4AoBONnFrjaH_EkrzJN-x2wUNw
 priority: medium
 relations: {}
 status: approved

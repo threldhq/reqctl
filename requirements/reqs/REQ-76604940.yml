@@ -10,6 +10,10 @@ acceptance_criteria:
   when: the item is written
 assessed:
   REQ-77158001: R7FsOlV5L_rO_9fZ2osiXtC-_I4Q7HjQuiD_-Yh924o
+citations:
+  25cppk: rpNhMt0cSV38WOvZpfBbIbp8ONKCVaMUX7iMfOrGdWg
+  cd7owj: FgnarXiMuKsQa-U2zL8YSkgxaLrTgDlAS34VZ0JGnUk
+  zijwjm: JrdBdFEJd40jUbUdlUzUt-6Zch_eXOfEQ_IwV9unzFU
 priority: medium
 relations:
   REQ-77158001: supersedes

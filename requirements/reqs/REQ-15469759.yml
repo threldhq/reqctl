@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+citations:
+  b6qizb: 4Cok8lh30v9cMKrhF85iyXqknRmCLyuj8gWlcA-XpG4
 priority: medium
 relations:
   REQ-24481048: constrains

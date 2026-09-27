@@ -8,6 +8,8 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
+citations:
+  grxatb: dDeGob9EywLMJtyhJKQM0gJtJ4bEtFitxYMiGyxtPZs
 priority: medium
 relations:
   REQ-18405752: constrains

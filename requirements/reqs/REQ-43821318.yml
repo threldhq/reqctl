@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and names the deprecation revision as the route
   when: removal of the approved item is requested
 assessed: {}
+citations:
+  qhlga3: lTrcxHR52h8b2w4r2w05X09z5oD5HPlvQUbgzmaFTgk
 priority: medium
 relations: {}
 status: approved

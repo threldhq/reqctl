@@ -12,6 +12,10 @@ acceptance_criteria:
     settles the pair
   when: revise is run to approve the superseding item
 assessed: {}
+citations:
+  qxi4hb: IYngeIPay0hW_cwLCYnCr1duwosmdGG6OTb_8wQv80I
+  ssmh6o: m1EHKJ15QsYpuZKZSzQNP985JHUqTGNyl75L40exYAg
+  xpj5go: UwMwjGa-no6CueUwoHceOymwoKChA4EcyiI2w3qSPHE
 priority: medium
 relations: {}
 status: approved

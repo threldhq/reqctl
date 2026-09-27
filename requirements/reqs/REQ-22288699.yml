@@ -11,6 +11,8 @@ acceptance_criteria:
   when: the run is scored
 assessed:
   REQ-75438506: GIywOiWYUqgHSl1TAe7_XUF_YpwOWZZrWPqOPGuhdFc
+citations:
+  tdrp6q: oJD8Qtx9qdMdxyT8frA26truOQkHdyNEr8WfFCK6oHg
 priority: medium
 relations:
   REQ-75438506: depends_on

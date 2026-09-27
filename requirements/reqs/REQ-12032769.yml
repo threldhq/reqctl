@@ -8,6 +8,8 @@ acceptance_criteria:
   then: the product accepts the findings
   when: the findings are checked
 assessed: {}
+citations:
+  n2lx2b: Xvokc0FDBJyn-IE7pM9xFvKF9hrl1nGpzfVCj6EF_kM
 priority: medium
 relations: {}
 status: approved

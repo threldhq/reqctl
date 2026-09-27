@@ -4,6 +4,8 @@ acceptance_criteria:
   when: a proposed change is sent
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+citations:
+  duwcld: n_fUTBUolUIupcmZgS5Lb69DTQhH95_iCIn1aoewfzE
 priority: medium
 relations:
   REQ-38789214: depends_on

@@ -4,10 +4,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+from travel_alone import LISTED, only
+
 HERE = Path(__file__).resolve().parent
 GOVERNED = "requirements/"
 
 
+# @req> REQ-37671861@eoVPY6Sstgbe jaw6mg
 def settling(base):
     if not base:
         return "false"
@@ -18,6 +21,7 @@ def settling(base):
         raise SystemExit(f"cannot diff against origin/{base}: "
                          f"{found.stderr.strip()}")
     touched = any(path.startswith(GOVERNED)
+                  and not only(f"origin/{base}", path, LISTED)
                   for path in found.stdout.splitlines())
     return "true" if touched else "false"
 

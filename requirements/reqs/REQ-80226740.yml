@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and names the baseline stating the item
   when: removal of the unapproved item is requested
 assessed: {}
+citations:
+  d223dk: FSPKnsIh7cPLPFN9CXtJkDZIcZ2MQmNnDmYlO0N_nrI
 priority: medium
 relations: {}
 status: approved

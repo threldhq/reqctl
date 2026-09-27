@@ -7,6 +7,8 @@ acceptance_criteria:
   then: the address shows the entry stating the field true and neither of the others
   when: context is asked for a statement addressing the item by that field
 assessed: {}
+citations:
+  3wyszr: IZNe91sGWJsazCnX_mHg8fpjjl3jkj1DoOMb1Gcj21w
 priority: medium
 relations: {}
 status: approved

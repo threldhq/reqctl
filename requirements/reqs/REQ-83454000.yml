@@ -13,6 +13,10 @@ acceptance_criteria:
 assessed:
   REQ-54045696: 1SxHcbQUMTJjnChXjdz6ILVvkDa-FY_LaXKHPtayH84
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+citations:
+  2qoccn: fJQwTTOhnzaX99ujjUmhyjfgUfwgCqJTu9Z1EKQ_BNw
+  2uanuo: mqqUkyWvzfr4bpxJJTRMZxWeepKAPMuC_dqDY0hFQ20
+  reughj: rlps9SQ3Af9fKCkgy88u5uFPSDA600nds4gSjnZas4k
 priority: medium
 relations:
   REQ-54045696: constrains

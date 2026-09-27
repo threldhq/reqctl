@@ -5,6 +5,8 @@ acceptance_criteria:
 assessed:
   REQ-80115998: 5Q31K4gVM_b7814S0s7RqdPwYFiAEpqF6SqJLiWlcJU
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  yh7ilp: Stg72vMqEUqKySdgGpZ1mTJfvpqwnZFLZlqiPviR0S0
 priority: medium
 relations:
   REQ-80115998: constrains

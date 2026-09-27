@@ -7,6 +7,8 @@ acceptance_criteria:
   then: the product refuses the return, naming the item
   when: the return is read
 assessed: {}
+citations:
+  vamoo7: QPV1blU5prdeqdoHqzg3OguaK90GAy_ArZHBHmC76F0
 priority: medium
 relations: {}
 status: approved

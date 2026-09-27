@@ -11,6 +11,8 @@ acceptance_criteria:
 assessed:
   REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
   REQ-68873467: 8njvorO8kPujWZNoyjDZJ7-X-DJrYHhIoaEDMDwKzi8
+citations:
+  zqtqps: d1FS0bF2fkTFf1LC-GQCWzl6okzwWqLEY4EqUGaO0pI
 priority: medium
 relations:
   REQ-48762557: depends_on

@@ -13,6 +13,9 @@ acceptance_criteria:
   then: the product refuses and names the reference or the link
   when: the corpus is validated
 assessed: {}
+citations:
+  e5vzf6: Ig21iAOY3btotmMmOyDdGgOepMNxYU99klTp_bnrZHc
+  mtmaxs: He1RSDCfnchP_TXcnCbSLtULdxxotNGtTPsFZgNWWec
 priority: medium
 relations: {}
 status: approved
