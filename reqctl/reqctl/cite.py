@@ -21,12 +21,13 @@ MARKER = re.compile(
 FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
 # @req+ REQ-52925332@wlFlbfJQbQ2g tup4w2
 MARKUP = re.compile(r"\A\s*<!--\s*|\s*-->\s*\Z")
-DELIMITERS = {".py": re.compile(r"\A\s*#+\s*"), ".js": re.compile(r"\A\s*//\s*")}
+DELIMITERS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"\A\s*#+\s*")),
+              ".js": re.compile(r"\A\s*//\s*")}
 # @req- tup4w2
 ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
 # @req> REQ-60346603@eKFixVFgV9Xt ulk4ve
-COMMENTS = {".py": ("# ", ""), ".md": ("<!-- ", " -->"),
-            ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
+COMMENTS = {**dict.fromkeys((".py", ".yml", ".yaml"), ("# ", "")),
+            ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
 
 
 # @req> REQ-52925332@wlFlbfJQbQ2g cczml5
@@ -81,7 +82,7 @@ def _indents(text):
         spans.append(range(start.line + 1, end.line + 1 + bool(end.column)))
     inside = {n for span in spans for n in span[1:]}
     depths = {}
-    for number, line in enumerate(text.splitlines(), start=1):
+    for number, line in enumerate(_feed_lines(text), start=1):
         body = line.strip()
         if body and (number in inside or not body.startswith("#")):
             depths[number] = len(_indent(line)) + (body == "-" or body.startswith("- "))
