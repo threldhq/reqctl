@@ -134,7 +134,6 @@ def build(run, answered):
     text = "" if source is None else README.format(
         text=corpus.read_text(source))
     out = run / plan.REVIEWED
-    out.unlink(missing_ok=True)
     where = run / "prompts" / "review.md"
     where.parent.mkdir(parents=True, exist_ok=True)
     where.write_text(PROMPT.format(
@@ -252,11 +251,7 @@ def check(run):
               "spawn the best-in-class agent again with the same prompt")
         return 1
     _, records = plan.loaded()
-    bound = plan.parameter(records, BOUND)
-    if bound < 1:
-        raise SystemExit(f"{BOUND} is {bound}; a summary holds at least one "
-                         "line")
-    print("\n".join(summary(review, said, bound)))
+    print("\n".join(summary(review, said, plan.parameter(records, BOUND))))
     print()
     print("\n".join(table(review, said)))
     return 0
