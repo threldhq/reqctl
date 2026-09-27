@@ -4,11 +4,10 @@ import os
 import re
 import subprocess
 import sys
+import unicodedata
 
 COMMANDS = ("new", "revise", "relate", "unrelate", "delete")
-FLAG = re.compile(r"^[a-z][a-z0-9-]*$")
-WORD = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*$")
-MINTED = re.compile(r"^\$(\d+)$")
+MINTED = re.compile(r"\$(\d+)")
 PAYLOAD = "CORPUS_CHANGE"
 BODY = ("Dispatched from the requirements portal.\n\n"
         "Every item here was written by `reqctl`; nothing hand-edited the "
@@ -19,16 +18,31 @@ class Refused(Exception):
     pass
 
 
+def flag(name):
+    return name[:1].isalpha() and all(
+        unicodedata.category(each) == "Ll" or each.isdecimal() or each == "-"
+        for each in name)
+
+
+def bare(word):
+    return word[:1].isalpha() and all(
+        each.isalpha() or each.isdecimal() or each in "-_" for each in word)
+
+
 def resolve(value, minted):
-    found = MINTED.match(value)
+    # @req+ REQ-81313171@3CV_M8XsRLpd 3dpv3v
+    found = MINTED.fullmatch(value)
     if not found:
         return value
     at = int(found.group(1))
+    # @req+ REQ-21669490@tWohKLmNox8d rkzzkl
     if at >= len(minted):
         raise Refused(f"{value}: step {at} has not run")
     if not minted[at]:
         raise Refused(f"{value}: step {at} minted nothing")
+    # @req- rkzzkl
     return minted[at]
+    # @req- 3dpv3v
 
 
 def argv(step, minted):
@@ -42,15 +56,18 @@ def argv(step, minted):
     for arg in args:
         if not isinstance(arg, str):
             raise Refused(f"{arg!r}: an argument is a string")
+        # @req+ REQ-72545168@yUfWE3RsMOFD dwzirn
         held = resolve(arg, minted)
-        if not WORD.match(held):
+        if not bare(held):
             raise Refused(f"{held!r}: not a bare word")
+        # @req- dwzirn
         made.append(held)
     options = step.get("options") or {}
     if not isinstance(options, dict):
         raise Refused(f"{options!r}: options is a mapping")
     for name, value in options.items():
-        if not FLAG.match(name):
+        # @req> REQ-99251609@o1kDTOHxcWxW e6n66c
+        if not flag(name):
             raise Refused(f"{name!r}: not a flag reqctl could carry")
         if value is None:
             made.append(f"--{name}")
@@ -61,6 +78,7 @@ def argv(step, minted):
         for each in held:
             if not isinstance(each, str):
                 raise Refused(f"--{name}: {each!r} is not a string")
+            # @req> REQ-52483245@AHTmVTTc0QE_ eburqo
             made.append(f"--{name}={resolve(each, minted)}")
     return made
 
