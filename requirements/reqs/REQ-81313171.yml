@@ -3,12 +3,6 @@ acceptance_criteria:
     argument that is exactly $N with N zero
   then: the second step receives the uid the first step minted
   when: the batch is applied
-- given: an option value that is exactly $N with N zero
-  then: reqctl receives the uid the first step minted as that option's value
-  when: the batch is applied
-- given: an option value holding $N among other text, such as see $0
-  then: reqctl receives the value unchanged as that option's value
-  when: the batch is applied
 assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
@@ -18,8 +12,8 @@ priority: medium
 relations:
   REQ-57492239: derives_from
 status: approved
-text: When a positional argument or an option value of a step of a batch the [portal](portal)
-  sends is exactly $N, the product shall pass in its place the uid that step N of
-  the batch minted, numbering the batch's steps from zero.
+text: When a positional argument of a step of a batch the [portal](portal) sends is
+  exactly $N, the product shall pass in its place the uid that step N of the batch
+  minted, numbering the batch's steps from zero.
 type: functional
 verification: inspection
