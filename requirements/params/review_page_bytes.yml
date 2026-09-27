@@ -1,0 +1,11 @@
+assessed:
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+entries:
+  '5242880': {}
+kind: parameter
+name: review_page_bytes
+status: approved
+text: The most bytes of a page at a source of the [best-in-class review](best_in_class_review)
+  that the product reads, as served or once decompressed
+unit: bytes
+value_type: size

@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: a source whose host name resolves to a loopback, private, link-local or reserved
+    address
+  then: the product refuses the review without fetching from that address
+  when: the review is checked
+- given: a source at an address in the shared range 100.64.0.0/10
+  then: the product refuses the review without fetching from that address
+  when: the review is checked
+- given: a source whose address is written in octal, hexadecimal, decimal or IPv4-mapped
+    IPv6 form
+  then: the product judges the address by its value, and refuses the review where
+    that value is an [internal address](internal_address)
+  when: the review is checked
+- given: a source at a public address whose page redirects to an [internal address](internal_address)
+  then: the product refuses the review without fetching from the address the redirect
+    names
+  when: the review is checked
+- given: a host name that resolves to a public address when the review is checked
+    and to an [internal address](internal_address) when the product connects
+  then: the product refuses the review without fetching from the [internal address](internal_address)
+  when: the review is checked
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  internal_address: foruPVLONTJIIP85LDy7rj_9C4rFHDLR6A8aKQlogqI
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-46144308: constrains
+status: approved
+text: If a source that a [practice](practice) of the [best-in-class review](best_in_class_review)
+  names is at an [internal address](internal_address), directly or through a redirect,
+  then the product shall refuse the review and name the source without fetching from
+  the [internal address](internal_address).
+type: functional
+verification: inspection
