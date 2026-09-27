@@ -18,7 +18,7 @@ assessed:
 citations:
   drprho: 0dTeDt4GLaWYSfb5ezlIvHT3DRjBVaAmDrIJnpHqTU0
   poc76h: BdDugNoHFxrkIFaJnTR34l7Uv6WDqzEB8kI0MiUKg8Q
-  sfrez4: WcRpHbtMSL4qHvwLC4i6SaKKlQWj6zyyKGrqrleHR7Y
+  sfrez4: U47umzCZFmCgtBE_XfIRXmNfWhBHdlmxxZ2sV5atdKQ
 priority: medium
 relations:
   REQ-38288492: depends_on

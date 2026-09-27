@@ -1352,12 +1352,8 @@ def describe(run):
         lines.append("")
     lines.append("### declined\n")
     # @req+ REQ-20454019@BJxxS0ixzdXK vxerce
-    practices = declined_practices(run)
-    if declined:
-        lines.append(declined)
-    elif not practices:
-        lines.append("Nothing was declined in this run.")
-    lines += practices
+    lines += (([declined] if declined else []) + declined_practices(run)
+              or ["Nothing was declined in this run."])
     # @req- vxerce
     print("\n".join(lines))
     # @req- qzk6eu

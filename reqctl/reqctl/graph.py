@@ -7,6 +7,7 @@ def unstamped(uid, path):
 
 
 def listing(tree, citations, uid=None):
+    named = {(citation["uid"], citation["id"]) for citation in citations}
     listed = {str(item.uid): corpus.mapping(item.data, corpus.CITATION_LIST)
               for item in corpus.items(tree)
               if str(item.uid).startswith(("REQ-", "GUARD-"))}
@@ -15,9 +16,7 @@ def listing(tree, citations, uid=None):
     for owner, held in listed.items():
         if uid and owner != uid:
             continue
-        named = {citation["id"] for citation in citations
-                 if citation["uid"] == owner}
-        for identity in sorted(set(held) - named):
+        for identity in sorted(one for one in held if (owner, one) not in named):
             problems.append(f"{owner}: its citation list holds {identity}, "
                             f"which no statement citation of {owner} names")
     for citation in citations:
