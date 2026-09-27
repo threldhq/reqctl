@@ -47,9 +47,13 @@ and checks reqctl rather than for reqctl itself; it is minted, approved and
 baselined like a requirement, and cited at the code that enforces it.
 
 What carries the build rather than stating a rule of ours -- dependency pins, CI
-wiring, lockfiles -- is governed by the gates in CI. The CI mechanics --
-workflow shape, the comment and help budgets, lockfile checks, CODEOWNERS,
-travel-alone -- are build, and a rule of ours lifted out of one is a `GUARD`.
+wiring, lockfiles -- is governed by the gates in CI. A rule of ours is sorted as
+the elucidate skill sorts it (REQ-83468274): a rule a behaviour of reqctl
+depends on is a `REQ`, even where only this repository runs that behaviour
+today; a rule only this repository's own check depends on -- the comment and
+help budgets, CODEOWNERS -- is a `GUARD`; a rule both depend on is one of each.
+Where a rule is enforced does not sort it: travel-alone is a corpus gate reqctl
+runs for any repository that calls it, so its rule is a `REQ`.
 The session-start hook is wired by the repository's own settings rather than
 the plugin, so it is build, and its install parity is GUARD-93589588. A
 third-party ruleset -- `ruff`, `mypy`, `actionlint` -- states no rule of ours to
