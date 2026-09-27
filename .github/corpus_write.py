@@ -6,6 +6,7 @@ import subprocess
 import sys
 import unicodedata
 
+# @req> REQ-25363659@x2KAEtIScy4m ic43s7
 COMMANDS = ("new", "revise", "relate", "unrelate", "delete")
 MINTED = re.compile(r"\$(\d+)")
 PAYLOAD = "CORPUS_CHANGE"
@@ -46,10 +47,12 @@ def resolve(value, minted):
 
 
 def argv(step, minted):
+    # @req+ REQ-25363659@x2KAEtIScy4m mybe2z
     command = step.get("command")
     if command not in COMMANDS:
         raise Refused(f"{command!r}: not one of {', '.join(COMMANDS)}")
     made = ["reqctl", "--json", command]
+    # @req- mybe2z
     args = step.get("args") or []
     if not isinstance(args, list):
         raise Refused(f"{args!r}: args is a list")
@@ -92,6 +95,7 @@ def ran(*made, check=True):
 
 
 def run(made):
+    # @req+ REQ-44900066@qaXVLJO6m5rP lfrc2x
     said = ran(*made).stdout.strip()
     if not said:
         raise Refused(f"{' '.join(made)}: said nothing")
@@ -99,6 +103,7 @@ def run(made):
         return json.loads(said)
     except json.JSONDecodeError as broken:
         raise Refused(f"{' '.join(made)}: said no json: {broken}") from broken
+    # @req- lfrc2x
 
 
 def apply(payload):
@@ -128,10 +133,13 @@ def proposed(raw, env):
     if not ran("git", "diff", "--cached", "--name-only").stdout.strip():
         raise Refused("the change altered nothing")
     ran("git", "commit", "-m", title)
+    # @req> REQ-64308807@X_7rJjBIYt8C ah6cew
     if ran("reqctl", "baseline", "--check", check=False).returncode:
         ran("git", "remote", "set-head", "origin", trunk)
+        # @req+ REQ-44733670@C8Ng3PpXQx7j sh5pwq
         ran("reqctl", "baseline", "--generate")
         ran("reqctl", "baseline", "--check")
+        # @req- sh5pwq
         ran("git", "add", "-A")
         ran("git", "commit", "-m", f"{title}: cut the baseline")
     ran("git", "push", "-u", "origin", branch)
