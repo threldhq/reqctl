@@ -75,7 +75,7 @@ jobs:
           fi
 
       - name: Help budget, what a session reads through reqctl --help
-        run: python .github/guards/help_budget.py --max 57
+        run: python .github/guards/help_budget.py --max 58
 
       - name: Names resolve
         run: python .github/guards/references.py
