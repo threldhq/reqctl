@@ -815,7 +815,7 @@ def cmd_untag(args):
     citation = cite.named(root, args.id)
     cite.remove(root, citation)
     # @req> REQ-13298390@OIZCRlURf3pq utmfsc
-    # @req> REQ-81275367@LOgwKiOj_0ok olrtj5
+    # @req> REQ-81275367@gSHwSanmQ208 olrtj5
     if citation["uid"] in {str(item.uid) for item in corpus.items(tree)}:
         _listed(tree, citation["uid"], {args.id: None})
     _emit(args, {"id": args.id, "path": citation["path"]},
@@ -838,7 +838,7 @@ def cmd_unlist(args):
         raise ReqctlError(
             f"{uid}: a statement citation names {args.id} -- reqctl untag "
             f"{args.id} removes the citation, reqctl repin {args.id} re-pins it")
-    # @req> REQ-56797974@cr5r6L2UdqJk tn22pk
+    # @req> REQ-56797974@Ga14vKvieLyx tn22pk
     _listed(tree, uid, {args.id: None})
     # @req- s3g7ya
     _emit(args, {"uid": uid, "id": args.id},
