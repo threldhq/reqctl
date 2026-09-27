@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import http.client
+import re
 import sys
 import urllib.request
 import zlib
@@ -139,6 +140,11 @@ def build(run, answered):
     return 0
 
 
+def words(text):
+    spaced = re.sub(r"[.,!?;:]", r" \g<0> ", text)
+    return re.sub(r"[^\w.,!?;:]+", " ", spaced).strip()
+
+
 def page(url):
     request = urllib.request.Request(
         url, headers={"User-Agent": "reqctl-elucidate-review",
@@ -160,7 +166,7 @@ def page(url):
     reader = PageText()
     reader.feed(body)
     reader.close()
-    return coverage.plain(coverage.spoken(" ".join(reader.held))), None
+    return words(" ".join(reader.held)), None
 
 
 def faults(review):
@@ -180,7 +186,7 @@ def faults(review):
             text, why = pages[url]
             if text is None:
                 found.append(f"practice {number}: {url} cannot be read: {why}")
-            elif not holds(text, source["passage"]):
+            elif not holds(text, words(source["passage"])):
                 found.append(f"practice {number}: {url} does not hold "
                              f"{source['passage']!r}")
     return found
@@ -188,7 +194,7 @@ def faults(review):
 
 def holds(text, passage):
     needle = coverage.spoken(passage or "")
-    return bool(needle) and coverage.quoted(text, needle)
+    return bool(re.search(r"\w", needle)) and coverage.quoted(text, needle)
 
 
 def stated(practice, said):
@@ -241,16 +247,18 @@ def check(run):
                                     "words"))
     path = run / plan.REVIEWED
     review, why = plan.read_return(path, shapes.REVIEW)
+    # @req> REQ-82432523@VoDkIJau94BB 4cioyu
+    again = (f"run `rm -f {path}`, then spawn the best-in-class agent again "
+             "with the same prompt")
     if review is None:
-        print(f"{path}: the review {why}; spawn the best-in-class agent again "
-              "with the same prompt")
+        print(f"{path}: the review {why}; {again}")
         return 1
     found = faults(review)
     for fault in found:
         print(fault)
     if found:
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
-              "spawn the best-in-class agent again with the same prompt")
+              f"{again}")
         return 1
     print("\n".join(summary(review, said,
                             plan.parameter(plan.glossary(), BOUND))))
