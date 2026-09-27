@@ -254,7 +254,7 @@ def check(run):
         print(fault)
     if found:
         # @req> REQ-82432523@VoDkIJau94BB 6hn44p
-        path.unlink()
+        path.unlink(missing_ok=True)
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
               "spawn the best-in-class agent again with the same prompt")
         return 1
