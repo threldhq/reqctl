@@ -66,9 +66,9 @@ def _depths(text):
 
 @functools.cache
 def _indents(text):
-    spans = [range(token.start_mark.line + 1,
-                   token.end_mark.line + 1 + bool(token.end_mark.column))
-             for token in yaml.scan(text, Loader=corpus.Loader)]
+    spans = [range(event.start_mark.line + 1,
+                   event.end_mark.line + 1 + bool(event.end_mark.column))
+             for event in yaml.parse(text, Loader=corpus.Loader)]
     inside = {n for span in spans for n in span[1:]}
     depths = {}
     for number, line in enumerate(text.splitlines(), start=1):
