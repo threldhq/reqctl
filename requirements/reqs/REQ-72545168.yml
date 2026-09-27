@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a positional argument beginning with a hyphen, as a flag does
+  then: the product refuses the batch, naming the argument
+  when: the batch is applied
+- given: a positional argument holding a semicolon, a dollar sign, a backtick or a
+    space
+  then: the product refuses the batch, naming the argument
+  when: the batch is applied
+- given: a positional argument naming $N
+  then: the product checks the uid step N minted in its place
+  when: the batch is applied
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: derives_from
+status: approved
+text: If a positional argument of a step of a batch the [portal](portal) sends does
+  not begin with a letter, or holds a character other than a letter, a digit, a hyphen
+  or an underscore, then the product shall refuse the batch.
+type: functional
+verification: inspection

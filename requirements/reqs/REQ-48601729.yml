@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a payload that is empty or is not JSON
+  then: the product refuses it, stating which, and opens no pull request
+  when: the payload is applied
+- given: a payload that is not a mapping, or whose steps are missing, not a list or
+    empty
+  then: the product refuses it
+  when: the payload is applied
+- given: a step that is not a mapping, whose arguments are not a list of text, or
+    whose options are not a mapping
+  then: the product refuses it, naming what is wrong
+  when: the payload is applied
+- given: an option whose value is neither absent, text nor a non-empty list of text
+  then: the product refuses it, naming the option
+  when: the payload is applied
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: derives_from
+status: approved
+text: If the payload the [portal](portal) sends is not a mapping holding a non-empty
+  list of steps, each a mapping whose arguments, if given, are a list of text and
+  whose options, if given, map each name to nothing, to text or to a non-empty list
+  of text, then the product shall refuse the payload.
+type: functional
+verification: inspection

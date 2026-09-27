@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: the form for a term
+  then: it offers no field reqctl refuses for a term, such as text or rationale
+  when: it is read
+- given: the form for each kind of item
+  then: every field it offers is one reqctl accepts for that kind
+  when: it is read
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations: {}
+status: approved
+text: The product shall offer in the [portal](portal), for each kind of item, only
+  the fields reqctl accepts for that kind.
+type: functional
+verification: inspection

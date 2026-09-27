@@ -1,4 +1,5 @@
-assessed: {}
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 entries:
   actions:
     access: read and write
@@ -8,5 +9,5 @@ entries:
     access: read
 kind: data
 name: portal_token_permissions
-status: draft
+status: approved
 text: the repository permissions the [portal](portal) asks its token to grant
