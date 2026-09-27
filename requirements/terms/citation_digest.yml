@@ -5,7 +5,8 @@ entries:
     aliases:
     - citation digests
     definition: A value the product takes over the lines a [statement citation](statement_citation)
-      covers when it reads the code, and writes nowhere.
+      covers when it reads the code, and writes only in the requirement the citation
+      names.
     word: citation digest
 kind: term
 status: approved

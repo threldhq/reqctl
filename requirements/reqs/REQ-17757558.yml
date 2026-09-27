@@ -6,15 +6,19 @@ acceptance_criteria:
 assessed:
   REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
   REQ-54851939: Iw_Sa4bHHJhi7YAvxvfvfhnK8zGwvVQyh8XONls3_GY
+  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 priority: medium
 relations:
   REQ-18833394: constrains
   REQ-54851939: depends_on
+  REQ-64846889: constrains
 status: approved
 text: When the product re-pins a [statement citation](statement_citation), the product
   shall change no character the code base holds other than the stamp the citation
-  names.
+  names and what the [citation list](citation_list) of the requirement it names holds
+  for the citation.
 type: functional
 verification: inspection
