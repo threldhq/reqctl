@@ -207,10 +207,10 @@ def opener(redirects):
 
 
 def page(url, fetch, bound):
-    request = urllib.request.Request(
-        url, headers={"User-Agent": "reqctl-elucidate-review",
-                      "Accept-Encoding": "gzip, deflate"})
     try:
+        request = urllib.request.Request(
+            url, headers={"User-Agent": "reqctl-elucidate-review",
+                          "Accept-Encoding": "gzip, deflate"})
         with fetch.open(request, timeout=WAIT) as answer:
             # @req+ REQ-99188850@TNL_gXYmsw4y f4kwgo
             raw = answer.read(bound)
@@ -224,10 +224,12 @@ def page(url, fetch, bound):
             # @req+ REQ-99188850@TNL_gXYmsw4y 4c6q6e
             unpacked = zlib.decompressobj(zlib.MAX_WBITS | 32)
             raw = unpacked.decompress(raw, bound)
-            if not unpacked.eof:
-                return None, (f"the page does not end within {bound} bytes "
-                              "once decompressed")
+            if len(raw) == bound and not unpacked.eof:
+                return None, (f"the page is larger than {bound} bytes once "
+                              "decompressed")
             # @req- 4c6q6e
+            if not unpacked.eof:
+                return None, "the compressed page is cut short"
         elif packed not in ("", "identity"):
             return None, f"served as {packed}, which the check cannot read"
         body = raw.decode(charset, errors="replace")
