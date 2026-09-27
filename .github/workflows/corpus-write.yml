@@ -40,8 +40,6 @@ jobs:
   write:
     runs-on: ubuntu-latest
     steps:
-      # @req> REQ-84875536@dj6Y7xTDeN6r n6bf6a
-      # @req> REQ-45437338@K7K_kLnTNJPw oot2os
       - name: Stop a pull request caller or an unpinned reqctl before any secret is read
         env:
           EVENT: ${{ github.event_name }}
