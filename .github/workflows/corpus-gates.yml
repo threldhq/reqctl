@@ -42,9 +42,9 @@ jobs:
       - name: Install reqctl at the release the caller pins
         if: inputs.reqctl != ''
         run: |
-          echo .reqctl/ >> .git/info/exclude
-          pip install --require-hashes -r .reqctl/reqctl/requirements-lock.txt
-          pip install -e .reqctl/reqctl --no-deps --no-build-isolation
+          mv .reqctl "$RUNNER_TEMP/reqctl"
+          pip install --require-hashes -r "$RUNNER_TEMP/reqctl/reqctl/requirements-lock.txt"
+          pip install -e "$RUNNER_TEMP/reqctl/reqctl" --no-deps --no-build-isolation
 
       - name: The corpus passes every gate
         if: inputs.reqctl == ''
@@ -56,4 +56,4 @@ jobs:
         if: inputs.reqctl != ''
         env:
           BASE_REF: ${{ github.base_ref }}
-        run: python .reqctl/.github/corpus_gates.py
+        run: python "$RUNNER_TEMP/reqctl/.github/corpus_gates.py"
