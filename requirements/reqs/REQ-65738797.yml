@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a command names two [statement citations](statement_citation), one at lines
+    the file does not hold
+  then: the product refuses the command and the file is unchanged
+  when: the product runs the command
+- given: a command names two [statement citations](statement_citation), one at lines
+    that would cut a block
+  then: the product refuses the command and the file is unchanged
+  when: the product runs the command
+assessed:
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-60346603: constrains
+  REQ-62782894: constrains
+status: approved
+text: If the product refuses one of the [statement citations](statement_citation)
+  a command names, then the product shall write none of them.
+type: functional
+verification: inspection

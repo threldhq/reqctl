@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a batch holding a step whose command is init
+  then: the product refuses the batch, naming the command, and opens no pull request
+  when: the batch is applied
+- given: a batch whose steps each name one of the ${portal_commands}
+  then: the product runs each step as that reqctl command
+  when: the batch is applied
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+  portal_commands: 6fKibshv2tZqcbD_ZGJf-31in0to-SDqLssZ8Cx60Ys
+  portal_commands.*: H5oxUJSwgJ9YPq2M2SOGRU978V54qU0_BczjUaWM1FE
+priority: medium
+relations:
+  REQ-57492239: derives_from
+status: approved
+text: If a step of a batch the [portal](portal) sends names a command that is not
+  one of the ${portal_commands}, then the product shall refuse the batch.
+type: functional
+verification: inspection

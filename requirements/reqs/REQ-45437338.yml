@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a caller passing the release as a tag or a branch
+  then: it stops before any secret is read, naming the ref
+  when: the workflow starts
+- given: a caller passing an abbreviated commit SHA
+  then: it stops before any secret is read, naming the ref
+  when: the workflow starts
+- given: a caller passing a forty-character commit SHA
+  then: it runs reqctl at that commit
+  when: the workflow starts
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-71344419: No0izFxAdVKWi2RA4WpKTM99R1YpXTfB-xHQ_uyRK2w
+  secret_workflows: PW2CLrlroB71sEBcwMYJBOg9VMzy6swAxvG8nYPYTWw
+  secret_workflows.*: KP2-zqLaL5Ly3qNr7ibTn9sdEkeZMyw_URquouxKYWk
+priority: medium
+relations:
+  REQ-57492239: constrains
+  REQ-71344419: constrains
+status: approved
+text: If the reqctl release a caller passes to one of the ${secret_workflows} as its
+  reqctl input is not a full commit SHA, then the product shall stop the workflow
+  before it reads a secret.
+type: functional
+verification: inspection

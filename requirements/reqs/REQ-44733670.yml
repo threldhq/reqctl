@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a generated baseline for which the baseline check reports a disagreement
+    or refuses
+  then: no pull request opens, and the product states the check's fault
+  when: the batch is applied
+- given: a batch for which baseline generation refuses
+  then: no pull request opens, and the product states the generation's fault
+  when: the batch is applied
+assessed:
+  REQ-44642786: TqRUT-VDn-ps_LzEHAIHw9Dtkpqnw8r02ffj22913E4
+  REQ-64308807: X_7rJjBIYt8CUE-ktXAa7y9c_0CONCW2KFnjxAqXBrw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-44642786: depends_on
+  REQ-64308807: derives_from
+status: approved
+text: If the product cannot generate a baseline for a batch the [portal](portal) sends,
+  or the baseline it generates does not check clean, then the product shall open no
+  pull request.
+type: functional
+verification: inspection

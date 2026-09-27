@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: the form for a new parameter
+  then: it marks text, name, value and value type as required, and no other field
+  when: it is read
+- given: the form for each kind of item
+  then: it offers every field reqctl requires to create an item of that kind
+  when: it is read
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations: {}
+status: approved
+text: The product shall mark as required in the [portal](portal), for each kind of
+  item, exactly the fields reqctl requires to create an item of that kind.
+type: functional
+verification: inspection

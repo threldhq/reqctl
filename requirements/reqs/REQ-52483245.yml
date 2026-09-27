@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: an option value holding a semicolon, a dollar sign, a backtick and a space
+  then: reqctl receives the value unchanged as that option's value, and nothing in
+    it runs as a command
+  when: the step runs
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: constrains
+status: approved
+text: The product shall pass each value of an option of a step of a batch the [portal](portal)
+  sends to reqctl unchanged, in one argument with the option's name, and through no
+  shell.
+type: functional
+verification: inspection

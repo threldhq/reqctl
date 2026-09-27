@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a batch that approves a draft requirement
+  then: the pull request carries a new baseline, which the product checked before
+    opening the pull request
+  when: the batch is applied
+- given: a batch that only adds a draft item
+  then: the pull request leaves the baseline as the default branch holds it
+  when: the batch is applied
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: derives_from
+status: approved
+text: When a batch the [portal](portal) sends changes something approved, the product
+  shall generate a baseline and check it before opening the pull request.
+type: functional
+verification: inspection
