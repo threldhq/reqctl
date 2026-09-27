@@ -10,9 +10,6 @@ assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
   portal_commands: 6fKibshv2tZqcbD_ZGJf-31in0to-SDqLssZ8Cx60Ys
   portal_commands.*: H5oxUJSwgJ9YPq2M2SOGRU978V54qU0_BczjUaWM1FE
-citations:
-  ic43s7: mR8W66IOAhXXIz2LgIk0b-x-0nEMba8hSV88R07ErrU
-  mybe2z: OUZCWh2aseIaqrHltfZleriFFTL8CC5fyXN8zocHU3M
 priority: medium
 relations:
   REQ-57492239: derives_from
