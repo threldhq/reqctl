@@ -26,6 +26,24 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      - name: Stop a pull request caller or an unpinned reqctl before any secret is read
+        env:
+          EVENT: ${{ github.event_name }}
+          REF: ${{ inputs.reqctl }}
+          CALLER: ${{ github.repository }}
+        run: |
+          case "$EVENT" in
+            pull_request | pull_request_*)
+              echo "::error::the caller was triggered by $EVENT; call this workflow from a push or a workflow dispatch"
+              exit 1 ;;
+          esac
+          if [ -n "$REF" ] || [ "$CALLER" != threldhq/reqctl ]; then
+            if ! [[ "$REF" =~ ^[0-9a-f]{40}$ ]]; then
+              printf '::error::reqctl input %q is not a forty-character commit SHA; pass the full commit SHA of the release\n' "$REF"
+              exit 1
+            fi
+          fi
+
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         id: app-token
         with:
