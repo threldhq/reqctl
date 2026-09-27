@@ -3,7 +3,8 @@ acceptance_criteria:
   then: the product fetches the source and refuses the review where the source does
     not hold the passage, matched at word boundaries with punctuation normalised
   when: the review is checked
-- given: a source the product cannot fetch or read
+- given: a source the product cannot fetch or read, such as a page that only renders
+    in a browser
   then: the product refuses the review and names the source
   when: the review is checked
 assessed:
