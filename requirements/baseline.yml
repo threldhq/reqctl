@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-baseline: 26
-commit: bc89368e8330d290e8b381e30ca8505528aea19c
-=======
-baseline: 27
-commit: a712b0cbe2bb247d3a044ab060d002385facb3c4
->>>>>>> origin/main
+baseline: 28
+commit: bfd300d5d4bca69e3e2589600a61ef40ef1fa08a
 items:
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-12128145: mFuOqNbkyV1oY-6soAHFUkqGN-yitkrFm5SThHXJEzo
@@ -180,11 +175,8 @@ items:
   REQ-44642786: TqRUT-VDn-ps_LzEHAIHw9Dtkpqnw8r02ffj22913E4
   REQ-44733670: C8Ng3PpXQx7jqYohztnywiVDQ8-IfnYvWWWcFrbNwOw
   REQ-44791607: jSOQJ6WGpg_lcyjVshfFJ31i-0U_8q8JIy-vD5Pduxw
-<<<<<<< HEAD
   REQ-44823271: ecfoMJvhcNBnKfryKKrJp98ETxfLPiryihj5QEHxzQY
-=======
   REQ-44900066: qaXVLJO6m5rPNCh83xwnryTIoHIrAteqeJP5sUa00dg
->>>>>>> origin/main
   REQ-45005873: aGI8YILcA3YWivKDJMebsfPTN3VFXErVTZuy1ngcovQ
   REQ-45221432: 7p3Uxweu-mBnMF17scBsWQwODHAFQmBdo9mYAJJHn9Q
   REQ-45437338: K7K_kLnTNJPwOrS3SxszbzJ31mL82w_1RXO1TXLWJyY
@@ -388,12 +380,9 @@ items:
   path_suffixes: Xra8WAFW9yj6q5X3w79Fxzu-ZKQIgGPH3AukLp2J9rs
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
-<<<<<<< HEAD
-  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
-=======
   portal_commands: 6fKibshv2tZqcbD_ZGJf-31in0to-SDqLssZ8Cx60Ys
   portal_token_permissions: gx7wfxrBqtaSYiVl9RtKG_S57wCIbFYcaQc1uXNuoFg
->>>>>>> origin/main
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
   recall_batch: YWoEFqqQvRgdxU-ZG7OGU8ey4lS_dVOuf75swngCeU4
@@ -404,8 +393,4 @@ items:
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
-<<<<<<< HEAD
-supersedes: 25
-=======
-supersedes: 26
->>>>>>> origin/main
+supersedes: 27
