@@ -1,16 +1,26 @@
 acceptance_criteria:
-- given: an item whose unresolved merge reaches a field other than its pins
+- given: an item whose unresolved merge reaches a field other than its pins and its
+    [citation list](citation_list)
   then: the product refuses and names the field it will not resolve
   when: that item is resolved
 - given: an item whose unresolved merge falls within its pins alone
   then: the item holds what both sides state alike and every pin the merge conflicted
     is gone
   when: that item is resolved
-assessed: {}
+- given: an item whose unresolved merge falls within its [citation list](citation_list)
+    alone
+  then: the [citation list](citation_list) holds what both sides hold alike, and holds
+    no [citation identity](citation_identity) the merge conflicted
+  when: that item is resolved
+assessed:
+  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
 priority: medium
-relations: {}
+relations:
+  REQ-64846889: depends_on
 status: approved
-text: If an item holding an unresolved merge outside its pins would be resolved, then
-  the product shall refuse the resolution.
+text: If an item holding an unresolved merge outside its pins and its [citation list](citation_list)
+  would be resolved, then the product shall refuse the resolution.
 type: functional
 verification: inspection

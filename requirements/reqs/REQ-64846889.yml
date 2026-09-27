@@ -1,0 +1,33 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) whose covered lines changed after
+    the [citation list](citation_list) of the requirement it names took their digest
+  then: the [citation list](citation_list) holds the [citation digest](citation_digest)
+    of the lines as they stand, and no other digest for the citation
+  when: the product re-pins the citation
+- given: a [statement citation](statement_citation) whose [citation identity](citation_identity)
+    the [citation list](citation_list) of the requirement it names does not hold
+  then: the [citation list](citation_list) holds the identity with the [citation digest](citation_digest)
+    of the lines the citation covers
+  when: the product re-pins the citation
+assessed:
+  REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
+  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  REQ-31471659: hKmNhTkU9xOAFkZt4GkdGC-Prnfl7nQD1cBEFSp2-so
+  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
+  citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-15770866: depends_on
+  REQ-18833394: depends_on
+  REQ-31471659: depends_on
+  REQ-75539229: depends_on
+status: approved
+text: When the product re-pins a [statement citation](statement_citation), the product
+  shall make the [citation list](citation_list) of the requirement the citation names
+  hold the citation's [citation identity](citation_identity) with the [citation digest](citation_digest)
+  of the lines the citation covers as they stand.
+type: functional
+verification: inspection

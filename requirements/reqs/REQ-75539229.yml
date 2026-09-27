@@ -1,0 +1,21 @@
+acceptance_criteria: []
+assessed:
+  REQ-31471659: hKmNhTkU9xOAFkZt4GkdGC-Prnfl7nQD1cBEFSp2-so
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-92239556: w0fSOmsCa6TA7eG4Pu986puzbfrheHoxMBn-lz0gK18
+  citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-31471659: depends_on
+  REQ-60346603: depends_on
+  REQ-92239556: depends_on
+status: approved
+text: When the product writes a [statement citation](statement_citation), the product
+  shall add the citation's [citation identity](citation_identity), with the [citation
+  digest](citation_digest) of the lines it covers, to the [citation list](citation_list)
+  of the requirement the citation names.
+type: functional
+verification: inspection

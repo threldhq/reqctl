@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-75539229: depends_on
+status: approved
+text: When trace is run, the product shall report as a problem each [statement citation](statement_citation)
+  whose [citation identity](citation_identity) the [citation list](citation_list)
+  of the requirement it names does not hold.
+type: functional
+verification: inspection

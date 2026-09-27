@@ -1,4 +1,7 @@
-assessed: {}
+assessed:
+  citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
+  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 entries:
   citation_list:
     aliases:
@@ -8,4 +11,4 @@ entries:
       digest](citation_digest) for each identity.'
     word: citation list
 kind: term
-status: draft
+status: approved

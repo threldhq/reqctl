@@ -4,8 +4,9 @@ acceptance_criteria:
   then: the citation below covers the lines the command named for it as the file stood
     before the command
   when: the product writes both
-- given: one command names lines of a file for one [statement citation](statement_citation)
-    and, for another, lines that overlap or lie within them
+- given: one command names lines of a file for a [statement citation](statement_citation)
+    of one requirement and, for a citation of another requirement, lines that overlap
+    or lie within them
   then: each citation covers the lines the command named for it as the file stood
     before the command
   when: the product writes both

@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) of a requirement in a file
+  then: the product refuses and the file is unchanged
+  when: the product is asked to write another citation of that requirement over exactly
+    the same lines
+- given: one command naming exactly the same lines of a file for two [statement citations](statement_citation)
+    of one requirement
+  then: the product refuses and the file is unchanged
+  when: the product runs the command
+- given: a [statement citation](statement_citation) of a requirement in a file
+  then: the product writes it
+  when: the product is asked to write a citation of another requirement over the same
+    lines
+assessed:
+  REQ-37846580: Hp5GeJsazpl4xjEaP76grNx4v5JQ47Wx_FHIzlNdRkI
+  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-37846580: depends_on
+  REQ-52925332: depends_on
+  REQ-60346603: constrains
+  REQ-62782894: constrains
+status: approved
+text: If a [statement citation](statement_citation) the product is asked to write
+  would cover exactly the lines another citation of the same requirement covers, then
+  the product shall refuse it.
+type: functional
+verification: inspection
