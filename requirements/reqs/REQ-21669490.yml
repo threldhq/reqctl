@@ -10,6 +10,8 @@ acceptance_criteria:
 assessed:
   REQ-81313171: 3CV_M8XsRLpdvggL2UlFybaGwYoSfuBaZ68A5wpiMC8
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  rkzzkl: BYiDSdRKO7ruLcS0Pycpt46hFPe5vMsTROCxRK5LZbs
 priority: medium
 relations:
   REQ-81313171: derives_from
