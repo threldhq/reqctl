@@ -1,9 +1,12 @@
 import base64
+import contextlib
 import functools
 import hashlib
 import json
 import os
 import re
+import secrets
+import shutil
 from pathlib import Path
 
 import yaml
@@ -246,28 +249,56 @@ def raw(item):
     return item.data
 
 
-def atomic_write(path, text):
-    temp = path.with_name(path.name + ".tmp")
+def atomic_write(path, content):
+    target = Path(path).resolve()
+    temp = target.with_name(f"{target.name}.{secrets.token_hex(8)}.tmp")
+    staged = False
     try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        temp.write_text(text)
-        os.replace(temp, path)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with open(temp, "xb" if isinstance(content, bytes) else "x") as sink:
+            staged = True
+            sink.write(content)
+            sink.flush()
+            os.fsync(sink.fileno())
+        if target.exists():
+            shutil.copymode(target, temp)
+        os.replace(temp, target)
+        staged = False
     except OSError as error:
-        try:
-            temp.unlink()
-        except OSError:
-            pass
         raise ReqctlError(
             f"cannot write {path}: {error.strerror or error}"
         ) from error
+    finally:
+        if staged:
+            with contextlib.suppress(OSError):
+                temp.unlink()
+
+
+def write_all(changes):
+    held = [(path, Path(path).read_bytes()) for path, _ in changes]
+    for at, (path, content) in enumerate(changes):
+        try:
+            atomic_write(path, content)
+        except BaseException as error:
+            kept = []
+            for undone, before in reversed(held[:at]):
+                try:
+                    atomic_write(undone, before)
+                except ReqctlError:
+                    kept.append(str(undone))
+            if kept:
+                raise ReqctlError(f"{error}; what this command wrote stays in "
+                                  f"{', '.join(kept)}") from error
+            raise
+
+
+def dump(data):
+    return yaml.safe_dump(data, default_flow_style=False, sort_keys=True,
+                          allow_unicode=True)
 
 
 def save(store, item):
-    atomic_write(
-        item.path,
-        yaml.safe_dump(item.data, default_flow_style=False, sort_keys=True,
-                       allow_unicode=True),
-    )
+    atomic_write(item.path, dump(item.data))
     invalidate(store)
 
 

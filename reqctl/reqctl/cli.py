@@ -750,7 +750,7 @@ def cmd_trace(args):
 # @req> REQ-78685242@62t3Pc4LqF05 da5qxm
 def _listed(store, uid, entries):
     if not uid.startswith(("REQ-", "GUARD-")):
-        return
+        return []
     item = corpus.find(store, uid)
     before = corpus.mapping(item.data, corpus.CITATION_LIST)
     held = dict(before)
@@ -760,12 +760,12 @@ def _listed(store, uid, entries):
         else:
             held[identity] = taken
     if held == before:
-        return
+        return []
     if held:
         item.data[corpus.CITATION_LIST] = held
     else:
         item.data.pop(corpus.CITATION_LIST, None)
-    corpus.save(store, item)
+    return [(item.path, corpus.dump(item.data))]
 
 
 def cmd_tag(args):
@@ -780,13 +780,16 @@ def cmd_tag(args):
             raise ReqctlError(f"{req}: only a requirement or a guard is cited")
         asked.append((first, last, str(item.uid),
                       corpus.tag_stamp(corpus.stamp(item))))
-    written = cite.write(root, args.path, asked, args.exclusive)
+    change, written = cite.tagged(root, args.path, asked, args.exclusive)
     # @req- nmyxfc
+    changes = [change]
     # @req> REQ-75539229@OyOJtrpdfVnQ c7r3ff
     # @req> REQ-89706423@_mbcyBulaUGb wrzqdw
     for uid in dict.fromkeys(uid for _, uid, _ in written):
-        _listed(tree, uid, {identity: taken for identity, named, taken in written
-                            if named == uid})
+        changes += _listed(tree, uid, {identity: taken
+                                       for identity, named, taken in written
+                                       if named == uid})
+    corpus.write_all(changes)
     identities = [identity for identity, _, _ in written]
     _emit(args, {"ids": identities, "path": args.path}, "\n".join(identities))
     return EXIT_OK
@@ -801,10 +804,11 @@ def cmd_repin(args):
         raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
                           f"is removed, not re-pinned: `reqctl untag {args.id}`")
     stamp = corpus.tag_stamp(corpus.stamp(item))
-    cite.repin(root, citation, stamp)
+    changes = [cite.repinned(root, citation, stamp)]
     # @req> REQ-64846889@pHOO0sEc7V1K 7dhw4d
     # @req> REQ-17757558@4j9rQN-e61OY tevb2p
-    _listed(tree, citation["uid"], {args.id: cite.standing(root, citation)})
+    changes += _listed(tree, citation["uid"], {args.id: cite.standing(root, citation)})
+    corpus.write_all(changes)
     _emit(args, {"id": args.id, "path": citation["path"], "stamp": stamp},
           f"{args.id} in {citation['path']} pinned @{stamp}")
     return EXIT_OK
@@ -813,11 +817,12 @@ def cmd_repin(args):
 def cmd_untag(args):
     tree, root = corpus.load()
     citation = cite.named(root, args.id)
-    cite.remove(root, citation)
+    changes = [cite.untagged(root, citation)]
     # @req> REQ-13298390@OIZCRlURf3pq utmfsc
     # @req> REQ-81275367@rZszCCP31YAU olrtj5
     if citation["uid"] in {str(item.uid) for item in corpus.items(tree)}:
-        _listed(tree, citation["uid"], {args.id: None})
+        changes += _listed(tree, citation["uid"], {args.id: None})
+    corpus.write_all(changes)
     _emit(args, {"id": args.id, "path": citation["path"]},
           f"{args.id} removed from {citation['path']}")
     return EXIT_OK
@@ -839,7 +844,7 @@ def cmd_unlist(args):
             f"{uid}: a statement citation names {args.id} -- reqctl untag "
             f"{args.id} removes the citation, reqctl repin {args.id} re-pins it")
     # @req> REQ-56797974@xJHqq1DXePrs tn22pk
-    _listed(tree, uid, {args.id: None})
+    corpus.write_all(_listed(tree, uid, {args.id: None}))
     # @req- s3g7ya
     _emit(args, {"uid": uid, "id": args.id},
           f"{args.id} removed from the citation list of {uid}")

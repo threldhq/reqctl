@@ -353,7 +353,7 @@ def _duplicates(path, found, asked):
 
 
 # @req> REQ-60346603@eKFixVFgV9Xt e2efde
-def write(root, path, asked, exclusive=False):
+def tagged(root, path, asked, exclusive=False):
     target = Path(path)
     if target.suffix not in COMMENTS:
         raise ReqctlError(f"{path}: citations are written only in "
@@ -398,9 +398,9 @@ def write(root, path, asked, exclusive=False):
     problems += _duplicates(path, found, dict(zip(minted, asked)))
     if problems:
         raise ReqctlError("\n".join(problems))
-    target.write_bytes(written.encode())
     # @req- zkxsxx
-    return [(c["id"], c["uid"], digest(path, written, c["lines"])) for c in new]
+    return ((target, written.encode()),
+            [(c["id"], c["uid"], digest(path, written, c["lines"])) for c in new])
 
 
 # @req> REQ-64846889@pHOO0sEc7V1K 6vgx2i
@@ -430,24 +430,24 @@ def _lines(root, citation):
     return target, _feed_lines(target.read_bytes().decode())
 
 
-def repin(root, citation, stamp):
+def repinned(root, citation, stamp):
     # @req+ REQ-17757558@4j9rQN-e61OY lqd5pz
     target, lines = _lines(root, citation)
     at = citation["open"] - 1
     pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['uid'])})(?:@\S*)?")
     # @req> REQ-18833394@wnCdGzhY7m6Z 62bkhg
     lines[at] = pinned.sub(lambda found: f"{found.group(1)}@{stamp}", lines[at], count=1)
-    target.write_bytes("".join(lines).encode())
+    return target, "".join(lines).encode()
     # @req- lqd5pz
 
 
-def remove(root, citation):
+def untagged(root, citation):
     target, lines = _lines(root, citation)
     marks = set(citation["marks"])
     # @req> REQ-81275367@rZszCCP31YAU 5gkn5k
     # @req> REQ-26984738@nD05toE71g-O a4ywox
-    target.write_bytes("".join(line for number, line in enumerate(lines, start=1)
-                               if number not in marks).encode())
+    return target, "".join(line for number, line in enumerate(lines, start=1)
+                           if number not in marks).encode()
 
 
 def _statement(path, text, first, last):
