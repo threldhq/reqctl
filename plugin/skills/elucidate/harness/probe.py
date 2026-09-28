@@ -383,8 +383,7 @@ def cmd_mint(args):
     dims = plan.dimensions(corpus.find_root(), records)
 
     out = Path(args.out)
-    (out / "proposals").mkdir(parents=True, exist_ok=True)
-    stale = (sorted((out / "proposals").glob("*.md"))
+    stale =(sorted((out / "proposals").glob("*.md"))
              + sorted((out / "verdicts").glob("*.json")))
     for path in stale:
         path.unlink()

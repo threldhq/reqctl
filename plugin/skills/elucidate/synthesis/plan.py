@@ -931,7 +931,6 @@ def build(run, chars, items, lines=PROMPT_LINES):
         stale.unlink()
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "recall" / f"{name}.md", body)
-    (run / "shards").mkdir(exist_ok=True)
     for name, text in texts.items():
         corpus.atomic_write(run / "shards" / f"{name}.md", text)
     corpus.atomic_write(run / "dictionary.md", dictionary_text)
