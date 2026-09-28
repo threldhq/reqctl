@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the file holds the whole of what it held before or the whole of what was written
   when: the product is stopped partway through writing it
 assessed: {}
+citations:
+  np3ttn: e2DBMd9stihXlM2yGIry-9pnTfbhSZhk1qe1heifMhY
 priority: medium
 relations: {}
 status: approved

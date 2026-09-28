@@ -135,8 +135,7 @@ def build(run, answered):
     text = "" if source is None else README.format(
         text=corpus.read_text(source))
     where = run / "prompts" / "review.md"
-    where.parent.mkdir(parents=True, exist_ok=True)
-    where.write_text(PROMPT.format(
+    corpus.atomic_write(where, PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
         words=words, readme=text))
     print(field)
