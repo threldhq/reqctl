@@ -1,8 +1,8 @@
 acceptance_criteria:
 - given: lines of code whose first line is blank
-  then: the code base gains only the lines holding a comment that carries the [statement
-    citation](statement_citation), and the [citation list](citation_list) of the requirement
-    gains only the citation
+  then: the [code base](code_base) gains only the lines holding a comment that carries
+    the [statement citation](statement_citation), and the [citation list](citation_list)
+    of the requirement gains only the citation
   when: the product cites a requirement at them
 - given: a file whose lines end in a carriage return and a line feed
   then: every line ending the file held is unchanged
@@ -15,6 +15,7 @@ assessed:
   REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
   REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
   5nywje: 9CM-_nHUPrLti1EXaFGwWfw5BxUTflUSnnf38Vbk7T0
@@ -26,8 +27,8 @@ relations:
   REQ-75539229: depends_on
 status: approved
 text: When the product cites a requirement at lines of code, the product shall change
-  the code base only by adding the lines holding a comment that carries the [statement
-  citation](statement_citation) and by adding the citation to the [citation list](citation_list)
-  of the requirement.
+  the [code base](code_base) only by adding the lines holding a comment that carries
+  the [statement citation](statement_citation) and by adding the citation to the [citation
+  list](citation_list) of the requirement.
 type: functional
 verification: inspection

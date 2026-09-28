@@ -1,8 +1,9 @@
 acceptance_criteria: []
 assessed:
-  REQ-59136977: RZuxd8I21O4a8mI67g5zkqxABlkY6DvHir5YRLL9s5U
+  REQ-59136977: 5NZtW-PM9X2OOiZgf5rDE9IouDL_tKWJpcAAzbj8lWo
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
 citations:
   tn22pk: oEfdh4jN2BmfAn_S2gFSCKd6qxZha4UhdH__ln43yo4
 priority: medium
@@ -10,7 +11,7 @@ relations:
   REQ-59136977: constrains
 status: approved
 text: When the product removes a [citation identity](citation_identity) from a [citation
-  list](citation_list), the product shall leave unchanged every line the code base
+  list](citation_list), the product shall leave unchanged every line the [code base](code_base)
   holds other than the lines holding what that list holds for the identity, and other
   than the lines holding that list where it holds nothing for any other identity.
 type: functional
