@@ -24,6 +24,9 @@ assessed:
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   internal_address: foruPVLONTJIIP85LDy7rj_9C4rFHDLR6A8aKQlogqI
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+citations:
+  goa2fj: 4kOYQdTyFuR6Yiw6rwHu3cv4FtJ6E5WMuUpuWkl5Caw
+  unfwxj: U32EBCpKF4JYhK9-a3tmg3aOm-v0ajND7fF0GGSZi_4
 priority: medium
 relations:
   REQ-46144308: constrains

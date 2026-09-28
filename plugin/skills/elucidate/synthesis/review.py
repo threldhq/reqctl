@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 import http.client
+import ipaddress
 import re
+import socket
 import sys
 import urllib.request
 import zlib
@@ -19,6 +21,8 @@ from reqctl import corpus
 
 FIELD = "governed_field"
 BOUND = "review_summary_lines"
+PAGE = "review_page_bytes"
+REDIRECTS = "review_redirects"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
 WAIT = 30
@@ -145,18 +149,87 @@ def words(text):
     return re.sub(r"[^\w.,!?;:]+", " ", spaced).strip()
 
 
-def page(url):
-    request = urllib.request.Request(
-        url, headers={"User-Agent": "reqctl-elucidate-review",
-                      "Accept-Encoding": "gzip, deflate"})
+# @req> REQ-37635213@tbWjYJVHFWan elw5bl
+class Redirects(urllib.request.HTTPRedirectHandler):
+    def __init__(self, bound):
+        self.max_repeats = self.max_redirections = bound
+        self.inf_msg = f"takes more than {bound} redirects; the last answered "
+
+    def redirect_request(self, req, *args):
+        req.redirect_dict = getattr(req, "redirect_dict", {})
+        return super().redirect_request(req, *args)
+
+
+# @req+ REQ-91666323@k8sa2vnqWm_q goa2fj
+def pinned(connection):
+    found = [info[4][0] for info in socket.getaddrinfo(
+        connection.host, connection.port, type=socket.SOCK_STREAM)]
+    inside = [one for one in found if not ipaddress.ip_address(one).is_global]
+    if inside:
+        raise OSError(f"{connection.host} is at the internal address "
+                      f"{inside[0]}")
+    return socket.create_connection((found[0], connection.port),
+                                    connection.timeout)
+
+
+class Plain(http.client.HTTPConnection):
+    def connect(self):
+        self.sock = pinned(self)
+
+
+class Secure(http.client.HTTPSConnection):
+    def connect(self):
+        self.sock = self._context.wrap_socket(pinned(self),
+                                              server_hostname=self.host)
+
+
+class PlainOpen(urllib.request.HTTPHandler):
+    def http_open(self, req):
+        return self.do_open(Plain, req)
+
+
+class SecureOpen(urllib.request.HTTPSHandler):
+    def https_open(self, req):
+        return self.do_open(Secure, req, context=self._context)
+# @req- goa2fj
+
+
+# @req> REQ-91666323@k8sa2vnqWm_q unfwxj
+# @req> REQ-37635213@tbWjYJVHFWan x27tsv
+def opener(redirects):
+    fetch = urllib.request.OpenerDirector()
+    for handler in (PlainOpen(), SecureOpen(), Redirects(redirects),
+                    urllib.request.HTTPErrorProcessor(),
+                    urllib.request.HTTPDefaultErrorHandler(),
+                    urllib.request.UnknownHandler()):
+        fetch.add_handler(handler)
+    return fetch
+
+
+def page(url, fetch, bound):
     try:
-        with urllib.request.urlopen(request, timeout=WAIT) as answer:
-            raw = answer.read()
+        request = urllib.request.Request(
+            url, headers={"User-Agent": "reqctl-elucidate-review",
+                          "Accept-Encoding": "gzip, deflate"})
+        with fetch.open(request, timeout=WAIT) as answer:
+            # @req+ REQ-99188850@TNL_gXYmsw4y f4kwgo
+            raw = answer.read(bound)
+            if answer.peek(1):
+                return None, f"the page is larger than {bound} bytes as served"
+            # @req- f4kwgo
             packed = (answer.headers.get("Content-Encoding")
                       or "").strip().lower()
             charset = answer.headers.get_content_charset() or "utf-8"
         if packed in PACKED:
-            raw = zlib.decompress(raw, zlib.MAX_WBITS | 32)
+            # @req+ REQ-99188850@TNL_gXYmsw4y 4c6q6e
+            unpacked = zlib.decompressobj(zlib.MAX_WBITS | 32)
+            raw = unpacked.decompress(raw, bound)
+            if len(raw) == bound and not unpacked.eof:
+                return None, (f"the page is larger than {bound} bytes once "
+                              "decompressed")
+            # @req- 4c6q6e
+            if not unpacked.eof:
+                return None, "the compressed page is cut short"
         elif packed not in ("", "identity"):
             return None, f"served as {packed}, which the check cannot read"
         body = raw.decode(charset, errors="replace")
@@ -169,11 +242,13 @@ def page(url):
     return words(" ".join(reader.held)), None
 
 
-def faults(review):
+def faults(review, bound, redirects):
     urls = sorted({source["url"] for practice in review["practices"]
                    for source in practice["sources"]})
+    fetch = opener(redirects)
     with ThreadPoolExecutor() as pool:
-        pages = dict(zip(urls, pool.map(page, urls)))
+        pages = dict(zip(urls, pool.map(
+            lambda url: page(url, fetch, bound), urls)))
     found = []
     for number, practice in enumerate(review["practices"], 1):
         # @req> REQ-32352887@xGar-bj5ZAXn dx3v2z
@@ -253,15 +328,16 @@ def check(run):
     if review is None:
         print(f"{path}: the review {why}; {again}")
         return 1
-    found = faults(review)
+    records = plan.glossary()
+    found = faults(review, plan.parameter(records, PAGE),
+                   plan.parameter(records, REDIRECTS))
     for fault in found:
         print(fault)
     if found:
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
               f"{again}")
         return 1
-    print("\n".join(summary(review, said,
-                            plan.parameter(plan.glossary(), BOUND))))
+    print("\n".join(summary(review, said, plan.parameter(records, BOUND))))
     print()
     print("\n".join(table(review, said)))
     return 0
