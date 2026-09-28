@@ -774,11 +774,9 @@ def lined(prompts, lines):
 
 
 def retire(run, text):
-    # @req+ REQ-40238953@RUP3vKC4vR8r 7jdcpl
     where = run / "export.md"
     changed = where.is_file() and where.read_text() != text
     corpus.atomic_write(where, text)
-    # @req- 7jdcpl
     if not changed:
         return []
     gone = sorted((run / "verdicts").glob("*.json"))
