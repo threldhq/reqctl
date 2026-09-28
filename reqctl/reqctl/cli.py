@@ -783,7 +783,7 @@ def cmd_tag(args):
     written = cite.write(root, args.path, asked, args.exclusive)
     # @req- nmyxfc
     # @req> REQ-75539229@OyOJtrpdfVnQ c7r3ff
-    # @req> REQ-89706423@iadxBaGa8VrN wrzqdw
+    # @req> REQ-89706423@_mbcyBulaUGb wrzqdw
     for uid in dict.fromkeys(uid for _, uid, _ in written):
         _listed(tree, uid, {identity: taken for identity, named, taken in written
                             if named == uid})
@@ -796,14 +796,14 @@ def cmd_repin(args):
     tree, root = corpus.load()
     citation = cite.named(root, args.id)
     item = corpus.find(tree, citation["uid"])
-    # @req> REQ-70626698@tT-VNXAxDjCV dhjmro
+    # @req> REQ-70626698@ybHsrTlF-wU1 dhjmro
     if corpus.raw(item).get("status") == "deprecated":
         raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
                           f"is removed, not re-pinned: `reqctl untag {args.id}`")
     stamp = corpus.tag_stamp(corpus.stamp(item))
     cite.repin(root, citation, stamp)
     # @req> REQ-64846889@pHOO0sEc7V1K 7dhw4d
-    # @req> REQ-17757558@VSn2tRlWyQmF tevb2p
+    # @req> REQ-17757558@4j9rQN-e61OY tevb2p
     _listed(tree, citation["uid"], {args.id: cite.standing(root, citation)})
     _emit(args, {"id": args.id, "path": citation["path"], "stamp": stamp},
           f"{args.id} in {citation['path']} pinned @{stamp}")
@@ -815,7 +815,7 @@ def cmd_untag(args):
     citation = cite.named(root, args.id)
     cite.remove(root, citation)
     # @req> REQ-13298390@OIZCRlURf3pq utmfsc
-    # @req> REQ-81275367@gSHwSanmQ208 olrtj5
+    # @req> REQ-81275367@rZszCCP31YAU olrtj5
     if citation["uid"] in {str(item.uid) for item in corpus.items(tree)}:
         _listed(tree, citation["uid"], {args.id: None})
     _emit(args, {"id": args.id, "path": citation["path"]},
@@ -827,18 +827,18 @@ def cmd_unlist(args):
     tree, root = corpus.load()
     item = corpus.find(tree, args.uid)
     uid = str(item.uid)
-    # @req> REQ-97939970@VFuhEbnLKli1 xrna4u
+    # @req> REQ-97939970@lyVUGGzeSEQW xrna4u
     if (not uid.startswith(("REQ-", "GUARD-"))
             or args.id not in corpus.mapping(item.data, corpus.CITATION_LIST)):
         raise ReqctlError(f"{uid}: its citation list does not hold {args.id}")
-    # @req+ REQ-59136977@RZuxd8I21O4a s3g7ya
-    # @req> REQ-81063063@le2DnuXlXsmo rphl5n
+    # @req+ REQ-59136977@5NZtW-PM9X2O s3g7ya
+    # @req> REQ-81063063@J51Kuu-RKFjK rphl5n
     if any(citation["id"] == args.id and citation["uid"] == uid
            for citation in cite.readable(root)):
         raise ReqctlError(
             f"{uid}: a statement citation names {args.id} -- reqctl untag "
             f"{args.id} removes the citation, reqctl repin {args.id} re-pins it")
-    # @req> REQ-56797974@Ga14vKvieLyx tn22pk
+    # @req> REQ-56797974@xJHqq1DXePrs tn22pk
     _listed(tree, uid, {args.id: None})
     # @req- s3g7ya
     _emit(args, {"uid": uid, "id": args.id},
