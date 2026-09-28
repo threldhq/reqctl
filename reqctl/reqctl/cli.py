@@ -789,6 +789,7 @@ def cmd_tag(args):
         changes += _listed(tree, uid, {identity: taken
                                        for identity, named, taken in written
                                        if named == uid})
+    # @req> REQ-65668011@6eXnj2-53DtA 4pj4jj
     corpus.write_all(changes)
     identities = [identity for identity, _, _ in written]
     _emit(args, {"ids": identities, "path": args.path}, "\n".join(identities))
@@ -808,6 +809,7 @@ def cmd_repin(args):
     # @req> REQ-64846889@pHOO0sEc7V1K 7dhw4d
     # @req> REQ-17757558@4j9rQN-e61OY tevb2p
     changes += _listed(tree, citation["uid"], {args.id: cite.standing(root, citation)})
+    # @req> REQ-65668011@6eXnj2-53DtA 34djjj
     corpus.write_all(changes)
     _emit(args, {"id": args.id, "path": citation["path"], "stamp": stamp},
           f"{args.id} in {citation['path']} pinned @{stamp}")
@@ -822,6 +824,7 @@ def cmd_untag(args):
     # @req> REQ-81275367@rZszCCP31YAU olrtj5
     if citation["uid"] in {str(item.uid) for item in corpus.items(tree)}:
         changes += _listed(tree, citation["uid"], {args.id: None})
+    # @req> REQ-65668011@6eXnj2-53DtA jwd2cj
     corpus.write_all(changes)
     _emit(args, {"id": args.id, "path": citation["path"]},
           f"{args.id} removed from {citation['path']}")

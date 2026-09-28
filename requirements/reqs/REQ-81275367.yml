@@ -11,8 +11,8 @@ assessed:
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
-  5gkn5k: LzczXExPLeS7dhB6fkXuGmfgniZlfmBWk5xxLXyRRac
-  olrtj5: xczswUmo9huoiNNlglhvHX4gD_kQgBNNcWVNrcLIT7Y
+  5gkn5k: v_rK_IBFTsu41-c2Ggk9O96iIQULR1TZ1ivApGyqMT8
+  olrtj5: q-SIChARCD0Wh13KP6Yv94fJTA2EPCcz7O2A3KdaQM8
 priority: medium
 relations:
   REQ-13298390: depends_on

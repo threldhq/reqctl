@@ -249,6 +249,7 @@ def raw(item):
     return item.data
 
 
+# @req> REQ-79557189@9se-A9aoBjZx np3ttn
 def atomic_write(path, content):
     target = Path(path).resolve()
     temp = target.with_name(f"{target.name}.{secrets.token_hex(8)}.tmp")
@@ -274,6 +275,7 @@ def atomic_write(path, content):
                 temp.unlink()
 
 
+# @req> REQ-65668011@6eXnj2-53DtA l5i6id
 def write_all(changes):
     held = [(path, Path(path).read_bytes()) for path, _ in changes]
     for at, (path, content) in enumerate(changes):
