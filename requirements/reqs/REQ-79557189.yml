@@ -5,11 +5,9 @@ acceptance_criteria:
 - given: a file the product rewrites
   then: the file holds the whole of what it held before or the whole of what was written
   when: the product is stopped partway through writing it
-assessed:
-  REQ-40238953: RUP3vKC4vR8r1eHkOj6vDGFveR7l4OhUuqGjZJ0Ah3U
+assessed: {}
 priority: medium
-relations:
-  REQ-40238953: supersedes
+relations: {}
 status: approved
 text: When the product writes a file, the product shall leave the file holding either
   the whole of what was written or what the file held before.
