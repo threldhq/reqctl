@@ -8,6 +8,7 @@ assessed:
   REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
   REQ-61906662: vIt4Qdb6Q01LJ5VHMe8kkG9Wsh5fJEM0IPWOAXSSzsU
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
   5gkn5k: LzczXExPLeS7dhB6fkXuGmfgniZlfmBWk5xxLXyRRac
@@ -20,9 +21,10 @@ relations:
   REQ-61906662: depends_on
 status: approved
 text: When the product removes a [statement citation](statement_citation), the product
-  shall leave unchanged every line the code base holds other than the lines holding
-  a comment that carries the citation, other than the lines holding what the [citation
-  list](citation_list) of the requirement it names holds for the citation, and other
-  than the lines holding that list where it holds nothing for any other citation.
+  shall leave unchanged every line the [code base](code_base) holds other than the
+  lines holding a comment that carries the citation, other than the lines holding
+  what the [citation list](citation_list) of the requirement it names holds for the
+  citation, and other than the lines holding that list where it holds nothing for
+  any other citation.
 type: functional
 verification: inspection

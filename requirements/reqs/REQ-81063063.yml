@@ -1,12 +1,13 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) the code base holds
+- given: a [statement citation](statement_citation) the [code base](code_base) holds
   then: the product refuses, names untag and repin, and the list is unchanged
   when: the product is asked to remove its [citation identity](citation_identity)
     from the [citation list](citation_list) of the requirement it names
 assessed:
-  REQ-59136977: RZuxd8I21O4a8mI67g5zkqxABlkY6DvHir5YRLL9s5U
+  REQ-59136977: 5NZtW-PM9X2OOiZgf5rDE9IouDL_tKWJpcAAzbj8lWo
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
   rphl5n: BbV0HY6XXc1dNYySMgZiNIx1UOoFgnt5R0oIN0eEsOE
@@ -16,7 +17,8 @@ relations:
 status: approved
 text: If the product is asked to remove from the [citation list](citation_list) of
   a requirement a [citation identity](citation_identity) that a [statement citation](statement_citation)
-  the code base holds names together with that requirement, then the product shall
-  refuse the removal and name untag and repin as the commands that act on that citation.
+  the [code base](code_base) holds names together with that requirement, then the
+  product shall refuse the removal and name untag and repin as the commands that act
+  on that citation.
 type: functional
 verification: inspection

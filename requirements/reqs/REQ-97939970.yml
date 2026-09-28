@@ -1,12 +1,13 @@
 acceptance_criteria:
 - given: a [citation identity](citation_identity) the [citation list](citation_list)
     of a requirement does not hold
-  then: the product refuses and the code base is unchanged
+  then: the product refuses and the [code base](code_base) is unchanged
   when: the product is asked to remove the identity from that list
 assessed:
-  REQ-59136977: RZuxd8I21O4a8mI67g5zkqxABlkY6DvHir5YRLL9s5U
+  REQ-59136977: 5NZtW-PM9X2OOiZgf5rDE9IouDL_tKWJpcAAzbj8lWo
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
 citations:
   xrna4u: ptgpGcwl1EI7NQAKWq2WCqBH_EZ-jhbLuj1HFsy0gWE
 priority: medium
