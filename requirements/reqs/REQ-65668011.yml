@@ -1,0 +1,41 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) whose requirement's item file
+    the product cannot read
+  then: the product reports an error and every line the [code base](code_base) holds
+    is unchanged
+  when: the product is asked to remove the citation
+- given: a [citation list](citation_list) the product cannot write
+  then: the product reports an error and every line the [code base](code_base) holds
+    is unchanged
+  when: the product is asked to cite, re-pin or remove a [statement citation](statement_citation)
+    naming its requirement
+assessed:
+  REQ-13298390: OIZCRlURf3pq-ZhHeyKdDSnceHIMsqnrRUQPpcjLOS8
+  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
+  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
+  REQ-79557189: 9se-A9aoBjZxhv3vIF32skwQLTi9xgDeHwOyO5srVf8
+  REQ-81275367: rZszCCP31YAUF8OI_m6qTAE3rFLUI2taSxCDDjYEk-E
+  citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+priority: medium
+relations:
+  REQ-13298390: constrains
+  REQ-18833394: constrains
+  REQ-26984738: constrains
+  REQ-60346603: constrains
+  REQ-62782894: constrains
+  REQ-64846889: constrains
+  REQ-75539229: constrains
+  REQ-79557189: depends_on
+  REQ-81275367: constrains
+status: approved
+text: If the product reports an error while citing, re-pinning or removing a [statement
+  citation](statement_citation), then the product shall leave every line the [code
+  base](code_base) holds as it was.
+type: functional
+verification: inspection

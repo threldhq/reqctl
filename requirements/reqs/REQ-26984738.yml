@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the product removes the citation by its [citation identity](citation_identity)
 assessed:
   REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
-  REQ-44424329: --ePOFus7t2HMD_69LLBgqXqfpK4lhrNikDYNlXE3H8
+  REQ-44424329: FMmHjrkfDEYRCx1n2GhkH0m-aUQg4OZL4rv5u7T2iVw
   REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ

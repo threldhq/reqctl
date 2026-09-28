@@ -9,6 +9,7 @@ assessed:
   citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
   s3g7ya: aETMvUlHUZaQZ9fEMylH7G-oZtgWtg7rsQwyDrtwCxQ
@@ -18,7 +19,7 @@ relations:
 status: approved
 text: When the product is asked to remove from the [citation list](citation_list)
   of a requirement a [citation identity](citation_identity) that no [statement citation](statement_citation)
-  the code base holds names together with that requirement, the product shall remove
-  the identity and its [citation digest](citation_digest) from that list.
+  the [code base](code_base) holds names together with that requirement, the product
+  shall remove the identity and its [citation digest](citation_digest) from that list.
 type: functional
 verification: inspection
