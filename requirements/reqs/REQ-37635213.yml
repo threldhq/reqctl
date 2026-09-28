@@ -9,6 +9,9 @@ assessed:
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   review_redirects: Ul5oTLdwqPtd4Z9qkcCud4ZvltD3raYEVPzO6PCFzOk
   review_redirects.*: kQgl2igfAUoACUekhfYuCaVPnXq7P7UPvyoWGAffW5Q
+citations:
+  elw5bl: UM7MvmcntZnxvHxJs7WfIiolTD9uDKmUQLmv2U8el2w
+  x27tsv: U32EBCpKF4JYhK9-a3tmg3aOm-v0ajND7fF0GGSZi_4
 priority: medium
 relations:
   REQ-46144308: derives_from
