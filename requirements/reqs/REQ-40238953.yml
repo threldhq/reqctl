@@ -7,8 +7,6 @@ acceptance_criteria:
   when: the run is built and not refused
 assessed:
   REQ-79557189: 9se-A9aoBjZxhv3vIF32skwQLTi9xgDeHwOyO5srVf8
-citations:
-  7jdcpl: dM4spDZcDE89vFCuI1sTfGBewRqK8spMpLr9D1IWv-o
 priority: medium
 relations:
   REQ-79557189: derives_from
