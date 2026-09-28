@@ -383,17 +383,17 @@ def cmd_mint(args):
     dims = plan.dimensions(corpus.find_root(), records)
 
     out = Path(args.out)
-    (out / "proposals").mkdir(parents=True, exist_ok=True)
-    stale = (sorted((out / "proposals").glob("*.md"))
+    stale =(sorted((out / "proposals").glob("*.md"))
              + sorted((out / "verdicts").glob("*.json")))
     for path in stale:
         path.unlink()
     for probe in key["probes"]:
-        (out / "proposals" / f"{probe['proposal']:02d}.md").write_text(
-            probe["statement"] + "\n")
-    (out / "words.md").write_text(
+        corpus.atomic_write(out / "proposals" / f"{probe['proposal']:02d}.md",
+                            probe["statement"] + "\n")
+    corpus.atomic_write(
+        out / "words.md",
         "".join(f"{probe['statement']}\n\n" for probe in key["probes"]))
-    (out / "answers.json").write_text(json.dumps(key, indent=2) + "\n")
+    corpus.atomic_write(out / "answers.json", json.dumps(key, indent=2) + "\n")
     recorded = {}
     if dims:
         recorded[plan.BINDS] = {
@@ -403,7 +403,7 @@ def cmd_mint(args):
             for name, (uid, _members) in dims.items()}
     recorded[plan.TRACE] = {probe["proposal"]: [probe["statement"]]
                             for probe in key["probes"]}
-    (out / "run.yaml").write_text(yaml.safe_dump(recorded, sort_keys=False))
+    corpus.atomic_write(out / "run.yaml", yaml.safe_dump(recorded, sort_keys=False))
 
     # @req+ REQ-79267149@1zBteGwniUwU 4avsug
     counted = {kind: sum(1 for probe in key["probes"] if probe["kind"] == kind)
@@ -437,7 +437,7 @@ def cmd_score(args):
     rows = measure(key, held, recalled, named)
     totals = _totals(rows)
     print(report(rows, absent, unread, totals))
-    (run / "score.json").write_text(json.dumps(
+    corpus.atomic_write(run / "score.json", json.dumps(
         {"totals": totals, "probes": rows, "no_verdict": sorted(absent),
          "no_recall_return": sorted(unread), "limitation": LIMITATION},
         indent=2) + "\n")

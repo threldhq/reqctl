@@ -22,6 +22,11 @@ assessed:
   citation_list: DmqIwhUDbbShYr6TmodX5TGhtjSrp9YNMu6FRuw79vc
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  34djjj: syNRnP4VNL6rlG_WgnoeEsLtwryVSsrpqCJJ12xUE2g
+  4pj4jj: syNRnP4VNL6rlG_WgnoeEsLtwryVSsrpqCJJ12xUE2g
+  jwd2cj: syNRnP4VNL6rlG_WgnoeEsLtwryVSsrpqCJJ12xUE2g
+  l5i6id: tfBYeNaxJatRKz8lboSsJPBMBnRhA29cZLeY2ujJwMg
 priority: medium
 relations:
   REQ-13298390: constrains

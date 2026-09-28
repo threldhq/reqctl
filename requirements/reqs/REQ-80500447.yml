@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the coverage prompt is built
 assessed: {}
 citations:
-  omzjq4: x5NX0wK-HkVRmLBcHQmADZbxCtcOzT2OQxKvaw41jvs
+  omzjq4: FsutJ4xqIse-87KpgGxBoOvUe0Lr1rF35OhVe4jvrm4
 priority: medium
 relations: {}
 status: approved

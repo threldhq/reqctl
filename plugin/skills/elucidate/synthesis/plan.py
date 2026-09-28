@@ -807,7 +807,7 @@ def coverage(run, words, declined, held, carried):
     # @req+ REQ-47744588@l3MLCZUPXuDZ a7rnsw
     # @req+ REQ-80500447@lQdaRnU0TPd1 omzjq4
     # @req> REQ-24569953@LsZU4Go81cg8 ssc6p2
-    where.write_text(COVERAGE.format(
+    corpus.atomic_write(where, COVERAGE.format(
         words=words, declined=declined, proposals=written,
         criteria=CARRIES.format(stated=lines) if lines else "", found=found,
         names=", ".join(f"`{name}`" for name in NAMES)))
@@ -826,8 +826,8 @@ def manifest(run, name, prompts):
             held[shape] = one["schema"]
         listed.append({**one, "schema": shape})
     where = run / "workflow" / f"{name}.json"
-    where.write_text(json.dumps({"shapes": held, "prompts": listed}, indent=1)
-                     + "\n")
+    corpus.atomic_write(where, json.dumps({"shapes": held, "prompts": listed},
+                                          indent=1) + "\n")
     return where
 
 
@@ -841,7 +841,7 @@ def state(run):
 
 
 def saved(run, held):
-    (run / STATE).write_text(json.dumps(held, indent=1) + "\n")
+    corpus.atomic_write(run / STATE, json.dumps(held, indent=1) + "\n")
 
 
 def recall_prompts(run, held, state_held, shards, only, words, declined,
@@ -930,11 +930,10 @@ def build(run, chars, items, lines=PROMPT_LINES):
             (run / "returns" / "recall").glob("*.json")):
         stale.unlink()
     for name, body in prompts.items():
-        (run / "prompts" / "recall" / f"{name}.md").write_text(body)
-    (run / "shards").mkdir(exist_ok=True)
+        corpus.atomic_write(run / "prompts" / "recall" / f"{name}.md", body)
     for name, text in texts.items():
-        (run / "shards" / f"{name}.md").write_text(text)
-    (run / "dictionary.md").write_text(dictionary_text)
+        corpus.atomic_write(run / "shards" / f"{name}.md", text)
+    corpus.atomic_write(run / "dictionary.md", dictionary_text)
     saved(run, state_held)
     where = manifest(run, "recall", spawned)
     coverage(run, words, declined, held, carried)
@@ -1031,7 +1030,7 @@ def halved(run, state_held, stopped, held, words, declined, dictionary_text,
         dictionary_text, records, total)
     lined(prompts, state_held["lines"])
     for name, body in prompts.items():
-        (run / "prompts" / "recall" / f"{name}.md").write_text(body)
+        corpus.atomic_write(run / "prompts" / "recall" / f"{name}.md", body)
     saved(run, state_held)
     where = manifest(run, "recall", spawned)
     # @req- moar22
@@ -1217,7 +1216,7 @@ def judge(run):
             (run / "returns" / "judge").glob("*.json")):
         stale.unlink()
     for name, body in prompts.items():
-        (run / "prompts" / "judge" / f"{name}.md").write_text(body)
+        corpus.atomic_write(run / "prompts" / "judge" / f"{name}.md", body)
     saved(run, state_held)
     where = manifest(run, "judge", spawned)
     # @req+ REQ-18337665@WgqhACOIS9SM 5zcmh2
@@ -1302,7 +1301,7 @@ def final(run):
         return 0
     lined(prompts, state_held["lines"])
     for name, body in prompts.items():
-        (run / "prompts" / "final" / f"{name}.md").write_text(body)
+        corpus.atomic_write(run / "prompts" / "final" / f"{name}.md", body)
     where = manifest(run, "final", spawned)
     # @req> REQ-56479390@PonL-ZUUzxq6 oapzeo
     print(f"{len(spawned)} final judge(s) to spawn: {where}")
