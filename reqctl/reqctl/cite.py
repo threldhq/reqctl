@@ -179,7 +179,7 @@ def parse(sources):
                     problems.append(f"{relative}:{number}: citation {identity} "
                                     "names no requirement")
                     continue
-                # @req> REQ-44424329@--ePOFus7t2H det3om
+                # @req> REQ-44424329@FMmHjrkfDEYR det3om
                 if identity in seen:
                     problems.append(
                         f"{relative}:{number}: citation {identity} is also "
@@ -296,7 +296,7 @@ def _sources(root):
 
 def mint(held):
     while True:
-        # @req+ REQ-92239556@w0fSOmsCa6TA uprfcz
+        # @req+ REQ-92239556@3Ak-FLuv4eG7 uprfcz
         identity = "".join(secrets.choice(ALPHABET) for _ in range(6))
         if identity not in held:
             return identity
@@ -307,13 +307,13 @@ def _ending(line):
     return line[len(line.rstrip("\r\n")):]
 
 
-# @req> REQ-89706423@iadxBaGa8VrN rkepcq
+# @req> REQ-89706423@_mbcyBulaUGb rkepcq
 def _indent(line):
     body = line.rstrip("\r\n")
     return body[:len(body) - len(body.lstrip())]
 
 
-# @req> REQ-89706423@iadxBaGa8VrN 5nywje
+# @req> REQ-89706423@_mbcyBulaUGb 5nywje
 def _inserted(lines, before, after):
     ending = next((_ending(line) for line in lines if _ending(line)), "\n")
     out = []
@@ -420,8 +420,8 @@ def named(root, identity):
     for citation in readable(root):
         if citation["id"] == identity:
             return citation
-    # @req> REQ-51778557@jyN3eEgJbFAs 2j6t3u
-    # @req> REQ-41024637@GwZanwxFaYmM cdi6vq
+    # @req> REQ-51778557@SqqYYPmC67aK 2j6t3u
+    # @req> REQ-41024637@zO8Xp3QDg6LT cdi6vq
     raise ReqctlError(f"no statement citation names {identity}")
 
 
@@ -431,7 +431,7 @@ def _lines(root, citation):
 
 
 def repin(root, citation, stamp):
-    # @req+ REQ-17757558@VSn2tRlWyQmF lqd5pz
+    # @req+ REQ-17757558@4j9rQN-e61OY lqd5pz
     target, lines = _lines(root, citation)
     at = citation["open"] - 1
     pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['uid'])})(?:@\S*)?")
@@ -444,7 +444,7 @@ def repin(root, citation, stamp):
 def remove(root, citation):
     target, lines = _lines(root, citation)
     marks = set(citation["marks"])
-    # @req> REQ-81275367@gSHwSanmQ208 5gkn5k
+    # @req> REQ-81275367@rZszCCP31YAU 5gkn5k
     # @req> REQ-26984738@nD05toE71g-O a4ywox
     target.write_bytes("".join(line for number, line in enumerate(lines, start=1)
                                if number not in marks).encode())
