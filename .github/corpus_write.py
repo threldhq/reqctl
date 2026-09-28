@@ -31,12 +31,12 @@ def bare(word):
 
 
 def resolve(value, minted):
-    # @req+ REQ-81313171@3CV_M8XsRLpd 3dpv3v
+    # @req+ REQ-81313171@NlK0HsO2hlQ4 3dpv3v
     found = MINTED.fullmatch(value)
     if not found:
         return value
     at = int(found.group(1))
-    # @req+ REQ-21669490@tWohKLmNox8d rkzzkl
+    # @req+ REQ-21669490@2Ec3CHq2mYp0 rkzzkl
     if at >= len(minted):
         raise Refused(f"{value}: step {at} has not run")
     if not minted[at]:
@@ -98,8 +98,8 @@ def argv(step, minted):
             made.append(f"--{name}")
             continue
         for each in value if isinstance(value, list) else [value]:
-            # @req> REQ-52483245@AHTmVTTc0QE_ eburqo
-            made.append(f"--{name}={resolve(each, minted)}")
+            # @req> REQ-52483245@YZqRZuCG0IVS eburqo
+            made.append(f"--{name}={each}")
     return made
 
 

@@ -1,10 +1,11 @@
 acceptance_criteria:
 - given: a [statement citation](statement_citation) citing a requirement the corpus
     has deprecated
-  then: the product refuses and the code base is unchanged
+  then: the product refuses and the [code base](code_base) is unchanged
   when: the product is asked to re-pin the citation
 assessed:
   REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
   dhjmro: Y1oeK1V0QSXCqBebyFgB0W3ag7vc0FljdDCek2Xrdzk

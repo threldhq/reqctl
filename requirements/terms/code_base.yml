@@ -1,0 +1,7 @@
+assessed: {}
+entries:
+  code_base:
+    definition: Every file in the repository the product runs in, the corpus included.
+    word: code base
+kind: term
+status: approved

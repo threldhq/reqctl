@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a file the product writes, and a write that fails partway
+  then: the file holds what it held before
+  when: the product writes the file
+- given: a file the product rewrites
+  then: the file holds the whole of what it held before or the whole of what was written
+  when: the product is stopped partway through writing it
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When the product writes a file, the product shall leave the file holding either
+  the whole of what was written or what the file held before.
+type: functional
+verification: inspection

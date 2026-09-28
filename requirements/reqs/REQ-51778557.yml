@@ -1,11 +1,12 @@
 acceptance_criteria:
 - given: a [citation identity](citation_identity) no [statement citation](statement_citation)
-    the code base holds names
-  then: the product refuses and the code base is unchanged
+    the [code base](code_base) holds names
+  then: the product refuses and the [code base](code_base) is unchanged
   when: the product is asked to remove the citation naming it
 assessed:
   REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
   citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
   2j6t3u: N5OhmYB2s3th665PNUiwT95Dg-ytOyeBPz1T7u79xaA
@@ -14,7 +15,7 @@ relations:
   REQ-26984738: constrains
 status: approved
 text: If the product is asked to remove a [statement citation](statement_citation)
-  by a [citation identity](citation_identity) that no citation the code base holds
-  names, then the product shall refuse the removal.
+  by a [citation identity](citation_identity) that no citation the [code base](code_base)
+  holds names, then the product shall refuse the removal.
 type: functional
 verification: inspection
