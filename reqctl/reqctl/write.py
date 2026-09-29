@@ -1529,7 +1529,7 @@ def delete(tree, uid):
         )
     # @req- ebwpu6
     # @req+ REQ-42065260@f4qBCU4zNhSm s7iyuc
-    item.path.unlink()
+    corpus.remove(item.path)
     corpus.invalidate(tree)
     return item.path
     # @req- s7iyuc

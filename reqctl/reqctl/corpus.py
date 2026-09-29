@@ -313,6 +313,11 @@ def all_or_nothing():
         _held = None
 
 
+def atomically(command):
+    with all_or_nothing():
+        return command()
+
+
 def _hold(path):
     if _held is not None and path not in _held:
         _held[path] = path.read_bytes() if path.exists() else None
@@ -321,7 +326,8 @@ def _hold(path):
 def _put_back(path, before):
     try:
         if before is None:
-            path.unlink(missing_ok=True)
+            if path.exists():
+                path.unlink()
         elif not path.is_file() or path.read_bytes() != before:
             atomic_write(path, before)
     except (OSError, ReqctlError):
@@ -329,10 +335,10 @@ def _put_back(path, before):
     return True
 
 
-def remove(path):
+def remove(path, missing_ok=False):
     held = Path(path).absolute()
     _hold(held)
-    held.unlink(missing_ok=True)
+    held.unlink(missing_ok=missing_ok)
 # @req- u5qcba
 
 

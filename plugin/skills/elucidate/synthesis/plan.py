@@ -781,14 +781,14 @@ def retire(run, text):
         return []
     gone = sorted((run / "verdicts").glob("*.json"))
     for stale in gone:
-        corpus.remove(stale)
+        corpus.remove(stale, missing_ok=True)
     return [stale.name for stale in gone]
 
 
 def cleared(run):
     # @req+ REQ-95375719@-TYbW5JhiwAf ey5733
     findings = run / FINDINGS
-    corpus.remove(findings)
+    corpus.remove(findings, missing_ok=True)
     # @req- ey5733
     return findings
 
@@ -1021,8 +1021,10 @@ def halved(run, state_held, stopped, held, words, declined, dictionary_text,
         for label in [one for one, spec in state_held["recall"].items()
                       if spec["shard"] == name]:
             del state_held["recall"][label]
-            corpus.remove(run / "prompts" / "recall" / f"{label}.md")
-            corpus.remove(run / "returns" / "recall" / f"{label}.json")
+            corpus.remove(run / "prompts" / "recall" / f"{label}.md",
+                          missing_ok=True)
+            corpus.remove(run / "returns" / "recall" / f"{label}.json",
+                          missing_ok=True)
     prompts, spawned, _ = recall_prompts(
         run, held, state_held, shards, set(stopped), words, declined,
         dictionary_text, records, total)
@@ -1161,7 +1163,8 @@ def judge(run):
             print(f"{label}:")
             for fault in faults:
                 print(f"  {fault}")
-            corpus.remove(run / "returns" / "recall" / f"{label}.json")
+            corpus.remove(run / "returns" / "recall" / f"{label}.json",
+                          missing_ok=True)
             scope = state_held["shards"][state_held["recall"][label]["shard"]]["scope"]
             spawned.append(spawn(run, "recall", label, f"recall:{label}",
                                  shapes.recall(scope),
@@ -1276,7 +1279,8 @@ def final(run):
         # @req> REQ-82676674@FK_7la2Hg_XC fnjvuz
         for name, why in refused:
             print(f"{name}: {why}")
-            corpus.remove(run / "returns" / "judge" / f"{name}.json")
+            corpus.remove(run / "returns" / "judge" / f"{name}.json",
+                          missing_ok=True)
             again.append(spawn(run, "judge", name, f"group:{name}",
                                shapes.GROUP, model, PHASES["judge"]))
         if refused:
@@ -1410,8 +1414,6 @@ def main(argv=None):
 if __name__ == "__main__":
     try:
         # @req> REQ-24406170@M08jCONzg-4u yny6rh
-        with corpus.all_or_nothing():
-            done = main()
-        sys.exit(done)
+        sys.exit(corpus.atomically(main))
     except (corpus.ReqctlError, OSError) as unreadable:
         sys.exit(f"{Path(__file__).name}: {unreadable}")
