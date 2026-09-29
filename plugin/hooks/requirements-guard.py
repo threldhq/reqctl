@@ -62,7 +62,7 @@ LITERAL_CHAR = re.compile(r"[^*?\[\]{}]")
 
 CITATION = re.compile(r"@req[+>-]")
 UNQUOTED = str.maketrans("", "", "'\"\\")
-CITATION_LINE = re.compile(r"^\s*(?:#+|<!--|//)\s*@req[+>-](?:\s|$)")
+CITATION_LINE = re.compile(r"^\s*(?:#+|<!--|//)?\s*@req[+>-](?:\s|$)")
 
 UNREADABLE = (
     "The requirements guard could not read this tool call, so it cannot judge "
@@ -470,8 +470,9 @@ def citations(text):
 def edited(tool, args):
     target = Path(os.environ.get("CLAUDE_PROJECT_DIR") or ".", args.get("file_path") or "")
     try:
-        before = target.read_text() if target.is_file() else ""
-    except (OSError, UnicodeError):
+        before = (target.read_bytes().decode(errors="ignore").replace("\r\n", "\n")
+                  if target.is_file() else "")
+    except OSError:
         deny(UNREADABLE)
     if tool == "Write":
         return before, args.get("content", "")
