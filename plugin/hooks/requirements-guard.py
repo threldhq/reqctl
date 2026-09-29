@@ -463,7 +463,7 @@ def judge_shell(raw):
 
 
 def citations(text):
-    return Counter(line.strip() for line in text.splitlines()
+    return Counter(line.strip() for line in text.split("\n")
                    if CITATION_LINE.match(line))
 
 
