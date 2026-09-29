@@ -1,0 +1,11 @@
+assessed: {}
+entries:
+  transient_failure:
+    aliases:
+    - transient failures
+    definition: 'A failure to fetch a source that may not recur when the source is
+      fetched again: a timeout, a refused or reset connection, or an answer of 429
+      or a 5xx status.'
+    word: transient failure
+kind: term
+status: approved
