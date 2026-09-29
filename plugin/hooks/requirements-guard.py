@@ -470,9 +470,8 @@ def citations(text):
 def edited(tool, args):
     target = Path(os.environ.get("CLAUDE_PROJECT_DIR") or ".", args.get("file_path") or "")
     try:
-        before = (target.read_bytes().decode(errors="ignore").replace("\r\n", "\n")
-                  if target.is_file() else "")
-    except OSError:
+        before = target.read_bytes().decode().replace("\r\n", "\n") if target.is_file() else ""
+    except (OSError, UnicodeError):
         deny(UNREADABLE)
     if tool == "Write":
         return before, args.get("content", "")
