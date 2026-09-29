@@ -774,7 +774,7 @@ def rename(store, uid, new_name):
     moved = corpus.folder_for(store.root, kind) / f"{new_name}.yml"
     corpus.save(store, corpus.Item(new_name, moved, after[new_name]))
     if item.path != moved:
-        item.path.unlink()
+        corpus.remove(item.path)
     for held_uid, data in after.items():
         if held_uid == new_name or data == before.get(held_uid):
             continue
@@ -809,7 +809,7 @@ def refile(store, uid):
     moved = corpus.folder_for(store.root, "data") / f"{item.uid}.yml"
     corpus.save(store, corpus.Item(item.uid, moved, after[item.uid]))
     if item.path != moved:
-        item.path.unlink()
+        corpus.remove(item.path)
     for held_uid, data in after.items():
         if held_uid == item.uid or data == before.get(held_uid):
             continue
@@ -1400,19 +1400,8 @@ def revise(store, uid, fields):
         return {}
     corpus.save(store, corpus.Item(uid, item.path, prospective))
     if spread:
-        written = [uid]
-        try:
-            for held in spread["moved"]:
-                corpus.save(store, held)
-                written.append(held.uid)
-        except OSError as broken:
-            waiting = [held.uid for held in spread["moved"]
-                       if held.uid not in written]
-            raise ReqctlError(
-                f"{broken}\nwritten: {', '.join(written)}\nnot written: "
-                f"{', '.join(waiting)}\nthe rename is part-written and reads "
-                f"as though it holds; restore requirements/ and run it again"
-            ) from broken
+        for held in spread["moved"]:
+            corpus.save(store, held)
         changed["reworded"] = {
             "links": spread["done"],
             "items": sorted(held.uid for held in spread["moved"]),

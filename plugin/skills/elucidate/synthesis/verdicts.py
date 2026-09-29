@@ -105,7 +105,7 @@ def respawn(run, state_held, numbers):
         spawned.append(plan.spawn(run, folder, number, f"{folder}:{number}",
                                   shapes.JUDGE, state_held["models"]["judge"],
                                   plan.PHASES["judge"]))
-        (run / "returns" / folder / f"{number}.json").unlink(missing_ok=True)
+        corpus.remove(run / "returns" / folder / f"{number}.json")
     return plan.manifest(run, "judge", spawned)
 
 
@@ -130,6 +130,8 @@ def main(argv=None):
 
 if __name__ == "__main__":
     try:
-        sys.exit(main())
+        with corpus.all_or_nothing():
+            done = main()
+        sys.exit(done)
     except (corpus.ReqctlError, OSError) as unreadable:
         sys.exit(f"{Path(__file__).name}: {unreadable}")

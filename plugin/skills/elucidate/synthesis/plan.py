@@ -781,14 +781,14 @@ def retire(run, text):
         return []
     gone = sorted((run / "verdicts").glob("*.json"))
     for stale in gone:
-        stale.unlink(missing_ok=True)
+        corpus.remove(stale)
     return [stale.name for stale in gone]
 
 
 def cleared(run):
     # @req+ REQ-95375719@-TYbW5JhiwAf ey5733
     findings = run / FINDINGS
-    findings.unlink(missing_ok=True)
+    corpus.remove(findings)
     # @req- ey5733
     return findings
 
@@ -926,7 +926,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
         (run / folder).mkdir(parents=True, exist_ok=True)
     for stale in list((run / "prompts" / "recall").glob("*.md")) + list(
             (run / "returns" / "recall").glob("*.json")):
-        stale.unlink()
+        corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "recall" / f"{name}.md", body)
     for name, text in texts.items():
@@ -1021,8 +1021,8 @@ def halved(run, state_held, stopped, held, words, declined, dictionary_text,
         for label in [one for one, spec in state_held["recall"].items()
                       if spec["shard"] == name]:
             del state_held["recall"][label]
-            (run / "prompts" / "recall" / f"{label}.md").unlink(missing_ok=True)
-            (run / "returns" / "recall" / f"{label}.json").unlink(missing_ok=True)
+            corpus.remove(run / "prompts" / "recall" / f"{label}.md")
+            corpus.remove(run / "returns" / "recall" / f"{label}.json")
     prompts, spawned, _ = recall_prompts(
         run, held, state_held, shards, set(stopped), words, declined,
         dictionary_text, records, total)
@@ -1161,7 +1161,7 @@ def judge(run):
             print(f"{label}:")
             for fault in faults:
                 print(f"  {fault}")
-            (run / "returns" / "recall" / f"{label}.json").unlink(missing_ok=True)
+            corpus.remove(run / "returns" / "recall" / f"{label}.json")
             scope = state_held["shards"][state_held["recall"][label]["shard"]]["scope"]
             spawned.append(spawn(run, "recall", label, f"recall:{label}",
                                  shapes.recall(scope),
@@ -1212,7 +1212,7 @@ def judge(run):
     lined(prompts, state_held["lines"])
     for stale in list((run / "prompts" / "judge").glob("*.md")) + list(
             (run / "returns" / "judge").glob("*.json")):
-        stale.unlink()
+        corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "judge" / f"{name}.md", body)
     saved(run, state_held)
@@ -1276,7 +1276,7 @@ def final(run):
         # @req> REQ-82676674@FK_7la2Hg_XC fnjvuz
         for name, why in refused:
             print(f"{name}: {why}")
-            (run / "returns" / "judge" / f"{name}.json").unlink(missing_ok=True)
+            corpus.remove(run / "returns" / "judge" / f"{name}.json")
             again.append(spawn(run, "judge", name, f"group:{name}",
                                shapes.GROUP, model, PHASES["judge"]))
         if refused:
@@ -1409,6 +1409,8 @@ def main(argv=None):
 
 if __name__ == "__main__":
     try:
-        sys.exit(main())
+        with corpus.all_or_nothing():
+            done = main()
+        sys.exit(done)
     except (corpus.ReqctlError, OSError) as unreadable:
         sys.exit(f"{Path(__file__).name}: {unreadable}")

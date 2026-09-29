@@ -386,7 +386,7 @@ def cmd_mint(args):
     stale =(sorted((out / "proposals").glob("*.md"))
              + sorted((out / "verdicts").glob("*.json")))
     for path in stale:
-        path.unlink()
+        corpus.remove(path)
     for probe in key["probes"]:
         corpus.atomic_write(out / "proposals" / f"{probe['proposal']:02d}.md",
                             probe["statement"] + "\n")
@@ -465,4 +465,6 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    with corpus.all_or_nothing():
+        done = main()
+    sys.exit(done)

@@ -255,6 +255,7 @@ def atomic_write(path, content):
     temp = target.with_name(f"{target.name}.{secrets.token_hex(8)}.tmp")
     staged = False
     try:
+        _hold(target)
         target.parent.mkdir(parents=True, exist_ok=True)
         with open(temp, "xb" if isinstance(content, bytes) else "x") as sink:
             staged = True
@@ -277,21 +278,59 @@ def atomic_write(path, content):
 
 # @req> REQ-65668011@6eXnj2-53DtA l5i6id
 def write_all(changes):
-    held = [(path, Path(path).read_bytes()) for path, _ in changes]
-    for at, (path, content) in enumerate(changes):
-        try:
+    with all_or_nothing():
+        for path, content in changes:
             atomic_write(path, content)
-        except BaseException as error:
-            kept = []
-            for undone, before in reversed(held[:at]):
-                try:
-                    atomic_write(undone, before)
-                except ReqctlError:
-                    kept.append(str(undone))
-            if kept:
-                raise ReqctlError(f"{error}; what this command wrote stays in "
-                                  f"{', '.join(kept)}") from error
-            raise
+
+
+_held = None
+
+
+@contextlib.contextmanager
+def all_or_nothing():
+    global _held
+    if _held is not None:
+        yield
+        return
+    _held = {}
+    try:
+        yield
+    except BaseException as error:
+        held, _held = _held, None
+        kept = [str(path) for path, before in reversed(held.items())
+                if not _put_back(path, before)]
+        if kept:
+            stays = f"what this command wrote stays in {', '.join(kept)}"
+            if isinstance(error, SystemExit):
+                raise SystemExit(f"{error}; {stays}") from error
+            if isinstance(error, (ReqctlError, OSError, UnicodeError)):
+                raise ReqctlError(f"{error}; {stays}") from error
+            error.add_note(stays)
+        raise
+    finally:
+        _held = None
+
+
+def _hold(path):
+    if _held is not None and path not in _held:
+        _held[path] = path.read_bytes() if path.exists() else None
+
+
+def _put_back(path, before):
+    try:
+        if before is None:
+            path.unlink(missing_ok=True)
+        elif not path.is_file() or path.read_bytes() != before:
+            atomic_write(path, before)
+    except (OSError, ReqctlError):
+        return False
+    return True
+
+
+def remove(path):
+    held = Path(path).absolute()
+    _hold(held)
+    held.unlink(missing_ok=True)
 
 
 def dump(data):
