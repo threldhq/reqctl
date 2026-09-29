@@ -130,6 +130,7 @@ def main(argv=None):
 
 if __name__ == "__main__":
     try:
+        # @req> REQ-24406170@M08jCONzg-4u ei57as
         with corpus.all_or_nothing():
             done = main()
         sys.exit(done)

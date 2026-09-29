@@ -255,6 +255,7 @@ def atomic_write(path, content):
     temp = target.with_name(f"{target.name}.{secrets.token_hex(8)}.tmp")
     staged = False
     try:
+        # @req> REQ-24406170@M08jCONzg-4u ig234p
         _hold(target)
         target.parent.mkdir(parents=True, exist_ok=True)
         with open(temp, "xb" if isinstance(content, bytes) else "x") as sink:
@@ -283,6 +284,7 @@ def write_all(changes):
             atomic_write(path, content)
 
 
+# @req+ REQ-24406170@M08jCONzg-4u u5qcba
 _held = None
 
 
@@ -331,6 +333,7 @@ def remove(path):
     held = Path(path).absolute()
     _hold(held)
     held.unlink(missing_ok=True)
+# @req- u5qcba
 
 
 def dump(data):
