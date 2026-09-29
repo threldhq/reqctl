@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a command that writes two files, and a write to the second that fails
+  then: the first file holds what it held before the command
+  when: the product runs the command
+- given: a command that has written a file and then refuses, reports a fault, is interrupted
+    or ends in a traceback
+  then: the file holds what it held before the command
+  when: the product runs the command
+- given: an item that statements name, and a write to one of those statements that
+    fails
+  then: the item's file stands where it stood holding what it held, and no file the
+    rename created remains
+  when: the product renames the item
+- given: a run whose build has written some of its prompts, and a write that fails
+  then: every file the build wrote holds what it held before the build
+  when: the product builds the run
+assessed:
+  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
+  REQ-73115701: e51Qp8vDbDXd9r9g1x11auhgdfz3p1C6bqxMeAuvYRk
+  REQ-79557189: 9se-A9aoBjZxhv3vIF32skwQLTi9xgDeHwOyO5srVf8
+priority: medium
+relations:
+  REQ-62782894: constrains
+  REQ-64846889: constrains
+  REQ-73115701: constrains
+  REQ-79557189: depends_on
+status: approved
+text: If one of the product's commands ends in an error, then the product shall put
+  back every file the command has written, created, renamed or deleted.
+type: functional
+verification: inspection
