@@ -62,7 +62,7 @@ LITERAL_CHAR = re.compile(r"[^*?\[\]{}]")
 
 CITATION = re.compile(r"@req[+>-]")
 UNQUOTED = str.maketrans("", "", "'\"\\")
-CITATION_LINE = re.compile(r"^\s*(?:#+|<!--|//)?\s*@req[+>-](?:\s|$)")
+CITATION_LINE = re.compile(r"^\s*(?:(?:#+|<!--|//)\s*)?@req[+>-](?:\s|$)")
 
 UNREADABLE = (
     "The requirements guard could not read this tool call, so it cannot judge "
