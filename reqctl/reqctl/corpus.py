@@ -298,16 +298,18 @@ def all_or_nothing():
     try:
         yield
     except BaseException as error:
+        if isinstance(error, SystemExit) and error.code in (None, 0):
+            raise
         held, _held = _held, None
         kept = [str(path) for path, before in reversed(held.items())
                 if not _put_back(path, before)]
         if kept:
-            stays = f"what this command wrote stays in {', '.join(kept)}"
+            left = f"not put back: {', '.join(kept)}"
             if isinstance(error, SystemExit):
-                raise SystemExit(f"{error}; {stays}") from error
+                raise SystemExit(f"{error}; {left}") from error
             if isinstance(error, (ReqctlError, OSError, UnicodeError)):
-                raise ReqctlError(f"{error}; {stays}") from error
-            error.add_note(stays)
+                raise ReqctlError(f"{error}; {left}") from error
+            error.add_note(left)
         raise
     finally:
         _held = None
