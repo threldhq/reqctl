@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: the kind schema gains a field for a kind of item
+  then: reqctl accepts the flag, with no edit to reqctl's parser
+  when: reqctl revise runs with that field's flag on an item of that kind
+- given: the kind schema lets an item leave a field out
+  then: it takes a flag that clears the field
+  when: reqctl revise runs on an item of that kind
+- given: the kind schema marks a field as the address the corpus reaches an item by
+  then: reqctl refuses the flag and names reqctl rename
+  when: reqctl revise runs with that field's flag
+assessed:
+  REQ-13148397: HGLj8b_6v-PVolRAcaFdJcDs_UjovUXrV-kbm7aGioo
+  REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
+priority: medium
+relations:
+  REQ-13148397: depends_on
+  REQ-44451070: depends_on
+status: approved
+text: The product shall build the flags that reqctl revise takes to set or clear an
+  item's fields from the kind schema.
+type: constraint
+verification: inspection

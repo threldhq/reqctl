@@ -5,6 +5,6 @@ acceptance_criteria:
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 relations: {}
-status: approved
+status: deprecated
 text: If the [portal](portal) offers a field for a kind of item that reqctl does not
   accept for that kind, then the build shall refuse the change.
