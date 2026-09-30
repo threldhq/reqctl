@@ -22,6 +22,11 @@ assessed:
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   review_fetch_seconds: Htcx-fm6ccpydSCOEZU7PmqT3YIW7ijMRv97lLajMNY
   review_fetch_seconds.*: 5mqJ4b8TkDMSGQk0a8MtmsPqJaTpGuoSwU7dw-FB57Y
+citations:
+  p7ygur: 7aCy1F3XHfzuWfdn7I-U2bNNDwtt59RnHu9dg3M2-Ow
+  sjt5cu: RvTBJ8QmhqEBeX9brVQuqQmHUKy-P433E6OTnKJ_-Bs
+  vz6m2q: zN6gvvtnvm2GMvD1yCLxLxjwlAIhHVfBlUqbz5KqRmM
+  xebeiz: WlTWiG8FV897t0PvOsb20rKRZi3Y1Hk7XQAn_DZvsSg
 priority: medium
 relations:
   REQ-46144308: derives_from

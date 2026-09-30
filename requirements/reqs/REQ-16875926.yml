@@ -18,6 +18,11 @@ assessed:
   review_fetch_seconds: Htcx-fm6ccpydSCOEZU7PmqT3YIW7ijMRv97lLajMNY
   review_fetch_seconds.*: 5mqJ4b8TkDMSGQk0a8MtmsPqJaTpGuoSwU7dw-FB57Y
   transient_failure: jRoVqaEGDhXAmWXfTDlCb-w_UeBtKn9hQr-FLR4xWP4
+citations:
+  eunqii: WlTWiG8FV897t0PvOsb20rKRZi3Y1Hk7XQAn_DZvsSg
+  hnfov3: mFNqRgJcME3Ni7zX4NiCM0UAOWgN89WcVvDh1qIl4yA
+  wuv5em: 8H42MSQJ5TRmd_-hASBMPIsufZiM3CmYUpq2W1vFpjQ
+  zrdwyr: SXy5ti9720ZUQbY3BN16aPkEZigGFq3BTHOhvIwbK7U
 priority: medium
 relations:
   REQ-46144308: constrains

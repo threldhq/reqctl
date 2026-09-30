@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 import argparse
+import contextlib
 import http.client
 import ipaddress
 import re
 import socket
 import sys
+import threading
+import time
+import urllib.parse
 import urllib.request
 import zlib
 from concurrent.futures import ThreadPoolExecutor
@@ -23,6 +27,7 @@ FIELD = "governed_field"
 BOUND = "review_summary_lines"
 PAGE = "review_page_bytes"
 REDIRECTS = "review_redirects"
+SECONDS = "review_fetch_seconds"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
 WAIT = 30
@@ -148,6 +153,49 @@ def words(text):
     return re.sub(r"[^\w.,!?;:]+", " ", spaced).strip()
 
 
+current = threading.local()
+
+
+class Transient(str):
+    pass
+
+
+# @req> REQ-16875926@oy3EzqZ3Ozhc hnfov3
+def transient(broken):
+    if isinstance(broken, urllib.request.HTTPError):
+        return broken.code == 429 or broken.code >= 500
+    return isinstance(getattr(broken, "reason", broken),
+                      (TimeoutError, ConnectionError))
+
+
+# @req> REQ-88584597@as115Aov_CEK vz6m2q
+class Deadline:
+    def __init__(self, seconds):
+        self.end, self.held = time.monotonic() + seconds, []
+        self.timer = threading.Timer(seconds, self.expire)
+        self.timer.start()
+
+    def left(self):
+        return max(self.end - time.monotonic(), 0)
+
+    def close(self):
+        self.timer.cancel()
+        self.timer.join()
+        for sock in self.held:
+            sock.close()
+
+    def expire(self):
+        for sock in self.held:
+            with contextlib.suppress(OSError):
+                sock.shutdown(socket.SHUT_RDWR)
+
+    def hold(self, sock):
+        self.held.append(sock.dup())
+        if not self.left():
+            self.expire()
+        return sock
+
+
 # @req> REQ-37635213@tbWjYJVHFWan elw5bl
 class Redirects(urllib.request.HTTPRedirectHandler):
     def __init__(self, bound):
@@ -167,8 +215,10 @@ def pinned(connection):
     if inside:
         raise OSError(f"{connection.host} is at the internal address "
                       f"{inside[0]}")
-    return socket.create_connection((found[0], connection.port),
-                                    connection.timeout)
+    # @req> REQ-88584597@as115Aov_CEK p7ygur
+    return current.deadline.hold(socket.create_connection(
+        (found[0], connection.port),
+        min(connection.timeout, current.deadline.left())))
 
 
 class Plain(http.client.HTTPConnection):
@@ -216,6 +266,9 @@ def page(url, fetch, bound):
             if answer.peek(1):
                 return None, f"the page is larger than {bound} bytes as served"
             # @req- f4kwgo
+            # @req> REQ-46144308@Za0OY4GCoecl nxt6cz
+            if answer.length:
+                raise http.client.IncompleteRead(raw, answer.length)
             packed = (answer.headers.get("Content-Encoding")
                       or "").strip().lower()
             charset = answer.headers.get_content_charset() or "utf-8"
@@ -231,23 +284,53 @@ def page(url, fetch, bound):
                 return None, "the compressed page is cut short"
         elif packed not in ("", "identity"):
             return None, f"served as {packed}, which the check cannot read"
-        body = raw.decode(charset, errors="replace")
+        return raw.decode(charset, errors="replace"), None
     except (OSError, ValueError, LookupError, EOFError, zlib.error,
             http.client.HTTPException) as broken:
-        return None, str(broken) or type(broken).__name__
+        # @req+ REQ-16875926@oy3EzqZ3Ozhc wuv5em
+        why = str(broken) or type(broken).__name__
+        return None, Transient(why) if transient(broken) else why
+        # @req- wuv5em
+
+
+def timed(url, fetch, bound, seconds):
+    # @req> REQ-88584597@as115Aov_CEK sjt5cu
+    with contextlib.closing(Deadline(seconds)) as deadline:
+        current.deadline = deadline
+        body, why = page(url, fetch, bound)
+    # @req> REQ-88584597@as115Aov_CEK xebeiz
+    # @req> REQ-16875926@oy3EzqZ3Ozhc eunqii
+    if not deadline.left():
+        return None, Transient(f"the fetch took more than {seconds} seconds")
+    if body is None:
+        return None, why
     reader = PageText()
     reader.feed(body)
     reader.close()
     return words(" ".join(reader.held)), None
 
 
-def faults(review, bound, redirects):
+def host(url):
+    try:
+        return urllib.parse.urlsplit(url).hostname
+    except ValueError:
+        return url
+
+
+def faults(review, bound, redirects, seconds):
     urls = sorted({source["url"] for practice in review["practices"]
                    for source in practice["sources"]})
+    # @req+ REQ-52340197@5988BwARNjD- mtrs7n
+    hosts = {}
+    for url in urls:
+        hosts.setdefault(host(url), []).append(url)
     fetch = opener(redirects)
     with ThreadPoolExecutor() as pool:
-        pages = dict(zip(urls, pool.map(
-            lambda url: page(url, fetch, bound), urls)))
+        pages = {url: read for fetched in pool.map(
+            lambda held: [(url, timed(url, fetch, bound, seconds))
+                          for url in held], hosts.values())
+                 for url, read in fetched}
+    # @req- mtrs7n
     found = []
     for number, practice in enumerate(review["practices"], 1):
         # @req> REQ-32352887@xGar-bj5ZAXn dx3v2z
@@ -259,7 +342,11 @@ def faults(review, bound, redirects):
             url = source["url"]
             text, why = pages[url]
             if text is None:
-                found.append(f"practice {number}: {url} cannot be read: {why}")
+                # @req+ REQ-16875926@oy3EzqZ3Ozhc zrdwyr
+                line = f"practice {number}: {url} cannot be read: {why}"
+                found.append(Transient(f"{line} (a transient failure)")
+                             if isinstance(why, Transient) else line)
+                # @req- zrdwyr
             elif not holds(text, words(source["passage"])):
                 found.append(f"practice {number}: {url} does not hold "
                              f"{source['passage']!r}")
@@ -329,12 +416,18 @@ def check(run):
         return 1
     records = plan.glossary()
     found = faults(review, plan.parameter(records, PAGE),
-                   plan.parameter(records, REDIRECTS))
+                   plan.parameter(records, REDIRECTS),
+                   plan.parameter(records, SECONDS))
     for fault in found:
         print(fault)
     if found:
+        # @req> REQ-46711731@SULIqbPOPYVp uput5b
+        remedy = ("each is a transient failure: check the same review again, "
+                  "without removing it or spawning the agent"
+                  if all(isinstance(fault, Transient) for fault in found)
+                  else again)
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
-              f"{again}")
+              f"{remedy}")
         return 1
     print("\n".join(summary(review, said, plan.parameter(records, BOUND))))
     print()
