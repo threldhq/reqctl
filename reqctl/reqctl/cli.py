@@ -953,15 +953,26 @@ def _command(sub, name, said):
     return sub.add_parser(name, help=said, description=said)
 
 
+RESERVED = ("json", "command", "func", "uid", "kind")
+
+
 def _field_arguments(s, flags, taken=()):
     for flag in flags:
-        if flag.dest in taken:
+        if flag.dest in taken and flag.entries:
             continue
-        if flag.switch:
-            s.add_argument(flag.flag, action="store_true")
-        else:
-            s.add_argument(flag.flag, choices=list(flag.choices) or None,
-                           action="append" if flag.repeated else "store")
+        if flag.dest in RESERVED + tuple(taken):
+            raise ReqctlError(f"a kind schema gives a field {flag.flag}, which "
+                              "reqctl takes for its own")
+        try:
+            if flag.switch:
+                s.add_argument(flag.flag, action="store_true")
+            else:
+                s.add_argument(flag.flag, choices=list(flag.choices) or None,
+                               action="append" if flag.repeated else "store",
+                               type=flag.convert, metavar=flag.metavar)
+        except argparse.ArgumentError as clash:
+            raise ReqctlError(f"a kind schema gives a field {flag.flag}, which "
+                              f"reqctl takes for its own: {clash}") from None
 
 
 def _item_arguments(s, root):

@@ -1,13 +1,22 @@
 import copy
+import re
 from dataclasses import dataclass
-
-from jsonschema import Draft202012Validator
 
 from . import corpus
 from .corpus import ReqctlError
 
 KIND = "kind"
 ENTRIES = "entries"
+WORD = re.compile(r"\A[a-z][a-z0-9_]*\Z")
+
+
+def boolean(text):
+    if text not in ("true", "false"):
+        raise ValueError(text)
+    return text == "true"
+
+
+CONVERTED = {"integer": int, "number": float, "boolean": boolean}
 
 
 def _dest(flag):
@@ -24,6 +33,9 @@ class Flag:
     choices: tuple
     repeated: bool
     switch: bool
+    convert: object
+    metavar: str | None
+    entries: bool
 
     @property
     def dest(self):
@@ -44,6 +56,8 @@ class Field:
     string: bool
     strings: bool
     prose: bool
+    convert: object
+    parts: tuple
 
     @property
     def dest(self):
@@ -63,7 +77,8 @@ def root():
 
 def _schema(root, kind):
     name = corpus.schema_name_for(kind)
-    return corpus.schema(root, name) if root else corpus.packaged_schema(name)
+    held = corpus.schema(root, name) if root else corpus.packaged_schema(name)
+    return held if isinstance(held, dict) else {}
 
 
 def _pointed(schema, ref):
@@ -71,7 +86,11 @@ def _pointed(schema, ref):
         return None
     target = schema
     for step in ref[2:].split("/"):
-        target = target.get(step) if isinstance(target, dict) else None
+        step = step.replace("~1", "/").replace("~0", "~")
+        if isinstance(target, list) and step.isdigit() and int(step) < len(target):
+            target = target[int(step)]
+        else:
+            target = target.get(step) if isinstance(target, dict) else None
     return target
 
 
@@ -93,21 +112,37 @@ def _resolved(schema, node):
     return node
 
 
+def _forbidden(stated):
+    return stated is False or (isinstance(stated, dict)
+                               and stated.get("not") in ({}, True))
+
+
+def _selects(schema, test, kind):
+    if not isinstance(test, dict) or set(test) - {"properties", "required"}:
+        return False
+    if set(test.get("required", ())) - {KIND}:
+        return False
+    tested = test.get("properties")
+    if not isinstance(tested, dict) or set(tested) != {KIND}:
+        return False
+    said = _resolved(schema, tested[KIND])
+    return said.get("const") == kind or kind in said.get("enum", ())
+
+
 def _merged(schema, kind):
     properties = {name: _resolved(schema, stated)
-                  for name, stated in schema.get("properties", {}).items()
-                  if stated is not False}
+                  for name, stated in (schema.get("properties") or {}).items()
+                  if not _forbidden(stated)}
     required = set(schema.get("required", ()))
     for branch in schema.get("allOf", ()):
-        test = branch.get("if", {}) if isinstance(branch, dict) else {}
-        if not isinstance(test, dict) or KIND not in test.get("properties", {}):
-            continue
-        if not Draft202012Validator(test).is_valid({KIND: kind}):
+        if not isinstance(branch, dict) or not _selects(schema, branch.get("if"), kind):
             continue
         then = branch.get("then", {})
+        if not isinstance(then, dict):
+            continue
         required.update(then.get("required", ()))
-        for name, stated in then.get("properties", {}).items():
-            if stated is False:
+        for name, stated in (then.get("properties") or {}).items():
+            if _forbidden(stated):
                 properties.pop(name, None)
             else:
                 properties[name] = {**properties.get(name, {}),
@@ -124,24 +159,30 @@ def _prose(node):
 
 
 def _field(schema, name, stated, required, entry):
-    said = str(stated.get("x-flag", name))
-    flag = _flag(said)
+    said = stated.get("x-flag", name)
+    if not isinstance(said, str) or not WORD.match(said):
+        raise ReqctlError(f"{schema.get('$id', 'a kind schema')}: {name} would "
+                          f"take the flag {said!r}, which is not a snake_case word")
     shape = stated.get("type")
     repeated = shape in ("array", "object")
     items = _resolved(schema, stated.get("items", {})) if shape == "array" else {}
+    typed = items.get("type") if shape == "array" else shape
+    convert = CONVERTED.get(typed) if isinstance(typed, str) else None
+    parts = tuple(items.get("required", ())) if items.get("type") == "object" else ()
     clears, empty = None, None
     if not required:
         clears = _flag("no_" + said)
     elif repeated and not stated.get("minItems") and not stated.get("minProperties"):
         clears, empty = _flag("no_" + said), [] if shape == "array" else {}
-    return Field(name=name, flag=flag, choices=tuple(stated.get("enum", ())),
+    textual = convert is None and "enum" not in stated
+    return Field(name=name, flag=_flag(said), choices=tuple(stated.get("enum", ())),
                  repeated=repeated,
                  required=required and "default" not in stated,
                  clears=clears, empty=empty,
                  address=stated.get("x-address") is True, entry=entry,
-                 string=shape == "string" and "enum" not in stated,
-                 strings=items.get("type") == "string",
-                 prose=_prose(stated))
+                 string=textual and not repeated,
+                 strings=textual and shape == "array" and not parts,
+                 prose=_prose(stated), convert=convert, parts=parts)
 
 
 def of(root, kind):
@@ -155,9 +196,17 @@ def of(root, kind):
             entry = _resolved(schema, stated.get("additionalProperties", {}))
             wanted = set(entry.get("required", ()))
             held += [_field(schema, key, _resolved(schema, value), key in wanted, True)
-                     for key, value in entry.get("properties", {}).items()]
+                     for key, value in (entry.get("properties") or {}).items()
+                     if not _forbidden(value)]
             continue
         held.append(_field(schema, name, stated, name in required, False))
+    taken = {}
+    for field in held:
+        for flag in filter(None, (field.flag, field.clears)):
+            if flag in taken:
+                raise ReqctlError(f"{kind}: {taken[flag]} and {field.name} would "
+                                  f"both take {flag}; give one an x-flag")
+            taken[flag] = field.name
     return held
 
 
@@ -183,7 +232,9 @@ def flags(root):
             if stated is not None:
                 choices = (tuple(dict.fromkeys(stated.choices + choices))
                            if stated.choices and choices else ())
-            held[field.flag] = Flag(field.flag, choices, field.repeated, False)
+            metavar = f"'{' | '.join(field.parts).upper()}'" if field.parts else None
+            held[field.flag] = Flag(field.flag, choices, field.repeated, False,
+                                    field.convert, metavar, field.name == ENTRIES)
     return list(held.values())
 
 
@@ -192,5 +243,6 @@ def clears(root):
     for kind in corpus.SCHEMA_NAMES:
         for field in of(root, kind):
             if field.clears:
-                held.setdefault(field.clears, Flag(field.clears, (), False, True))
+                held.setdefault(field.clears,
+                                Flag(field.clears, (), False, True, None, None, False))
     return list(held.values())

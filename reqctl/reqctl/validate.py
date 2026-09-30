@@ -63,7 +63,12 @@ def schema_problems(root, uid, data):
     for error in sorted(validator.iter_errors(data), key=str):
         error = best_match([error])
         where = ".".join(str(p) for p in error.absolute_path) or "(item)"
-        problems.append(f"{uid}: schema: {where}: {error.message}")
+        said = error.message
+        if error.validator == "not" and error.validator_value in ({}, True):
+            kind = corpus.kind_of(uid, data)
+            said = ("does not apply to a data item" if kind == "data"
+                    else f"does not apply to a {kind}")
+        problems.append(f"{uid}: schema: {where}: {said}")
     # @req> REQ-35443917@7V3GXXoqruBl znhrrb
     if data.get("verification") == "automated_test" and not any(
             problem.startswith(f"{uid}: schema: verification:")

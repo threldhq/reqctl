@@ -161,8 +161,8 @@ def _stray(root, own, fields, operations=()):
 
 
 def _converted(field, value):
-    if field.name == "acceptance_criteria":
-        return criteria(value)
+    if field.parts:
+        return criteria(value, field)
     # @req> REQ-24481048@ZhiYUpKwnPlA 2k7l5j
     if field.name == "unclaimed":
         return _unclaimed(value)
@@ -171,6 +171,10 @@ def _converted(field, value):
     if field.strings:
         return [str(member).strip() for member in value]
     return value
+
+
+def _keyed(field, entries):
+    return entries is not None and (field is entries or field.name == "default")
 
 
 def _one(values, flag):
@@ -190,20 +194,20 @@ def _unclaimed(pairs):
     return held
 
 
-def criteria(given):
+def criteria(given, field):
     if not given:
         return None
     parsed = []
     for raw in given:
         parts = [p.strip() for p in raw.split("|")]
-        if len(parts) != 3 or not all(parts):
+        if len(parts) != len(field.parts) or not all(parts):
             raise ReqctlError(
-                f"--criterion {raw!r}: expected 'given | when | then' -- three "
-                "non-empty parts separated by |"
+                f"{field.flag} {raw!r}: expected '{' | '.join(field.parts)}' -- "
+                f"{len(field.parts)} non-empty parts separated by |"
             )
         for part in parts:
-            _refuse_hidden("--criterion", part)
-        parsed.append(dict(zip(("given", "when", "then"), parts)))
+            _refuse_hidden(field.flag, part)
+        parsed.append(dict(zip(field.parts, parts)))
     return parsed
 
 
@@ -767,10 +771,11 @@ def refile(store, uid):
 
     before = {found.uid: found.data for found in corpus.items(store)}
     after = dict(before)
-    carried = _fields.names(store.root, "data")
+    dropped = (_fields.names(store.root, "parameter")
+               - _fields.names(store.root, "data"))
     after[item.uid] = dict(
         {key: value for key, value in item.data.items()
-         if key in carried}, kind="data")
+         if key not in dropped}, kind="data")
     after.update(_repin(after, {item.uid}))
 
     problems = _validate.dictionary_rules(item.uid, after[item.uid])
@@ -869,15 +874,18 @@ def prepare(store, kind, fields, placeholder=None):
     _refuse_blank_text(fields, own)
 
     data = _fields.defaults(store.root, kind)
+    entries = next((field for field in own if field.name == "entries"), None)
     entry = {}
     for field in own:
         value = fields.get(field.dest)
-        if value is not None and field.name not in ("entries", "default"):
+        if value is not None and not _keyed(field, entries):
             (entry if field.entry else data)[field.name] = _converted(field, value)
-    named = data.get("name")
-    entries = next((field for field in own if field.name == "entries"), None)
+    named = next((data.get(field.name) for field in own if field.address), None)
     if kind == "term":
-        word = entry["word"]
+        word = entry.get("word")
+        if not isinstance(word, str):
+            raise ReqctlError("a term needs a word: its handle falls out of the "
+                              "word it states")
         handle = corpus.handle_for(word)
         if not corpus.DATA_KEY.match(handle):
             raise ReqctlError(
@@ -885,7 +893,7 @@ def prepare(store, kind, fields, placeholder=None):
                 "term is addressed by one")
         data["entries"] = {handle: entry}
         named = handle
-    elif kind == "parameter" and entries is not None:
+    elif kind == "parameter" and entries and fields.get(entries.dest) is not None:
         data["entries"] = _entered(_one(fields[entries.dest], entries.flag))
         if fields.get("default") is not None:
             chosen = entry_key(scalar(str(fields["default"])))
@@ -893,7 +901,7 @@ def prepare(store, kind, fields, placeholder=None):
                 raise ReqctlError(f"--default {fields['default']}: not a member "
                                   "of the set")
             data["default"] = chosen
-    elif kind == "data" and entries is not None:
+    elif kind == "data" and entries and fields.get(entries.dest) is not None:
         keys = [str(key).strip() for key in fields[entries.dest]]
         repeated = sorted({key for key in keys if keys.count(key) > 1})
         if repeated:
@@ -1086,7 +1094,7 @@ def revise(store, uid, fields):
             value = _one(fields[entries.dest], entries.flag)
         stated = {field.name: _converted(field, fields[field.dest])
                   for field in own if fields.get(field.dest) is not None
-                  and field.name not in ("entries", "default")}
+                  and not _keyed(field, entries)}
     except ReqctlError as error:
         raise ReqctlError(f"{error}; {uid} was not changed") from None
     acks = fields.get("ack") or []
@@ -1105,8 +1113,11 @@ def revise(store, uid, fields):
                 f"--kind {fields['kind']}: {uid} is a {kind}; mint the item "
                 f"you meant; {uid} was not changed")
         prospective["kind"] = kind
-    sole = next(iter(corpus.entries(before) or {}), None)
-    entry = dict((corpus.entries(before) or {}).get(sole) or {})
+    sole, entry = None, {}
+    through = any(field.entry for field in own)
+    if through:
+        sole = next(iter(corpus.entries(before) or {}), None)
+        entry = dict((corpus.entries(before) or {}).get(sole) or {})
     for field in own:
         target = entry if field.entry else prospective
         if field.name in stated:
@@ -1118,7 +1129,7 @@ def revise(store, uid, fields):
                 target.pop(field.name, None)
             else:
                 target[field.name] = copy.deepcopy(field.empty)
-    if any(field.entry for field in own):
+    if through:
         prospective["entries"] = {sole: entry}
     if kind == "parameter":
         if value is not None:

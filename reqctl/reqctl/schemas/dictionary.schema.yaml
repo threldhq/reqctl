@@ -142,12 +142,12 @@ allOf:
   - if: {required: [kind], properties: {kind: {const: term}}}
     then:
       properties:
-        name: false
-        text: false
-        value_type: false
-        unit: false
-        default: false
-        rationale: false
+        name: {not: {}}
+        text: {not: {}}
+        value_type: {not: {}}
+        unit: {not: {}}
+        default: {not: {}}
+        rationale: {not: {}}
         entries:
           maxProperties: 1
           additionalProperties: {$ref: "#/$defs/term"}
@@ -162,8 +162,8 @@ allOf:
     then:
       required: [name]
       properties:
-        value_type: false
-        unit: false
+        value_type: {not: {}}
+        unit: {not: {}}
         entries: {x-flag: entry}
 
 $defs:
