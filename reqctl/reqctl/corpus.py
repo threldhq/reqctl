@@ -302,25 +302,27 @@ def all_or_nothing():
     except BaseException as error:
         if isinstance(error, SystemExit) and error.code in (None, 0):
             raise
-        held, made, _held, _made = _held, _made, None, None
+        held, _held = _held, None
         kept = [str(path) for path, before in reversed(held.items())
                 if not _put_back(path, before)]
-        # @req> REQ-81667762@82D0B66GuW3u yxx323
-        stayed = [str(folder) for folder in reversed(made)
-                  if not _remove_folder(folder)]
-        # @req+ REQ-83236530@f_SrFVNH8QSC ipd45o
-        left = "; ".join(f"{what}: {', '.join(paths)}" for what, paths in (
-            ("not put back", kept), ("folders left in place", stayed)) if paths)
-        if left:
+        # @req> REQ-81667762@82D0B66GuW3u cdcyzh
+        for folder in reversed(_made):
+            with contextlib.suppress(OSError):
+                folder.rmdir()
+        # @req+ REQ-83236530@f_SrFVNH8QSC v2zljr
+        kept += [f"{folder}{os.sep}" for folder in reversed(_made)
+                 if folder.is_dir()]
+        if kept:
+            left = f"not put back: {', '.join(kept)}"
             if isinstance(error, SystemExit):
                 raise SystemExit(f"{error}; {left}") from error
             if isinstance(error, (ReqctlError, OSError, UnicodeError)):
                 raise ReqctlError(f"{error}; {left}") from error
             error.add_note(left)
-        # @req- ipd45o
+        # @req- v2zljr
         raise
     finally:
-        _held = _made = None
+        _held = None
 
 
 def atomically(command):
@@ -352,20 +354,13 @@ def remove(path, missing_ok=False):
 # @req- u5qcba
 
 
-# @req+ REQ-81667762@82D0B66GuW3u habjh7
+# @req> REQ-81667762@82D0B66GuW3u 3rsgq3
 def make_folder(path):
     folder = Path(path).absolute()
-    if _made is not None:
+    if _held is not None:
         _made.extend(one for one in (*reversed(folder.parents), folder)
                      if not one.exists())
     folder.mkdir(parents=True, exist_ok=True)
-
-
-def _remove_folder(folder):
-    with contextlib.suppress(OSError):
-        folder.rmdir()
-    return not folder.is_dir()
-# @req- habjh7
 
 
 def dump(data):
