@@ -37,8 +37,9 @@ def repository(where):
 
 # @req> REQ-56725181@knOj5NP_RuL_ 52i7vh
 def policy_of(page):
-    script = base64.b64encode(hashlib.sha256(SCRIPT.search(page).group(1)).digest())
-    return (f"default-src 'none'; script-src 'sha256-{script.decode()}'; "
+    script = SCRIPT.search(page).group(1).replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    held = base64.b64encode(hashlib.sha256(script).digest())
+    return (f"default-src 'none'; script-src 'sha256-{held.decode()}'; "
             "style-src 'unsafe-inline'; connect-src https://api.github.com; "
             "form-action 'none'")
 
