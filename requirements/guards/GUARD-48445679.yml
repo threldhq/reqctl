@@ -9,7 +9,7 @@ acceptance_criteria:
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 relations: {}
-status: approved
+status: deprecated
 text: If the fields the [portal](portal) marks as required for a kind of item are
   other than those reqctl requires to create an item of that kind, then the build
   shall refuse the change.

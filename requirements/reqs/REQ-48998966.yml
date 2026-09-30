@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a data item is given a name and no entry
+  then: reqctl refuses the item, naming --entry, and writes no file
+  when: reqctl new runs
+- given: a parameter is given a name, a text and a value, and no value type
+  then: reqctl refuses the item, naming --value-type
+  when: reqctl new runs
+- given: a requirement is given a text and no verification
+  then: reqctl mints the requirement
+  when: reqctl new runs
+assessed:
+  REQ-13148397: HGLj8b_6v-PVolRAcaFdJcDs_UjovUXrV-kbm7aGioo
+  REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
+  REQ-71965656: 7EwX0Kxq6VnfLW59O8tUMn10fYD-TRyY584jATDwF1g
+priority: medium
+relations:
+  REQ-13148397: depends_on
+  REQ-44451070: depends_on
+  REQ-71965656: depends_on
+status: approved
+text: If reqctl new is not given a flag for every field that the kind schema requires
+  and reqctl fills in no default for, then the product shall refuse the item, naming
+  each flag it lacks.
+type: functional
+verification: inspection
