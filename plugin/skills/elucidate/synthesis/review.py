@@ -266,6 +266,9 @@ def page(url, fetch, bound):
             if answer.peek(1):
                 return None, f"the page is larger than {bound} bytes as served"
             # @req- f4kwgo
+            # @req> REQ-46144308@Za0OY4GCoecl nxt6cz
+            if answer.length:
+                raise http.client.IncompleteRead(raw, answer.length)
             packed = (answer.headers.get("Content-Encoding")
                       or "").strip().lower()
             charset = answer.headers.get_content_charset() or "utf-8"
@@ -322,7 +325,7 @@ def faults(review, bound, redirects, seconds):
     for url in urls:
         hosts.setdefault(host(url), []).append(url)
     fetch = opener(redirects)
-    with ThreadPoolExecutor(len(hosts) or 1) as pool:
+    with ThreadPoolExecutor() as pool:
         pages = {url: read for fetched in pool.map(
             lambda held: [(url, timed(url, fetch, bound, seconds))
                           for url in held], hosts.values())
