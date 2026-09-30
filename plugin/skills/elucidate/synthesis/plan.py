@@ -29,6 +29,7 @@ TRACE = "trace"
 FINDINGS = "coverage.yml"
 STATE = "build.json"
 REVIEWED = "review.json"
+REMOVED = "removed.json"
 DECLINED = "declined_practices"
 OBLIGATION = {"REQ": "requirements", "GUARD": "guards"}
 KIND_NAME = {"REQ": "requirement", "GUARD": "guard"}
@@ -1361,6 +1362,18 @@ def describe(run):
     return 0
 
 
+# @req> REQ-51975077@c_HnzFhrYbl_ z6krrc
+def removed(run):
+    path = run / REMOVED
+    if not path.is_file():
+        return []
+    held, why = read_return(path, shapes.REVIEW)
+    if held is None:
+        raise SystemExit(f"{path}: the practices removed on the owner's answer "
+                         f"{why}")
+    return held["practices"]
+
+
 def declined_practices(run):
     # @req+ REQ-20454019@BJxxS0ixzdXK mkqci7
     path, read = recorded(run)
@@ -1369,23 +1382,20 @@ def declined_practices(run):
         raise SystemExit(f"{path}: `{DECLINED}` states {numbers!r}. The form "
                          "is a list of the review's practice numbers, as "
                          "`[1, 3]`.")
-    if not numbers:
-        return []
+    # @req> REQ-51975077@c_HnzFhrYbl_ px3ye3
+    held = removed(run)
     review, why = read_return(run / REVIEWED, shapes.REVIEW)
-    if review is None:
+    if numbers and review is None:
         raise SystemExit(f"{path}: `{DECLINED}` names practices, and "
                          f"{run / REVIEWED} {why}")
-    held = review["practices"]
-    lines = []
     for number in numbers:
-        if type(number) is not int or not 1 <= number <= len(held):
+        if type(number) is not int or not 1 <= number <= len(review["practices"]):
             raise SystemExit(f"{path}: `{DECLINED}` names {number!r}; the review "
-                             f"holds practices 1 to {len(held)}")
-        practice = held[number - 1]
-        lines.append(f"- a practice of the best-in-class review, declined: "
-                     f"{practice['practice']} "
-                     f"({', '.join(practice['leaders'])})")
-    return lines
+                             f"holds practices 1 to {len(review['practices'])}")
+        held.append(review["practices"][number - 1])
+    return [f"- a practice of the best-in-class review, declined: "
+            f"{practice['practice']} ({', '.join(practice['leaders'])})"
+            for practice in held]
     # @req- mkqci7
 
 
