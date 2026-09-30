@@ -18,6 +18,9 @@ def _schemas_are_schemas(root):
     for name in sorted(set(SCHEMAS) | set(corpus.schema_names(root))):
         try:
             corpus.schema(root, name)
+        # @req> REQ-14895892@JjrTwHoJqTRe 22v4gm
+        except corpus.UnmarkedCopy:
+            raise
         except corpus.ReqctlError as unreadable:
             problems.append(str(unreadable))
             broken.add(name)
@@ -924,6 +927,9 @@ def _dropped(node, paths, at=()):
 def _without(root, uid, data, *finders):
     try:
         paths = frozenset(one for find in finders for one in find(root, uid, data))
+    # @req> REQ-14895892@JjrTwHoJqTRe in6ljr
+    except corpus.UnmarkedCopy:
+        raise
     except corpus.ReqctlError:
         return data
     return _dropped(data, paths) if paths else data
