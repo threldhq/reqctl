@@ -146,20 +146,23 @@ def hash_found(path, text):
     return held
 
 
-def past_string(text, index, number):
-    quote, size = text[index], len(text)
+def past_string(path, text, index, number):
+    quote, size, opened = text[index], len(text), number
     index += 1
-    while index < size and text[index] != quote:
+    while index < size and text[index] not in (quote, "\n"):
         if text[index] == "\\":
-            index += 1
+            index += 2 if text.startswith("\r\n", index + 1) else 1
         if index < size and text[index] == "\n":
             number += 1
         index += 1
+    if index >= size or text[index] != quote:
+        raise SystemExit(f"cannot read {path}: the string on line {opened} "
+                         "never closes")
     return index + 1, number
 
 
-def past_template(text, index, number):
-    size = len(text)
+def past_template(path, text, index, number):
+    size, opened = len(text), number
     while index < size:
         if text[index] == "`":
             return index + 1, number, False
@@ -170,7 +173,8 @@ def past_template(text, index, number):
         if index < size and text[index] == "\n":
             number += 1
         index += 1
-    return index, number, False
+    raise SystemExit(f"cannot read {path}: the template literal on line "
+                     f"{opened} never closes")
 
 
 def past_regex(text, index):
@@ -186,13 +190,16 @@ def past_regex(text, index):
             classed = False
         elif letter == "/" and not classed:
             flags = WORD.match(text, index + 1)
+            if text.startswith(("//", "/*"), index) or (
+                    flags and not set(flags.group()) <= set("dgimsuyv")):
+                return None
             return flags.end() if flags else index + 1
         index += 1
     return None
 
 
-def slash_found(path, text):
-    held, index, size, number = [], 0, len(text), 1
+def slash_found(path, text, number=1):
+    held, index, size = [], 0, len(text)
     braces, substitutions, operand = 0, [], False
     while index < size:
         letter = text[index]
@@ -205,12 +212,13 @@ def slash_found(path, text):
                                and substitutions[-1] == braces):
             if letter == "}":
                 substitutions.pop()
-            index, number, opened = past_template(text, index + 1, number)
+            index, number, opened = past_template(path, text, index + 1,
+                                                  number)
             if opened:
                 substitutions.append(braces)
             operand = not opened
         elif letter in "\"'":
-            index, number = past_string(text, index, number)
+            index, number = past_string(path, text, index, number)
             operand = True
         elif text.startswith("//", index):
             stop = text.find("\n", index)
@@ -248,9 +256,8 @@ def markup_found(path, text):
         held.append(("comment", start, start + found.group().count("\n"),
                      " ".join(found.group().split())))
     for found in EMBEDDED.finditer(text):
-        base = text.count("\n", 0, found.start(2))
-        held += [(what, line + base, end + base, body)
-                 for what, line, end, body in slash_found(path, found.group(2))]
+        held += slash_found(path, found.group(2),
+                            text.count("\n", 0, found.start(2)) + 1)
     return held
 
 
