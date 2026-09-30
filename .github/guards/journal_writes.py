@@ -30,7 +30,9 @@ METHODS = {
     "unlink": "delete",
 }
 # @req- kcim4i
-ARITY = {"rename": 1, "replace": 1, "unlink": 0}
+ARITY = {"rename": (1, 1, "target"), "replace": (1, 1, "target"),
+         "unlink": (0, 1, "missing_ok")}
+MODULES = {name.split(".")[0] for name in FUNCTIONS} | {PATH.split(".")[0]}
 WRITING_MODES = set("wax+")
 STRAY = (f"makes one of the {DATA} outside {JOURNAL} -- change the file "
          "through corpus.atomic_write or corpus.remove")
@@ -75,6 +77,9 @@ def mode_writes(mode):
 
 
 def opened(node, name, held):
+    if any(isinstance(one, ast.Starred) for one in node.args) or any(
+            one.arg is None for one in node.keywords):
+        return None
     if name in FUNCTIONS or name == f"{PATH}.open":
         target = argument(node, 0, "path" if name == "os.open" else "file")
         if resolved(target, held) == "os.devnull":
@@ -99,10 +104,14 @@ def classified(node, held):
     owner = resolved(func.value, held)
     if owner == PATH:
         return METHODS[func.attr], name
-    if isinstance(func.value, ast.Name) and owner is not None:
+    if isinstance(func.value, ast.Name) and owner == func.value.id:
         return None
-    if func.attr in ARITY and len(node.args) != ARITY[func.attr]:
-        return None
+    if func.attr in ARITY:
+        low, high, keyword = ARITY[func.attr]
+        given = len(node.args) + sum(one.arg in (keyword, None)
+                                     for one in node.keywords)
+        if not low <= given <= high:
+            return None
     return METHODS[func.attr], ast.unparse(func)
 
 
@@ -111,6 +120,11 @@ def refusals(path):
     tree = references.parsed(path)
     held = imported(tree)
     for node in ast.walk(tree):
+        if (isinstance(node, ast.ImportFrom) and node.module in MODULES
+                and any(alias.name == "*" for alias in node.names)):
+            yield node.lineno, (f"from {node.module} import * hides which of "
+                                f"the {DATA} this file makes -- import the "
+                                "names it uses")
         if not isinstance(node, ast.Call):
             continue
         made = classified(node, held)
