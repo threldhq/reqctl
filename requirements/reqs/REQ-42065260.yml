@@ -4,7 +4,7 @@ acceptance_criteria:
   when: removal of the unapproved item is requested
 assessed: {}
 citations:
-  s7iyuc: gi7Joyx7iQmbGOFFvlJ0bFCL5pHlo8pH8xKIWOyVE8Q
+  s7iyuc: 3J869Wnrh68inCFGku-_k7bWtc4axP2I5Qz1WafYGLk
 priority: medium
 relations: {}
 status: approved
