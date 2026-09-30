@@ -9,7 +9,8 @@ entries:
     definition: Path.unlink, os.remove, os.unlink or shutil.rmtree
   open_to_write:
     definition: open, io.open or Path.open in a mode that writes, appends, creates
-      or updates, or os.open with a flag that writes, appends, creates or truncates
+      or updates, or os.open with a flag that writes, appends, creates or truncates,
+      on any path but os.devnull
   rename:
     definition: Path.rename, Path.replace, os.rename, os.renames, os.replace or shutil.move
   write:
