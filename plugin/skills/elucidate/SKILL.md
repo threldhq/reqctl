@@ -247,7 +247,7 @@ the owner as a question.
 
 What survives groups by the decision it turns on, not the statement that raised
 it: one question per decision. Ask them in one message, numbered, ordered by
-what they block. Never the question picker, never one at a time. Each carries
+what they block. Never one at a time. Each carries
 what hangs on it, what is undecided, what the corpus already says, the
 alternatives stated evenly, and your reading of them, marked as yours.
 Disagreeing stays as easy as agreeing: the owner's first look must not be a
@@ -268,6 +268,13 @@ the answer it favours and the numbered practices it rests on, or that the
 review holds nothing bearing on the question. It is the review's reading,
 marked as such, beside the alternatives.
 <!-- @req- vb4fww -->
+
+<!-- @req+ REQ-12222066@KVMqlUhM4uwv ado55e -->
+No further step runs while a question you put the owner is unanswered. Post
+the message asking it, then collect the answer: without a goal, by ending your
+turn, never with the question picker; under a goal, where ending the turn does
+not wait for the owner, with the question picker.
+<!-- @req- ado55e -->
 
 <!-- @req+ REQ-93075993@_Ewq27hRC5AG jt35j6 -->
 An answer adopting a practice joins the owner's words with the rest of their
