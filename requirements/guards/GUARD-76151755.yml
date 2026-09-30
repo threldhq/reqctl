@@ -5,6 +5,8 @@ acceptance_criteria:
   when: the build runs
 assessed:
   GUARD-27671623: 3zDwoF3LwQkwJfjcvT7R9thCsV14lyaaD-cA12PDExA
+citations:
+  3zx2hr: mpD4dqsTfcOg7n_RuMUh_xi6yNY4NHYBeO8RrBO8MIY
 relations:
   GUARD-27671623: constrains
 status: approved

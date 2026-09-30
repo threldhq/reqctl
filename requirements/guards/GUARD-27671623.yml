@@ -19,6 +19,12 @@ acceptance_criteria:
 assessed:
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+citations:
+  7noe76: ypPTp6lkvyMhbwHch7ae2C0vtLisCqZPS4tpMw-7xx4
+  hvzjkq: 2OT3XxB7_mXbhklkwENt_3jaNCzjs4Bx1UpdAqjGPU4
+  ixyyek: Mn-Il8lYfdW4r8mvltYZim9TXlAbkbJouxvRwrrVWLA
+  jrq67o: SFQ_73GPwnS8iIHrmlgA9YtgYukjds0g8sFiuiD7N8w
+  ka4pr4: xYjEBZ-i7sFhlPdE2Jjh0M_4N_wbLBhz3qSaTfGIpjk
 relations: {}
 status: approved
 text: If a file outside the [corpus root](corpus_root) holds a comment or docstring
