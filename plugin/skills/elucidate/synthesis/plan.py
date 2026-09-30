@@ -1384,17 +1384,15 @@ def declined_practices(run):
                          "`[1, 3]`.")
     # @req> REQ-51975077@c_HnzFhrYbl_ px3ye3
     held = removed(run)
-    if numbers:
-        review, why = read_return(run / REVIEWED, shapes.REVIEW)
-        if review is None:
-            raise SystemExit(f"{path}: `{DECLINED}` names practices, and "
-                             f"{run / REVIEWED} {why}")
-        practices = review["practices"]
-        for number in numbers:
-            if type(number) is not int or not 1 <= number <= len(practices):
-                raise SystemExit(f"{path}: `{DECLINED}` names {number!r}; the "
-                                 f"review holds practices 1 to {len(practices)}")
-            held.append(practices[number - 1])
+    review, why = read_return(run / REVIEWED, shapes.REVIEW)
+    if numbers and review is None:
+        raise SystemExit(f"{path}: `{DECLINED}` names practices, and "
+                         f"{run / REVIEWED} {why}")
+    for number in numbers:
+        if type(number) is not int or not 1 <= number <= len(review["practices"]):
+            raise SystemExit(f"{path}: `{DECLINED}` names {number!r}; the review "
+                             f"holds practices 1 to {len(review['practices'])}")
+        held.append(review["practices"][number - 1])
     return [f"- a practice of the best-in-class review, declined: "
             f"{practice['practice']} ({', '.join(practice['leaders'])})"
             for practice in held]

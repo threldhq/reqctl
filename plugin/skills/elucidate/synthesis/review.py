@@ -415,22 +415,21 @@ def table(review, said):
 
 
 # @req> REQ-46711731@rqojAeSdcYOn jkd2va
-def asked(run, review, pages, attempts, again):
+def asked(run, review, pages, again):
     failed = sorted(url for url, (_, why) in pages.items()
                     if isinstance(why, Transient))
-    named = [(number, practice)
+    named = {number: practice
              for number, practice in enumerate(review["practices"], 1)
-             if any(source["url"] in failed for source in practice["sources"])]
+             if any(source["url"] in failed for source in practice["sources"])}
     corpus.atomic_write(run / ASKED, json.dumps(
-        {"practices": [practice for _, practice in named]}))
-    script = f"python3 {HERE / 'review.py'}"
-    return (f"every source above failed all {attempts} attempts. Put one "
-            f"question to the owner naming {', '.join(failed)}, with three "
-            "answers:\n- check the same review again: "
-            f"`{script} check --run {run}`\n- decline practice(s) "
-            f"{', '.join(str(number) for number, _ in named)}, which name "
-            f"those sources: `{script} decline --run {run}`\n- make the "
-            f"review again: {again}")
+        {"practices": list(named.values())}))
+    script = f"python3 {__file__}"
+    return ("every source above failed every attempt. Put one question to the "
+            f"owner naming {', '.join(failed)}, with three answers:\n- check "
+            f"the same review again: `{script} check --run {run}`\n- decline "
+            f"practice(s) {', '.join(map(str, named))}, which name those "
+            f"sources: `{script} decline --run {run}`\n- make the review "
+            f"again: {again}")
 
 
 # @req> REQ-51975077@c_HnzFhrYbl_ zf7cg7
@@ -453,7 +452,6 @@ def decline(run):
     corpus.atomic_write(run / plan.REMOVED, json.dumps(
         {"practices": plan.removed(run) + named["practices"]}))
     corpus.atomic_write(path, json.dumps({"practices": kept}))
-    corpus.remove(where)
     for practice in named["practices"]:
         print(f"removed, declined by the owner: {practice['practice']}")
     print()
@@ -475,15 +473,15 @@ def check(run):
         print(f"{path}: the review {why}; {again}")
         return 1
     records = plan.glossary()
-    attempts = plan.parameter(records, ATTEMPTS)
     found, pages = faults(review, plan.parameter(records, PAGE),
                           plan.parameter(records, REDIRECTS),
-                          plan.parameter(records, SECONDS), attempts)
+                          plan.parameter(records, SECONDS),
+                          plan.parameter(records, ATTEMPTS))
     for fault in found:
         print(fault)
     if found:
         # @req> REQ-46711731@rqojAeSdcYOn uput5b
-        remedy = (asked(run, review, pages, attempts, again)
+        remedy = (asked(run, review, pages, again)
                   if all(isinstance(fault, Transient) for fault in found)
                   else again)
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
