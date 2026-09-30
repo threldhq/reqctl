@@ -977,7 +977,7 @@ def _field_arguments(s, flags, taken=()):
 
 def _item_arguments(s, flags):
     s.add_argument("kind", choices=list(_write.KINDS))
-    # @req> REQ-71965656@7EwX0Kxq6Vnf f7bkcf
+    # @req> REQ-71965656@LcOQ8O1Sqy_n f7bkcf
     _field_arguments(s, flags)
 
 
@@ -1014,7 +1014,7 @@ def build_parser(root, fielded):
                  "change an item's fields, pin its links with --ack, or edit "
                  "a data entry")
     s.add_argument("uid")
-    # @req> REQ-91205530@UySHruI9_FXO ctnzp2
+    # @req> REQ-91205530@RtIsl4zWjUDc ctnzp2
     _field_arguments(s, flags + clears, _write.OPERATIONS)
     s.add_argument("--ack", dest="ack", action="append",
                    metavar="NAME | NAME.ENTRY",

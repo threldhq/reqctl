@@ -835,7 +835,7 @@ def mint(store, kind, name=None, placeholder=None):
 
 def prepare(store, kind, fields, placeholder=None):
     own = _fields.of(store.root, kind)
-    # @req+ REQ-48998966@WmgTdfEbX1GA 4zgzmu
+    # @req+ REQ-48998966@GDZnL3iANt0t 4zgzmu
     missing = [field.flag for field in own
                if field.required and fields.get(field.dest) is None]
     if missing:
@@ -996,7 +996,7 @@ def _revision(store, uid, fields):
             "--handle: a term's handle is the address the corpus reaches it "
             f"by; `reqctl rename {uid} HANDLE` moves the file with it"
         )
-    # @req> REQ-91205530@UySHruI9_FXO hc64tl
+    # @req> REQ-91205530@RtIsl4zWjUDc hc64tl
     for field in own:
         if field.address and fields.get(field.dest) is not None:
             noun = "a data item" if kind == "data" else f"a {kind}"
