@@ -100,6 +100,8 @@ def _resolved(schema, node):
         if ref in seen:
             raise ReqctlError(f"{named}: {ref} refers back to itself")
         target = _pointed(schema, ref)
+        if isinstance(target, bool):
+            target = {} if target else {"not": {}}
         if not isinstance(target, dict):
             raise ReqctlError(f"{named}: {ref} names nothing within the schema")
         seen.add(ref)
@@ -108,13 +110,12 @@ def _resolved(schema, node):
     return node
 
 
-def _forbidden(stated):
-    return stated is False or (isinstance(stated, dict)
-                               and stated.get("not") in ({}, True))
+def _forbidden(schema, stated):
+    return stated is False or _resolved(schema, stated).get("not") in ({}, True)
 
 
 def _selects(schema, test, kind):
-    if not isinstance(test, dict) or set(test) - {"properties", "required"}:
+    if set(test) - {"properties", "required"}:
         return False
     if set(test.get("required", ())) - {KIND}:
         return False
@@ -128,12 +129,13 @@ def _selects(schema, test, kind):
 def _merged(schema, kind):
     properties, required = {}, set()
     branches = [_resolved(schema, item) for item in schema.get("allOf", ())]
-    chosen = [_resolved(schema, branch.get("then")) for branch in branches
-              if _selects(schema, _resolved(schema, branch.get("if")), kind)]
+    chosen = [_resolved(schema, branch.get("then")) if "if" in branch else branch
+              for branch in branches if "if" not in branch
+              or _selects(schema, _resolved(schema, branch["if"]), kind)]
     for block in [schema] + chosen:
         required.update(block.get("required", ()))
         for name, stated in (block.get("properties") or {}).items():
-            if _forbidden(stated):
+            if _forbidden(schema, stated):
                 properties.pop(name, None)
             else:
                 properties[name] = {**properties.get(name, {}),
@@ -189,7 +191,7 @@ def of(root, kind):
             wanted = set(entry.get("required", ()))
             held += [_field(schema, key, _resolved(schema, value), key in wanted, True)
                      for key, value in (entry.get("properties") or {}).items()
-                     if not _forbidden(value)
+                     if not _forbidden(schema, value)
                      and _resolved(schema, value).get("readOnly") is not True]
             continue
         held.append(_field(schema, name, stated, name in required, False))
@@ -220,14 +222,12 @@ def flags(root):
     held = {}
     for kind in corpus.SCHEMA_NAMES:
         for field in of(root, kind):
-            stated = held.get(field.flag)
-            choices = field.choices
-            if stated is not None:
-                if (stated.repeated, stated.convert) != (field.repeated, field.convert):
-                    raise ReqctlError(f"{field.flag} takes a different kind of value "
-                                      f"for a {kind}; give one field an x-flag")
-                choices = (tuple(dict.fromkeys(stated.choices + choices))
-                           if stated.choices and choices else ())
+            stated = held.get(field.flag, field)
+            if (stated.repeated, stated.convert) != (field.repeated, field.convert):
+                raise ReqctlError(f"{field.flag} takes a different kind of value "
+                                  f"for a {kind}; give one field an x-flag")
+            choices = (tuple(dict.fromkeys(stated.choices + field.choices))
+                       if stated.choices and field.choices else ())
             metavar = f"'{' | '.join(field.parts).upper()}'" if field.parts else None
             held[field.flag] = Flag(field.flag, choices, field.repeated, False,
                                     field.convert, metavar, field.name == ENTRIES)

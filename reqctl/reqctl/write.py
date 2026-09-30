@@ -988,11 +988,11 @@ def revise(store, uid, fields):
             f"{uid}: names no kind; `reqctl validate` names the fault; "
             f"{uid} was not changed")
     own = _fields.of(store.root, kind)
+    revisable = [field for field in own if field.name != "entries"
+                 or kind == "parameter" and field.dest not in OPERATIONS]
 
     # @req+ REQ-25589226@gN1zcZG8pbON 5apnio
-    stray = _stray(store.root, [field for field in own
-                                if kind != "data" or field.name != "entries"],
-                   fields, OPERATIONS)
+    stray = _stray(store.root, revisable, fields, OPERATIONS)
     if stray:
         raise ReqctlError(
             f"{', '.join(stray)} does not apply to a {kind}; {uid} was not changed"
@@ -1118,8 +1118,7 @@ def revise(store, uid, fields):
     if any(field.entry for field in own):
         prospective["entries"] = {sole: entry}
     if kind == "parameter":
-        if (entries and entries.dest not in OPERATIONS
-                and fields.get(entries.dest) is not None):
+        if entries in revisable and fields.get(entries.dest) is not None:
             try:
                 prospective["entries"] = _entered(
                     _one(fields[entries.dest], entries.flag))
@@ -1201,8 +1200,8 @@ def revise(store, uid, fields):
     except ReqctlError as error:
         raise ReqctlError(f"{error}; {uid} was not changed") from None
 
-    if "text" in stated and "text" in prospective:
-        faults = _validate.ears(uid, {"text": prospective["text"]})
+    if "text" in stated:
+        faults = _validate.ears(uid, prospective)
         if faults:
             raise ReqctlError("\n".join(faults) + f"\n{uid} was not changed")
     if (any(field.prose and fields.get(field.dest) is not None for field in own)
