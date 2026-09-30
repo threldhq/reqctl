@@ -4,7 +4,7 @@ acceptance_criteria:
   when: the Claude Code plugin is installed into it
 assessed:
   REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
-  REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
+  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
 citations:
   bd2fgi: 2scBimq-73D1Be1gw2fn6wqZNCEuMf0CCmbzhqeESGE
   pdpnj6: bHiA--ZV1UKDuCvsrvjZHngWSqGs9mthB2ewev2ZrA4

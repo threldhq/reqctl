@@ -720,11 +720,11 @@ def packaged_schema_path(name):
 
 
 def schema(root, name):
-    # @req+ REQ-13148397@HGLj8b_6v-PV 4fsesd
+    # @req+ REQ-13148397@XXob_8TNNhHN 4fsesd
     stated = schema_path(root, name)
     path = stated
     # @req- 4fsesd
-    # @req> REQ-44451070@ESOdOvAVpGC0 idgq2r
+    # @req> REQ-44451070@VVBRK8IWFyvq idgq2r
     if not path.is_file():
         path = packaged_schema_path(name)
         if not path.is_file():

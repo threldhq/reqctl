@@ -382,7 +382,7 @@ function pairsHtml(held) {
     </div>`).join("");
 }
 
-<!-- @req+ REQ-87847146@IsskbJDRwpZ1 hmmycl -->
+<!-- @req+ REQ-87847146@zR5tHnA8xAWx hmmycl -->
 const FIELDS = JSON.parse(document.getElementById("kind-fields").textContent);
 
 <!-- @req+ REQ-21522236@FSo8K6fhdHTu fuavre -->
@@ -459,7 +459,7 @@ function rewordHtml(uid, item) {
         </div>`).join("")}</div>`;
 }
 
-<!-- @req+ REQ-87847146@IsskbJDRwpZ1 z2svqa -->
+<!-- @req+ REQ-87847146@zR5tHnA8xAWx z2svqa -->
 function fieldsHtml(act, kind, item) {
   return shapeOf(act, kind).map((field) => {
     <!-- @req+ REQ-69283350@XSe9n-OwepOP dmpy2p -->
@@ -608,7 +608,7 @@ function payloadFor(act, uid, read, held) {
   const item = act === "new" ? undefined : byUid[uid];
   const options = {};
   const stuck = [];
-  <!-- @req+ REQ-87847146@IsskbJDRwpZ1 lsvu3b -->
+  <!-- @req+ REQ-87847146@zR5tHnA8xAWx lsvu3b -->
   for (const field of shapeOf(act, kind)) {
     const typed = read(`field-${field.flag}`).trim();
     if (item && typed === heldBy(item, field).trim()) continue;
