@@ -8,7 +8,6 @@ from reqctl import corpus
 
 SOURCES = ("reqctl", "plugin")
 JOURNAL = "reqctl/reqctl/corpus.py"
-DATA = "file_writes"
 PATH = "pathlib.Path"
 # @req+ GUARD-15820124@9ypnh2GEXx5T kcim4i
 FUNCTIONS = {
@@ -36,7 +35,7 @@ FOLDER_FUNCTIONS = {"os.mkdir": "mkdir", "os.makedirs": "mkdir",
                     "tempfile.TemporaryDirectory": "temporary"}
 FOLDER_METHODS = {"mkdir": "mkdir"}
 GUARDED = (
-    (DATA, FUNCTIONS, METHODS,
+    ("file_writes", FUNCTIONS, METHODS,
      "change the file through corpus.atomic_write or corpus.remove"),
     ("folder_creations", FOLDER_FUNCTIONS, FOLDER_METHODS,
      "create the folder through corpus.make_folder"),
@@ -114,7 +113,7 @@ def classified(node, held, functions, methods):
         return None
     owner = resolved(func.value, held)
     if owner == PATH:
-        return METHODS[func.attr], name
+        return methods[func.attr], name
     if isinstance(func.value, ast.Name) and owner == func.value.id:
         return None
     if func.attr in ARITY:
