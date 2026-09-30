@@ -235,6 +235,9 @@ def dictionary_rules(uid, data):
         return problems
     value_type = data.get("value_type")
     shape = KEY_SHAPES.get(value_type)
+    if shape is None and isinstance(value_type, str):
+        problems.append(f"{uid}: value_type {value_type} is not a type reqctl "
+                        "reads an entry key as")
     if shape is not None:
         # @req> REQ-41697188@oclky4jsxJDW da5737
         for key in held:

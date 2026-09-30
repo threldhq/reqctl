@@ -10,7 +10,7 @@ acceptance_criteria:
   when: revise is run
 assessed: {}
 citations:
-  eo3nl5: cGKZJzgwyGNxeZbYcziu6QFkw3uCIBemn6IsWUR5rR0
+  eo3nl5: QfN-ZxWJFEeRNMzBq_Hx7mv6COKEEEkjjheOqYdseVw
 priority: medium
 relations: {}
 status: approved

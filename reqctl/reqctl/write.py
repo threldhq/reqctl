@@ -149,15 +149,11 @@ def _refuse_blank_text(fields, own):
             _refuse_hidden(field.flag, member)
 
 
-def _given(value):
-    return value is not None and value is not False and value != []
-
-
 def _stray(root, own, fields, operations=()):
     mine = ({field.dest for field in own} | set(operations)
             | {field.cleared for field in own if field.clears})
     return sorted(flag.flag for flag in _fields.flags(root) + _fields.clears(root)
-                  if flag.dest not in mine and _given(fields.get(flag.dest)))
+                  if flag.dest not in mine and fields.get(flag.dest) is not None)
 
 
 def _converted(field, value):
@@ -506,11 +502,10 @@ def _article_for(word):
     return "an" if word[:1].lower() in "aeiou" else "a"
 
 
-def _rename_map(before, fields):
+def _rename_map(before, fields, now):
     words = {}
-    if fields.get("term") is not None:
+    if now is not None:
         was = corpus.term_word(before)
-        now = str(fields["term"]).strip()
         if was and was != now:
             words[was] = now
     for pair in fields.get("reword") or []:
@@ -873,6 +868,8 @@ def prepare(store, kind, fields, placeholder=None):
 
     data = _fields.defaults(store.root, kind)
     entries = next((field for field in own if field.name == "entries"), None)
+    default = next((fields.get(field.dest) for field in own
+                    if field.name == "default"), None)
     entry = {}
     for field in own:
         value = fields.get(field.dest)
@@ -893,10 +890,10 @@ def prepare(store, kind, fields, placeholder=None):
         named = handle
     elif kind == "parameter" and entries and fields.get(entries.dest) is not None:
         data["entries"] = _entered(_one(fields[entries.dest], entries.flag))
-        if fields.get("default") is not None:
-            chosen = entry_key(scalar(str(fields["default"])))
+        if default is not None:
+            chosen = entry_key(scalar(str(default)))
             if chosen not in data["entries"]:
-                raise ReqctlError(f"--default {fields['default']}: not a member "
+                raise ReqctlError(f"--default {default}: not a member "
                                   "of the set")
             data["default"] = chosen
     elif kind == "data" and entries and fields.get(entries.dest) is not None:
@@ -907,10 +904,10 @@ def prepare(store, kind, fields, placeholder=None):
                 f"{entries.flag} {', '.join(repeated)}: given more than once"
             )
         data["entries"] = {key: {} for key in keys}
-        if fields.get("default") is not None:
-            chosen = str(fields["default"]).strip()
+        if default is not None:
+            chosen = str(default).strip()
             if chosen not in data["entries"]:
-                raise ReqctlError(f"--default {fields['default']}: not an entry")
+                raise ReqctlError(f"--default {default}: not an entry")
             data["default"] = chosen
 
     # @req+ REQ-73115701@e51Qp8vDbDXd yorgmf
@@ -1085,6 +1082,8 @@ def revise(store, uid, fields):
                 f"{uid} was not changed"
             )
     entries = next((field for field in own if field.name == "entries"), None)
+    default = next((fields.get(field.dest) for field in own
+                    if field.name == "default"), None)
     try:
         stated = {field.name: _converted(field, fields[field.dest])
                   for field in own if fields.get(field.dest) is not None
@@ -1094,7 +1093,10 @@ def revise(store, uid, fields):
     acks = fields.get("ack") or []
 
     before = dict(item.data)
-    words = _rename_map(before, fields)
+    try:
+        words = _rename_map(before, fields, stated.get("word"))
+    except ReqctlError as error:
+        raise ReqctlError(f"{error}; {uid} was not changed") from None
     prospective = dict(before)
     # @req> REQ-34694183@iiEJLoDQUuRu i7ubge
     prospective["assessed"] = _assessed_map(uid, before)
@@ -1132,11 +1134,11 @@ def revise(store, uid, fields):
             held = prospective.pop("default", None)
             if held in prospective["entries"]:
                 prospective["default"] = held
-        if fields.get("default") is not None:
-            chosen = entry_key(scalar(str(fields["default"])))
+        if default is not None:
+            chosen = entry_key(scalar(str(default)))
             if chosen not in corpus.entries(prospective):
                 raise ReqctlError(
-                    f"--default {fields['default']}: not a member of the set; "
+                    f"--default {default}: not a member of the set; "
                     f"{uid} was not changed"
                 )
             prospective["default"] = chosen
@@ -1191,11 +1193,11 @@ def revise(store, uid, fields):
                 )
             held.pop(key)
             prospective["entries"] = held
-        if fields.get("default") is not None:
-            chosen = str(fields["default"]).strip()
+        if default is not None:
+            chosen = str(default).strip()
             if chosen not in (corpus.entries(prospective) or {}):
                 raise ReqctlError(
-                    f"--default {fields['default']}: not an entry; "
+                    f"--default {default}: not an entry; "
                     f"{uid} was not changed"
                 )
             prospective["default"] = chosen
@@ -1205,7 +1207,7 @@ def revise(store, uid, fields):
     except ReqctlError as error:
         raise ReqctlError(f"{error}; {uid} was not changed") from None
 
-    if fields.get("text") is not None:
+    if "text" in stated:
         faults = _validate.ears(uid, {"text": prospective["text"]})
         if faults:
             raise ReqctlError("\n".join(faults) + f"\n{uid} was not changed")
@@ -1285,7 +1287,7 @@ def revise(store, uid, fields):
         asked = [key for key in OPERATIONS
                  + tuple(field.dest for field in own)
                  + tuple(field.cleared for field in own if field.clears)
-                 if _given(fields.get(key))]
+                 if fields.get(key) is not None]
         if not asked:
             raise ReqctlError(
                 f"nothing to change; pass at least one field; "

@@ -83,7 +83,7 @@ def _pointed(schema, ref):
     target = schema
     for step in ref[2:].split("/"):
         step = step.replace("~1", "/").replace("~0", "~")
-        if isinstance(target, list) and step.isdigit() and int(step) < len(target):
+        if isinstance(target, list) and step.isdecimal() and int(step) < len(target):
             target = target[int(step)]
         else:
             target = target.get(step) if isinstance(target, dict) else None
@@ -127,11 +127,10 @@ def _selects(schema, test, kind):
 
 def _merged(schema, kind):
     properties, required = {}, set()
-    for block in [schema] + [branch.get("then") for branch in schema.get("allOf", ())
-                             if isinstance(branch, dict)
-                             and _selects(schema, branch.get("if"), kind)]:
-        if not isinstance(block, dict):
-            continue
+    for block in [schema] + [_resolved(schema, branch.get("then"))
+                             for branch in schema.get("allOf", ())
+                             if isinstance(branch, dict) and _selects(
+                                 schema, _resolved(schema, branch.get("if")), kind)]:
         required.update(block.get("required", ()))
         for name, stated in (block.get("properties") or {}).items():
             if _forbidden(stated):
@@ -161,14 +160,16 @@ def _field(schema, name, stated, required, entry):
     typed = items.get("type") if shape == "array" else shape
     convert = CONVERTED.get(typed) if isinstance(typed, str) else None
     parts = tuple(items.get("required", ())) if items.get("type") == "object" else ()
+    enum = stated.get("enum", ())
     clears, empty = None, None
     if not required:
         clears = _flag("no_" + said)
     elif repeated and not stated.get("minItems") and not stated.get("minProperties"):
         clears, empty = _flag("no_" + said), list if shape == "array" else dict
-    return Field(name=name, flag=_flag(said), choices=tuple(stated.get("enum", ())),
+    return Field(name=name, flag=_flag(said),
+                 choices=tuple(enum) if all(isinstance(one, str) for one in enum) else (),
                  repeated=repeated,
-                 required=required and "default" not in stated,
+                 required=required and (entry or "default" not in stated),
                  clears=clears, empty=empty,
                  address=stated.get("x-address") is True, entry=entry,
                  textual=(convert is None and "enum" not in stated
@@ -188,7 +189,8 @@ def of(root, kind):
             wanted = set(entry.get("required", ()))
             held += [_field(schema, key, _resolved(schema, value), key in wanted, True)
                      for key, value in (entry.get("properties") or {}).items()
-                     if not _forbidden(value)]
+                     if not _forbidden(value)
+                     and _resolved(schema, value).get("readOnly") is not True]
             continue
         held.append(_field(schema, name, stated, name in required, False))
     taken = {}
@@ -220,6 +222,10 @@ def flags(root):
         for field in of(root, kind):
             stated = held.get(field.flag)
             choices = field.choices
+            if stated and (stated.repeated, stated.convert) != (field.repeated,
+                                                                field.convert):
+                raise ReqctlError(f"{field.flag} takes a different kind of value "
+                                  f"for a {kind}; give one field an x-flag")
             if stated is not None:
                 choices = (tuple(dict.fromkeys(stated.choices + choices))
                            if stated.choices and choices else ())

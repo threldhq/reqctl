@@ -965,7 +965,7 @@ def _field_arguments(s, flags, taken=()):
                               "if tooling writes it, or give it another x-flag")
         try:
             if flag.switch:
-                s.add_argument(flag.flag, action="store_true")
+                s.add_argument(flag.flag, action="store_true", default=None)
             else:
                 s.add_argument(flag.flag, choices=list(flag.choices) or None,
                                action="append" if flag.repeated else "store",
