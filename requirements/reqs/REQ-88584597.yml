@@ -1,26 +1,34 @@
 acceptance_criteria:
 - given: a source whose server sends its page a few bytes at a time, each within the
-    product's wait for one read, for longer than ${review_fetch_seconds} seconds
-  then: the product refuses the review and names the source, having stopped reading
-    the source once ${review_fetch_seconds} seconds had passed
+    product's wait for one read, for longer than ${review_fetch_seconds} seconds on
+    every attempt
+  then: the product ends each attempt once ${review_fetch_seconds} seconds of it have
+    passed, then refuses the review and names the source
   when: the review is checked
 - given: a source whose redirects and page together take longer than ${review_fetch_seconds}
     seconds, though no one response does
-  then: the product refuses the review and names the source
+  then: the product ends the attempt once ${review_fetch_seconds} seconds of it have
+    passed
   when: the review is checked
 - given: a source whose response carries interim responses, chunk framing or trailers
     without end
-  then: the product refuses the review and names the source once ${review_fetch_seconds}
-    seconds have passed
+  then: the product ends the attempt once ${review_fetch_seconds} seconds of it have
+    passed
+  when: the review is checked
+- given: a source whose first attempt takes longer than ${review_fetch_seconds} seconds
+    and whose second serves its page at once
+  then: the product reads the page and names no fault for the source
   when: the review is checked
 - given: a source whose fetch waits for an earlier fetch under its host name to end
-  then: the product counts none of the wait toward the ${review_fetch_seconds} seconds
+  then: the product counts none of the wait toward an attempt's ${review_fetch_seconds}
+    seconds
   when: the review is checked
 assessed:
+  REQ-16875926: oy3EzqZ3OzhcKVmxtXKFGGdl87CNv_gWhrPmAemZGQA
   REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
-  review_fetch_seconds: Htcx-fm6ccpydSCOEZU7PmqT3YIW7ijMRv97lLajMNY
+  review_fetch_seconds: Epy-unUvrfwl8YjufHo7-kXCJrO22NiDCmLEnVFJPxU
   review_fetch_seconds.*: 5mqJ4b8TkDMSGQk0a8MtmsPqJaTpGuoSwU7dw-FB57Y
 citations:
   p7ygur: 7aCy1F3XHfzuWfdn7I-U2bNNDwtt59RnHu9dg3M2-Ow
@@ -29,11 +37,12 @@ citations:
   xebeiz: WlTWiG8FV897t0PvOsb20rKRZi3Y1Hk7XQAn_DZvsSg
 priority: medium
 relations:
+  REQ-16875926: constrains
   REQ-46144308: derives_from
 status: approved
-text: If fetching a source that a [practice](practice) of the [best-in-class review](best_in_class_review)
-  names, from its first connection to the end of its page and across every redirect,
-  takes more than ${review_fetch_seconds} seconds, then the product shall refuse the
-  review and name the source.
+text: If an attempt at fetching a source that a [practice](practice) of the [best-in-class
+  review](best_in_class_review) names, from its first connection to the end of its
+  page and across every redirect, takes more than ${review_fetch_seconds} seconds,
+  then the product shall end the attempt.
 type: functional
 verification: inspection
