@@ -19,6 +19,8 @@ assessed:
   review_fetch_attempts: uDAjrtH0ea74ebTNFm8Ui6pR856RRa35l_tCaGc3ldg
   review_fetch_attempts.*: 3F9q2MKaHp0IHPWVepgwLDcasPk5CwdKGsLe4-Ev-zI
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+citations:
+  m4qxzr: lSadIyddjBSKgMgrr2SbwyyX45_RePIRLWaJwFtNZaE
 priority: medium
 relations:
   REQ-16875926: constrains

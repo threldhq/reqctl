@@ -42,12 +42,15 @@ properties:
 
   status:
     enum: [draft, approved, deprecated, superseded]
+    default: draft
     description: >-
       Lifecycle. Excluded from the stamp, so a transition never makes dependants
       suspect.
 
   acceptance_criteria:
     type: array
+    default: []
+    x-flag: criterion
     description: >-
       What enforcing this guard means, as given, when and then. In the stamp:
       criteria define the obligation as much as the statement does, so changing
@@ -72,6 +75,8 @@ properties:
 
   relations:
     type: object
+    readOnly: true
+    default: {}
     description: >-
       Edges to other guards, target to kind. A guard may not relate to a
       requirement: the build serves the product, but a rule about the build
@@ -87,6 +92,8 @@ properties:
 
   assessed:
     type: object
+    readOnly: true
+    default: {}
     description: >-
       Pins, dependency address to the stamp it was assessed against. A
       dependency is a relations target, a parameter or data entry the prose
@@ -102,6 +109,7 @@ properties:
 
   citations:
     type: object
+    readOnly: true
     description: >-
       The citation list: the citation identity of each statement citation
       naming this guard, to the citation digest of the lines it covers.

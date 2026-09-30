@@ -3,6 +3,7 @@ import argparse
 import contextlib
 import http.client
 import ipaddress
+import json
 import re
 import socket
 import sys
@@ -28,6 +29,8 @@ BOUND = "review_summary_lines"
 PAGE = "review_page_bytes"
 REDIRECTS = "review_redirects"
 SECONDS = "review_fetch_seconds"
+ATTEMPTS = "review_fetch_attempts"
+ASKED = "asked.json"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
 WAIT = 30
@@ -163,12 +166,12 @@ class Transient(str):
 # @req> REQ-16875926@oy3EzqZ3Ozhc hnfov3
 def transient(broken):
     if isinstance(broken, urllib.request.HTTPError):
-        return broken.code == 429 or broken.code >= 500
+        return broken.code in (408, 429, 500, 502, 503, 504)
     return isinstance(getattr(broken, "reason", broken),
                       (TimeoutError, ConnectionError))
 
 
-# @req> REQ-88584597@as115Aov_CEK vz6m2q
+# @req> REQ-88584597@irHrgUCmpY4P vz6m2q
 class Deadline:
     def __init__(self, seconds):
         self.end, self.held = time.monotonic() + seconds, []
@@ -215,7 +218,7 @@ def pinned(connection):
     if inside:
         raise OSError(f"{connection.host} is at the internal address "
                       f"{inside[0]}")
-    # @req> REQ-88584597@as115Aov_CEK p7ygur
+    # @req> REQ-88584597@irHrgUCmpY4P p7ygur
     return current.deadline.hold(socket.create_connection(
         (found[0], connection.port),
         min(connection.timeout, current.deadline.left())))
@@ -293,15 +296,24 @@ def page(url, fetch, bound):
         # @req- wuv5em
 
 
-def timed(url, fetch, bound, seconds):
-    # @req> REQ-88584597@as115Aov_CEK sjt5cu
+def attempt(url, fetch, bound, seconds):
+    # @req> REQ-88584597@irHrgUCmpY4P sjt5cu
     with contextlib.closing(Deadline(seconds)) as deadline:
         current.deadline = deadline
         body, why = page(url, fetch, bound)
-    # @req> REQ-88584597@as115Aov_CEK xebeiz
+    # @req> REQ-88584597@irHrgUCmpY4P xebeiz
     # @req> REQ-16875926@oy3EzqZ3Ozhc eunqii
     if not deadline.left():
-        return None, Transient(f"the fetch took more than {seconds} seconds")
+        return None, Transient(f"the attempt took more than {seconds} seconds")
+    return body, why
+
+
+def timed(url, fetch, bound, seconds, attempts):
+    # @req> REQ-61943665@FNLfuGZs1Eqa m4qxzr
+    for _ in range(attempts):
+        body, why = attempt(url, fetch, bound, seconds)
+        if not isinstance(why, Transient):
+            break
     if body is None:
         return None, why
     reader = PageText()
@@ -317,7 +329,7 @@ def host(url):
         return url
 
 
-def faults(review, bound, redirects, seconds):
+def faults(review, bound, redirects, seconds, attempts):
     urls = sorted({source["url"] for practice in review["practices"]
                    for source in practice["sources"]})
     # @req+ REQ-52340197@5988BwARNjD- mtrs7n
@@ -327,7 +339,7 @@ def faults(review, bound, redirects, seconds):
     fetch = opener(redirects)
     with ThreadPoolExecutor() as pool:
         pages = {url: read for fetched in pool.map(
-            lambda held: [(url, timed(url, fetch, bound, seconds))
+            lambda held: [(url, timed(url, fetch, bound, seconds, attempts))
                           for url in held], hosts.values())
                  for url, read in fetched}
     # @req- mtrs7n
@@ -350,7 +362,7 @@ def faults(review, bound, redirects, seconds):
             elif not holds(text, words(source["passage"])):
                 found.append(f"practice {number}: {url} does not hold "
                              f"{source['passage']!r}")
-    return found
+    return found, pages
 
 
 def holds(text, passage):
@@ -402,6 +414,56 @@ def table(review, said):
     # @req- awbcj3
 
 
+# @req> REQ-46711731@rqojAeSdcYOn jkd2va
+def asked(run, review, pages, again):
+    failed = sorted(url for url, (_, why) in pages.items()
+                    if isinstance(why, Transient))
+    named = {number: practice
+             for number, practice in enumerate(review["practices"], 1)
+             if any(source["url"] in failed for source in practice["sources"])}
+    corpus.atomic_write(run / ASKED, json.dumps(
+        {"practices": list(named.values())}))
+    script = f"python3 {__file__}"
+    return ("every source above failed every attempt. Put one question to the "
+            f"owner naming {', '.join(failed)}, with three answers:\n- check "
+            f"the same review again: `{script} check --run {run}`\n- decline "
+            f"practice(s) {', '.join(map(str, named))}, which name those "
+            f"sources: `{script} decline --run {run}`\n- make the review "
+            f"again: {again}")
+
+
+# @req> REQ-51975077@c_HnzFhrYbl_ zf7cg7
+def decline(run):
+    path, where = run / plan.REVIEWED, run / ASKED
+    if not where.is_file():
+        raise SystemExit(f"{where}: no question stands over this review; "
+                         "decline only on the owner's answer to the question "
+                         "the check raises")
+    table, read = plan.recorded(run)
+    if read.get(plan.DECLINED):
+        raise SystemExit(f"{table}: `{plan.DECLINED}` numbers the review's "
+                         "practices, and removing one would renumber them; "
+                         "answer by checking the same review again or making "
+                         "it again")
+    review, why = plan.read_return(path, shapes.REVIEW)
+    named, broken = plan.read_return(where, shapes.REVIEW)
+    if review is None or named is None:
+        raise SystemExit(f"{path}: the review {why}" if review is None
+                         else f"{where}: {broken}")
+    kept = [practice for practice in review["practices"]
+            if practice not in named["practices"]]
+    if len(kept) + len(named["practices"]) != len(review["practices"]):
+        raise SystemExit(f"{path}: the review changed since the check raised "
+                         "its question; check it again")
+    corpus.atomic_write(run / plan.REMOVED, json.dumps(
+        {"practices": plan.removed(run) + named["practices"]}))
+    corpus.atomic_write(path, json.dumps({"practices": kept}))
+    for practice in named["practices"]:
+        print(f"removed, declined by the owner: {practice['practice']}")
+    print()
+    return check(run)
+
+
 def check(run):
     said = coverage.plain(plan.said(run, "words.md",
                                     "the review is read against the owner's "
@@ -409,21 +471,23 @@ def check(run):
     path = run / plan.REVIEWED
     review, why = plan.read_return(path, shapes.REVIEW)
     # @req> REQ-82432523@VoDkIJau94BB 4cioyu
-    again = (f"run `rm -f {path}`, then spawn the best-in-class agent again "
-             "with the same prompt")
+    again = (f"run `rm -f {path} {run / plan.REMOVED}`, then spawn the "
+             "best-in-class agent again with the same prompt")
+    # @req> REQ-51975077@c_HnzFhrYbl_ m75ejw
+    corpus.remove(run / ASKED, missing_ok=True)
     if review is None:
         print(f"{path}: the review {why}; {again}")
         return 1
     records = plan.glossary()
-    found = faults(review, plan.parameter(records, PAGE),
-                   plan.parameter(records, REDIRECTS),
-                   plan.parameter(records, SECONDS))
+    found, pages = faults(review, plan.parameter(records, PAGE),
+                          plan.parameter(records, REDIRECTS),
+                          plan.parameter(records, SECONDS),
+                          plan.parameter(records, ATTEMPTS))
     for fault in found:
         print(fault)
     if found:
-        # @req> REQ-46711731@SULIqbPOPYVp uput5b
-        remedy = ("each is a transient failure: check the same review again, "
-                  "without removing it or spawning the agent"
+        # @req> REQ-46711731@rqojAeSdcYOn uput5b
+        remedy = (asked(run, review, pages, again)
                   if all(isinstance(fault, Transient) for fault in found)
                   else again)
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
@@ -445,6 +509,9 @@ def main(argv=None):
     read = sub.add_parser("check")
     read.add_argument("--run", required=True, metavar="DIR")
     read.set_defaults(handler=lambda args: check(Path(args.run)))
+    drop = sub.add_parser("decline")
+    drop.add_argument("--run", required=True, metavar="DIR")
+    drop.set_defaults(handler=lambda args: decline(Path(args.run)))
     args = parsed.parse_args(argv)
     return args.handler(args)
 

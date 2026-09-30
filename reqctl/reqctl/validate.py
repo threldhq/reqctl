@@ -63,7 +63,12 @@ def schema_problems(root, uid, data):
     for error in sorted(validator.iter_errors(data), key=str):
         error = best_match([error])
         where = ".".join(str(p) for p in error.absolute_path) or "(item)"
-        problems.append(f"{uid}: schema: {where}: {error.message}")
+        said = error.message
+        if error.validator == "not" and error.validator_value in ({}, True):
+            kind = corpus.kind_of(uid, data)
+            said = ("does not apply to a data item" if kind == "data"
+                    else f"does not apply to a {kind}")
+        problems.append(f"{uid}: schema: {where}: {said}")
     # @req> REQ-35443917@7V3GXXoqruBl znhrrb
     if data.get("verification") == "automated_test" and not any(
             problem.startswith(f"{uid}: schema: verification:")
@@ -215,13 +220,7 @@ def dictionary_rules(uid, data):
                 problems.append(
                     f"{uid}: records \"{phrase}\" as not the term but gives no "
                     f"reason -- write --unclaimed \"{phrase}=the reason\"")
-        for key in ("name", "value_type", "unit", "default", "text"):
-            if data.get(key) is not None:
-                problems.append(f"{uid}: {key} does not apply to a term")
         return problems
-    if not isinstance(data.get("name"), str):
-        noun = "parameter" if item_kind == "parameter" else "data item"
-        problems.append(f"{uid}: a {noun} carries a name")
     # @req+ REQ-67914848@CoWJ0QyQOZsG fnsqos
     default = data.get("default")
     if default is not None and default not in held:
@@ -229,9 +228,6 @@ def dictionary_rules(uid, data):
                         "entry")
     # @req- fnsqos
     if item_kind == "data":
-        for key in ("value_type", "unit"):
-            if data.get(key) is not None:
-                problems.append(f"{uid}: {key} does not apply to a data item")
         for key in held:
             if not corpus.DATA_KEY.match(str(key)):
                 problems.append(f"{uid}: entry key {key!r} is not a snake_case "
@@ -239,9 +235,10 @@ def dictionary_rules(uid, data):
         return problems
     value_type = data.get("value_type")
     shape = KEY_SHAPES.get(value_type)
-    if shape is None:
-        problems.append(f"{uid}: a parameter carries a value_type")
-    else:
+    if shape is None and isinstance(value_type, str):
+        problems.append(f"{uid}: value_type {value_type} is not a type reqctl "
+                        "reads an entry key as")
+    if shape is not None:
         # @req> REQ-41697188@oclky4jsxJDW da5737
         for key in held:
             if not isinstance(key, str) or not shape.match(key):

@@ -38,8 +38,9 @@ assessed:
   question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
-  4avail: dA2dVR5BdYIGRAFmalKdrpekTpDyyrbeHMiqfBBbOXk
-  uput5b: PE_bYmbhZSyK931XsRrkwrOPjMzZSkIl4QHb-5FgrhI
+  4avail: n3OgJduzk5pxvixqkJFsmQoCFtnzkgU4JGFZ2jhEf2E
+  jkd2va: PpWQH4pC6G8wEYUVOgyeWPK6YrDt7wb_9f4026ut0s0
+  uput5b: chCr-0masZawWsfAruh2DzYq3g2ljArFIN4z-nhrHck
 priority: medium
 relations:
   REQ-12222066: depends_on
