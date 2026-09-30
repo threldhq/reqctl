@@ -1,0 +1,33 @@
+acceptance_criteria:
+- given: a source whose first attempt ends in a [transient failure](transient_failure)
+    and whose second serves its page
+  then: the product reads the page and names no fault for the source
+  when: the review is checked
+- given: a source whose every attempt ends in a [transient failure](transient_failure)
+  then: the product makes ${review_fetch_attempts} attempts at the source, refuses
+    the review, and names the failure of the last attempt only
+  when: the review is checked
+- given: a source whose server answers with a status that is not a [transient failure](transient_failure)
+  then: the product makes one attempt at the source
+  when: the review is checked
+assessed:
+  REQ-16875926: oy3EzqZ3OzhcKVmxtXKFGGdl87CNv_gWhrPmAemZGQA
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  REQ-88584597: irHrgUCmpY4PwnrnRWGMzbZPMJOW57xIb587AdL9DAI
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  review_fetch_attempts: uDAjrtH0ea74ebTNFm8Ui6pR856RRa35l_tCaGc3ldg
+  review_fetch_attempts.*: 3F9q2MKaHp0IHPWVepgwLDcasPk5CwdKGsLe4-Ev-zI
+  transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+priority: medium
+relations:
+  REQ-16875926: constrains
+  REQ-46144308: constrains
+  REQ-88584597: depends_on
+status: approved
+text: If an attempt at fetching a source that a [practice](practice) of the [best-in-class
+  review](best_in_class_review) names ends in a [transient failure](transient_failure),
+  then the product shall make another attempt at the source, making at most ${review_fetch_attempts}
+  attempts at the source in all.
+type: functional
+verification: inspection

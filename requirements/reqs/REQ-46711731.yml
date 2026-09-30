@@ -1,35 +1,56 @@
 acceptance_criteria:
-- given: a review refused only over sources whose servers answered 503 or whose fetches
-    took more than ${review_fetch_seconds} seconds
-  then: the product names checking the same review again as the way to clear the refusal
+- given: a review refused only over sources whose servers answered 503 to every attempt
+  then: the product raises one [question for the owner](question_for_the_owner) naming
+    each source as having failed every attempt and offering checking the same review
+    again, declining every [practice](practice) that names one of those sources, or
+    making the review again
   when: the review is checked
-- given: a review refused over a source whose server answered 503 and another whose
-    page does not hold its passage
+- given: the question raised over a review refused only over [transient failures](transient_failure)
+  then: the product checks the same review again, and raises the question again if
+    every fault is again a [transient failure](transient_failure)
+  when: the owner answers by checking the same review again
+- given: the question raised over a review refused only over [transient failures](transient_failure)
+  then: the product removes every [practice](practice) naming one of the sources and
+    checks the same review again
+  when: the owner answers by declining
+- given: two [practices](practice) naming one source whose server answered 503 to
+    every attempt
+  then: the product removes both [practices](practice) from the review
+  when: the owner answers the question by declining
+- given: the question raised over a review refused only over [transient failures](transient_failure)
+  then: the product makes the review again
+  when: the owner answers by making the review again
+- given: a review refused over a source whose server answered 503 to every attempt
+    and another whose page does not hold its passage
   then: the product names making the review again as the way to clear the refusal
   when: the review is checked
-- given: a review refused over a source whose server answered 503 and a [practice](practice)
-    that names no source
+- given: a review refused over a source whose server answered 503 to every attempt
+    and a [practice](practice) that names no source
   then: the product names making the review again as the way to clear the refusal
   when: the review is checked
 assessed:
+  REQ-12222066: KVMqlUhM4uwvrl2w0oEnKSc0Xz3R1gDORN2BqDklWow
   REQ-16875926: oy3EzqZ3OzhcKVmxtXKFGGdl87CNv_gWhrPmAemZGQA
   REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
-  review_fetch_seconds: Htcx-fm6ccpydSCOEZU7PmqT3YIW7ijMRv97lLajMNY
-  review_fetch_seconds.*: 5mqJ4b8TkDMSGQk0a8MtmsPqJaTpGuoSwU7dw-FB57Y
-  transient_failure: jRoVqaEGDhXAmWXfTDlCb-w_UeBtKn9hQr-FLR4xWP4
+  question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+  transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
   4avail: dA2dVR5BdYIGRAFmalKdrpekTpDyyrbeHMiqfBBbOXk
   uput5b: PE_bYmbhZSyK931XsRrkwrOPjMzZSkIl4QHb-5FgrhI
 priority: medium
 relations:
+  REQ-12222066: depends_on
   REQ-16875926: depends_on
   REQ-46144308: constrains
+  REQ-89642091: depends_on
 status: approved
-text: If every fault over which the product refuses the [best-in-class review](best_in_class_review)
+text: 'If every fault over which the product refuses the [best-in-class review](best_in_class_review)
   is a [transient failure](transient_failure) of a source, then the product shall
-  name checking the same review again, rather than making the review again, as the
-  way to clear the refusal.
+  raise one [question for the owner](question_for_the_owner) naming every such source
+  and offering three answers: checking the same review again, declining every [practice](practice)
+  that names one of those sources, or making the review again.'
 type: functional
 verification: inspection
