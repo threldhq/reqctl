@@ -47,14 +47,21 @@ ALLOWED = {
 DELIMITERS = re.compile(r"\A(?:#+|//|/\*|<!--)\s*|\s*(?:\*/|-->)\Z")
 
 
+# @req> GUARD-27671623@3zDwoF3LwQkw 7noe76
 def cites(body):
     stripped = DELIMITERS.sub("", body).strip()
     return bool(cite.MARKER.match(stripped))
 
+# @req+ GUARD-27671623@3zDwoF3LwQkw ixyyek
 QUOTED = re.compile(r"\"[^\"]*\"|'[^']*'")
 TRAILING = re.compile(r"\S\s+(#(?:\s.*|$))")
 MARKED = re.compile(r"<!--.*?-->", re.S)
 EMBEDDED = re.compile(r"<(script|style)[^>]*>(.*?)</\1>", re.S)
+WORD = re.compile(r"[\w$]+")
+BEFORE_OPERAND = frozenset({"await", "case", "delete", "do", "else", "in",
+                            "instanceof", "new", "of", "return", "throw",
+                            "typeof", "void", "yield"})
+# @req- ixyyek
 
 
 def scanned():
@@ -91,6 +98,7 @@ def syntax_of(path):
     return BY_NAME.get(held.name) or BY_SUFFIX.get(held.suffix)
 
 
+# @req+ GUARD-27671623@3zDwoF3LwQkw ka4pr4
 def python_found(path, text):
     held = []
     try:
@@ -150,15 +158,60 @@ def past_string(text, index, number):
     return index + 1, number
 
 
+def past_template(text, index, number):
+    size = len(text)
+    while index < size:
+        if text[index] == "`":
+            return index + 1, number, False
+        if text.startswith("${", index):
+            return index + 2, number, True
+        if text[index] == "\\":
+            index += 1
+        if index < size and text[index] == "\n":
+            number += 1
+        index += 1
+    return index, number, False
+
+
+def past_regex(text, index):
+    size, classed = len(text), False
+    index += 1
+    while index < size and text[index] != "\n":
+        letter = text[index]
+        if letter == "\\":
+            index += 1
+        elif letter == "[":
+            classed = True
+        elif letter == "]":
+            classed = False
+        elif letter == "/" and not classed:
+            flags = WORD.match(text, index + 1)
+            return flags.end() if flags else index + 1
+        index += 1
+    return None
+
+
 def slash_found(path, text):
     held, index, size, number = [], 0, len(text), 1
+    braces, substitutions, operand = 0, [], False
     while index < size:
         letter = text[index]
         if letter == "\n":
             number += 1
             index += 1
-        elif letter in "\"'`":
+        elif letter.isspace():
+            index += 1
+        elif letter == "`" or (letter == "}" and substitutions
+                               and substitutions[-1] == braces):
+            if letter == "}":
+                substitutions.pop()
+            index, number, opened = past_template(text, index + 1, number)
+            if opened:
+                substitutions.append(braces)
+            operand = not opened
+        elif letter in "\"'":
             index, number = past_string(text, index, number)
+            operand = True
         elif text.startswith("//", index):
             stop = text.find("\n", index)
             stop = size if stop < 0 else stop
@@ -171,7 +224,19 @@ def slash_found(path, text):
             end = number + body.count("\n")
             held.append(("comment", number, end, " ".join(body.split())))
             number, index = end, stop
+        elif letter == "/" and not operand and (
+                stop := past_regex(text, index)) is not None:
+            index, operand = stop, True
+        elif found := WORD.match(text, index):
+            index, operand = found.end(), found.group() not in BEFORE_OPERAND
+        elif text.startswith(("++", "--"), index):
+            index, operand = index + 2, True
         else:
+            if letter == "{":
+                braces += 1
+            elif letter == "}":
+                braces -= 1
+            operand = letter in ")]}"
             index += 1
     return held
 
@@ -191,6 +256,7 @@ def markup_found(path, text):
 
 FINDERS = {PYTHON: python_found, HASH: hash_found, SLASH: slash_found,
            MARKUP: markup_found}
+# @req- ka4pr4
 
 
 def marked(text):
@@ -226,6 +292,7 @@ def runs(found, lines):
         yield held
 
 
+# @req> GUARD-27671623@3zDwoF3LwQkw jrq67o
 def survey(paths, allowed=ALLOWED):
     counted, refused, used = 0, [], set()
     for path in paths:
@@ -263,11 +330,13 @@ def survey(paths, allowed=ALLOWED):
             if is_code("\n".join(body for _, body in block)):
                 refused.append((path, block[0][0], "commented-out code",
                                 block[0][1]))
+    # @req> GUARD-76151755@kec8SwUpDtFd 3zx2hr
     for path, body in sorted(allowed - used):
         refused.append((path, 1, "exemption matches nothing here", body))
     return counted, refused
 
 
+# @req> GUARD-27671623@3zDwoF3LwQkw hvzjkq
 def main(ceiling):
     counted, refused = survey(scanned())
     for path, line, why, body in refused:

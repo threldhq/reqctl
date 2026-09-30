@@ -240,9 +240,6 @@ const flags = (row) =>
   `${row.missing ? `<span class="chip missing">missing</span>` : ""}${
     row.suspect ? `<span class="chip suspect">suspect</span>` : ""}`;
 
-// Offered only where it is earned. Acknowledging asserts the statement still
-// holds against what the reference now says, so it is one reference at a time
-// and never a sweep over all of them.
 const acking = (row) => row.suspect
   ? ` <button class="thin" data-act="ack" data-ack="${esc(row.uid)}">Still holds</button>`
   : "";
