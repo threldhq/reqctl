@@ -59,6 +59,9 @@ def schema_problems(root, uid, data):
     try:
         declared = corpus.schema_for(root, corpus.kind_of(uid, data),
                                      corpus.name_of(uid, data))
+    # @req> REQ-14895892@JjrTwHoJqTRe r2dbx6
+    except corpus.UnmarkedCopy:
+        raise
     except corpus.ReqctlError as absent:
         return [f"{uid}: {absent}"]
     validator = Draft202012Validator(declared)

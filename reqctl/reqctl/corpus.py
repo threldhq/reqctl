@@ -735,10 +735,8 @@ def schema(root, name):
     if path == stated and name in SCHEMA_NAMES.values():
         lacking = _unmarked(path, stamped, name)
         if lacking:
-            raise UnmarkedCopy(
-                f"{stated}: the shipped schema carries "
-                f"{', '.join(f'{marker} on {field}' for field, marker in lacking)}"
-                ", which this copy lacks")
+            raise UnmarkedCopy(f"{stated}: the shipped schema carries {lacking}, "
+                               "which this copy lacks")
     return _parsed_schema(path, stamped)
 
 
@@ -752,10 +750,10 @@ def _unmarked(path, stamped, name):
     from . import fields
     shipped = packaged_schema_path(name)
     stat = shipped.stat()
-    return tuple(fields.unmarked(
+    return fields.unmarked(
         _parsed_schema(shipped, (stat.st_mtime_ns, stat.st_size)),
         _parsed_schema(path, stamped),
-        [kind for kind, named in SCHEMA_NAMES.items() if named == name]))
+        [kind for kind, named in SCHEMA_NAMES.items() if named == name])
 # @req- a252bv
 
 

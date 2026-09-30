@@ -241,17 +241,14 @@ def clears(root):
 
 
 # @req+ REQ-14895892@JjrTwHoJqTRe aepkss
-MARKED = ("default", "readOnly")
-
-
 def _lacking(shipped, copy, held, stated, at, seen=frozenset()):
     ref = held.get("$ref") if isinstance(held, dict) else None
     if ref in seen:
         return set()
     seen = seen | {ref} if ref else seen
     held, stated = _resolved(shipped, held), _resolved(copy, stated)
-    found = {(at, marker) for marker in held if marker not in stated
-             and (marker.startswith("x-") or marker in MARKED)}
+    found = {f"{marker} on {at}" for marker in held if marker not in stated
+             and (marker.startswith("x-") or marker in ("default", "readOnly"))}
     inner = stated.get("properties") or {}
     for name, value in (held.get("properties") or {}).items():
         if name in inner and not _forbidden(copy, inner[name]):
@@ -268,5 +265,5 @@ def unmarked(shipped, copy, kinds):
         held, stated = _merged(shipped, kind)[0], _merged(copy, kind)[0]
         for name in held.keys() & stated.keys():
             found |= _lacking(shipped, copy, held[name], stated[name], name)
-    return sorted(found)
+    return ", ".join(sorted(found))
 # @req- aepkss
