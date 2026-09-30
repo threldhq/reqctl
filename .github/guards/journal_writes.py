@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import ast
-import subprocess
 import sys
 from pathlib import Path
 
+import references
 from reqctl import corpus
 
 SOURCES = ("reqctl", "plugin")
@@ -30,58 +30,24 @@ METHODS = {
     "unlink": "delete",
 }
 # @req- kcim4i
-ONE_TARGET = {"rename", "replace"}
-NO_ARGUMENT = {"unlink"}
+ARITY = {"rename": 1, "replace": 1, "unlink": 0}
 WRITING_MODES = set("wax+")
-WRITING_FLAGS = {"O_WRONLY", "O_RDWR", "O_APPEND", "O_CREAT", "O_TRUNC",
-                 "O_TMPFILE"}
 STRAY = (f"makes one of the {DATA} outside {JOURNAL} -- change the file "
          "through corpus.atomic_write or corpus.remove")
 
 
-def scanned():
-    found = subprocess.run(
-        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard",
-         "--", *(f"{root}/*.py" for root in SOURCES)],
-        capture_output=True, text=True, check=False)
-    if found.returncode != 0:
-        raise SystemExit(f"cannot list files: {found.stderr.strip()}")
-    return sorted({path for path in found.stdout.split("\0") if path})
-
-
-def parsed_tree(path):
-    try:
-        return ast.parse(Path(path).read_text(encoding="utf-8"),
-                         filename=str(path))
-    except (OSError, UnicodeDecodeError, SyntaxError) as broken:
-        raise SystemExit(f"cannot read {path}: {broken}") from broken
-
-
 def imported(tree):
-    held = {}
+    held = {"open": "builtins.open"}
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                root = alias.name.split(".")[0]
-                held[alias.asname or root] = (alias.name if alias.asname
-                                              else root)
+                bound = alias.asname or alias.name.split(".")[0]
+                held[bound] = alias.name if alias.asname else bound
         elif isinstance(node, ast.ImportFrom):
             source = "." * node.level + (node.module or "")
             for alias in node.names:
                 held[alias.asname or alias.name] = f"{source}.{alias.name}"
     return held
-
-
-def shadows_open(tree):
-    for node in tree.body:
-        if (isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef,
-                              ast.ClassDef)) and node.name == "open"):
-            return True
-        if isinstance(node, ast.Assign) and any(
-                isinstance(target, ast.Name) and target.id == "open"
-                for target in node.targets):
-            return True
-    return False
 
 
 def resolved(node, held):
@@ -108,45 +74,24 @@ def mode_writes(mode):
     return None
 
 
-def flags_write(flags):
-    if flags is None:
-        return None
-    named = {node.attr for node in ast.walk(flags)
-             if isinstance(node, ast.Attribute)}
-    named |= {node.id for node in ast.walk(flags) if isinstance(node, ast.Name)}
-    stated = {name for name in named if name.startswith("O_")}
-    if stated & WRITING_FLAGS:
-        return True
-    if not stated or named - stated - {"os"}:
-        return None
-    return False
-
-
 def opened(node, name, held):
-    if name in ("builtins.open", "io.open", "os.open"):
+    if name in FUNCTIONS or name == f"{PATH}.open":
         target = argument(node, 0, "path" if name == "os.open" else "file")
         if resolved(target, held) == "os.devnull":
             return False
         if name == "os.open":
-            return flags_write(argument(node, 1, "flags"))
-        return mode_writes(argument(node, 1, "mode"))
-    if name == f"{PATH}.open":
+            return resolved(argument(node, 1, "flags"), held) != "os.O_RDONLY"
         return mode_writes(argument(node, 1, "mode"))
     keyed = next((one.value for one in node.keywords if one.arg == "mode"),
                  None)
     if keyed is not None:
         return mode_writes(keyed)
-    first = node.args[0] if node.args else None
-    literal = isinstance(first, ast.Constant) and isinstance(first.value, str)
-    return mode_writes(first) if literal else False
+    return bool(mode_writes(node.args[0] if node.args else None))
 
 
-def classified(node, held, shadowed):
+def classified(node, held):
     func = node.func
     name = resolved(func, held)
-    if (name is None and isinstance(func, ast.Name) and func.id == "open"
-            and not shadowed):
-        name = "builtins.open"
     if name in FUNCTIONS:
         return FUNCTIONS[name], name
     if not isinstance(func, ast.Attribute) or func.attr not in METHODS:
@@ -156,43 +101,34 @@ def classified(node, held, shadowed):
         return METHODS[func.attr], name
     if isinstance(func.value, ast.Name) and owner is not None:
         return None
-    if func.attr in ONE_TARGET and (len(node.args) != 1 or node.keywords):
-        return None
-    if func.attr in NO_ARGUMENT and node.args:
+    if func.attr in ARITY and len(node.args) != ARITY[func.attr]:
         return None
     return METHODS[func.attr], ast.unparse(func)
 
 
 # @req+ GUARD-15820124@9ypnh2GEXx5T 4squcr
 def refusals(path):
-    tree = parsed_tree(path)
-    held, shadowed = imported(tree), shadows_open(tree)
-    found = []
+    tree = references.parsed(path)
+    held = imported(tree)
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
             continue
-        made = classified(node, held, shadowed)
+        made = classified(node, held)
         if made is None:
             continue
         member, form = made
         writes = (opened(node, form, held) if member == "open_to_write"
                   else True)
         if writes is None:
-            found.append((node.lineno, f"{form} is given a mode this guard "
-                                       "cannot read -- state it as a literal"))
+            yield node.lineno, (f"{form} is given a mode this guard cannot "
+                                "read -- state it as a literal")
         elif writes:
-            found.append((node.lineno, f"{form} {STRAY}"))
-    return found
+            yield node.lineno, f"{form} {STRAY}"
 
 
 def drift(root):
-    store, _ = corpus.load(root)
-    held = {str(item.uid): corpus.raw(item) for item in corpus.items(store)}
-    data = held.get(DATA)
-    if data is None or corpus.kind_of(DATA, data) != "data":
-        return [f"the corpus holds no data item named {DATA} to read the "
-                "refused calls from"]
-    stated = set(corpus.entries(data) or {})
+    stated = set(corpus.entries(corpus.read(corpus.path_for(root, DATA)))
+                 or {})
     known = set(FUNCTIONS.values()) | set(METHODS.values())
     return ([f"{DATA} names {member}, which {Path(__file__).name} does not "
              "refuse -- teach it that member's calls"
@@ -204,16 +140,14 @@ def drift(root):
 
 def main():
     found = [f"::error::{fault}" for fault in drift(Path("."))]
-    paths = scanned()
-    for root in SOURCES:
-        if not any(path.startswith(f"{root}/") for path in paths):
-            found.append(f"::error::no Python file lies under {root}/ -- point "
-                         f"SOURCES in {Path(__file__).name} at the sources")
-    for path in paths:
-        if path == JOURNAL:
-            continue
-        found += [f"::error file={path},line={line}::{why}"
-                  for line, why in refusals(path)]
+    paths = references.tracked(*(f"{root}/*.py" for root in SOURCES))
+    found += [f"::error::no Python file lies under {root}/ -- point SOURCES "
+              f"in {Path(__file__).name} at the sources"
+              for root in SOURCES
+              if not any(path.startswith(f"{root}/") for path in paths)]
+    found += [f"::error file={path},line={line}::{why}"
+              for path in paths if path != JOURNAL
+              for line, why in refusals(path)]
     for fault in found:
         print(fault)
     return 1 if found else 0
