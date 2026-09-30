@@ -127,20 +127,20 @@ def _selects(schema, test, kind):
 
 
 def _merged(schema, kind):
-    properties, required = {}, set()
+    properties, required, barred = {}, set(), set()
     branches = [_resolved(schema, item) for item in schema.get("allOf", ())]
-    chosen = [_resolved(schema, branch.get("then")) if "if" in branch else branch
-              for branch in branches if "if" not in branch
-              or _selects(schema, _resolved(schema, branch["if"]), kind)]
-    for block in [schema] + chosen:
+    chosen = [_resolved(schema, branch.get("then")) for branch in branches
+              if _selects(schema, _resolved(schema, branch.get("if")), kind)]
+    for block in [schema] + branches + chosen:
         required.update(block.get("required", ()))
         for name, stated in (block.get("properties") or {}).items():
             if _forbidden(schema, stated):
-                properties.pop(name, None)
+                barred.add(name)
             else:
                 properties[name] = {**properties.get(name, {}),
                                     **_resolved(schema, stated)}
-    return properties, required
+    return {name: stated for name, stated in properties.items()
+            if name not in barred}, required
 
 
 def _prose(node):
