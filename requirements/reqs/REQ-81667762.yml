@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a command that creates nested folders to hold a file it writes, and a later
+    write that fails
+  then: no folder the command created remains
+  when: the product runs the command
+assessed:
+  REQ-24406170: M08jCONzg-4unbIjswcpNFFuynYzysf9JZj5KZch_QA
+priority: medium
+relations:
+  REQ-24406170: depends_on
+status: approved
+text: If one of the product's commands ends in an error, then the product shall remove
+  every folder the command has created that holds nothing but folders the product
+  removes once the command's files are put back.
+type: functional
+verification: inspection
