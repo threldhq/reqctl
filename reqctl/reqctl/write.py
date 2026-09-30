@@ -971,8 +971,7 @@ def _revision(store, uid, fields):
     item = corpus.find(store, uid)
     kind = corpus.kind_of(uid, item.data)
     if kind not in KINDS:
-        raise ReqctlError(
-            f"{uid}: names no kind; `reqctl validate` names the fault")
+        raise ReqctlError(f"{uid}: names no kind; `reqctl validate` names the fault")
     own = _fields.of(store.root, kind)
     revisable = [field for field in own if field.name != "entries"
                  or kind == "parameter" and field.dest not in OPERATIONS]
@@ -1010,9 +1009,7 @@ def _revision(store, uid, fields):
         )
 
     if kind in ("term", "parameter") and corpus.entries(item.data) is None:
-        raise ReqctlError(
-            f"{uid}: has no entries -- `reqctl validate` names the fault"
-        )
+        raise ReqctlError(f"{uid}: has no entries -- `reqctl validate` names the fault")
     _refuse_blank_text(fields, own)
     if fields.get("entry") is not None and kind not in ("data", "parameter"):
         raise ReqctlError(f"--entry does not apply to a {kind}")
@@ -1061,8 +1058,7 @@ def _revision(store, uid, fields):
             raise ReqctlError(f"--kind does not apply to a {kind}")
         if fields["kind"] != kind:
             raise ReqctlError(
-                f"--kind {fields['kind']}: {uid} is a {kind}; mint the item "
-                "you meant")
+                f"--kind {fields['kind']}: {uid} is a {kind}; mint the item you meant")
         prospective["kind"] = kind
     sole = next(iter(corpus.entries(before) or {}), None)
     entry = dict(corpus.term_fields(before))
@@ -1216,7 +1212,7 @@ def _revision(store, uid, fields):
                  if fields.get(key) is not None]
         if not asked:
             raise ReqctlError("nothing to change; pass at least one field")
-        return None
+        return {}, []
     if spread:
         changed["reworded"] = {
             "links": spread["done"],
@@ -1225,24 +1221,20 @@ def _revision(store, uid, fields):
             "left": sorted(spread["left"]),
             "repinned": spread["repinned"],
         }
-    return item, prospective, changed, spread["moved"] if spread else []
+    return changed, [corpus.Item(uid, item.path, prospective),
+                     *(spread["moved"] if spread else [])]
 
 
 def revise(store, uid, fields):
     # @req+ REQ-98666936@8CkDXfV6m3Ir 4k5e4z
     try:
-        planned = _revision(store, uid, fields)
+        changed, written = _revision(store, uid, fields)
     except ReqctlError as error:
         joint = "\n" if "\n" in str(error) else "; "
         raise ReqctlError(f"{error}{joint}{uid} was not changed") from None
     # @req- 4k5e4z
-    if planned is None:
-        return {}
-    item, prospective, changed, moved = planned
-    corpus.save(store, corpus.Item(uid, item.path, prospective))
-    for held in moved:
+    for held in written:
         corpus.save(store, held)
-    item.data = prospective
     return changed
 
 
