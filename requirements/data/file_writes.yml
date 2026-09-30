@@ -17,5 +17,5 @@ entries:
     definition: Path.write_text or Path.write_bytes
 kind: data
 name: file_writes
-status: draft
+status: approved
 text: the calls through which code writes, creates, renames or deletes a file
