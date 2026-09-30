@@ -1,0 +1,10 @@
+assessed:
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+entries:
+  '3': {}
+kind: parameter
+name: review_fetch_attempts
+status: approved
+text: The most attempts the product makes at a source of the [best-in-class review](best_in_class_review),
+  the first included
+value_type: count

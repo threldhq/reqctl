@@ -1,0 +1,38 @@
+acceptance_criteria:
+- given: a review refused only because every attempt at the source of one [practice](practice)
+    ended in a [transient failure](transient_failure), and the owner answers the question
+    by declining
+  then: the product fetches none of the sources of that [practice](practice) and passes
+    the review
+  when: the review is checked again
+- given: the owner answers the question by declining
+  then: the product states which [practices](practice) it removed
+  when: the product removes the [practices](practice)
+- given: a [practice](practice) the product removed from the review on the owner's
+    answer
+  then: the run's declined list states the [practice](practice)
+  when: the run's pull request description is rendered
+- given: a review that passes after the product removed a [practice](practice)
+  then: neither holds the removed [practice](practice)
+  when: the check prints the review's summary and table
+- given: a review that passed, whose table the owner answers by declining a [practice](practice)
+  then: the product removes nothing from the review
+  when: the owner answers
+assessed:
+  REQ-46711731: rqojAeSdcYOnIgKWWfTXSfGr9gWGYpBFMtEHxbCuE80
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+  transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+priority: medium
+relations:
+  REQ-46711731: constrains
+  REQ-82432523: depends_on
+status: approved
+text: When the owner answers the [question for the owner](question_for_the_owner)
+  that a refusal of the [best-in-class review](best_in_class_review) raises by declining
+  [practices](practice), the product shall remove those [practices](practice) from
+  the review.
+type: functional
+verification: inspection
