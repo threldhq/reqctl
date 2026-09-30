@@ -12,6 +12,8 @@ assessed:
   REQ-13148397: HGLj8b_6v-PVolRAcaFdJcDs_UjovUXrV-kbm7aGioo
   REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
   REQ-71965656: 7EwX0Kxq6VnfLW59O8tUMn10fYD-TRyY584jATDwF1g
+citations:
+  4zgzmu: bxDPW237BVLWt3JcPYPYOdtVURN62vyVOperO99_5Yc
 priority: medium
 relations:
   REQ-13148397: depends_on

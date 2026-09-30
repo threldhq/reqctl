@@ -210,10 +210,12 @@ python3 ${CLAUDE_SKILL_DIR}/synthesis/review.py check --run .elucidate/<run>
 ```
 <!-- @req- dyekvt -->
 
-<!-- @req+ REQ-46711731@SULIqbPOPYVp 4avail -->
+<!-- @req+ REQ-46711731@rqojAeSdcYOn 4avail -->
 The check fetches every page the review cites. It refuses the review where a
 practice names no source or a page cannot be read or does not hold the passage
-quoted from it, and names the way to clear the refusal: follow it.
+quoted from it, and names the way to clear the refusal: follow it. Where every
+fault is a transient failure, it names a question for the owner instead: put it
+to them, and take the step their answer names.
 <!-- @req- 4avail -->
 
 A review that passes is the run's review; nothing later in the run makes
