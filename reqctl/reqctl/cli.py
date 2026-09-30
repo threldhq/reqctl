@@ -8,6 +8,7 @@ import webbrowser
 from . import baseline as _baseline
 from . import cite
 from . import corpus
+from . import fields as _fields
 from . import graph
 from . import portal as _portal
 from . import resolve as _resolve
@@ -952,38 +953,24 @@ def _command(sub, name, said):
     return sub.add_parser(name, help=said, description=said)
 
 
-def _item_arguments(s):
+def _field_arguments(s, flags, taken=()):
+    for flag in flags:
+        if flag.dest in taken:
+            continue
+        if flag.switch:
+            s.add_argument(flag.flag, action="store_true")
+        else:
+            s.add_argument(flag.flag, choices=list(flag.choices) or None,
+                           action="append" if flag.repeated else "store")
+
+
+def _item_arguments(s, root):
     s.add_argument("kind", choices=list(_write.KINDS))
-    s.add_argument("--text", help="the statement, or for a parameter or data "
-                                  "item what it denotes")
-    s.add_argument("--type", choices=["functional", "non_functional", "constraint"])
-    # @req> REQ-35443917@7V3GXXoqruBl xyvmst
-    s.add_argument("--verification",
-                   choices=["inspection", "analysis", "demonstration"])
-    s.add_argument("--priority", choices=["high", "medium", "low"])
-    s.add_argument("--rationale")
-    s.add_argument("--criterion", dest="criteria", action="append",
-                   metavar="'GIVEN | WHEN | THEN'",
-                   help="an acceptance criterion; repeat for each one")
-    s.add_argument("--name", help="parameter handle, snake_case")
-    s.add_argument("--term", help="the word a term defines")
-    s.add_argument("--alias", dest="aliases", action="append",
-                   help="another wording of the term; repeat for each one")
-    s.add_argument("--unclaimed", dest="unclaimed", action="append",
-                   metavar="PHRASE=REASON")
-    s.add_argument("--definition", help="what a term means, in prose")
-    s.add_argument("--value")
-    s.add_argument("--unit")
-    s.add_argument("--value-type", dest="value_type",
-                   choices=["duration", "size", "count", "ratio", "percentage",
-                            "currency", "boolean", "text"])
-    s.add_argument("--default", metavar="MEMBER",
-                   help="the set member statements select as ${name.default}")
-    s.add_argument("--entry", dest="entry", action="append", metavar="KEY",
-                   help="a data entry's handle; repeat for each one")
+    # @req> REQ-71965656@7EwX0Kxq6Vnf f7bkcf
+    _field_arguments(s, _fields.flags(root))
 
 
-def build_parser():
+def build_parser(root=None):
     p = argparse.ArgumentParser(
         prog="reqctl",
         description="The requirements corpus under requirements/ is read and "
@@ -994,7 +981,7 @@ def build_parser():
     sub = p.add_subparsers(dest="command", required=True)
 
     s = _command(sub, "new", "mint a requirement, parameter, term or data item")
-    _item_arguments(s)
+    _item_arguments(s, root)
     s.add_argument("--uid", help="mint a requirement or guard under this uid "
                                  "rather than a fresh one")
     s.set_defaults(func=cmd_new)
@@ -1002,49 +989,25 @@ def build_parser():
     s = _command(sub, "lint",
                  "report the faults new would refuse an item for, writing "
                  "nothing")
-    _item_arguments(s)
+    _item_arguments(s, root)
     s.set_defaults(func=cmd_lint)
 
     s = _command(sub, "revise",
                  "change an item's fields, pin its links with --ack, or edit "
                  "a data entry")
     s.add_argument("uid")
-    s.add_argument("--text")
-    s.add_argument("--status", choices=["draft", "approved", "deprecated", "superseded"])
-    s.add_argument("--type", choices=["functional", "non_functional", "constraint"])
-    # @req> REQ-35443917@7V3GXXoqruBl ep2jqr
-    s.add_argument("--verification",
-                   choices=["inspection", "analysis", "demonstration"])
-    s.add_argument("--priority", choices=["high", "medium", "low"])
-    s.add_argument("--rationale")
-    g = s.add_mutually_exclusive_group()
-    g.add_argument("--criterion", dest="criteria", action="append",
-                   metavar="'GIVEN | WHEN | THEN'",
-                   help="replaces every acceptance criterion; repeat for each one")
-    g.add_argument("--no-criteria", dest="no_criteria", action="store_true",
-                   help="remove every acceptance criterion")
+    # @req> REQ-91205530@UySHruI9_FXO ctnzp2
+    _field_arguments(s, _fields.flags(root) + _fields.clears(root),
+                     _write.OPERATIONS)
     s.add_argument("--ack", dest="ack", action="append",
                    metavar="NAME | NAME.ENTRY",
                    help="pin a referenced parameter or linked term at its "
                         "current state; repeat for each one")
-    s.add_argument("--name")
-    s.add_argument("--term")
-    s.add_argument("--alias", dest="aliases", action="append")
-    s.add_argument("--unclaimed", dest="unclaimed", action="append",
-                   metavar="PHRASE=REASON")
-    s.add_argument("--definition")
-    s.add_argument("--value")
-    s.add_argument("--unit")
-    s.add_argument("--value-type", dest="value_type",
-                   choices=["duration", "size", "count", "ratio", "percentage",
-                            "currency", "boolean", "text"])
-    s.add_argument("--default", metavar="MEMBER",
-                   help="the set member statements select as ${name.default}")
     s.add_argument("--handle", metavar="KEY",
                    help="terms: the entry key, snake_case; the word it wore "
                         "moves into the entry where a word is not already "
                         "stated")
-    s.add_argument("--kind", choices=["term", "parameter", "data"])
+    s.add_argument("--kind", choices=list(_write.KINDS))
     s.add_argument("--entry", metavar="KEY",
                    help="the existing entry --set writes to")
     s.add_argument("--new-entry", dest="new_entry", metavar="KEY",
@@ -1058,14 +1021,6 @@ def build_parser():
                    help="drop a field from --entry's entry; repeat for each one")
     s.add_argument("--drop-entry", dest="drop_entry", metavar="KEY",
                    help="remove a data entry; its fields go with it")
-    s.add_argument("--no-rationale", dest="no_rationale", action="store_true",
-                   help="clear the rationale")
-    s.add_argument("--no-unit", dest="no_unit", action="store_true",
-                   help="clear a parameter's unit")
-    s.add_argument("--no-default", dest="no_default", action="store_true",
-                   help="clear a parameter's default member")
-    s.add_argument("--no-alias", dest="no_aliases", action="store_true",
-                   help="clear every alias of a term")
     s.add_argument("--reword", dest="reword", action="append", metavar="OLD=NEW",
                    help="a word this term's links show, and what it becomes; "
                         "--term rewrites its own word without this")
@@ -1211,10 +1166,24 @@ def _drop_output():
         pass
 
 
+def _fault(as_json, error):
+    if as_json:
+        print(json.dumps({"error": str(error)}, indent=2))
+    else:
+        print(f"reqctl: {error}", file=sys.stderr)
+    return EXIT_INVALID
+
+
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
+    # @req+ REQ-19913588@zNetOTQBhHYZ zh6xly
     try:
-        args = build_parser().parse_args(argv)
+        parser = build_parser(_fields.root())
+    except (ReqctlError, OSError, UnicodeError) as error:
+        return _fault("--json" in argv, error)
+    # @req- zh6xly
+    try:
+        args = parser.parse_args(argv)
     except SystemExit as usage:
         if "--json" in argv and usage.code:
             print(json.dumps({"error": "usage: the fault is on stderr; "
@@ -1231,11 +1200,7 @@ def main(argv=None):
                 _drop_output()
                 return EXIT_OK
     except (ReqctlError, OSError, UnicodeError) as error:
-        if args.json:
-            _emit(args, {"error": str(error)}, "")
-        else:
-            print(f"reqctl: {error}", file=sys.stderr)
-        return EXIT_INVALID
+        return _fault(args.json, error)
     # @req- dw57fs
 
 

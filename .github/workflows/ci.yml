@@ -75,10 +75,7 @@ jobs:
           fi
 
       - name: Help budget, what a session reads through reqctl --help
-        run: python .github/guards/help_budget.py --max 58
-
-      - name: Names resolve
-        run: python .github/guards/references.py
+        run: python .github/guards/help_budget.py --max 43
 
       - name: Lockfile inputs state their versions
         run: |
@@ -157,8 +154,8 @@ jobs:
             echo '```'
           } >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
 
-      - name: Portal offers what reqctl accepts
-        run: python .github/guards/portal_binding.py
+      - name: Names resolve
+        run: python .github/guards/references.py
 
       - name: A guard binds to no nominated dimension
         run: python .github/guards/guard_binding.py

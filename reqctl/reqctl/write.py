@@ -1,3 +1,4 @@
+import copy
 import math
 import random
 import re
@@ -5,50 +6,19 @@ import unicodedata
 
 from . import baseline as _baseline
 from . import corpus
+from . import fields as _fields
 from . import validate as _validate
 from .corpus import ReqctlError
 
-REQUIREMENT_FIELDS = ("type", "status", "verification", "priority", "rationale")
-GUARD_FIELDS = ("status", "rationale")
-PARAMETER_FIELDS = ("status", "name", "unit", "value_type", "rationale")
-TERM_FIELDS = ("status", "term", "aliases", "definition", "unclaimed")
 RELATIONS = ("derives_from", "depends_on", "constrains", "supersedes",
              "conflicts_with")
 STATEMENTS = frozenset(corpus.PREFIXES[prefix]
                        for prefix in _validate.SUBJECTS)
-SETTABLE = (set(REQUIREMENT_FIELDS) | set(PARAMETER_FIELDS) | set(TERM_FIELDS)
-            | {"value"})
-REVISABLE = SETTABLE | {"kind", "text", "criteria", "no_criteria", "ack", "entry",
-                        "new_entry", "set", "append", "unset", "default", "drop_entry",
-                        "reword", "handle"}
-FLAGS = {"aliases": "--alias"}
-
-CLEARABLE = {
-    "no_rationale": ("--no-rationale", ("requirement", "parameter", "data")),
-    "no_unit": ("--no-unit", ("parameter",)),
-    "no_default": ("--no-default", ("parameter", "data")),
-    "no_aliases": ("--no-alias", ("term",)),
-}
-REVISABLE |= set(CLEARABLE)
-SWITCHES = {"no_criteria"} | set(CLEARABLE)
+OPERATIONS = ("ack", "handle", "kind", "entry", "new_entry", "set", "append",
+              "unset", "drop_entry", "reword")
 
 KINDS = {kind: prefix.rstrip("-")
          for prefix, kind in corpus.PREFIXES.items()}
-FIELDS = {
-    "requirement": REQUIREMENT_FIELDS,
-    "guard": GUARD_FIELDS,
-    "parameter": PARAMETER_FIELDS + ("value",),
-    "term": TERM_FIELDS,
-    "data": ("status", "name", "rationale", "text"),
-}
-REQUIRED = {
-    "requirement": ("text",),
-    "guard": ("text",),
-    "parameter": ("text", "name", "value", "value_type"),
-    "term": ("term", "definition"),
-    "data": ("name",),
-}
-REFILED = ("value_type", "unit")
 
 MINT_ATTEMPTS = 10
 
@@ -58,31 +28,6 @@ SEPARATED = re.compile(r"\d,\d")
 BETWEEN_DIGITS = re.compile(r"\d\s*(\D)\s*\d")
 
 ARTICLED_LINK = re.compile(r"(?:\b([Aa]n?)(\s+))?" + corpus.CONCEPT_LINK.pattern)
-
-PARAMETER_DEFAULTS = {"kind": "parameter", "status": "draft", "assessed": {}}
-TERM_DEFAULTS = {"kind": "term", "status": "draft", "assessed": {}}
-# @req> REQ-87380206@tt4tAqgS8C4_ rw2mmr
-REQUIREMENT_DEFAULTS = {
-    "type": "functional",
-    "status": "draft",
-    "verification": "inspection",
-    "priority": "medium",
-    "acceptance_criteria": [],
-    "relations": {},
-    "assessed": {},
-}
-GUARD_DEFAULTS = {
-    "status": "draft",
-    "acceptance_criteria": [],
-    "relations": {},
-    "assessed": {},
-}
-DATA_DEFAULTS = {"kind": "data", "status": "draft", "assessed": {}}
-DEFAULTS = {"requirement": REQUIREMENT_DEFAULTS,
-            "guard": GUARD_DEFAULTS,
-            "parameter": PARAMETER_DEFAULTS,
-            "term": TERM_DEFAULTS,
-            "data": DATA_DEFAULTS}
 
 
 def _quoting(char):
@@ -193,18 +138,46 @@ def _refuse_hidden(label, value):
         raise ReqctlError(f"{label} {_hidden_fault(hidden)}")
 
 
-def _refuse_blank_text(fields):
-    for key in ("text", "definition", "term", "rationale", "name", "unit"):
-        value = fields.get(key)
-        if value is None:
+def _refuse_blank_text(fields, own):
+    for field in own:
+        value = fields.get(field.dest)
+        if value is None or not (field.string or field.strings):
             continue
-        if not str(value).strip():
-            raise ReqctlError(f"--{key} must not be blank")
-        _refuse_hidden(f"--{key}", value)
-    for alias in fields.get("aliases") or []:
-        if not str(alias).strip():
-            raise ReqctlError("--alias must not be blank")
-        _refuse_hidden("--alias", alias)
+        for member in value if field.strings else [value]:
+            if not str(member).strip():
+                raise ReqctlError(f"{field.flag} must not be blank")
+            _refuse_hidden(field.flag, member)
+
+
+def _given(value):
+    return value is not None and value is not False and value != []
+
+
+def _stray(root, own, fields, operations=()):
+    mine = ({field.dest for field in own} | set(operations)
+            | {field.cleared for field in own if field.clears})
+    return sorted(flag.flag for flag in _fields.flags(root) + _fields.clears(root)
+                  if flag.dest not in mine and _given(fields.get(flag.dest)))
+
+
+def _converted(field, value):
+    if field.name == "acceptance_criteria":
+        return criteria(value)
+    # @req> REQ-24481048@ZhiYUpKwnPlA 2k7l5j
+    if field.name == "unclaimed":
+        return _unclaimed(value)
+    if field.name == "word":
+        return str(value).strip()
+    if field.strings:
+        return [str(member).strip() for member in value]
+    return value
+
+
+def _one(values, flag):
+    if len(values) > 1:
+        raise ReqctlError(f"{flag} states the whole set once, as in "
+                          "[json, markdown]")
+    return scalar(values[0])
 
 
 def _unclaimed(pairs):
@@ -794,9 +767,10 @@ def refile(store, uid):
 
     before = {found.uid: found.data for found in corpus.items(store)}
     after = dict(before)
+    carried = _fields.names(store.root, "data")
     after[item.uid] = dict(
         {key: value for key, value in item.data.items()
-         if key not in REFILED}, kind="data")
+         if key in carried}, kind="data")
     after.update(_repin(after, {item.uid}))
 
     problems = _validate.dictionary_rules(item.uid, after[item.uid])
@@ -877,90 +851,54 @@ def mint(store, kind, name=None, placeholder=None):
 
 
 def prepare(store, kind, fields, placeholder=None):
-    missing = [f"--{f.replace('_', '-')}" for f in REQUIRED[kind]
-               if fields.get(f) is None]
+    own = _fields.of(store.root, kind)
+    # @req+ REQ-48998966@WmgTdfEbX1GA 4zgzmu
+    missing = [field.flag for field in own
+               if field.required and fields.get(field.dest) is None]
     if missing:
         raise ReqctlError(
             f"a {kind} needs {', '.join(missing)} to be valid the moment it exists"
         )
-
-    allowed = FIELDS[kind]
-    stray = sorted(
-        FLAGS.get(key, f"--{key.replace('_', '-')}")
-        for key in SETTABLE - set(allowed)
-        if fields.get(key) is not None
-    )
+    # @req- 4zgzmu
+    stray = _stray(store.root, own, fields)
     if stray:
         raise ReqctlError(f"{', '.join(stray)} does not apply to a {kind}")
-    if fields.get("criteria") and kind not in ("requirement", "guard"):
-        raise ReqctlError("only a requirement or a guard carries acceptance "
-                          "criteria")
     if fields.get("uid") is not None and kind not in ("requirement", "guard"):
         raise ReqctlError(f"--uid does not apply to a {kind}; it is minted "
                           "under the name it carries")
-    if fields.get("text") is not None and kind == "term":
-        raise ReqctlError("--text does not apply to a term; it carries --definition")
-    if fields.get("default") is not None and kind not in ("parameter", "data"):
-        raise ReqctlError(f"--default does not apply to a {kind}")
-    if fields.get("entry") and kind != "data":
-        raise ReqctlError(f"--entry does not apply to a {kind}")
-    _refuse_blank_text(fields)
-    if fields.get("value") is not None:
-        fields = dict(fields, value=scalar(fields["value"]))
+    _refuse_blank_text(fields, own)
 
-    named = None
-    data = {key: (dict(value) if isinstance(value, dict)
-                  else list(value) if isinstance(value, list) else value)
-            for key, value in DEFAULTS[kind].items()}
-    if kind in ("requirement", "guard"):
-        data["text"] = fields["text"]
-        for key in allowed:
-            if fields.get(key) is not None:
-                data[key] = fields[key]
-        given = criteria(fields.get("criteria"))
-        if given is not None:
-            data["acceptance_criteria"] = given
-    elif kind == "term":
-        word = str(fields["term"]).strip()
+    data = _fields.defaults(store.root, kind)
+    entry = {}
+    for field in own:
+        value = fields.get(field.dest)
+        if value is not None and field.name not in ("entries", "default"):
+            (entry if field.entry else data)[field.name] = _converted(field, value)
+    named = data.get("name")
+    entries = next((field for field in own if field.name == "entries"), None)
+    if kind == "term":
+        word = entry["word"]
         handle = corpus.handle_for(word)
         if not corpus.DATA_KEY.match(handle):
             raise ReqctlError(
                 f"--term {word!r}: no snake_case handle falls out of it, and a "
                 "term is addressed by one")
-        entry = {"word": word, "definition": fields["definition"]}
-        if fields.get("aliases"):
-            entry["aliases"] = [str(alias).strip() for alias in fields["aliases"]]
-        if fields.get("unclaimed"):
-            # @req> REQ-24481048@ZhiYUpKwnPlA 3zljbn
-            entry["unclaimed"] = _unclaimed(fields["unclaimed"])
-        if fields.get("status") is not None:
-            data["status"] = fields["status"]
         data["entries"] = {handle: entry}
         named = handle
-    elif kind == "parameter":
-        data["text"] = fields["text"]
-        for key in ("status", "name", "unit", "value_type", "rationale"):
-            if fields.get(key) is not None:
-                data[key] = fields[key]
-        data["entries"] = _entered(fields["value"])
-        named = fields["name"]
+    elif kind == "parameter" and entries is not None:
+        data["entries"] = _entered(_one(fields[entries.dest], entries.flag))
         if fields.get("default") is not None:
             chosen = entry_key(scalar(str(fields["default"])))
             if chosen not in data["entries"]:
                 raise ReqctlError(f"--default {fields['default']}: not a member "
                                   "of the set")
             data["default"] = chosen
-    else:
-        for key in allowed:
-            if fields.get(key) is not None:
-                data[key] = fields[key]
-        if not fields.get("entry"):
-            raise ReqctlError("a data item needs at least one --entry")
-        keys = [str(key).strip() for key in fields["entry"]]
+    elif kind == "data" and entries is not None:
+        keys = [str(key).strip() for key in fields[entries.dest]]
         repeated = sorted({key for key in keys if keys.count(key) > 1})
         if repeated:
             raise ReqctlError(
-                f"--entry {', '.join(repeated)}: given more than once"
+                f"{entries.flag} {', '.join(repeated)}: given more than once"
             )
         data["entries"] = {key: {} for key in keys}
         if fields.get("default") is not None:
@@ -968,7 +906,6 @@ def prepare(store, kind, fields, placeholder=None):
             if chosen not in data["entries"]:
                 raise ReqctlError(f"--default {fields['default']}: not an entry")
             data["default"] = chosen
-        named = fields["name"]
 
     # @req+ REQ-73115701@e51Qp8vDbDXd yorgmf
     if placeholder is None and fields.get("uid") is not None:
@@ -1048,26 +985,19 @@ def _refuse_new_schema_faults(store, uid, before, prospective):
 def revise(store, uid, fields):
     item = corpus.find(store, uid)
     kind = corpus.kind_of(uid, item.data)
-    if kind not in FIELDS:
+    if kind not in KINDS:
         raise ReqctlError(
             f"{uid}: names no kind; `reqctl validate` names the fault; "
             f"{uid} was not changed")
-    allowed = FIELDS[kind]
+    own = _fields.of(store.root, kind)
 
-    stray = sorted(
-        FLAGS.get(key, f"--{key.replace('_', '-')}")
-        for key in SETTABLE - set(allowed)
-        if fields.get(key) is not None
-    )
+    # @req+ REQ-25589226@gN1zcZG8pbON 5apnio
+    stray = _stray(store.root, own, fields, OPERATIONS)
     if stray:
         raise ReqctlError(
             f"{', '.join(stray)} does not apply to a {kind}; {uid} was not changed"
         )
-    if fields.get("text") is not None and kind == "term":
-        raise ReqctlError(
-            f"--text does not apply to a term; it carries --definition; "
-            f"{uid} was not changed"
-        )
+    # @req- 5apnio
     # @req+ REQ-61755382@oWxB5-1lwQ9G 7pv66p
     if fields.get("handle") is not None:
         if kind != "term":
@@ -1080,13 +1010,15 @@ def revise(store, uid, fields):
             f"by; `reqctl rename {uid} HANDLE` moves the file with it; "
             f"{uid} was not changed"
         )
-    if fields.get("name") is not None and kind in ("parameter", "data"):
-        noun = "a parameter" if kind == "parameter" else "a data item"
-        raise ReqctlError(
-            f"--name: {noun}'s name is the address the corpus reaches it by; "
-            f"`reqctl rename {uid} NAME` moves the file with it; {uid} was "
-            "not changed"
-        )
+    # @req> REQ-91205530@UySHruI9_FXO hc64tl
+    for field in own:
+        if field.address and fields.get(field.dest) is not None:
+            noun = "a data item" if kind == "data" else f"a {kind}"
+            raise ReqctlError(
+                f"{field.flag}: {noun}'s {field.name} is the address the corpus "
+                f"reaches it by; `reqctl rename {uid} {field.name.upper()}` "
+                f"moves the file with it; {uid} was not changed"
+            )
     # @req- 7pv66p
     if fields.get("reword") and kind != "term":
         raise ReqctlError(
@@ -1100,14 +1032,9 @@ def revise(store, uid, fields):
             f"{uid} was not changed"
         )
     try:
-        _refuse_blank_text(fields)
+        _refuse_blank_text(fields, own)
     except ReqctlError as error:
         raise ReqctlError(f"{error}; {uid} was not changed") from None
-    # @req> REQ-25589226@gN1zcZG8pbON 6mn4qt
-    if fields.get("default") is not None and kind not in ("parameter", "data"):
-        raise ReqctlError(
-            f"--default does not apply to a {kind}; {uid} was not changed"
-        )
     if fields.get("entry") is not None and kind not in ("data", "parameter"):
         raise ReqctlError(
             f"--entry does not apply to a {kind}; {uid} was not changed"
@@ -1144,31 +1071,24 @@ def revise(store, uid, fields):
             f"--unset {', '.join(sorted(both))} contradicts --set; pass one; "
             f"{uid} was not changed"
         )
-    for flag, (spelt, kinds) in CLEARABLE.items():
-        if fields.get(flag) in (None, False):
-            continue
-        if kind not in kinds:
+    for field in own:
+        if (field.clears and fields.get(field.cleared)
+                and fields.get(field.dest) is not None):
             raise ReqctlError(
-                f"{spelt} does not apply to a {kind}; {uid} was not changed"
+                f"{field.clears} contradicts {field.flag}; pass one; "
+                f"{uid} was not changed"
             )
-        clash = flag[3:]
-        if fields.get(clash) is not None:
-            raise ReqctlError(
-                f"{spelt} contradicts {FLAGS.get(clash, '--' + clash.replace('_', '-'))}"
-                f"; pass one; {uid} was not changed"
-            )
+    entries = next((field for field in own if field.name == "entries"), None)
+    value = None
     try:
-        if fields.get("value") is not None:
-            fields = dict(fields, value=scalar(fields["value"]))
-        given = ([] if fields.get("no_criteria")
-                 else criteria(fields.get("criteria")))
+        if (kind == "parameter" and entries is not None
+                and fields.get(entries.dest) is not None):
+            value = _one(fields[entries.dest], entries.flag)
+        stated = {field.name: _converted(field, fields[field.dest])
+                  for field in own if fields.get(field.dest) is not None
+                  and field.name not in ("entries", "default")}
     except ReqctlError as error:
         raise ReqctlError(f"{error}; {uid} was not changed") from None
-    if given is not None and not uid.startswith(("REQ-", "GUARD-")):
-        raise ReqctlError(
-            f"only a requirement or a guard carries acceptance criteria; "
-            f"{uid} was not changed"
-        )
     acks = fields.get("ack") or []
 
     before = dict(item.data)
@@ -1185,46 +1105,30 @@ def revise(store, uid, fields):
                 f"--kind {fields['kind']}: {uid} is a {kind}; mint the item "
                 f"you meant; {uid} was not changed")
         prospective["kind"] = kind
-    if fields.get("text") is not None:
-        prospective["text"] = fields["text"]
-    if given is not None:
-        prospective["acceptance_criteria"] = given
-    if kind == "term":
-        held = dict(corpus.entries(before))
-        word = next(iter(held), None)
-        entry = dict(held.get(word) or {})
-        if fields.get("definition") is not None:
-            entry["definition"] = fields["definition"]
-        if fields.get("aliases") is not None:
-            entry["aliases"] = [str(alias).strip() for alias in fields["aliases"]]
-        elif fields.get("no_aliases"):
-            entry.pop("aliases", None)
-        if fields.get("unclaimed"):
-            # @req> REQ-24481048@ZhiYUpKwnPlA apdsw2
-            entry["unclaimed"] = {**(entry.get("unclaimed") or {}),
-                                  **_unclaimed(fields["unclaimed"])}
-        if fields.get("term") is not None:
-            entry["word"] = str(fields["term"]).strip()
-        prospective["entries"] = {word: entry}
-        if fields.get("status") is not None:
-            prospective["status"] = fields["status"]
-    elif kind == "parameter":
-        for key in ("status", "name", "unit", "value_type", "rationale"):
-            if fields.get(key) is not None:
-                prospective[key] = fields[key]
-        if fields.get("value") is not None:
+    sole = next(iter(corpus.entries(before) or {}), None)
+    entry = dict((corpus.entries(before) or {}).get(sole) or {})
+    for field in own:
+        target = entry if field.entry else prospective
+        if field.name in stated:
+            said = stated[field.name]
+            target[field.name] = ({**(target.get(field.name) or {}), **said}
+                                  if isinstance(said, dict) else said)
+        elif field.clears and fields.get(field.cleared):
+            if field.empty is None:
+                target.pop(field.name, None)
+            else:
+                target[field.name] = copy.deepcopy(field.empty)
+    if any(field.entry for field in own):
+        prospective["entries"] = {sole: entry}
+    if kind == "parameter":
+        if value is not None:
             try:
-                prospective["entries"] = _entered(fields["value"])
+                prospective["entries"] = _entered(value)
             except ReqctlError as error:
                 raise ReqctlError(f"{error}; {uid} was not changed") from None
-            prospective.pop("default", None)
-            held = before.get("default")
+            held = prospective.pop("default", None)
             if held in prospective["entries"]:
                 prospective["default"] = held
-        if fields.get("no_unit"):
-            prospective.pop("unit", None)
-        if fields.get("no_default"):
-            prospective.pop("default", None)
         if fields.get("default") is not None:
             chosen = entry_key(scalar(str(fields["default"])))
             if chosen not in corpus.entries(prospective):
@@ -1249,9 +1153,6 @@ def revise(store, uid, fields):
                 fields.get("unset") or [], key, uid)
             prospective["entries"] = held
     elif kind == "data":
-        for key in allowed:
-            if fields.get(key) is not None:
-                prospective[key] = fields[key]
         held = dict(corpus.entries(before) or {})
         if fields.get("new_entry") is not None:
             key = str(fields["new_entry"]).strip()
@@ -1287,8 +1188,6 @@ def revise(store, uid, fields):
                 )
             held.pop(key)
             prospective["entries"] = held
-        if fields.get("no_default"):
-            prospective.pop("default", None)
         if fields.get("default") is not None:
             chosen = str(fields["default"]).strip()
             if chosen not in (corpus.entries(prospective) or {}):
@@ -1297,13 +1196,6 @@ def revise(store, uid, fields):
                     f"{uid} was not changed"
                 )
             prospective["default"] = chosen
-    else:
-        for key in allowed:
-            if fields.get(key) is not None:
-                prospective[key] = fields[key]
-
-    if fields.get("no_rationale"):
-        prospective.pop("rationale", None)
 
     try:
         prospective = _resolved_prose(store, uid, prospective)
@@ -1314,10 +1206,8 @@ def revise(store, uid, fields):
         faults = _validate.ears(uid, {"text": prospective["text"]})
         if faults:
             raise ReqctlError("\n".join(faults) + f"\n{uid} was not changed")
-    if (fields.get("text") is not None or fields.get("definition") is not None
-            or fields.get("rationale") is not None
-            or fields.get("set") or fields.get("append")
-            or given is not None):
+    if (any(field.prose and fields.get(field.dest) is not None for field in own)
+            or fields.get("set") or fields.get("append")):
         try:
             _refuse_unknown_references(store, prospective)
         except ReqctlError as error:
@@ -1389,9 +1279,10 @@ def revise(store, uid, fields):
                 )
     # @req> REQ-96926927@HugEvFR4Eh82 q2ou3q
     if not changed and not (spread and spread["done"]):
-        asked = [key for key in sorted(REVISABLE)
-                 if fields.get(key) is not None and fields.get(key) != []
-                 and (key not in SWITCHES or fields.get(key))]
+        asked = [key for key in OPERATIONS
+                 + tuple(field.dest for field in own)
+                 + tuple(field.cleared for field in own if field.clears)
+                 if _given(fields.get(key))]
         if not asked:
             raise ReqctlError(
                 f"nothing to change; pass at least one field; "

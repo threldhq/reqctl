@@ -10,7 +10,8 @@ acceptance_criteria:
   when: the fault reaches the caller
 assessed: {}
 citations:
-  dw57fs: QWEU7yXznnjqut2-ucadApw0298LplTnnM2r3Di6hqw
+  dw57fs: wDqm_xGPunFKBlfqDyCV3gVAdYz5BGvVRk622BedQGU
+  zh6xly: C4qc85T6Tz76x9DpNSr_z0Ab47Q5Q960zFnxbU-BgqY
 priority: medium
 relations: {}
 status: approved

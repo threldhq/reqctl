@@ -215,13 +215,7 @@ def dictionary_rules(uid, data):
                 problems.append(
                     f"{uid}: records \"{phrase}\" as not the term but gives no "
                     f"reason -- write --unclaimed \"{phrase}=the reason\"")
-        for key in ("name", "value_type", "unit", "default", "text"):
-            if data.get(key) is not None:
-                problems.append(f"{uid}: {key} does not apply to a term")
         return problems
-    if not isinstance(data.get("name"), str):
-        noun = "parameter" if item_kind == "parameter" else "data item"
-        problems.append(f"{uid}: a {noun} carries a name")
     # @req+ REQ-67914848@CoWJ0QyQOZsG fnsqos
     default = data.get("default")
     if default is not None and default not in held:
@@ -229,9 +223,6 @@ def dictionary_rules(uid, data):
                         "entry")
     # @req- fnsqos
     if item_kind == "data":
-        for key in ("value_type", "unit"):
-            if data.get(key) is not None:
-                problems.append(f"{uid}: {key} does not apply to a data item")
         for key in held:
             if not corpus.DATA_KEY.match(str(key)):
                 problems.append(f"{uid}: entry key {key!r} is not a snake_case "
@@ -239,9 +230,7 @@ def dictionary_rules(uid, data):
         return problems
     value_type = data.get("value_type")
     shape = KEY_SHAPES.get(value_type)
-    if shape is None:
-        problems.append(f"{uid}: a parameter carries a value_type")
-    else:
+    if shape is not None:
         # @req> REQ-41697188@oclky4jsxJDW da5737
         for key in held:
             if not isinstance(key, str) or not shape.match(key):

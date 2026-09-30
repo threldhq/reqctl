@@ -702,6 +702,14 @@ def schema(root, name):
         path = packaged_schema_path(name)
         if not path.is_file():
             raise ReqctlError(f"missing schema: {stated}")
+    return _read_schema(path)
+
+
+def packaged_schema(name):
+    return _read_schema(packaged_schema_path(name))
+
+
+def _read_schema(path):
     stat = path.stat()
     return _parsed_schema(path, (stat.st_mtime_ns, stat.st_size))
 

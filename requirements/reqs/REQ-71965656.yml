@@ -11,6 +11,8 @@ acceptance_criteria:
 assessed:
   REQ-13148397: HGLj8b_6v-PVolRAcaFdJcDs_UjovUXrV-kbm7aGioo
   REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
+citations:
+  f7bkcf: PlXB8X843021KTQhEr16iuKbhRY2hGeBWgAM9m1FNpw
 priority: medium
 relations:
   REQ-13148397: depends_on
