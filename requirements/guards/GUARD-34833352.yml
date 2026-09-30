@@ -5,6 +5,6 @@ acceptance_criteria:
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 relations: {}
-status: approved
+status: deprecated
 text: If the [portal](portal) offers to clear a field that no flag of reqctl revise
   empties, then the build shall refuse the change.
