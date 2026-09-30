@@ -14,6 +14,8 @@ acceptance_criteria:
 assessed:
   REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
   question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+citations:
+  bzkv6x: f1qAEuV-qK83Z4-0F3jv8iTaDby_BsvuOIWrBwNTGr4
 priority: medium
 relations:
   REQ-38288492: depends_on

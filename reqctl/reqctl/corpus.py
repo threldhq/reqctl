@@ -257,7 +257,8 @@ def atomic_write(path, content):
     try:
         # @req> REQ-24406170@M08jCONzg-4u ig234p
         _hold(target)
-        target.parent.mkdir(parents=True, exist_ok=True)
+        # @req> REQ-81667762@82D0B66GuW3u lkbxat
+        make_folder(target.parent)
         with open(temp, "xb" if isinstance(content, bytes) else "x") as sink:
             staged = True
             sink.write(content)
@@ -286,15 +287,16 @@ def write_all(changes):
 
 # @req+ REQ-24406170@M08jCONzg-4u u5qcba
 _held = None
+_made = None
 
 
 @contextlib.contextmanager
 def all_or_nothing():
-    global _held
+    global _held, _made
     if _held is not None:
         yield
         return
-    _held = {}
+    _held, _made = {}, []
     try:
         yield
     except BaseException as error:
@@ -303,6 +305,13 @@ def all_or_nothing():
         held, _held = _held, None
         kept = [str(path) for path, before in reversed(held.items())
                 if not _put_back(path, before)]
+        # @req> REQ-81667762@82D0B66GuW3u cdcyzh
+        for folder in reversed(_made):
+            with contextlib.suppress(OSError):
+                folder.rmdir()
+        # @req+ REQ-83236530@f_SrFVNH8QSC v2zljr
+        kept += [f"{folder}{os.sep}" for folder in reversed(_made)
+                 if _stands(folder)]
         if kept:
             left = f"not put back: {', '.join(kept)}"
             if isinstance(error, SystemExit):
@@ -310,6 +319,7 @@ def all_or_nothing():
             if isinstance(error, (ReqctlError, OSError, UnicodeError)):
                 raise ReqctlError(f"{error}; {left}") from error
             error.add_note(left)
+        # @req- v2zljr
         raise
     finally:
         _held = None
@@ -342,6 +352,23 @@ def remove(path, missing_ok=False):
     _hold(held)
     held.unlink(missing_ok=missing_ok)
 # @req- u5qcba
+
+
+# @req> REQ-81667762@82D0B66GuW3u 3rsgq3
+def make_folder(path):
+    folder = Path(path).absolute()
+    if _held is not None:
+        _made.extend(one for one in (*reversed(folder.parents), folder)
+                     if not one.exists())
+    folder.mkdir(parents=True, exist_ok=True)
+
+
+# @req> REQ-83236530@f_SrFVNH8QSC 3j7lib
+def _stands(folder):
+    try:
+        return folder.is_dir()
+    except OSError:
+        return True
 
 
 def dump(data):

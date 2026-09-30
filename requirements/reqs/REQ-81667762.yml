@@ -5,6 +5,11 @@ acceptance_criteria:
   when: the product runs the command
 assessed:
   REQ-24406170: M08jCONzg-4unbIjswcpNFFuynYzysf9JZj5KZch_QA
+citations:
+  3rsgq3: 26sWtY0csjp1RjR-HdB6FxMraTg6srstOMY-7qXdrC0
+  cdcyzh: 9XYd_2DzjSFKBxiy0XHuFVToz2wGDwyrMOIXYjj14Lg
+  ef2rgh: 8p0hTfi56f2IYl1A6DLb9VlMMIvjN5QWrvQmOCdc0H0
+  lkbxat: 7Jp7kJNyRxjs8xZ5vhorCLaL57-eP8UrbFq32aClvJQ
 priority: medium
 relations:
   REQ-24406170: depends_on

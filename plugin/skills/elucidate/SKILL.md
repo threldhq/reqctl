@@ -18,6 +18,12 @@ description: >
 Ideas in, a requirements pull request out. Nothing here approves anything: the
 merge is the approval, and only the owner merges.
 
+<!-- @req+ REQ-12222066@KVMqlUhM4uwv bzkv6x -->
+No further step runs while a question you put the owner is unanswered. Post the
+questions, then end your turn; under a goal, where that does not wait, collect
+the answers with the question picker.
+<!-- @req- bzkv6x -->
+
 ```
 1  convert     the owner's words become EARS statements   inline, beside one review agent
 2  challenge   recall over every shard, then one judge each   agents by the corpus's roles
@@ -247,7 +253,7 @@ the owner as a question.
 
 What survives groups by the decision it turns on, not the statement that raised
 it: one question per decision. Ask them in one message, numbered, ordered by
-what they block. Never the question picker, never one at a time. Each carries
+what they block. Never one at a time. Each carries
 what hangs on it, what is undecided, what the corpus already says, the
 alternatives stated evenly, and your reading of them, marked as yours.
 Disagreeing stays as easy as agreeing: the owner's first look must not be a

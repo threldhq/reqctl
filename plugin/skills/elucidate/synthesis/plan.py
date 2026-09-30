@@ -921,10 +921,11 @@ def build(run, chars, items, lines=PROMPT_LINES):
         records, len(blocked))
     lined(prompts, lines)
 
+    # @req> REQ-81667762@82D0B66GuW3u ef2rgh
     for folder in ("prompts/recall", "prompts/judge", "prompts/final",
                    "returns/recall", "returns/judge", "returns/final",
                    "verdicts", "workflow"):
-        (run / folder).mkdir(parents=True, exist_ok=True)
+        corpus.make_folder(run / folder)
     for stale in list((run / "prompts" / "recall").glob("*.md")) + list(
             (run / "returns" / "recall").glob("*.json")):
         corpus.remove(stale)
