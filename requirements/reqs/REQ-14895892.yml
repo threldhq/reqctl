@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a repository's own copy of a [kind schema](kind_schema) states a field without
+    a marker the shipped schema carries on that field
+  then: the product refuses the copy and names its path, the field and the marker
+  when: reqctl validate runs
+- given: a repository's own copy of a [kind schema](kind_schema) states a field without
+    a marker the shipped schema carries on that field
+  then: the product refuses the copy
+  when: any other command that reads that [kind schema](kind_schema) runs
+- given: a repository's own copy of a [kind schema](kind_schema) leaves out a field
+    the shipped schema states
+  then: the product does not refuse the copy for that field
+  when: a command reads the copy
+- given: a repository's own copy of a [kind schema](kind_schema) gives a marker another
+    value than the shipped schema gives it
+  then: the product does not refuse the copy for that value
+  when: a command reads the copy
+assessed:
+  REQ-13148397: XXob_8TNNhHNxQ0WHfaFlfOb0AM_DHtJIkCKTBVfhm0
+  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
+  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+  schema_marker: aUPBsCbKNXsnZ9A1k4uL3ic-N6BgBilXd4Qx3mqWpLM
+priority: medium
+relations:
+  REQ-13148397: constrains
+  REQ-44451070: depends_on
+status: approved
+text: If a repository's own copy of a [kind schema](kind_schema) lacks a [marker](schema_marker)
+  that the shipped schema carries on a field the copy also states, then the product
+  shall refuse the copy.
+type: functional
+verification: inspection

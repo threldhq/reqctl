@@ -8,7 +8,8 @@ acceptance_criteria:
     packaged one
   when: the corpus is validated
 assessed:
-  REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
+  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
+  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
 citations:
   4fsesd: sWBmKBb8AlLIEHAV49_K9f_rtF85m1B8V5GNVCBdbo0
 priority: high
@@ -18,6 +19,6 @@ relations:
   REQ-44451070: constrains
 status: approved
 text: Where a repository states a schema for a kind, the product shall read that schema
-  in place of the kind schema it ships with.
+  in place of the [kind schema](kind_schema) it ships with.
 type: functional
 verification: inspection
