@@ -19,6 +19,8 @@ assessed:
   review_fetch_seconds: Htcx-fm6ccpydSCOEZU7PmqT3YIW7ijMRv97lLajMNY
   review_fetch_seconds.*: 5mqJ4b8TkDMSGQk0a8MtmsPqJaTpGuoSwU7dw-FB57Y
   transient_failure: jRoVqaEGDhXAmWXfTDlCb-w_UeBtKn9hQr-FLR4xWP4
+citations:
+  uput5b: PE_bYmbhZSyK931XsRrkwrOPjMzZSkIl4QHb-5FgrhI
 priority: medium
 relations:
   REQ-16875926: depends_on
