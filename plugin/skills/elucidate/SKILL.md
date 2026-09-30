@@ -18,6 +18,12 @@ description: >
 Ideas in, a requirements pull request out. Nothing here approves anything: the
 merge is the approval, and only the owner merges.
 
+<!-- @req+ REQ-12222066@KVMqlUhM4uwv bzkv6x -->
+No further step runs while a question you put the owner is unanswered. Post the
+questions, then end your turn; under a goal, where that does not wait, collect
+the answers with the question picker.
+<!-- @req- bzkv6x -->
+
 ```
 1  convert     the owner's words become EARS statements   inline, beside one review agent
 2  challenge   recall over every shard, then one judge each   agents by the corpus's roles
@@ -268,13 +274,6 @@ the answer it favours and the numbered practices it rests on, or that the
 review holds nothing bearing on the question. It is the review's reading,
 marked as such, beside the alternatives.
 <!-- @req- vb4fww -->
-
-<!-- @req+ REQ-12222066@KVMqlUhM4uwv ado55e -->
-No further step runs while a question you put the owner is unanswered. Post
-the message asking it, then collect the answer: without a goal, by ending your
-turn, never with the question picker; under a goal, where ending the turn does
-not wait for the owner, with the question picker.
-<!-- @req- ado55e -->
 
 <!-- @req+ REQ-93075993@_Ewq27hRC5AG jt35j6 -->
 An answer adopting a practice joins the owner's words with the rest of their
