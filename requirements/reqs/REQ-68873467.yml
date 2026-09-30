@@ -1,20 +1,21 @@
 acceptance_criteria:
-- given: two groups each returning one part finding for the same proposal
+- given: two groups each returning one part finding for the same [proposal](proposal)
   then: the prompt states both findings with their quoted clauses
   when: the final judge prompt is built
 - given: a group whose return holds no finding
   then: the prompt names that group as returning no finding
   when: the final judge prompt is built
 assessed:
-  REQ-48762557: LXnAEs9b0lwaASdEUo6PvATBD8k4XKNRpAGuWZiNNDk
+  REQ-48762557: vkwEwASOFYbm3YOd61HzJZqkHw22sUc5TROjdQu8yII
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   4eflcn: GyrxnLZo_Q3we8Xedb9Dvh9RsfZfAWpHlz6KlUa0oYQ
 priority: medium
 relations:
   REQ-48762557: depends_on
 status: approved
-text: When the items named for a proposal were split into groups, the product shall
-  state every group's findings, each with the clause the finding quotes, to one final
-  judge prompt for that proposal.
+text: When the items named for a [proposal](proposal) were split into groups, the
+  product shall state every group's findings, each with the clause the finding quotes,
+  to one final judge prompt for that [proposal](proposal).
 type: functional
 verification: inspection

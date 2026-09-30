@@ -1,5 +1,5 @@
 acceptance_criteria:
-- given: a parameter minted with a bracketed set
+- given: a parameter [minted](mint) with a bracketed set
   then: the product refuses and states that a set member is duplicated
   when: the set states one member more than once
 - given: a parameter whose value is revised to a bracketed set
@@ -11,7 +11,8 @@ acceptance_criteria:
 - given: a parameter whose value type is duration
   then: the product refuses and states that a set member is duplicated
   when: the set states one number in two spellings
-assessed: {}
+assessed:
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:
   4cg2e4: 7LbGrQ4dJ4-uLDZiUNg0dbmXWLx5CnGPxXadHe-x1xk
   ghvzto: xeW7WcFJRq1UHh_SLLo6MPWUX95hinthQ9h1BZXnUfY

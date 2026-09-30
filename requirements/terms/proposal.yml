@@ -1,0 +1,11 @@
+assessed:
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+entries:
+  proposal:
+    aliases:
+    - proposals
+    definition: A statement a run of the elucidate skill numbers and judges, which
+      becomes an item of the corpus only once it is [minted](mint).
+    word: proposal
+kind: term
+status: approved

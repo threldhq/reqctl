@@ -1,9 +1,10 @@
 acceptance_criteria:
-- given: three judges, one returning a verdict that answers another proposal and one
-    never returning
+- given: three judges, one returning a verdict that answers another [proposal](proposal)
+    and one never returning
   then: the report states one accepted, one refused and one never returned
   when: the verdicts are read
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   u37uos: Rx956bsr_hsxVBDxl7mPSZUDRdGCTvPaau680JXFObY
 priority: medium

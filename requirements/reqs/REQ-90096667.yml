@@ -3,7 +3,7 @@ acceptance_criteria:
   then: the prompt states the owner's answer as the field
   when: the prompt of the [best-in-class review](best_in_class_review) is built
 assessed:
-  REQ-12222066: KVMqlUhM4uwvrl2w0oEnKSc0Xz3R1gDORN2BqDklWow
+  REQ-12222066: H7OEdnWlOPCRZTzpoerdwR5TbojNwRMs6NLeAbVIJdk
   REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
   REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE

@@ -5,7 +5,7 @@ acceptance_criteria:
     holds the answer among the owner's words the trace quotes
   when: the owner's words are converted again
 assessed:
-  REQ-28473555: TU3p5DYcYjTUVo_CSQzFHnvaw-7cJKCGgcHaMDKC488
+  REQ-28473555: fDR67hlkVPAcYu5CZEkvaZNcGRhCezKrij39XsOys4k
   REQ-58598892: Ac8QPjjAwTy9U0mrdllRuDfPId5q6TBy6pVCi5AbTXM
   REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE

@@ -1,5 +1,5 @@
 acceptance_criteria:
-- given: a pattern for uids that misses the uid of any kind of item the product mints
+- given: a pattern for uids that misses the uid of any kind of item the product [mints](mint)
   then: the product reports a problem
   when: the ${corpus_gates.stamp_admission} gate runs
 - given: an allowlist for uids that states paths
@@ -12,6 +12,7 @@ acceptance_criteria:
 assessed:
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.stamp_admission: E62zb0qgo3sf0OgKcFWjYdcAUcak-IBB9NM3c8BVqeA
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 priority: medium
 relations: {}
 status: approved

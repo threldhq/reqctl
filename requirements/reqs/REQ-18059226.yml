@@ -1,7 +1,7 @@
 acceptance_criteria:
 - given: a term the corpus holds
   then: the product refuses and names both terms
-  when: a second term claiming the word that term defines is minted
+  when: a second term claiming the word that term defines is [minted](mint)
 - given: a corpus holding a term whose alias is a word another term claims
   then: the product refuses and names both terms
   when: the corpus is validated
@@ -10,6 +10,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-79013939: bHJwWtA0cgeGylANm5kpe06YlFr6uZuhEb2AQRL_7gQ
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:
   2troxr: TM0QSjEFxN9lpdlhTEtIodDUwaXq6ui_osuUtJXKp0g
 priority: medium

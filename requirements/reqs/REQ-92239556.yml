@@ -1,19 +1,21 @@
 acceptance_criteria:
 - given: an [citation identity](citation_identity) a [statement citation](statement_citation)
     now in the code names
-  then: the product mints one that is not it
-  when: the product mints an [citation identity](citation_identity)
+  then: the product [mints](mint) one that is not it
+  when: the product [mints](mint) an [citation identity](citation_identity)
 assessed:
-  citation_identity: SevdOfJi9htzWmv2unB4qhxIpVyKsegzxUM1WABgUAQ
+  citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 citations:
   uprfcz: 8mUq0aqDh2-BrqhkjuJajsH4Fl0KklLGSoT7qqZyI0Q
 priority: medium
 relations: {}
 status: approved
-text: When the product mints a [citation identity](citation_identity) for the lines
-  a [statement citation](statement_citation) covers, the product shall mint one that
-  no [statement citation](statement_citation) the [code base](code_base) holds names.
+text: When the product [mints](mint) a [citation identity](citation_identity) for
+  the lines a [statement citation](statement_citation) covers, the product shall [mint](mint)
+  one that no [statement citation](statement_citation) the [code base](code_base)
+  holds names.
 type: functional
 verification: inspection
