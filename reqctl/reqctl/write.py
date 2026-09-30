@@ -397,26 +397,23 @@ def entry_key(member):
 
 
 # @req> REQ-76604940@HbN3En3lfKzD cd7owj
-def _set_fields(entry, pairs, uid):
+def _set_fields(entry, pairs):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
         if not name.strip() or not split:
-            raise ReqctlError(
-                f"--set {pair!r}: the form is field=value; {uid} was not changed"
-            )
+            raise ReqctlError(f"--set {pair!r}: the form is field=value")
         steps = [step.strip() for step in name.strip().split(".")]
         if not all(steps):
             raise ReqctlError(
                 f"--set {name.strip()!r}: a dotted field names the entries a "
-                f"field holds, as properties.date.name; {uid} was not changed"
+                "field holds, as properties.date.name"
             )
         where = entry
         for step in steps[:-1]:
             nested = where.get(step, {})
             if not isinstance(nested, dict):
                 raise ReqctlError(
-                    f"--set {name.strip()}: {step} holds a value, not entries; "
-                    f"{uid} was not changed"
+                    f"--set {name.strip()}: {step} holds a value, not entries"
                 )
             where[step] = nested = dict(nested)
             where = nested
@@ -425,74 +422,65 @@ def _set_fields(entry, pairs, uid):
     return entry
 
 
-def _appended(where, steps, uid):
+def _appended(where, steps):
     for step in steps[:-1]:
         nested = where.get(step, {})
         if not isinstance(nested, dict):
             raise ReqctlError(
-                f"--append {'.'.join(steps)}: {step} holds a value, not "
-                f"entries; {uid} was not changed"
+                f"--append {'.'.join(steps)}: {step} holds a value, not entries"
             )
         where[step] = nested = dict(nested)
         where = nested
     held = where.get(steps[-1])
     if held is not None and not isinstance(held, list):
         raise ReqctlError(
-            f"--append {'.'.join(steps)}: {steps[-1]} holds a value, not a "
-            f"set; {uid} was not changed"
+            f"--append {'.'.join(steps)}: {steps[-1]} holds a value, not a set"
         )
     return where, list(held or [])
 
 
 # @req> REQ-76604940@HbN3En3lfKzD zijwjm
-def _append_fields(entry, pairs, uid):
+def _append_fields(entry, pairs):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
         if not name.strip() or not split:
-            raise ReqctlError(
-                f"--append {pair!r}: the form is field=value; {uid} was not "
-                "changed"
-            )
+            raise ReqctlError(f"--append {pair!r}: the form is field=value")
         steps = [step.strip() for step in name.strip().split(".")]
         if not all(steps):
             raise ReqctlError(
                 f"--append {name.strip()!r}: a dotted field names the entries a "
-                f"field holds, as properties.date.name; {uid} was not changed"
+                "field holds, as properties.date.name"
             )
         member = scalar(value)
         if isinstance(member, list):
             raise ReqctlError(
                 f"--append {name.strip()}: a set is appended a member at a "
-                f"time; repeat --append; {uid} was not changed"
+                "time; repeat --append"
             )
-        where, held = _appended(entry, steps, uid)
+        where, held = _appended(entry, steps)
         where[steps[-1]] = held + [member]
     return entry
 
 
-def _unset_fields(entry, names, key, uid):
+def _unset_fields(entry, names, key):
     for name in names:
         gone = str(name).strip()
         steps = [step.strip() for step in gone.split(".")]
         if not all(steps):
             raise ReqctlError(
                 f"--unset {gone!r}: a dotted field names the entries a field "
-                f"holds, as properties.date.name; {uid} was not changed"
+                "holds, as properties.date.name"
             )
         where = entry
         for step in steps[:-1]:
             nested = where.get(step)
             if not isinstance(nested, dict):
-                raise ReqctlError(
-                    f"--unset {gone}: {step} holds no entries; "
-                    f"{uid} was not changed"
-                )
+                raise ReqctlError(f"--unset {gone}: {step} holds no entries")
             where[step] = nested = dict(nested)
             where = nested
         if steps[-1] not in where:
             raise ReqctlError(
-                f"--unset {gone}: not a field of "
-                f"{'.'.join([key, *steps[:-1]])}; {uid} was not changed"
+                f"--unset {gone}: not a field of {'.'.join([key, *steps[:-1]])}"
             )
         where.pop(steps[-1])
     return entry
@@ -631,7 +619,7 @@ def _propagate(store, uid, prospective, words):
              + _validate._unlinked_terms(before, store.root)) if found else []
     faults = [fault for fault in found if fault not in stood]
     if faults:
-        raise ReqctlError("\n".join(faults) + f"\n{uid} was not changed")
+        raise ReqctlError("\n".join(faults))
     fields = corpus.term_fields(after[uid])
     seen["left"] -= {corpus.term_word(after[uid]), *(fields.get("aliases") or [])}
     seen["moved"] = [
@@ -976,17 +964,15 @@ def _refuse_new_schema_faults(store, uid, before, prospective):
         if problem not in existing
     ]
     if introduced:
-        raise ReqctlError("\n".join(introduced) + f"\n{uid} was not changed")
+        raise ReqctlError("\n".join(introduced))
 
 
-# @req+ REQ-98666936@8CkDXfV6m3Ir eo3nl5
-def revise(store, uid, fields):
+def _revision(store, uid, fields):
     item = corpus.find(store, uid)
     kind = corpus.kind_of(uid, item.data)
     if kind not in KINDS:
         raise ReqctlError(
-            f"{uid}: names no kind; `reqctl validate` names the fault; "
-            f"{uid} was not changed")
+            f"{uid}: names no kind; `reqctl validate` names the fault")
     own = _fields.of(store.root, kind)
     revisable = [field for field in own if field.name != "entries"
                  or kind == "parameter" and field.dest not in OPERATIONS]
@@ -994,21 +980,18 @@ def revise(store, uid, fields):
     # @req+ REQ-25589226@gN1zcZG8pbON 5apnio
     stray = _stray(store.root, revisable, fields, OPERATIONS)
     if stray:
-        raise ReqctlError(
-            f"{', '.join(stray)} does not apply to a {kind}; {uid} was not changed"
-        )
+        raise ReqctlError(f"{', '.join(stray)} does not apply to a {kind}")
     # @req- 5apnio
     # @req+ REQ-61755382@oWxB5-1lwQ9G 7pv66p
     if fields.get("handle") is not None:
         if kind != "term":
             raise ReqctlError(
                 f"--handle does not apply to a {kind}; only a term wears its "
-                f"word as a key; {uid} was not changed"
+                "word as a key"
             )
         raise ReqctlError(
-            f"--handle: a term's handle is the address the corpus reaches it "
-            f"by; `reqctl rename {uid} HANDLE` moves the file with it; "
-            f"{uid} was not changed"
+            "--handle: a term's handle is the address the corpus reaches it "
+            f"by; `reqctl rename {uid} HANDLE` moves the file with it"
         )
     # @req> REQ-91205530@UySHruI9_FXO hc64tl
     for field in own:
@@ -1017,77 +1000,57 @@ def revise(store, uid, fields):
             raise ReqctlError(
                 f"{field.flag}: {noun}'s {field.name} is the address the corpus "
                 f"reaches it by; `reqctl rename {uid} {field.name.upper()}` "
-                f"moves the file with it; {uid} was not changed"
+                "moves the file with it"
             )
     # @req- 7pv66p
     if fields.get("reword") and kind != "term":
         raise ReqctlError(
             f"--reword does not apply to a {kind}; only a term's links show a "
-            f"word a statement can outgrow; {uid} was not changed"
+            "word a statement can outgrow"
         )
 
     if kind in ("term", "parameter") and corpus.entries(item.data) is None:
         raise ReqctlError(
-            f"{uid}: has no entries -- `reqctl validate` names the fault; "
-            f"{uid} was not changed"
+            f"{uid}: has no entries -- `reqctl validate` names the fault"
         )
-    try:
-        _refuse_blank_text(fields, own)
-    except ReqctlError as error:
-        raise ReqctlError(f"{error}; {uid} was not changed") from None
+    _refuse_blank_text(fields, own)
     if fields.get("entry") is not None and kind not in ("data", "parameter"):
-        raise ReqctlError(
-            f"--entry does not apply to a {kind}; {uid} was not changed"
-        )
+        raise ReqctlError(f"--entry does not apply to a {kind}")
     if fields.get("new_entry") is not None and kind != "data":
-        raise ReqctlError(
-            f"--new-entry does not apply to a {kind}; {uid} was not changed"
-        )
+        raise ReqctlError(f"--new-entry does not apply to a {kind}")
     if fields.get("drop_entry") is not None and kind != "data":
-        raise ReqctlError(
-            f"--drop-entry does not apply to a {kind}; {uid} was not changed"
-        )
+        raise ReqctlError(f"--drop-entry does not apply to a {kind}")
     if fields.get("entry") is not None and fields.get("new_entry") is not None:
-        raise ReqctlError(
-            f"--entry and --new-entry are one write each; pass one; "
-            f"{uid} was not changed"
-        )
+        raise ReqctlError("--entry and --new-entry are one write each; pass one")
     if (fields.get("set") and fields.get("entry") is None
             and fields.get("new_entry") is None):
-        raise ReqctlError(f"--set needs --entry; {uid} was not changed")
+        raise ReqctlError("--set needs --entry")
     if (fields.get("append") and fields.get("entry") is None
             and fields.get("new_entry") is None):
-        raise ReqctlError(f"--append needs --entry; {uid} was not changed")
+        raise ReqctlError("--append needs --entry")
     if fields.get("unset") and fields.get("entry") is None:
         raise ReqctlError(
-            f"--unset needs --entry; a new entry has no field to drop, and "
-            f"--drop-entry takes the whole one; {uid} was not changed"
+            "--unset needs --entry; a new entry has no field to drop, and "
+            "--drop-entry takes the whole one"
         )
     both = ({str(name).strip() for name in fields.get("unset") or []}
             & {str(pair).partition("=")[0].strip()
                for pair in fields.get("set") or []})
     if both:
         raise ReqctlError(
-            f"--unset {', '.join(sorted(both))} contradicts --set; pass one; "
-            f"{uid} was not changed"
+            f"--unset {', '.join(sorted(both))} contradicts --set; pass one"
         )
     for field in own:
         if (field.clears and fields.get(field.cleared)
                 and fields.get(field.dest) is not None):
-            raise ReqctlError(
-                f"{field.clears} contradicts {field.flag}; pass one; "
-                f"{uid} was not changed"
-            )
+            raise ReqctlError(f"{field.clears} contradicts {field.flag}; pass one")
     entries = next((field for field in own if field.name == "entries"), None)
     default = {field.name: fields.get(field.dest) for field in own}.get("default")
     before = dict(item.data)
-    try:
-        stated = {field.name: _converted(field, fields[field.dest])
-                  for field in own if fields.get(field.dest) is not None
-                  and not _keyed(field, entries)}
-        words = _rename_map(before, fields, stated.get("word"))
-    except ReqctlError as error:
-        raise ReqctlError(f"{error}; {uid} was not changed") from None
+    stated = {field.name: _converted(field, fields[field.dest])
+              for field in own if fields.get(field.dest) is not None
+              and not _keyed(field, entries)}
+    words = _rename_map(before, fields, stated.get("word"))
     acks = fields.get("ack") or []
 
     prospective = dict(before)
@@ -1095,12 +1058,11 @@ def revise(store, uid, fields):
     prospective["assessed"] = _assessed_map(uid, before)
     if fields.get("kind") is not None:
         if kind in ("requirement", "guard"):
-            raise ReqctlError(
-                f"--kind does not apply to a {kind}; {uid} was not changed")
+            raise ReqctlError(f"--kind does not apply to a {kind}")
         if fields["kind"] != kind:
             raise ReqctlError(
                 f"--kind {fields['kind']}: {uid} is a {kind}; mint the item "
-                f"you meant; {uid} was not changed")
+                "you meant")
         prospective["kind"] = kind
     sole = next(iter(corpus.entries(before) or {}), None)
     entry = dict(corpus.term_fields(before))
@@ -1119,36 +1081,26 @@ def revise(store, uid, fields):
         prospective["entries"] = {sole: entry}
     if kind == "parameter":
         if entries in revisable and fields.get(entries.dest) is not None:
-            try:
-                prospective["entries"] = _entered(
-                    _one(fields[entries.dest], entries.flag))
-            except ReqctlError as error:
-                raise ReqctlError(f"{error}; {uid} was not changed") from None
+            prospective["entries"] = _entered(
+                _one(fields[entries.dest], entries.flag))
             held = prospective.pop("default", None)
             if held in prospective["entries"]:
                 prospective["default"] = held
         if default is not None:
             chosen = entry_key(scalar(str(default)))
             if chosen not in corpus.entries(prospective):
-                raise ReqctlError(
-                    f"--default {default}: not a member of the set; "
-                    f"{uid} was not changed"
-                )
+                raise ReqctlError(f"--default {default}: not a member of the set")
             prospective["default"] = chosen
         if fields.get("entry") is not None:
             held = dict(corpus.entries(prospective))
             key = str(fields["entry"]).strip()
             if key not in held:
-                raise ReqctlError(
-                    f"--entry {key}: not a member of the set; "
-                    f"{uid} was not changed"
-                )
+                raise ReqctlError(f"--entry {key}: not a member of the set")
             held[key] = _unset_fields(
                 _append_fields(
-                    _set_fields(dict(held[key] or {}),
-                                fields.get("set") or [], uid),
-                    fields.get("append") or [], uid),
-                fields.get("unset") or [], key, uid)
+                    _set_fields(dict(held[key] or {}), fields.get("set") or []),
+                    fields.get("append") or []),
+                fields.get("unset") or [], key)
             prospective["entries"] = held
     elif kind == "data":
         held = dict(corpus.entries(before) or {})
@@ -1156,66 +1108,53 @@ def revise(store, uid, fields):
             key = str(fields["new_entry"]).strip()
             if key in held:
                 raise ReqctlError(
-                    f"--new-entry {key}: already an entry; use --entry {key}; "
-                    f"{uid} was not changed"
+                    f"--new-entry {key}: already an entry; use --entry {key}"
                 )
             held[key] = _append_fields(
-                _set_fields({}, fields.get("set") or [], uid),
-                fields.get("append") or [], uid)
+                _set_fields({}, fields.get("set") or []),
+                fields.get("append") or [])
             prospective["entries"] = held
         if fields.get("entry") is not None:
             key = str(fields["entry"]).strip()
             if key not in held:
                 raise ReqctlError(
                     f"--entry {key}: not an entry of {uid}; to add one, pass "
-                    f"--new-entry {key}; {uid} was not changed"
+                    f"--new-entry {key}"
                 )
             held[key] = _unset_fields(
                 _append_fields(
-                    _set_fields(dict(held[key] or {}),
-                                fields.get("set") or [], uid),
-                    fields.get("append") or [], uid),
-                fields.get("unset") or [], key, uid)
+                    _set_fields(dict(held[key] or {}), fields.get("set") or []),
+                    fields.get("append") or []),
+                fields.get("unset") or [], key)
             prospective["entries"] = held
         if fields.get("drop_entry") is not None:
             held = dict(corpus.entries(prospective) or {})
             key = str(fields["drop_entry"]).strip()
             if key not in held:
-                raise ReqctlError(
-                    f"--drop-entry {key}: no such entry; {uid} was not changed"
-                )
+                raise ReqctlError(f"--drop-entry {key}: no such entry")
             held.pop(key)
             prospective["entries"] = held
         if default is not None:
             chosen = str(default).strip()
             if chosen not in (corpus.entries(prospective) or {}):
-                raise ReqctlError(
-                    f"--default {default}: not an entry; "
-                    f"{uid} was not changed"
-                )
+                raise ReqctlError(f"--default {default}: not an entry")
             prospective["default"] = chosen
 
-    try:
-        prospective = _resolved_prose(store, uid, prospective)
-    except ReqctlError as error:
-        raise ReqctlError(f"{error}; {uid} was not changed") from None
+    prospective = _resolved_prose(store, uid, prospective)
 
     if "text" in stated:
         faults = _validate.ears(uid, prospective)
         if faults:
-            raise ReqctlError("\n".join(faults) + f"\n{uid} was not changed")
+            raise ReqctlError("\n".join(faults))
     if (any(field.prose and fields.get(field.dest) is not None for field in own)
             or fields.get("set") or fields.get("append")):
-        try:
-            _refuse_unknown_references(store, prospective)
-        except ReqctlError as error:
-            raise ReqctlError(f"{error}; {uid} was not changed") from None
+        _refuse_unknown_references(store, prospective)
     _refuse_new_schema_faults(store, uid, before, prospective)
     # @req+ REQ-53480164@R-Vze1T10x-h xpj5go
     # @req+ REQ-62819035@LB2IzcLq4nTI qgjwmq
     stranded = _new_corpus_faults(store, uid, prospective)
     if stranded:
-        raise ReqctlError("\n".join(stranded) + f"\n{uid} was not changed")
+        raise ReqctlError("\n".join(stranded))
     # @req- qgjwmq
     # @req- xpj5go
 
@@ -1225,10 +1164,7 @@ def revise(store, uid, fields):
         written = [address for address in referenced
                    if _addresses_match(store, address, ack)]
         if not written:
-            raise ReqctlError(
-                f"--ack {ack}: the statement does not reference it; "
-                f"{uid} was not changed"
-            )
+            raise ReqctlError(f"--ack {ack}: the statement does not reference it")
         ack_written[ack] = written
 
     changed = {key: prospective[key] for key in prospective
@@ -1249,10 +1185,7 @@ def revise(store, uid, fields):
             target_uid, rest = corpus.split_address(address)
             pin = corpus.stamp_at(corpus.find(store, target_uid), rest)
             if pin is None:
-                raise ReqctlError(
-                    f"--ack {ack}: {address} names no entry to pin; "
-                    f"{uid} was not changed"
-                )
+                raise ReqctlError(f"--ack {ack}: {address} names no entry to pin")
             if prospective["assessed"].get(address) != pin:
                 prospective["assessed"][address] = pin
                 changed.setdefault("assessed", []).append(address)
@@ -1273,7 +1206,7 @@ def revise(store, uid, fields):
             if asked not in spread["placed"]:
                 raise ReqctlError(
                     f"--reword {pair}: no link shows {asked!r}, so the reword "
-                    f"placed no word; {uid} was not changed"
+                    "placed no word"
                 )
     # @req> REQ-96926927@HugEvFR4Eh82 q2ou3q
     if not changed and not (spread and spread["done"]):
@@ -1282,15 +1215,9 @@ def revise(store, uid, fields):
                  + tuple(field.cleared for field in own if field.clears)
                  if fields.get(key) is not None]
         if not asked:
-            raise ReqctlError(
-                f"nothing to change; pass at least one field; "
-                f"{uid} was not changed"
-            )
-        return {}
-    corpus.save(store, corpus.Item(uid, item.path, prospective))
+            raise ReqctlError("nothing to change; pass at least one field")
+        return None
     if spread:
-        for held in spread["moved"]:
-            corpus.save(store, held)
         changed["reworded"] = {
             "links": spread["done"],
             "items": sorted(held.uid for held in spread["moved"]),
@@ -1298,9 +1225,25 @@ def revise(store, uid, fields):
             "left": sorted(spread["left"]),
             "repinned": spread["repinned"],
         }
+    return item, prospective, changed, spread["moved"] if spread else []
+
+
+def revise(store, uid, fields):
+    # @req+ REQ-98666936@8CkDXfV6m3Ir 4k5e4z
+    try:
+        planned = _revision(store, uid, fields)
+    except ReqctlError as error:
+        joint = "\n" if "\n" in str(error) else "; "
+        raise ReqctlError(f"{error}{joint}{uid} was not changed") from None
+    # @req- 4k5e4z
+    if planned is None:
+        return {}
+    item, prospective, changed, moved = planned
+    corpus.save(store, corpus.Item(uid, item.path, prospective))
+    for held in moved:
+        corpus.save(store, held)
     item.data = prospective
     return changed
-# @req- eo3nl5
 
 
 def _relations_map(item):
