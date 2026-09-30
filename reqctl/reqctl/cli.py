@@ -986,7 +986,7 @@ def _fielded(argv):
                 None) in FIELDED
 
 
-def build_parser(root=None, fielded=True):
+def build_parser(root, fielded):
     flags = _fields.flags(root) if fielded else []
     clears = _fields.clears(root) if fielded else []
     p = argparse.ArgumentParser(

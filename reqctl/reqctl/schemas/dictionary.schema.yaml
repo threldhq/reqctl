@@ -119,7 +119,6 @@ properties:
     propertyNames:
       type: string
       minLength: 1
-    additionalProperties: {$ref: "#/$defs/entry"}
 
   assessed:
     type: object
@@ -156,7 +155,7 @@ allOf:
     then:
       required: [name, text, value_type]
       properties:
-        entries: {x-flag: value}
+        entries: {x-flag: value, additionalProperties: {$ref: "#/$defs/entry"}}
 
   - if: {required: [kind], properties: {kind: {const: data}}}
     then:
@@ -164,7 +163,7 @@ allOf:
       properties:
         value_type: {not: {}}
         unit: {not: {}}
-        entries: {x-flag: entry}
+        entries: {x-flag: entry, additionalProperties: {$ref: "#/$defs/entry"}}
 
 $defs:
 
@@ -203,6 +202,7 @@ $defs:
 
   term:
     required: [word, definition]
+    additionalProperties: {$ref: "#/$defs/field"}
     properties:
       word:
         type: string

@@ -1,5 +1,4 @@
 import copy
-import re
 from dataclasses import dataclass
 
 from . import corpus
@@ -7,7 +6,6 @@ from .corpus import ReqctlError
 
 KIND = "kind"
 ENTRIES = "entries"
-WORD = re.compile(r"\A[a-z][a-z0-9_]*\Z")
 
 
 def boolean(text):
@@ -53,8 +51,7 @@ class Field:
     empty: object
     address: bool
     entry: bool
-    string: bool
-    strings: bool
+    textual: bool
     prose: bool
     convert: object
     parts: tuple
@@ -72,12 +69,11 @@ def root():
     try:
         return corpus.find_root()
     except ReqctlError:
-        return None
+        return "."
 
 
 def _schema(root, kind):
-    name = corpus.schema_name_for(kind)
-    held = corpus.schema(root, name) if root else corpus.packaged_schema(name)
+    held = corpus.schema_for(root, kind)
     return held if isinstance(held, dict) else {}
 
 
@@ -130,18 +126,14 @@ def _selects(schema, test, kind):
 
 
 def _merged(schema, kind):
-    properties = {name: _resolved(schema, stated)
-                  for name, stated in (schema.get("properties") or {}).items()
-                  if not _forbidden(stated)}
-    required = set(schema.get("required", ()))
-    for branch in schema.get("allOf", ()):
-        if not isinstance(branch, dict) or not _selects(schema, branch.get("if"), kind):
+    properties, required = {}, set()
+    for block in [schema] + [branch.get("then") for branch in schema.get("allOf", ())
+                             if isinstance(branch, dict)
+                             and _selects(schema, branch.get("if"), kind)]:
+        if not isinstance(block, dict):
             continue
-        then = branch.get("then", {})
-        if not isinstance(then, dict):
-            continue
-        required.update(then.get("required", ()))
-        for name, stated in (then.get("properties") or {}).items():
+        required.update(block.get("required", ()))
+        for name, stated in (block.get("properties") or {}).items():
             if _forbidden(stated):
                 properties.pop(name, None)
             else:
@@ -160,7 +152,7 @@ def _prose(node):
 
 def _field(schema, name, stated, required, entry):
     said = stated.get("x-flag", name)
-    if not isinstance(said, str) or not WORD.match(said):
+    if not isinstance(said, str) or not corpus.DATA_KEY.fullmatch(said):
         raise ReqctlError(f"{schema.get('$id', 'a kind schema')}: {name} would "
                           f"take the flag {said!r}, which is not a snake_case word")
     shape = stated.get("type")
@@ -173,15 +165,14 @@ def _field(schema, name, stated, required, entry):
     if not required:
         clears = _flag("no_" + said)
     elif repeated and not stated.get("minItems") and not stated.get("minProperties"):
-        clears, empty = _flag("no_" + said), [] if shape == "array" else {}
-    textual = convert is None and "enum" not in stated
+        clears, empty = _flag("no_" + said), list if shape == "array" else dict
     return Field(name=name, flag=_flag(said), choices=tuple(stated.get("enum", ())),
                  repeated=repeated,
                  required=required and "default" not in stated,
                  clears=clears, empty=empty,
                  address=stated.get("x-address") is True, entry=entry,
-                 string=textual and not repeated,
-                 strings=textual and shape == "array" and not parts,
+                 textual=(convert is None and "enum" not in stated
+                          and shape != "object" and not parts),
                  prose=_prose(stated), convert=convert, parts=parts)
 
 
@@ -239,10 +230,6 @@ def flags(root):
 
 
 def clears(root):
-    held = {}
-    for kind in corpus.SCHEMA_NAMES:
-        for field in of(root, kind):
-            if field.clears:
-                held.setdefault(field.clears,
-                                Flag(field.clears, (), False, True, None, None, False))
-    return list(held.values())
+    return list({field.clears: Flag(field.clears, (), False, True, None, None, False)
+                 for kind in corpus.SCHEMA_NAMES for field in of(root, kind)
+                 if field.clears}.values())

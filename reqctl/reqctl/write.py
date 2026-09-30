@@ -1,4 +1,3 @@
-import copy
 import math
 import random
 import re
@@ -142,10 +141,9 @@ def _refuse_blank_text(fields, own):
     entries = next((field for field in own if field.name == "entries"), None)
     for field in own:
         value = fields.get(field.dest)
-        if (value is None or _keyed(field, entries)
-                or not (field.string or field.strings)):
+        if value is None or _keyed(field, entries) or not field.textual:
             continue
-        for member in value if field.strings else [value]:
+        for member in value if field.repeated else [value]:
             if not str(member).strip():
                 raise ReqctlError(f"{field.flag} must not be blank")
             _refuse_hidden(field.flag, member)
@@ -170,7 +168,7 @@ def _converted(field, value):
         return _unclaimed(value)
     if field.name == "word":
         return str(value).strip()
-    if field.strings:
+    if field.textual and field.repeated:
         return [str(member).strip() for member in value]
     return value
 
@@ -197,8 +195,6 @@ def _unclaimed(pairs):
 
 
 def criteria(given, field):
-    if not given:
-        return None
     parsed = []
     for raw in given:
         parts = [p.strip() for p in raw.split("|")]
@@ -1089,11 +1085,7 @@ def revise(store, uid, fields):
                 f"{uid} was not changed"
             )
     entries = next((field for field in own if field.name == "entries"), None)
-    value = None
     try:
-        if (kind == "parameter" and entries is not None
-                and fields.get(entries.dest) is not None):
-            value = _one(fields[entries.dest], entries.flag)
         stated = {field.name: _converted(field, fields[field.dest])
                   for field in own if fields.get(field.dest) is not None
                   and not _keyed(field, entries)}
@@ -1115,11 +1107,8 @@ def revise(store, uid, fields):
                 f"--kind {fields['kind']}: {uid} is a {kind}; mint the item "
                 f"you meant; {uid} was not changed")
         prospective["kind"] = kind
-    sole, entry = None, {}
-    through = any(field.entry for field in own)
-    if through:
-        sole = next(iter(corpus.entries(before) or {}), None)
-        entry = dict((corpus.entries(before) or {}).get(sole) or {})
+    sole = next(iter(corpus.entries(before) or {}), None)
+    entry = dict(corpus.term_fields(before))
     for field in own:
         target = entry if field.entry else prospective
         if field.name in stated:
@@ -1130,13 +1119,14 @@ def revise(store, uid, fields):
             if field.empty is None:
                 target.pop(field.name, None)
             else:
-                target[field.name] = copy.deepcopy(field.empty)
-    if through:
+                target[field.name] = field.empty()
+    if any(field.entry for field in own):
         prospective["entries"] = {sole: entry}
     if kind == "parameter":
-        if value is not None:
+        if entries and fields.get(entries.dest) is not None:
             try:
-                prospective["entries"] = _entered(value)
+                prospective["entries"] = _entered(
+                    _one(fields[entries.dest], entries.flag))
             except ReqctlError as error:
                 raise ReqctlError(f"{error}; {uid} was not changed") from None
             held = prospective.pop("default", None)
