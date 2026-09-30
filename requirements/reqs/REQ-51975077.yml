@@ -25,6 +25,11 @@ assessed:
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+citations:
+  m75ejw: Yx_zW7XFhiQSKGzUKgX0zb6MH_7rpKnkJ-342bBDcRo
+  px3ye3: -j9szJso-KJThhrDV5axbVjDx_HLs8RYhOyjbJxROkI
+  z6krrc: L3l-6It0GxwLJSmZR2PzMkzBjaa5Ymcfe05fYMJ0QzU
+  zf7cg7: k7xkHJaDGlwuBhnEWqqvTvfHZXORYYXuUy10u4zW0cQ
 priority: medium
 relations:
   REQ-46711731: constrains
