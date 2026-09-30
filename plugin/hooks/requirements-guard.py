@@ -463,6 +463,8 @@ def judge_shell(raw):
 
 
 def citations(text):
+    if "\0" in text:
+        return Counter()
     return Counter(line.strip() for line in text.split("\n")
                    if CITATION_LINE.match(line))
 
@@ -480,6 +482,8 @@ def edited(tool, args):
         old, new = edit.get("old_string", ""), edit.get("new_string", "")
         if not isinstance(old, str) or not isinstance(new, str):
             deny(UNREADABLE)
+        if not new and not old.endswith("\n") and old + "\n" in after:
+            old += "\n"
         after = after.replace(old, new, -1 if edit.get("replace_all") else 1)
     return before, after
 
