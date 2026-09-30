@@ -979,6 +979,11 @@ def _refuse_new_schema_faults(store, uid, before, prospective):
         raise ReqctlError("\n".join(introduced) + f"\n{uid} was not changed")
 
 
+def revisable_fields(own, kind):
+    return [field for field in own if field.name != "entries"
+            or kind == "parameter" and field.dest not in OPERATIONS]
+
+
 # @req+ REQ-98666936@8CkDXfV6m3Ir eo3nl5
 def revise(store, uid, fields):
     item = corpus.find(store, uid)
@@ -988,8 +993,7 @@ def revise(store, uid, fields):
             f"{uid}: names no kind; `reqctl validate` names the fault; "
             f"{uid} was not changed")
     own = _fields.of(store.root, kind)
-    revisable = [field for field in own if field.name != "entries"
-                 or kind == "parameter" and field.dest not in OPERATIONS]
+    revisable = revisable_fields(own, kind)
 
     # @req+ REQ-25589226@gN1zcZG8pbON 5apnio
     stray = _stray(store.root, revisable, fields, OPERATIONS)

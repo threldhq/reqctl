@@ -22,6 +22,11 @@ assessed:
   REQ-49576265: TZb-gviCuP5YoreZuR-DpCD14zDAOXTH3QmbqBJlzFE
   REQ-69283350: XSe9n-OwepOPSdNidPSzte-ujbjXmNKNJg9-bSgDCKo
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  avcfk3: BSrArGttNssjiAUPRQeTlGRF_dW1gwKHgd3eXasavWY
+  hmmycl: EvQIgsEczt8KMQra6qMOWK-bsQrDCRSHWzl86ZeNjBE
+  lsvu3b: 3mZN5iP5RsuJYPlW_mirhMEwevAiki1A9uCmERCo3yc
+  z2svqa: 4i1X0df8jmKWRwlZTf_WE6L7u6XSN6LAWLyvaBuw8eY
 priority: medium
 relations:
   REQ-13148397: depends_on

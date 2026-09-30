@@ -118,6 +118,7 @@ dialog.wide { max-width: none; height: calc(100vh - 28px);
 
 <div id="app"></div>
 
+<script type="application/json" id="kind-fields"></script>
 <script>
 const VIEW = "corpus-view";
 const FLOW = "corpus-write.yml";
@@ -345,52 +346,16 @@ function drawDetail() {
   `;
 }
 
-const CHOICES = {
-  type: ["", "functional", "non_functional", "constraint"],
-  verification: ["", "inspection", "analysis", "demonstration"],
-  priority: ["", "high", "medium", "low"],
-  status: ["", "draft", "approved", "deprecated", "superseded"],
-  relation: ["derives_from", "depends_on", "constrains", "supersedes", "conflicts_with"],
-  "value-type": ["", "duration", "size", "count", "ratio", "percentage",
-                 "currency", "boolean", "text"],
-  kind: ["requirement", "term", "parameter", "data"],
-};
+const RELATIONS = ["derives_from", "depends_on", "constrains", "supersedes", "conflicts_with"];
 
 const kindOf = (uid) => byUid[uid]?.kind;
-
-<!-- @req+ REQ-21522236@FSo8K6fhdHTu lvb5vk -->
-<!-- @req+ REQ-69283350@XSe9n-OwepOP g6xqs6 -->
-const SHAPE = {
-  requirement: [["text", "textarea"], ["status", "select"], ["type", "select"],
-                ["verification", "select"], ["priority", "select"],
-                ["rationale", "textarea"], ["criterion", "textarea"]],
-  term: [["status", "select"], ["term", "text"], ["definition", "textarea"],
-         ["alias", "textarea"]],
-  parameter: [["text", "textarea"], ["status", "select"], ["name", "text"],
-              ["value", "text"], ["value-type", "select"], ["unit", "text"],
-              ["default", "text"], ["rationale", "textarea"]],
-  data: [["text", "textarea"], ["status", "select"], ["name", "text"],
-         ["entry", "textarea"], ["default", "text"], ["rationale", "textarea"]],
-};
-<!-- @req- g6xqs6 -->
-<!-- @req- lvb5vk -->
-
-<!-- @req+ REQ-69283350@XSe9n-OwepOP hmvswm -->
-const NEEDED = {
-  requirement: ["text"],
-  term: ["term", "definition"],
-  parameter: ["text", "name", "value", "value-type"],
-  data: ["name", "entry"],
-};
-<!-- @req- hmvswm -->
-
-const REPEATED = new Set(["criterion", "alias", "entry"]);
 
 const MINTED_STATUS = ["approved", "draft"];
 
 const FORMS = {
   revise: { title: "Revise" },
-  relate: { title: "Relate", fields: [["relation", "select"], ["target", "text"]] },
+  relate: { title: "Relate", fields: [{ flag: "relation", choices: RELATIONS },
+                                      { flag: "target", choices: [] }] },
   deprecate: { title: "Deprecate", fields: [] },
   new: { title: "New" },
   entry: { title: "Edit member", fields: [] },
@@ -417,44 +382,28 @@ function pairsHtml(held) {
     </div>`).join("");
 }
 
-<!-- @req+ REQ-21522236@FSo8K6fhdHTu fuavre -->
-const NEW_ONLY = new Set(["name", "entry"]);
+<!-- @req+ REQ-87847146@IsskbJDRwpZ1 hmmycl -->
+const FIELDS = JSON.parse(document.getElementById("kind-fields").textContent);
 
+<!-- @req+ REQ-21522236@FSo8K6fhdHTu fuavre -->
 function shapeOf(act, kind) {
-  return FORMS[act].fields
-    ?? SHAPE[kind].filter(([name]) => act === "new" || !NEW_ONLY.has(name));
+  return FORMS[act].fields ?? FIELDS[kind][act];
 }
 <!-- @req- fuavre -->
-
-const HINTS = {
-  criterion: "GIVEN | WHEN | THEN, one per line",
-  alias: "one wording per line",
-  entry: "one member per line",
-};
+<!-- @req- hmmycl -->
 
 const criteriaText = (item) => (item?.acceptance_criteria ?? [])
   .map((c) => `${c.given} | ${c.when} | ${c.then}`).join("\n");
 
-const HOLDS = { alias: "aliases", "value-type": "value_type" };
-
-<!-- @req+ REQ-14679866@V0QsDEPmgOq3 yktaxn -->
-const CLEARS = { rationale: "no-rationale", unit: "no-unit",
-                 default: "no-default", alias: "no-alias",
-                 criterion: "no-criterion" };
-<!-- @req- yktaxn -->
-
-const valueText = (held) =>
-  held.length === 1 ? String(held[0]) : `[${held.join(", ")}]`;
-
-function heldBy(item, name) {
+function heldBy(item, field) {
   if (!item) return "";
-  if (name === "criterion") return criteriaText(item);
-  const held = item[HOLDS[name] ?? name];
+  const held = item[field.flag] ?? item[field.name];
   if (held === null || held === undefined) return "";
-  if (Array.isArray(held)) {
-    return name === "value" ? valueText(held) : held.join("\n");
-  }
-  return String(held);
+  if (!Array.isArray(held)) return String(held);
+  const lines = held.map((each) => field.parts.length
+    ? field.parts.map((part) => each[part]).join(" | ") : String(each));
+  if (field.repeated) return lines.join("\n");
+  return lines.length === 1 ? lines[0] : `[${lines.join(", ")}]`;
 }
 
 const LINKED_WORD = /\[([^\]\n]+)\]\(([a-z][a-z0-9_]*)\)/g;
@@ -510,32 +459,38 @@ function rewordHtml(uid, item) {
         </div>`).join("")}</div>`;
 }
 
+<!-- @req+ REQ-87847146@IsskbJDRwpZ1 z2svqa -->
 function fieldsHtml(act, kind, item) {
-  return shapeOf(act, kind).map(([name, shape]) => {
+  return shapeOf(act, kind).map((field) => {
     <!-- @req+ REQ-69283350@XSe9n-OwepOP dmpy2p -->
-    const needed = act === "new" && (NEEDED[kind] ?? []).includes(name);
-    const label = `<label for="f-${name}">${esc(name)}${
+    const needed = act === "new" && field.required;
+    const label = `<label for="f-field-${field.flag}">${esc(field.flag)}${
       needed ? ` <span style="color:var(--warn)">required</span>` : ""}</label>`;
     <!-- @req- dmpy2p -->
-    const held = heldBy(item, name);
-    if (shape === "select") {
+    const held = heldBy(item, field);
+    if (field.choices.length) {
       const blank = act === "new" ? "(default)" : "(none)";
-      const offered = act === "new" && name === "status" ? MINTED_STATUS
-        : (CHOICES[name] ?? [""]).filter((v) => v !== "" || !held);
+      const choices = act === "relate" ? field.choices : ["", ...field.choices];
+      const offered = act === "new" && field.flag === "status" ? MINTED_STATUS
+        : choices.filter((v) => v !== "" || !held);
       const list = held && !offered.includes(held) ? [held, ...offered] : offered;
-      return `<div class="field">${label}<select id="f-${name}">${
+      return `<div class="field">${label}<select id="f-field-${field.flag}">${
         list.map((v) => `<option value="${esc(v)}"${v === held ? " selected" : ""}>${
           esc(v || blank)}</option>`).join("")
       }</select></div>`;
     }
-    if (shape === "textarea") {
-      const hint = HINTS[name] ? ` placeholder="${esc(HINTS[name])}"` : "";
-      return `<div class="field">${label}<textarea id="f-${name}"${hint}>${
+    if (field.repeated || field.prose) {
+      const parts = field.parts.join(" | ").toUpperCase();
+      const hint = field.repeated
+        ? ` placeholder="${esc(parts ? `${parts}, one per line` : "one per line")}"` : "";
+      return `<div class="field">${label}<textarea id="f-field-${field.flag}"${hint}>${
         esc(held)}</textarea></div>`;
     }
-    return `<div class="field">${label}<input id="f-${name}" value="${esc(held)}"></div>`;
+    return `<div class="field">${label}<input id="f-field-${field.flag}" value="${
+      esc(held)}"></div>`;
   }).join("");
 }
+<!-- @req- z2svqa -->
 
 function formHtml(act, uid, kind, entry) {
   const heading = act === "new" ? "New"
@@ -543,7 +498,7 @@ function formHtml(act, uid, kind, entry) {
     : `${FORMS[act].title} this ${kind}`;
   const picker = act !== "new" ? "" : `
       <div class="field"><label for="f-kind">kind</label>
-        <select id="f-kind">${CHOICES.kind.map((k) =>
+        <select id="f-kind">${Object.keys(FIELDS).map((k) =>
           `<option value="${esc(k)}"${k === kind ? " selected" : ""}>${esc(k)}</option>`
         ).join("")}</select></div>`;
   return `
@@ -645,30 +600,33 @@ function payloadFor(act, uid, read, held) {
     return { steps: [{ command: "revise", args: [uid], options: { status: "deprecated" } }] };
   }
   if (act === "relate") {
-    const target = read("target").trim();
+    const target = read("field-target").trim();
     if (!/^REQ-\d+$/.test(target)) throw new Error("only a requirement carries relations");
-    return { steps: [{ command: "relate", args: [uid, read("relation"), target] }] };
+    return { steps: [{ command: "relate", args: [uid, read("field-relation"), target] }] };
   }
   const kind = act === "new" ? read("kind") : kindOf(uid);
   const item = act === "new" ? undefined : byUid[uid];
   const options = {};
   const stuck = [];
-  for (const [name] of shapeOf(act, kind)) {
-    const typed = read(name).trim();
-    if (item && typed === heldBy(item, name).trim()) continue;
+  <!-- @req+ REQ-87847146@IsskbJDRwpZ1 lsvu3b -->
+  for (const field of shapeOf(act, kind)) {
+    const typed = read(`field-${field.flag}`).trim();
+    if (item && typed === heldBy(item, field).trim()) continue;
     <!-- @req+ REQ-14679866@V0QsDEPmgOq3 c3qlcl -->
     if (!typed) {
-      if (item && CLEARS[name]) options[CLEARS[name]] = null;
-      else if (item) stuck.push(name);
+      if (item && field.clears) options[field.clears] = null;
+      else if (item) stuck.push(field.flag);
       continue;
     }
     <!-- @req- c3qlcl -->
-    options[name] = REPEATED.has(name)
+    options[field.flag] = field.repeated
       ? typed.split("\n").map((line) => line.trim()).filter(Boolean)
       : typed;
   }
+  <!-- @req- lsvu3b -->
   if (act === "new") {
-    const missing = NEEDED[kind].filter((name) => !options[name]);
+    const missing = shapeOf(act, kind)
+      .filter((field) => field.required && !options[field.flag]).map((field) => field.flag);
     if (missing.length) throw new Error(`a ${kind} needs ${missing.join(", ")}`);
     const { status, ...rest } = options;
     const steps = [{ command: "new", args: [kind], options: rest }];
