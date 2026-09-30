@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a review refused only over sources whose servers answered 503 or whose fetches
+    took more than ${review_fetch_seconds} seconds
+  then: the product names checking the same review again as the way to clear the refusal
+  when: the review is checked
+- given: a review refused over a source whose server answered 503 and another whose
+    page does not hold its passage
+  then: the product names making the review again as the way to clear the refusal
+  when: the review is checked
+- given: a review refused over a source whose server answered 503 and a [practice](practice)
+    that names no source
+  then: the product names making the review again as the way to clear the refusal
+  when: the review is checked
+assessed:
+  REQ-16875926: oy3EzqZ3OzhcKVmxtXKFGGdl87CNv_gWhrPmAemZGQA
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  review_fetch_seconds: Htcx-fm6ccpydSCOEZU7PmqT3YIW7ijMRv97lLajMNY
+  review_fetch_seconds.*: 5mqJ4b8TkDMSGQk0a8MtmsPqJaTpGuoSwU7dw-FB57Y
+  transient_failure: jRoVqaEGDhXAmWXfTDlCb-w_UeBtKn9hQr-FLR4xWP4
+priority: medium
+relations:
+  REQ-16875926: depends_on
+  REQ-46144308: constrains
+status: approved
+text: If every fault over which the product refuses the [best-in-class review](best_in_class_review)
+  is a [transient failure](transient_failure) of a source, then the product shall
+  name checking the same review again, rather than making the review again, as the
+  way to clear the refusal.
+type: functional
+verification: inspection

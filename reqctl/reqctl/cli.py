@@ -1223,10 +1223,13 @@ def main(argv=None):
         raise
     # @req+ REQ-19913588@zNetOTQBhHYZ dw57fs
     try:
-        return args.func(args)
-    except BrokenPipeError:
-        _drop_output()
-        return EXIT_OK
+        # @req> REQ-24406170@M08jCONzg-4u 3ofubr
+        with corpus.all_or_nothing():
+            try:
+                return args.func(args)
+            except BrokenPipeError:
+                _drop_output()
+                return EXIT_OK
     except (ReqctlError, OSError, UnicodeError) as error:
         if args.json:
             _emit(args, {"error": str(error)}, "")

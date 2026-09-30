@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a review whose [practices](practice) name three sources whose addresses hold
+    one host name
+  then: the product fetches the three one after another, starting none until the fetch
+    before it has ended
+  when: the review is checked
+- given: a review whose [practices](practice) name sources under two host names
+  then: the product fetches under the two host names at the same time
+  when: the review is checked
+- given: a source whose fetch redirects to another host name
+  then: the product holds the host name in the source's address until the fetch ends
+  when: the review is checked
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-46144308: constrains
+status: approved
+text: The product shall fetch the sources that the [practices](practice) of the [best-in-class
+  review](best_in_class_review) name no more than one at a time under each host name.
+type: functional
+verification: inspection
