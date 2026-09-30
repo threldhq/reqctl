@@ -7,6 +7,9 @@ assessed:
   folder_creations: -VW_HOn20a9Y6PtyhjDRM0rAMuun3bZ3Mp1pXm2BKLA
   folder_creations.*: qcjifiJVBUeHxH-fbJuIn-ZdcV5Jly1qk1SxLWHspuc
   journal: dInjfGfHVBBWX6Ff9e081XVu9lftdeHWOU3kz3-ZtBc
+citations:
+  ehsnrd: _kqntmRs1JwbtZo5hjzIAg9ncorQN55YFf-LII2wGOY
+  k3vppt: rXgf9Jrn3fqzOAPiYdt_1p5QJhBuBkU6PZXzt8mnooQ
 relations:
   GUARD-65225392: depends_on
 status: approved

@@ -30,12 +30,23 @@ METHODS = {
     "unlink": "delete",
 }
 # @req- kcim4i
+# @req+ GUARD-37890983@MBBp99PJwOhl k3vppt
+FOLDER_FUNCTIONS = {"os.mkdir": "mkdir", "os.makedirs": "mkdir",
+                    "tempfile.mkdtemp": "temporary",
+                    "tempfile.TemporaryDirectory": "temporary"}
+FOLDER_METHODS = {"mkdir": "mkdir"}
+GUARDED = (
+    (DATA, FUNCTIONS, METHODS,
+     "change the file through corpus.atomic_write or corpus.remove"),
+    ("folder_creations", FOLDER_FUNCTIONS, FOLDER_METHODS,
+     "create the folder through corpus.make_folder"),
+)
+# @req- k3vppt
 ARITY = {"rename": (1, 1, "target"), "replace": (1, 1, "target"),
          "unlink": (0, 1, "missing_ok")}
-MODULES = {name.split(".")[0] for name in FUNCTIONS} | {PATH.split(".")[0]}
+MODULES = {name.split(".")[0] for _, functions, _, _ in GUARDED
+           for name in functions} | {PATH.split(".")[0]}
 WRITING_MODES = set("wax+")
-STRAY = (f"makes one of the {DATA} outside {JOURNAL} -- change the file "
-         "through corpus.atomic_write or corpus.remove")
 
 
 def imported(tree):
@@ -94,12 +105,12 @@ def opened(node, name, held):
     return bool(mode_writes(node.args[0] if node.args else None))
 
 
-def classified(node, held):
+def classified(node, held, functions, methods):
     func = node.func
     name = resolved(func, held)
-    if name in FUNCTIONS:
-        return FUNCTIONS[name], name
-    if not isinstance(func, ast.Attribute) or func.attr not in METHODS:
+    if name in functions:
+        return functions[name], name
+    if not isinstance(func, ast.Attribute) or func.attr not in methods:
         return None
     owner = resolved(func.value, held)
     if owner == PATH:
@@ -112,44 +123,48 @@ def classified(node, held):
                                      for one in node.keywords)
         if not low <= given <= high:
             return None
-    return METHODS[func.attr], ast.unparse(func)
+    return methods[func.attr], ast.unparse(func)
 
 
 # @req+ GUARD-15820124@9ypnh2GEXx5T 4squcr
+# @req+ GUARD-37890983@MBBp99PJwOhl ehsnrd
 def refusals(path):
     tree = references.parsed(path)
     held = imported(tree)
     for node in ast.walk(tree):
         if (isinstance(node, ast.ImportFrom) and node.module in MODULES
                 and any(alias.name == "*" for alias in node.names)):
-            yield node.lineno, (f"from {node.module} import * hides which of "
-                                f"the {DATA} this file makes -- import the "
-                                "names it uses")
+            yield node.lineno, (f"from {node.module} import * hides which "
+                                "calls this file makes -- import the names "
+                                "it uses")
         if not isinstance(node, ast.Call):
             continue
-        made = classified(node, held)
-        if made is None:
-            continue
-        member, form = made
-        writes = (opened(node, form, held) if member == "open_to_write"
-                  else True)
-        if writes is None:
-            yield node.lineno, (f"{form} is given a mode this guard cannot "
-                                "read -- state it as a literal")
-        elif writes:
-            yield node.lineno, f"{form} {STRAY}"
+        for data, functions, methods, remedy in GUARDED:
+            made = classified(node, held, functions, methods)
+            if made is None:
+                continue
+            member, form = made
+            writes = (opened(node, form, held) if member == "open_to_write"
+                      else True)
+            if writes is None:
+                yield node.lineno, (f"{form} is given a mode this guard "
+                                    "cannot read -- state it as a literal")
+            elif writes:
+                yield node.lineno, (f"{form} makes one of the {data} outside "
+                                    f"{JOURNAL} -- {remedy}")
 
 
 def drift(root):
-    stated = set(corpus.entries(corpus.read(corpus.path_for(root, DATA)))
-                 or {})
-    known = set(FUNCTIONS.values()) | set(METHODS.values())
-    return ([f"{DATA} names {member}, which {Path(__file__).name} does not "
-             "refuse -- teach it that member's calls"
-             for member in sorted(stated - known)]
-            + [f"{Path(__file__).name} refuses {member}, which {DATA} does "
-               "not name -- drop it from the guard"
-               for member in sorted(known - stated)])
+    for data, functions, methods, _ in GUARDED:
+        stated = set(corpus.entries(corpus.read(corpus.path_for(root, data)))
+                     or {})
+        known = set(functions.values()) | set(methods.values())
+        yield from (f"{data} names {member}, which {Path(__file__).name} "
+                    "does not refuse -- teach it that member's calls"
+                    for member in sorted(stated - known))
+        yield from (f"{Path(__file__).name} refuses {member}, which {data} "
+                    "does not name -- drop it from the guard"
+                    for member in sorted(known - stated))
 
 
 def main():
@@ -165,6 +180,7 @@ def main():
     for fault in found:
         print(fault)
     return 1 if found else 0
+# @req- ehsnrd
 # @req- 4squcr
 
 
