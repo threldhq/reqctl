@@ -7,6 +7,7 @@ import re
 import socket
 import sys
 import threading
+import time
 import urllib.parse
 import urllib.request
 import zlib
@@ -164,34 +165,33 @@ def transient(broken):
     if isinstance(broken, urllib.request.HTTPError):
         return broken.code == 429 or broken.code >= 500
     return isinstance(getattr(broken, "reason", broken),
-                      (TimeoutError, ConnectionRefusedError, ConnectionResetError))
+                      (TimeoutError, ConnectionError))
 
 
 # @req> REQ-88584597@as115Aov_CEK vz6m2q
 class Deadline:
     def __init__(self, seconds):
-        self.passed, self.held = False, []
+        self.end, self.held = time.monotonic() + seconds, []
         self.timer = threading.Timer(seconds, self.expire)
-
-    def __enter__(self):
         self.timer.start()
-        return self
 
-    def __exit__(self, *raised):
+    def left(self):
+        return max(self.end - time.monotonic(), 0)
+
+    def close(self):
         self.timer.cancel()
         self.timer.join()
         for sock in self.held:
             sock.close()
 
     def expire(self):
-        self.passed = True
         for sock in self.held:
             with contextlib.suppress(OSError):
                 sock.shutdown(socket.SHUT_RDWR)
 
     def hold(self, sock):
         self.held.append(sock.dup())
-        if self.passed:
+        if not self.left():
             self.expire()
         return sock
 
@@ -217,7 +217,8 @@ def pinned(connection):
                       f"{inside[0]}")
     # @req> REQ-88584597@as115Aov_CEK p7ygur
     return current.deadline.hold(socket.create_connection(
-        (found[0], connection.port), connection.timeout))
+        (found[0], connection.port),
+        min(connection.timeout, current.deadline.left())))
 
 
 class Plain(http.client.HTTPConnection):
@@ -291,12 +292,12 @@ def page(url, fetch, bound):
 
 def timed(url, fetch, bound, seconds):
     # @req> REQ-88584597@as115Aov_CEK sjt5cu
-    with Deadline(seconds) as deadline:
+    with contextlib.closing(Deadline(seconds)) as deadline:
         current.deadline = deadline
         body, why = page(url, fetch, bound)
     # @req> REQ-88584597@as115Aov_CEK xebeiz
     # @req> REQ-16875926@oy3EzqZ3Ozhc eunqii
-    if deadline.passed:
+    if not deadline.left():
         return None, Transient(f"the fetch took more than {seconds} seconds")
     if body is None:
         return None, why
@@ -321,7 +322,7 @@ def faults(review, bound, redirects, seconds):
     for url in urls:
         hosts.setdefault(host(url), []).append(url)
     fetch = opener(redirects)
-    with ThreadPoolExecutor() as pool:
+    with ThreadPoolExecutor(len(hosts) or 1) as pool:
         pages = {url: read for fetched in pool.map(
             lambda held: [(url, timed(url, fetch, bound, seconds))
                           for url in held], hosts.values())
