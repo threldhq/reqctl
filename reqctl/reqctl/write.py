@@ -46,7 +46,7 @@ REQUIRED = {
     "guard": ("text",),
     "parameter": ("text", "name", "value", "value_type"),
     "term": ("term", "definition"),
-    "data": ("name",),
+    "data": ("name", "entry"),
 }
 REFILED = ("value_type", "unit")
 

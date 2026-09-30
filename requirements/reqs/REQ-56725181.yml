@@ -11,6 +11,9 @@ acceptance_criteria:
 assessed:
   REQ-49576265: TZb-gviCuP5YoreZuR-DpCD14zDAOXTH3QmbqBJlzFE
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  52i7vh: XDs7cawYElCbGwE2jwGH-EpZr-MvNLoA7oeMT5XkC7A
+  fml6m3: rNpIDKKaeqn8HigZLwasV5Q6MSriYZqCPThQTKyVLb4
 priority: medium
 relations:
   REQ-49576265: constrains

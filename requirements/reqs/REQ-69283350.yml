@@ -7,6 +7,10 @@ acceptance_criteria:
   when: it is read
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  dmpy2p: rtdjG8z-NtPKmMZK5hYRZmLHFRHhAVKvMahmn-SgJc4
+  g6xqs6: i47KiMSSdagwLX_u2ZXH8vp8S1Xc_HswTI9i0qyCdvc
+  hmvswm: U3tMfBgAa6Kvvo3I22G5aVDFzwqXpjv1lvSAFNypen8
 priority: medium
 relations: {}
 status: approved

@@ -499,7 +499,9 @@ def _context(store, item, dependents, tags):
                          suspect=corpus.is_suspect(store, item, address))
         concepts.append(entry)
 
-    cited = tags.get(uid, [])
+    # @req> REQ-19896380@2sOnckMwnWfx 7iy6c4
+    cited = [(path, pinned) for path, pinned in tags.get(uid, [])
+             if not corpus.is_test(path)]
     references = list(dict.fromkeys(path for path, _ in cited))
     described = _describe(store, item)
     behind = {
@@ -515,8 +517,7 @@ def _context(store, item, dependents, tags):
         "incoming": incoming,
         "parameters": parameters,
         "concepts": concepts,
-        "implementation": [p for p in references if not corpus.is_test(p)],
-        "tests": [p for p in references if corpus.is_test(p)],
+        "implementation": references,
         "stale": list(behind.values()),
         "suspect_links": sum(
             1 for r in outgoing + parameters + concepts if r["suspect"]
@@ -580,12 +581,11 @@ def _context(store, item, dependents, tags):
                if carrying else
                "  nothing else carries its words unlinked")
         )
-    for label in ("implementation", "tests"):
-        blocks.append(
-            f"\n{label}\n"
-            + ("\n".join(f"  {p}{_behind(behind.get(p), data)}"
-                          for p in data[label]) or "  none")
-        )
+    blocks.append(
+        "\nimplementation\n"
+        + ("\n".join(f"  {p}{_behind(behind.get(p), data)}"
+                      for p in references) or "  none")
+    )
     return data, "\n".join(blocks)
 
 
@@ -727,8 +727,6 @@ def cmd_trace(args):
             print(f"{row['uid']}  {row['status']}")
             for path in row["implementation"]:
                 print(f"    impl  {path}")
-            for path in row["tests"]:
-                print(f"    test  {path}")
         if data["unimplemented"]:
             print("\nawaiting implementation: " + ", ".join(data["unimplemented"]))
         # @req> REQ-35979865@-t3USRO-BKGk wht4dr

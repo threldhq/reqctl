@@ -7,6 +7,9 @@ acceptance_criteria:
   when: it is read
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  fuavre: zPTw2CaugrrF-R__cQI93T7lQmpz1ZvjI-ftmvfz_RM
+  lvb5vk: i47KiMSSdagwLX_u2ZXH8vp8S1Xc_HswTI9i0qyCdvc
 priority: medium
 relations: {}
 status: approved
