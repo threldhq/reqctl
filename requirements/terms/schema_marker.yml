@@ -1,0 +1,12 @@
+assessed:
+  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+entries:
+  schema_marker:
+    aliases:
+    - schema markers
+    definition: A keyword a [kind schema](kind_schema) states on a field that tells
+      the product how to handle the field, rather than which values the field may
+      hold.
+    word: schema marker
+kind: term
+status: approved
