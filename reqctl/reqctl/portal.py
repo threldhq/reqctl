@@ -40,7 +40,7 @@ def repository(where):
     return found.group(1)
 
 
-# @req+ REQ-87847146@IsskbJDRwpZ1 avcfk3
+# @req+ REQ-87847146@zR5tHnA8xAWx avcfk3
 # @req> REQ-69283350@XSe9n-OwepOP cgzp5c
 # @req> REQ-14679866@V0QsDEPmgOq3 357tly
 def _offered(kind, field):
