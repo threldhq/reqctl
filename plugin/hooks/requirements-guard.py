@@ -112,6 +112,12 @@ HAND_CITATION = (
     "  reqctl tag PATH --from N --to M --req UID | reqctl repin ID | reqctl untag ID"
 )
 
+INEXACT = (
+    "old_string is not in the file exactly as written, and the file or new_string holds "
+    "a statement citation.\n"
+    "Give old_string exactly as the file holds it, quotes and escapes included."
+)
+
 WHOLE_TREE: list[str] = []
 FORCE = ("-f", "--force", "--discard-changes")
 RESTORES = ("checkout", "restore", "reset", "clean", "switch")
@@ -482,6 +488,9 @@ def edited(tool, args):
         old, new = edit.get("old_string", ""), edit.get("new_string", "")
         if not isinstance(old, str) or not isinstance(new, str):
             deny(UNREADABLE)
+        if old and old not in after and any(
+                CITATION_LINE.match(line) for text in (after, new) for line in text.split("\n")):
+            deny(INEXACT)
         if not new and not old.endswith("\n") and old + "\n" in after:
             old += "\n"
         after = after.replace(old, new, -1 if edit.get("replace_all") else 1)
