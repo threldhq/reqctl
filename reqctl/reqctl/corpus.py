@@ -257,7 +257,8 @@ def atomic_write(path, content):
     try:
         # @req> REQ-24406170@M08jCONzg-4u ig234p
         _hold(target)
-        target.parent.mkdir(parents=True, exist_ok=True)
+        # @req> REQ-81667762@82D0B66GuW3u lkbxat
+        make_folder(target.parent)
         with open(temp, "xb" if isinstance(content, bytes) else "x") as sink:
             staged = True
             sink.write(content)
@@ -286,33 +287,40 @@ def write_all(changes):
 
 # @req+ REQ-24406170@M08jCONzg-4u u5qcba
 _held = None
+_made = None
 
 
 @contextlib.contextmanager
 def all_or_nothing():
-    global _held
+    global _held, _made
     if _held is not None:
         yield
         return
-    _held = {}
+    _held, _made = {}, []
     try:
         yield
     except BaseException as error:
         if isinstance(error, SystemExit) and error.code in (None, 0):
             raise
-        held, _held = _held, None
+        held, made, _held, _made = _held, _made, None, None
         kept = [str(path) for path, before in reversed(held.items())
                 if not _put_back(path, before)]
-        if kept:
-            left = f"not put back: {', '.join(kept)}"
+        # @req> REQ-81667762@82D0B66GuW3u yxx323
+        stayed = [str(folder) for folder in reversed(made)
+                  if not _remove_folder(folder)]
+        # @req+ REQ-83236530@f_SrFVNH8QSC ipd45o
+        left = "; ".join(f"{what}: {', '.join(paths)}" for what, paths in (
+            ("not put back", kept), ("folders left in place", stayed)) if paths)
+        if left:
             if isinstance(error, SystemExit):
                 raise SystemExit(f"{error}; {left}") from error
             if isinstance(error, (ReqctlError, OSError, UnicodeError)):
                 raise ReqctlError(f"{error}; {left}") from error
             error.add_note(left)
+        # @req- ipd45o
         raise
     finally:
-        _held = None
+        _held = _made = None
 
 
 def atomically(command):
@@ -342,6 +350,22 @@ def remove(path, missing_ok=False):
     _hold(held)
     held.unlink(missing_ok=missing_ok)
 # @req- u5qcba
+
+
+# @req+ REQ-81667762@82D0B66GuW3u habjh7
+def make_folder(path):
+    folder = Path(path).absolute()
+    if _made is not None:
+        _made.extend(one for one in (*reversed(folder.parents), folder)
+                     if not one.exists())
+    folder.mkdir(parents=True, exist_ok=True)
+
+
+def _remove_folder(folder):
+    with contextlib.suppress(OSError):
+        folder.rmdir()
+    return not folder.is_dir()
+# @req- habjh7
 
 
 def dump(data):

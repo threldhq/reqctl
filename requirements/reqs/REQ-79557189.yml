@@ -8,7 +8,7 @@ acceptance_criteria:
 assessed:
   REQ-40238953: RUP3vKC4vR8r1eHkOj6vDGFveR7l4OhUuqGjZJ0Ah3U
 citations:
-  np3ttn: gwpHjFW42svwcKBDC3z7Kwm2_bVYRmJeQhudPh1IKnk
+  np3ttn: _kJxCDL3QwedY0VPHoBBwwnUGeEGIMGZ1Py4n31PX_I
 priority: medium
 relations:
   REQ-40238953: supersedes
