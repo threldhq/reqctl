@@ -40,19 +40,26 @@ properties:
 
   type:
     enum: [functional, non_functional, constraint]
+    default: functional
 
   status:
     enum: [draft, approved, deprecated, superseded]
+    default: draft
     description: >-
       Lifecycle. Excluded from the stamp, so a transition never makes dependants
       suspect. Proposed-change, impact-assessed and under-review are carried by
       the pull request, not by this field.
 
+  # @req> REQ-35443917@7V3GXXoqruBl efas27
+  # @req> REQ-87380206@tt4tAqgS8C4_ idouod
   verification:
     enum: [inspection, analysis, demonstration]
+    default: inspection
 
   acceptance_criteria:
     type: array
+    default: []
+    x-flag: criterion
     description: >-
       What satisfying this requirement means, as given, when and then. In the
       stamp: criteria define the obligation as much as the statement does, so
@@ -69,6 +76,7 @@ properties:
 
   priority:
     enum: [high, medium, low]
+    default: medium
     description: >-
       In the stamp: reprioritising an approved requirement changes its meaning
       to whoever ordered work by it, so dependants reassess.
@@ -83,6 +91,8 @@ properties:
 
   relations:
     type: object
+    readOnly: true
+    default: {}
     description: >-
       Edges to other requirements, target to kind. Parameters are not related;
       a ${name} reference in text is the whole relationship.
@@ -103,6 +113,8 @@ properties:
 
   assessed:
     type: object
+    readOnly: true
+    default: {}
     description: >-
       Pins, dependency address to the stamp it was assessed against. A
       dependency is a relations target, a parameter or data entry the prose
@@ -119,6 +131,7 @@ properties:
 
   citations:
     type: object
+    readOnly: true
     description: >-
       The citation list: the citation identity of each statement citation
       naming this requirement, to the citation digest of the lines it covers.

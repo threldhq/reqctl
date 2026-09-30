@@ -5,12 +5,11 @@ description: >-
   A TERM, PARAM or DATA item file: a dictionary of entries, the entry key its
   identity. What prose may do with an entry is decided by its fields -- a
   renderable value substitutes through ${...}, a definition annotates through
-  [...](...). The per-kind rules are reqctl's checks: a term holds exactly
-  one entry; a parameter's keys parse as its value_type; a default names an
-  existing entry; an entry
-  key may not shadow an item-level field name; a parameter or data item
-  carries a name, a term never does -- a term states the word it is known by,
-  and its entry key is the handle that addresses it.
+  [...](...). Which fields each kind carries is stated by the branch for that
+  kind below. The rest are reqctl's checks: a term holds exactly one entry; a
+  parameter's keys parse as its value_type; a default names an existing entry;
+  an entry key may not shadow an item-level field name. A term states the word
+  it is known by, and its entry key is the handle that addresses it.
 type: object
 additionalProperties: false
 
@@ -20,9 +19,11 @@ properties:
 
   status:
     enum: [draft, approved, deprecated, superseded]
+    default: draft
 
   kind:
     enum: [term, parameter, data]
+    readOnly: true
     description: >-
       What the item is. A named item carries no prefix to say it, so the file
       states it and the folder it sits in holds the statement to that: an item
@@ -36,6 +37,7 @@ properties:
   name:
     type: string
     pattern: "^[a-z][a-z0-9_]*$"
+    x-address: true
     description: >-
       The name the item answers to and the address prose carries: ${name} is
       stored as it is written. It is the filename too, so renaming is `reqctl
@@ -45,6 +47,7 @@ properties:
   carried:
     type: array
     uniqueItems: true
+    readOnly: true
     items:
       type: string
       pattern: "^[a-z][a-z0-9_]*$"
@@ -116,10 +119,11 @@ properties:
     propertyNames:
       type: string
       minLength: 1
-    additionalProperties: {$ref: "#/$defs/entry"}
 
   assessed:
     type: object
+    readOnly: true
+    default: {}
     description: >-
       Pins, dependency address to the stamp it was assessed against. An
       address is the name the item carries, or that name dot an entry key for
@@ -131,6 +135,35 @@ properties:
     additionalProperties:
       type: string
       minLength: 1
+
+allOf:
+
+  - if: {required: [kind], properties: {kind: {const: term}}}
+    then:
+      properties:
+        name: {not: {}}
+        text: {not: {}}
+        value_type: {not: {}}
+        unit: {not: {}}
+        default: {not: {}}
+        rationale: {not: {}}
+        entries:
+          maxProperties: 1
+          additionalProperties: {$ref: "#/$defs/term"}
+
+  - if: {required: [kind], properties: {kind: {const: parameter}}}
+    then:
+      required: [name, text, value_type]
+      properties:
+        entries: {x-flag: value, additionalProperties: {$ref: "#/$defs/entry"}}
+
+  - if: {required: [kind], properties: {kind: {const: data}}}
+    then:
+      required: [name]
+      properties:
+        value_type: {not: {}}
+        unit: {not: {}}
+        entries: {x-flag: entry, additionalProperties: {$ref: "#/$defs/entry"}}
 
 $defs:
 
@@ -166,6 +199,19 @@ $defs:
           prose: the glossary does not police it, so a sentence written here
           would carry a term past the link it owes. The bound is what stops
           that -- the longest label the corpus holds is ten characters.
+
+  term:
+    required: [word, definition]
+    additionalProperties: {$ref: "#/$defs/field"}
+    properties:
+      word:
+        type: string
+        x-flag: term
+        description: >-
+          The word the term is known by, as prose states it.
+      definition: {$ref: "#/$defs/entry/properties/definition"}
+      aliases: {$ref: "#/$defs/entry/properties/aliases", x-flag: alias}
+      unclaimed: {$ref: "#/$defs/entry/properties/unclaimed"}
 
   field:
     type: [string, number, boolean, array, object]

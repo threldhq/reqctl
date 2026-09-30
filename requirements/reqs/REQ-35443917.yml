@@ -7,8 +7,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  ep2jqr: MGv3xHlPzmmOHnfNeQHUIgQ5w3Xm9pa1w5XDAMLlr6Q
-  xyvmst: MGv3xHlPzmmOHnfNeQHUIgQ5w3Xm9pa1w5XDAMLlr6Q
+  efas27: _Fgkmdzlcfcf-rJxp23cMiLRVKEX2BOQAFUjiCp5ndo
   znhrrb: f5Wxr2gwDnsjObJPexDtOOUunibfzBXJHgrvKMUBSDs
 priority: medium
 relations: {}

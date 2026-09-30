@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from reqctl import fields
+
 GOVERNED = "requirements/"
 SUFFIXES = "py|yml|yaml|json|mjs|html|md|sh|in|txt"
 PATHISH = re.compile(rf"(?<![\w-])\.?[\w./<>-]*[\w>-]+\.(?:{SUFFIXES})(?![\w-])")
@@ -45,7 +47,8 @@ def parsed(path):
 
 
 def flags_defined():
-    held = {"--help"}
+    root = fields.root()
+    held = {"--help"} | {flag.flag for flag in fields.flags(root) + fields.clears(root)}
     for path in listed("*.py"):
         for node in ast.walk(parsed(path)):
             if not isinstance(node, ast.Call):
