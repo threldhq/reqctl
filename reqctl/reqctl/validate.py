@@ -68,7 +68,9 @@ def schema_problems(root, uid, data):
             kind = corpus.kind_of(uid, data)
             said = ("does not apply to a data item" if kind == "data"
                     else f"does not apply to a {kind}")
-        problems.append(f"{uid}: schema: {where}: {said}")
+        line = f"{uid}: schema: {where}: {said}"
+        if line not in problems:
+            problems.append(line)
     # @req> REQ-35443917@7V3GXXoqruBl znhrrb
     if data.get("verification") == "automated_test" and not any(
             problem.startswith(f"{uid}: schema: verification:")

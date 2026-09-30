@@ -139,9 +139,11 @@ def _refuse_hidden(label, value):
 
 
 def _refuse_blank_text(fields, own):
+    entries = next((field for field in own if field.name == "entries"), None)
     for field in own:
         value = fields.get(field.dest)
-        if value is None or not (field.string or field.strings):
+        if (value is None or _keyed(field, entries)
+                or not (field.string or field.strings)):
             continue
         for member in value if field.strings else [value]:
             if not str(member).strip():

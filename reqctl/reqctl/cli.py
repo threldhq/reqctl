@@ -954,6 +954,7 @@ def _command(sub, name, said):
 
 
 RESERVED = ("json", "command", "func", "uid", "kind")
+FIELDED = ("new", "lint", "revise")
 
 
 def _field_arguments(s, flags, taken=()):
@@ -962,7 +963,8 @@ def _field_arguments(s, flags, taken=()):
             continue
         if flag.dest in RESERVED + tuple(taken):
             raise ReqctlError(f"a kind schema gives a field {flag.flag}, which "
-                              "reqctl takes for its own")
+                              "reqctl takes for its own; mark the field readOnly "
+                              "if tooling writes it, or give it another x-flag")
         try:
             if flag.switch:
                 s.add_argument(flag.flag, action="store_true")
@@ -975,13 +977,20 @@ def _field_arguments(s, flags, taken=()):
                               f"reqctl takes for its own: {clash}") from None
 
 
-def _item_arguments(s, root):
+def _item_arguments(s, flags):
     s.add_argument("kind", choices=list(_write.KINDS))
     # @req> REQ-71965656@7EwX0Kxq6Vnf f7bkcf
-    _field_arguments(s, _fields.flags(root))
+    _field_arguments(s, flags)
 
 
-def build_parser(root=None):
+def _fielded(argv):
+    return next((token for token in argv if not token.startswith("-")),
+                None) in FIELDED
+
+
+def build_parser(root=None, fielded=True):
+    flags = _fields.flags(root) if fielded else []
+    clears = _fields.clears(root) if fielded else []
     p = argparse.ArgumentParser(
         prog="reqctl",
         description="The requirements corpus under requirements/ is read and "
@@ -992,7 +1001,7 @@ def build_parser(root=None):
     sub = p.add_subparsers(dest="command", required=True)
 
     s = _command(sub, "new", "mint a requirement, parameter, term or data item")
-    _item_arguments(s, root)
+    _item_arguments(s, flags)
     s.add_argument("--uid", help="mint a requirement or guard under this uid "
                                  "rather than a fresh one")
     s.set_defaults(func=cmd_new)
@@ -1000,7 +1009,7 @@ def build_parser(root=None):
     s = _command(sub, "lint",
                  "report the faults new would refuse an item for, writing "
                  "nothing")
-    _item_arguments(s, root)
+    _item_arguments(s, flags)
     s.set_defaults(func=cmd_lint)
 
     s = _command(sub, "revise",
@@ -1008,8 +1017,7 @@ def build_parser(root=None):
                  "a data entry")
     s.add_argument("uid")
     # @req> REQ-91205530@UySHruI9_FXO ctnzp2
-    _field_arguments(s, _fields.flags(root) + _fields.clears(root),
-                     _write.OPERATIONS)
+    _field_arguments(s, flags + clears, _write.OPERATIONS)
     s.add_argument("--ack", dest="ack", action="append",
                    metavar="NAME | NAME.ENTRY",
                    help="pin a referenced parameter or linked term at its "
@@ -1189,7 +1197,7 @@ def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     # @req+ REQ-19913588@zNetOTQBhHYZ zh6xly
     try:
-        parser = build_parser(_fields.root())
+        parser = build_parser(_fields.root(), _fielded(argv))
     except (ReqctlError, OSError, UnicodeError) as error:
         return _fault("--json" in argv, error)
     # @req- zh6xly
