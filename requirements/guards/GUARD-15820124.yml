@@ -7,6 +7,9 @@ assessed:
   file_writes: uU0zn_U2-6G4YPuYKTT54Hx2GwvEpivtQf--szRpZSU
   file_writes.*: 4cCOAvUp7yxo6mjDmDwG7EvEYkCB5jkrSYGnBVwCbXs
   journal: dInjfGfHVBBWX6Ff9e081XVu9lftdeHWOU3kz3-ZtBc
+citations:
+  4squcr: 3XJzXdCdreGZK4H6-9I4wlNSCL_Q97FWwDZHs4RBwSw
+  kcim4i: kvKv49W-DtrZHjyscPiaitZ77L8rzdNjqlKBl13R04g
 relations:
   GUARD-65225392: depends_on
 status: approved
