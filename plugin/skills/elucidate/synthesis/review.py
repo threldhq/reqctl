@@ -439,6 +439,12 @@ def decline(run):
         raise SystemExit(f"{where}: no question stands over this review; "
                          "decline only on the owner's answer to the question "
                          "the check raises")
+    table, read = plan.recorded(run)
+    if read.get(plan.DECLINED):
+        raise SystemExit(f"{table}: `{plan.DECLINED}` numbers the review's "
+                         "practices, and removing one would renumber them; "
+                         "answer by checking the same review again or making "
+                         "it again")
     review, why = plan.read_return(path, shapes.REVIEW)
     named, broken = plan.read_return(where, shapes.REVIEW)
     if review is None or named is None:
@@ -465,8 +471,8 @@ def check(run):
     path = run / plan.REVIEWED
     review, why = plan.read_return(path, shapes.REVIEW)
     # @req> REQ-82432523@VoDkIJau94BB 4cioyu
-    again = (f"run `rm -f {path}`, then spawn the best-in-class agent again "
-             "with the same prompt")
+    again = (f"run `rm -f {path} {run / plan.REMOVED}`, then spawn the "
+             "best-in-class agent again with the same prompt")
     # @req> REQ-51975077@c_HnzFhrYbl_ m75ejw
     corpus.remove(run / ASKED, missing_ok=True)
     if review is None:
