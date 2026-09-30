@@ -127,10 +127,10 @@ def _selects(schema, test, kind):
 
 def _merged(schema, kind):
     properties, required = {}, set()
-    for block in [schema] + [_resolved(schema, branch.get("then"))
-                             for branch in schema.get("allOf", ())
-                             if isinstance(branch, dict) and _selects(
-                                 schema, _resolved(schema, branch.get("if")), kind)]:
+    branches = [_resolved(schema, item) for item in schema.get("allOf", ())]
+    chosen = [_resolved(schema, branch.get("then")) for branch in branches
+              if _selects(schema, _resolved(schema, branch.get("if")), kind)]
+    for block in [schema] + chosen:
         required.update(block.get("required", ()))
         for name, stated in (block.get("properties") or {}).items():
             if _forbidden(stated):
@@ -161,13 +161,13 @@ def _field(schema, name, stated, required, entry):
     convert = CONVERTED.get(typed) if isinstance(typed, str) else None
     parts = tuple(items.get("required", ())) if items.get("type") == "object" else ()
     enum = stated.get("enum", ())
+    choices = tuple(enum) if all(isinstance(one, str) for one in enum) else ()
     clears, empty = None, None
     if not required:
         clears = _flag("no_" + said)
     elif repeated and not stated.get("minItems") and not stated.get("minProperties"):
         clears, empty = _flag("no_" + said), list if shape == "array" else dict
-    return Field(name=name, flag=_flag(said),
-                 choices=tuple(enum) if all(isinstance(one, str) for one in enum) else (),
+    return Field(name=name, flag=_flag(said), choices=choices,
                  repeated=repeated,
                  required=required and (entry or "default" not in stated),
                  clears=clears, empty=empty,
@@ -222,11 +222,10 @@ def flags(root):
         for field in of(root, kind):
             stated = held.get(field.flag)
             choices = field.choices
-            if stated and (stated.repeated, stated.convert) != (field.repeated,
-                                                                field.convert):
-                raise ReqctlError(f"{field.flag} takes a different kind of value "
-                                  f"for a {kind}; give one field an x-flag")
             if stated is not None:
+                if (stated.repeated, stated.convert) != (field.repeated, field.convert):
+                    raise ReqctlError(f"{field.flag} takes a different kind of value "
+                                      f"for a {kind}; give one field an x-flag")
                 choices = (tuple(dict.fromkeys(stated.choices + choices))
                            if stated.choices and choices else ())
             metavar = f"'{' | '.join(field.parts).upper()}'" if field.parts else None

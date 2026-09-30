@@ -503,11 +503,8 @@ def _article_for(word):
 
 
 def _rename_map(before, fields, now):
-    words = {}
-    if now is not None:
-        was = corpus.term_word(before)
-        if was and was != now:
-            words[was] = now
+    was = corpus.term_word(before)
+    words = {was: now} if was and now and was != now else {}
     for pair in fields.get("reword") or []:
         old, _, new = str(pair).partition("=")
         old, new = old.strip(), new.strip()
@@ -868,8 +865,7 @@ def prepare(store, kind, fields, placeholder=None):
 
     data = _fields.defaults(store.root, kind)
     entries = next((field for field in own if field.name == "entries"), None)
-    default = next((fields.get(field.dest) for field in own
-                    if field.name == "default"), None)
+    default = {field.name: fields.get(field.dest) for field in own}.get("default")
     entry = {}
     for field in own:
         value = fields.get(field.dest)
@@ -893,8 +889,7 @@ def prepare(store, kind, fields, placeholder=None):
         if default is not None:
             chosen = entry_key(scalar(str(default)))
             if chosen not in data["entries"]:
-                raise ReqctlError(f"--default {default}: not a member "
-                                  "of the set")
+                raise ReqctlError(f"--default {default}: not a member of the set")
             data["default"] = chosen
     elif kind == "data" and entries and fields.get(entries.dest) is not None:
         keys = [str(key).strip() for key in fields[entries.dest]]
@@ -995,7 +990,9 @@ def revise(store, uid, fields):
     own = _fields.of(store.root, kind)
 
     # @req+ REQ-25589226@gN1zcZG8pbON 5apnio
-    stray = _stray(store.root, own, fields, OPERATIONS)
+    stray = _stray(store.root, [field for field in own
+                                if kind != "data" or field.name != "entries"],
+                   fields, OPERATIONS)
     if stray:
         raise ReqctlError(
             f"{', '.join(stray)} does not apply to a {kind}; {uid} was not changed"
@@ -1082,21 +1079,17 @@ def revise(store, uid, fields):
                 f"{uid} was not changed"
             )
     entries = next((field for field in own if field.name == "entries"), None)
-    default = next((fields.get(field.dest) for field in own
-                    if field.name == "default"), None)
+    default = {field.name: fields.get(field.dest) for field in own}.get("default")
+    before = dict(item.data)
     try:
         stated = {field.name: _converted(field, fields[field.dest])
                   for field in own if fields.get(field.dest) is not None
                   and not _keyed(field, entries)}
+        words = _rename_map(before, fields, stated.get("word"))
     except ReqctlError as error:
         raise ReqctlError(f"{error}; {uid} was not changed") from None
     acks = fields.get("ack") or []
 
-    before = dict(item.data)
-    try:
-        words = _rename_map(before, fields, stated.get("word"))
-    except ReqctlError as error:
-        raise ReqctlError(f"{error}; {uid} was not changed") from None
     prospective = dict(before)
     # @req> REQ-34694183@iiEJLoDQUuRu i7ubge
     prospective["assessed"] = _assessed_map(uid, before)
@@ -1125,7 +1118,8 @@ def revise(store, uid, fields):
     if any(field.entry for field in own):
         prospective["entries"] = {sole: entry}
     if kind == "parameter":
-        if entries and fields.get(entries.dest) is not None:
+        if (entries and entries.dest not in OPERATIONS
+                and fields.get(entries.dest) is not None):
             try:
                 prospective["entries"] = _entered(
                     _one(fields[entries.dest], entries.flag))
@@ -1207,7 +1201,7 @@ def revise(store, uid, fields):
     except ReqctlError as error:
         raise ReqctlError(f"{error}; {uid} was not changed") from None
 
-    if "text" in stated:
+    if "text" in stated and "text" in prospective:
         faults = _validate.ears(uid, {"text": prospective["text"]})
         if faults:
             raise ReqctlError("\n".join(faults) + f"\n{uid} was not changed")
