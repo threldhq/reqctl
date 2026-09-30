@@ -258,12 +258,14 @@ function render(value) {
   return prose(value);
 }
 
+<!-- @req+ REQ-19896380@2sOnckMwnWfx uoavfi -->
 const SHOWN = new Set(["uid", "kind", "status", "text", "name", "term",
   "definition",
   "aliases", "tag", "type", "verification", "priority", "acceptance_criteria",
   "rationale", "value", "unit", "value_type", "default", "entries",
   "references", "parameters", "concepts", "outgoing", "incoming",
   "implementation", "tests", "stamp", "suspect_links"]);
+<!-- @req- uoavfi -->
 
 function chips(held) {
   return Object.entries(held ?? {})
@@ -340,8 +342,6 @@ function drawDetail() {
         &mdash; <b>${esc(p.name)}</b> ${flags(p)}${acking(p)}</div>`).join(""))}
     ${part("Implemented by", (item.implementation ?? []).map((p) =>
       `<div class="card mono">${esc(typeof p === "string" ? p : JSON.stringify(p))}</div>`).join(""))}
-    ${part("Verified by", (item.tests ?? []).map((p) =>
-      `<div class="card mono">${esc(typeof p === "string" ? p : JSON.stringify(p))}</div>`).join(""))}
     ${part("References", (item.references ?? []).map((r) =>
       `<div class="card">${render(r)}</div>`).join(""))}
     ${rest.map(([k, v]) => part(k, `<div class="card">${render(v)}</div>`)).join("")}
@@ -361,6 +361,8 @@ const CHOICES = {
 
 const kindOf = (uid) => byUid[uid]?.kind;
 
+<!-- @req+ REQ-21522236@FSo8K6fhdHTu lvb5vk -->
+<!-- @req+ REQ-69283350@XSe9n-OwepOP g6xqs6 -->
 const SHAPE = {
   requirement: [["text", "textarea"], ["status", "select"], ["type", "select"],
                 ["verification", "select"], ["priority", "select"],
@@ -371,17 +373,21 @@ const SHAPE = {
               ["value", "text"], ["value-type", "select"], ["unit", "text"],
               ["default", "text"], ["rationale", "textarea"]],
   data: [["text", "textarea"], ["status", "select"], ["name", "text"],
-         ["default", "text"], ["rationale", "textarea"]],
+         ["entry", "textarea"], ["default", "text"], ["rationale", "textarea"]],
 };
+<!-- @req- g6xqs6 -->
+<!-- @req- lvb5vk -->
 
+<!-- @req+ REQ-69283350@XSe9n-OwepOP hmvswm -->
 const NEEDED = {
   requirement: ["text"],
   term: ["term", "definition"],
   parameter: ["text", "name", "value", "value-type"],
-  data: ["name"],
+  data: ["name", "entry"],
 };
+<!-- @req- hmvswm -->
 
-const REPEATED = new Set(["criterion", "alias"]);
+const REPEATED = new Set(["criterion", "alias", "entry"]);
 
 const MINTED_STATUS = ["approved", "draft"];
 
@@ -414,13 +420,19 @@ function pairsHtml(held) {
     </div>`).join("");
 }
 
+<!-- @req+ REQ-21522236@FSo8K6fhdHTu fuavre -->
+const NEW_ONLY = new Set(["name", "entry"]);
+
 function shapeOf(act, kind) {
-  return FORMS[act].fields ?? SHAPE[kind];
+  return FORMS[act].fields
+    ?? SHAPE[kind].filter(([name]) => act === "new" || !NEW_ONLY.has(name));
 }
+<!-- @req- fuavre -->
 
 const HINTS = {
   criterion: "GIVEN | WHEN | THEN, one per line",
   alias: "one wording per line",
+  entry: "one member per line",
 };
 
 const criteriaText = (item) => (item?.acceptance_criteria ?? [])
@@ -503,9 +515,11 @@ function rewordHtml(uid, item) {
 
 function fieldsHtml(act, kind, item) {
   return shapeOf(act, kind).map(([name, shape]) => {
+    <!-- @req+ REQ-69283350@XSe9n-OwepOP dmpy2p -->
     const needed = act === "new" && (NEEDED[kind] ?? []).includes(name);
     const label = `<label for="f-${name}">${esc(name)}${
       needed ? ` <span style="color:var(--warn)">required</span>` : ""}</label>`;
+    <!-- @req- dmpy2p -->
     const held = heldBy(item, name);
     if (shape === "select") {
       const blank = act === "new" ? "(default)" : "(none)";

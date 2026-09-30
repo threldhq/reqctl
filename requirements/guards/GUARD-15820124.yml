@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a change adding a call to Path.unlink to reqctl/reqctl/write.py
+  then: the build refuses the change and names the file and line of the call
+  when: the build runs
+assessed:
+  GUARD-65225392: myxez9Yz6SOiTVlmcZCO291f_XgHcMR62MAguFsCQ68
+  file_writes: uU0zn_U2-6G4YPuYKTT54Hx2GwvEpivtQf--szRpZSU
+  file_writes.*: 4cCOAvUp7yxo6mjDmDwG7EvEYkCB5jkrSYGnBVwCbXs
+  journal: dInjfGfHVBBWX6Ff9e081XVu9lftdeHWOU3kz3-ZtBc
+citations:
+  4squcr: Zj3119toOEiWDVUTlkiQgy91gUAXyyleIAOLdtpAvbE
+  kcim4i: kvKv49W-DtrZHjyscPiaitZ77L8rzdNjqlKBl13R04g
+relations:
+  GUARD-65225392: depends_on
+status: approved
+text: If a Python file in the sources of reqctl or of its Claude Code plugin, other
+  than the reqctl/reqctl/corpus.py that holds the [journal](journal), makes one of
+  the ${file_writes}, then the build shall refuse the change.

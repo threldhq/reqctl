@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  journal:
+    definition: The part of the product that records what a file held before a command
+      writes, creates, renames or deletes it, and from that record puts the file back
+      when the command ends in an error.
+    word: journal
+kind: term
+status: approved

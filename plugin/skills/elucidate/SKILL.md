@@ -210,10 +210,14 @@ python3 ${CLAUDE_SKILL_DIR}/synthesis/review.py check --run .elucidate/<run>
 ```
 <!-- @req- dyekvt -->
 
+<!-- @req+ REQ-46711731@SULIqbPOPYVp 4avail -->
 The check fetches every page the review cites. It refuses the review where a
-practice names no source or a page does not hold the passage quoted from it:
-spawn the agent again with the same prompt. A review that passes is the run's
-review; nothing later in the run makes another.
+practice names no source or a page cannot be read or does not hold the passage
+quoted from it, and names the way to clear the refusal: follow it.
+<!-- @req- 4avail -->
+
+A review that passes is the run's review; nothing later in the run makes
+another.
 <!-- @req- drprho -->
 
 <!-- @req+ REQ-90096667@PunOebgQZAD6 cbcn57 -->
