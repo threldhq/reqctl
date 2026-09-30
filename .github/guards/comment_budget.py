@@ -57,7 +57,7 @@ QUOTED = re.compile(r"\"[^\"]*\"|'[^']*'")
 TRAILING = re.compile(r"\S\s+(#(?:\s.*|$))")
 MARKED = re.compile(r"<!--.*?-->", re.S)
 EMBEDDED = re.compile(r"<(script|style)[^>]*>(.*?)</\1>", re.S)
-WORD = re.compile(r"[\w$]+")
+WORD = re.compile(r"\d[\w.]*|[\w$]+")
 BEFORE_OPERAND = frozenset({"await", "case", "delete", "do", "else", "in",
                             "instanceof", "new", "of", "return", "throw",
                             "typeof", "void", "yield"})
@@ -198,7 +198,7 @@ def past_regex(text, index):
     return None
 
 
-def slash_found(path, text, number=1):
+def slash_found(path, text, number=1, regexes=True):
     held, index, size = [], 0, len(text)
     braces, substitutions, operand = 0, [], False
     while index < size:
@@ -232,11 +232,13 @@ def slash_found(path, text, number=1):
             end = number + body.count("\n")
             held.append(("comment", number, end, " ".join(body.split())))
             number, index = end, stop
-        elif letter == "/" and not operand and (
+        elif letter == "/" and regexes and not operand and (
                 stop := past_regex(text, index)) is not None:
             index, operand = stop, True
         elif found := WORD.match(text, index):
-            index, operand = found.end(), found.group() not in BEFORE_OPERAND
+            operand = (found.group() not in BEFORE_OPERAND
+                       or text[index - 1:index] == ".")
+            index = found.end()
         elif text.startswith(("++", "--"), index):
             index, operand = index + 2, True
         else:
@@ -244,7 +246,8 @@ def slash_found(path, text, number=1):
                 braces += 1
             elif letter == "}":
                 braces -= 1
-            operand = letter in ")]}"
+            operand = letter in ")]}" or (
+                letter == "!" and operand and not text.startswith("!=", index))
             index += 1
     return held
 
@@ -257,7 +260,8 @@ def markup_found(path, text):
                      " ".join(found.group().split())))
     for found in EMBEDDED.finditer(text):
         held += slash_found(path, found.group(2),
-                            text.count("\n", 0, found.start(2)) + 1)
+                            text.count("\n", 0, found.start(2)) + 1,
+                            found.group(1) == "script")
     return held
 
 
