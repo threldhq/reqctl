@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  mkdir:
+    definition: Path.mkdir, os.mkdir or os.makedirs
+  temporary:
+    definition: tempfile.mkdtemp or tempfile.TemporaryDirectory
+kind: data
+name: folder_creations
+status: approved
+text: the calls through which code creates a folder
