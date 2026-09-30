@@ -237,7 +237,8 @@ def slash_found(path, text, number=1, regexes=True):
             index, operand = stop, True
         elif found := WORD.match(text, index):
             operand = (found.group() not in BEFORE_OPERAND
-                       or text[index - 1:index] == ".")
+                       or text[index - 1:index] == "."
+                       and text[index - 2:index - 1] != ".")
             index = found.end()
         elif text.startswith(("++", "--"), index):
             index, operand = index + 2, True
@@ -247,7 +248,8 @@ def slash_found(path, text, number=1, regexes=True):
             elif letter == "}":
                 braces -= 1
             operand = letter in ")]}" or (
-                letter == "!" and operand and not text.startswith("!=", index))
+                letter == "!" and operand and not text[index - 1:index].isspace()
+                and not text.startswith("!=", index))
             index += 1
     return held
 
