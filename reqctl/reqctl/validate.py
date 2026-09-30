@@ -1097,7 +1097,7 @@ def _settled(path):
 
 
 def _named_schemas(records, root):
-    # @req+ REQ-48136849@06uQ0leCcA29 wljy47
+    # @req+ REQ-48136849@IqLDEuOZNuoa wljy47
     held = {corpus.name_of(uid, data) for uid, data in records.items()}
     return [f"corpus: {name}.schema.yaml governs an item named {name}, and "
             "the corpus holds none -- mint it, or remove the schema"

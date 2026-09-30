@@ -1,15 +1,20 @@
 import base64
 import hashlib
+import json
 import re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from . import fields as _fields
+from . import write as _write
 from .baseline import _git
 from .corpus import ReqctlError
 
 PAGE = Path(__file__).resolve().parent / "portal.html"
 SCRIPT = re.compile(rb"<script>(.*?)</script>", re.S)
+FIELDS_AT = b'<script type="application/json" id="kind-fields">'
+UNSAFE = {ord(char): f"\\u{ord(char):04x}" for char in "<>&"}
 HOST, PORT = "127.0.0.1", 8374
 GITHUB = re.compile(r"(?:(?:https?|ssh|git)://(?:[^@/]+@)?|[^@/:]+@)"
                     r"(?i:github\.com)[:/]([A-Za-z0-9-]+/[A-Za-z0-9._-]+?)"
@@ -33,6 +38,35 @@ def repository(where):
     # @req- 2v7p2v
     # @req> REQ-53764133@hNDAdKGPLVUD mbl5cu
     return found.group(1)
+
+
+# @req+ REQ-87847146@zR5tHnA8xAWx avcfk3
+# @req> REQ-69283350@XSe9n-OwepOP cgzp5c
+# @req> REQ-14679866@V0QsDEPmgOq3 357tly
+def _offered(kind, field):
+    once = kind == "parameter" and field.name == _fields.ENTRIES
+    return {"name": field.name, "flag": field.flag[2:], "required": field.required,
+            "repeated": field.repeated and not once, "prose": field.prose,
+            "choices": list(field.choices), "parts": list(field.parts),
+            "clears": field.clears and field.clears[2:]}
+
+
+# @req> REQ-21522236@FSo8K6fhdHTu vldi2d
+def forms(root):
+    offered = {}
+    for kind in _write.KINDS:
+        own = _fields.of(root, kind)
+        offered[kind] = {"new": [_offered(kind, field) for field in own],
+                         "revise": [_offered(kind, field) for field
+                                    in _write.revisable_fields(own, kind)
+                                    if not field.address]}
+    return offered
+
+
+def with_forms(page, root):
+    before, after = page.split(FIELDS_AT)
+    return before + FIELDS_AT + json.dumps(forms(root)).translate(UNSAFE).encode() + after
+# @req- avcfk3
 
 
 # @req> REQ-56725181@knOj5NP_RuL_ 52i7vh
@@ -67,7 +101,7 @@ class Page(BaseHTTPRequestHandler):
 
 # @req> REQ-49576265@TZb-gviCuP5Y uor45m
 def server():
-    Page.body = PAGE.read_bytes()
+    Page.body = with_forms(PAGE.read_bytes(), _fields.root())
     Page.policy = policy_of(Page.body)
     try:
         return ThreadingHTTPServer((HOST, PORT), Page)

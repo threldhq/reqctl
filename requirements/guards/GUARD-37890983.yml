@@ -1,0 +1,15 @@
+acceptance_criteria:
+- given: a change adding a call to Path.mkdir to plugin/skills/elucidate/synthesis/plan.py
+  then: the build refuses the change and names the file and line of the call
+  when: the build runs
+assessed:
+  GUARD-65225392: myxez9Yz6SOiTVlmcZCO291f_XgHcMR62MAguFsCQ68
+  folder_creations: -VW_HOn20a9Y6PtyhjDRM0rAMuun3bZ3Mp1pXm2BKLA
+  folder_creations.*: qcjifiJVBUeHxH-fbJuIn-ZdcV5Jly1qk1SxLWHspuc
+  journal: dInjfGfHVBBWX6Ff9e081XVu9lftdeHWOU3kz3-ZtBc
+relations:
+  GUARD-65225392: depends_on
+status: approved
+text: If a Python file in the sources of reqctl or of its Claude Code plugin, other
+  than the reqctl/reqctl/corpus.py that holds the [journal](journal), makes one of
+  the ${folder_creations}, then the build shall refuse the change.

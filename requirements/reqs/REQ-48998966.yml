@@ -9,9 +9,10 @@ acceptance_criteria:
   then: reqctl [mints](mint) the requirement
   when: reqctl new runs
 assessed:
-  REQ-13148397: HGLj8b_6v-PVolRAcaFdJcDs_UjovUXrV-kbm7aGioo
-  REQ-44451070: ESOdOvAVpGC0mI5dEPMEvOk7jtwZfpzbpeRdPD2hw_0
-  REQ-71965656: 7EwX0Kxq6VnfLW59O8tUMn10fYD-TRyY584jATDwF1g
+  REQ-13148397: XXob_8TNNhHNxQ0WHfaFlfOb0AM_DHtJIkCKTBVfhm0
+  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
+  REQ-71965656: LcOQ8O1Sqy_nLhwZqAOb7fWRt-a_sZidII4lZiliL8Q
+  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
   mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:
   4zgzmu: bxDPW237BVLWt3JcPYPYOdtVURN62vyVOperO99_5Yc
@@ -21,8 +22,8 @@ relations:
   REQ-44451070: depends_on
   REQ-71965656: depends_on
 status: approved
-text: If reqctl new is not given a flag for every field that the kind schema requires
-  and reqctl fills in no default for, then the product shall refuse the item, naming
-  each flag it lacks.
+text: If reqctl new is not given a flag for every field that the [kind schema](kind_schema)
+  requires and reqctl fills in no default for, then the product shall refuse the item,
+  naming each flag it lacks.
 type: functional
 verification: inspection

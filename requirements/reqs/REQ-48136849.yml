@@ -5,10 +5,11 @@ acceptance_criteria:
 - given: a repository stating a schema named for an item the corpus holds
   then: the product accepts it
   when: the corpus is validated
-- given: a repository stating only the kind schemas
-  then: the product accepts it, a kind schema naming no item
+- given: a repository stating only the [kind schemas](kind_schema)
+  then: the product accepts it, a [kind schema](kind_schema) naming no item
   when: the corpus is validated
-assessed: {}
+assessed:
+  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
 citations:
   wljy47: J91SKxLGHMwI0zgqnKlqmiRC3TWRgF8rO_0v_SLUTMM
 priority: high
