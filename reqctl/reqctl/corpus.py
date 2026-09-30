@@ -311,7 +311,7 @@ def all_or_nothing():
                 folder.rmdir()
         # @req+ REQ-83236530@f_SrFVNH8QSC v2zljr
         kept += [f"{folder}{os.sep}" for folder in reversed(_made)
-                 if folder.is_dir()]
+                 if _stands(folder)]
         if kept:
             left = f"not put back: {', '.join(kept)}"
             if isinstance(error, SystemExit):
@@ -361,6 +361,14 @@ def make_folder(path):
         _made.extend(one for one in (*reversed(folder.parents), folder)
                      if not one.exists())
     folder.mkdir(parents=True, exist_ok=True)
+
+
+# @req> REQ-83236530@f_SrFVNH8QSC 3j7lib
+def _stands(folder):
+    try:
+        return folder.is_dir()
+    except OSError:
+        return True
 
 
 def dump(data):
