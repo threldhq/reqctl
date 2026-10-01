@@ -56,7 +56,8 @@ def cites(body):
 QUOTED = re.compile(r"\"[^\"]*\"|'[^']*'")
 TRAILING = re.compile(r"\S\s+(#(?:\s.*|$))")
 MARKED = re.compile(r"<!--.*?-->", re.S)
-EMBEDDED = re.compile(r"<(script|style)[^>]*>(.*?)</\1>", re.S | re.I)
+EMBEDDED = re.compile(rf"{MARKED.pattern}|<(script|style)[^>]*>(.*?)</\1>",
+                      re.S | re.I)
 WORD = re.compile(r"\d[\w.]*|[\w$]+")
 BEFORE_OPERAND = frozenset({"await", "case", "delete", "do", "else", "in",
                             "instanceof", "new", "of", "return", "throw",
@@ -201,28 +202,9 @@ def past_regex(text, index):
     return None
 
 
-def brace_context(parent, previous, operand):
-    if parent in FUNCTIONS:
-        return "block"
-    if previous == "{" or previous == ":" and parent in ("block", "object"):
-        return "block" if parent == "block" else "object"
-    if previous in (None, ";", ")", "=>", "else") or operand:
-        return "block"
-    return "object"
-
-
-def function_context(parent, previous, operand):
-    if (operand or previous in (None, ")", "}", "else")
-            or previous == ";" and parent != "header"
-            or previous in ("{", ":") and parent == "block"):
-        return "declaration"
-    return "expression"
-
-
 def slash_found(path, text, number=1, script=True):
     held, index, size = [], 0, len(text)
-    nests, substitutions, operand = [], [], False
-    previous, ended = None, 0
+    nests, operand, previous, ended = [], False, None, 0
     while index < size:
         letter = text[index]
         parent = nests[-1] if nests else "block"
@@ -231,14 +213,13 @@ def slash_found(path, text, number=1, script=True):
             index += 1
         elif letter.isspace():
             index += 1
-        elif letter == "`" or (letter == "}" and substitutions
-                               and substitutions[-1] == len(nests)):
+        elif letter == "`" or letter == "}" and parent == "template":
             if letter == "}":
-                substitutions.pop()
+                nests.pop()
             index, number, opened = past_template(path, text, index + 1,
                                                   number)
             if opened:
-                substitutions.append(len(nests))
+                nests.append("template")
             operand, previous, ended = not opened, "", index
         elif letter in "\"'":
             index, number = past_string(path, text, index, number)
@@ -265,7 +246,12 @@ def slash_found(path, text, number=1, script=True):
             member = (text[index - 1:index] == "."
                       and text[index - 2:index - 1] != ".")
             if found.group() in ("class", "function") and not member:
-                nests.append(function_context(parent, previous, operand))
+                nests.append(
+                    "declaration" if operand
+                    or previous in (None, ")", "}", "else")
+                    or previous == ";" and parent != "header"
+                    or previous in ("{", ":") and parent == "block"
+                    else "expression")
             operand = found.group() not in BEFORE_OPERAND or member
             previous = "" if member else found.group()
             index = ended = found.end()
@@ -277,7 +263,13 @@ def slash_found(path, text, number=1, script=True):
             if letter == "(":
                 nests.append("header" if previous in HEADERS else "group")
             elif letter == "{":
-                nests.append(brace_context(parent, previous, operand))
+                nests.append(
+                    "block" if parent in FUNCTIONS
+                    else parent if previous == "{"
+                    or previous == ":" and parent in ("block", "object")
+                    else "block" if operand
+                    or previous in (None, ";", ")", "}", "=>", "do", "else")
+                    else "object")
             elif letter in ")}":
                 closed = nests.pop() if nests else "block"
                 if closed == "block" and nests and nests[-1] in FUNCTIONS:
@@ -293,19 +285,19 @@ def slash_found(path, text, number=1, script=True):
 
 
 def markup_found(path, text):
-    held, outside = [], text
+    held = []
     for found in EMBEDDED.finditer(text):
-        script = found.group(1).lower() == "script"
-        held += slash_found(path, found.group(2),
-                            text.count("\n", 0, found.start(2)) + 1, script)
-        if script:
-            outside = (outside[:found.start(2)]
-                       + re.sub(r"[^\n]", " ", found.group(2))
-                       + outside[found.end(2):])
-    for found in MARKED.finditer(outside):
-        start = outside.count("\n", 0, found.start()) + 1
-        held.append(("comment", start, start + found.group().count("\n"),
-                     " ".join(found.group().split())))
+        kind = (found.group(1) or "").lower()
+        if kind != "script":
+            for marked in MARKED.finditer(text, found.start(), found.end()):
+                start = text.count("\n", 0, marked.start()) + 1
+                held.append(("comment", start,
+                             start + marked.group().count("\n"),
+                             " ".join(marked.group().split())))
+        if kind:
+            held += slash_found(path, found.group(2),
+                                text.count("\n", 0, found.start(2)) + 1,
+                                kind == "script")
     return held
 
 
