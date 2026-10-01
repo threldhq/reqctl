@@ -242,31 +242,28 @@ def clears(root):
 
 
 # @req+ REQ-14895892@JjrTwHoJqTRe aepkss
-def _facets(schema, node, kind, read, sure, seen):
-    if (id(node), read, sure) in seen or not isinstance(node, dict):
-        return
-    seen.add((id(node), read, sure))
-    if "$ref" in node:
-        yield from _facets(schema, _resolved(schema, {"$ref": node["$ref"]}),
-                           kind, read, sure, seen)
-    yield node, read, sure
-    for key in ("allOf", "anyOf", "oneOf"):
-        for member in node.get(key, ()):
-            yield from _facets(schema, member, kind, read and key == "allOf",
-                               sure and key == "allOf", seen)
-    if "if" in node:
-        kinds = {one for one in corpus.SCHEMA_NAMES
-                 if _selects(schema, _resolved(schema, node["if"]), one)}
-        for branch, applies in (("then", not kinds or kind in kinds),
-                                ("else", kind not in kinds)):
-            if applies and branch in node:
-                yield from _facets(schema, node[branch], kind, read, sure and bool(kinds), seen)
-
-
 def _expanded(schema, nodes, kind):
     seen = set()
-    return [one for node, read, sure in nodes
-            for one in _facets(schema, node, kind, read, sure, seen)]
+
+    def facets(node, read, sure):
+        if (id(node), read, sure) in seen or not isinstance(node, dict):
+            return
+        seen.add((id(node), read, sure))
+        if "$ref" in node:
+            yield from facets(_resolved(schema, {"$ref": node["$ref"]}), read, sure)
+        yield node, read, sure
+        for key in ("allOf", "anyOf", "oneOf"):
+            for member in node.get(key, ()):
+                yield from facets(member, read and key == "allOf", sure and key == "allOf")
+        if "if" in node:
+            kinds = {one for one in corpus.SCHEMA_NAMES
+                     if _selects(schema, _resolved(schema, node["if"]), one)}
+            for branch, applies in (("then", not kinds or kind in kinds),
+                                    ("else", kind not in kinds)):
+                if applies:
+                    yield from facets(node.get(branch), read, sure and bool(kinds))
+
+    return [one for node, read, sure in nodes for one in facets(node, read, sure)]
 
 
 def _children(schema, facets, name):
@@ -284,7 +281,7 @@ def _children(schema, facets, name):
 def _lacking(shipped, copy, held, stated, at, kind, seen=frozenset()):
     pair = tuple(frozenset((id(node), read, sure) for node, read, sure in nodes)
                  for nodes in (held, stated))
-    if pair in seen:
+    if pair in seen or not (held and stated):
         return
     seen |= {pair}
     carried = {marker for node, read, _ in stated if read for marker in _resolved(copy, node)}
@@ -293,19 +290,17 @@ def _lacking(shipped, copy, held, stated, at, kind, seen=frozenset()):
                 if marker.startswith("x-") or marker in ("default", "readOnly"))
     held, stated = _expanded(shipped, held, kind), _expanded(copy, stated, kind)
     for name in {name for node, _, _ in held for name in node.get("properties") or {}}:
-        outer, inner = _children(shipped, held, name), _children(copy, stated, name)
-        if outer and inner:
-            yield from _lacking(shipped, copy, outer, inner,
-                                f"{at}.{name}" if at else name, kind, seen)
+        yield from _lacking(shipped, copy, _children(shipped, held, name),
+                            _children(copy, stated, name),
+                            f"{at}.{name}" if at else name, kind, seen)
     for step in ("items", "additionalProperties"):
-        outer, inner = ([(node[step], read, sure) for node, read, sure in facets
-                         if isinstance(node.get(step), dict)]
-                        + [(value, read, False) for node, read, _ in facets
-                           if step == "additionalProperties"
-                           for value in (node.get("patternProperties") or {}).values()]
-                        for facets in (held, stated))
-        if outer and inner:
-            yield from _lacking(shipped, copy, outer, inner, at, kind, seen)
+        yield from _lacking(shipped, copy, *([(node[step], read, sure) for node, read, sure in facets
+                                              if isinstance(node.get(step), dict)]
+                                             + [(value, read, False) for node, read, _ in facets
+                                                if step == "additionalProperties"
+                                                for value in
+                                                (node.get("patternProperties") or {}).values()]
+                                             for facets in (held, stated)), at, kind, seen)
 
 
 def unmarked(shipped, copy, kinds):
