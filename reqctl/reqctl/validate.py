@@ -197,7 +197,7 @@ def dictionary_rules(uid, data):
     held = corpus.entries(data)
     if held is None or uid.startswith("REQ-"):
         return problems
-    # @req> REQ-67450031@TfZxNsopcgxE 5qg2a5
+    # @req> REQ-67450031@RujtrZ7Az3B2 5qg2a5
     for key in ("default", "pinned", "text", "name"):
         if key in held:
             problems.append(f"{uid}: an entry may not be keyed {key} -- it "
