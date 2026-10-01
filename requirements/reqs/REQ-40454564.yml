@@ -1,6 +1,6 @@
 acceptance_criteria:
-- given: a run whose [proposals](proposal) all name the product as the subject of
-    the obligation
+- given: a run whose [proposals](proposal) all name the build as the subject of the
+    obligation
   then: no shard of requirements is built
   when: the run is built
 - given: a run whose [proposals](proposal) all name the product as the subject of
