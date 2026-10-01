@@ -1073,6 +1073,9 @@ def _revision(store, uid, fields):
         # @req> REQ-20206793@HmbOOqLkGGec xna7hd
         if field.drops and fields.get(field.dropped):
             recorded = target.pop(field.name, None) or {}
+            if not isinstance(recorded, dict):
+                raise ReqctlError(f"{uid}: {field.name} is not a mapping -- "
+                                  "`reqctl validate` names the fault")
             named = [" ".join(str(key).split()) for key in fields[field.dropped]]
             absent = [key for key in named if key not in recorded]
             # @req> REQ-78673239@6YprF1By2TZv hszdda

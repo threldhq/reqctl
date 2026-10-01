@@ -634,8 +634,16 @@ function payloadFor(act, uid, read, held) {
       : typed;
     <!-- @req+ REQ-51798986@Xa9cAPHBctJ6 l7hwbf -->
     if (item && field.drops) {
-      const gone = Object.keys(item[field.flag] ?? item[field.name] ?? {})
-        .filter((key) => !options[field.flag].some((line) => line.startsWith(`${key}=`)));
+      const held = item[field.flag] ?? item[field.name];
+      if (held == null) {
+        throw new Error(`the published corpus carries no ${field.flag} for ${item.uid}; `
+                        + "republish it with this reqctl, then reload");
+      }
+      const phrases = options[field.flag]
+        .map((line) => line.split("=")[0].trim().replace(/\s+/g, " "));
+      const twice = phrases.find((phrase, at) => phrases.indexOf(phrase) !== at);
+      if (twice) throw new Error(`${twice} is listed twice`);
+      const gone = Object.keys(held).filter((key) => !phrases.includes(key));
       if (gone.length) options[field.drops] = gone;
     }
     <!-- @req- l7hwbf -->
