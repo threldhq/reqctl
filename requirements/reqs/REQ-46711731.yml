@@ -29,7 +29,7 @@ acceptance_criteria:
   then: the product names making the review again as the way to clear the refusal
   when: the review is checked
 assessed:
-  REQ-12222066: KVMqlUhM4uwvrl2w0oEnKSc0Xz3R1gDORN2BqDklWow
+  REQ-12222066: H7OEdnWlOPCRZTzpoerdwR5TbojNwRMs6NLeAbVIJdk
   REQ-16875926: oy3EzqZ3OzhcKVmxtXKFGGdl87CNv_gWhrPmAemZGQA
   REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
   REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM

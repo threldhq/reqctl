@@ -1,11 +1,12 @@
 acceptance_criteria:
-- given: a requirement minted or revised with --verification automated_test
+- given: a requirement [minted](mint) or revised with --verification automated_test
   then: the product refuses
   when: the command runs
 - given: a requirement file stating automated_test as its verification
   then: the product refuses the item
   when: the corpus is validated
-assessed: {}
+assessed:
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:
   efas27: _Fgkmdzlcfcf-rJxp23cMiLRVKEX2BOQAFUjiCp5ndo
   znhrrb: f5Wxr2gwDnsjObJPexDtOOUunibfzBXJHgrvKMUBSDs

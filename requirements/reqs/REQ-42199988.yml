@@ -1,14 +1,15 @@
 acceptance_criteria:
-- given: a run whose corpus moved under one proposal's set
-  then: that proposal's verdict is retired
+- given: a run whose corpus moved under one [proposal](proposal)'s set
+  then: that [proposal](proposal)'s verdict is retired
   when: the run is judged again
-- given: a run whose corpus moved under no part of a proposal's set
-  then: that proposal's verdict stands
+- given: a run whose corpus moved under no part of a [proposal](proposal)'s set
+  then: that [proposal](proposal)'s verdict stands
   when: the run is judged again
 - given: a verdict for a slot the run no longer holds
   then: that verdict is retired
   when: the run is judged again
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 priority: medium
 relations: {}
 status: approved

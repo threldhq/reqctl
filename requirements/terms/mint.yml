@@ -1,0 +1,21 @@
+assessed: {}
+entries:
+  mint:
+    aliases:
+    - minted
+    - minting
+    - mints
+    definition: To create an item of the corpus, or an entry of one, under an identity
+      it did not hold before.
+    unclaimed:
+      mint probes: a probe is the harness's own record, drawn from the corpus, not
+        an item of it
+      minting the probes: a probe is the harness's own record, drawn from the corpus,
+        not an item of it
+      probes are minted: a probe is the harness's own record, drawn from the corpus,
+        not an item of it
+      probes it minted: a probe is the harness's own record, drawn from the corpus,
+        not an item of it
+    word: mint
+kind: term
+status: approved

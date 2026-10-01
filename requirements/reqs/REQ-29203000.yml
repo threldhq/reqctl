@@ -3,8 +3,8 @@ acceptance_criteria:
   then: that judge is spawned on Sonnet at high effort
   when: the agents are spawned
 assessed:
-  REQ-10470323: qHJTwBVi_HZun8QqqiuhYxmy8SjSSlxW7GEqthbFnh8
-  REQ-68127788: bLvPproYZMB0vf0e7UaFGU1sLk-Lr1PtgMv6wvQRhSc
+  REQ-10470323: pMpSTZR3Eeq9TWBXU_41KPr3WlzvBlOwFCa1wwyH36U
+  REQ-68127788: BccauyYFIuLms3wnvh3sB52RUT3lWSxaONwYB8RtWDI
 citations:
   o7zxou: 8RjUj4D5WIvKZiozlz4UcMO7Yr_wdIb1KaDOc7Glc8c
 priority: medium

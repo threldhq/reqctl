@@ -1,14 +1,15 @@
 acceptance_criteria:
-- given: a proposal naming neither subject
-  then: the product refuses the run and names the proposal
+- given: a [proposal](proposal) naming neither subject
+  then: the product refuses the run and names the [proposal](proposal)
   when: the run is built
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   ny4y6f: OPQgcFZAkZB1vz7oqPH6wfOBNKy88QhDwqI2Rl8Why0
 priority: medium
 relations: {}
 status: approved
-text: If a proposal names neither the product nor the build as the subject of the
-  obligation, then the product shall refuse the run.
+text: If a [proposal](proposal) names neither the product nor the build as the subject
+  of the obligation, then the product shall refuse the run.
 type: functional
 verification: inspection

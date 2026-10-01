@@ -1,7 +1,7 @@
 acceptance_criteria:
 - given: a corpus stating a binding dimension and a run recording no binding under
     it for a proposed requirement
-  then: the product refuses the run, naming the proposal and the dimension
+  then: the product refuses the run, naming the [proposal](proposal) and the dimension
   when: the run is built
 - given: a proposed requirement whose text references no member and whose binding
     is recorded as all
@@ -10,6 +10,7 @@ acceptance_criteria:
 assessed:
   REQ-29846444: iGWqcEzs6s52xVYwT50drAGnMzrNvkfAKADoRzuEkco
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   5nfu7e: IeQgXHZL6gHJD6rJPynk7M2A4OOfTlakjbG6w__Qx8A
   6bxg5g: orPDvdPjBf9aaGPj_ttA57wGhw9H8BaRif5uMt93k5g

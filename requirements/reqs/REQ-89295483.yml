@@ -1,15 +1,17 @@
 acceptance_criteria:
-- given: a proposal and an obligation restating it
-  then: the proposal is judged against that obligation
+- given: a [proposal](proposal) and an obligation restating it
+  then: the [proposal](proposal) is judged against that obligation
   when: the run is built
-- given: a proposal and an obligation sharing only the words every statement carries
-  then: the proposal is not judged against that obligation
+- given: a [proposal](proposal) and an obligation sharing only the words every statement
+    carries
+  then: the [proposal](proposal) is not judged against that obligation
   when: the run is built
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 priority: medium
 relations: {}
 status: superseded
-text: When a run is built, the product shall judge a proposal against the obligations
-  whose likeness to it clears the likeness cut, and against no other.
+text: When a run is built, the product shall judge a [proposal](proposal) against
+  the obligations whose likeness to it clears the likeness cut, and against no other.
 type: functional
 verification: inspection

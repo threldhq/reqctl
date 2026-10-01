@@ -1,14 +1,16 @@
 acceptance_criteria:
-- given: a proposal carrying a reference to a member no parameter or data item holds
+- given: a [proposal](proposal) carrying a reference to a member no parameter or data
+    item holds
   then: the product refuses the run
   when: the run is built
-- given: a proposal carrying a reference token that does not parse
+- given: a [proposal](proposal) carrying a reference token that does not parse
   then: the product refuses the run
   when: the run is built
 assessed:
   REQ-29846444: iGWqcEzs6s52xVYwT50drAGnMzrNvkfAKADoRzuEkco
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
   REQ-77623729: IBqRGG8zgX39_nCzqSdXxqBPTEn9_R-EddOqa3DGmMs
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   usq427: j5EvGYYBYkmPI7WIiYVVhyoHeIsWB_FDThEJJ4Wm0uU
 priority: medium
@@ -18,7 +20,7 @@ relations:
   REQ-77623729: depends_on
 status: approved
 text: Where the corpus states a binding dimension, the product shall refuse a run
-  in which a proposal carries a reference that does not parse, or that resolves to
-  no parameter, data item or member of one.
+  in which a [proposal](proposal) carries a reference that does not parse, or that
+  resolves to no parameter, data item or member of one.
 type: functional
 verification: inspection

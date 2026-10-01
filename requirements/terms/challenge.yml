@@ -1,0 +1,10 @@
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+entries:
+  challenge:
+    definition: The step of a run of the elucidate skill that judges each of the run's
+      [proposals](proposal) against the approved corpus and reads the owner's words
+      back against them.
+    word: challenge
+kind: term
+status: approved

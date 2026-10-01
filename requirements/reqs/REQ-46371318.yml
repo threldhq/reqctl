@@ -1,5 +1,5 @@
 acceptance_criteria:
-- given: a probe's verdict that answers another proposal
+- given: a probe's verdict that answers another [proposal](proposal)
   then: the product refuses to score the run
   when: the run is scored
 - given: a probe whose verdict never returned
@@ -7,8 +7,9 @@ acceptance_criteria:
   when: the run is scored
 assessed:
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
-  REQ-62710822: voiCNXQxSuF9uFQKT0n8bC1O84NXYp9BZFlua-_jzIY
+  REQ-62710822: tuR0HPyf8X-cHcxcgvULtKHBOZXfVE5aa6EWLqcZUzM
   REQ-75438506: GIywOiWYUqgHSl1TAe7_XUF_YpwOWZZrWPqOPGuhdFc
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   tgcyaj: ju5tdJj7ItrRmmPMgYh1ZB-AdizGQAHtd6RbfRW5T-s
 priority: medium
@@ -18,7 +19,7 @@ relations:
   REQ-75438506: constrains
 status: approved
 text: If a probe's verdict does not parse, does not fit the shape its judge prompt
-  states or answers a proposal other than its probe, then the product shall refuse
-  to score the run.
+  states or answers a [proposal](proposal) other than its probe, then the product
+  shall refuse to score the run.
 type: functional
 verification: inspection
