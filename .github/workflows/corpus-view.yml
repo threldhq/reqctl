@@ -27,18 +27,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # @req> REQ-84875536@dj6Y7xTDeN6r xuffpt
-      # @req> REQ-45437338@K7K_kLnTNJPw tuggnp
-      - name: Stop a pull request caller or an unpinned reqctl before any secret is read
+      - name: Stop a pull request caller before any secret is read
         env:
           EVENT: ${{ github.event_name }}
-          REF: ${{ inputs.reqctl }}
-          CALLER: ${{ github.repository }}
         run: |
           case "$EVENT" in
             pull_request | pull_request_*)
               echo "::error::the caller was triggered by $EVENT; call this workflow from a push or a workflow dispatch"
               exit 1 ;;
           esac
+
+      # @req> REQ-45437338@K7K_kLnTNJPw vyjmfj
+      - name: Stop an unpinned reqctl before any secret is read
+        env:
+          REF: ${{ inputs.reqctl }}
+          CALLER: ${{ github.repository }}
+        run: |
           if [ -n "$REF" ] || [ "$CALLER" != threldhq/reqctl ]; then
             if ! [[ "$REF" =~ ^[0-9a-f]{40}$ ]]; then
               printf '::error::reqctl input %q is not a forty-character commit SHA; pass the full commit SHA of the release\n' "$REF"
