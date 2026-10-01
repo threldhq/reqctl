@@ -311,7 +311,6 @@ waits on it: run `judge` only once the spawn has returned.
 python3 ${CLAUDE_SKILL_DIR}/synthesis/plan.py judge --run DIR     # recall returns in, judge prompts out
 python3 ${CLAUDE_SKILL_DIR}/synthesis/plan.py final --run DIR     # only where a proposal was split into groups
 python3 ${CLAUDE_SKILL_DIR}/synthesis/verdicts.py --run DIR       # returns in, verdicts/NN.json out, findings reported
-python3 ${CLAUDE_SKILL_DIR}/synthesis/plan.py describe --run DIR  # the pull request section
 ```
 
 Read that report, not the returns.
@@ -333,8 +332,9 @@ corpus itself labels and scores what a run returns. Run it before and after.
 <!-- @req+ REQ-32446903@I3rgjDNBKOJC wmw3cf -->
 Ask the owner which proposals to mint, in the message carrying the questions,
 or in one saying the challenge raised none. Add each proposal they decline to
-`declined.md` with their reason, or that they gave none, then run `describe`.
-This is the last point before the corpus changes.
+`declined.md` with their reason, or that they gave none, then render the pull
+request section with `python3 ${CLAUDE_SKILL_DIR}/synthesis/plan.py describe
+--run DIR`. This is the last point before the corpus changes.
 <!-- @req- wmw3cf -->
 <!-- @req- msg57t -->
 
@@ -406,10 +406,12 @@ verdict and never created fails silently, and so does a value the owner agreed
 to share that was minted twice -- nothing validates recall. Wire what the
 read-back finds missing, or put it to the owner, before the pull request opens.
 
-The pull request body carries step 1's declined list and any UNJUDGED slot the
+<!-- @req+ REQ-21373303@mNM6_z8-kXLh vadyl4 -->
+The pull request body carries the run's declined list and any UNJUDGED slot the
 owner accepted. Nothing else durably records either, and a reader who cannot
 see what was considered and dropped reads the corpus as everything that was
 asked for.
+<!-- @req- vadyl4 -->
 
 An answer that settles more than this batch is a rule. Sort it as step 1 sorts
 a statement and land it there: a requirement to mint, or code, a schema or a
