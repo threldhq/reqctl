@@ -243,8 +243,7 @@ def slash_found(path, text, number=1, script=True):
                 stop := past_regex(text, index)) is not None:
             index, operand, previous, ended = stop, True, "", stop
         elif found := WORD.match(text, index):
-            member = (text[index - 1:index] == "."
-                      and text[index - 2:index - 1] != ".")
+            member = previous == "." and text[ended - 3:ended] != "..."
             if found.group() in ("class", "function") and not member:
                 nests.append(
                     "declaration" if operand
@@ -286,18 +285,15 @@ def slash_found(path, text, number=1, script=True):
 
 def markup_found(path, text):
     held = []
+    for found in MARKED.finditer(text):
+        start = text.count("\n", 0, found.start()) + 1
+        held.append(("comment", start, start + found.group().count("\n"),
+                     " ".join(found.group().split())))
     for found in EMBEDDED.finditer(text):
-        kind = (found.group(1) or "").lower()
-        if kind != "script":
-            for marked in MARKED.finditer(text, found.start(), found.end()):
-                start = text.count("\n", 0, marked.start()) + 1
-                held.append(("comment", start,
-                             start + marked.group().count("\n"),
-                             " ".join(marked.group().split())))
-        if kind:
-            held += slash_found(path, found.group(2),
-                                text.count("\n", 0, found.start(2)) + 1,
-                                kind == "script")
+        if found.group(1):
+            held += [entry for entry in slash_found(
+                path, found.group(2), text.count("\n", 0, found.start(2)) + 1,
+                found.group(1).lower() == "script") if entry not in held]
     return held
 
 
