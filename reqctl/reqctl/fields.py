@@ -242,11 +242,10 @@ def clears(root):
 
 # @req+ REQ-14895892@JjrTwHoJqTRe aepkss
 def _lacking(shipped, copy, held, stated, at, seen=frozenset()):
-    refs = tuple(node.get("$ref") if isinstance(node, dict) else None
-                 for node in (held, stated))
-    if refs in seen:
+    pair = (id(held), id(stated))
+    if pair in seen:
         return set()
-    seen = seen | {refs} if any(refs) else seen
+    seen = seen | {pair}
     held, stated = _resolved(shipped, held), _resolved(copy, stated)
     found = {f"{marker} on {at}" for marker in held if marker not in stated
              and (marker.startswith("x-") or marker in ("default", "readOnly"))}
