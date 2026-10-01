@@ -35,8 +35,10 @@ prints:
   through `elucidate`.
 - terms, parameters, and the requirements around it -- a statement that leans
   on another is not satisfied by reading one of them.
-- `implementation` and `tests` -- what already cites this requirement. Extend
+<!-- @req+ REQ-85764802@N7tHuybyVI0x j5ywyv -->
+- `implementation` -- what already cites this requirement. Extend
   that unit rather than opening a second one beside it.
+<!-- @req- j5ywyv -->
 - a suspect link -- the target moved and nobody has reread the pair. Stop:
   `reqctl validate` already refuses the corpus, and the owner resolves it with
   `reqctl revise UID --ack TARGET` on a requirements pull request of its own.

@@ -93,6 +93,7 @@ something the statement does not already say. Then:
 - **Keep their nouns.** If they said "note", do not write "document". One thing
   with two names is a question, not a choice you make.
 <!-- @req+ REQ-83468274@0xeqDjC8CkiL dsbvv7 -->
+<!-- @req+ REQ-85764802@N7tHuybyVI0x nvqukv -->
 - **Sort product from build.** A rule a behaviour of the governed software
   depends on is a requirement and states "the product shall", even where only
   one repository runs that behaviour today. A rule only the repository's own
@@ -106,6 +107,7 @@ something the statement does not already say. Then:
   no rule of ours to lift, and stays code; a rule of ours configured into one
   is still ours. A guard relates only to guards, so a build rule that seems to
   lean on a product statement is two rules, not one.
+<!-- @req- nvqukv -->
 <!-- @req- dsbvv7 -->
 - **A value is a parameter; a record is a data item.** The entry key settles it:
   a parameter's key *is* the value, typed by `--value-type` and carrying
