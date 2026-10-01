@@ -270,8 +270,8 @@ decline each practice in it, and each row carries the review's recommendation.
 <!-- @req- 25edfl -->
 
 <!-- @req+ REQ-18597283@h9OoEEN62bql vb4fww -->
-Every question you put the owner after the review carries a recommendation
-drawn from the run's review:
+Every question you put the owner once the review passes carries a
+recommendation drawn from the run's review:
 the answer it favours and the numbered practices it rests on, or that the
 review holds nothing bearing on the question. It is the review's reading,
 marked as such, beside the alternatives.
@@ -332,9 +332,9 @@ corpus itself labels and scores what a run returns. Run it before and after.
 
 <!-- @req+ REQ-32446903@I3rgjDNBKOJC wmw3cf -->
 Ask the owner which proposals to mint, in the message carrying the questions,
-or in one saying the challenge raised none. Write each proposal they decline
-into `declined.md` with their reason before `describe` renders the pull request
-section. This is the last point before the corpus changes.
+or in one saying the challenge raised none. Add each proposal they decline to
+`declined.md` with their reason, or that they gave none, then run `describe`.
+This is the last point before the corpus changes.
 <!-- @req- wmw3cf -->
 <!-- @req- msg57t -->
 
