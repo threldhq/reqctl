@@ -296,7 +296,7 @@ def _sources(root):
 
 def mint(held):
     while True:
-        # @req+ REQ-92239556@3Ak-FLuv4eG7 uprfcz
+        # @req+ REQ-92239556@4-oyw0syx-xA uprfcz
         identity = "".join(secrets.choice(ALPHABET) for _ in range(6))
         if identity not in held:
             return identity

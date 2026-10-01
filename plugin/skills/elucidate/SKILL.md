@@ -18,7 +18,7 @@ description: >
 Ideas in, a requirements pull request out. Nothing here approves anything: the
 merge is the approval, and only the owner merges.
 
-<!-- @req+ REQ-12222066@KVMqlUhM4uwv bzkv6x -->
+<!-- @req+ REQ-12222066@H7OEdnWlOPCR bzkv6x -->
 No further step runs while a question you put the owner is unanswered. Post the
 questions, then end your turn; under a goal, where that does not wait, collect
 the answers with the question picker.
@@ -270,8 +270,8 @@ decline each practice in it, and each row carries the review's recommendation.
 <!-- @req- 25edfl -->
 
 <!-- @req+ REQ-18597283@h9OoEEN62bql vb4fww -->
-Every question you put the owner -- here, and the coverage and verdict
-questions of step 2 -- carries a recommendation drawn from the run's review:
+Every question you put the owner once the review passes carries a
+recommendation drawn from the run's review:
 the answer it favours and the numbered practices it rests on, or that the
 review holds nothing bearing on the question. It is the review's reading,
 marked as such, beside the alternatives.
@@ -330,7 +330,12 @@ Changing what this step asks, or what it gives an agent, is measured rather
 than argued: `python3 ${CLAUDE_SKILL_DIR}/harness/probe.py` mints probes the
 corpus itself labels and scores what a run returns. Run it before and after.
 
-Wait for the owner. This is the last point before the corpus changes.
+<!-- @req+ REQ-32446903@I3rgjDNBKOJC wmw3cf -->
+Ask the owner which proposals to mint, in the message carrying the questions,
+or in one saying the challenge raised none. Add each proposal they decline to
+`declined.md` with their reason, or that they gave none, then run `describe`.
+This is the last point before the corpus changes.
+<!-- @req- wmw3cf -->
 <!-- @req- msg57t -->
 
 ## 3 -- Approve
@@ -366,7 +371,7 @@ The order matters: `baseline --generate` records HEAD as the commit whose
 corpus the baseline states, so generated over an uncommitted corpus the
 manifest points at a tree that lacks its own items.
 
-<!-- @req+ REQ-28700224@LfiV5W-9N5P2 6n6vna -->
+<!-- @req+ REQ-28700224@PBlsadvJKsKt 6n6vna -->
 Where step 1 asked the owner for the field of the governed software, mint their
 answer as the parameter the review reads:
 
