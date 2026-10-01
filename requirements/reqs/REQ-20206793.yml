@@ -5,6 +5,8 @@ acceptance_criteria:
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
   REQ-91205530: RtIsl4zWjUDcyDQYk_c3Zjjr1JyT6AFU2_BHsNGQ6fY
+citations:
+  xna7hd: 2fMc52sIKlh3P4SHE8MP9b8S3blSCbiu7GtDEv0Ml8k
 priority: medium
 relations:
   REQ-24481048: depends_on

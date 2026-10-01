@@ -126,7 +126,6 @@ const KEY = "reqportal-token";
 const PLACE = "reqportal-repo";
 const REPO_FORM = /^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/;
 const BATCH = "reqportal-batch";
-const KINDS = ["requirement", "term", "parameter", "data"];
 
 let corpus = [];
 let byUid = {};
@@ -217,12 +216,16 @@ function matches(item) {
   return !query || hay.toLowerCase().includes(query.toLowerCase());
 }
 
+<!-- @req+ REQ-28090849@VwFKlP8Df7Dp 7luynt -->
+<!-- @req+ REQ-42771008@YigdTUSV_OGU suyt4d -->
 function drawFacets() {
-  return `<div class="facets">${KINDS.map((k) => {
+  return `<div class="facets">${Object.keys(FIELDS).map((k) => {
     const n = corpus.filter((i) => i.kind === k).length;
     return `<button class="facet" data-kind="${k}" aria-pressed="${k === kind}">${k} ${n}</button>`;
   }).join("")}</div>`;
 }
+<!-- @req- suyt4d -->
+<!-- @req- 7luynt -->
 
 function drawRows() {
   const shown = corpus.filter(matches);
@@ -399,6 +402,11 @@ function heldBy(item, field) {
   if (!item) return "";
   const held = item[field.flag] ?? item[field.name];
   if (held === null || held === undefined) return "";
+  <!-- @req+ REQ-59010401@pkTwqJqZIeSw 2my5p2 -->
+  if (typeof held === "object" && !Array.isArray(held)) {
+    return Object.entries(held).map(([key, value]) => `${key}=${value}`).join("\n");
+  }
+  <!-- @req- 2my5p2 -->
   if (!Array.isArray(held)) return String(held);
   const lines = held.map((each) => field.parts.length
     ? field.parts.map((part) => each[part]).join(" | ") : String(each));
@@ -480,9 +488,11 @@ function fieldsHtml(act, kind, item) {
       }</select></div>`;
     }
     if (field.repeated || field.prose) {
-      const parts = field.parts.join(" | ").toUpperCase();
+      <!-- @req+ REQ-40281745@Ifnq5GBzdwaj rjpgoh -->
+      const parts = field.form ?? field.parts.join(" | ").toUpperCase();
       const hint = field.repeated
         ? ` placeholder="${esc(parts ? `${parts}, one per line` : "one per line")}"` : "";
+      <!-- @req- rjpgoh -->
       return `<div class="field">${label}<textarea id="f-field-${field.flag}"${hint}>${
         esc(held)}</textarea></div>`;
     }
@@ -622,6 +632,15 @@ function payloadFor(act, uid, read, held) {
     options[field.flag] = field.repeated
       ? typed.split("\n").map((line) => line.trim()).filter(Boolean)
       : typed;
+    <!-- @req+ REQ-51798986@Xa9cAPHBctJ6 l7hwbf -->
+    if (item && field.drops) {
+      const kept = new Set(options[field.flag]
+        .map((line) => line.split("=")[0].split(/\s+/).filter(Boolean).join(" ")));
+      const gone = Object.keys(item[field.flag] ?? item[field.name] ?? {})
+        .filter((key) => !kept.has(key));
+      if (gone.length) options[field.drops] = gone;
+    }
+    <!-- @req- l7hwbf -->
   }
   <!-- @req- lsvu3b -->
   if (act === "new") {

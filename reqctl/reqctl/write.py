@@ -15,6 +15,8 @@ STATEMENTS = frozenset(corpus.PREFIXES[prefix]
                        for prefix in _validate.SUBJECTS)
 OPERATIONS = ("ack", "handle", "kind", "entry", "new_entry", "set", "append",
               "unset", "drop_entry", "reword")
+# @req> REQ-40281745@Ifnq5GBzdwaj vbv3ir
+FORMS = {"unclaimed": "phrase=reason"}
 
 KINDS = {kind: prefix.rstrip("-")
          for prefix, kind in corpus.PREFIXES.items()}
@@ -151,8 +153,10 @@ def _refuse_blank_text(fields, own):
 
 def _stray(root, own, fields, operations=()):
     mine = ({field.dest for field in own} | set(operations)
-            | {field.cleared for field in own if field.clears})
+            | {field.cleared for field in own if field.clears}
+            | {field.dropped for field in own if field.drops})
     return sorted(flag.flag for flag in _fields.flags(root) + _fields.clears(root)
+                  + _fields.drops(root)
                   if flag.dest not in mine and fields.get(flag.dest) is not None)
 
 
@@ -185,7 +189,7 @@ def _unclaimed(pairs):
     for pair in pairs:
         phrase, split, reason = str(pair).partition("=")
         if not phrase.strip() or not split:
-            raise ReqctlError(f"--unclaimed {pair!r}: the form is phrase=reason")
+            raise ReqctlError(f"--unclaimed {pair!r}: the form is {FORMS['unclaimed']}")
         held[" ".join(phrase.split())] = reason.strip()
     return held
 
@@ -1068,6 +1072,20 @@ def _revision(store, uid, fields):
     entry = dict(corpus.term_fields(before))
     for field in own:
         target = entry if field.entry else prospective
+        # @req> REQ-20206793@HmbOOqLkGGec xna7hd
+        if field.drops and fields.get(field.dropped):
+            recorded = target.get(field.name) or {}
+            named = [" ".join(str(key).split()) for key in fields[field.dropped]]
+            absent = [key for key in named if key not in recorded]
+            # @req> REQ-78673239@6YprF1By2TZv hszdda
+            if absent:
+                raise ReqctlError(f"{field.drops} {', '.join(map(repr, absent))}: "
+                                  f"not recorded on {uid}")
+            kept = {key: value for key, value in recorded.items() if key not in named}
+            if kept:
+                target[field.name] = kept
+            else:
+                target.pop(field.name, None)
         if field.name in stated:
             said = stated[field.name]
             target[field.name] = ({**(target.get(field.name) or {}), **said}

@@ -4,6 +4,8 @@ acceptance_criteria:
   when: reqctl context is run for the term
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+citations:
+  q5tknl: zSQ8nAEgrkTs1YeCqWUUVs3FhEwrjnSJUR-hTgAkRvc
 priority: medium
 relations:
   REQ-24481048: depends_on

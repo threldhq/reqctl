@@ -87,6 +87,8 @@ def _describe(tree, item):
             aliases=fields.get("aliases") or [],
             definition=str(fields.get("definition") or "").strip(),
         )
+        # @req> REQ-22686458@dmNVoBq6qCcv q5tknl
+        out["unclaimed"] = corpus.unclaimed(data)
     elif corpus.kind_of(uid, data) == "data":
         out.update(name=data.get("name"), entries=corpus.entries(data) or {})
     else:
@@ -175,11 +177,12 @@ def _render(fields, order=None):
     lines = []
     for key in keys:
         value = fields.get(key)
-        if value in (None, [], ""):
+        if value in (None, [], "", {}):
             continue
         if isinstance(value, dict):
             value = "; ".join(
-                f"{name} -- {_entry_fields(held)}" if held else str(name)
+                f"{name} -- {held if isinstance(held, str) else _entry_fields(held)}"
+                if held else str(name)
                 for name, held in value.items()
             )
         if isinstance(value, list):
@@ -989,6 +992,7 @@ def _fielded(argv):
 def build_parser(root, fielded):
     flags = _fields.flags(root) if fielded else []
     clears = _fields.clears(root) if fielded else []
+    drops = _fields.drops(root) if fielded else []
     p = argparse.ArgumentParser(
         prog="reqctl",
         description="The requirements corpus under requirements/ is read and "
@@ -1015,7 +1019,7 @@ def build_parser(root, fielded):
                  "a data entry")
     s.add_argument("uid")
     # @req> REQ-91205530@RtIsl4zWjUDc ctnzp2
-    _field_arguments(s, flags + clears, _write.OPERATIONS)
+    _field_arguments(s, flags + clears + drops, _write.OPERATIONS)
     s.add_argument("--ack", dest="ack", action="append",
                    metavar="NAME | NAME.ENTRY",
                    help="pin a referenced parameter or linked term at its "

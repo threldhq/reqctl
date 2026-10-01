@@ -11,6 +11,8 @@ assessed:
   REQ-49576265: TZb-gviCuP5YoreZuR-DpCD14zDAOXTH3QmbqBJlzFE
   REQ-87847146: zR5tHnA8xAWxljTpeSDCDp0ewi3bq8TLBRCVV7Y_B7I
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  7luynt: l6FaODuf9MAeGQloN_3X0GIkoQvuJZ37lTQ5ObxP8cM
 priority: medium
 relations:
   REQ-42771008: constrains
