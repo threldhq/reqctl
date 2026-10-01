@@ -992,7 +992,6 @@ def _fielded(argv):
 def build_parser(root, fielded):
     flags = _fields.flags(root) if fielded else []
     clears = _fields.clears(root) if fielded else []
-    drops = _fields.drops(root) if fielded else []
     p = argparse.ArgumentParser(
         prog="reqctl",
         description="The requirements corpus under requirements/ is read and "
@@ -1019,7 +1018,7 @@ def build_parser(root, fielded):
                  "a data entry")
     s.add_argument("uid")
     # @req> REQ-91205530@RtIsl4zWjUDc ctnzp2
-    _field_arguments(s, flags + clears + drops, _write.OPERATIONS)
+    _field_arguments(s, flags + clears, _write.OPERATIONS)
     s.add_argument("--ack", dest="ack", action="append",
                    metavar="NAME | NAME.ENTRY",
                    help="pin a referenced parameter or linked term at its "

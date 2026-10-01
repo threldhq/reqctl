@@ -634,10 +634,8 @@ function payloadFor(act, uid, read, held) {
       : typed;
     <!-- @req+ REQ-51798986@Xa9cAPHBctJ6 l7hwbf -->
     if (item && field.drops) {
-      const kept = new Set(options[field.flag]
-        .map((line) => line.split("=")[0].split(/\s+/).filter(Boolean).join(" ")));
       const gone = Object.keys(item[field.flag] ?? item[field.name] ?? {})
-        .filter((key) => !kept.has(key));
+        .filter((key) => !options[field.flag].some((line) => line.startsWith(`${key}=`)));
       if (gone.length) options[field.drops] = gone;
     }
     <!-- @req- l7hwbf -->

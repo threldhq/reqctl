@@ -16,7 +16,7 @@ def boolean(text):
 
 
 CONVERTED = {"integer": int, "number": float, "boolean": boolean}
-PLAIN = ("string", "number", "integer", "boolean")
+PLAIN = ("string", *CONVERTED)
 
 
 def _dest(flag):
@@ -245,15 +245,14 @@ def flags(root):
 
 
 def clears(root):
-    return list({field.clears: Flag(field.clears, (), False, True, None, None, False)
-                 for kind in corpus.SCHEMA_NAMES for field in of(root, kind)
-                 if field.clears}.values())
-
-
-def drops(root):
-    return list({field.drops: Flag(field.drops, (), True, False, None, "KEY", False)
-                 for kind in corpus.SCHEMA_NAMES for field in of(root, kind)
-                 if field.drops}.values())
+    held = {}
+    for kind in corpus.SCHEMA_NAMES:
+        for field in of(root, kind):
+            if field.clears:
+                held[field.clears] = Flag(field.clears, (), False, True, None, None, False)
+            if field.drops:
+                held[field.drops] = Flag(field.drops, (), True, False, None, "KEY", False)
+    return list(held.values())
 
 
 # @req+ REQ-14895892@JjrTwHoJqTRe aepkss

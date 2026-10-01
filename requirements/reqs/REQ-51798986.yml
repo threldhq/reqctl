@@ -13,7 +13,7 @@ assessed:
   REQ-59010401: pkTwqJqZIeSw-huBiWyR5oqxIBYaRmYIRIdb6MyFIhI
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  l7hwbf: QIA8xYF8AxJS-4CHVcAbLdLH-Ysoia7Pn4PY5f0RRV8
+  l7hwbf: wbJYzZvQLbvFZXqIcIYyJNu6RBS9zRL9mfTC3YhtNaw
 priority: medium
 relations:
   REQ-52483245: depends_on
