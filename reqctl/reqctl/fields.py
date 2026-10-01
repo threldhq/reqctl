@@ -1,4 +1,5 @@
 import copy
+import re
 from dataclasses import dataclass
 
 from . import corpus
@@ -241,30 +242,65 @@ def clears(root):
 
 
 # @req+ REQ-14895892@JjrTwHoJqTRe aepkss
-def _lacking(shipped, copy, held, stated, at, seen=frozenset()):
-    pair = (id(held), id(stated))
+def _facets(schema, node, kind, read, seen=frozenset()):
+    if id(node) in seen:
+        return []
+    seen = seen | {id(node)}
+    node = _resolved(schema, node)
+    held = [(node, read)]
+    for member in node.get("allOf", ()):
+        held += _facets(schema, member, kind, read, seen)
+    for member in [*node.get("anyOf", ()), *node.get("oneOf", ())]:
+        held += _facets(schema, member, kind, False, seen)
+    if "if" in node:
+        kinds = {one for one in corpus.SCHEMA_NAMES
+                 if _selects(schema, _resolved(schema, node["if"]), one)}
+        for branch, applies in (("then", not kinds or kind in kinds),
+                                ("else", kind not in kinds)):
+            if applies and branch in node:
+                held += _facets(schema, node[branch], kind, read, seen)
+    return held
+
+
+def _children(schema, facets, name):
+    found = []
+    for node, read in facets:
+        named = node.get("properties") or {}
+        if name in named:
+            if read and _forbidden(schema, named[name]):
+                return []
+            found.append((named[name], read))
+        found += [(value, read) for pattern, value in
+                  (node.get("patternProperties") or {}).items() if re.search(pattern, name)]
+    return found
+
+
+def _lacking(shipped, copy, held, stated, at, kind, seen=frozenset()):
+    pair = (frozenset(id(node) for node, _ in held),
+            frozenset((id(node), read) for node, read in stated))
     if pair in seen:
         return set()
     seen = seen | {pair}
-    held, stated = _resolved(shipped, held), _resolved(copy, stated)
-    found = {f"{marker} on {at}" for marker in held if marker not in stated
+    held = [one for node, read in held for one in _facets(shipped, node, kind, read)]
+    stated = [one for node, read in stated for one in _facets(copy, node, kind, read)]
+    carried = {marker for node, read in stated if read for marker in node}
+    found = {f"{marker} on {at}" for node, read in held if read for marker in node
+             if marker not in carried
              and (marker.startswith("x-") or marker in ("default", "readOnly"))}
-    inner = stated.get("properties") or {}
-    for name, value in (held.get("properties") or {}).items():
-        if name in inner and not _forbidden(copy, inner[name]):
-            found |= _lacking(shipped, copy, value, inner[name], f"{at}.{name}", seen)
+    for name in {name for node, _ in held for name in node.get("properties") or {}}:
+        outer, inner = _children(shipped, held, name), _children(copy, stated, name)
+        if outer and inner:
+            found |= _lacking(shipped, copy, outer, inner,
+                              f"{at}.{name}" if at else name, kind, seen)
     for step in ("items", "additionalProperties"):
-        if isinstance(held.get(step), dict) and isinstance(stated.get(step), dict):
-            found |= _lacking(shipped, copy, held[step], stated[step], at, seen)
+        outer = [(node[step], read) for node, read in held if isinstance(node.get(step), dict)]
+        inner = [(node[step], read) for node, read in stated if isinstance(node.get(step), dict)]
+        if outer and inner:
+            found |= _lacking(shipped, copy, outer, inner, at, kind, seen)
     return found
 
 
 def unmarked(shipped, copy, kinds):
-    copy = copy if isinstance(copy, dict) else {}
-    found = set()
-    for kind in kinds:
-        held, stated = _merged(shipped, kind)[0], _merged(copy, kind)[0]
-        for name in held.keys() & stated.keys():
-            found |= _lacking(shipped, copy, held[name], stated[name], name)
-    return ", ".join(sorted(found))
+    return ", ".join(sorted({lack for kind in kinds for lack in _lacking(
+        shipped, copy, [(shipped, True)], [(copy, True)], "", kind)}))
 # @req- aepkss
