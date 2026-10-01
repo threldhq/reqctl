@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a term recording an unclaimed phrase with its reason
+  then: the product shows the phrase and its reason
+  when: reqctl context is run for the term
+assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+priority: medium
+relations:
+  REQ-24481048: depends_on
+status: approved
+text: When reqctl context is run for a term, the product shall show the term's unclaimed
+  phrases with their reasons.
+type: functional
+verification: inspection

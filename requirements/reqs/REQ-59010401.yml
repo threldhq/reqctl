@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a term recording an unclaimed phrase with its reason
+  then: the box for unclaimed phrases holds a line stating the phrase and its reason
+    as phrase=reason
+  when: the [portal](portal)'s Revise form is opened for the term
+assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+  REQ-87847146: zR5tHnA8xAWxljTpeSDCDp0ewi3bq8TLBRCVV7Y_B7I
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-24481048: depends_on
+  REQ-87847146: depends_on
+status: approved
+text: When the [portal](portal)'s Revise form is opened for a term, the product shall
+  fill the form's box for unclaimed phrases with the term's unclaimed phrases and
+  their reasons.
+type: functional
+verification: inspection

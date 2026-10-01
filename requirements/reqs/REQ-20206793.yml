@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a term recording two unclaimed phrases, each with its reason
+  then: the term records only the other, with its reason unchanged
+  when: reqctl revise is asked to remove one of them
+assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+  REQ-91205530: RtIsl4zWjUDcyDQYk_c3Zjjr1JyT6AFU2_BHsNGQ6fY
+priority: medium
+relations:
+  REQ-24481048: depends_on
+  REQ-91205530: depends_on
+status: approved
+text: When reqctl revise is asked to remove one of a term's unclaimed phrases, the
+  product shall remove that phrase and keep the term's other unclaimed phrases.
+type: functional
+verification: inspection
