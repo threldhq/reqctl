@@ -25,10 +25,10 @@ assessed:
   kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  avcfk3: BSrArGttNssjiAUPRQeTlGRF_dW1gwKHgd3eXasavWY
+  avcfk3: q1qrOJ0AAua2MliU82rCbcqVw5UodS_yX1bkfHRm-lc
   hmmycl: EvQIgsEczt8KMQra6qMOWK-bsQrDCRSHWzl86ZeNjBE
-  lsvu3b: 3mZN5iP5RsuJYPlW_mirhMEwevAiki1A9uCmERCo3yc
-  z2svqa: 4i1X0df8jmKWRwlZTf_WE6L7u6XSN6LAWLyvaBuw8eY
+  lsvu3b: AzYd0s-oPg5ExkmUpm9G4iJ2KzdWVsvq9jDUxQITrGE
+  z2svqa: VkJBhDc30AoTwacJrilK2laIgOz2G_sFULdCl3iv5fY
 priority: medium
 relations:
   REQ-13148397: depends_on

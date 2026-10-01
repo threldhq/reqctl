@@ -16,6 +16,7 @@ def boolean(text):
 
 
 CONVERTED = {"integer": int, "number": float, "boolean": boolean}
+PLAIN = ("string", *CONVERTED)
 
 
 def _dest(flag):
@@ -49,6 +50,7 @@ class Field:
     repeated: bool
     required: bool
     clears: str | None
+    drops: str | None
     empty: object
     address: bool
     entry: bool
@@ -64,6 +66,10 @@ class Field:
     @property
     def cleared(self):
         return _dest(self.clears) if self.clears else None
+
+    @property
+    def dropped(self):
+        return _dest(self.drops) if self.drops else None
 
 
 def root():
@@ -163,6 +169,9 @@ def _field(schema, name, stated, required, entry):
     typed = items.get("type") if shape == "array" else shape
     convert = CONVERTED.get(typed) if isinstance(typed, str) else None
     parts = tuple(items.get("required", ())) if items.get("type") == "object" else ()
+    values = (_resolved(schema, stated.get("additionalProperties", {}))
+              if shape == "object" else {})
+    drops = _flag("drop_" + said) if values.get("type") in PLAIN else None
     enum = stated.get("enum", ())
     choices = tuple(enum) if all(isinstance(one, str) for one in enum) else ()
     clears, empty = None, None
@@ -173,7 +182,7 @@ def _field(schema, name, stated, required, entry):
     return Field(name=name, flag=_flag(said), choices=choices,
                  repeated=repeated,
                  required=required and (entry or "default" not in stated),
-                 clears=clears, empty=empty,
+                 clears=clears, drops=drops, empty=empty,
                  address=stated.get("x-address") is True, entry=entry,
                  textual=(convert is None and "enum" not in stated
                           and shape != "object" and not parts),
@@ -198,7 +207,7 @@ def of(root, kind):
         held.append(_field(schema, name, stated, name in required, False))
     taken = {}
     for field in held:
-        for flag in filter(None, (field.flag, field.clears)):
+        for flag in filter(None, (field.flag, field.clears, field.drops)):
             if flag in taken:
                 raise ReqctlError(f"{kind}: {taken[flag]} and {field.name} would "
                                   f"both take {flag}; give one an x-flag")
@@ -236,9 +245,14 @@ def flags(root):
 
 
 def clears(root):
-    return list({field.clears: Flag(field.clears, (), False, True, None, None, False)
-                 for kind in corpus.SCHEMA_NAMES for field in of(root, kind)
-                 if field.clears}.values())
+    held = {}
+    for kind in corpus.SCHEMA_NAMES:
+        for field in of(root, kind):
+            if field.clears:
+                held[field.clears] = Flag(field.clears, (), False, True, None, None, False)
+            if field.drops:
+                held[field.drops] = Flag(field.drops, (), True, False, None, "KEY", False)
+    return list(held.values())
 
 
 # @req+ REQ-14895892@JjrTwHoJqTRe aepkss

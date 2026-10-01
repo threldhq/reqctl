@@ -7,6 +7,8 @@ assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
   REQ-87847146: zR5tHnA8xAWxljTpeSDCDp0ewi3bq8TLBRCVV7Y_B7I
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  2my5p2: erlCnA6wsPzcjUDEpLfqTcaO22zY8Hh6etDjXCZy1yU
 priority: medium
 relations:
   REQ-24481048: depends_on

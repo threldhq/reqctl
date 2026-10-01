@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the [portal](portal)'s list is read
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  suyt4d: l6FaODuf9MAeGQloN_3X0GIkoQvuJZ37lTQ5ObxP8cM
 priority: medium
 relations: {}
 status: approved

@@ -48,7 +48,9 @@ def _offered(kind, field):
     return {"name": field.name, "flag": field.flag[2:], "required": field.required,
             "repeated": field.repeated and not once, "prose": field.prose,
             "choices": list(field.choices), "parts": list(field.parts),
-            "clears": field.clears and field.clears[2:]}
+            "clears": field.clears and field.clears[2:],
+            "drops": field.drops and field.drops[2:],
+            "form": _write.FORMS.get(field.name)}
 
 
 # @req> REQ-21522236@FSo8K6fhdHTu vldi2d

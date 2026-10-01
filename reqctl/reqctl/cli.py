@@ -87,6 +87,8 @@ def _describe(tree, item):
             aliases=fields.get("aliases") or [],
             definition=str(fields.get("definition") or "").strip(),
         )
+        # @req> REQ-22686458@dmNVoBq6qCcv q5tknl
+        out["unclaimed"] = corpus.unclaimed(data)
     elif corpus.kind_of(uid, data) == "data":
         out.update(name=data.get("name"), entries=corpus.entries(data) or {})
     else:
@@ -175,11 +177,12 @@ def _render(fields, order=None):
     lines = []
     for key in keys:
         value = fields.get(key)
-        if value in (None, [], ""):
+        if value in (None, [], "", {}):
             continue
         if isinstance(value, dict):
             value = "; ".join(
-                f"{name} -- {_entry_fields(held)}" if held else str(name)
+                f"{name} -- {held if isinstance(held, str) else _entry_fields(held)}"
+                if held else str(name)
                 for name, held in value.items()
             )
         if isinstance(value, list):
