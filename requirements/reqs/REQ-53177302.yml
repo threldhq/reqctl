@@ -1,11 +1,12 @@
 acceptance_criteria:
 - given: a dictionary item carrying a name
   then: the product refuses and names the item already answering to the name
-  when: a second dictionary item is minted under that name
+  when: a second dictionary item is [minted](mint) under that name
 - given: a corpus holding a parameter and a data item that carry one name
   then: the product refuses and names both items
   when: the corpus is validated
-assessed: {}
+assessed:
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:
   7bhax4: 22MdEymRIfAxxziweJqUdt7_s6VmqFpmba-RaL2YOWE
   uay7dt: yVYfNwapR2k90nSzBkJwJpSllqvpw3FjpDrTIjQ0yr8

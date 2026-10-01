@@ -3,16 +3,18 @@ acceptance_criteria:
     that the owner has not answered
   then: the product blocks the run there instead of deciding the question on its own
     reading
-  when: the run reaches the challenge step
+  when: the run reaches the [challenge](challenge) step
 - given: a run of the elucidate skill whose verdict raises a [question for the owner](question_for_the_owner)
-  then: the product blocks the run before any item is minted
-  when: the challenge ends
+  then: the product blocks the run before any item is [minted](mint)
+  when: the [challenge](challenge) ends
 - given: a skill carried out unattended under a goal, holding a [question for the
     owner](question_for_the_owner) that the owner has not answered
   then: the product blocks the step until the owner answers
   when: the skill would take its next step
 assessed:
   REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
   question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
 citations:
   bzkv6x: f1qAEuV-qK83Z4-0F3jv8iTaDby_BsvuOIWrBwNTGr4

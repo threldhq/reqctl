@@ -1,14 +1,15 @@
 acceptance_criteria:
-- given: a proposal no obligation is alike enough to
-  then: the product names that proposal as judged against no obligation
+- given: a [proposal](proposal) no obligation is alike enough to
+  then: the product names that [proposal](proposal) as judged against no obligation
   when: the run is built
 assessed:
-  REQ-89295483: n_8TgPn69NOB4jFBD9oBibvGqayPg4QGg-7xthV-UmE
+  REQ-89295483: BBk6Cgz0clRjDHyWrw9K8h--GTqLibL1z2MMi94E49Q
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 priority: medium
 relations:
   REQ-89295483: derives_from
 status: superseded
-text: If no obligation clears the likeness cut for a proposal, then the product shall
-  name that proposal in its report.
+text: If no obligation clears the likeness cut for a [proposal](proposal), then the
+  product shall name that [proposal](proposal) in its report.
 type: functional
 verification: inspection

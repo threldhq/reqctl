@@ -20,6 +20,13 @@ assessed:
   REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
   kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
   schema_marker: aUPBsCbKNXsnZ9A1k4uL3ic-N6BgBilXd4Qx3mqWpLM
+citations:
+  22v4gm: r-lZh9VrUNmRTc5iPRlCj_690S9FbMCneTsDkTlRZUg
+  a252bv: lNwseI7CseryyzTdVQsQyOkVSyCwWPvyKXEbYXtOgCM
+  aepkss: FkFUXCWapixBxep8MWc4KXuV669AJIfEYvP1StPnhNE
+  in6ljr: r-lZh9VrUNmRTc5iPRlCj_690S9FbMCneTsDkTlRZUg
+  r2dbx6: r-lZh9VrUNmRTc5iPRlCj_690S9FbMCneTsDkTlRZUg
+  yz3x2d: twTUik3DTYurrPwl4_fAWUUayA-ExHtxz0HiWYGAVqM
 priority: medium
 relations:
   REQ-13148397: constrains

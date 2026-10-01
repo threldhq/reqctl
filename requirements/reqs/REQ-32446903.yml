@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: a run of the elucidate skill whose [challenge](challenge) raises no [question
+    for the owner](question_for_the_owner)
+  then: the product puts to the owner, as a [question for the owner](question_for_the_owner),
+    which of the run's [proposals](proposal) to [mint](mint), and states with it that
+    the [challenge](challenge) raised none
+  when: its verdicts are read and its coverage findings are checked
+- given: a run of the elucidate skill whose [challenge](challenge) raises [questions
+    for the owner](question_for_the_owner)
+  then: the product puts which of the run's [proposals](proposal) to [mint](mint)
+    to the owner in the same message as those questions
+  when: its verdicts are read and its coverage findings are checked
+- given: a run of the elucidate skill whose owner declines to [mint](mint) one of
+    its [proposals](proposal)
+  then: the description states that [proposal](proposal) in the run's declined list
+    with the owner's reason
+  when: the run's pull request description is rendered
+assessed:
+  REQ-12222066: H7OEdnWlOPCRZTzpoerdwR5TbojNwRMs6NLeAbVIJdk
+  REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM
+  challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  question_for_the_owner: TL5MCPQxVb4id57zkPK9NgDS7xp5CSlZjLMvyG3trj0
+citations:
+  wmw3cf: _cd2RkMRANJmX0-W8zwVhO4-p_B238zOMDgsyYl4aVo
+priority: medium
+relations:
+  REQ-12222066: depends_on
+  REQ-89642091: depends_on
+status: approved
+text: When the [challenge](challenge) of a run of the elucidate skill ends, the product
+  shall put to the owner, as a [question for the owner](question_for_the_owner), which
+  of the run's [proposals](proposal) to [mint](mint).
+type: functional
+verification: inspection

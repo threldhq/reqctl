@@ -1,11 +1,12 @@
 acceptance_criteria: []
-assessed: {}
+assessed:
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:
   idouod: _Fgkmdzlcfcf-rJxp23cMiLRVKEX2BOQAFUjiCp5ndo
 priority: medium
 relations: {}
 status: approved
-text: When a requirement is minted without a verification, the product shall record
-  inspection as the verification.
+text: When a requirement is [minted](mint) without a verification, the product shall
+  record inspection as the verification.
 type: functional
 verification: inspection

@@ -50,8 +50,8 @@ properties:
       suspect. Proposed-change, impact-assessed and under-review are carried by
       the pull request, not by this field.
 
-  # @req> REQ-35443917@7V3GXXoqruBl efas27
-  # @req> REQ-87380206@tt4tAqgS8C4_ idouod
+  # @req> REQ-35443917@uIQcvcwLzfs4 efas27
+  # @req> REQ-87380206@s24vYGZICHft idouod
   verification:
     enum: [inspection, analysis, demonstration]
     default: inspection

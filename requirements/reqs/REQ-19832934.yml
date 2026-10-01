@@ -1,8 +1,8 @@
 acceptance_criteria:
-- given: a recall return that stopped at the output bound with forty proposals in
-    the batch
-  then: the shard's prompts are rebuilt carrying at most twenty proposals each, and
-    the stopped return is retired
+- given: a recall return that stopped at the output bound with forty [proposals](proposal)
+    in the batch
+  then: the shard's prompts are rebuilt carrying at most twenty [proposals](proposal)
+    each, and the stopped return is retired
   when: the returns are read
 - given: a recall return that does not fit the recall shape
   then: the shard's prompts are rebuilt in batches of half the size
@@ -11,7 +11,8 @@ acceptance_criteria:
   then: the shard's prompts are rebuilt in batches of half the size
   when: the returns are read
 assessed:
-  REQ-94426583: robFmbw2ht7IlAltCYRS9ZBd2bKMAF5O9JJ7vubNIy8
+  REQ-94426583: 5DnvqbSeaqCQIkT4j5HcqkSNzUQou7HOF6t2uNfZYv8
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   moar22: hQari6bRs_5igB3dfyWRSKvwhjJmh7JFoBAb-aBQm_U
 priority: medium

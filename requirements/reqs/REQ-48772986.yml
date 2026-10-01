@@ -6,14 +6,15 @@ acceptance_criteria:
   then: the prompt states the term's word, aliases and definition
   when: the run is built
 assessed:
-  REQ-90454282: Hn_cCdBHt6FCgTVr7h_FwY_DQr1NfJSmIlaX7gNlDxM
+  REQ-90454282: aYcgrH2NgS5QIPOxL57Upyv7DtUwaY-Mf0zNAJHCkTo
+  challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
 citations:
   4xoc6j: _0Bzc4sOtKjguEGid-lHum05sWzqDLi1Vwht1okoIBA
 priority: medium
 relations:
   REQ-90454282: constrains
 status: approved
-text: When a challenge prompt is built, the product shall state each term, parameter
-  and data item by name and definition alone, and no entry field.
+text: When a [challenge](challenge) prompt is built, the product shall state each
+  term, parameter and data item by name and definition alone, and no entry field.
 type: functional
 verification: inspection

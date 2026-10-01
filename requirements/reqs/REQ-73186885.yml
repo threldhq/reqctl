@@ -1,14 +1,16 @@
 acceptance_criteria:
-- given: a run holding a proposal named 01.md and a proposal named 1.md
+- given: a run holding a [proposal](proposal) named 01.md and a [proposal](proposal)
+    named 1.md
   then: the product refuses the run and names both files
   when: the run is built
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   twr3xe: mZnxXNRcjpx5x4xikweLJoM777HzcM0TptmJ3yxfn9M
 priority: medium
 relations: {}
 status: approved
-text: If two proposal files in a run are named for the same number, then the product
-  shall refuse the run.
+text: If two [proposal](proposal) files in a run are named for the same number, then
+  the product shall refuse the run.
 type: functional
 verification: inspection

@@ -730,7 +730,34 @@ def schema(root, name):
         if not path.is_file():
             raise ReqctlError(f"missing schema: {stated}")
     stat = path.stat()
-    return _parsed_schema(path, (stat.st_mtime_ns, stat.st_size))
+    stamped = (stat.st_mtime_ns, stat.st_size)
+    # @req> REQ-14895892@JjrTwHoJqTRe yz3x2d
+    if path == stated and name in SCHEMA_NAMES.values():
+        lacking = _unmarked(path, stamped, name)
+        if lacking:
+            raise RefusedCopy(f"{stated}: the shipped schema carries {lacking}, "
+                              "which this copy lacks")
+    return _parsed_schema(path, stamped)
+
+
+class RefusedCopy(ReqctlError):
+    pass
+
+
+# @req+ REQ-14895892@JjrTwHoJqTRe a252bv
+@functools.lru_cache(maxsize=None)
+def _unmarked(path, stamped, name):
+    from . import fields
+    shipped = packaged_schema_path(name)
+    stat = shipped.stat()
+    held = _parsed_schema(shipped, (stat.st_mtime_ns, stat.st_size))
+    stated = _parsed_schema(path, stamped)
+    try:
+        return fields.unmarked(
+            held, stated, [kind for kind, named in SCHEMA_NAMES.items() if named == name])
+    except ReqctlError as fault:
+        raise RefusedCopy(f"{path}: {fault}") from fault
+# @req- a252bv
 
 
 SCHEMA_NAMES = {"requirement": "requirement", "guard": "guard",

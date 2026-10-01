@@ -4,11 +4,12 @@ acceptance_criteria:
   then: the product refuses the batch, naming the reference
   when: the batch is applied
 - given: a second step holding a positional argument that is exactly $N with N zero
-    when the first step minted nothing, as a relate does
+    when the first step [minted](mint) nothing, as a relate does
   then: the product refuses the batch, naming the reference
   when: the batch is applied
 assessed:
-  REQ-81313171: NlK0HsO2hlQ4OGN3SV7a-AECsEnxOSWqPjyXpRNurE0
+  REQ-81313171: ZHINyeZGDkmi5Oji-Wh97bMVW7xZP5xfBolpuyuiYBE
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   rkzzkl: BYiDSdRKO7ruLcS0Pycpt46hFPe5vMsTROCxRK5LZbs
@@ -17,7 +18,7 @@ relations:
   REQ-81313171: derives_from
 status: approved
 text: If a positional argument of a step of a batch the [portal](portal) sends is
-  exactly $N for a step that has not run, or that minted no uid, then the product
-  shall refuse the batch.
+  exactly $N for a step that has not run, or that [minted](mint) no uid, then the
+  product shall refuse the batch.
 type: functional
 verification: inspection

@@ -8,12 +8,14 @@ acceptance_criteria:
     shard to spawn
   when: the recall returns are read
 - given: a judge whose verdict never returned
-  then: the product reports the proposal and lists its judge to spawn again
+  then: the product reports the [proposal](proposal) and lists its judge to spawn
+    again
   when: the verdicts are read
-- given: a recall return from a batch of one proposal that does not parse
+- given: a recall return from a batch of one [proposal](proposal) that does not parse
   then: the product refuses the run and lists no agent to spawn
   when: the recall returns are read
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   fnjvuz: SoQ3-vqLPSRy6ZHbFukG2eKSbu9CDGTtkPNd6k3pS-E
   fzv4pc: A0QwXsBv1i_pPymloXcwKk9U6-rqCdOxAnoVwBts_4c

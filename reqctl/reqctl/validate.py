@@ -18,6 +18,9 @@ def _schemas_are_schemas(root):
     for name in sorted(set(SCHEMAS) | set(corpus.schema_names(root))):
         try:
             corpus.schema(root, name)
+        # @req> REQ-14895892@JjrTwHoJqTRe 22v4gm
+        except corpus.RefusedCopy:
+            raise
         except corpus.ReqctlError as unreadable:
             problems.append(str(unreadable))
             broken.add(name)
@@ -56,6 +59,9 @@ def schema_problems(root, uid, data):
     try:
         declared = corpus.schema_for(root, corpus.kind_of(uid, data),
                                      corpus.name_of(uid, data))
+    # @req> REQ-14895892@JjrTwHoJqTRe r2dbx6
+    except corpus.RefusedCopy:
+        raise
     except corpus.ReqctlError as absent:
         return [f"{uid}: {absent}"]
     validator = Draft202012Validator(declared)
@@ -69,7 +75,7 @@ def schema_problems(root, uid, data):
             said = ("does not apply to a data item" if kind == "data"
                     else f"does not apply to a {kind}")
         problems.append(f"{uid}: schema: {where}: {said}")
-    # @req> REQ-35443917@7V3GXXoqruBl znhrrb
+    # @req> REQ-35443917@uIQcvcwLzfs4 znhrrb
     if data.get("verification") == "automated_test" and not any(
             problem.startswith(f"{uid}: schema: verification:")
             for problem in problems):
@@ -191,13 +197,13 @@ def dictionary_rules(uid, data):
     held = corpus.entries(data)
     if held is None or uid.startswith("REQ-"):
         return problems
-    # @req> REQ-67450031@Ltb3K5bINBgP 5qg2a5
+    # @req> REQ-67450031@TfZxNsopcgxE 5qg2a5
     for key in ("default", "pinned", "text", "name"):
         if key in held:
             problems.append(f"{uid}: an entry may not be keyed {key} -- it "
                             "would shadow an item field of that name; rename "
                             "the entry")
-    # @req> REQ-22887335@phmPbBePOAku idfqw5
+    # @req> REQ-22887335@g4kwWO-CFxtK idfqw5
     if corpus.MEMBERS in held:
         problems.append(f"{uid}: an entry may not be keyed {corpus.MEMBERS} -- "
                         "that address pins the item's membership; rename the "
@@ -679,7 +685,7 @@ def _shared_words(records):
                 claims.setdefault(word.strip().casefold(), ([], word))[0].append(uid)
     problems = []
     for _, (uids, word) in sorted(claims.items()):
-        # @req> REQ-18059226@MYj9BvF9QPy1 2troxr
+        # @req> REQ-18059226@M_Z00FMwux9p 2troxr
         if len(set(uids)) > 1:
             problems.append(
                 f"{', '.join(sorted(set(uids)))} each claim \"{word}\" -- a "
@@ -924,6 +930,9 @@ def _dropped(node, paths, at=()):
 def _without(root, uid, data, *finders):
     try:
         paths = frozenset(one for find in finders for one in find(root, uid, data))
+    # @req> REQ-14895892@JjrTwHoJqTRe in6ljr
+    except corpus.RefusedCopy:
+        raise
     except corpus.ReqctlError:
         return data
     return _dropped(data, paths) if paths else data
@@ -1016,7 +1025,7 @@ def coherence(records, root):
 
 
 def _duplicate_names(records):
-    # @req+ REQ-53177302@2yk3BbuA8YqV uay7dt
+    # @req+ REQ-53177302@IIPp8ha5oKcr uay7dt
     named = {}
     for uid, data in records.items():
         name = corpus.name_of(uid, data)

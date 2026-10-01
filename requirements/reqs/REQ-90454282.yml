@@ -1,9 +1,9 @@
 acceptance_criteria:
-- given: a run holding a proposal naming the product
+- given: a run holding a [proposal](proposal) naming the product
   then: every requirement the corpus holds appears in exactly one recall prompt, with
     its status, and no guard appears
   when: the run is built
-- given: a run holding a proposal naming the product
+- given: a run holding a [proposal](proposal) naming the product
   then: every guard the corpus holds appears in exactly one recall prompt, with its
     status, and no requirement appears
   when: the run is built
@@ -12,9 +12,10 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
-  REQ-46098858: bag6NDybL_bpoymac3a-PC6WPPlTWuBxTgd585bJ-Ak
-  REQ-65835654: 6lJRH2MRhAwwB_ULCjalIqerLHe8o_jfQ1SFRBzwGaQ
-  REQ-89295483: n_8TgPn69NOB4jFBD9oBibvGqayPg4QGg-7xthV-UmE
+  REQ-46098858: EClgM52w1AQKHZDYcVndKOOpVNl5cT8ecuifP1X9u1Q
+  REQ-65835654: TC6sNHeoW6okeelf4FXw2sSvftUjHU-YJ-3e_XVszhM
+  REQ-89295483: BBk6Cgz0clRjDHyWrw9K8h--GTqLibL1z2MMi94E49Q
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   yp35nb: Eg7v25h9diifH5W8VXSGIWJNqsYnnLDETDyUedKJ_lI
 priority: medium
@@ -24,7 +25,7 @@ relations:
   REQ-65835654: supersedes
   REQ-89295483: supersedes
 status: approved
-text: When a run is built, the product shall state every obligation of a proposal's
+text: When a run is built, the product shall state every obligation of a [proposal](proposal)'s
   kind that the corpus holds in exactly one recall prompt of that run, with the status
   of each.
 type: functional

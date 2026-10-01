@@ -681,7 +681,7 @@ def _named(data, kind, new_name):
     return dict(data, entries={new_name: held[word]})
 
 
-# @req> REQ-53177302@2yk3BbuA8YqV 7bhax4
+# @req> REQ-53177302@IIPp8ha5oKcr 7bhax4
 def _refuse_unusable_name(store, name, held=None):
     if not corpus.DATA_KEY.match(name):
         raise ReqctlError(f"{name}: a name is snake_case")
@@ -786,7 +786,7 @@ def _entered(value):
                 f"without them U+{ord(separator):04X} is not a separator but part "
                 "of the one member's name"
             )
-    # @req+ REQ-42544082@SSo3dr8vJpX3 ghvzto
+    # @req+ REQ-42544082@OLwWLVzt5GvE ghvzto
     members = value if isinstance(value, list) else [value]
     if len(set(members)) != len(members):
         raise ReqctlError("a set member is duplicated")
@@ -801,7 +801,7 @@ def _taken(folder, uid):
     return any((folder / f"{uid}{suffix}").exists() for suffix in (".yml", ".yaml"))
 
 
-# @req> REQ-57781505@JeDsR_YIG2Wd cmxvxt
+# @req> REQ-57781505@6gvPA-9Mhwyo cmxvxt
 def _placeholder_for(kind, uid):
     prefix = KINDS[kind]
     given = GIVEN_UID.match(uid)
@@ -817,10 +817,10 @@ def mint(store, kind, name=None, placeholder=None):
         _refuse_unusable_name(store, name)
         return name, folder / f"{name}.yml"
     prefix = KINDS[kind]
-    # @req+ REQ-73115701@e51Qp8vDbDXd j3ijco
+    # @req+ REQ-73115701@OR6yfOsRwhRH j3ijco
     if placeholder is not None:
         uid = f"{prefix}-{placeholder}"
-        # @req> REQ-64236823@peysRQtlkC57 5xsesf
+        # @req> REQ-64236823@RxfiDLC17yGo 5xsesf
         if _taken(folder, uid):
             raise ReqctlError(f"{uid}: the corpus already holds an item under it")
         return uid, folder / f"{uid}.yml"
@@ -835,7 +835,7 @@ def mint(store, kind, name=None, placeholder=None):
 
 def prepare(store, kind, fields, placeholder=None):
     own = _fields.of(store.root, kind)
-    # @req+ REQ-48998966@GDZnL3iANt0t 4zgzmu
+    # @req+ REQ-48998966@HRHIfriQphFB 4zgzmu
     missing = [field.flag for field in own
                if field.required and fields.get(field.dest) is None]
     if missing:
@@ -893,7 +893,7 @@ def prepare(store, kind, fields, placeholder=None):
                 raise ReqctlError(f"--default {default}: not an entry")
             data["default"] = chosen
 
-    # @req+ REQ-73115701@e51Qp8vDbDXd yorgmf
+    # @req+ REQ-73115701@OR6yfOsRwhRH yorgmf
     if placeholder is None and fields.get("uid") is not None:
         placeholder = _placeholder_for(kind, fields["uid"])
     uid, path = mint(store, kind, named, placeholder)
@@ -911,7 +911,7 @@ def prepare(store, kind, fields, placeholder=None):
 def create(store, kind, fields):
     # @req+ REQ-25589226@gN1zcZG8pbON fqpvnt
     # @req+ REQ-67914848@CoWJ0QyQOZsG ytoyxl
-    # @req+ REQ-42544082@SSo3dr8vJpX3 4cg2e4
+    # @req+ REQ-42544082@OLwWLVzt5GvE 4cg2e4
     uid, path, data, problems = prepare(store, kind, fields)
     if problems:
         raise ReqctlError("\n".join(problems))

@@ -1,8 +1,9 @@
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 entries:
   '40': {}
 kind: parameter
 name: recall_batch
 status: approved
-text: The most proposals one recall prompt carries
+text: The most [proposals](proposal) one recall prompt carries
 value_type: count

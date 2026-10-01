@@ -3,7 +3,7 @@ acceptance_criteria:
     character longer or shorter
   then: the product reports a problem
   when: the ${corpus_gates.stamp_admission} gate runs
-- given: a pattern admitting a uid that also admits a kind the product does not mint
+- given: a pattern admitting a uid that also admits a kind the product does not [mint](mint)
     or a number of other than eight digits
   then: the product reports a problem
   when: the ${corpus_gates.stamp_admission} gate runs
@@ -12,9 +12,10 @@ acceptance_criteria:
   then: the product reports a problem
   when: the ${corpus_gates.stamp_admission} gate runs
 assessed:
-  REQ-57781505: JeDsR_YIG2WdJKc2JzcjhVOVUIqiIzaZZl1orDOqIjQ
+  REQ-57781505: 6gvPA-9MhwyokUIsth3vEA2ue9dP73BlB9pBRdiOEFg
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.stamp_admission: E62zb0qgo3sf0OgKcFWjYdcAUcak-IBB9NM3c8BVqeA
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 priority: medium
 relations:
   REQ-57781505: depends_on

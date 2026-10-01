@@ -196,7 +196,7 @@ def returned(run, key):
         number = probe["proposal"]
         path = run / "verdicts" / f"{number}.json"
         data, why = plan.read_return(path, shapes.JUDGE)
-        # @req+ REQ-46371318@bTR5XgyXXjAC tgcyaj
+        # @req+ REQ-46371318@dBNigl0Snl8W tgcyaj
         if data is None:
             if why == "returned nothing":
                 absent.append(number)
@@ -405,7 +405,7 @@ def cmd_mint(args):
                             for probe in key["probes"]}
     corpus.atomic_write(out / "run.yaml", yaml.safe_dump(recorded, sort_keys=False))
 
-    # @req+ REQ-79267149@1zBteGwniUwU 4avsug
+    # @req+ REQ-79267149@1hemNLVJn-Fh 4avsug
     counted = {kind: sum(1 for probe in key["probes"] if probe["kind"] == kind)
                for kind in ("duplicate", "fault", "sibling")}
     print(f"{counted['duplicate']} duplicate probe(s), {counted['fault']} fault "
@@ -415,7 +415,7 @@ def cmd_mint(args):
     print(f"  words       {out}/words.md, the statements each probe traces to")
     print(f"  run         {out}/run.yaml, each probe's binding and trace")
     print(f"  key         {out}/answers.json")
-    # @req> REQ-79267149@1zBteGwniUwU u3gura
+    # @req> REQ-79267149@1hemNLVJn-Fh u3gura
     if stale:
         print(f"  retired     {len(stale)} file(s) of the run this key "
               "replaces, its verdicts among them")

@@ -238,3 +238,33 @@ def clears(root):
     return list({field.clears: Flag(field.clears, (), False, True, None, None, False)
                  for kind in corpus.SCHEMA_NAMES for field in of(root, kind)
                  if field.clears}.values())
+
+
+# @req+ REQ-14895892@JjrTwHoJqTRe aepkss
+def _lacking(shipped, copy, held, stated, at, seen=frozenset()):
+    pair = (id(held), id(stated))
+    if pair in seen:
+        return set()
+    seen = seen | {pair}
+    held, stated = _resolved(shipped, held), _resolved(copy, stated)
+    found = {f"{marker} on {at}" for marker in held if marker not in stated
+             and (marker.startswith("x-") or marker in ("default", "readOnly"))}
+    inner = stated.get("properties") or {}
+    for name, value in (held.get("properties") or {}).items():
+        if name in inner and not _forbidden(copy, inner[name]):
+            found |= _lacking(shipped, copy, value, inner[name], f"{at}.{name}", seen)
+    for step in ("items", "additionalProperties"):
+        if isinstance(held.get(step), dict) and isinstance(stated.get(step), dict):
+            found |= _lacking(shipped, copy, held[step], stated[step], at, seen)
+    return found
+
+
+def unmarked(shipped, copy, kinds):
+    copy = copy if isinstance(copy, dict) else {}
+    found = set()
+    for kind in kinds:
+        held, stated = _merged(shipped, kind)[0], _merged(copy, kind)[0]
+        for name in held.keys() & stated.keys():
+            found |= _lacking(shipped, copy, held[name], stated[name], name)
+    return ", ".join(sorted(found))
+# @req- aepkss

@@ -1,11 +1,12 @@
 assessed:
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
 entries:
   citation_identity:
     aliases:
     - citation identities
     definition: The name a [statement citation](statement_citation) gives the lines
-      it covers, minted by the product and never given to another.
+      it covers, [minted](mint) by the product and never given to another.
     word: citation identity
 kind: term
 status: approved

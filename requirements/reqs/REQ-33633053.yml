@@ -1,17 +1,19 @@
 acceptance_criteria:
-- given: a shard read in batches of one proposal whose recall return does not parse
+- given: a shard read in batches of one [proposal](proposal) whose recall return does
+    not parse
   then: the product refuses the run, naming the return and a smaller shard bound as
     the remedy
   when: the recall returns are read
 assessed:
-  REQ-19832934: CAEeElFyXNOgWd7DYggavbvJFpG8enKfJzbw-oE0Rkw
+  REQ-19832934: Mk7Pla2kkx3ikPU-DSIeGBqiPwOm-4cU-DkllvZhn_M
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   mrzj65: LoxYNAzgJI1OTX2v0IJOVPckhpcGHDCaoJ_Oi2mG2vc
 priority: medium
 relations:
   REQ-19832934: constrains
 status: approved
-text: If a recall return the product would halve came from a batch of one proposal,
+text: If a recall return the product would halve came from a batch of one [proposal](proposal),
   then the product shall refuse the run.
 type: functional
 verification: inspection

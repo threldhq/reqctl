@@ -31,12 +31,12 @@ def bare(word):
 
 
 def resolve(value, minted):
-    # @req+ REQ-81313171@NlK0HsO2hlQ4 3dpv3v
+    # @req+ REQ-81313171@ZHINyeZGDkmi 3dpv3v
     found = MINTED.fullmatch(value)
     if not found:
         return value
     at = int(found.group(1))
-    # @req+ REQ-21669490@2Ec3CHq2mYp0 rkzzkl
+    # @req+ REQ-21669490@QsSQGmKKX39j rkzzkl
     if at >= len(minted):
         raise Refused(f"{value}: step {at} has not run")
     if not minted[at]:
@@ -84,7 +84,7 @@ def argv(step, minted):
     made = ["reqctl", "--json", command]
     # @req- 43rpbl
     for arg in step.get("args", []):
-        # @req+ REQ-72545168@yUfWE3RsMOFD dwzirn
+        # @req+ REQ-72545168@6hxgE6F8MeJe dwzirn
         held = resolve(arg, minted)
         if not bare(held):
             raise Refused(f"{held!r}: not a bare word")
@@ -98,7 +98,7 @@ def argv(step, minted):
             made.append(f"--{name}")
             continue
         for each in value if isinstance(value, list) else [value]:
-            # @req> REQ-52483245@YZqRZuCG0IVS eburqo
+            # @req> REQ-52483245@aBzpGUKfyp4P eburqo
             made.append(f"--{name}={each}")
     return made
 

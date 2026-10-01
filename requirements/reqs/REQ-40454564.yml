@@ -1,17 +1,20 @@
 acceptance_criteria:
-- given: a run whose proposals all name the product as the subject of the obligation
+- given: a run whose [proposals](proposal) all name the product as the subject of
+    the obligation
   then: no shard of requirements is built
   when: the run is built
-- given: a run whose proposals all name the product as the subject of the obligation
+- given: a run whose [proposals](proposal) all name the product as the subject of
+    the obligation
   then: no shard of guards is built
   when: the run is built
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   kostqz: 4X8E1DXJT1jXbgPu4qJCQocVmCg8eJiwtMCMjYM9dsE
 priority: medium
 relations: {}
 status: approved
-text: If no proposal in a run may be judged against a kind of obligation, then the
-  product shall build no shard of that kind.
+text: If no [proposal](proposal) in a run may be judged against a kind of obligation,
+  then the product shall build no shard of that kind.
 type: functional
 verification: inspection

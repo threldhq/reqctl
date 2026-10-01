@@ -1,14 +1,16 @@
 acceptance_criteria:
-- given: a run whose binding record names a proposal number no proposal file carries
+- given: a run whose binding record names a [proposal](proposal) number no [proposal](proposal)
+    file carries
   then: the product refuses the run and names the unmatched number
   when: the run is built
-assessed: {}
+assessed:
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   owkvnp: FgIjSxIxjbx6XIfT5hsPt3Z6WTXSS-RQ8WXrzP97hCQ
 priority: medium
 relations: {}
 status: approved
-text: If a binding record names a proposal number the run holds no proposal for, then
-  the product shall refuse the run.
+text: If a binding record names a [proposal](proposal) number the run holds no [proposal](proposal)
+  for, then the product shall refuse the run.
 type: functional
 verification: inspection
