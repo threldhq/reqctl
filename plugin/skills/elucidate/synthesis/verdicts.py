@@ -13,7 +13,7 @@ from reqctl import corpus
 
 
 def cited(data, stated):
-    # @req+ REQ-62710822@voiCNXQxSuF9 adhfwh
+    # @req+ REQ-62710822@tuR0HPyf8X-c adhfwh
     found = []
     for field, key in shapes.CITING.items():
         for entry in data.get(field) or []:
@@ -38,7 +38,7 @@ def judged(run, state_held):
             (absent if why == "returned nothing" else failed).append(
                 (number, [why]))
             continue
-        # @req+ REQ-62710822@voiCNXQxSuF9 v3dukx
+        # @req+ REQ-62710822@tuR0HPyf8X-c v3dukx
         faults = ([f"answers proposal {data['proposal']}, not {number}"]
                   if str(data["proposal"]) != number else [])
         faults += cited(data, set(state_held["named"][number]))
@@ -53,7 +53,7 @@ def judged(run, state_held):
 
 
 def grouped(accepted):
-    # @req+ REQ-91823330@YBrjy3XTcDS0 7xe5ny
+    # @req+ REQ-91823330@d5PQjefU78ES 7xe5ny
     held = {}
     for number, data in accepted:
         for field, key in shapes.CITING.items():
@@ -69,17 +69,17 @@ def grouped(accepted):
 
 
 def report(accepted, failed, absent):
-    # @req> REQ-55679883@RYeaIjP7qP3t u37uos
+    # @req> REQ-55679883@pQMP7EUWR1Ti u37uos
     lines = [(f"{len(accepted)} accepted, {len(failed)} failed, "
               f"{len(absent)} never returned")]
-    # @req+ REQ-82676674@FK_7la2Hg_XC hbpale
+    # @req+ REQ-82676674@dpVWKsG65ILE hbpale
     for number, why in absent:
         lines.append(f"  no verdict: proposal {number}")
     for number, faults in failed:
         lines.append(f"  proposal {number}: spawn its judge again")
         lines += [f"    {fault}" for fault in faults]
     # @req- hbpale
-    # @req+ REQ-91823330@YBrjy3XTcDS0 ih4cxu
+    # @req+ REQ-91823330@d5PQjefU78ES ih4cxu
     held = grouped(accepted)
     if held:
         lines += ["", "findings, by what they name"]
@@ -88,7 +88,7 @@ def report(accepted, failed, absent):
             lines += [f"    proposal {number}: {reason}"
                       for number, reason in entries]
     # @req- ih4cxu
-    # @req> REQ-90450530@3hD9gxWAaXt4 v3dvwn
+    # @req> REQ-90450530@Gq7L86eHJeJg v3dvwn
     for number, data in accepted:
         for field in ("values", "words", "faults", "questions"):
             for entry in data.get(field) or []:
@@ -121,7 +121,7 @@ def main(argv=None):
         raise SystemExit("no judge prompt was built; run `plan.py judge` first")
     accepted, failed, absent = judged(run, state_held)
     print(report(accepted, failed, absent))
-    # @req> REQ-82676674@FK_7la2Hg_XC zeg5gl
+    # @req> REQ-82676674@dpVWKsG65ILE zeg5gl
     if failed or absent:
         print(f"{len(failed) + len(absent)} judge(s) to spawn again: "
               f"{respawn(run, state_held, [n for n, _ in failed + absent])}")

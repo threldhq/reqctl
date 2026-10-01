@@ -18,7 +18,7 @@ description: >
 Ideas in, a requirements pull request out. Nothing here approves anything: the
 merge is the approval, and only the owner merges.
 
-<!-- @req+ REQ-12222066@KVMqlUhM4uwv bzkv6x -->
+<!-- @req+ REQ-12222066@H7OEdnWlOPCR bzkv6x -->
 No further step runs while a question you put the owner is unanswered. Post the
 questions, then end your turn; under a goal, where that does not wait, collect
 the answers with the question picker.
@@ -366,7 +366,7 @@ The order matters: `baseline --generate` records HEAD as the commit whose
 corpus the baseline states, so generated over an uncommitted corpus the
 manifest points at a tree that lacks its own items.
 
-<!-- @req+ REQ-28700224@LfiV5W-9N5P2 6n6vna -->
+<!-- @req+ REQ-28700224@PBlsadvJKsKt 6n6vna -->
 Where step 1 asked the owner for the field of the governed software, mint their
 answer as the parameter the review reads:
 
