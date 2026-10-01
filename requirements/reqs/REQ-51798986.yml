@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a term recording two unclaimed phrases
+  then: the term records only the other phrase
+  when: a revision made in the [portal](portal)'s Revise form with one of their lines
+    deleted from the box is applied
+- given: a term recording an unclaimed phrase
+  then: the term records the phrase with its reason unchanged
+  when: a revision made in the [portal](portal)'s Revise form with the box unchanged
+    is applied
+assessed:
+  REQ-52483245: aBzpGUKfyp4PnSJq46E27oVwb_uZVff24uHTZI8hoRE
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-59010401: pkTwqJqZIeSw-huBiWyR5oqxIBYaRmYIRIdb6MyFIhI
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-52483245: depends_on
+  REQ-57492239: depends_on
+  REQ-59010401: depends_on
+status: approved
+text: When a revision of a term made in the [portal](portal)'s Revise form is applied,
+  the product shall leave the term recording exactly the unclaimed phrases and reasons
+  that the form's box for unclaimed phrases held.
+type: functional
+verification: inspection

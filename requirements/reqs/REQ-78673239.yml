@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a term that does not record a phrase
+  then: the product refuses, names the phrase and leaves the term unchanged
+  when: reqctl revise is asked to remove that phrase from it
+assessed:
+  REQ-20206793: HmbOOqLkGGec6sJ7EcCLSamvx-s0SXRa-2Cvl1_juP0
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+priority: medium
+relations:
+  REQ-20206793: constrains
+  REQ-24481048: depends_on
+status: approved
+text: If reqctl revise is asked to remove from a term an unclaimed phrase that the
+  term does not record, then the product shall refuse the revision.
+type: functional
+verification: inspection

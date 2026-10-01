@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: the page reqctl portal serves
+  then: it holds no list of kinds of its own
+  when: it is read
+- given: the product gains a kind of item
+  then: the [portal](portal)'s list shows the items of that kind, with no edit to
+    the page
+  when: reqctl portal serves the page
+assessed:
+  REQ-42771008: YigdTUSV_OGUH2KJteo2hH-vg21pVIfZg6ap6Ng4PN8
+  REQ-49576265: TZb-gviCuP5YoreZuR-DpCD14zDAOXTH3QmbqBJlzFE
+  REQ-87847146: zR5tHnA8xAWxljTpeSDCDp0ewi3bq8TLBRCVV7Y_B7I
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-42771008: constrains
+  REQ-49576265: depends_on
+  REQ-87847146: depends_on
+status: approved
+text: When reqctl portal serves the [portal](portal), the product shall take the kinds
+  of item the [portal](portal)'s list shows from the forms it serves with the page.
+type: constraint
+verification: inspection

@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: the [portal](portal)'s form creating a term and its form revising one
+  then: the hint states that each phrase is written as phrase=reason, one per line
+  when: the hint of each one's box for unclaimed phrases is read
+assessed:
+  REQ-51798986: Xa9cAPHBctJ6cS_QYep_FAU8jJHNFfuwwhhm9mCykik
+  REQ-59010401: pkTwqJqZIeSw-huBiWyR5oqxIBYaRmYIRIdb6MyFIhI
+  REQ-87847146: zR5tHnA8xAWxljTpeSDCDp0ewi3bq8TLBRCVV7Y_B7I
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-51798986: constrains
+  REQ-59010401: constrains
+  REQ-87847146: depends_on
+status: approved
+text: The product shall state, in the hint of every box the [portal](portal) offers
+  for a term's unclaimed phrases, that each phrase is written as phrase=reason, one
+  per line.
+type: functional
+verification: inspection
