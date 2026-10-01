@@ -332,7 +332,7 @@ corpus itself labels and scores what a run returns. Run it before and after.
 <!-- @req+ REQ-32446903@I3rgjDNBKOJC wmw3cf -->
 Ask the owner which proposals to mint, in the message carrying the questions,
 or in one saying the challenge raised none. Add each proposal they decline to
-`declined.md` with their reason, or that they gave none, then render the pull
+`declined.md` with their reason, or that they gave none. Then render the pull
 request section with `python3 ${CLAUDE_SKILL_DIR}/synthesis/plan.py describe
 --run DIR`. This is the last point before the corpus changes.
 <!-- @req- wmw3cf -->
