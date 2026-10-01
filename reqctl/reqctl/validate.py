@@ -18,6 +18,9 @@ def _schemas_are_schemas(root):
     for name in sorted(set(SCHEMAS) | set(corpus.schema_names(root))):
         try:
             corpus.schema(root, name)
+        # @req> REQ-14895892@JjrTwHoJqTRe 22v4gm
+        except corpus.RefusedCopy:
+            raise
         except corpus.ReqctlError as unreadable:
             problems.append(str(unreadable))
             broken.add(name)
@@ -56,6 +59,9 @@ def schema_problems(root, uid, data):
     try:
         declared = corpus.schema_for(root, corpus.kind_of(uid, data),
                                      corpus.name_of(uid, data))
+    # @req> REQ-14895892@JjrTwHoJqTRe r2dbx6
+    except corpus.RefusedCopy:
+        raise
     except corpus.ReqctlError as absent:
         return [f"{uid}: {absent}"]
     validator = Draft202012Validator(declared)
@@ -924,6 +930,9 @@ def _dropped(node, paths, at=()):
 def _without(root, uid, data, *finders):
     try:
         paths = frozenset(one for find in finders for one in find(root, uid, data))
+    # @req> REQ-14895892@JjrTwHoJqTRe in6ljr
+    except corpus.RefusedCopy:
+        raise
     except corpus.ReqctlError:
         return data
     return _dropped(data, paths) if paths else data
