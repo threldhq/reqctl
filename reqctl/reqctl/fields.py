@@ -303,7 +303,31 @@ def _lacking(shipped, copy, held, stated, at, kind, seen=frozenset()):
                                              for facets in (held, stated)), at, kind, seen)
 
 
+def _lacking_plain(shipped, copy, held, stated, at, seen=frozenset()):
+    pair = (id(held), id(stated))
+    if pair in seen:
+        return
+    seen |= {pair}
+    held, stated = _resolved(shipped, held), _resolved(copy, stated)
+    yield from (f"{marker} on {at}" for marker in held.keys() - stated.keys()
+                if marker.startswith("x-") or marker in ("default", "readOnly"))
+    inner = stated.get("properties") or {}
+    for name, value in (held.get("properties") or {}).items():
+        if name in inner and not _forbidden(copy, inner[name]):
+            yield from _lacking_plain(shipped, copy, value, inner[name], f"{at}.{name}", seen)
+    for step in ("items", "additionalProperties"):
+        if isinstance(held.get(step), dict) and isinstance(stated.get(step), dict):
+            yield from _lacking_plain(shipped, copy, held[step], stated[step], at, seen)
+
+
 def unmarked(shipped, copy, kinds):
-    return ", ".join(sorted({lack for kind in kinds for lack in _lacking(
-        shipped, copy, [(shipped, True, True)], [(copy, True, True)], "", kind)}))
+    found = set()
+    for kind in kinds:
+        found.update(_lacking(shipped, copy, [(shipped, True, True)], [(copy, True, True)],
+                              "", kind))
+        held = _merged(shipped, kind)[0]
+        stated = _merged(copy if isinstance(copy, dict) else {}, kind)[0]
+        for name in held.keys() & stated.keys():
+            found.update(_lacking_plain(shipped, copy, held[name], stated[name], name))
+    return ", ".join(sorted(found))
 # @req- aepkss
