@@ -14,8 +14,8 @@ assessed:
   secret_workflows: PW2CLrlroB71sEBcwMYJBOg9VMzy6swAxvG8nYPYTWw
   secret_workflows.*: KP2-zqLaL5Ly3qNr7ibTn9sdEkeZMyw_URquouxKYWk
 citations:
-  dugw2f: vKUMhL7Mme3qPJLEo9YFovx6NsJBfEIHhYcMc-Rz4FU
-  tuggnp: vKUMhL7Mme3qPJLEo9YFovx6NsJBfEIHhYcMc-Rz4FU
+  vyjmfj: R7hC_o74StbU-763xysDRPG90FJZT0ul6ySO4soN0mY
+  ypglcl: R7hC_o74StbU-763xysDRPG90FJZT0ul6ySO4soN0mY
 priority: medium
 relations:
   REQ-57492239: constrains
