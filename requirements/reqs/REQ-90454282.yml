@@ -1,9 +1,11 @@
 acceptance_criteria:
-- given: a run holding a [proposal](proposal) naming the product
+- given: a run whose [proposals](proposal) all name the product as the subject of
+    the obligation
   then: every requirement the corpus holds appears in exactly one recall prompt, with
     its status, and no guard appears
   when: the run is built
-- given: a run holding a [proposal](proposal) naming the product
+- given: a run whose [proposals](proposal) all name the build as the subject of the
+    obligation
   then: every guard the corpus holds appears in exactly one recall prompt, with its
     status, and no requirement appears
   when: the run is built
