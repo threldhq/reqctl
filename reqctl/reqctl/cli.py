@@ -1187,7 +1187,7 @@ def _drop_output():
 
 
 # @req> REQ-61484030@n7khA9l0yAgr s75lcl
-# @req> REQ-19913588@zNetOTQBhHYZ irna4n
+# @req> REQ-19913588@Pbi1CR5jtivz irna4n
 def _fault(as_json, error):
     try:
         if sys.stdout is not None:
@@ -1203,7 +1203,7 @@ def _fault(as_json, error):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
-    # @req+ REQ-19913588@zNetOTQBhHYZ zh6xly
+    # @req+ REQ-19913588@Pbi1CR5jtivz zh6xly
     try:
         parser = build_parser(_fields.root(), _fielded(argv))
     except (ReqctlError, OSError, UnicodeError) as error:
@@ -1217,7 +1217,7 @@ def main(argv=None):
                                        "`reqctl --help` lists the commands"},
                              indent=2))
         raise
-    # @req+ REQ-19913588@zNetOTQBhHYZ dw57fs
+    # @req+ REQ-19913588@Pbi1CR5jtivz dw57fs
     try:
         # @req> REQ-51372579@dWaIOhXJzQnK 7fex4d
         if sys.stdout is None:
