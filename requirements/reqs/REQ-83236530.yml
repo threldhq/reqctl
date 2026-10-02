@@ -5,7 +5,7 @@ acceptance_criteria:
     the folder
   when: the product runs the command
 assessed:
-  REQ-19913588: zNetOTQBhHYZABdjZtnyiFSArbPbBq73Woovl3UokrE
+  REQ-19913588: Pbi1CR5jtivz8qi3AlI320-7pRuKcedppG7UpnOk2TU
   REQ-24406170: M08jCONzg-4unbIjswcpNFFuynYzysf9JZj5KZch_QA
   REQ-81667762: 82D0B66GuW3u_auRLnUBOJleTdKVNEUz289s-BTS_2o
 citations:
