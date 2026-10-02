@@ -7,7 +7,7 @@ acceptance_criteria:
   then: it holds none of the synthesis steps
   when: its contents are read
 assessed:
-  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   synthesis_steps: xe3OiAl6nX8ClNv6lrdaSi-ccSt2HzKlLO0VZefN0SI
   synthesis_steps.*: mytx4Qp5JSaZ10p3r9f0R28mRy5h9hMuVUEfZKSo4Es
 citations:

@@ -6,7 +6,7 @@ acceptance_criteria:
   then: no passage presents a [test](test) as holding a rule
   when: the text of the skill is read
 assessed:
-  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 citations:
   j5ywyv: t8blfHxAdNEiWA0XrcURi95EUjfFsu4mzEDZAd0fDRE
