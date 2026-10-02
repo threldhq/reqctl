@@ -1214,7 +1214,9 @@ def main(argv=None):
     try:
         # @req> REQ-24406170@M08jCONzg-4u 3ofubr
         with corpus.all_or_nothing():
-            return args.func(args)
+            done = args.func(args)
+            sys.stdout.flush()
+            return done
     except BrokenPipeError:
         _drop_output()
         # @req> REQ-51372579@dWaIOhXJzQnK ihfdn7

@@ -285,12 +285,14 @@ def repeated_labels(uid, data):
     problems = []
     for at, criterion in enumerate(criteria, 1):
         for part, said in (criterion.items() if isinstance(criterion, dict) else ()):
-            found = (re.match(rf"{re.escape(part)}\b", said.lstrip(), re.IGNORECASE)
+            found = (re.match(rf"{re.escape(part)}\b",
+                              "".join(filter(str.isprintable, said)).lstrip(),
+                              re.IGNORECASE)
                      if isinstance(part, str) and isinstance(said, str) else None)
             if found:
-                problems.append(f"{uid}: criterion {at}'s {part} begins with "
-                                f"{found.group()!r}, which reqctl writes before "
-                                f"it -- drop the word from the {part}")
+                problems.append(f"{uid}: criterion {at}'s {part} {said!r} begins "
+                                f"with {found.group()!r}, which reqctl writes "
+                                f"before it -- drop the word from the {part}")
     return problems
 
 
