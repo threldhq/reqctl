@@ -314,12 +314,14 @@ def hidden_fault(char):
 
 
 def _strings(node, at=()):
+    if isinstance(node, set):
+        node = dict.fromkeys(node)
     if isinstance(node, dict):
         for key, value in node.items():
             if isinstance(key, str):
                 yield at, key
             yield from _strings(value, at + (str(key),))
-    elif isinstance(node, list):
+    elif isinstance(node, (list, tuple)):
         for index, value in enumerate(node):
             yield from _strings(value, at + (str(index),))
     elif isinstance(node, str):
