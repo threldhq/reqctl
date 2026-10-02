@@ -150,7 +150,14 @@ def loads(text, where):
                 f"{where} states {', '.join(twice)} more than once -- YAML "
                 "keeps the last, so drop the one that does not govern"
             )
-        return loader.construct_document(node) if node is not None else None
+        # @req+ REQ-19913588@zNetOTQBhHYZ 3222m4
+        try:
+            return loader.construct_document(node) if node is not None else None
+        except (yaml.YAMLError, RecursionError):
+            raise
+        except Exception as error:
+            raise ReqctlError(f"{where} holds a value YAML cannot build: {error}") from error
+        # @req- 3222m4
     except yaml.YAMLError as error:
         raise ReqctlError(f"{where} is not YAML: {error}") from error
     except RecursionError as error:

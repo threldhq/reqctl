@@ -1181,11 +1181,13 @@ def run(root, exempt=None):
     problems, broken_schemas = _schemas_are_schemas(root)
     records, unreadable = {}, {}
     for path in paths:
+        # @req+ REQ-69525887@UqIXxEzRxfHQ d3uvus
         try:
             data = _settled(path)
         except corpus.ReqctlError as error:
             unreadable[path.stem] = str(error).replace(f"{root}/", "")
             continue
+        # @req- d3uvus
         if isinstance(data, dict):
             records[path.stem] = data
     reachable = corpus.reachable(records)

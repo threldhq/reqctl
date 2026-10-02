@@ -8,6 +8,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-39368456: fHW3SvGcMIr_v4Kf3BJrNebhowS0MNxZvXJyM0hMIOg
+citations:
+  d3uvus: IysW_F90riuMcb3vYI0lKRE37UcOjud7Xn74F7VVqxM
 priority: medium
 relations:
   REQ-39368456: constrains
