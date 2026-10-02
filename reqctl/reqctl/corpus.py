@@ -156,7 +156,8 @@ def loads(text, where):
         except (yaml.YAMLError, RecursionError):
             raise
         except Exception as error:
-            raise ReqctlError(f"{where} holds a value YAML cannot build: {error}") from error
+            raise ReqctlError(f"{where} holds a value YAML cannot build -- "
+                              f"{type(error).__name__}: {error}") from error
         # @req- 3222m4
     except yaml.YAMLError as error:
         raise ReqctlError(f"{where} is not YAML: {error}") from error
