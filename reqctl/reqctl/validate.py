@@ -297,6 +297,46 @@ def repeated_labels(uid, data):
     return problems
 
 
+def hidden(text):
+    return next((c for i, c in enumerate(text)
+                 if not c.isprintable() or (i == 0 and unicodedata.category(c) == "Mn")),
+                None)
+
+
+def hidden_fault(char):
+    if len(f"a{char}b".splitlines()) > 1:
+        return f"holds U+{ord(char):04X}, a line break -- write it as one line"
+    if char.isspace():
+        return (f"holds U+{ord(char):04X}, which prints as a plain space but "
+                "is not one -- respace it with ordinary spaces")
+    return (f"holds U+{ord(char):04X}, which prints as nothing -- retype it "
+            "rather than pasting it")
+
+
+def _strings(node, at=()):
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if isinstance(key, str):
+                yield at, key
+            yield from _strings(value, at + (str(key),))
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            yield from _strings(value, at + (str(index),))
+    elif isinstance(node, str):
+        yield at, node
+
+
+# @req> REQ-79956352@eYUCCnssLbl5 5uqc7i
+def hidden_values(uid, data):
+    problems = []
+    for at, said in _strings(data):
+        char = hidden(said)
+        if char is not None:
+            problems.append(f"{uid}: {'.'.join(at) or '(item)'} {said!r} "
+                            f"{hidden_fault(char)}")
+    return problems
+
+
 def _relations(uid, data, records, canonical, known):
     stated = data.get("relations")
     problems = [
@@ -1169,6 +1209,7 @@ def run(root, exempt=None):
         problems += _guarded(uid, ears, uid, data)
         problems += _guarded(uid, text_values, uid, data)
         problems += _guarded(uid, repeated_labels, uid, data)
+        problems += _guarded(uid, hidden_values, uid, data)
         problems += _guarded(uid, dictionary_rules, uid, data)
         problems += _guarded(uid, _relations, uid, data, records,
                              reachable, known)

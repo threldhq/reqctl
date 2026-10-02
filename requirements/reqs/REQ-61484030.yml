@@ -12,6 +12,8 @@ acceptance_criteria:
   when: the command ends
 assessed:
   REQ-19913588: zNetOTQBhHYZABdjZtnyiFSArbPbBq73Woovl3UokrE
+citations:
+  s75lcl: XWgZury8kcGk5-1Cs2skj7cjcBLEVI1irJFO4JDVsbk
 priority: medium
 relations:
   REQ-19913588: derives_from

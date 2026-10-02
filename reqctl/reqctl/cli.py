@@ -1186,11 +1186,15 @@ def _drop_output():
         pass
 
 
+# @req> REQ-61484030@n7khA9l0yAgr s75lcl
 def _fault(as_json, error):
-    if as_json:
-        print(json.dumps({"error": str(error)}, indent=2))
-    else:
-        print(f"reqctl: {error}", file=sys.stderr)
+    if as_json and sys.stdout is not None:
+        try:
+            print(json.dumps({"error": str(error)}, indent=2), flush=True)
+            return EXIT_INVALID
+        except OSError:
+            _drop_output()
+    print(f"reqctl: {error}", file=sys.stderr)
     return EXIT_INVALID
 
 

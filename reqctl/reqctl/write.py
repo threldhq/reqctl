@@ -41,22 +41,6 @@ def _listing(text):
                  and "COMMA" in unicodedata.name(c, "").split()), None)
 
 
-def _hidden(text):
-    return next((c for i, c in enumerate(text)
-                 if not c.isprintable() or (i == 0 and unicodedata.category(c) == "Mn")),
-                None)
-
-
-def _hidden_fault(char):
-    if len(f"a{char}b".splitlines()) > 1:
-        return f"holds U+{ord(char):04X}, a line break -- write it as one line"
-    if char.isspace():
-        return (f"holds U+{ord(char):04X}, which prints as a plain space but "
-                "is not one -- respace it with ordinary spaces")
-    return (f"holds U+{ord(char):04X}, which prints as nothing -- retype it "
-            "rather than pasting it")
-
-
 def scalar(text):
     stripped = text.strip()
     if stripped.startswith("[") and stripped.endswith("]"):
@@ -69,9 +53,9 @@ def scalar(text):
         inner = stripped[1:-1]
         members = []
         for part in inner.split(",") if inner.strip() else []:
-            hidden = _hidden(part.strip(" "))
+            hidden = _validate.hidden(part.strip(" "))
             if hidden is not None:
-                raise ReqctlError(f"{part.strip()!r}: {_hidden_fault(hidden)}")
+                raise ReqctlError(f"{part.strip()!r}: {_validate.hidden_fault(hidden)}")
             members.append(part.strip())
         for member in members:
             if not member:
@@ -113,9 +97,9 @@ def scalar(text):
             "separator, and which digits it groups is ambiguous -- write the "
             "number whole (10000)"
         )
-    hidden = _hidden(text)
+    hidden = _validate.hidden(text)
     if hidden is not None:
-        raise ReqctlError(f"{stripped!r}: {_hidden_fault(hidden)}")
+        raise ReqctlError(f"{stripped!r}: {_validate.hidden_fault(hidden)}")
     if stripped.lower() in ("true", "false"):
         return stripped.lower() == "true"
     digits = stripped.lstrip("+-")
@@ -132,11 +116,11 @@ def scalar(text):
     return number if math.isfinite(number) else stripped
 
 
-# @req> REQ-79956352@k55ltaUh0RIF 7g4u3w
+# @req> REQ-79956352@eYUCCnssLbl5 7g4u3w
 def _refuse_hidden(label, value):
-    hidden = _hidden(str(value))
+    hidden = _validate.hidden(str(value))
     if hidden is not None:
-        raise ReqctlError(f"{label} {_hidden_fault(hidden)}")
+        raise ReqctlError(f"{label} {_validate.hidden_fault(hidden)}")
 
 
 def _refuse_blank_text(fields, own):
