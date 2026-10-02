@@ -10,7 +10,7 @@ acceptance_criteria:
   then: no step re-runs the [tests](test) a branch adds or changes
   when: the steps of the skill are read
 assessed:
-  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-56906371: rALaP5YBvHg7rld_RJyzT5l1PbgVp-KmltaXTAHGWKk
   REQ-70581878: 7_JGPxsumznGr8336FUF8nnr_zkrH4f-_0DjqeVLhzk
   statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
