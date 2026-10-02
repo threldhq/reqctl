@@ -6,6 +6,8 @@ acceptance_criteria:
   then: reqctl ends with a non-zero exit status
   when: the reader of the output stops reading before the export is all written
 assessed: {}
+citations:
+  ihfdn7: TixmTu2G0hJDnGMbpJHYYgB3l6OOTBgG6H_9LBuDvio
 priority: medium
 relations: {}
 status: approved

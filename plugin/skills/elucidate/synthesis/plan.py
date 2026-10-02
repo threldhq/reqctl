@@ -668,7 +668,7 @@ def packed(name, held, chars, items):
 
 
 def partitioned(blocked, held, chars, items):
-    # @req+ REQ-90454282@dAczt3znuEiz yp35nb
+    # @req+ REQ-90454282@M0OdZ2RxH5qS yp35nb
     kinds = {kind for _, _, _, kind in held}
     shards = []
     for prefix, scope in OBLIGATION.items():

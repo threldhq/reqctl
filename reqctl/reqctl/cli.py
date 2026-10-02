@@ -869,7 +869,7 @@ def cmd_compare(args):
     return EXIT_OK
 
 
-# @req> REQ-49576265@TZb-gviCuP5Y pihyx4
+# @req> REQ-49576265@dETVQnFJ79Sd pihyx4
 def _opened(url):
     if not webbrowser.open(url):
         print(f"no browser opened; open {url} in one", file=sys.stderr)
@@ -877,9 +877,9 @@ def _opened(url):
 
 def cmd_portal(args):
     held = _portal.repository(os.getcwd())
-    # @req+ REQ-49576265@TZb-gviCuP5Y wx5icq
+    # @req+ REQ-49576265@dETVQnFJ79Sd wx5icq
     server = _portal.server()
-    # @req> REQ-53764133@hNDAdKGPLVUD f7ob5l
+    # @req> REQ-53764133@s638VvRMfEgi f7ob5l
     url = f"http://{_portal.HOST}:{_portal.PORT}/?repo={held}"
     _emit(args, {"repository": held, "url": url},
           f"the portal on {held} is at {url} -- Ctrl-C stops it")
@@ -1214,11 +1214,11 @@ def main(argv=None):
     try:
         # @req> REQ-24406170@M08jCONzg-4u 3ofubr
         with corpus.all_or_nothing():
-            try:
-                return args.func(args)
-            except BrokenPipeError:
-                _drop_output()
-                return EXIT_OK
+            return args.func(args)
+    except BrokenPipeError:
+        _drop_output()
+        # @req> REQ-51372579@dWaIOhXJzQnK ihfdn7
+        return EXIT_INVALID
     except (ReqctlError, OSError, UnicodeError) as error:
         return _fault(args.json, error)
     # @req- dw57fs

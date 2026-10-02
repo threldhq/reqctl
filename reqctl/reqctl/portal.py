@@ -23,7 +23,7 @@ USERINFO = re.compile(r"(?<=//)[^@/]+@")
 
 
 def repository(where):
-    # @req+ REQ-95796962@YsAwm-tWkbqN 2v7p2v
+    # @req+ REQ-95796962@u8QGW_upRZM7 2v7p2v
     if _git(where, "rev-parse", "--git-dir").returncode:
         raise ReqctlError("not inside a git repository, so no origin remote "
                           "names the portal's repository")
@@ -36,7 +36,7 @@ def repository(where):
         raise ReqctlError(f"origin is {USERINFO.sub('', url)}, not a GitHub "
                           "owner/repo")
     # @req- 2v7p2v
-    # @req> REQ-53764133@hNDAdKGPLVUD mbl5cu
+    # @req> REQ-53764133@s638VvRMfEgi mbl5cu
     return found.group(1)
 
 
@@ -80,7 +80,7 @@ def policy_of(page):
             "form-action 'none'")
 
 
-# @req> REQ-49576265@TZb-gviCuP5Y 6hnjpw
+# @req> REQ-49576265@dETVQnFJ79Sd 6hnjpw
 class Page(BaseHTTPRequestHandler):
     body = b""
     policy = ""
@@ -101,7 +101,7 @@ class Page(BaseHTTPRequestHandler):
         pass
 
 
-# @req> REQ-49576265@TZb-gviCuP5Y uor45m
+# @req> REQ-49576265@dETVQnFJ79Sd uor45m
 def server():
     Page.body = with_forms(PAGE.read_bytes(), _fields.root())
     Page.policy = policy_of(Page.body)
