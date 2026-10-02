@@ -15,6 +15,8 @@ acceptance_criteria:
   when: a requirement carrying the criterion is [minted](mint)
 assessed:
   mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+citations:
+  gvf6gm: TUGJ4baz9Ir8aAiRgnBkImODKP5x4NQ99bmNOOvFdn0
 priority: medium
 relations: {}
 status: approved

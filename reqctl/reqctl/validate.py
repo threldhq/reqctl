@@ -197,7 +197,7 @@ def dictionary_rules(uid, data):
     held = corpus.entries(data)
     if held is None or uid.startswith("REQ-"):
         return problems
-    # @req> REQ-67450031@RujtrZ7Az3B2 5qg2a5
+    # @req> REQ-67450031@IPDu6OnW2Fck 5qg2a5
     for key in ("default", "pinned", "text", "name"):
         if key in held:
             problems.append(f"{uid}: an entry may not be keyed {key} -- it "
@@ -274,6 +274,26 @@ def text_values(uid, data):
                 f"{uid}: text value {member!r} is shaped like a quantity -- "
                 "give it a numeric value_type, or reword the name"
             )
+    return problems
+
+
+# @req> REQ-98653444@vg2d8T6B3LIH gvf6gm
+def repeated_labels(uid, data):
+    criteria = data.get("acceptance_criteria")
+    if not isinstance(criteria, list):
+        return []
+    problems = []
+    for at, criterion in enumerate(criteria, 1):
+        for part, said in (criterion.items() if isinstance(criterion, dict) else ()):
+            found = (re.match(rf"{re.escape(part)}\b",
+                              "".join(filter(str.isprintable,
+                                             re.sub(r"\s", " ", said))).lstrip(),
+                              re.IGNORECASE)
+                     if isinstance(part, str) and isinstance(said, str) else None)
+            if found:
+                problems.append(f"{uid}: criterion {at}'s {part} {said!r} begins "
+                                f"with {found.group()!r}, which reqctl writes "
+                                f"before it -- drop the word from the {part}")
     return problems
 
 
@@ -1148,6 +1168,7 @@ def run(root, exempt=None):
             problems += _guarded(uid, schema_problems, root, uid, data)
         problems += _guarded(uid, ears, uid, data)
         problems += _guarded(uid, text_values, uid, data)
+        problems += _guarded(uid, repeated_labels, uid, data)
         problems += _guarded(uid, dictionary_rules, uid, data)
         problems += _guarded(uid, _relations, uid, data, records,
                              reachable, known)
