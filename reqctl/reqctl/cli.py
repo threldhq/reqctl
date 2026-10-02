@@ -1214,6 +1214,11 @@ def main(argv=None):
                                        "`reqctl --help` lists the commands"},
                              indent=2))
         raise
+    # @req> REQ-51372579@dWaIOhXJzQnK kknvo3
+    if sys.stdout is None:
+        reader, writer = os.pipe()
+        os.close(reader)
+        sys.stdout = os.fdopen(writer, "w")
     # @req+ REQ-19913588@zNetOTQBhHYZ dw57fs
     try:
         # @req> REQ-24406170@M08jCONzg-4u 3ofubr
