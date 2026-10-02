@@ -5,7 +5,7 @@ tools: WebSearch, WebFetch, Write
 model: sonnet
 ---
 
-<!-- @req> REQ-38288492@1yCh_1wG8N-l 26246r -->
+<!-- @req> REQ-38288492@4l6tMNjp19tH 26246r -->
 # Best-in-class review
 
 You research; you do not draft requirements. Nothing you write becomes one
