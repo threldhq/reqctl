@@ -50,13 +50,6 @@ green having invoked the wrong thing.
 Read what it skipped. Every skip states its reason, and one of them --
 provisioning, or a tool absent here -- means that step is only checked by CI.
 
-<!-- @req+ REQ-85764802@N7tHuybyVI0x qpfhcp -->
-Then run the tests this branch adds or changes five times, not once. A test
-that passes on timing passes the first run too, and the suite will not tell
-you which kind you wrote. If one cannot be made repeatable, say so in the
-pull request rather than leaving a later run to surface it.
-<!-- @req- qpfhcp -->
-
 A pull request that lands red has wasted a runner and the owner's attention.
 
 ## 2 -- Succinctness
