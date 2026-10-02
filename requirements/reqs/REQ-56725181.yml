@@ -9,7 +9,7 @@ acceptance_criteria:
   then: the browser allows the request
   when: it requests GitHub's API at api.github.com
 assessed:
-  REQ-49576265: TZb-gviCuP5YoreZuR-DpCD14zDAOXTH3QmbqBJlzFE
+  REQ-49576265: dETVQnFJ79Sd9FtB8hj_gFw3AK4B-2hLwJokbaMRE3U
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   52i7vh: Ti9vxYjoZ1Ed1VfbomlbOaa65pS3eLkc_6-uIYvgDC8

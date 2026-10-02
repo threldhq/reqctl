@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: reqctl validate writing the problems of a corpus
+  then: reqctl ends with a non-zero exit status
+  when: the reader of the output stops reading before the problems are all written
+- given: reqctl export writing the corpus
+  then: reqctl ends with a non-zero exit status
+  when: the reader of the output stops reading before the export is all written
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: If the reader of a reqctl command's output stops reading before the command
+  has finished writing, then the product shall end the command with a non-zero exit
+  status.
+type: functional
+verification: inspection

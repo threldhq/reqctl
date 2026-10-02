@@ -1,8 +1,8 @@
 acceptance_criteria:
-- given: given reqctl is installed from its wheel
-  then: then the browser opens at a local address serving the [portal](portal) bundled
+- given: reqctl is installed from its wheel
+  then: the browser opens at a local address serving the [portal](portal) bundled
     in that wheel
-  when: when reqctl portal is run
+  when: reqctl portal is run
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
