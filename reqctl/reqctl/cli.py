@@ -1187,13 +1187,16 @@ def _drop_output():
 
 
 # @req> REQ-61484030@n7khA9l0yAgr s75lcl
+# @req> REQ-19913588@zNetOTQBhHYZ irna4n
 def _fault(as_json, error):
-    if as_json and sys.stdout is not None:
-        try:
-            print(json.dumps({"error": str(error)}, indent=2), flush=True)
-            return EXIT_INVALID
-        except OSError:
-            _drop_output()
+    try:
+        if sys.stdout is not None:
+            if as_json:
+                print(json.dumps({"error": str(error)}, indent=2), flush=True)
+                return EXIT_INVALID
+            sys.stdout.flush()
+    except OSError:
+        _drop_output()
     print(f"reqctl: {error}", file=sys.stderr)
     return EXIT_INVALID
 
@@ -1216,6 +1219,11 @@ def main(argv=None):
         raise
     # @req+ REQ-19913588@zNetOTQBhHYZ dw57fs
     try:
+        # @req> REQ-51372579@dWaIOhXJzQnK 7fex4d
+        if sys.stdout is None:
+            reader, writer = os.pipe()
+            os.close(reader)
+            sys.stdout = os.fdopen(writer, "w")
         # @req> REQ-24406170@M08jCONzg-4u 3ofubr
         with corpus.all_or_nothing():
             done = args.func(args)
