@@ -286,7 +286,8 @@ def repeated_labels(uid, data):
     for at, criterion in enumerate(criteria, 1):
         for part, said in (criterion.items() if isinstance(criterion, dict) else ()):
             found = (re.match(rf"{re.escape(part)}\b",
-                              "".join(filter(str.isprintable, said)).lstrip(),
+                              "".join(filter(str.isprintable,
+                                             re.sub(r"\s", " ", said))).lstrip(),
                               re.IGNORECASE)
                      if isinstance(part, str) and isinstance(said, str) else None)
             if found:
