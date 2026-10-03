@@ -18,7 +18,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Push the release tag the change first pins the plugin to
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.11"
+
+      - name: Install the build backend the dev lock pins
+        run: pip install --require-hashes -r reqctl/requirements-dev-lock.txt
+
+      - name: Push the release tag the change first pins the plugin to, and attach the reqctl wheel to its release
         env:
           BEFORE: ${{ github.event.before }}
           GH_TOKEN: ${{ github.token }}
