@@ -7,18 +7,14 @@ acceptance_criteria:
     on the model and at the effort the product ships for it
   when: the product spawns a run's agents
 assessed:
-  REQ-23060027: QKFI8tm_J5VF5FlpyYn7ENn8OIvvcTXbZ_-9Z0mJhIo
-  REQ-68127788: BccauyYFIuLms3wnvh3sB52RUT3lWSxaONwYB8RtWDI
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 priority: medium
 rationale: A repository that adopts reqctl keeps running the elucidate skill without
   [minting](mint) the item.
-relations:
-  REQ-23060027: constrains
-  REQ-68127788: supersedes
-status: approved
+relations: {}
+status: draft
 text: Where the corpus states no model and no effort for an agent named in ${elucidate_agents},
   the product shall spawn that agent on the model and at the effort that the product
   ships for it.

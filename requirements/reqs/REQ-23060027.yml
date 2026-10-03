@@ -16,6 +16,7 @@ acceptance_criteria:
 assessed:
   REQ-10470323: pMpSTZR3Eeq9TWBXU_41KPr3WlzvBlOwFCa1wwyH36U
   REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
+  REQ-68127788: BccauyYFIuLms3wnvh3sB52RUT3lWSxaONwYB8RtWDI
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
@@ -24,6 +25,7 @@ priority: medium
 relations:
   REQ-10470323: supersedes
   REQ-29203000: constrains
+  REQ-68127788: supersedes
 status: approved
 text: When the product spawns an agent named in ${elucidate_agents}, the product shall
   spawn it on the model and at the effort that the agent's entry states.
