@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  reqctl_wheel:
+    definition: The Python wheel built from the reqctl project that reqctl/pyproject.toml
+      defines, stating the project name and the version that file states at the commit
+      it is built from.
+    word: reqctl wheel
+kind: term
+status: approved

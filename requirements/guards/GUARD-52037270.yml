@@ -15,7 +15,7 @@ acceptance_criteria:
   then: the build refuses the change
   when: the build runs
 assessed:
-  GUARD-60575106: QWS2QB-n2_dHE5jaZVwrwj3QiQwh9fAouSFzS7cQujM
+  GUARD-60575106: cyDaQHsIDZhKvI_k7z0nyfMVUPzfsgOz9El4ta0v_Pc
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
 citations:
   ls2q44: 2CmMYTrb5viXs9k2C4gedukczSQBf1AS048wd14LRgc

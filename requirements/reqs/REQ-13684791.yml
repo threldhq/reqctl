@@ -3,11 +3,12 @@ acceptance_criteria:
   then: it holds a script for each synthesis step, and the elucidate skill calls those
     scripts
   when: its contents are read
-- given: the reqctl wheel as built
+- given: the [reqctl wheel](reqctl_wheel) as built
   then: it holds none of the synthesis steps
   when: its contents are read
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
   synthesis_steps: xe3OiAl6nX8ClNv6lrdaSi-ccSt2HzKlLO0VZefN0SI
   synthesis_steps.*: mytx4Qp5JSaZ10p3r9f0R28mRy5h9hMuVUEfZKSo4Es
 citations:

@@ -8,7 +8,7 @@ acceptance_criteria:
   when: reqctl portal serves the page
 assessed:
   REQ-42771008: YigdTUSV_OGUH2KJteo2hH-vg21pVIfZg6ap6Ng4PN8
-  REQ-49576265: dETVQnFJ79Sd9FtB8hj_gFw3AK4B-2hLwJokbaMRE3U
+  REQ-49576265: pFihs7WdIwGSo9e5kkPdFZLxtJJRQIRHfXC3rdxNwAs
   REQ-87847146: zR5tHnA8xAWxljTpeSDCDp0ewi3bq8TLBRCVV7Y_B7I
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:

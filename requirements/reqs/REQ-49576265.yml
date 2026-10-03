@@ -5,6 +5,7 @@ acceptance_criteria:
   when: reqctl portal is run
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
 citations:
   6hnjpw: _TCMvdn5nJGARnIhW_oE258Jz4kkP_YYAIUSQny0pow
   pihyx4: PIopL4uMls1sXsCNTo6p19mYBUX6BRwRUkdJJZhCTf0
@@ -14,6 +15,6 @@ priority: medium
 relations: {}
 status: approved
 text: When reqctl portal is run, the product shall serve the [portal](portal) bundled
-  in the reqctl wheel at a local address and open the browser at it.
+  in the [reqctl wheel](reqctl_wheel) at a local address and open the browser at it.
 type: functional
 verification: demonstration
