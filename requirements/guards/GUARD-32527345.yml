@@ -14,6 +14,9 @@ acceptance_criteria:
 assessed:
   GUARD-56838909: thIjmFd7Wvy9mCXKuc9YQFNqxbnPNTu0ZrBVmxzAo3w
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+citations:
+  el2tax: zzQAfW3WF6P7Wg6K6XmzjEv-m6nrirGh2-jh2Nat40o
+  zykp4x: E0V6bn_vn3qzlBVCN7ErUOhrpp8gRfry-rC82PkfooU
 relations:
   GUARD-56838909: depends_on
 status: approved
