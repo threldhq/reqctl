@@ -124,15 +124,14 @@ something the statement does not already say. Then:
   concept to tell a shared budget from two numbers that happen to match.
   Values that bound or describe the same behaviour or the same thing -- a
   review's fetch limits, each agent's model and effort -- are entries of one
-  data item, never a parameter each: `reqctl new data --name review_limits
-  --entry page_bytes --entry redirects`, then `revise review_limits --entry
-  page_bytes --set quantity=5242880 --set unit=bytes --set definition=...`,
-  referenced as `${review_limits.page_bytes.quantity}`. A value whose subject
-  the corpus already holds a data item for is a new entry of that item. A
-  count a reader would say aloud -- one type, both organisations -- is written
-  as a word and governs nothing.
+  data item, never a parameter each: `revise review_limits --entry page_bytes
+  --set quantity=5242880 --set unit=bytes --set definition=...`, referenced as
+  `${review_limits.page_bytes.quantity}`. A value whose subject the corpus
+  already holds a data item for is a new entry of that item. A count a reader
+  would say aloud -- one type, both organisations -- is written as a word and
+  governs nothing.
 
-- **A set of words is a data item; a set of quantities is a parameter.**
+- **A set of words is a data item; one quantity's tiers are a parameter.**
   Providers, formats, view types are words: mint one `DATA` --
   `reqctl new data --name export_formats --entry json --entry markdown` -- and
   reference it. The tiers of one threshold move together as one quantity:

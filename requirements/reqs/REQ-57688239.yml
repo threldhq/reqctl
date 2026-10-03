@@ -15,7 +15,7 @@ assessed:
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
-  4yael4: rvtaIGJEZhPOPVoeOhqzeOBR8A17tYiKikmD_B6J208
+  4yael4: 39PSMOf9VzqQS5XDL7k5EyHF4gwiTDYMym0KqCiSO2s
 priority: medium
 relations:
   REQ-22755763: depends_on

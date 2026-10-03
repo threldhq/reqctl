@@ -559,35 +559,25 @@ def citable(item):
 
 
 # @req> REQ-18176935@u-uprH5qBxMT r63o2r
-def cited_stamp(item):
+# @req> REQ-34330878@Zd73-2hLzA6M ymaadg
+def cited_stamp(item, entry=None):
     held = stamp(item)
-    if kind_of(item.uid, item.data) in ("parameter", "data"):
-        held = digest([held, stamp_at(item, MEMBERS)])
+    if entry or kind_of(item.uid, item.data) in ("parameter", "data"):
+        held = digest([held, stamp_at(item, entry or MEMBERS)])
     return tag_stamp(held)
-
-
-# @req> REQ-34330878@Zd73-2hLzA6M zvzpnr
-def entry_stamp(item, entry):
-    return tag_stamp(digest([stamp(item), stamp_at(item, entry)]))
-
-
-def owner(address):
-    return str(address).partition(".")[0]
 
 
 def cited_entries(item):
     if kind_of(item.uid, item.data) != "data":
-        return []
-    return list(entries(item.data) or {})
+        return {}
+    return entries(item.data) or {}
 
 
 # @req> REQ-22755763@jWQQtKhJ8JoO ez4hkv
 def cited_item(store, address):
-    named, _, entry = str(address).partition(".")
+    named, entry = split_address(address)
     item = find(store, named)
-    if not entry:
-        return item, None
-    if entry not in cited_entries(item):
+    if entry is not None and entry not in cited_entries(item):
         raise ReqctlError(f"{address}: {named} is not a data item holding "
                           f"{entry} -- only an entry of a data item is cited "
                           "by its name")

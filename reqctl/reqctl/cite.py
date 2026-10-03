@@ -149,7 +149,7 @@ def cited(citations):
     held = {}
     for citation in citations:
         held.setdefault(citation["uid"], []).append(
-            (citation["path"], citation["pinned"]))
+            (citation["path"], citation["pinned"], citation["entry"]))
     return held
 
 
@@ -218,8 +218,11 @@ def parse(sources):
     return covered(opened), problems
 
 
+# @req> REQ-22755763@jWQQtKhJ8JoO rafirp
 def _citation(held, relative, start, close, first, last, marks):
-    return {"id": held["id"], "uid": held["uid"], "pinned": held["stamp"] or "",
+    uid, _, entry = held["uid"].partition(".")
+    return {"id": held["id"], "uid": uid, "entry": entry or None,
+            "address": held["uid"], "pinned": held["stamp"] or "",
             "exclusive": bool(held["exclusive"]), "path": relative,
             "open": start, "close": close, "first": first, "last": last,
             "marks": marks}
@@ -345,7 +348,7 @@ def _duplicates(path, found, asked):
         for other in found:
             earlier = (other["id"] not in asked
                        or order.index(other["id"]) < order.index(identity))
-            if (other["uid"] == uid and earlier
+            if (other["address"] == uid and earlier
                     and spanned[other["id"]] == spanned[identity]):
                 problems.append(
                     f"{path}: lines {first}-{last} are already cited for {uid}"
@@ -437,7 +440,7 @@ def repinned(root, citation, stamp):
     # @req+ REQ-17757558@4j9rQN-e61OY lqd5pz
     target, lines = _lines(root, citation)
     at = citation["open"] - 1
-    pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['uid'])})(?:@\S*)?")
+    pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['address'])})(?:@\S*)?")
     # @req> REQ-18833394@wnCdGzhY7m6Z 62bkhg
     lines[at] = pinned.sub(lambda found: f"{found.group(1)}@{stamp}", lines[at], count=1)
     return target, "".join(lines).encode()

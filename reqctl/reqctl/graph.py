@@ -7,9 +7,7 @@ def unstamped(uid, path):
 
 
 def listing(tree, citations, uid=None):
-    # @req> REQ-74122607@VDvRKpUj1amL km6xcd
-    named = {(corpus.owner(citation["uid"]), citation["id"])
-             for citation in citations}
+    named = {(citation["uid"], citation["id"]) for citation in citations}
     # @req> REQ-77594104@j8bc8SJ4n3Lz 7nucmz
     listed = {str(item.uid): corpus.mapping(item.data, corpus.CITATION_LIST)
               for item in corpus.items(tree)
@@ -25,8 +23,7 @@ def listing(tree, citations, uid=None):
                 f"statement citation names together with {owner} -- "
                 f"reqctl unlist {owner} {identity}")
     for citation in citations:
-        # @req> REQ-74122607@VDvRKpUj1amL nq6jgl
-        owner, identity = corpus.owner(citation["uid"]), citation["id"]
+        owner, identity = citation["uid"], citation["id"]
         if (uid and owner != uid) or owner not in listed:
             continue
         # @req+ REQ-67655319@ezp6TxUzJ72E wqruf3
@@ -56,15 +53,11 @@ def trace(tree, root, uid=None):
     if uid:
         corpus.find(tree, uid)
     known = {str(item.uid) for item in corpus.items(tree)}
-    # @req> REQ-74122607@VDvRKpUj1amL 5g5odt
-    known |= {f"{item.uid}.{entry}" for item in corpus.items(tree)
-              for entry in corpus.cited_entries(item)}
 
     rows, problems, unimplemented, stale, deprecated = [], list(cited_problems), [], [], []
     # @req> REQ-19896380@2sOnckMwnWfx aes6o5
     for citation in citations:
-        if (corpus.is_test(citation["path"])
-                and (not uid or corpus.owner(citation["uid"]) == uid)):
+        if corpus.is_test(citation["path"]) and (not uid or citation["uid"] == uid):
             problems.append(
                 f"{citation['path']}: citation {citation['id']} of "
                 f"{citation['uid']} is in a test -- reqctl untag {citation['id']}")
@@ -74,14 +67,8 @@ def trace(tree, root, uid=None):
         if uid and current != uid:
             continue
         data = corpus.raw(item)
-        # @req+ REQ-74122607@VDvRKpUj1amL 4qvhpf
-        whole = tags.get(current, [])
-        entry_pins = {entry: tags[f"{current}.{entry}"]
-                      for entry in corpus.cited_entries(item)
-                      if f"{current}.{entry}" in tags}
-        cited = whole + [pin for pins in entry_pins.values() for pin in pins]
-        # @req- 4qvhpf
-        files = list(dict.fromkeys(path for path, _ in cited))
+        cited = tags.get(current, [])
+        files = list(dict.fromkeys(path for path, _, _ in cited))
         rows.append(
             {
                 "uid": current,
@@ -100,9 +87,9 @@ def trace(tree, root, uid=None):
         if (corpus.citable(item)
                 and data.get("status") == "deprecated" and cited):
             deprecated += [{"uid": current, "path": path} for path
-                           in dict.fromkeys(p for p, pinned in cited if pinned)]
+                           in dict.fromkeys(p for p, pinned, _ in cited if pinned)]
             problems += [unstamped(current, path)
-                         for path, pinned in cited if not pinned]
+                         for path, pinned, _ in cited if not pinned]
             continue
         if data.get("status") != "approved":
             if files:
@@ -113,18 +100,15 @@ def trace(tree, root, uid=None):
             continue
         # @req> REQ-77594104@j8bc8SJ4n3Lz lgfhiu
         if corpus.citable(item):
-            held = corpus.cited_stamp(item) if whole else None
-            for path, pinned in whole:
+            for path, pinned, entry in cited:
+                # @req+ REQ-74122607@VDvRKpUj1amL pbsx4y
+                address = f"{current}.{entry}" if entry else current
+                if entry and entry not in corpus.cited_entries(item):
+                    problems.append(f"{address}: referenced by {path} but no such entry")
+                    continue
+                held = corpus.cited_stamp(item, entry)
+                # @req- pbsx4y
                 # @req> REQ-75161909@bnqFzGCM1y16 7df3my
-                if not pinned:
-                    problems.append(unstamped(current, path))
-                elif pinned != held:
-                    stale.append({"uid": current, "path": path,
-                                  "pinned": pinned, "held": held})
-        # @req> REQ-74122607@VDvRKpUj1amL 4mtkgv
-        for entry, pins in entry_pins.items():
-            address, held = f"{current}.{entry}", corpus.entry_stamp(item, entry)
-            for path, pinned in pins:
                 if not pinned:
                     problems.append(unstamped(address, path))
                 elif pinned != held:
@@ -138,7 +122,7 @@ def trace(tree, root, uid=None):
             if tagged not in known:
                 problems.append(
                     f"{tagged}: referenced by "
-                    f"{', '.join(dict.fromkeys(p for p, _ in tags[tagged]))}"
+                    f"{', '.join(dict.fromkeys(p for p, _, _ in tags[tagged]))}"
                     " but no "
                     "such requirement"
                 )
@@ -147,8 +131,6 @@ def trace(tree, root, uid=None):
     # @req> REQ-32191310@ot16I3lSs2Nu 65dur7
     problems += listing(tree, citations, uid)
 
-    # @req> REQ-74122607@VDvRKpUj1amL mqcfbp
-    scoped = [c for c in shown if not uid or corpus.owner(c["uid"]) == uid]
     return {"rows": rows, "problems": problems, "stale": stale,
             "deprecated": deprecated, "unimplemented": sorted(unimplemented),
-            "citations": scoped}
+            "citations": [c for c in shown if not uid or c["uid"] == uid]}
