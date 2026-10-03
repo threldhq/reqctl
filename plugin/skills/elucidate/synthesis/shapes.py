@@ -1,3 +1,5 @@
+from coverage import LISTS, NAMES
+
 BEARINGS = ["same", "overlaps", "contradicts", "parent", "prerequisite",
             "restricted_by", "related"]
 FINDINGS = ["covered_whole", "covered_part", "conflict", "derives_from",
@@ -104,3 +106,14 @@ REVIEW = _object(["practices"], {
             "adopt": {"type": "boolean"},
         })),
 })
+
+# @req+ REQ-36422345@O-3IKmoFSYSG lq44vs
+QUOTED = {"type": "string", "pattern": "\\S"}
+NAMED = {name: {"type": ["string", "integer"]} for name in NAMES
+         if name not in LISTS}
+
+COVERAGE = _object(list(LISTS), {
+    "unclaimed": _list(_object(["quote"], {**NAMED, "quote": QUOTED})),
+    "renamed": _list(_object(["owner"], {**NAMED, "owner": QUOTED})),
+})
+# @req- lq44vs

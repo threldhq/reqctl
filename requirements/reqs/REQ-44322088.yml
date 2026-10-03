@@ -17,6 +17,8 @@ assessed:
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
   citation_list: oI_huIAigDjUEHWU9ldVcxiVBvI0Rrr430zuqriAcy4
   statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+citations:
+  7e5dqc: mNDn2YW16N8LjCuOJMcQfsjaAUfiqsZb229fZaROwwI
 priority: medium
 relations:
   REQ-13298390: depends_on

@@ -136,11 +136,27 @@ properties:
       type: string
       minLength: 1
 
+  # @req> REQ-88203622@QLXb8abUOMT3 jez5bu
+  citations:
+    type: object
+    readOnly: true
+    description: >-
+      The citation list: the citation identity of each statement citation
+      naming this parameter or data item, to the citation digest of the lines
+      it covers. Excluded from the stamps. Written by reqctl tag, repin, untag
+      and unlist, never by hand.
+    propertyNames:
+      pattern: "^[a-z2-7]{6}$"
+    additionalProperties:
+      type: string
+      pattern: "^[A-Za-z0-9_-]{43}$"
+
 allOf:
 
   - if: {required: [kind], properties: {kind: {const: term}}}
     then:
       properties:
+        citations: {not: {}}
         name: {not: {}}
         text: {not: {}}
         value_type: {not: {}}

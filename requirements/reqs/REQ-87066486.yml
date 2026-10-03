@@ -6,8 +6,10 @@ acceptance_criteria:
     another value
   then: the product reads no more of a page than ${review_page_bytes} bytes
   when: the [best-in-class review](best_in_class_review) is checked there
-- given: a repository whose corpus states a challenge_roles data item
-  then: the product takes the models that data item names
+- given: a repository whose corpus states a challenge_roles data item, or an elucidate_agents
+    data item naming other models or efforts
+  then: the product spawns each agent on the model and at the effort that ${elucidate_agents}
+    states for it
   when: a run is built there
 assessed:
   REQ-18272120: P5XOlho5WrkHimyHO6t4oiiJ0VhBYlilQ6WMiCR2fzI
@@ -16,9 +18,15 @@ assessed:
   REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
   REQ-94426583: 5DnvqbSeaqCQIkT4j5HcqkSNzUQou7HOF6t2uNfZYv8
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
+  elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   review_page_bytes: 8byjsLX3ASyH4_Zc_WWAPQSRAwOizmU7pDqp7h4API4
   review_page_bytes.*: WX_pLJ5Q5te-7IkbHsWsq3DH3WqUCwHeu4NWrn4cJAw
   statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+citations:
+  4py3et: r19mBpwDHD8S0oSIAS7Nwq187Qn7yT1N6A-XRQzTkAE
+  mmgold: A3QA8Bt7ntmt5sDkq3kOc_1uElzgTV3E0EYjdUWF7Lo
+  udnw6h: gWX4P1PK7fJzfamZdWLHwXeJHULlMmZUeJH5GZPwpoY
 priority: medium
 relations:
   REQ-18272120: supersedes

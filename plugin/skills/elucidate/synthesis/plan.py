@@ -22,7 +22,8 @@ RELATION = re.compile(rf"^- (?:{'|'.join(write.RELATIONS)}) (REQ-\d{{8}})$")
 USED_BY = "- used by: "
 TOKEN = re.compile(r"\$\{[^}]*\}?")
 SIBLING = re.compile(r"^proposal (\d+)$")
-ROLES = "challenge_roles"
+PINNED = re.compile(r"claude-[a-z0-9.-]*[0-9][a-z0-9.-]*")
+PLUGIN = Path(".claude-plugin") / "plugin.json"
 BINDS = "binds"
 CRITERIA = "criteria"
 TRACE = "trace"
@@ -37,11 +38,26 @@ SIBLINGS = "siblings"
 SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
-# @req> REQ-18272120@P5XOlho5WrkH o47rwb
-BOUNDS = ("recall_batch", "judge_bound", "judge_group", "floor_k",
-          "agent_ceiling")
-PHASES = {"recall": "medium", "judge": "high"}
-MODELS = {"recall": "sonnet", "judge": "opus"}
+# @req+ REQ-87066486@uKF1dXTp7rGk udnw6h
+# @req> recall_batch@1MUqoxzBBHZd 7f7moo
+RECALL_BATCH = 40
+# @req> judge_bound@decGTil8BS2t pjbkc7
+JUDGE_BOUND = 45
+# @req> judge_group@V4NTMrVRGpDF tfddk2
+JUDGE_GROUP = 20
+# @req> floor_k@Kulp75919beA ol3y4x
+FLOOR_K = 10
+# @req> agent_ceiling@gIFXgBrYQYI1 ohe2ox
+AGENT_CEILING = 150
+# @req- udnw6h
+# @req> REQ-87066486@uKF1dXTp7rGk 4py3et
+# @req> elucidate_agents@V5-K1rlTkh2C kgnxgu
+AGENTS = {
+    "best_in_class": {"model": "claude-sonnet-5-5", "effort": "high"},
+    "coverage": {"model": "claude-sonnet-5-5", "effort": "high"},
+    "recall": {"model": "claude-sonnet-5-5", "effort": "medium"},
+    "judge": {"model": "claude-opus-5-5", "effort": "high"},
+}
 
 BEARING = """A statement bears on a proposal when it states the same obligation in
 other words (same), states part of it or more than it (overlaps), would be
@@ -280,69 +296,53 @@ def written(out, shape):
     return WRITE.format(out=out, shape=json.dumps(shape, indent=1))
 
 
-def spawn(run, folder, name, label, shape, model, effort):
+def spawn(run, folder, name, label, shape, settings):
     return {"label": label, "path": str(run / "prompts" / folder / f"{name}.md"),
             "out": str(run / "returns" / folder / f"{name}.json"),
-            "schema": shape, "model": model, "effort": effort}
+            "schema": shape, **settings}
 
 
-def named_item(records, kind, name):
+def inline(label, prompt, shape, kind, settings):
+    return {"label": label, "prompt": prompt, "schema": shape, "agent": kind,
+            **settings}
+
+
+def registered(name):
+    plugin = Path(sys.argv[0]).absolute().parents[3] / PLUGIN
+    if not plugin.is_file():
+        return name
+    return f"{json.loads(plugin.read_text())['name']}:{name}"
+
+
+def named_item(records, name):
     found = [(uid, data) for uid, data in records.items()
-             if corpus.kind_of(uid, data) == kind and data.get("name") == name]
+             if corpus.kind_of(uid, data) == "data" and data.get("name") == name]
     if len(found) != 1:
         raise SystemExit(
             f"the corpus defines {'no' if not found else 'more than one'} "
-            f"{kind} named {name}, and the build reads its bounds from it. "
-            "Mint one first.")
+            f"data item named {name}. Mint one first.")
     return found[0]
 
 
-def parameter(records, name):
-    # @req+ REQ-18272120@P5XOlho5WrkH dyeqka
-    _, data = named_item(records, "parameter", name)
-    held = list(corpus.entries(data) or {})
-    if len(held) != 1 or not str(held[0]).isdigit():
-        raise SystemExit(f"{name} states {held}, and the build is bounded by "
-                         "one whole number")
-    # @req- dyeqka
-    return int(held[0])
-
-
-def family(model):
-    return model.split("-")[1] if model.startswith("claude-") else model
-
-
-def roles(records):
-    found = [data for uid, data in records.items()
-             if corpus.kind_of(uid, data) == "data"
-             and data.get("name") == ROLES]
-    if len(found) > 1:
-        raise SystemExit(
-            f"more than one item is named {ROLES}, and which of them names "
-            "the models is not the build's to decide.")
-    held = dict(MODELS)
-    if not found:
-        return held
-    entries = corpus.entries(found[0]) or {}
-    fallback = (entries.get(found[0].get("default")) or {}).get("model")
-    for phase in PHASES:
-        stated = (entries.get(phase) or {}).get("model")
-        if stated is None:
-            stated = fallback
-        if stated is None:
-            continue
-        # @req> REQ-82356895@oVmNHXQoc3Fa waczui
-        if not isinstance(stated, str) or not stated:
-            raise SystemExit(f"{ROLES} names no model for {phase}, which the "
-                             "build spawns")
-        held[phase] = family(stated)
-    return held
+def agent(name):
+    model, effort = (AGENTS[name].get(field) for field in ("model", "effort"))
+    # @req> REQ-96661837@hTUc2_9HnHBv hz4zip
+    if bool(model) != bool(effort):
+        raise SystemExit(f"elucidate_agents' {name} entry states a model "
+                         "without an effort, or an effort without a model; "
+                         "state both")
+    # @req> REQ-82356895@VikBiVGZE3m5 yj46qn
+    if not isinstance(model, str) or not PINNED.fullmatch(model):
+        raise SystemExit(f"elucidate_agents' {name} entry names its model as "
+                         f"{model!r}, which is not a pinned model ID such as "
+                         "claude-opus-5-5")
+    return {"model": model, "effort": effort}
 
 
 def dimensions(root, records):
     held = {}
     for name in corpus.binding_dimensions(root):
-        uid, data = named_item(records, "data", name)
+        uid, data = named_item(records, name)
         # @req+ REQ-29846444@iGWqcEzs6s52 zjcgv2
         members = set(corpus.entries(data) or {})
         if not members:
@@ -802,17 +802,19 @@ def coverage(run, words, declined, held, carried):
         f"\n  proposal {number}: {one}"
         for number, _, _, _ in held
         for one in carried.get(str(number), ()))
-    where = run / "prompts" / "coverage.md"
     # @req+ REQ-47744588@l3MLCZUPXuDZ a7rnsw
     # @req+ REQ-80500447@cWHS2ihd6kMV omzjq4
     # @req> REQ-24569953@LsZU4Go81cg8 ssc6p2
-    corpus.atomic_write(where, COVERAGE.format(
+    return COVERAGE.format(
         words=words, declined=declined, proposals=written,
         criteria=CARRIES.format(stated=lines) if lines else "", found=found,
-        names=", ".join(f"`{name}`" for name in NAMES)))
+        names=", ".join(f"`{name}`" for name in NAMES))
     # @req- omzjq4
     # @req- a7rnsw
-    return where
+
+
+def manifested(run, name):
+    return run / "workflow" / f"{name}.json"
 
 
 def manifest(run, name, prompts):
@@ -824,7 +826,7 @@ def manifest(run, name, prompts):
             shape = f"shape-{len(held) + 1}"
             held[shape] = one["schema"]
         listed.append({**one, "schema": shape})
-    where = run / "workflow" / f"{name}.json"
+    where = manifested(run, name)
     corpus.atomic_write(where, json.dumps({"shapes": held, "prompts": listed},
                                           indent=1) + "\n")
     return where
@@ -856,10 +858,10 @@ def recall_prompts(run, held, state_held, shards, only, words, declined,
             prompts[label] = recall_prompt(
                 run, name, at, scope, len(block), total, set(chunk), held,
                 words, declined, dictionary_text, texts[name])
+            # @req> REQ-23060027@QKFI8tm_J5VF 6y5rvz
             spawned.append(spawn(run, "recall", label, f"recall:{label}",
                                  shapes.recall(scope),
-                                 state_held["models"]["recall"],
-                                 PHASES["recall"]))
+                                 state_held["agents"]["recall"]))
             state_held["recall"][label] = {"shard": name, "batch": at,
                                           "proposals": chunk}
     return prompts, spawned, texts
@@ -885,8 +887,8 @@ def build(run, chars, items, lines=PROMPT_LINES):
                 else "nothing was declined in this run")
     held = proposals(run)
     store, records = loaded()
-    bounds = {name: parameter(records, name) for name in BOUNDS}
-    models = roles(records)
+    # @req> REQ-23060027@QKFI8tm_J5VF dxtamn
+    agents = {name: agent(name) for name in AGENTS}
     settled_on = binding(run, held, corpus.find_root(), records)
     traces = traced(run, words, held)
     carried = stated(run)
@@ -898,20 +900,19 @@ def build(run, chars, items, lines=PROMPT_LINES):
     sibling = siblings(held)
     if sibling is not None:
         shards.append(sibling)
-    batch = bounds["recall_batch"]
-    counted = sum(len(batched(judged_by(held, scope), batch))
+    counted = sum(len(batched(judged_by(held, scope), RECALL_BATCH))
                   for _, scope, _ in shards) + len(held)
-    ceilinged(counted, bounds["agent_ceiling"])
+    ceilinged(counted, AGENT_CEILING)
 
     state_held = {
-        "bounds": bounds, "models": models, "lines": lines,
+        "agents": agents, "lines": lines,
         "proposals": {str(number): {"kind": kind, "statement": statement,
                                     "path": str(path),
                                     "binding": settled_on.get(number),
                                     "trace": traces.get(str(number), [])}
                       for number, statement, path, kind in held},
         "shards": {name: {"scope": scope, "items": [uid for uid, _ in block],
-                          "batch": batch}
+                          "batch": RECALL_BATCH}
                    for name, scope, block in shards},
         "recall": {}, "judge": {}, "named": {},
     }
@@ -936,18 +937,23 @@ def build(run, chars, items, lines=PROMPT_LINES):
     corpus.atomic_write(run / "dictionary.md", dictionary_text)
     saved(run, state_held)
     where = manifest(run, "recall", spawned)
-    coverage(run, words, declined, held, carried)
+    asked = coverage(run, words, declined, held, carried)
+    # @req> REQ-23060027@QKFI8tm_J5VF ukljdu
+    reading = manifest(run, "coverage", [inline(
+        "coverage", asked, shapes.COVERAGE, registered("coverage"),
+        agents["coverage"])])
     cleared(run)
     retired = retire(run, exported_text)
     for name in retired:
         print(f"retired {name}: the export it was judged against has moved")
     # @req> REQ-16868696@xXhoCmAQTytn js66h5
     print(f"{len(held)} proposal(s) over {len(shards)} shard(s) in batches of "
-          f"{batch}: {len(spawned)} recall agent(s), then one judge each")
+          f"{RECALL_BATCH}: {len(spawned)} recall agent(s), then one judge "
+          "each")
     print(f"  spawn     {where}")
     print(f"  prompts   {run / 'prompts' / 'recall'}/<shard>-b<n>.md")
-    print(f"  coverage  {run / 'prompts' / 'coverage.md'}, read back once the "
-          "answers are in")
+    # @req> REQ-23060027@QKFI8tm_J5VF citfb2
+    print(f"  coverage  {reading}, spawned once the answers are in")
     return 0
     # @req- rwweso
 
@@ -1168,43 +1174,41 @@ def judge(run):
             corpus.remove(run / "returns" / "recall" / f"{label}.json",
                           missing_ok=True)
             scope = state_held["shards"][state_held["recall"][label]["shard"]]["scope"]
+            # @req> REQ-23060027@QKFI8tm_J5VF spkcng
             spawned.append(spawn(run, "recall", label, f"recall:{label}",
                                  shapes.recall(scope),
-                                 state_held["models"]["recall"],
-                                 PHASES["recall"]))
+                                 state_held["agents"]["recall"]))
         print(f"{len(spawned)} recall agent(s) to spawn again: "
               f"{manifest(run, 'recall', spawned)}")
         return 1
 
-    bounds = state_held["bounds"]
     index = indexed(records)
     plans = {}
     for number, spec in state_held["proposals"].items():
-        floored = floor(index, spec["kind"], spec["statement"],
-                        bounds["floor_k"])
+        floored = floor(index, spec["kind"], spec["statement"], FLOOR_K)
         for uid, shared in floored:
             named[number].setdefault(uid, []).append(
                 "floor: shares " + ", ".join(shared))
         names = sorted(named[number], key=lambda uid: (SIBLING.match(uid) is not None, uid))
-        plans[number] = (names, grouped(names, bounds["judge_bound"],
-                                        bounds["judge_group"]))
+        plans[number] = (names, grouped(names, JUDGE_BOUND, JUDGE_GROUP))
     counted = len(state_held["recall"]) + sum(
         1 if groups is None else len(groups) + 1
         for _, groups in plans.values())
-    ceilinged(counted, bounds["agent_ceiling"])
+    ceilinged(counted, AGENT_CEILING)
 
     prompts, spawned = {}, []
     for number, (names, groups) in plans.items():
         spec = state_held["proposals"][number]
         state_held["named"][number] = {uid: named[number][uid] for uid in names}
-        model = state_held["models"]["judge"]
+        # @req> REQ-23060027@QKFI8tm_J5VF tpcwue
+        judging = state_held["agents"]["judge"]
         if groups is None:
             prompts[f"{number}"] = judge_prompt(
                 run, number, spec, names, named[number], state_held, text,
                 dictionary_text)
             state_held["judge"][number] = {"groups": None}
             spawned.append(spawn(run, "judge", number, f"judge:{number}",
-                                 shapes.JUDGE, model, PHASES["judge"]))
+                                 shapes.JUDGE, judging))
             continue
         state_held["judge"][number] = {"groups": groups}
         for at, group in enumerate(groups, 1):
@@ -1212,8 +1216,8 @@ def judge(run):
                 run, number, spec, at, group, named[number], state_held,
                 text, dictionary_text)
             spawned.append(spawn(run, "judge", f"{number}-g{at}",
-                                 f"group:{number}-g{at}", shapes.GROUP, model,
-                                 PHASES["judge"]))
+                                 f"group:{number}-g{at}", shapes.GROUP,
+                                 judging))
     lined(prompts, state_held["lines"])
     for stale in list((run / "prompts" / "judge").glob("*.md")) + list(
             (run / "returns" / "judge").glob("*.json")):
@@ -1272,7 +1276,8 @@ def final_prompt(run, number, spec, lines, dictionary_text):
 def final(run):
     state_held = state(run)
     dictionary_text = (run / "dictionary.md").read_text()
-    model = state_held["models"]["judge"]
+    # @req> REQ-23060027@QKFI8tm_J5VF pxmf5e
+    judging = state_held["agents"]["judge"]
     prompts, spawned, again, waiting = {}, [], [], 0
     for number, spec in state_held["judge"].items():
         if spec["groups"] is None:
@@ -1284,7 +1289,7 @@ def final(run):
             corpus.remove(run / "returns" / "judge" / f"{name}.json",
                           missing_ok=True)
             again.append(spawn(run, "judge", name, f"group:{name}",
-                               shapes.GROUP, model, PHASES["judge"]))
+                               shapes.GROUP, judging))
         if refused:
             waiting += 1
             continue
@@ -1292,7 +1297,7 @@ def final(run):
             run, number, state_held["proposals"][number], lines,
             dictionary_text)
         spawned.append(spawn(run, "final", number, f"final:{number}",
-                             shapes.JUDGE, model, PHASES["judge"]))
+                             shapes.JUDGE, judging))
     # @req> REQ-20121033@iowcBoRYOX0g zqtqps
     # @req> REQ-82676674@dpVWKsG65ILE ukzxgc
     if again:

@@ -50,6 +50,8 @@ STATED_SKIP = ("aliases",)
 POLICED_SKIP = ("aliases", "word", "name", "carried")
 POLICED_ITEM_SKIP = POLICED_SKIP + ("default", "unit")
 CITATION_LIST = "citations"
+# @req> REQ-88203622@QLXb8abUOMT3 otmh6w
+CITABLE = ("requirement", "guard", "parameter", "data")
 ITEM_SKIP = ("entries", "acceptance_criteria", "text",
              "assessed", "relations", "status", CITATION_LIST)
 MEMBERS = "*"
@@ -549,6 +551,19 @@ def stamp_at(item, entry_key=None):
 
 def stamp(item):
     return stamp_of(item.uid, item.data)
+
+
+# @req> REQ-88203622@QLXb8abUOMT3 zi6xxa
+def citable(item):
+    return kind_of(item.uid, item.data) in CITABLE
+
+
+# @req> REQ-18176935@u-uprH5qBxMT r63o2r
+def cited_stamp(item):
+    held = stamp(item)
+    if kind_of(item.uid, item.data) in ("parameter", "data"):
+        held = digest([held, stamp_at(item, MEMBERS)])
+    return tag_stamp(held)
 
 
 def tag_stamp(held):

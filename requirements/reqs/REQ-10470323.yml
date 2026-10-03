@@ -13,7 +13,7 @@ rationale: A repository overriding every role writes one model rather than repea
   it per role, and may still name one role's model on its own.
 relations:
   REQ-68127788: constrains
-status: approved
+status: superseded
 text: Where the corpus states a default model for [challenge](challenge) roles, the
   product shall use it for every role the corpus states no model for.
 type: functional

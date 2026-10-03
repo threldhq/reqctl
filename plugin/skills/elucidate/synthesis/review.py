@@ -25,12 +25,20 @@ import shapes
 from reqctl import corpus
 
 FIELD = "governed_field"
-BOUND = "review_summary_lines"
-PAGE = "review_page_bytes"
-REDIRECTS = "review_redirects"
-SECONDS = "review_fetch_seconds"
-ATTEMPTS = "review_fetch_attempts"
+# @req+ REQ-87066486@uKF1dXTp7rGk mmgold
+# @req> review_summary_lines@gpqiM9kc6wV_ 4l32ki
+BOUND = 10
+# @req> review_page_bytes@TuS1V_5GViL- y2swyp
+PAGE = 5242880
+# @req> review_redirects@hL_venWbyEu_ vpsnks
+REDIRECTS = 5
+# @req> review_fetch_seconds@GSTHss8vIjb8 ehmws6
+SECONDS = 60
+# @req> review_fetch_attempts@Vc3KPadF5DCU i7na7o
+ATTEMPTS = 3
+# @req- mmgold
 ASKED = "asked.json"
+SPAWN = "review"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
 WAIT = 30
@@ -142,12 +150,17 @@ def build(run, answered):
     # @req> REQ-57259870@9aNmMpV7yL55 vmnzm3
     text = "" if source is None else README.format(
         text=corpus.read_text(source))
-    where = run / "prompts" / "review.md"
-    corpus.atomic_write(where, PROMPT.format(
+    prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
-        words=words, readme=text))
+        words=words, readme=text)
+    # @req> REQ-61616834@ocFeB1JGP518 dnioty
+    # @req> REQ-23060027@QKFI8tm_J5VF zq3w3z
+    spawning = plan.manifest(run, SPAWN, [plan.inline(
+        "review", prompt, shapes.REVIEW, plan.registered("best-in-class"),
+        plan.agent("best_in_class"))])
     print(field)
-    print(f"spawn one best-in-class agent with {where}, verbatim")
+    # @req> REQ-61616834@ocFeB1JGP518 b2u3gj
+    print(f"spawn the best-in-class agent through the workflow with {spawning}")
     return 0
 
 
@@ -472,17 +485,14 @@ def check(run):
     review, why = plan.read_return(path, shapes.REVIEW)
     # @req> REQ-82432523@VoDkIJau94BB 4cioyu
     again = (f"run `rm -f {path} {run / plan.REMOVED}`, then spawn the "
-             "best-in-class agent again with the same prompt")
+             "best-in-class agent again through the workflow with "
+             f"{plan.manifested(run, SPAWN)}")
     # @req> REQ-51975077@c_HnzFhrYbl_ m75ejw
     corpus.remove(run / ASKED, missing_ok=True)
     if review is None:
         print(f"{path}: the review {why}; {again}")
         return 1
-    records = plan.glossary()
-    found, pages = faults(review, plan.parameter(records, PAGE),
-                          plan.parameter(records, REDIRECTS),
-                          plan.parameter(records, SECONDS),
-                          plan.parameter(records, ATTEMPTS))
+    found, pages = faults(review, PAGE, REDIRECTS, SECONDS, ATTEMPTS)
     for fault in found:
         print(fault)
     if found:
@@ -493,7 +503,7 @@ def check(run):
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
               f"{remedy}")
         return 1
-    print("\n".join(summary(review, said, plan.parameter(records, BOUND))))
+    print("\n".join(summary(review, said, BOUND)))
     print()
     print("\n".join(table(review, said)))
     return 0

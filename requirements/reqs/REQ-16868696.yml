@@ -10,7 +10,7 @@ assessed:
   REQ-94426583: 5DnvqbSeaqCQIkT4j5HcqkSNzUQou7HOF6t2uNfZYv8
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
-  js66h5: aeAO8P05vHvNvQRUN_8Yq7Ivv9gnN1lu2MyNfA9Tm_s
+  js66h5: B52vZiNExr_NmpgJvRrkQ_6S3mJl1U5nnO12m3Fx74M
 priority: medium
 relations:
   REQ-32866040: depends_on
