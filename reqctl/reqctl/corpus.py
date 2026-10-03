@@ -717,12 +717,33 @@ def _parsed_schema(path, stamped):
         raise ReqctlError(f"unreadable schema {path}: a value YAML cannot build -- "
                           f"{type(error).__name__}: {error}") from error
     # @req- rnou7b
+    # @req+ REQ-19913588@Pbi1CR5jtivz mszvfu
     try:
         Draft202012Validator.check_schema(declared)
     except SchemaError as error:
         where = ".".join(str(p) for p in error.absolute_path) or "(schema)"
         raise ReqctlError(f"{path.name}: {where}: {error.message}") from error
+    except RecursionError as error:
+        raise ReqctlError(f"{path.name}: nests too deeply to check") from error
+    validator = Draft202012Validator(declared)
+    for ref in _refs(declared):
+        try:
+            list(validator.evolve(schema={"$ref": ref}).iter_errors(None))
+        except Exception as error:
+            raise ReqctlError(f"{path.name}: $ref {ref!r} cannot be followed") from error
+    # @req- mszvfu
     return declared
+
+
+def _refs(node, root=True):
+    if isinstance(node, list):
+        for value in node:
+            yield from _refs(value, False)
+    elif isinstance(node, dict) and (root or "$id" not in node):
+        if isinstance(node.get("$ref"), str):
+            yield node["$ref"]
+        for value in node.values():
+            yield from _refs(value, False)
 
 
 PACKAGED_SCHEMAS = Path(__file__).resolve().parent / "schemas"
