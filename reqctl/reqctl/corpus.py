@@ -706,12 +706,17 @@ def schema_path(root, name):
 
 @functools.lru_cache(maxsize=None)
 def _parsed_schema(path, stamped):
+    # @req+ REQ-19913588@Pbi1CR5jtivz rnou7b
     try:
         declared = yaml.load(path.read_text(), Loader=Loader)
     except UnicodeDecodeError as error:
         raise ReqctlError(f"unreadable schema {path}: not valid UTF-8") from error
     except (OSError, yaml.YAMLError) as error:
         raise ReqctlError(f"unreadable schema {path}: {error}") from error
+    except Exception as error:
+        raise ReqctlError(f"unreadable schema {path}: a value YAML cannot build -- "
+                          f"{type(error).__name__}: {error}") from error
+    # @req- rnou7b
     try:
         Draft202012Validator.check_schema(declared)
     except SchemaError as error:
