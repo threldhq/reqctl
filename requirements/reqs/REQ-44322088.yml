@@ -1,0 +1,33 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) of a parameter
+  then: the comments carrying it and what the parameter's [citation list](citation_list)
+    holds for it are gone
+  when: the product removes the citation
+- given: a [citation list](citation_list) of a data item holding a [citation identity](citation_identity)
+    that no [statement citation](statement_citation) names
+  then: the list no longer holds the identity
+  when: the product is asked to remove the identity from the list
+assessed:
+  REQ-13298390: OIZCRlURf3pq-ZhHeyKdDSnceHIMsqnrRUQPpcjLOS8
+  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
+  REQ-59136977: 5NZtW-PM9X2OOiZgf5rDE9IouDL_tKWJpcAAzbj8lWo
+  REQ-81063063: J51Kuu-RKFjKtxqc3zlT27HAFl1_TAy_lK0VI9FlpSM
+  REQ-81275367: rZszCCP31YAUF8OI_m6qTAE3rFLUI2taSxCDDjYEk-E
+  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
+  citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
+  citation_list: oI_huIAigDjUEHWU9ldVcxiVBvI0Rrr430zuqriAcy4
+  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+priority: medium
+relations:
+  REQ-13298390: depends_on
+  REQ-26984738: depends_on
+  REQ-59136977: depends_on
+  REQ-81063063: depends_on
+  REQ-81275367: depends_on
+  REQ-88203622: depends_on
+status: approved
+text: The product shall remove a [statement citation](statement_citation) of a parameter
+  or a data item, and a [citation identity](citation_identity) from the [citation
+  list](citation_list) of one, exactly as the product does for a requirement.
+type: functional
+verification: inspection
