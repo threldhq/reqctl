@@ -8,10 +8,14 @@ import re
 import secrets
 import shutil
 from pathlib import Path
+from urllib.parse import urldefrag, urljoin, urlsplit
 
 import yaml
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError
+from jsonschema.validators import validator_for
+from referencing import Registry
+from referencing.jsonschema import DRAFT202012, specification_with
 
 Loader = yaml.CSafeLoader if yaml.__with_libyaml__ else yaml.SafeLoader
 
@@ -732,12 +736,58 @@ def _parsed_schema(path, stamped):
         raise ReqctlError(f"unreadable schema {path}: a value YAML cannot build -- "
                           f"{type(error).__name__}: {error}") from error
     # @req- rnou7b
+    # @req+ REQ-19913588@Pbi1CR5jtivz mszvfu
     try:
         Draft202012Validator.check_schema(declared)
+        _refuse_unfollowable(path, DRAFT202012.create_resource(declared))
     except SchemaError as error:
         where = ".".join(str(p) for p in error.absolute_path) or "(schema)"
         raise ReqctlError(f"{path.name}: {where}: {error.message}") from error
+    except RecursionError as error:
+        raise ReqctlError(f"{path.name}: nests too deeply to check") from error
+    # @req- mszvfu
     return declared
+
+
+# @req> REQ-19913588@Pbi1CR5jtivz 4sbgsj
+def _refuse_unfollowable(path, resource):
+    try:
+        walked = list(_walked(resource, ""))
+        if any(specification_with(schema.get("$schema", ""), default=DRAFT202012)
+               is not DRAFT202012
+               or validator_for(schema, Draft202012Validator) is not Draft202012Validator
+               for _, schema in walked[1:]):
+            return
+    except ValueError as error:
+        raise ReqctlError(f"{path.name}: an $id or $schema is not an address -- "
+                          f"{error}") from error
+    root = resource.id() or ""
+    registry = Registry().with_resource(root, resource)
+    with contextlib.suppress(ValueError):
+        registry = registry.crawl()
+        if registry[root] is not resource:
+            registry = registry.with_resource(root, resource)
+    for base, keyword, ref in sorted({(base, keyword, schema[keyword])
+                                      for base, schema in walked
+                                      for keyword in ("$ref", "$dynamicRef")
+                                      if keyword in schema}):
+        try:
+            address = base if ref.startswith("#") else urldefrag(urljoin(base, ref)).url
+            if address not in registry and urlsplit(address).scheme:
+                continue
+            target = registry.resolver(base).lookup(ref).contents
+        except Exception as error:
+            raise ReqctlError(f"{path.name}: {keyword} {ref!r} cannot be followed") from error
+        if not isinstance(target, (dict, bool)):
+            raise ReqctlError(f"{path.name}: {keyword} {ref!r} names a value, not a schema")
+
+
+def _walked(resource, base):
+    base = urljoin(base, resource.id() or "")
+    if isinstance(resource.contents, dict):
+        yield base, resource.contents
+    for sub in DRAFT202012.subresources_of(resource.contents):
+        yield from _walked(DRAFT202012.create_resource(sub), base)
 
 
 PACKAGED_SCHEMAS = Path(__file__).resolve().parent / "schemas"
