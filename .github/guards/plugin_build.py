@@ -27,14 +27,14 @@ def faults(root):
         return [fault]
     project = wheel.get("project") or {}
     name, version = project.get("name"), project.get("version")
-    # @req> GUARD-56838909@thIjmFd7Wvy9 zznuqt
+    # @req> GUARD-56838909@xIKhRXKhnYS1 zznuqt
     if not name or not version:
         return [f"{WHEEL}: states no project name or version for the plugin to "
                 "match"]
     listed, fault = read(root, MARKETPLACE, json.loads)
     if fault:
         return [fault]
-    # @req+ GUARD-32527345@N-55spkkHLMg zykp4x
+    # @req+ GUARD-32527345@r3WSOnuqI9M1 zykp4x
     entry = next((one for one in listed.get("plugins") or []
                   if isinstance(one, dict) and one.get("name") == name), None)
     if entry is None:
@@ -56,11 +56,11 @@ def faults(root):
     manifest, fault = read(root, where, json.loads)
     if fault:
         return [fault]
-    # @req> GUARD-56838909@thIjmFd7Wvy9 5442zm
+    # @req> GUARD-56838909@xIKhRXKhnYS1 5442zm
     if manifest.get("version") != version:
         return [f"{where}: the plugin states version {manifest.get('version')}, "
                 f"the reqctl wheel {version} -- state one version in both"]
-    # @req+ GUARD-32527345@N-55spkkHLMg el2tax
+    # @req+ GUARD-32527345@r3WSOnuqI9M1 el2tax
     tag = f"{manifest.get('name')}--v{version}"
     pinned = ((source.get("source"), source.get("ref"), source.get("sha"))
               if isinstance(source, dict) else None)
