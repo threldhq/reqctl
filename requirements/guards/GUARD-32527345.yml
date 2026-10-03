@@ -1,7 +1,7 @@
 acceptance_criteria:
-- given: a change moving the reqctl wheel to a new version while the plugin marketplace
-    of the repository lists the Claude Code plugin by a source pinned to the [release
-    tag](release_tag) of the old one
+- given: a change moving the [reqctl wheel](reqctl_wheel) to a new version while the
+    plugin marketplace of the repository lists the Claude Code plugin by a source
+    pinned to the [release tag](release_tag) of the old one
   then: the build refuses the change
   when: the build runs
 - given: the plugin marketplace of the repository listing the Claude Code plugin from
@@ -12,8 +12,9 @@ acceptance_criteria:
   then: the build refuses the change
   when: the build runs
 assessed:
-  GUARD-56838909: thIjmFd7Wvy9mCXKuc9YQFNqxbnPNTu0ZrBVmxzAo3w
+  GUARD-56838909: xIKhRXKhnYS1MYLIbdImBNLs2hvqG6FJ_64zn3NvNu8
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
 citations:
   el2tax: zzQAfW3WF6P7Wg6K6XmzjEv-m6nrirGh2-jh2Nat40o
   zykp4x: E0V6bn_vn3qzlBVCN7ErUOhrpp8gRfry-rC82PkfooU
@@ -21,5 +22,5 @@ relations:
   GUARD-56838909: depends_on
 status: approved
 text: If the plugin marketplace of the repository does not list the Claude Code plugin
-  by a source pinned to the [release tag](release_tag) of the version the reqctl wheel
-  states, then the build shall refuse the change.
+  by a source pinned to the [release tag](release_tag) of the version the [reqctl
+  wheel](reqctl_wheel) states, then the build shall refuse the change.

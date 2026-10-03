@@ -1,16 +1,17 @@
 acceptance_criteria:
-- given: the reqctl wheel stating a version
+- given: the [reqctl wheel](reqctl_wheel) stating a version
   then: it lists the Claude Code plugin by a source pinned to the [release tag](release_tag)
     of that version
   when: the plugin marketplace of the repository is read
-- given: a change moving the reqctl wheel to a new version
+- given: a change moving the [reqctl wheel](reqctl_wheel) to a new version
   then: it lists the Claude Code plugin by a source pinned to the [release tag](release_tag)
     of the new version
   when: the plugin marketplace that change carries is read
 assessed:
-  REQ-30556120: DkVMnz07BUroy4M656urOBBlkpb1hqpti6dUmqVkuus
+  REQ-30556120: XH-t8i6eMs-_s0z-LqEpn4f8islaU3KIDGRwswWiVyc
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
 priority: medium
 relations:
   REQ-30556120: constrains
@@ -18,6 +19,6 @@ relations:
 status: approved
 text: The product shall list the Claude Code plugin, in the plugin marketplace of
   the repository that holds its sources, by a source pinned to the [release tag](release_tag)
-  of the version the reqctl wheel states.
+  of the version the [reqctl wheel](reqctl_wheel) states.
 type: functional
 verification: inspection

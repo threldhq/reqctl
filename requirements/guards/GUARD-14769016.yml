@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: a release pull request moving the [reqctl wheel](reqctl_wheel) to 0.1.6 and
+    the Claude Code plugin to a source pinned to reqctl--v0.1.6
+  then: releases/download/reqctl--v0.1.6/reqctl-0.1.6-py3-none-any.whl of the repository
+    serves the [reqctl wheel](reqctl_wheel) built at that merge commit, with no manual
+    step
+  when: it merges into the default branch and the build pushes reqctl--v0.1.6 at the
+    merge commit
+- given: a change that reached the default branch, at whose merge commit the build
+    pushed reqctl--v0.1.6 while attaching the [reqctl wheel](reqctl_wheel) failed
+  then: releases/download/reqctl--v0.1.6/reqctl-0.1.6-py3-none-any.whl of the repository
+    serves the [reqctl wheel](reqctl_wheel) built at that merge commit
+  when: the build runs on that change again
+assessed:
+  GUARD-60575106: cyDaQHsIDZhKvI_k7z0nyfMVUPzfsgOz9El4ta0v_Pc
+  release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+relations:
+  GUARD-60575106: depends_on
+status: approved
+text: While a [release tag](release_tag) stands at the commit of a change that has
+  reached the default branch, whether pushed before the build runs on that change
+  or while it does, and no GitHub release for that [release tag](release_tag) carries
+  a [reqctl wheel](reqctl_wheel), when the build runs on that change, the build shall
+  attach the [reqctl wheel](reqctl_wheel) built at that [release tag](release_tag)
+  to a GitHub release for that [release tag](release_tag), creating that release where
+  none exists.

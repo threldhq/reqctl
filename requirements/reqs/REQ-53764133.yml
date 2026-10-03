@@ -5,7 +5,7 @@ acceptance_criteria:
     the corpus from it
   when: reqctl portal is run in it
 assessed:
-  REQ-49576265: dETVQnFJ79Sd9FtB8hj_gFw3AK4B-2hLwJokbaMRE3U
+  REQ-49576265: pFihs7WdIwGSo9e5kkPdFZLxtJJRQIRHfXC3rdxNwAs
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   f7ob5l: SnoASiti_1CIUtxdMK-RRhv4jounMqspkl9kRk9cACg

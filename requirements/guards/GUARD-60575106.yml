@@ -1,6 +1,6 @@
 acceptance_criteria:
-- given: a release pull request moving the reqctl wheel to 0.1.5 and the Claude Code
-    plugin to a source pinned to reqctl--v0.1.5
+- given: a release pull request moving the [reqctl wheel](reqctl_wheel) to 0.1.5 and
+    the Claude Code plugin to a source pinned to reqctl--v0.1.5
   then: the build pushes reqctl--v0.1.5 at the merge commit
   when: it merges into the default branch
 - given: a change reaching the default branch that leaves the Claude Code plugin pinned
@@ -12,8 +12,9 @@ acceptance_criteria:
   then: the build pushes no tag and moves none
   when: it reaches the default branch
 assessed:
-  GUARD-56838909: thIjmFd7Wvy9mCXKuc9YQFNqxbnPNTu0ZrBVmxzAo3w
+  GUARD-56838909: xIKhRXKhnYS1MYLIbdImBNLs2hvqG6FJ_64zn3NvNu8
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
 citations:
   s6dmsl: LlVNNnzPID8OgR9twNvbPg4bTOde5fdLPk0xEvfv0v4
 relations:
