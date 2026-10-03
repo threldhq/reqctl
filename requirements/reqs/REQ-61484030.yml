@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: reqctl --json context naming an item the corpus does not hold
+  then: 'standard error holds the one line reqctl: followed by the message, and reqctl
+    ends with a non-zero exit status'
+  when: the standard output is closed before the fault is written
+- given: a command run with --json that cannot put back a file the command wrote,
+    with the standard output closed
+  then: standard error names the file not put back
+  when: the command ends
+- given: a fault stated as JSON on an open standard output
+  then: the fault appears on standard output alone
+  when: the command ends
+assessed:
+  REQ-19913588: Pbi1CR5jtivz8qi3AlI320-7pRuKcedppG7UpnOk2TU
+citations:
+  s75lcl: zpovRZHNEPbMBEDqDUemY8gTyvWUD7RbMVehwQfTxCU
+priority: medium
+relations:
+  REQ-19913588: derives_from
+status: approved
+text: If a fault cannot be written to the standard output of a reqctl command, then
+  the product shall state the fault on standard error as one line naming reqctl and
+  the message.
+type: functional
+verification: inspection

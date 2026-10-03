@@ -1,11 +1,11 @@
 acceptance_criteria:
-- given: given a git repository whose origin remote names owner/repo, and a browser
-    remembering another repository
-  then: then the [portal](portal) remembers owner/repo in place of the other and reads
+- given: a git repository whose origin remote names owner/repo, and a browser remembering
+    another repository
+  then: the [portal](portal) remembers owner/repo in place of the other and reads
     the corpus from it
-  when: when reqctl portal is run in it
+  when: reqctl portal is run in it
 assessed:
-  REQ-49576265: TZb-gviCuP5YoreZuR-DpCD14zDAOXTH3QmbqBJlzFE
+  REQ-49576265: dETVQnFJ79Sd9FtB8hj_gFw3AK4B-2hLwJokbaMRE3U
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   f7ob5l: SnoASiti_1CIUtxdMK-RRhv4jounMqspkl9kRk9cACg

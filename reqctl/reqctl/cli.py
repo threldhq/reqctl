@@ -869,7 +869,7 @@ def cmd_compare(args):
     return EXIT_OK
 
 
-# @req> REQ-49576265@TZb-gviCuP5Y pihyx4
+# @req> REQ-49576265@dETVQnFJ79Sd pihyx4
 def _opened(url):
     if not webbrowser.open(url):
         print(f"no browser opened; open {url} in one", file=sys.stderr)
@@ -877,9 +877,9 @@ def _opened(url):
 
 def cmd_portal(args):
     held = _portal.repository(os.getcwd())
-    # @req+ REQ-49576265@TZb-gviCuP5Y wx5icq
+    # @req+ REQ-49576265@dETVQnFJ79Sd wx5icq
     server = _portal.server()
-    # @req> REQ-53764133@hNDAdKGPLVUD f7ob5l
+    # @req> REQ-53764133@s638VvRMfEgi f7ob5l
     url = f"http://{_portal.HOST}:{_portal.PORT}/?repo={held}"
     _emit(args, {"repository": held, "url": url},
           f"the portal on {held} is at {url} -- Ctrl-C stops it")
@@ -1186,17 +1186,24 @@ def _drop_output():
         pass
 
 
+# @req> REQ-61484030@n7khA9l0yAgr s75lcl
+# @req> REQ-19913588@Pbi1CR5jtivz irna4n
 def _fault(as_json, error):
-    if as_json:
-        print(json.dumps({"error": str(error)}, indent=2))
-    else:
-        print(f"reqctl: {error}", file=sys.stderr)
+    try:
+        if sys.stdout is not None:
+            if as_json:
+                print(json.dumps({"error": str(error)}, indent=2), flush=True)
+                return EXIT_INVALID
+            sys.stdout.flush()
+    except OSError:
+        _drop_output()
+    print(f"reqctl: {error}", file=sys.stderr)
     return EXIT_INVALID
 
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
-    # @req+ REQ-19913588@zNetOTQBhHYZ zh6xly
+    # @req+ REQ-19913588@Pbi1CR5jtivz zh6xly
     try:
         parser = build_parser(_fields.root(), _fielded(argv))
     except (ReqctlError, OSError, UnicodeError) as error:
@@ -1210,15 +1217,22 @@ def main(argv=None):
                                        "`reqctl --help` lists the commands"},
                              indent=2))
         raise
-    # @req+ REQ-19913588@zNetOTQBhHYZ dw57fs
+    # @req+ REQ-19913588@Pbi1CR5jtivz dw57fs
     try:
+        # @req> REQ-51372579@dWaIOhXJzQnK 7fex4d
+        if sys.stdout is None:
+            reader, writer = os.pipe()
+            os.close(reader)
+            sys.stdout = os.fdopen(writer, "w")
         # @req> REQ-24406170@M08jCONzg-4u 3ofubr
         with corpus.all_or_nothing():
-            try:
-                return args.func(args)
-            except BrokenPipeError:
-                _drop_output()
-                return EXIT_OK
+            done = args.func(args)
+            sys.stdout.flush()
+            return done
+    except BrokenPipeError:
+        _drop_output()
+        # @req> REQ-51372579@dWaIOhXJzQnK ihfdn7
+        return EXIT_INVALID
     except (ReqctlError, OSError, UnicodeError) as error:
         return _fault(args.json, error)
     # @req- dw57fs

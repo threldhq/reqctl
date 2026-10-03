@@ -6,7 +6,7 @@ acceptance_criteria:
   then: the prompt states the term's word, aliases and definition
   when: the run is built
 assessed:
-  REQ-90454282: dAczt3znuEizUwF61ilhHQCmujXW8QEupKCdfg60rZc
+  REQ-90454282: M0OdZ2RxH5qSAggaNA3jqFbkTXkdvD7VSStQiH-FPdw
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
 citations:
   4xoc6j: _0Bzc4sOtKjguEGid-lHum05sWzqDLi1Vwht1okoIBA

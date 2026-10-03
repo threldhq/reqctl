@@ -19,6 +19,8 @@ Cite the code that satisfies a requirement with
 behaviour satisfies it. Never compose or paste a citation. Once the code is read
 against the statement that now stands, re-pin a stale citation with
 `reqctl repin ID`; remove one that no longer governs with `reqctl untag ID`.
+Do not cite helpers or incidental code. A region that moved is untagged and
+cited again. A statement citation is the only form `reqctl trace` accepts.
 
 Verify code by reading it against the statement it cites: `reqctl compare` names
 the cited regions a change touches, and `reqctl trace` must pass.
@@ -26,6 +28,9 @@ the cited regions a change touches, and `reqctl trace` must pass.
 Drafting a requirement, marking one approved and cutting a baseline are
 proposals. Approval is the merge, and only the owner merges. A pull request that
 changes the corpus changes nothing else.
+It lands with the code still pinned to the statements it superseded, so `main`
+goes red on traceability. The pull request that re-pins is the next work, ahead
+of anything else; `implement` states how.
 
 Commit the corpus, then run `reqctl baseline --generate`, then commit the
 baseline. A baseline holding an unresolved merge is regenerated with

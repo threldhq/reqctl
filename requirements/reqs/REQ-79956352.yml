@@ -11,9 +11,13 @@ acceptance_criteria:
 - given: a value carrying no hidden character
   then: the product writes the value
   when: the value is written
+- given: a corpus holding an item whose value carries a hidden character
+  then: the product refuses the corpus, naming the item and the field
+  when: the corpus is validated
 assessed: {}
 citations:
-  7g4u3w: yh0_YslSo9Qvmok59q4u-DHPnHsTLKqoBl7y4SxxUeg
+  5uqc7i: 0eu7n7wXk8GicrE9PV64x-qzpS1Yv7JwLAAPHaVXm5M
+  7g4u3w: ojcBpomGGpsuvEDEgkz8DwHntgtGxee1QRViBsCGa_s
 priority: medium
 relations: {}
 status: approved

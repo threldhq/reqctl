@@ -3,7 +3,7 @@ acceptance_criteria:
   then: the install completes and the plugin's hook and skills run there without failing
   when: the Claude Code plugin is installed into it
 assessed:
-  REQ-38288492: 1yCh_1wG8N-lqE4sY0Qg6z_rh_wWAAvM8bQztUmtvhE
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
 citations:
   bd2fgi: 2scBimq-73D1Be1gw2fn6wqZNCEuMf0CCmbzhqeESGE
