@@ -16,6 +16,8 @@ assessed:
   REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+citations:
+  rsw2w2: NADaXoBLi40v05te8JwKh3BW7JLoMqN7S5afbv-fFGA
 priority: medium
 relations:
   REQ-17757558: depends_on

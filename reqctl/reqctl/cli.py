@@ -751,9 +751,10 @@ def cmd_trace(args):
 
 # @req> REQ-78685242@62t3Pc4LqF05 da5qxm
 def _listed(store, uid, entries):
-    if not uid.startswith(("REQ-", "GUARD-")):
-        return []
     item = corpus.find(store, uid)
+    # @req> REQ-88203622@QLXb8abUOMT3 3xsagz
+    if not corpus.citable(uid, item.data):
+        return []
     before = corpus.mapping(item.data, corpus.CITATION_LIST)
     held = dict(before)
     for identity, taken in entries.items():
@@ -778,10 +779,13 @@ def cmd_tag(args):
     asked = []
     for first, last, req in zip(args.first, args.last, args.req):
         item = corpus.find(tree, req)
-        if not str(item.uid).startswith(("REQ-", "GUARD-")):
-            raise ReqctlError(f"{req}: only a requirement or a guard is cited")
+        # @req> REQ-88203622@QLXb8abUOMT3 myjx5s
+        if not corpus.citable(str(item.uid), item.data):
+            raise ReqctlError(f"{req}: only a requirement, a guard, a parameter "
+                              "or a data item is cited")
+        # @req> REQ-18176935@u-uprH5qBxMT wkv6gw
         asked.append((first, last, str(item.uid),
-                      corpus.tag_stamp(corpus.stamp(item))))
+                      corpus.tag_stamp(corpus.cited_stamp(item))))
     change, written = cite.tagged(root, args.path, asked, args.exclusive)
     # @req- nmyxfc
     changes = [change]
@@ -806,7 +810,8 @@ def cmd_repin(args):
     if corpus.raw(item).get("status") == "deprecated":
         raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
                           f"is removed, not re-pinned: `reqctl untag {args.id}`")
-    stamp = corpus.tag_stamp(corpus.stamp(item))
+    # @req> REQ-41600593@dV84ANKBJqdk rsw2w2
+    stamp = corpus.tag_stamp(corpus.cited_stamp(item))
     changes = [cite.repinned(root, citation, stamp)]
     # @req> REQ-64846889@pHOO0sEc7V1K 7dhw4d
     # @req> REQ-17757558@4j9rQN-e61OY tevb2p
@@ -838,7 +843,8 @@ def cmd_unlist(args):
     item = corpus.find(tree, args.uid)
     uid = str(item.uid)
     # @req> REQ-97939970@lyVUGGzeSEQW xrna4u
-    if (not uid.startswith(("REQ-", "GUARD-"))
+    # @req> REQ-44322088@XOM-uvuGSwbD 7e5dqc
+    if (not corpus.citable(uid, item.data)
             or args.id not in corpus.mapping(item.data, corpus.CITATION_LIST)):
         raise ReqctlError(f"{uid}: its citation list does not hold {args.id}")
     # @req+ REQ-59136977@5NZtW-PM9X2O s3g7ya

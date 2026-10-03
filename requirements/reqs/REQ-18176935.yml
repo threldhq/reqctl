@@ -11,6 +11,9 @@ acceptance_criteria:
 assessed:
   REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
   statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+citations:
+  r63o2r: 43AjPHDY5HpZCSYiFw46OTjwlgg2OQiGRk8Yr2cyrfQ
+  wkv6gw: TFmfd6Au2V7hFtdtfJhO9Go5JIvZCo3PoeVVEpI05jg
 priority: medium
 relations:
   REQ-88203622: depends_on

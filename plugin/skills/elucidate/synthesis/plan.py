@@ -37,9 +37,21 @@ SIBLINGS = "siblings"
 SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
-# @req> REQ-18272120@P5XOlho5WrkH o47rwb
-BOUNDS = ("recall_batch", "judge_bound", "judge_group", "floor_k",
-          "agent_ceiling")
+# @req+ REQ-87066486@jSgYRKWg1Lky udnw6h
+# @req> recall_batch@k7K8OXrTFia8 7f7moo
+RECALL_BATCH = 40
+# @req> judge_bound@yESi_L2XNEEg pjbkc7
+JUDGE_BOUND = 45
+# @req> judge_group@UQnqF3v3JumT tfddk2
+JUDGE_GROUP = 20
+# @req> floor_k@ZjERL-XRvx8C ol3y4x
+FLOOR_K = 10
+# @req> agent_ceiling@9MXMFXqswJ4M ohe2ox
+AGENT_CEILING = 150
+BOUNDS = {"recall_batch": RECALL_BATCH, "judge_bound": JUDGE_BOUND,
+          "judge_group": JUDGE_GROUP, "floor_k": FLOOR_K,
+          "agent_ceiling": AGENT_CEILING}
+# @req- udnw6h
 PHASES = {"recall": "medium", "judge": "high"}
 MODELS = {"recall": "sonnet", "judge": "opus"}
 
@@ -295,17 +307,6 @@ def named_item(records, kind, name):
             f"{kind} named {name}, and the build reads its bounds from it. "
             "Mint one first.")
     return found[0]
-
-
-def parameter(records, name):
-    # @req+ REQ-18272120@P5XOlho5WrkH dyeqka
-    _, data = named_item(records, "parameter", name)
-    held = list(corpus.entries(data) or {})
-    if len(held) != 1 or not str(held[0]).isdigit():
-        raise SystemExit(f"{name} states {held}, and the build is bounded by "
-                         "one whole number")
-    # @req- dyeqka
-    return int(held[0])
 
 
 def family(model):
@@ -885,7 +886,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
                 else "nothing was declined in this run")
     held = proposals(run)
     store, records = loaded()
-    bounds = {name: parameter(records, name) for name in BOUNDS}
+    bounds = dict(BOUNDS)
     models = roles(records)
     settled_on = binding(run, held, corpus.find_root(), records)
     traces = traced(run, words, held)

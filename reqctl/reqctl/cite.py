@@ -15,8 +15,9 @@ from .corpus import ReqctlError
 
 OPEN, CLOSE, SINGLE = "+", "-", ">"
 SIGN = re.compile(r"@req([+>-])(?=\s|$)")
+# @req> REQ-88203622@QLXb8abUOMT3 y644wh
 MARKER = re.compile(
-    rf"\A@req(?P<sign>[+>-])(?:\s+(?P<uid>(?:{corpus.KINDS})-\d+)"
+    rf"\A@req(?P<sign>[+>-])(?:\s+(?P<uid>(?:{corpus.KINDS})-\d+|{corpus.NAME}(?=@))"
     r"(?:@(?P<stamp>\S*))?)?(?:\s+(?P<id>\S+))?(?:\s+(?P<exclusive>exclusive))?\Z")
 FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
 # @req+ REQ-52925332@wlFlbfJQbQ2g tup4w2

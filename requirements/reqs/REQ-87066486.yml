@@ -19,6 +19,9 @@ assessed:
   review_page_bytes: 8byjsLX3ASyH4_Zc_WWAPQSRAwOizmU7pDqp7h4API4
   review_page_bytes.*: WX_pLJ5Q5te-7IkbHsWsq3DH3WqUCwHeu4NWrn4cJAw
   statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+citations:
+  mmgold: A3QA8Bt7ntmt5sDkq3kOc_1uElzgTV3E0EYjdUWF7Lo
+  udnw6h: ER_UylTlHTR_M22SyEQSxFxQO8J9Bf-pUCcnqLsPOhs
 priority: medium
 relations:
   REQ-18272120: supersedes
