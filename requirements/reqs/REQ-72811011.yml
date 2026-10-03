@@ -9,16 +9,12 @@ acceptance_criteria:
   then: it is spawned on that model ID rather than on the family the ID belongs to
   when: the agent is spawned
 assessed:
-  REQ-23060027: QKFI8tm_J5VF5FlpyYn7ENn8OIvvcTXbZ_-9Z0mJhIo
-  REQ-82356895: oVmNHXQoc3Fa-QaVoxZnCI3A9ftlEf0vfJpMfJImdkg
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
 priority: medium
-relations:
-  REQ-23060027: constrains
-  REQ-82356895: supersedes
-status: approved
+relations: {}
+status: draft
 text: If an entry of ${elucidate_agents} names its model by anything other than a
   [pinned model ID](pinned_model_id), then the product shall refuse the run.
 type: functional
