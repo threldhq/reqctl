@@ -2,12 +2,25 @@ acceptance_criteria:
 - given: a workflow stating no permissions
   then: the build refuses the change
   when: the build runs
-- given: a workflow granting read access to contents with a job in it granting write
-    access to contents
+- given: a workflow granting read access to contents with a job in it, other than
+    the job that pushes a [release tag](release_tag), granting write access to contents
   then: the build refuses the change
   when: the build runs
-assessed: {}
-relations: {}
+- given: the job that pushes a [release tag](release_tag) granting write access to
+    contents and to pull requests
+  then: the build refuses the change
+  when: the build runs
+- given: the workflow holding the job that pushes a [release tag](release_tag) granting
+    write access to contents at the workflow level
+  then: the build refuses the change
+  when: the build runs
+assessed:
+  GUARD-60575106: QWS2QB-n2_dHE5jaZVwrwj3QiQwh9fAouSFzS7cQujM
+  release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+relations:
+  GUARD-60575106: depends_on
 status: approved
-text: If the permissions of a workflow, or of a job in a workflow, are other than
-  read access to contents alone, then the build shall refuse the change.
+text: If the permissions of a workflow, or of a job in a workflow other than the job
+  that pushes a [release tag](release_tag), are other than read access to contents
+  alone, or the permissions of the job that pushes a [release tag](release_tag) are
+  other than write access to contents alone, then the build shall refuse the change.

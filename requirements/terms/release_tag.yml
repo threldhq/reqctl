@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  release_tag:
+    aliases:
+    - release tags
+    definition: A git tag of the repository that holds reqctl's sources, named <plugin-name>--v<version>,
+      where the version is the one plugin.json states at the commit the tag marks.
+    word: release tag
+kind: term
+status: approved

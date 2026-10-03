@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a release pull request moving the reqctl wheel to 0.1.5 and the Claude Code
+    plugin to a source pinned to reqctl--v0.1.5
+  then: the build pushes reqctl--v0.1.5 at the merge commit
+  when: it merges into the default branch
+- given: a change reaching the default branch that leaves the Claude Code plugin pinned
+    to a [release tag](release_tag) already pushed
+  then: the build pushes no tag and moves none
+  when: the build runs
+- given: a change first pinning the Claude Code plugin to a [release tag](release_tag)
+    already pushed at another commit
+  then: the build pushes no tag and moves none
+  when: it reaches the default branch
+assessed:
+  GUARD-56838909: thIjmFd7Wvy9mCXKuc9YQFNqxbnPNTu0ZrBVmxzAo3w
+  release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+relations:
+  GUARD-56838909: depends_on
+status: approved
+text: When a change that reaches the default branch first pins the Claude Code plugin,
+  in the plugin marketplace of the repository, to a [release tag](release_tag) that
+  has not been pushed to the repository, the build shall push that [release tag](release_tag)
+  at the commit of that change.
