@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) of a data item naming a stamp
+    the data item no longer carries
+  then: the citation names the stamp the data item carries
+  when: the product re-pins the citation
+- given: a [statement citation](statement_citation) of a parameter the corpus has
+    deprecated
+  then: the product refuses and the [code base](code_base) is unchanged
+  when: the product is asked to re-pin the citation
+assessed:
+  REQ-17757558: 4j9rQN-e61OYG38ijgByc3TLEHos-5NYvLjL6eo5Nng
+  REQ-18176935: u-uprH5qBxMTk7RLhLVJ39PV5F5depbLxxBYrr2xkWY
+  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
+  REQ-70626698: ybHsrTlF-wU1DJlKjkn2xPl6XzCm9kCorA_lVp1CsS8
+  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+priority: medium
+relations:
+  REQ-17757558: depends_on
+  REQ-18176935: depends_on
+  REQ-18833394: depends_on
+  REQ-64846889: depends_on
+  REQ-70626698: depends_on
+  REQ-88203622: depends_on
+status: approved
+text: The product shall re-pin a [statement citation](statement_citation) of a parameter
+  or a data item exactly as the product re-pins a [statement citation](statement_citation)
+  of a requirement.
+type: functional
+verification: inspection

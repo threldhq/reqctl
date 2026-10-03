@@ -1,0 +1,41 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) naming a stamp the approved parameter
+    it names no longer carries
+  then: the product reports the citation as a problem
+  when: trace is given no base branch
+- given: a [statement citation](statement_citation) of a data item whose [citation
+    digest](citation_digest) differs from the one the data item's [citation list](citation_list)
+    holds for it
+  then: the product reports the citation as a problem
+  when: trace is run
+- given: a [test](test) carrying a [statement citation](statement_citation) of a parameter
+  then: the product reports the citation as a problem and names no [test](test) among
+    what cites the parameter
+  when: trace is run
+assessed:
+  REQ-13384695: P9NXsZKZp683hy0Csa1HeSwHpU5MeNs-vEcM2BbccvM
+  REQ-18176935: u-uprH5qBxMTk7RLhLVJ39PV5F5depbLxxBYrr2xkWY
+  REQ-19896380: 2sOnckMwnWfx54LPxaP0CI5eHt16m804M_5H5fFPhcQ
+  REQ-32191310: ot16I3lSs2Nu4P6630ojNQEKWmJJU0EywrhZK2VN4Uk
+  REQ-37671861: eoVPY6SstgbetS0rAHq4o5hHXcsjM7IcFqoGd47cswk
+  REQ-67655319: ezp6TxUzJ72EeXlq0cOSWQ13pMcIBZgw_tCI2-n2jDI
+  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
+  citation_digest: zaIcW6twyA6Shtvgk36zhODZNoZZkIX9Yhjg4c3UVv0
+  citation_list: oI_huIAigDjUEHWU9ldVcxiVBvI0Rrr430zuqriAcy4
+  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+priority: medium
+relations:
+  REQ-13384695: depends_on
+  REQ-18176935: depends_on
+  REQ-19896380: depends_on
+  REQ-32191310: depends_on
+  REQ-37671861: depends_on
+  REQ-67655319: depends_on
+  REQ-88203622: depends_on
+status: approved
+text: When trace is run, the product shall report each [statement citation](statement_citation)
+  of a parameter or a data item exactly as the product reports a [statement citation](statement_citation)
+  of a requirement.
+type: functional
+verification: inspection

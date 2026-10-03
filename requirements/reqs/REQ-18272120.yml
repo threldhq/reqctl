@@ -16,7 +16,7 @@ priority: medium
 relations:
   REQ-48148587: constrains
   REQ-48762557: constrains
-status: approved
+status: deprecated
 text: If any of the parameters recall_batch, judge_bound, judge_group, floor_k and
   agent_ceiling is missing from the corpus or holds other than one whole number, then
   the product shall refuse the run.

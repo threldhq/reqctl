@@ -4,7 +4,7 @@ acceptance_criteria:
   then: the product names the requirement
   when: the product states what the change touches
 assessed:
-  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
 citations:
   w6qryd: 7UUwJtqVGzY5NZLD5pYhhzjsOnVG10RE6PtVXLytPRk
 priority: medium

@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) of a parameter
+  then: the citation names a stamp the parameter no longer carries
+  when: the parameter's value is revised
+- given: a [statement citation](statement_citation) of a data item
+  then: the citation names a stamp the data item no longer carries
+  when: a field of one of the data item's entries is revised
+- given: a [statement citation](statement_citation) of a parameter
+  then: the citation names the stamp the parameter carries
+  when: the parameter's rationale is revised
+assessed:
+  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
+  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+priority: medium
+relations:
+  REQ-88203622: depends_on
+status: approved
+text: The product shall pin a [statement citation](statement_citation) of a parameter
+  or a data item to a stamp taken over the item's own stamp and over every entry the
+  item holds.
+type: functional
+verification: inspection
