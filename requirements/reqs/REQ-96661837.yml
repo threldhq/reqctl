@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: an entry stating a model and no effort
+  then: the product refuses the run, naming the entry
+  when: a run is built
+- given: an entry stating an effort and no model
+  then: the product refuses the run, naming the entry, rather than spawning the agent
+    on the model the product ships for it
+  when: a run is built
+assessed:
+  REQ-23060027: QKFI8tm_J5VF5FlpyYn7ENn8OIvvcTXbZ_-9Z0mJhIo
+  elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
+  elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
+priority: medium
+relations:
+  REQ-23060027: constrains
+status: approved
+text: If an entry of ${elucidate_agents} states a model without an effort, or an effort
+  without a model, then the product shall refuse the run.
+type: functional
+verification: inspection
