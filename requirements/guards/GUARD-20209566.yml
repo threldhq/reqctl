@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: the workflow holding the job that pushes a [release tag](release_tag) triggered
+    by a pull request
+  then: the build refuses the change
+  when: the build runs
+- given: the workflow holding the job that pushes a [release tag](release_tag) triggered
+    by a manual dispatch
+  then: the build refuses the change
+  when: the build runs
+assessed:
+  GUARD-60575106: QWS2QB-n2_dHE5jaZVwrwj3QiQwh9fAouSFzS7cQujM
+  release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+relations:
+  GUARD-60575106: constrains
+status: approved
+text: If the workflow holding the job that pushes a [release tag](release_tag) is
+  triggered by an event other than a push to the default branch, then the build shall
+  refuse the change.
