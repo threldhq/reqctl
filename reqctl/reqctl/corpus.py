@@ -13,6 +13,7 @@ from urllib.parse import urldefrag, urljoin, urlsplit
 import yaml
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError
+from jsonschema.validators import validator_for
 from referencing import Registry
 from referencing.jsonschema import DRAFT202012, specification_with
 
@@ -740,12 +741,16 @@ def _refuse_unfollowable(path, resource):
     except ValueError as error:
         raise ReqctlError(f"{path.name}: an $id is not an address -- {error}") from error
     if any(specification_with(schema.get("$schema", ""), default=DRAFT202012)
-           is not DRAFT202012 for _, schema in walked):
+           is not DRAFT202012
+           or validator_for(schema, Draft202012Validator) is not Draft202012Validator
+           for _, schema in walked[1:]):
         return
     root = resource.id() or ""
     registry = Registry().with_resource(root, resource)
     with contextlib.suppress(ValueError):
-        registry = registry.crawl().with_resource(root, resource)
+        registry = registry.crawl()
+        if registry[root] is not resource:
+            registry = registry.with_resource(root, resource)
     for base, keyword, ref in sorted({(base, keyword, schema[keyword])
                                       for base, schema in walked
                                       for keyword in ("$ref", "$dynamicRef")
