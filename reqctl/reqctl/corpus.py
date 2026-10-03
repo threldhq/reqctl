@@ -566,6 +566,34 @@ def cited_stamp(item):
     return tag_stamp(held)
 
 
+# @req> REQ-34330878@Zd73-2hLzA6M zvzpnr
+def entry_stamp(item, entry):
+    return tag_stamp(digest([stamp(item), stamp_at(item, entry)]))
+
+
+def owner(address):
+    return str(address).partition(".")[0]
+
+
+def cited_entries(item):
+    if kind_of(item.uid, item.data) != "data":
+        return []
+    return list(entries(item.data) or {})
+
+
+# @req> REQ-22755763@jWQQtKhJ8JoO ez4hkv
+def cited_item(store, address):
+    named, _, entry = str(address).partition(".")
+    item = find(store, named)
+    if not entry:
+        return item, None
+    if entry not in cited_entries(item):
+        raise ReqctlError(f"{address}: {named} is not a data item holding "
+                          f"{entry} -- only an entry of a data item is cited "
+                          "by its name")
+    return item, entry
+
+
 def tag_stamp(held):
     return held[:TAG_STAMP]
 

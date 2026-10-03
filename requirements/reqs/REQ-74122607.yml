@@ -16,6 +16,13 @@ assessed:
   citation_digest: P0B_wyGMXd0g87oxCpk-YqeQLW01MECv1WuzJa3yS6Q
   citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  4mtkgv: IQYxnQ6ZjqWpCVgkSo3x85dbDzaTuP5mSUfnO1Puwrw
+  4qvhpf: OPKo6d4b3y0rBGkt2WznpjP2F0A_FE0eRxpNhq4ktX0
+  5g5odt: 0I2bqeVq6trw3WteUNwsEm2hhF0PAHJ-3tAF1UvKowY
+  km6xcd: BmJKoRVSTL1RRUbQc3tzBtXSc0UXQiKWwndEcWD2vyk
+  mqcfbp: 53bHgnLGd2ss-IrBYBroadR8lP1d8smCfLFhTbFPzR4
+  nq6jgl: gdpBgVJllMmaep9dP1uaqdYpcTD2bnM5KzIXW3w9EtA
 priority: medium
 relations:
   REQ-22755763: depends_on

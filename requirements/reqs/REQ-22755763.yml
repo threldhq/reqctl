@@ -7,6 +7,11 @@ assessed:
   REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
   citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  5upe6v: ACs51HEquZWqUnYjowHvQ6aWx71riLU2Arq1Qpzq8GM
+  ez4hkv: IPsN9iPwO3bXjCuUX4fI98WqzskPfOdqzzxoACEJ7dw
+  uruli2: 0orfmR2ATCW1K2L_4g39S9TqgjT4oGtld_7IQL-lTaE
+  yiibpx: d_8VT-RzDqubNkdeyCxjofsXSgt4Z0ybuIBxmEO5Lqo
 priority: medium
 relations:
   REQ-88203622: derives_from

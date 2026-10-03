@@ -12,6 +12,9 @@ assessed:
   REQ-18176935: u-uprH5qBxMTk7RLhLVJ39PV5F5depbLxxBYrr2xkWY
   REQ-22755763: jWQQtKhJ8JoO_gFCNaK6GDJCv93GcomxUpOHsgzRt7w
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  nqvtul: d_8VT-RzDqubNkdeyCxjofsXSgt4Z0ybuIBxmEO5Lqo
+  zvzpnr: LMxmM4i-SB7mFHNEk3WLr6ysha0-6FAMYSbSHisp1sY
 priority: medium
 relations:
   REQ-18176935: derives_from

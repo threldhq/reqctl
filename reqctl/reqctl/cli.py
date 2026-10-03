@@ -751,7 +751,8 @@ def cmd_trace(args):
 
 # @req> REQ-78685242@62t3Pc4LqF05 da5qxm
 def _listed(store, uid, entries):
-    item = corpus.find(store, uid)
+    # @req> REQ-22755763@jWQQtKhJ8JoO uruli2
+    item = corpus.find(store, corpus.owner(uid))
     # @req> REQ-88203622@QLXb8abUOMT3 3xsagz
     if not corpus.citable(item):
         return []
@@ -778,11 +779,17 @@ def cmd_tag(args):
         raise ReqctlError("name --from, --to and --req once for each citation")
     asked = []
     for first, last, req in zip(args.first, args.last, args.req):
-        item = corpus.find(tree, req)
+        item, entry = corpus.cited_item(tree, req)
         # @req> REQ-88203622@QLXb8abUOMT3 myjx5s
         if not corpus.citable(item):
-            raise ReqctlError(f"{req}: only a requirement, a guard, a parameter "
-                              "or a data item is cited")
+            raise ReqctlError(f"{req}: only a requirement, a guard, a parameter, "
+                              "a data item or one entry of a data item is cited")
+        # @req> REQ-22755763@jWQQtKhJ8JoO yiibpx
+        # @req> REQ-34330878@Zd73-2hLzA6M nqvtul
+        if entry:
+            asked.append((first, last, f"{item.uid}.{entry}",
+                          corpus.entry_stamp(item, entry)))
+            continue
         # @req> REQ-18176935@u-uprH5qBxMT wkv6gw
         asked.append((first, last, str(item.uid), corpus.cited_stamp(item)))
     change, written = cite.tagged(root, args.path, asked, args.exclusive)
@@ -804,13 +811,15 @@ def cmd_tag(args):
 def cmd_repin(args):
     tree, root = corpus.load()
     citation = cite.named(root, args.id)
-    item = corpus.find(tree, citation["uid"])
+    # @req+ REQ-57688239@5uLv_U76DmQs 4yael4
+    item, entry = corpus.cited_item(tree, citation["uid"])
     # @req> REQ-70626698@ybHsrTlF-wU1 dhjmro
     if corpus.raw(item).get("status") == "deprecated":
         raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
                           f"is removed, not re-pinned: `reqctl untag {args.id}`")
     # @req> REQ-41600593@dV84ANKBJqdk rsw2w2
-    stamp = corpus.cited_stamp(item)
+    stamp = corpus.entry_stamp(item, entry) if entry else corpus.cited_stamp(item)
+    # @req- 4yael4
     changes = [cite.repinned(root, citation, stamp)]
     # @req> REQ-64846889@pHOO0sEc7V1K 7dhw4d
     # @req> REQ-17757558@4j9rQN-e61OY tevb2p
@@ -828,7 +837,8 @@ def cmd_untag(args):
     changes = [cite.untagged(root, citation)]
     # @req> REQ-13298390@OIZCRlURf3pq utmfsc
     # @req> REQ-81275367@rZszCCP31YAU olrtj5
-    if citation["uid"] in {str(item.uid) for item in corpus.items(tree)}:
+    # @req> REQ-28888702@HmZifhO5eMD9 iwdu5n
+    if corpus.owner(citation["uid"]) in {str(item.uid) for item in corpus.items(tree)}:
         changes += _listed(tree, citation["uid"], {args.id: None})
     # @req> REQ-65668011@6eXnj2-53DtA jwd2cj
     corpus.write_all(changes)
@@ -848,7 +858,7 @@ def cmd_unlist(args):
         raise ReqctlError(f"{uid}: its citation list does not hold {args.id}")
     # @req+ REQ-59136977@5NZtW-PM9X2O s3g7ya
     # @req> REQ-81063063@J51Kuu-RKFjK rphl5n
-    if any(citation["id"] == args.id and citation["uid"] == uid
+    if any(citation["id"] == args.id and corpus.owner(citation["uid"]) == uid
            for citation in cite.readable(root)):
         raise ReqctlError(
             f"{uid}: a statement citation names {args.id} -- reqctl untag "
@@ -1123,8 +1133,8 @@ def build_parser(root, fielded):
     s.set_defaults(func=cmd_trace)
 
     s = _command(sub, "tag",
-                 "cite a requirement, a guard, a parameter or a data item at "
-                 "lines of a file, writing one comment "
+                 "cite a requirement, a guard, a parameter, a data item or one "
+                 "entry of a data item at lines of a file, writing one comment "
                  "over a single code statement and a pair of comments over "
                  "more; repeat --from, --to and --req to cite several, each "
                  "numbered as the file stands before the command")

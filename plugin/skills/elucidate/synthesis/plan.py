@@ -38,19 +38,19 @@ SIBLINGS = "siblings"
 SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
-# @req+ REQ-87066486@uKF1dXTp7rGk udnw6h
-# @req> recall_batch@1MUqoxzBBHZd 7f7moo
+# @req+ REQ-87066486@lrbuj-bgSDF8 udnw6h
+# @req> challenge_bounds.recall_batch@DGBoxybgFaOo 24eqhj
 RECALL_BATCH = 40
-# @req> judge_bound@decGTil8BS2t pjbkc7
+# @req> challenge_bounds.judge_bound@KpTZxRxtu6PE cwon42
 JUDGE_BOUND = 45
-# @req> judge_group@V4NTMrVRGpDF tfddk2
+# @req> challenge_bounds.judge_group@y0rL6wAKSjE1 2qxagy
 JUDGE_GROUP = 20
-# @req> floor_k@Kulp75919beA ol3y4x
+# @req> challenge_bounds.floor_k@kGgaA97AwCMJ qut2ab
 FLOOR_K = 10
-# @req> agent_ceiling@gIFXgBrYQYI1 ohe2ox
+# @req> challenge_bounds.agent_ceiling@l4qzZij69kI8 nelsvq
 AGENT_CEILING = 150
 # @req- udnw6h
-# @req> REQ-87066486@uKF1dXTp7rGk 4py3et
+# @req> REQ-87066486@lrbuj-bgSDF8 4py3et
 # @req> elucidate_agents@V5-K1rlTkh2C kgnxgu
 AGENTS = {
     "best_in_class": {"model": "claude-sonnet-5-5", "effort": "high"},
@@ -693,7 +693,7 @@ def siblings(held):
 
 
 def batched(numbers, batch):
-    # @req+ REQ-94426583@5DnvqbSeaqCQ eefhta
+    # @req+ REQ-94426583@8JHtrZp73dHb eefhta
     # @req> REQ-32866040@hbsvPKXBNujz f2uvmw
     return [numbers[at:at + batch] for at in range(0, len(numbers), batch)]
     # @req- eefhta
@@ -754,7 +754,7 @@ def recall_prompt(run, name, batch, scope, count, total, numbers, held, words,
 
 
 def ceilinged(count, ceiling):
-    # @req> REQ-48148587@zTFTyv30tHgP aky7xw
+    # @req> REQ-48148587@wA7bmyxqWF2Z aky7xw
     if count > ceiling:
         raise SystemExit(
             f"the run would spawn {count} agents, past the ceiling of "
@@ -1076,7 +1076,7 @@ def references(words, statement):
 
 
 def floor(index, kind, statement, k):
-    # @req+ REQ-80191784@DmJODzeKYuiV f4rqof
+    # @req+ REQ-80191784@Tk5avoqVWwY- f4rqof
     words, carried = index
     wanted = references(words, statement)
     ranked = []
@@ -1126,7 +1126,7 @@ def judge_prompt(run, number, spec, names, named, state_held, text,
 
 
 def grouped(names, bound_at, group):
-    # @req+ REQ-48762557@vkwEwASOFYbm 5f3ye7
+    # @req+ REQ-48762557@awBU6cqFJEkK 5f3ye7
     if len(names) <= bound_at:
         return None
     return [names[at:at + group] for at in range(0, len(names), group)]

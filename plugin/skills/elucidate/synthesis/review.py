@@ -25,16 +25,16 @@ import shapes
 from reqctl import corpus
 
 FIELD = "governed_field"
-# @req+ REQ-87066486@uKF1dXTp7rGk mmgold
-# @req> review_summary_lines@gpqiM9kc6wV_ 4l32ki
+# @req+ REQ-87066486@lrbuj-bgSDF8 mmgold
+# @req> review_limits.summary_lines@4hQ6ynB1F_5x zuyxaz
 BOUND = 10
-# @req> review_page_bytes@TuS1V_5GViL- y2swyp
+# @req> review_limits.page_bytes@CK3zn6szcyR_ dkutyi
 PAGE = 5242880
-# @req> review_redirects@hL_venWbyEu_ vpsnks
+# @req> review_limits.redirects@Ms3KxYv4Tp83 s34v53
 REDIRECTS = 5
-# @req> review_fetch_seconds@GSTHss8vIjb8 ehmws6
+# @req> review_limits.fetch_seconds@isM6z8L-G64k aliyyn
 SECONDS = 60
-# @req> review_fetch_attempts@Vc3KPadF5DCU i7na7o
+# @req> review_limits.fetch_attempts@BPNGFlQ1EkHJ qdopar
 ATTEMPTS = 3
 # @req- mmgold
 ASKED = "asked.json"
@@ -176,7 +176,7 @@ class Transient(str):
     pass
 
 
-# @req> REQ-16875926@oy3EzqZ3Ozhc hnfov3
+# @req> REQ-16875926@rLub1dpB7yu_ hnfov3
 def transient(broken):
     if isinstance(broken, urllib.request.HTTPError):
         return broken.code in (408, 429, 500, 502, 503, 504)
@@ -184,7 +184,7 @@ def transient(broken):
                       (TimeoutError, ConnectionError))
 
 
-# @req> REQ-88584597@irHrgUCmpY4P vz6m2q
+# @req> REQ-88584597@SIv6i6OT97j3 vz6m2q
 class Deadline:
     def __init__(self, seconds):
         self.end, self.held = time.monotonic() + seconds, []
@@ -212,7 +212,7 @@ class Deadline:
         return sock
 
 
-# @req> REQ-37635213@tbWjYJVHFWan elw5bl
+# @req> REQ-37635213@hDGHrxRYQZ75 elw5bl
 class Redirects(urllib.request.HTTPRedirectHandler):
     def __init__(self, bound):
         self.max_repeats = self.max_redirections = bound
@@ -231,7 +231,7 @@ def pinned(connection):
     if inside:
         raise OSError(f"{connection.host} is at the internal address "
                       f"{inside[0]}")
-    # @req> REQ-88584597@irHrgUCmpY4P p7ygur
+    # @req> REQ-88584597@SIv6i6OT97j3 p7ygur
     return current.deadline.hold(socket.create_connection(
         (found[0], connection.port),
         min(connection.timeout, current.deadline.left())))
@@ -260,7 +260,7 @@ class SecureOpen(urllib.request.HTTPSHandler):
 
 
 # @req> REQ-91666323@k8sa2vnqWm_q unfwxj
-# @req> REQ-37635213@tbWjYJVHFWan x27tsv
+# @req> REQ-37635213@hDGHrxRYQZ75 x27tsv
 def opener(redirects):
     fetch = urllib.request.OpenerDirector()
     for handler in (PlainOpen(), SecureOpen(), Redirects(redirects),
@@ -277,7 +277,7 @@ def page(url, fetch, bound):
             url, headers={"User-Agent": "reqctl-elucidate-review",
                           "Accept-Encoding": "gzip, deflate"})
         with fetch.open(request, timeout=WAIT) as answer:
-            # @req+ REQ-99188850@TNL_gXYmsw4y f4kwgo
+            # @req+ REQ-99188850@t4pvJTwe8prh f4kwgo
             raw = answer.read(bound)
             if answer.peek(1):
                 return None, f"the page is larger than {bound} bytes as served"
@@ -289,7 +289,7 @@ def page(url, fetch, bound):
                       or "").strip().lower()
             charset = answer.headers.get_content_charset() or "utf-8"
         if packed in PACKED:
-            # @req+ REQ-99188850@TNL_gXYmsw4y 4c6q6e
+            # @req+ REQ-99188850@t4pvJTwe8prh 4c6q6e
             unpacked = zlib.decompressobj(zlib.MAX_WBITS | 32)
             raw = unpacked.decompress(raw, bound)
             if len(raw) == bound and not unpacked.eof:
@@ -303,26 +303,26 @@ def page(url, fetch, bound):
         return raw.decode(charset, errors="replace"), None
     except (OSError, ValueError, LookupError, EOFError, zlib.error,
             http.client.HTTPException) as broken:
-        # @req+ REQ-16875926@oy3EzqZ3Ozhc wuv5em
+        # @req+ REQ-16875926@rLub1dpB7yu_ wuv5em
         why = str(broken) or type(broken).__name__
         return None, Transient(why) if transient(broken) else why
         # @req- wuv5em
 
 
 def attempt(url, fetch, bound, seconds):
-    # @req> REQ-88584597@irHrgUCmpY4P sjt5cu
+    # @req> REQ-88584597@SIv6i6OT97j3 sjt5cu
     with contextlib.closing(Deadline(seconds)) as deadline:
         current.deadline = deadline
         body, why = page(url, fetch, bound)
-    # @req> REQ-88584597@irHrgUCmpY4P xebeiz
-    # @req> REQ-16875926@oy3EzqZ3Ozhc eunqii
+    # @req> REQ-88584597@SIv6i6OT97j3 xebeiz
+    # @req> REQ-16875926@rLub1dpB7yu_ eunqii
     if not deadline.left():
         return None, Transient(f"the attempt took more than {seconds} seconds")
     return body, why
 
 
 def timed(url, fetch, bound, seconds, attempts):
-    # @req> REQ-61943665@FNLfuGZs1Eqa m4qxzr
+    # @req> REQ-61943665@YLTr2dPn2Pw8 m4qxzr
     for _ in range(attempts):
         body, why = attempt(url, fetch, bound, seconds)
         if not isinstance(why, Transient):
@@ -367,7 +367,7 @@ def faults(review, bound, redirects, seconds, attempts):
             url = source["url"]
             text, why = pages[url]
             if text is None:
-                # @req+ REQ-16875926@oy3EzqZ3Ozhc zrdwyr
+                # @req+ REQ-16875926@rLub1dpB7yu_ zrdwyr
                 line = f"practice {number}: {url} cannot be read: {why}"
                 found.append(Transient(f"{line} (a transient failure)")
                              if isinstance(why, Transient) else line)
@@ -388,7 +388,7 @@ def stated(practice, said):
 
 
 def summary(review, said, bound):
-    # @req+ REQ-44823271@ecfoMJvhcNBn yzwezx
+    # @req+ REQ-44823271@AviNJLM07SOZ yzwezx
     practices = review["practices"]
     fields = sorted({practice["field"] for practice in practices})
     unstated = sum(not stated(practice, said) for practice in practices)
