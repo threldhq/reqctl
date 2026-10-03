@@ -1,11 +1,11 @@
 acceptance_criteria:
 - given: a dictionary item
   then: the product refuses and names the key it will not accept
-  when: an entry keyed default, pinned, handles_content, serving, text or name is
-    [minted](mint) or revised into it
+  when: an entry keyed default, pinned, text or name is [minted](mint) or revised
+    into it
 - given: a dictionary item whose governing schema declares no field of that name
   then: the product refuses the entry just the same
-  when: an entry keyed for one of those names
+  when: an entry keyed for one of those names is [minted](mint) or revised into it
 assessed:
   mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:

@@ -668,7 +668,7 @@ def packed(name, held, chars, items):
 
 
 def partitioned(blocked, held, chars, items):
-    # @req+ REQ-90454282@aYcgrH2NgS5Q yp35nb
+    # @req+ REQ-90454282@M0OdZ2RxH5qS yp35nb
     kinds = {kind for _, _, _, kind in held}
     shards = []
     for prefix, scope in OBLIGATION.items():
@@ -893,7 +893,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
     linted(held, store)
     exported_text = exported()
     blocked = blocks(exported_text)
-    # @req> REQ-40454564@6e_lVKTtkSII kostqz
+    # @req> REQ-40454564@7Yw4h6spRiXB kostqz
     shards = partitioned(blocked, held, chars, items)
     sibling = siblings(held)
     if sibling is not None:

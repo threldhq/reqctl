@@ -1,10 +1,10 @@
 acceptance_criteria:
-- given: given a directory that is not a git repository, or a git repository whose
-    origin remote is absent or not a GitHub owner/repo
-  then: then the product opens nothing and prints one line stating why
-  when: when reqctl portal is run
+- given: a directory that is not a git repository, or a git repository whose origin
+    remote is absent or not a GitHub owner/repo
+  then: the product opens nothing and prints one line stating why
+  when: reqctl portal is run
 assessed:
-  REQ-53764133: hNDAdKGPLVUD6mqWyUsmz56iDb8_rol-_PGHehx6P8I
+  REQ-53764133: s638VvRMfEgiuyNbCQqTKtcyV4K8QQdVi-o-3V8gI58
 citations:
   2v7p2v: 78jxnUxMhOho4eJAPhVwnZhCDfKDrxepmycgNi_KcE0
 priority: medium

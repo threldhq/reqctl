@@ -1,6 +1,6 @@
 acceptance_criteria:
 - given: the Claude Code plugin as shipped
-  then: it holds each of the plugin components, and may hold more
+  then: it holds each of the plugin components
   when: its contents are read
 assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js

@@ -197,7 +197,7 @@ def dictionary_rules(uid, data):
     held = corpus.entries(data)
     if held is None or uid.startswith("REQ-"):
         return problems
-    # @req> REQ-67450031@TfZxNsopcgxE 5qg2a5
+    # @req> REQ-67450031@IPDu6OnW2Fck 5qg2a5
     for key in ("default", "pinned", "text", "name"):
         if key in held:
             problems.append(f"{uid}: an entry may not be keyed {key} -- it "
@@ -274,6 +274,68 @@ def text_values(uid, data):
                 f"{uid}: text value {member!r} is shaped like a quantity -- "
                 "give it a numeric value_type, or reword the name"
             )
+    return problems
+
+
+# @req> REQ-98653444@vg2d8T6B3LIH gvf6gm
+def repeated_labels(uid, data):
+    criteria = data.get("acceptance_criteria")
+    if not isinstance(criteria, list):
+        return []
+    problems = []
+    for at, criterion in enumerate(criteria, 1):
+        for part, said in (criterion.items() if isinstance(criterion, dict) else ()):
+            found = (re.match(rf"{re.escape(part)}\b",
+                              "".join(filter(str.isprintable,
+                                             re.sub(r"\s", " ", said))).lstrip(),
+                              re.IGNORECASE)
+                     if isinstance(part, str) and isinstance(said, str) else None)
+            if found:
+                problems.append(f"{uid}: criterion {at}'s {part} {said!r} begins "
+                                f"with {found.group()!r}, which reqctl writes "
+                                f"before it -- drop the word from the {part}")
+    return problems
+
+
+def hidden(text):
+    return next((c for i, c in enumerate(text)
+                 if not c.isprintable() or (i == 0 and unicodedata.category(c) == "Mn")),
+                None)
+
+
+def hidden_fault(char):
+    if len(f"a{char}b".splitlines()) > 1:
+        return f"holds U+{ord(char):04X}, a line break -- write it as one line"
+    if char.isspace():
+        return (f"holds U+{ord(char):04X}, which prints as a plain space but "
+                "is not one -- respace it with ordinary spaces")
+    return (f"holds U+{ord(char):04X}, which prints as nothing -- retype it "
+            "rather than pasting it")
+
+
+def _strings(node, at=()):
+    if isinstance(node, set):
+        node = dict.fromkeys(node)
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if isinstance(key, str):
+                yield at, key
+            yield from _strings(value, at + (str(key),))
+    elif isinstance(node, (list, tuple)):
+        for index, value in enumerate(node):
+            yield from _strings(value, at + (str(index),))
+    elif isinstance(node, str):
+        yield at, node
+
+
+# @req> REQ-79956352@eYUCCnssLbl5 5uqc7i
+def hidden_values(uid, data):
+    problems = []
+    for at, said in _strings(data):
+        char = hidden(said)
+        if char is not None:
+            problems.append(f"{uid}: {'.'.join(at) or '(item)'} {said!r} "
+                            f"{hidden_fault(char)}")
     return problems
 
 
@@ -1119,11 +1181,13 @@ def run(root, exempt=None):
     problems, broken_schemas = _schemas_are_schemas(root)
     records, unreadable = {}, {}
     for path in paths:
+        # @req+ REQ-69525887@UqIXxEzRxfHQ d3uvus
         try:
             data = _settled(path)
         except corpus.ReqctlError as error:
             unreadable[path.stem] = str(error).replace(f"{root}/", "")
             continue
+        # @req- d3uvus
         if isinstance(data, dict):
             records[path.stem] = data
     reachable = corpus.reachable(records)
@@ -1148,6 +1212,8 @@ def run(root, exempt=None):
             problems += _guarded(uid, schema_problems, root, uid, data)
         problems += _guarded(uid, ears, uid, data)
         problems += _guarded(uid, text_values, uid, data)
+        problems += _guarded(uid, repeated_labels, uid, data)
+        problems += _guarded(uid, hidden_values, uid, data)
         problems += _guarded(uid, dictionary_rules, uid, data)
         problems += _guarded(uid, _relations, uid, data, records,
                              reachable, known)

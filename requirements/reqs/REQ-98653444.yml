@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a requirement or a guard carrying a criterion whose given begins with the
+    word given
+  then: the product refuses the item, naming the criterion and the part
+  when: the item is [minted](mint) or revised to carry the criterion
+- given: a corpus holding a requirement whose criterion has a when beginning with
+    the word when
+  then: the product refuses the corpus, naming the requirement and the part
+  when: the corpus is validated
+- given: a criterion whose then begins with Then
+  then: the product refuses the requirement
+  when: a requirement carrying the criterion is [minted](mint)
+- given: a criterion whose when begins with whenever
+  then: the product accepts the requirement
+  when: a requirement carrying the criterion is [minted](mint)
+assessed:
+  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+citations:
+  gvf6gm: TUGJ4baz9Ir8aAiRgnBkImODKP5x4NQ99bmNOOvFdn0
+priority: medium
+relations: {}
+status: approved
+text: If the given, when or then of an acceptance criterion begins with the word that
+  names that part, then the product shall refuse the criterion.
+type: functional
+verification: inspection
