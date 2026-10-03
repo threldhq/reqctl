@@ -8,10 +8,13 @@ import re
 import secrets
 import shutil
 from pathlib import Path
+from urllib.parse import urldefrag, urljoin, urlsplit
 
 import yaml
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError
+from referencing import Registry
+from referencing.jsonschema import DRAFT202012
 
 Loader = yaml.CSafeLoader if yaml.__with_libyaml__ else yaml.SafeLoader
 
@@ -720,30 +723,40 @@ def _parsed_schema(path, stamped):
     # @req+ REQ-19913588@Pbi1CR5jtivz mszvfu
     try:
         Draft202012Validator.check_schema(declared)
+        _refuse_unfollowable(path, DRAFT202012.create_resource(declared))
     except SchemaError as error:
         where = ".".join(str(p) for p in error.absolute_path) or "(schema)"
         raise ReqctlError(f"{path.name}: {where}: {error.message}") from error
     except RecursionError as error:
         raise ReqctlError(f"{path.name}: nests too deeply to check") from error
-    validator = Draft202012Validator(declared)
-    for ref in _refs(declared):
-        try:
-            list(validator.evolve(schema={"$ref": ref}).iter_errors(None))
-        except Exception as error:
-            raise ReqctlError(f"{path.name}: $ref {ref!r} cannot be followed") from error
     # @req- mszvfu
     return declared
 
 
-def _refs(node, root=True):
-    if isinstance(node, list):
-        for value in node:
-            yield from _refs(value, False)
-    elif isinstance(node, dict) and (root or "$id" not in node):
-        if isinstance(node.get("$ref"), str):
-            yield node["$ref"]
-        for value in node.values():
-            yield from _refs(value, False)
+# @req> REQ-19913588@Pbi1CR5jtivz 4sbgsj
+def _refuse_unfollowable(path, resource):
+    try:
+        registry = Registry().with_resource(resource.id() or "", resource).crawl()
+        references = list(_references(resource, ""))
+    except ValueError as error:
+        raise ReqctlError(f"{path.name}: an $id is not an address -- {error}") from error
+    for base, keyword, ref in references:
+        try:
+            address = urldefrag(urljoin(base, ref)).url
+            if address in registry or not urlsplit(address).scheme:
+                registry.resolver(base).lookup(ref)
+        except Exception as error:
+            raise ReqctlError(f"{path.name}: {keyword} {ref!r} cannot be followed") from error
+
+
+def _references(resource, base):
+    base = urljoin(base, resource.id() or "")
+    if isinstance(resource.contents, dict):
+        for keyword in ("$ref", "$dynamicRef"):
+            if keyword in resource.contents:
+                yield base, keyword, resource.contents[keyword]
+    for sub in resource.subresources():
+        yield from _references(sub, base)
 
 
 PACKAGED_SCHEMAS = Path(__file__).resolve().parent / "schemas"

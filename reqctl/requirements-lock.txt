@@ -101,6 +101,7 @@ referencing==0.37.0 \
     #   -c requirements-dev-lock.txt
     #   jsonschema
     #   jsonschema-specifications
+    #   reqctl (pyproject.toml)
 rpds-py==2026.6.3 \
     --hash=sha256:0be972be84cfcaf46c8c6edf690ca0f154ac17babf1f6a955a51579b34ad2dc5 \
     --hash=sha256:127565fead0a10943b282957bd5447804ff3160ad79f2ad2635e6d249e380680 \
