@@ -1212,10 +1212,14 @@ def main(argv=None):
     try:
         args = parser.parse_args(argv)
     except SystemExit as usage:
+        # @req> REQ-61484030@n7khA9l0yAgr 7acuon
         if "--json" in argv and usage.code:
-            print(json.dumps({"error": "usage: the fault is on stderr; "
-                                       "`reqctl --help` lists the commands"},
-                             indent=2))
+            try:
+                print(json.dumps({"error": "usage: the fault is on stderr; "
+                                           "`reqctl --help` lists the commands"},
+                                 indent=2), flush=True)
+            except OSError:
+                _drop_output()
         raise
     # @req+ REQ-19913588@Pbi1CR5jtivz dw57fs
     try:
