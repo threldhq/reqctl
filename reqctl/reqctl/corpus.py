@@ -736,27 +736,34 @@ def _parsed_schema(path, stamped):
 # @req> REQ-19913588@Pbi1CR5jtivz 4sbgsj
 def _refuse_unfollowable(path, resource):
     try:
-        registry = Registry().with_resource(resource.id() or "", resource).crawl()
-        references = list(_references(resource, ""))
+        walked = list(_walked(resource, ""))
     except ValueError as error:
         raise ReqctlError(f"{path.name}: an $id is not an address -- {error}") from error
-    for base, keyword, ref in references:
+    if any("$schema" in schema for _, schema in walked[1:]):
+        return
+    known = {base for base, _ in walked}
+    registry = Registry().with_resource(resource.id() or "", resource)
+    for base, keyword, ref in sorted({(base, keyword, schema[keyword])
+                                      for base, schema in walked
+                                      for keyword in ("$ref", "$dynamicRef")
+                                      if keyword in schema}):
         try:
-            address = urldefrag(urljoin(base, ref)).url
-            if address in registry or not urlsplit(address).scheme:
-                registry.resolver(base).lookup(ref)
+            address = base if ref.startswith("#") else urldefrag(urljoin(base, ref)).url
+            if address not in known and urlsplit(address).scheme:
+                continue
+            target = registry.resolver(base).lookup(ref).contents
         except Exception as error:
             raise ReqctlError(f"{path.name}: {keyword} {ref!r} cannot be followed") from error
+        if not isinstance(target, (dict, bool)):
+            raise ReqctlError(f"{path.name}: {keyword} {ref!r} names a value, not a schema")
 
 
-def _references(resource, base):
+def _walked(resource, base):
     base = urljoin(base, resource.id() or "")
     if isinstance(resource.contents, dict):
-        for keyword in ("$ref", "$dynamicRef"):
-            if keyword in resource.contents:
-                yield base, keyword, resource.contents[keyword]
-    for sub in resource.subresources():
-        yield from _references(sub, base)
+        yield base, resource.contents
+    for sub in DRAFT202012.subresources_of(resource.contents):
+        yield from _walked(DRAFT202012.create_resource(sub), base)
 
 
 PACKAGED_SCHEMAS = Path(__file__).resolve().parent / "schemas"
