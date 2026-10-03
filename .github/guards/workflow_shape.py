@@ -11,7 +11,6 @@ PINNED = re.compile(r"@[0-9a-f]{40}$")
 PIP = re.compile(r"(?m)^.*?(pip install\b.*)$")
 CONTINUED = re.compile(r"\\\n[ \t]*")
 READ_ONLY = {"contents": "read"}
-WRITES = {"contents": "write"}
 TAGS = "release-tag.yml"
 PUSHED = {"push": {"branches": ["main"]}}
 SECRET = re.compile(r"\bsecrets\b")
@@ -103,7 +102,7 @@ def faults(text, where, gates=None):
         if not isinstance(job, dict):
             continue
         # @req+ GUARD-52037270@OztX8T4vOmsH w4sjw2
-        allowed = WRITES if who == TAGS else READ_ONLY
+        allowed = {"contents": "write"} if who == TAGS else READ_ONLY
         taken = job.get("permissions", READ_ONLY)
         if taken != allowed:
             found.append(f"{where}: job {name} takes {taken!r}, not "

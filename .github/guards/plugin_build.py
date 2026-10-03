@@ -43,12 +43,9 @@ def faults(root):
     # @req- zykp4x
     # @req+ GUARD-65225392@myxez9Yz6SOi ziceo7
     source = entry.get("source")
-    if isinstance(source, dict) and source.get("url") == REPOSITORY:
-        path = source.get("path")
-    elif isinstance(source, str) and source.startswith("./"):
-        path = source
-    else:
-        path = None
+    path = (source.get("path")
+            if isinstance(source, dict) and source.get("url") == REPOSITORY
+            else source)
     held = (root / path).resolve() if isinstance(path, str) else None
     if held is None or not held.is_relative_to(root):
         return [f"{MARKETPLACE}: {name} is sourced from {source!r}, which is not "
