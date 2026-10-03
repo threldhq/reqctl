@@ -14,7 +14,7 @@ import yaml
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError
 from referencing import Registry
-from referencing.jsonschema import DRAFT202012
+from referencing.jsonschema import DRAFT202012, specification_with
 
 Loader = yaml.CSafeLoader if yaml.__with_libyaml__ else yaml.SafeLoader
 
@@ -739,17 +739,20 @@ def _refuse_unfollowable(path, resource):
         walked = list(_walked(resource, ""))
     except ValueError as error:
         raise ReqctlError(f"{path.name}: an $id is not an address -- {error}") from error
-    if any("$schema" in schema for _, schema in walked[1:]):
+    if any(specification_with(schema.get("$schema", ""), default=DRAFT202012)
+           is not DRAFT202012 for _, schema in walked):
         return
-    known = {base for base, _ in walked}
-    registry = Registry().with_resource(resource.id() or "", resource)
+    root = resource.id() or ""
+    registry = Registry().with_resource(root, resource)
+    with contextlib.suppress(ValueError):
+        registry = registry.crawl().with_resource(root, resource)
     for base, keyword, ref in sorted({(base, keyword, schema[keyword])
                                       for base, schema in walked
                                       for keyword in ("$ref", "$dynamicRef")
                                       if keyword in schema}):
         try:
             address = base if ref.startswith("#") else urldefrag(urljoin(base, ref)).url
-            if address not in known and urlsplit(address).scheme:
+            if address not in registry and urlsplit(address).scheme:
                 continue
             target = registry.resolver(base).lookup(ref).contents
         except Exception as error:
