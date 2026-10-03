@@ -22,9 +22,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install the build backend the dev lock pins
-        run: pip install --require-hashes -r reqctl/requirements-dev-lock.txt
-
       - name: Push the release tag the change first pins the plugin to, and attach the reqctl wheel to its release
         env:
           BEFORE: ${{ github.event.before }}

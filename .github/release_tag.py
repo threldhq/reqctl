@@ -7,12 +7,13 @@ import tempfile
 import tomllib
 from pathlib import Path
 
-from corpus_write import Refused, ran
+from corpus_write import Refused, ran, run
 
 WHEEL = "reqctl/pyproject.toml"
 MARKETPLACE = ".claude-plugin/marketplace.json"
 MANIFEST = ".claude-plugin/plugin.json"
-ABSENT = "(HTTP 404)"
+LOCK = "reqctl/requirements-dev-lock.txt"
+BACKEND = re.compile(r"(?m)^setuptools==\S+(?: \\\n\s+--hash=\S+)+")
 
 
 def shown(commit, path, parse):
@@ -39,43 +40,43 @@ def pinned(commit):
 
 
 def marked(tag):
-    return ran("git", "rev-parse", "--verify", "--quiet",
-               f"refs/tags/{tag}^{{commit}}", check=False).stdout.strip() or None
+    return ran("git", "rev-parse", "--verify", f"refs/tags/{tag}^{{commit}}",
+               check=False).stdout.strip() or None
 
 
 def released(repo, tag):
-    asked = f"repos/{repo}/releases/tags/{tag}"
-    done = ran("gh", "api", asked, check=False)
-    if done.returncode and ABSENT in done.stderr:
-        return None
-    if done.returncode:
-        raise Refused(f"gh api {asked}: {done.stderr.strip() or 'failed silently'}")
     try:
-        return json.loads(done.stdout)
-    except ValueError as broken:
-        raise Refused(f"gh api {asked}: {broken}") from broken
+        return run(("gh", "api", f"repos/{repo}/releases/tags/{tag}"))
+    except Refused as refused:
+        if "(HTTP 404)" in str(refused):
+            return None
+        raise
 
 
 # @req> GUARD-14769016@T01UILpAY633 z2onys
 def attach(repo, tag, commit):
-    name = shown(commit, WHEEL, tomllib.loads)["project"]["name"]
-    prefix = re.sub(r"[-_.]+", "_", name).lower() + "-"
-    release = released(repo, tag)
-    if release is not None and any(
-            str(asset.get("name")).startswith(prefix)
-            and str(asset.get("name")).endswith(".whl")
-            for asset in release.get("assets") or []):
-        return f"the release for {tag} already carries a {name} wheel"
     if ran("git", "rev-parse", "HEAD").stdout.strip() != commit:
         raise Refused(f"the checkout is not at {commit}, the commit {tag} "
                       "marks; check that commit out to build its wheel")
+    backend = BACKEND.search(Path(LOCK).read_text())
+    if backend is None:
+        raise Refused(f"{LOCK} pins no setuptools by hash; pin it there to "
+                      "build the wheel")
     with tempfile.TemporaryDirectory() as out:
+        pins = Path(out) / "backend.txt"
+        pins.write_text(backend.group())
+        ran(sys.executable, "-m", "pip", "install", "--require-hashes",
+            "--no-deps", "-r", str(pins))
         ran(sys.executable, "-m", "pip", "wheel", "--no-deps",
             "--no-build-isolation", "--wheel-dir", out,
             str(Path(WHEEL).resolve().parent))
-        wheel = next(Path(out).glob(f"{prefix}*.whl"), None)
-        if wheel is None:
-            raise Refused(f"pip wheel built no {name} wheel from {WHEEL}")
+        wheel = next(Path(out).glob("*.whl"))
+        dist = wheel.name.partition("-")[0]
+        release = released(repo, tag)
+        if release is not None and any(
+                Path(str(asset.get("name"))).match(f"{dist}-*.whl")
+                for asset in release.get("assets") or []):
+            return f"the release for {tag} already carries a {dist} wheel"
         if release is None:
             ran("gh", "release", "create", tag, str(wheel), "--repo", repo,
                 "--verify-tag", "--title", tag, "--notes", "")
