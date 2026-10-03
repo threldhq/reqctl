@@ -11,8 +11,8 @@ assessed:
   synthesis_steps: xe3OiAl6nX8ClNv6lrdaSi-ccSt2HzKlLO0VZefN0SI
   synthesis_steps.*: mytx4Qp5JSaZ10p3r9f0R28mRy5h9hMuVUEfZKSo4Es
 citations:
-  dyekvt: zprlt5ULU0gwcuWcae0uA_S0wDPUjZ01QlSP3qIp6YI
-  msg57t: PKjVK16IxY6xXEfw1dMuSW7DkAjg_ZqeEnQO6kmm3dg
+  dyekvt: iHn9YlQkl2OhLL8b0_mgCUXq1I6Cpul5ezjemw07ZJg
+  msg57t: Jnf4VQVFvZeuzNmqCcmt4Bf-ixpWCdahmpllJgXI0Vg
 priority: medium
 relations:
   REQ-38288492: depends_on

@@ -21,6 +21,18 @@ assessed:
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   elucidate_workflow: LLnSfqUTLbwl39eM7HWxSLD1q97stP7Pc5uZbHCJu_o
+citations:
+  6y5rvz: R6we1NNBwPxehe0O9GtCYFhUPmJLau5VWDXaAEBTDU4
+  7pvcrn: J2DF51g6PnmXiqXQiLnLQcPRs-5K787pogbtYlQDk10
+  citfb2: ysIH7kljYqhIzM1eqeH32Zt31KDeiBBTigU48WELZT0
+  dxtamn: Ele6mo3b2kEX12mkXj0ILWgsINvZ7oltcTrph29_F8s
+  oem57l: LL2VR8F91A_4kE-t0Y9GSFGb0BA1J1llatHySfmINK4
+  pxmf5e: quS1bUbk3Z3Nq4nDV1szrS_1d6cG1RX8S9atLf8MIvo
+  spkcng: R6we1NNBwPxehe0O9GtCYFhUPmJLau5VWDXaAEBTDU4
+  tpcwue: quS1bUbk3Z3Nq4nDV1szrS_1d6cG1RX8S9atLf8MIvo
+  ukljdu: xbi4kIvvp6r_48IrFu13YQ5iowoFugGw5ff9cIJKDtg
+  xxpn4n: EFmh6nTYmYwigc0GUK6dibUZK234VpbtMso3kzbGaV0
+  zq3w3z: ObzRXW1VMbc3SPCM3nJxkd45TQYgVVTjx3x7jdqI61Y
 priority: medium
 relations:
   REQ-10470323: supersedes

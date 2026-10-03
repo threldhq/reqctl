@@ -102,9 +102,9 @@ def respawn(run, state_held, numbers):
     spawned = []
     for number in numbers:
         folder = "final" if state_held["judge"][number]["groups"] else "judge"
+        # @req> REQ-23060027@QKFI8tm_J5VF oem57l
         spawned.append(plan.spawn(run, folder, number, f"{folder}:{number}",
-                                  shapes.JUDGE, state_held["models"]["judge"],
-                                  plan.PHASES["judge"]))
+                                  shapes.JUDGE, state_held["agents"]["judge"]))
         corpus.remove(run / "returns" / folder / f"{number}.json",
                       missing_ok=True)
     return plan.manifest(run, "judge", spawned)

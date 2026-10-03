@@ -1,6 +1,6 @@
 export const meta = {
   name: 'elucidate',
-  description: 'Spawn one agent per prompt the build wrote, each reading its prompt and writing its return',
+  description: 'Spawn one agent per prompt the build wrote, each writing its return',
   phases: [{ title: 'Spawn', detail: 'one agent per prompt, in parallel' }],
 }
 
@@ -12,8 +12,12 @@ function task(one) {
 }
 
 // @req+ REQ-29203000@rYU8NmxmlHLn o7zxou
+// @req+ REQ-23060027@QKFI8tm_J5VF xxpn4n
+// @req+ REQ-36422345@O-3IKmoFSYSG kgth24
 const results = await parallel(args.prompts.map(one => () =>
-  agent(task(one), { label: one.label, phase: 'Spawn', schema: args.shapes[one.schema], model: one.model, effort: one.effort })))
+  agent(one.prompt ?? task(one), { label: one.label, phase: 'Spawn', schema: args.shapes[one.schema], model: one.model, effort: one.effort, agentType: one.agent })))
+// @req- kgth24
+// @req- xxpn4n
 // @req- o7zxou
 
 // @req+ REQ-42411532@ub-n0TKm3ymH na2sto

@@ -10,6 +10,10 @@ assessed:
   elucidate_workflow: LLnSfqUTLbwl39eM7HWxSLD1q97stP7Pc5uZbHCJu_o
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.best_in_class_agent: 8UrK8-pAzkRt-eKDXgXkrTXFeFyql1_OmwQJpYfDtzA
+citations:
+  b2u3gj: 3eOifk3bErJDECiyAHBQxJ3Hiau5qiYEaNWZYBNFdEM
+  dnioty: ObzRXW1VMbc3SPCM3nJxkd45TQYgVVTjx3x7jdqI61Y
+  oit5jj: c-kBk-h62eS02hGzSggCHle9FDdRZdeAKmiAexmjing
 priority: medium
 relations:
   REQ-38288492: depends_on
