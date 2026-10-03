@@ -5,6 +5,6 @@ entries:
   '20': {}
 kind: parameter
 name: judge_group
-status: approved
+status: deprecated
 text: The most items one judge group holds
 value_type: count

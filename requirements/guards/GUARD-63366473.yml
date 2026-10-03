@@ -12,7 +12,7 @@ assessed:
   comment_markers: fC-ZQ7s7HpanLYOaaakUXhqSF11L78s-JFC1FY5etyA
   comment_markers.*: sKVxZqeKEsdmvnSvKzQK3c2emeFoUWxgNGlWTZKxnGI
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 relations: {}
 status: approved
 text: If a comment or docstring outside the [corpus root](corpus_root) holds one of

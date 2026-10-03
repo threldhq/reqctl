@@ -6,7 +6,7 @@ entries:
   '10': {}
 kind: parameter
 name: review_summary_lines
-status: approved
+status: deprecated
 text: The most lines the summary of a [best-in-class review](best_in_class_review)
   holds
 value_type: count

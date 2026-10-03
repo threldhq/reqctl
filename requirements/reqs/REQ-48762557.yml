@@ -9,10 +9,9 @@ acceptance_criteria:
   when: the judge prompts are built
 assessed:
   REQ-30631052: YipkKcwzRStRgjQYay9Wr1bz3AU80L23gLwgBpCP3Go
-  judge_bound: 3maLw8ZObEPGYPE0kzB90tHHBWjSVnInVCdjM5bV1Ew
-  judge_bound.*: lWSgiNX2uk-eYOImP3gRJZK7SamL2l5iUtUZGXA5yWY
-  judge_group: OAcH6zP2t55_EISeDTUz1Pfhz8zIZyYWffPmKEYdLFo
-  judge_group.*: MOdB_cGmXg6hVQMxXJFxELytsu7PAyXoUwbDAdrrle8
+  challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
+  challenge_bounds.judge_bound: usfwiJrXsFZWaY5Mcwe1A50JHRWpFov-W2_yLFZ5OE4
+  challenge_bounds.judge_group: 2k6b0ufxpYmiC_GBiQTDa90gR-pSdMBIYkXikZQALTc
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   5f3ye7: KLI12JslZACTjVYjbr0kMx9_prjdpRWcqm9Njk9FjXs
@@ -20,8 +19,8 @@ priority: medium
 relations:
   REQ-30631052: constrains
 status: approved
-text: If the items named for a [proposal](proposal) exceed ${judge_bound}, then the
-  product shall split the named items into judge prompts holding at most ${judge_group}
-  items each.
+text: If the items named for a [proposal](proposal) exceed ${challenge_bounds.judge_bound.quantity},
+  then the product shall split the named items into judge prompts holding at most
+  ${challenge_bounds.judge_group.quantity} items each.
 type: functional
 verification: inspection

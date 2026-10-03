@@ -1,10 +1,12 @@
 acceptance_criteria:
-- given: a repository whose corpus holds no parameter named review_page_bytes
-  then: the product reads no more of a page than ${review_page_bytes} bytes
+- given: a repository whose corpus holds no data item named review_limits
+  then: the product reads no more of a page than ${review_limits.page_bytes.quantity}
+    bytes
   when: the [best-in-class review](best_in_class_review) is checked there
-- given: a repository whose corpus holds a parameter named review_page_bytes stating
-    another value
-  then: the product reads no more of a page than ${review_page_bytes} bytes
+- given: a repository whose corpus holds a data item named review_limits whose page_bytes
+    entry states another quantity
+  then: the product reads no more of a page than ${review_limits.page_bytes.quantity}
+    bytes
   when: the [best-in-class review](best_in_class_review) is checked there
 - given: a repository whose corpus states a challenge_roles data item, or an elucidate_agents
     data item naming other models or efforts
@@ -13,16 +15,16 @@ acceptance_criteria:
   when: a run is built there
 assessed:
   REQ-18272120: P5XOlho5WrkHimyHO6t4oiiJ0VhBYlilQ6WMiCR2fzI
-  REQ-48148587: zTFTyv30tHgPlKtYsWziVJVeV6NFvUal3gTLmP7V7N0
-  REQ-48762557: vkwEwASOFYbm3YOd61HzJZqkHw22sUc5TROjdQu8yII
+  REQ-48148587: wA7bmyxqWF2Zyx_B5SQ9MYQnHdmvjYgBCyR5jwnCrqM
+  REQ-48762557: awBU6cqFJEkKXAqTfW9LPJgd7WeTwb0_DFX12zHFaj8
   REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
-  REQ-94426583: 5DnvqbSeaqCQIkT4j5HcqkSNzUQou7HOF6t2uNfZYv8
+  REQ-94426583: 8JHtrZp73dHbt0YdrxVVJJCwoQIjtjEQO5VDptA7dRQ
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
-  review_page_bytes: 8byjsLX3ASyH4_Zc_WWAPQSRAwOizmU7pDqp7h4API4
-  review_page_bytes.*: WX_pLJ5Q5te-7IkbHsWsq3DH3WqUCwHeu4NWrn4cJAw
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  review_limits: UPSuHlsQZqT7GXjskz-Z-rhN826eBPukAOBjuJvU6aU
+  review_limits.page_bytes: Vg7TUFPrj8IMJZtVMCxzt38RWdLgb38ApIdTuKZs57w
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
   4py3et: r19mBpwDHD8S0oSIAS7Nwq187Qn7yT1N6A-XRQzTkAE
   mmgold: A3QA8Bt7ntmt5sDkq3kOc_1uElzgTV3E0EYjdUWF7Lo
@@ -36,7 +38,8 @@ relations:
   REQ-94426583: constrains
 status: approved
 text: The product shall carry in the code it ships, pinned by a [statement citation](statement_citation)
-  of the item, each value of its own parameters and data items that the code uses,
-  reading none of them from a corpus when the code runs.
+  of the item, or of the data item's entry holding the value, each value of its own
+  parameters and data items that the code uses, reading none of them from a corpus
+  when the code runs.
 type: functional
 verification: inspection

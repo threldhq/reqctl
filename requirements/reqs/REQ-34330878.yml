@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) of one entry of a data item
+  then: the stamp the product pins the citation to is unchanged
+  when: a field of another of the data item's entries is revised
+- given: a [statement citation](statement_citation) of one entry of a data item
+  then: the stamp the product pins the citation to changes
+  when: a field of that entry is revised
+- given: a [statement citation](statement_citation) of one entry of a data item
+  then: the stamp the product pins the citation to changes
+  when: the data item's text is revised
+assessed:
+  REQ-18176935: u-uprH5qBxMTk7RLhLVJ39PV5F5depbLxxBYrr2xkWY
+  REQ-22755763: jWQQtKhJ8JoO_gFCNaK6GDJCv93GcomxUpOHsgzRt7w
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-18176935: derives_from
+  REQ-22755763: depends_on
+status: approved
+text: The product shall pin a [statement citation](statement_citation) of one entry
+  of a data item to a stamp taken over the data item's own stamp and over the stamp
+  that entry carries.
+type: functional
+verification: inspection

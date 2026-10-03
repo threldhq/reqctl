@@ -6,7 +6,7 @@ entries:
   '5': {}
 kind: parameter
 name: review_redirects
-status: approved
+status: deprecated
 text: The most redirects the product follows when it fetches a source of the [best-in-class
   review](best_in_class_review)
 value_type: count

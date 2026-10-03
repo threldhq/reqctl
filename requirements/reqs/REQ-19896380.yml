@@ -11,7 +11,7 @@ acceptance_criteria:
   when: trace is run
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 citations:
   6rtw6m: LB35N9Iu5aM_FQOPe7GgeKvJBrR7MJ3DW7pUnvgNw38

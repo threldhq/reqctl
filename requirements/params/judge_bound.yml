@@ -5,6 +5,6 @@ entries:
   '45': {}
 kind: parameter
 name: judge_bound
-status: approved
+status: deprecated
 text: The most items one judge prompt holds before the items are split into groups
 value_type: count
