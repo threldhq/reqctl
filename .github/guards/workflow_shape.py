@@ -11,6 +11,9 @@ PINNED = re.compile(r"@[0-9a-f]{40}$")
 PIP = re.compile(r"(?m)^.*?(pip install\b.*)$")
 CONTINUED = re.compile(r"\\\n[ \t]*")
 READ_ONLY = {"contents": "read"}
+WRITES = {"contents": "write"}
+TAGS = "release-tag.yml"
+PUSHED = {"push": {"branches": ["main"]}}
 SECRET = re.compile(r"\bsecrets\b")
 WIELDS = {"corpus-write.yml", "corpus-view.yml"}
 GATE = re.compile(r"\.github/guards/([\w-]+)\.py")
@@ -80,21 +83,32 @@ def faults(text, where, gates=None):
     if who in WIELDS:
         for fired in sorted(UNTRUSTED & triggers(held)):
             found.append(f"{where}: wields a secret and fires on {fired}")
+    # @req+ GUARD-20209566@zkKPlDbnzFuA wqoe4t
+    events = held.get(True, held.get("on"))
+    if who == TAGS and events != PUSHED:
+        found.append(f"{where}: is triggered by {events!r}, not by {PUSHED!r} "
+                     "alone")
+    # @req- wqoe4t
     gates = corpus_gates() if gates is None else gates
     jobs = held.get("jobs") or {}
     if not isinstance(jobs, dict):
         return [*found, f"{where}: jobs is not a mapping"]
     if len(jobs) != JOBS:
         found.append(f"{where}: has {len(jobs)} jobs, not {JOBS}")
+    # @req> GUARD-52037270@OztX8T4vOmsH ls2q44
     if held.get("permissions") != READ_ONLY:
         found.append(f"{where}: permissions is {held.get('permissions')!r}, "
                      f"not {READ_ONLY!r}")
     for name, job in jobs.items():
         if not isinstance(job, dict):
             continue
-        if "permissions" in job and job["permissions"] != READ_ONLY:
-            found.append(f"{where}: job {name} takes {job['permissions']!r}, "
-                         f"widening the workflow's {READ_ONLY!r}")
+        # @req+ GUARD-52037270@OztX8T4vOmsH w4sjw2
+        allowed = WRITES if who == TAGS else READ_ONLY
+        taken = job.get("permissions", READ_ONLY)
+        if taken != allowed:
+            found.append(f"{where}: job {name} takes {taken!r}, not "
+                         f"{allowed!r}")
+        # @req- w4sjw2
         steps = [step for step in job.get("steps") or [] if isinstance(step, dict)]
         for uses in [job.get("uses")] + [step.get("uses") for step in steps]:
             if uses and not PINNED.search(str(uses)):

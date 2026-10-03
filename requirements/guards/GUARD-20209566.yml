@@ -10,6 +10,8 @@ acceptance_criteria:
 assessed:
   GUARD-60575106: QWS2QB-n2_dHE5jaZVwrwj3QiQwh9fAouSFzS7cQujM
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+citations:
+  wqoe4t: ZwH1oR2lAAw0TJ2MRVg6GYuUoIeqyQMAqQGajLAWddI
 relations:
   GUARD-60575106: constrains
 status: approved
