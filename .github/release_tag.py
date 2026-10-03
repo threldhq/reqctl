@@ -66,7 +66,8 @@ def attach(repo, tag, commit):
         pins = Path(out) / "backend.txt"
         pins.write_text(backend.group())
         ran(sys.executable, "-m", "pip", "install", "--require-hashes",
-            "--no-deps", "-r", str(pins))
+            "--no-deps", "--force-reinstall", "--only-binary", ":all:",
+            "-r", str(pins))
         ran(sys.executable, "-m", "pip", "wheel", "--no-deps",
             "--no-build-isolation", "--wheel-dir", out,
             str(Path(WHEEL).resolve().parent))
@@ -102,7 +103,7 @@ def main(before, after):
         # @req> GUARD-14769016@T01UILpAY633 huv5w6
         if held == after:
             print(attach(repo, tag, after))
-    except Refused as refused:
+    except (Refused, OSError) as refused:
         print(f"::error::{refused}")
         return 1
     return 0
