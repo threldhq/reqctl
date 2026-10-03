@@ -31,6 +31,7 @@ REDIRECTS = "review_redirects"
 SECONDS = "review_fetch_seconds"
 ATTEMPTS = "review_fetch_attempts"
 ASKED = "asked.json"
+SPAWN = "review"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
 WAIT = 30
@@ -142,12 +143,18 @@ def build(run, answered):
     # @req> REQ-57259870@9aNmMpV7yL55 vmnzm3
     text = "" if source is None else README.format(
         text=corpus.read_text(source))
-    where = run / "prompts" / "review.md"
-    corpus.atomic_write(where, PROMPT.format(
+    prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
-        words=words, readme=text))
+        words=words, readme=text)
+    corpus.atomic_write(run / "prompts" / "review.md", prompt)
+    # @req> REQ-61616834@ocFeB1JGP518 dnioty
+    # @req> REQ-23060027@QKFI8tm_J5VF zq3w3z
+    spawning = plan.manifest(run, SPAWN, [plan.inline(
+        "review", prompt, run / plan.REVIEWED, shapes.REVIEW,
+        plan.registered("best-in-class"), plan.agent("best_in_class"))])
     print(field)
-    print(f"spawn one best-in-class agent with {where}, verbatim")
+    # @req> REQ-61616834@ocFeB1JGP518 b2u3gj
+    print(f"spawn the best-in-class agent through the workflow with {spawning}")
     return 0
 
 
@@ -472,7 +479,8 @@ def check(run):
     review, why = plan.read_return(path, shapes.REVIEW)
     # @req> REQ-82432523@VoDkIJau94BB 4cioyu
     again = (f"run `rm -f {path} {run / plan.REMOVED}`, then spawn the "
-             "best-in-class agent again with the same prompt")
+             "best-in-class agent again through the workflow with "
+             f"{plan.manifested(run, SPAWN)}")
     # @req> REQ-51975077@c_HnzFhrYbl_ m75ejw
     corpus.remove(run / ASKED, missing_ok=True)
     if review is None:

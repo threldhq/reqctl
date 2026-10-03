@@ -10,6 +10,11 @@ assessed:
   REQ-22034470: UtTX-sX116FwvDC01dHo2q4QacqTj84CikdDmOwmiS0
   REQ-61616834: ocFeB1JGP518dTo37bhkp0LKfeG6BTBIFGYwBXIEHEU
   elucidate_workflow: LLnSfqUTLbwl39eM7HWxSLD1q97stP7Pc5uZbHCJu_o
+citations:
+  2rmqw3: Lc6hp879jnY75QSH697fK7BDUUz6VHGXQYhWBS4NvI0
+  5wmxfp: Lc6hp879jnY75QSH697fK7BDUUz6VHGXQYhWBS4NvI0
+  kgth24: EFmh6nTYmYwigc0GUK6dibUZK234VpbtMso3kzbGaV0
+  lq44vs: Vr4lHUuVVfcBfewal5q1bcyWIIyGd4nNb99WnSfHGB8
 priority: medium
 relations:
   REQ-22034470: depends_on

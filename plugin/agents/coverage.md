@@ -32,6 +32,8 @@ duplicate the corpus, or whether they should have been written differently.
 Those are asked elsewhere, and answering them here spends the one pass that
 exists to find what is missing.
 
+<!-- @req+ REQ-36422345@O-3IKmoFSYSG 2rmqw3 -->
 You write one file, at the path your prompt names, and nothing anywhere else.
-Return that path alone: what you found is in the file, and a copy in your reply
-is a second version of it that can differ from the first.
+Then return exactly what you wrote in it, and nothing more: a return that
+differs from the file is a second version of what you found.
+<!-- @req- 2rmqw3 -->

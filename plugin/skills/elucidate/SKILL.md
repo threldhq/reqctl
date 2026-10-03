@@ -26,7 +26,7 @@ the answers with the question picker.
 
 ```
 1  convert     the owner's words become EARS statements   inline, beside one review agent
-2  challenge   recall over every shard, then one judge each   agents by the corpus's roles
+2  challenge   recall over every shard, then one judge each   agents on the models reqctl ships
 3  approve     reqctl, then the pull request              owner reviews and merges
 ```
 
@@ -50,7 +50,8 @@ then` strings, and its trace a list of passages quoted from the owner's words;
 a proposal carrying no criteria is left out of that map rather than written
 empty. `run.yaml` also holds `declined_practices`, the numbers of the review's
 practices the owner declined. `synthesis/review.py` writes the review's prompt
-into `prompts/`, and the review agent writes `review.json`. `synthesis/plan.py` writes the rest
+into `prompts/` and its manifest into `workflow/`, and the review agent writes
+`review.json`. `synthesis/plan.py` writes the rest
 -- `export.md`, `shards/`, `dictionary.md`, `prompts/`, `build.json`,
 `workflow/` -- and the agents fill `returns/`, which the scripts read into
 `verdicts/`. The directory is made
@@ -208,10 +209,14 @@ convert a run's words, build the review's prompt:
 python3 ${CLAUDE_SKILL_DIR}/synthesis/review.py build --run .elucidate/<run>
 ```
 
+<!-- @req+ REQ-61616834@ocFeB1JGP518 oit5jj -->
 It states the owner's words, the field of the governed software -- the
 `governed_field` parameter where the corpus states one -- and the repository's
-README where there is one. Spawn one `best-in-class` agent with the prompt it
-names, verbatim, then check what the agent wrote:
+README where there is one, and names the manifest that spawns the review's
+agent. Spawn it with one call of the Workflow tool, `scriptPath` at
+`${CLAUDE_SKILL_DIR}/workflow.js` and `args` holding the contents of that
+manifest, then check what the agent wrote:
+<!-- @req- oit5jj -->
 
 ```bash
 python3 ${CLAUDE_SKILL_DIR}/synthesis/review.py check --run .elucidate/<run>
@@ -315,9 +320,12 @@ python3 ${CLAUDE_SKILL_DIR}/synthesis/verdicts.py --run DIR       # returns in, 
 
 Read that report, not the returns.
 
-The coverage agent is spawned from the prompt `build` named, once the answers
-are in, and `python3 ${CLAUDE_SKILL_DIR}/synthesis/coverage.py --words FILE
+<!-- @req+ REQ-23060027@QKFI8tm_J5VF 7pvcrn -->
+The coverage agent is spawned through the workflow with the manifest `build`
+names for it, once the answers are in, and
+`python3 ${CLAUDE_SKILL_DIR}/synthesis/coverage.py --words FILE
 --found FILE` checks every quote back against the owner's words.
+<!-- @req- 7pvcrn -->
 
 A value or a word a verdict flagged, a conflict with an approved statement, a
 part cover whose parts may account for the whole, and every question take the
