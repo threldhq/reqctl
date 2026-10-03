@@ -68,7 +68,7 @@ def trace(tree, root, uid=None):
             continue
         data = corpus.raw(item)
         cited = tags.get(current, [])
-        files = list(dict.fromkeys(path for path, _ in cited))
+        files = list(dict.fromkeys(path for path, _, _ in cited))
         rows.append(
             {
                 "uid": current,
@@ -87,9 +87,9 @@ def trace(tree, root, uid=None):
         if (corpus.citable(item)
                 and data.get("status") == "deprecated" and cited):
             deprecated += [{"uid": current, "path": path} for path
-                           in dict.fromkeys(p for p, pinned in cited if pinned)]
+                           in dict.fromkeys(p for p, pinned, _ in cited if pinned)]
             problems += [unstamped(current, path)
-                         for path, pinned in cited if not pinned]
+                         for path, pinned, _ in cited if not pinned]
             continue
         if data.get("status") != "approved":
             if files:
@@ -100,13 +100,19 @@ def trace(tree, root, uid=None):
             continue
         # @req> REQ-77594104@j8bc8SJ4n3Lz lgfhiu
         if corpus.citable(item):
-            held = corpus.cited_stamp(item) if cited else None
-            for path, pinned in cited:
+            for path, pinned, entry in cited:
+                # @req+ REQ-74122607@VDvRKpUj1amL pbsx4y
+                address = f"{current}.{entry}" if entry else current
+                if entry and entry not in corpus.cited_entries(item):
+                    problems.append(f"{address}: referenced by {path} but no such entry")
+                    continue
+                held = corpus.cited_stamp(item, entry)
+                # @req- pbsx4y
                 # @req> REQ-75161909@bnqFzGCM1y16 7df3my
                 if not pinned:
-                    problems.append(unstamped(current, path))
+                    problems.append(unstamped(address, path))
                 elif pinned != held:
-                    stale.append({"uid": current, "path": path,
+                    stale.append({"uid": address, "path": path,
                                   "pinned": pinned, "held": held})
         if current.startswith(("REQ-", "GUARD-")) and not files:
             unimplemented.append(current)
@@ -116,7 +122,7 @@ def trace(tree, root, uid=None):
             if tagged not in known:
                 problems.append(
                     f"{tagged}: referenced by "
-                    f"{', '.join(dict.fromkeys(p for p, _ in tags[tagged]))}"
+                    f"{', '.join(dict.fromkeys(p for p, _, _ in tags[tagged]))}"
                     " but no "
                     "such requirement"
                 )

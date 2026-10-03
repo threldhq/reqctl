@@ -110,26 +110,34 @@ something the statement does not already say. Then:
   lean on a product statement is two rules, not one.
 <!-- @req- nvqukv -->
 <!-- @req- dsbvv7 -->
-- **A value is a parameter; a record is a data item.** The entry key settles it:
+<!-- @req+ REQ-79715634@qXK-LHf6SP8u ktu5yd -->
+- **A lone value is a parameter; a record is a data item.** The entry key settles it:
   a parameter's key *is* the value, typed by `--value-type` and carrying
   `--unit` -- `30` is the thirty, `utc` is the fallback zone. A data item's key
   is a handle and the facts live in its fields -- `primary_disk` is not a
   value, it names one. Shape does not decide this and neither does who controls
   the thing: both kinds hold lists, and either may record something outside our
   gift.
-- **A bare number is a parameter.** A limit, a timeout, a threshold: name it and
-  mint it at step 3 rather than writing it into the prose. Say what it measures,
-  not only its value -- step 2 needs the concept to tell a shared budget from two
-  numbers that happen to match. A count a reader would say aloud -- one type,
-  both organisations -- is written as a word and governs nothing.
+- **A bare number is a parameter until it shares a subject.** A limit, a
+  timeout, a threshold: name it and mint it at step 3 rather than writing it
+  into the prose. Say what it measures, not only its value -- step 2 needs the
+  concept to tell a shared budget from two numbers that happen to match.
+  Values that bound or describe the same behaviour or the same thing -- a
+  review's fetch limits, each agent's model and effort -- are entries of one
+  data item, never a parameter each: `revise review_limits --entry page_bytes
+  --set quantity=5242880 --set unit=bytes --set definition=...`, referenced as
+  `${review_limits.page_bytes.quantity}`. A value whose subject the corpus
+  already holds a data item for is a new entry of that item. A count a reader
+  would say aloud -- one type, both organisations -- is written as a word and
+  governs nothing.
 
-- **A set of words is a data item; a set of quantities is a parameter.**
+- **A set of words is a data item; one quantity's tiers are a parameter.**
   Providers, formats, view types are words: mint one `DATA` --
   `reqctl new data --name export_formats --entry json --entry markdown` -- and
-  reference it. Thresholds that move together are quantities: mint one `PARAM`
-  whose value is an array, `--value "[10, 20]" --value-type count`, exactly as
-  a lone threshold. `.github/guards/taxonomy.py` states the line and refuses
-  the wrong side of it, so it is not restated here.
+  reference it. The tiers of one threshold move together as one quantity:
+  mint one `PARAM` whose value is an array, `--value "[10, 20]" --value-type
+  count`, exactly as a lone threshold. `.github/guards/taxonomy.py` states the
+  line and refuses the wrong side of it, so it is not restated here.
   Either way it is one named place, versioned, and adding a member re-reviews
   everything stated against it. Do not spell the members out inside a
   statement, and do not mint a requirement per option. Each member is an
@@ -137,6 +145,7 @@ something the statement does not already say. Then:
   `revise --entry MEMBER --set definition=...` gives a member its own
   meaning, so a statement may cite one member -- `${name.member}` --
   without binding the rest.
+<!-- @req- ktu5yd -->
 - **A named record is a data item.** Formats, colours, settings --
   records that are values, not obligations: mint one `DATA` per
   subject with `reqctl new data --name ... --entry handle`, then
@@ -266,7 +275,7 @@ alternatives stated evenly, and your reading of them, marked as yours.
 Disagreeing stays as easy as agreeing: the owner's first look must not be a
 yes/no on a choice already made.
 
-<!-- @req> REQ-44823271@ecfoMJvhcNBn v2tnmd -->
+<!-- @req> REQ-44823271@AviNJLM07SOZ v2tnmd -->
 State the review's summary in that message, as `check` prints it.
 
 <!-- @req+ REQ-58598892@Ac8QPjjAwTy9 25edfl -->

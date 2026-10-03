@@ -504,7 +504,7 @@ def _context(store, item, dependents, tags):
         concepts.append(entry)
 
     # @req> REQ-19896380@2sOnckMwnWfx 7iy6c4
-    cited = [(path, pinned) for path, pinned in tags.get(uid, [])
+    cited = [(path, pinned) for path, pinned, _ in tags.get(uid, [])
              if not corpus.is_test(path)]
     references = list(dict.fromkeys(path for path, _ in cited))
     described = _describe(store, item)
@@ -778,13 +778,16 @@ def cmd_tag(args):
         raise ReqctlError("name --from, --to and --req once for each citation")
     asked = []
     for first, last, req in zip(args.first, args.last, args.req):
-        item = corpus.find(tree, req)
+        item, entry = corpus.cited_item(tree, req)
         # @req> REQ-88203622@QLXb8abUOMT3 myjx5s
         if not corpus.citable(item):
-            raise ReqctlError(f"{req}: only a requirement, a guard, a parameter "
-                              "or a data item is cited")
+            raise ReqctlError(f"{req}: only a requirement, a guard, a parameter, "
+                              "a data item or one entry of a data item is cited")
+        # @req> REQ-22755763@jWQQtKhJ8JoO yiibpx
+        # @req> REQ-34330878@Zd73-2hLzA6M nqvtul
         # @req> REQ-18176935@u-uprH5qBxMT wkv6gw
-        asked.append((first, last, str(item.uid), corpus.cited_stamp(item)))
+        asked.append((first, last, f"{item.uid}.{entry}" if entry else str(item.uid),
+                      corpus.cited_stamp(item, entry)))
     change, written = cite.tagged(root, args.path, asked, args.exclusive)
     # @req- nmyxfc
     changes = [change]
@@ -804,13 +807,15 @@ def cmd_tag(args):
 def cmd_repin(args):
     tree, root = corpus.load()
     citation = cite.named(root, args.id)
-    item = corpus.find(tree, citation["uid"])
+    # @req+ REQ-57688239@5uLv_U76DmQs 4yael4
+    item, entry = corpus.cited_item(tree, citation["address"])
     # @req> REQ-70626698@ybHsrTlF-wU1 dhjmro
     if corpus.raw(item).get("status") == "deprecated":
         raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
                           f"is removed, not re-pinned: `reqctl untag {args.id}`")
     # @req> REQ-41600593@dV84ANKBJqdk rsw2w2
-    stamp = corpus.cited_stamp(item)
+    stamp = corpus.cited_stamp(item, entry)
+    # @req- 4yael4
     changes = [cite.repinned(root, citation, stamp)]
     # @req> REQ-64846889@pHOO0sEc7V1K 7dhw4d
     # @req> REQ-17757558@4j9rQN-e61OY tevb2p
@@ -828,6 +833,7 @@ def cmd_untag(args):
     changes = [cite.untagged(root, citation)]
     # @req> REQ-13298390@OIZCRlURf3pq utmfsc
     # @req> REQ-81275367@rZszCCP31YAU olrtj5
+    # @req> REQ-28888702@HmZifhO5eMD9 iwdu5n
     if citation["uid"] in {str(item.uid) for item in corpus.items(tree)}:
         changes += _listed(tree, citation["uid"], {args.id: None})
     # @req> REQ-65668011@6eXnj2-53DtA jwd2cj
@@ -1123,8 +1129,8 @@ def build_parser(root, fielded):
     s.set_defaults(func=cmd_trace)
 
     s = _command(sub, "tag",
-                 "cite a requirement, a guard, a parameter or a data item at "
-                 "lines of a file, writing one comment "
+                 "cite a requirement, a guard, a parameter, a data item or one "
+                 "entry of a data item at lines of a file, writing one comment "
                  "over a single code statement and a pair of comments over "
                  "more; repeat --from, --to and --req to cite several, each "
                  "numbered as the file stands before the command")
