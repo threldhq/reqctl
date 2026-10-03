@@ -15,7 +15,7 @@ assessed:
   GUARD-56838909: thIjmFd7Wvy9mCXKuc9YQFNqxbnPNTu0ZrBVmxzAo3w
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
 citations:
-  s6dmsl: IFKhnYLhsC60canHmjnDFYCKawP4LXTnA59R7hJyNTs
+  s6dmsl: LlVNNnzPID8OgR9twNvbPg4bTOde5fdLPk0xEvfv0v4
 relations:
   GUARD-56838909: depends_on
 status: approved

@@ -12,12 +12,13 @@ MANIFEST = ".claude-plugin/plugin.json"
 
 
 def shown(commit, path, parse):
-    found = ran("git", "show", f"{commit}:{path}", check=False)
     try:
-        held = parse(found.stdout)
-    except ValueError:
-        return {}
-    return held if isinstance(held, dict) else {}
+        held = parse(ran("git", "show", f"{commit}:{path}").stdout)
+    except ValueError as broken:
+        raise Refused(f"{commit}:{path}: {broken}") from broken
+    if not isinstance(held, dict):
+        raise Refused(f"{commit}:{path}: not a mapping")
+    return held
 
 
 def pinned(commit):
@@ -35,13 +36,13 @@ def pinned(commit):
 
 def main(before, after):
     # @req+ GUARD-60575106@QWS2QB-n2_dH s6dmsl
-    tag = pinned(after)
-    if tag is None or pinned(before) == tag:
-        return 0
-    if ran("git", "rev-parse", "--verify", f"refs/tags/{tag}",
-           check=False).returncode == 0:
-        return 0
     try:
+        tag = pinned(after)
+        if tag is None or pinned(before) == tag:
+            return 0
+        if ran("git", "rev-parse", "--verify", f"refs/tags/{tag}",
+               check=False).returncode == 0:
+            return 0
         ran("gh", "api", f"repos/{os.environ['GITHUB_REPOSITORY']}/git/refs",
             "-f", f"ref=refs/tags/{tag}", "-f", f"sha={after}")
     except Refused as refused:
