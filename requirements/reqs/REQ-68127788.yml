@@ -12,7 +12,7 @@ rationale: Which model plays a role is the tool's own operating configuration, n
   a statement about any product, so a repository adopting the tool inherits one rather
   than writing one.
 relations: {}
-status: approved
+status: superseded
 text: Where the corpus states no model for a [challenge](challenge) role, the product
   shall use the model it ships for that role.
 type: functional

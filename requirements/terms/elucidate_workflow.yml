@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  elucidate_workflow:
+    definition: The workflow script that the elucidate skill ships, through which
+      a run of the skill spawns its agents in one call of the Workflow tool of Claude
+      Code.
+    word: elucidate workflow
+kind: term
+status: approved

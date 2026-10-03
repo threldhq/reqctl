@@ -1,0 +1,30 @@
+assessed:
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+citations:
+  kgnxgu: r19mBpwDHD8S0oSIAS7Nwq187Qn7yT1N6A-XRQzTkAE
+entries:
+  best_in_class:
+    definition: the agent that makes the [best-in-class review](best_in_class_review)
+    effort: high
+    model: claude-sonnet-5-5
+  coverage:
+    definition: the agent that reads the owner's words back against a run's [proposals](proposal)
+      and its declined list
+    effort: high
+    model: claude-sonnet-5-5
+  judge:
+    definition: 'an agent that judges a [proposal](proposal) against the corpus: a
+      judge, a group judge or a final judge'
+    effort: high
+    model: claude-opus-5-5
+  recall:
+    definition: an agent that names, from one shard of the corpus, the items bearing
+      on a run's [proposals](proposal)
+    effort: medium
+    model: claude-sonnet-5-5
+kind: data
+name: elucidate_agents
+status: approved
+text: each agent that a run of the elucidate skill spawns, with the model and the
+  effort it is spawned on

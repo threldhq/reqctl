@@ -2,15 +2,11 @@ acceptance_criteria:
 - given: a build recording Sonnet at high effort for a judge prompt
   then: that judge is spawned on Sonnet at high effort
   when: the agents are spawned
-assessed:
-  REQ-10470323: pMpSTZR3Eeq9TWBXU_41KPr3WlzvBlOwFCa1wwyH36U
-  REQ-68127788: BccauyYFIuLms3wnvh3sB52RUT3lWSxaONwYB8RtWDI
+assessed: {}
 citations:
-  o7zxou: 8RjUj4D5WIvKZiozlz4UcMO7Yr_wdIb1KaDOc7Glc8c
+  o7zxou: EFmh6nTYmYwigc0GUK6dibUZK234VpbtMso3kzbGaV0
 priority: medium
-relations:
-  REQ-10470323: depends_on
-  REQ-68127788: depends_on
+relations: {}
 status: approved
 text: When the product spawns a run's agents, the product shall spawn each on the
   model and at the effort the run's build recorded for its prompt.
