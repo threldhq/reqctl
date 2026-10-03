@@ -738,13 +738,14 @@ def _parsed_schema(path, stamped):
 def _refuse_unfollowable(path, resource):
     try:
         walked = list(_walked(resource, ""))
+        if any(specification_with(schema.get("$schema", ""), default=DRAFT202012)
+               is not DRAFT202012
+               or validator_for(schema, Draft202012Validator) is not Draft202012Validator
+               for _, schema in walked[1:]):
+            return
     except ValueError as error:
-        raise ReqctlError(f"{path.name}: an $id is not an address -- {error}") from error
-    if any(specification_with(schema.get("$schema", ""), default=DRAFT202012)
-           is not DRAFT202012
-           or validator_for(schema, Draft202012Validator) is not Draft202012Validator
-           for _, schema in walked[1:]):
-        return
+        raise ReqctlError(f"{path.name}: an $id or $schema is not an address -- "
+                          f"{error}") from error
     root = resource.id() or ""
     registry = Registry().with_resource(root, resource)
     with contextlib.suppress(ValueError):
