@@ -146,12 +146,11 @@ def build(run, answered):
     prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
         words=words, readme=text)
-    corpus.atomic_write(run / "prompts" / "review.md", prompt)
     # @req> REQ-61616834@ocFeB1JGP518 dnioty
     # @req> REQ-23060027@QKFI8tm_J5VF zq3w3z
     spawning = plan.manifest(run, SPAWN, [plan.inline(
-        "review", prompt, run / plan.REVIEWED, shapes.REVIEW,
-        plan.registered("best-in-class"), plan.agent("best_in_class"))])
+        "review", prompt, shapes.REVIEW, plan.registered("best-in-class"),
+        plan.agent("best_in_class"))])
     print(field)
     # @req> REQ-61616834@ocFeB1JGP518 b2u3gj
     print(f"spawn the best-in-class agent through the workflow with {spawning}")

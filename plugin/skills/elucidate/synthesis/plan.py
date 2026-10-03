@@ -292,9 +292,9 @@ def spawn(run, folder, name, label, shape, settings):
             "schema": shape, **settings}
 
 
-def inline(label, prompt, out, shape, kind, settings):
-    return {"label": label, "prompt": prompt, "out": str(out), "schema": shape,
-            "agent": kind, **settings}
+def inline(label, prompt, shape, kind, settings):
+    return {"label": label, "prompt": prompt, "schema": shape, "agent": kind,
+            **settings}
 
 
 def registered(name):
@@ -804,17 +804,15 @@ def coverage(run, words, declined, held, carried):
         f"\n  proposal {number}: {one}"
         for number, _, _, _ in held
         for one in carried.get(str(number), ()))
-    where = run / "prompts" / "coverage.md"
     # @req+ REQ-47744588@l3MLCZUPXuDZ a7rnsw
     # @req+ REQ-80500447@cWHS2ihd6kMV omzjq4
     # @req> REQ-24569953@LsZU4Go81cg8 ssc6p2
-    corpus.atomic_write(where, COVERAGE.format(
+    return COVERAGE.format(
         words=words, declined=declined, proposals=written,
         criteria=CARRIES.format(stated=lines) if lines else "", found=found,
-        names=", ".join(f"`{name}`" for name in NAMES)))
+        names=", ".join(f"`{name}`" for name in NAMES))
     # @req- omzjq4
     # @req- a7rnsw
-    return where
 
 
 def manifested(run, name):
@@ -946,8 +944,8 @@ def build(run, chars, items, lines=PROMPT_LINES):
     asked = coverage(run, words, declined, held, carried)
     # @req> REQ-23060027@QKFI8tm_J5VF ukljdu
     reading = manifest(run, "coverage", [inline(
-        "coverage", asked.read_text(), run / FINDINGS, shapes.COVERAGE,
-        registered("coverage"), agents["coverage"])])
+        "coverage", asked, shapes.COVERAGE, registered("coverage"),
+        agents["coverage"])])
     cleared(run)
     retired = retire(run, exported_text)
     for name in retired:

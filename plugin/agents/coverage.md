@@ -2,7 +2,6 @@
 name: coverage
 description: Reads the owner's words against a run's proposed statements and its declined list, and names what neither accounts for. Spawned only by the elucidate skill's step 1; not for general work.
 tools: Write
-model: sonnet
 ---
 
 <!-- @req> REQ-38288492@4l6tMNjp19tH gqyp6i -->
