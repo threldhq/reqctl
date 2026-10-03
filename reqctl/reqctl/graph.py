@@ -76,11 +76,11 @@ def trace(tree, root, uid=None):
                 "implementation": files,
             }
         )
-        if corpus.kind_of(current, data) == "term" and files:
+        if files and not corpus.citable(item):
             problems.append(
-                f"{current}: referenced by {', '.join(files)} -- a term is a "
-                "definition; nothing implements it. Tag the requirement "
-                "stated against it instead"
+                f"{current}: referenced by {', '.join(files)} -- only a "
+                "requirement, a guard, a parameter or a data item is cited. "
+                "Tag the requirement stated against it instead"
             )
         # @req> REQ-35979865@-t3USRO-BKGk iz2v2g
         # @req> REQ-77594104@j8bc8SJ4n3Lz tizjds
