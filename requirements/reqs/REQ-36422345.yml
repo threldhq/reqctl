@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: an agent spawned through the [elucidate workflow](elucidate_workflow)
+  then: the agent is asked again, and no return that does not match is read
+  when: its return does not match the shape its prompt states
+- given: an agent whose returns never match its shape
+  then: it fails with the last validation error and is reported as an agent that did
+    not return
+  when: it is asked for the last time
+assessed:
+  REQ-22034470: UtTX-sX116FwvDC01dHo2q4QacqTj84CikdDmOwmiS0
+  REQ-61616834: ocFeB1JGP518dTo37bhkp0LKfeG6BTBIFGYwBXIEHEU
+  elucidate_workflow: LLnSfqUTLbwl39eM7HWxSLD1q97stP7Pc5uZbHCJu_o
+priority: medium
+relations:
+  REQ-22034470: depends_on
+  REQ-61616834: constrains
+status: approved
+text: When the product spawns an agent through the [elucidate workflow](elucidate_workflow),
+  the product shall accept from it only a return matching the shape its prompt states,
+  asking the agent again before failing it with the last validation error.
+type: functional
+verification: inspection

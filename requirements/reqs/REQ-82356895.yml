@@ -16,7 +16,7 @@ priority: medium
 relations:
   REQ-10470323: constrains
   REQ-68127788: constrains
-status: approved
+status: superseded
 text: If the corpus states for a [challenge](challenge) role a model that is empty
   or is not text, then the product shall refuse the run.
 type: functional

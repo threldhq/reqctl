@@ -1,0 +1,11 @@
+assessed: {}
+entries:
+  pinned_model_id:
+    aliases:
+    - pinned model IDs
+    definition: A model ID that names one version of a Claude model, such as claude-opus-5-5,
+      rather than an alias, such as opus, which can resolve to another version of
+      its family.
+    word: pinned model ID
+kind: term
+status: approved

@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a run converting the owner's words for the first time
+  then: the ${plugin_components.best_in_class_agent} is spawned through the [elucidate
+    workflow](elucidate_workflow), not on its own
+  when: the product makes the [best-in-class review](best_in_class_review)
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  elucidate_workflow: LLnSfqUTLbwl39eM7HWxSLD1q97stP7Pc5uZbHCJu_o
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.best_in_class_agent: 8UrK8-pAzkRt-eKDXgXkrTXFeFyql1_OmwQJpYfDtzA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-82432523: constrains
+status: approved
+text: When the product makes the [best-in-class review](best_in_class_review), the
+  product shall spawn the ${plugin_components.best_in_class_agent} through the [elucidate
+  workflow](elucidate_workflow).
+type: functional
+verification: inspection
