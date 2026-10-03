@@ -26,15 +26,15 @@ from reqctl import corpus
 
 FIELD = "governed_field"
 # @req+ REQ-87066486@jSgYRKWg1Lky mmgold
-# @req> review_summary_lines@De7bNnudobpk 4l32ki
+# @req> review_summary_lines@gpqiM9kc6wV_ 4l32ki
 BOUND = 10
-# @req> review_page_bytes@t8N3b00E5Z7H y2swyp
+# @req> review_page_bytes@TuS1V_5GViL- y2swyp
 PAGE = 5242880
-# @req> review_redirects@tGONi2j1OBZU vpsnks
+# @req> review_redirects@hL_venWbyEu_ vpsnks
 REDIRECTS = 5
-# @req> review_fetch_seconds@YuWH-bhxVJMT ehmws6
+# @req> review_fetch_seconds@GSTHss8vIjb8 ehmws6
 SECONDS = 60
-# @req> review_fetch_attempts@GZJWbr0uo0UY i7na7o
+# @req> review_fetch_attempts@Vc3KPadF5DCU i7na7o
 ATTEMPTS = 3
 # @req- mmgold
 ASKED = "asked.json"

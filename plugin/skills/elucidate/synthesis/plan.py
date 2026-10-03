@@ -38,19 +38,16 @@ SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
 # @req+ REQ-87066486@jSgYRKWg1Lky udnw6h
-# @req> recall_batch@k7K8OXrTFia8 7f7moo
+# @req> recall_batch@1MUqoxzBBHZd 7f7moo
 RECALL_BATCH = 40
-# @req> judge_bound@yESi_L2XNEEg pjbkc7
+# @req> judge_bound@decGTil8BS2t pjbkc7
 JUDGE_BOUND = 45
-# @req> judge_group@UQnqF3v3JumT tfddk2
+# @req> judge_group@V4NTMrVRGpDF tfddk2
 JUDGE_GROUP = 20
-# @req> floor_k@ZjERL-XRvx8C ol3y4x
+# @req> floor_k@Kulp75919beA ol3y4x
 FLOOR_K = 10
-# @req> agent_ceiling@9MXMFXqswJ4M ohe2ox
+# @req> agent_ceiling@gIFXgBrYQYI1 ohe2ox
 AGENT_CEILING = 150
-BOUNDS = {"recall_batch": RECALL_BATCH, "judge_bound": JUDGE_BOUND,
-          "judge_group": JUDGE_GROUP, "floor_k": FLOOR_K,
-          "agent_ceiling": AGENT_CEILING}
 # @req- udnw6h
 PHASES = {"recall": "medium", "judge": "high"}
 MODELS = {"recall": "sonnet", "judge": "opus"}
@@ -298,14 +295,13 @@ def spawn(run, folder, name, label, shape, model, effort):
             "schema": shape, "model": model, "effort": effort}
 
 
-def named_item(records, kind, name):
+def named_item(records, name):
     found = [(uid, data) for uid, data in records.items()
-             if corpus.kind_of(uid, data) == kind and data.get("name") == name]
+             if corpus.kind_of(uid, data) == "data" and data.get("name") == name]
     if len(found) != 1:
         raise SystemExit(
             f"the corpus defines {'no' if not found else 'more than one'} "
-            f"{kind} named {name}, and the build reads its bounds from it. "
-            "Mint one first.")
+            f"data item named {name}. Mint one first.")
     return found[0]
 
 
@@ -343,7 +339,7 @@ def roles(records):
 def dimensions(root, records):
     held = {}
     for name in corpus.binding_dimensions(root):
-        uid, data = named_item(records, "data", name)
+        uid, data = named_item(records, name)
         # @req+ REQ-29846444@iGWqcEzs6s52 zjcgv2
         members = set(corpus.entries(data) or {})
         if not members:
@@ -886,7 +882,6 @@ def build(run, chars, items, lines=PROMPT_LINES):
                 else "nothing was declined in this run")
     held = proposals(run)
     store, records = loaded()
-    bounds = dict(BOUNDS)
     models = roles(records)
     settled_on = binding(run, held, corpus.find_root(), records)
     traces = traced(run, words, held)
@@ -899,13 +894,13 @@ def build(run, chars, items, lines=PROMPT_LINES):
     sibling = siblings(held)
     if sibling is not None:
         shards.append(sibling)
-    batch = bounds["recall_batch"]
+    batch = RECALL_BATCH
     counted = sum(len(batched(judged_by(held, scope), batch))
                   for _, scope, _ in shards) + len(held)
-    ceilinged(counted, bounds["agent_ceiling"])
+    ceilinged(counted, AGENT_CEILING)
 
     state_held = {
-        "bounds": bounds, "models": models, "lines": lines,
+        "models": models, "lines": lines,
         "proposals": {str(number): {"kind": kind, "statement": statement,
                                     "path": str(path),
                                     "binding": settled_on.get(number),
@@ -1177,22 +1172,19 @@ def judge(run):
               f"{manifest(run, 'recall', spawned)}")
         return 1
 
-    bounds = state_held["bounds"]
     index = indexed(records)
     plans = {}
     for number, spec in state_held["proposals"].items():
-        floored = floor(index, spec["kind"], spec["statement"],
-                        bounds["floor_k"])
+        floored = floor(index, spec["kind"], spec["statement"], FLOOR_K)
         for uid, shared in floored:
             named[number].setdefault(uid, []).append(
                 "floor: shares " + ", ".join(shared))
         names = sorted(named[number], key=lambda uid: (SIBLING.match(uid) is not None, uid))
-        plans[number] = (names, grouped(names, bounds["judge_bound"],
-                                        bounds["judge_group"]))
+        plans[number] = (names, grouped(names, JUDGE_BOUND, JUDGE_GROUP))
     counted = len(state_held["recall"]) + sum(
         1 if groups is None else len(groups) + 1
         for _, groups in plans.values())
-    ceilinged(counted, bounds["agent_ceiling"])
+    ceilinged(counted, AGENT_CEILING)
 
     prompts, spawned = {}, []
     for number, (names, groups) in plans.items():

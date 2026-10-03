@@ -550,15 +550,16 @@ def stamp(item):
 
 
 # @req> REQ-88203622@QLXb8abUOMT3 zi6xxa
-def citable(uid, data):
-    return kind_of(uid, data) in CITABLE
+def citable(item):
+    return kind_of(item.uid, item.data) in CITABLE
 
 
 # @req> REQ-18176935@u-uprH5qBxMT r63o2r
 def cited_stamp(item):
-    if kind_of(item.uid, item.data) in ("requirement", "guard"):
-        return stamp(item)
-    return digest([item.uid, stamp(item), entries(item.data) or {}])
+    held = stamp(item)
+    if kind_of(item.uid, item.data) in ("parameter", "data"):
+        held = digest([held, stamp_at(item, MEMBERS)])
+    return tag_stamp(held)
 
 
 def tag_stamp(held):

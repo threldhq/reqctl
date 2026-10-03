@@ -11,7 +11,7 @@ def listing(tree, citations, uid=None):
     # @req> REQ-77594104@j8bc8SJ4n3Lz 7nucmz
     listed = {str(item.uid): corpus.mapping(item.data, corpus.CITATION_LIST)
               for item in corpus.items(tree)
-              if corpus.citable(str(item.uid), item.data)}
+              if corpus.citable(item)}
     problems = []
     # @req> REQ-13384695@P9NXsZKZp683 3lmvqm
     for owner, held in listed.items():
@@ -84,7 +84,7 @@ def trace(tree, root, uid=None):
             )
         # @req> REQ-35979865@-t3USRO-BKGk iz2v2g
         # @req> REQ-77594104@j8bc8SJ4n3Lz tizjds
-        if (corpus.citable(current, data)
+        if (corpus.citable(item)
                 and data.get("status") == "deprecated" and cited):
             deprecated += [{"uid": current, "path": path} for path
                            in dict.fromkeys(p for p, pinned in cited if pinned)]
@@ -99,8 +99,8 @@ def trace(tree, root, uid=None):
                 )
             continue
         # @req> REQ-77594104@j8bc8SJ4n3Lz lgfhiu
-        if corpus.citable(current, data):
-            held = corpus.tag_stamp(corpus.cited_stamp(item)) if cited else None
+        if corpus.citable(item):
+            held = corpus.cited_stamp(item) if cited else None
             for path, pinned in cited:
                 # @req> REQ-75161909@bnqFzGCM1y16 7df3my
                 if not pinned:

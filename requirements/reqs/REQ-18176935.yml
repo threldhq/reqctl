@@ -12,8 +12,8 @@ assessed:
   REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
   statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
 citations:
-  r63o2r: 43AjPHDY5HpZCSYiFw46OTjwlgg2OQiGRk8Yr2cyrfQ
-  wkv6gw: TFmfd6Au2V7hFtdtfJhO9Go5JIvZCo3PoeVVEpI05jg
+  r63o2r: WURfvaShIGjPGMd5FSar6b9ZEgMw5EI13I4tAhMQsnI
+  wkv6gw: _MCru0LsCKktGwRCAcrznJpPhG8Z41WZoVQbYvNDTTM
 priority: medium
 relations:
   REQ-88203622: depends_on
