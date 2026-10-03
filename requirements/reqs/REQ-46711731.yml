@@ -30,7 +30,7 @@ acceptance_criteria:
   when: the review is checked
 assessed:
   REQ-12222066: H7OEdnWlOPCRZTzpoerdwR5TbojNwRMs6NLeAbVIJdk
-  REQ-16875926: oy3EzqZ3OzhcKVmxtXKFGGdl87CNv_gWhrPmAemZGQA
+  REQ-16875926: rLub1dpB7yu_y9tFU3C_dapG5BhwSggMmYInqr9QW3k
   REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
   REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE

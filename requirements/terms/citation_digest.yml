@@ -1,11 +1,12 @@
 assessed:
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 entries:
   citation_digest:
     aliases:
     - citation digests
     definition: A value the product takes over the lines a [statement citation](statement_citation)
-      covers when it reads the code, and writes only in the item the citation names.
+      covers when it reads the code, and writes only in the item the citation names,
+      or whose entry it names.
     word: citation digest
 kind: term
 status: approved

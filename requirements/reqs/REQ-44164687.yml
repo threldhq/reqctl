@@ -20,7 +20,7 @@ acceptance_criteria:
   when: trace is run
 assessed:
   REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 citations:
   q2mqfm: vkEnl0GxYm42ZNI5OeS2MVDpphzTn0b6A7XT1fgab_0

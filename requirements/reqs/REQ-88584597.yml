@@ -1,35 +1,35 @@
 acceptance_criteria:
 - given: a source whose server sends its page a few bytes at a time, each within the
-    product's wait for one read, for longer than ${review_fetch_seconds} seconds on
-    every attempt
-  then: the product ends each attempt once ${review_fetch_seconds} seconds of it have
-    passed, then refuses the review and names the source
+    product's wait for one read, for longer than ${review_limits.fetch_seconds.quantity}
+    seconds on every attempt
+  then: the product ends each attempt once ${review_limits.fetch_seconds.quantity}
+    seconds of it have passed, then refuses the review and names the source
   when: the review is checked
-- given: a source whose redirects and page together take longer than ${review_fetch_seconds}
+- given: a source whose redirects and page together take longer than ${review_limits.fetch_seconds.quantity}
     seconds, though no one response does
-  then: the product ends the attempt once ${review_fetch_seconds} seconds of it have
-    passed
+  then: the product ends the attempt once ${review_limits.fetch_seconds.quantity}
+    seconds of it have passed
   when: the review is checked
 - given: a source whose response carries interim responses, chunk framing or trailers
     without end
-  then: the product ends the attempt once ${review_fetch_seconds} seconds of it have
-    passed
+  then: the product ends the attempt once ${review_limits.fetch_seconds.quantity}
+    seconds of it have passed
   when: the review is checked
-- given: a source whose first attempt takes longer than ${review_fetch_seconds} seconds
-    and whose second serves its page at once
+- given: a source whose first attempt takes longer than ${review_limits.fetch_seconds.quantity}
+    seconds and whose second serves its page at once
   then: the product reads the page and names no fault for the source
   when: the review is checked
 - given: a source whose fetch waits for an earlier fetch under its host name to end
-  then: the product counts none of the wait toward an attempt's ${review_fetch_seconds}
+  then: the product counts none of the wait toward an attempt's ${review_limits.fetch_seconds.quantity}
     seconds
   when: the review is checked
 assessed:
-  REQ-16875926: oy3EzqZ3OzhcKVmxtXKFGGdl87CNv_gWhrPmAemZGQA
+  REQ-16875926: rLub1dpB7yu_y9tFU3C_dapG5BhwSggMmYInqr9QW3k
   REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
-  review_fetch_seconds: Epy-unUvrfwl8YjufHo7-kXCJrO22NiDCmLEnVFJPxU
-  review_fetch_seconds.*: 5mqJ4b8TkDMSGQk0a8MtmsPqJaTpGuoSwU7dw-FB57Y
+  review_limits: UPSuHlsQZqT7GXjskz-Z-rhN826eBPukAOBjuJvU6aU
+  review_limits.fetch_seconds: 0vRLrGvmlAS16yZfgMTDhA_np8dkfrt6T7gdha_3Yn0
 citations:
   p7ygur: 7aCy1F3XHfzuWfdn7I-U2bNNDwtt59RnHu9dg3M2-Ow
   sjt5cu: RvTBJ8QmhqEBeX9brVQuqQmHUKy-P433E6OTnKJ_-Bs
@@ -42,7 +42,7 @@ relations:
 status: approved
 text: If an attempt at fetching a source that a [practice](practice) of the [best-in-class
   review](best_in_class_review) names, from its first connection to the end of its
-  page and across every redirect, takes more than ${review_fetch_seconds} seconds,
-  then the product shall end the attempt.
+  page and across every redirect, takes more than ${review_limits.fetch_seconds.quantity}
+  seconds, then the product shall end the attempt.
 type: functional
 verification: inspection

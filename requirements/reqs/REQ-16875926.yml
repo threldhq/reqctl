@@ -3,7 +3,8 @@ acceptance_criteria:
   then: the product refuses the review, names the source, and names its failure as
     transient
   when: the review is checked
-- given: a source whose fetch takes more than ${review_fetch_seconds} seconds
+- given: a source whose fetch takes more than ${review_limits.fetch_seconds.quantity}
+    seconds
   then: the product refuses the review, names the source, and names its failure as
     transient
   when: the review is checked
@@ -15,8 +16,8 @@ assessed:
   REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
-  review_fetch_seconds: Epy-unUvrfwl8YjufHo7-kXCJrO22NiDCmLEnVFJPxU
-  review_fetch_seconds.*: 5mqJ4b8TkDMSGQk0a8MtmsPqJaTpGuoSwU7dw-FB57Y
+  review_limits: UPSuHlsQZqT7GXjskz-Z-rhN826eBPukAOBjuJvU6aU
+  review_limits.fetch_seconds: 0vRLrGvmlAS16yZfgMTDhA_np8dkfrt6T7gdha_3Yn0
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
   eunqii: jnT9Zlezgr0XQv4nJHUMYdEgQkJFqPETqW2My5JQn-U

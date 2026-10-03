@@ -4,20 +4,20 @@ acceptance_criteria:
   then: the product reads the page and names no fault for the source
   when: the review is checked
 - given: a source whose every attempt ends in a [transient failure](transient_failure)
-  then: the product makes ${review_fetch_attempts} attempts at the source, refuses
-    the review, and names the failure of the last attempt only
+  then: the product makes ${review_limits.fetch_attempts.quantity} attempts at the
+    source, refuses the review, and names the failure of the last attempt only
   when: the review is checked
 - given: a source whose server answers with a status that is not a [transient failure](transient_failure)
   then: the product makes one attempt at the source
   when: the review is checked
 assessed:
-  REQ-16875926: oy3EzqZ3OzhcKVmxtXKFGGdl87CNv_gWhrPmAemZGQA
+  REQ-16875926: rLub1dpB7yu_y9tFU3C_dapG5BhwSggMmYInqr9QW3k
   REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
-  REQ-88584597: irHrgUCmpY4PwnrnRWGMzbZPMJOW57xIb587AdL9DAI
+  REQ-88584597: SIv6i6OT97j3iTzO9jzu9v40eBlbRtT9-yUZsPtF6hE
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
-  review_fetch_attempts: uDAjrtH0ea74ebTNFm8Ui6pR856RRa35l_tCaGc3ldg
-  review_fetch_attempts.*: 3F9q2MKaHp0IHPWVepgwLDcasPk5CwdKGsLe4-Ev-zI
+  review_limits: UPSuHlsQZqT7GXjskz-Z-rhN826eBPukAOBjuJvU6aU
+  review_limits.fetch_attempts: -S7kVkS77PaEge7iDg31SovaUPBolAadWLVZO49hnzA
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
   m4qxzr: lSadIyddjBSKgMgrr2SbwyyX45_RePIRLWaJwFtNZaE
@@ -29,7 +29,7 @@ relations:
 status: approved
 text: If an attempt at fetching a source that a [practice](practice) of the [best-in-class
   review](best_in_class_review) names ends in a [transient failure](transient_failure),
-  then the product shall make another attempt at the source, making at most ${review_fetch_attempts}
+  then the product shall make another attempt at the source, making at most ${review_limits.fetch_attempts.quantity}
   attempts at the source in all.
 type: functional
 verification: inspection

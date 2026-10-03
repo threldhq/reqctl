@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: lines of code
+  then: the product writes a [statement citation](statement_citation) naming the entry
+    and adds the citation to the data item's [citation list](citation_list)
+  when: the product is asked to cite one entry of a data item at them
+assessed:
+  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
+  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-88203622: derives_from
+status: approved
+text: The product shall cite one entry of a data item at lines of code exactly as
+  the product cites the data item.
+type: functional
+verification: inspection

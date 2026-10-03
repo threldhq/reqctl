@@ -6,7 +6,7 @@ entries:
   '5242880': {}
 kind: parameter
 name: review_page_bytes
-status: approved
+status: deprecated
 text: The most bytes of a page at a source of the [best-in-class review](best_in_class_review)
   that the product reads, as served or once decompressed
 unit: bytes

@@ -1,0 +1,30 @@
+assessed:
+  challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
+  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+entries:
+  agent_ceiling:
+    definition: The most agents one run spawns before the build refuses the run
+    quantity: 150
+    unit: agents
+  floor_k:
+    definition: The obligations the floor adds to a judge prompt beyond what recall
+      named
+    quantity: 10
+    unit: obligations
+  judge_bound:
+    definition: The most items one judge prompt holds before the items are split into
+      groups
+    quantity: 45
+    unit: items
+  judge_group:
+    definition: The most items one judge group holds
+    quantity: 20
+    unit: items
+  recall_batch:
+    definition: The most [proposals](proposal) one recall prompt carries
+    quantity: 40
+kind: data
+name: challenge_bounds
+status: approved
+text: each bound within which the product builds the prompts of a [challenge](challenge)
+  and spawns its agents

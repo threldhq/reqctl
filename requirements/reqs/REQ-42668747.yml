@@ -10,7 +10,7 @@ acceptance_criteria:
   when: the product reads the citation
 assessed:
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
   cfabxh: CBY1AWS6BqGFAd0OwYrv3asp9nLX1WLDFP-q8Yec-F4
 priority: medium

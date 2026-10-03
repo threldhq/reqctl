@@ -11,7 +11,7 @@ acceptance_criteria:
   then: the shard's prompts are rebuilt in batches of half the size
   when: the returns are read
 assessed:
-  REQ-94426583: 5DnvqbSeaqCQIkT4j5HcqkSNzUQou7HOF6t2uNfZYv8
+  REQ-94426583: 8JHtrZp73dHbt0YdrxVVJJCwoQIjtjEQO5VDptA7dRQ
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   moar22: hQari6bRs_5igB3dfyWRSKvwhjJmh7JFoBAb-aBQm_U

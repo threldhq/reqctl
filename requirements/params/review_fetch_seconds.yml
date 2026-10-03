@@ -6,7 +6,7 @@ entries:
   '60': {}
 kind: parameter
 name: review_fetch_seconds
-status: approved
+status: deprecated
 text: The longest the product spends on one attempt at fetching a source of the [best-in-class
   review](best_in_class_review), from its first connection to the end of its page
   and across every redirect

@@ -1,0 +1,34 @@
+assessed:
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+entries:
+  fetch_attempts:
+    definition: The most attempts the product makes at a source of the [best-in-class
+      review](best_in_class_review), the first included
+    quantity: 3
+    unit: attempts
+  fetch_seconds:
+    definition: The longest the product spends on one attempt at fetching a source
+      of the [best-in-class review](best_in_class_review), from its first connection
+      to the end of its page and across every redirect
+    quantity: 60
+    unit: seconds
+  page_bytes:
+    definition: The most bytes of a page at a source of the [best-in-class review](best_in_class_review)
+      that the product reads, as served or once decompressed
+    quantity: 5242880
+    unit: bytes
+  redirects:
+    definition: The most redirects the product follows when it fetches a source of
+      the [best-in-class review](best_in_class_review)
+    quantity: 5
+    unit: redirects
+  summary_lines:
+    definition: The most lines the summary of a [best-in-class review](best_in_class_review)
+      holds
+    quantity: 10
+    unit: lines
+kind: data
+name: review_limits
+status: approved
+text: each limit within which the product fetches the sources of a [best-in-class
+  review](best_in_class_review) and states its summary

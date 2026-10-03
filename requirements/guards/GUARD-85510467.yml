@@ -7,7 +7,7 @@ acceptance_criteria:
 assessed:
   GUARD-12397751: ZZpZOVKQVB3u8515qCOsND-187sMqV_SPBN85IW9_Qw
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 relations:
   GUARD-12397751: constrains
 status: approved

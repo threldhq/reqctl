@@ -5,8 +5,8 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-90454282: M0OdZ2RxH5qSAggaNA3jqFbkTXkdvD7VSStQiH-FPdw
-  agent_ceiling: s6ylQPWOuN97qlZEEoQggtg3aQiSeApfZ28e6AA_dAQ
-  agent_ceiling.*: I8Fho96MvFvxDN5bGsKZ0_jrsEBScIVjBW5iA6lenqI
+  challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
+  challenge_bounds.agent_ceiling: rNdX3mBcBWsmANEdHa9CPivfspuHSvyL8VNJWmeG5yc
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
   aky7xw: 75LULcFRHQjSaH1gtmjSRTYudfAkVDFm0AKZ5uhLlYY
@@ -14,7 +14,7 @@ priority: medium
 relations:
   REQ-90454282: constrains
 status: approved
-text: If a run would spawn more than ${agent_ceiling} agents, then the product shall
-  refuse the run before any prompt is written.
+text: If a run would spawn more than ${challenge_bounds.agent_ceiling.quantity} agents,
+  then the product shall refuse the run before any prompt is written.
 type: functional
 verification: inspection

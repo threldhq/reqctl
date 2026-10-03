@@ -6,7 +6,7 @@ entries:
   '3': {}
 kind: parameter
 name: review_fetch_attempts
-status: approved
+status: deprecated
 text: The most attempts the product makes at a source of the [best-in-class review](best_in_class_review),
   the first included
 value_type: count

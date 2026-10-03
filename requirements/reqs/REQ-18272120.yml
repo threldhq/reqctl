@@ -7,8 +7,8 @@ acceptance_criteria:
   then: the product refuses the run
   when: a run is built
 assessed:
-  REQ-48148587: zTFTyv30tHgPlKtYsWziVJVeV6NFvUal3gTLmP7V7N0
-  REQ-48762557: vkwEwASOFYbm3YOd61HzJZqkHw22sUc5TROjdQu8yII
+  REQ-48148587: wA7bmyxqWF2Zyx_B5SQ9MYQnHdmvjYgBCyR5jwnCrqM
+  REQ-48762557: awBU6cqFJEkKXAqTfW9LPJgd7WeTwb0_DFX12zHFaj8
 priority: medium
 relations:
   REQ-48148587: constrains

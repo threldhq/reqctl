@@ -5,6 +5,6 @@ entries:
   '10': {}
 kind: parameter
 name: floor_k
-status: approved
+status: deprecated
 text: The obligations the floor adds to a judge prompt beyond what recall named
 value_type: count

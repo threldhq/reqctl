@@ -5,9 +5,9 @@ entries:
     aliases:
     - statement citations
     definition: 'A comment, or a pair of comments, in code naming a requirement, a
-      guard, a parameter or a data item, and an identity: a pair covers the lines
-      between its comments, and a single comment covers the [code statement](code_statement)
-      that follows it.'
+      guard, a parameter, a data item or one entry of a data item, and an identity:
+      a pair covers the lines between its comments, and a single comment covers the
+      [code statement](code_statement) that follows it.'
     word: statement citation
 kind: term
 status: approved

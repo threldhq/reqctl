@@ -9,7 +9,7 @@ acceptance_criteria:
   when: the product reads the citation
 assessed:
   nest_level: ZBG5hueA94O71Lx_L6dhMkqhJ-nCJXsbS_pjI3Hm6CI
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
   fu7y6n: 9O4GsxgzkLo5k3QVeHVl14d1z1Y_IpEJsE-rw2udeMY
 priority: medium

@@ -10,7 +10,7 @@ acceptance_criteria:
   when: trace is run
 assessed:
   REQ-76258226: 8oshGhfGWgBFGznGPQjp4TUQB00QeANN6QlKdQho8ew
-  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 priority: medium
 relations:

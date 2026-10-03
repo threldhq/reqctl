@@ -9,7 +9,7 @@ acceptance_criteria:
   then: the product writes no final judge prompt
   when: the final judges are built
 assessed:
-  REQ-48762557: vkwEwASOFYbm3YOd61HzJZqkHw22sUc5TROjdQu8yII
+  REQ-48762557: awBU6cqFJEkKXAqTfW9LPJgd7WeTwb0_DFX12zHFaj8
   REQ-68873467: KplV4u6qSuvJl8DrYu8EuAlhwNG6N9aSjwfrUqGWkXA
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
