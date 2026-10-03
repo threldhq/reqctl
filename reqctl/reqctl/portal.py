@@ -80,7 +80,7 @@ def policy_of(page):
             "form-action 'none'")
 
 
-# @req> REQ-49576265@dETVQnFJ79Sd 6hnjpw
+# @req> REQ-49576265@pFihs7WdIwGS 6hnjpw
 class Page(BaseHTTPRequestHandler):
     body = b""
     policy = ""
@@ -101,7 +101,7 @@ class Page(BaseHTTPRequestHandler):
         pass
 
 
-# @req> REQ-49576265@dETVQnFJ79Sd uor45m
+# @req> REQ-49576265@pFihs7WdIwGS uor45m
 def server():
     Page.body = with_forms(PAGE.read_bytes(), _fields.root())
     Page.policy = policy_of(Page.body)

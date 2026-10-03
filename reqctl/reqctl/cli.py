@@ -880,7 +880,7 @@ def cmd_compare(args):
     return EXIT_OK
 
 
-# @req> REQ-49576265@dETVQnFJ79Sd pihyx4
+# @req> REQ-49576265@pFihs7WdIwGS pihyx4
 def _opened(url):
     if not webbrowser.open(url):
         print(f"no browser opened; open {url} in one", file=sys.stderr)
@@ -888,7 +888,7 @@ def _opened(url):
 
 def cmd_portal(args):
     held = _portal.repository(os.getcwd())
-    # @req+ REQ-49576265@dETVQnFJ79Sd wx5icq
+    # @req+ REQ-49576265@pFihs7WdIwGS wx5icq
     server = _portal.server()
     # @req> REQ-53764133@s638VvRMfEgi f7ob5l
     url = f"http://{_portal.HOST}:{_portal.PORT}/?repo={held}"

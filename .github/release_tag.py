@@ -35,7 +35,7 @@ def pinned(commit):
 
 
 def main(before, after):
-    # @req+ GUARD-60575106@QWS2QB-n2_dH s6dmsl
+    # @req+ GUARD-60575106@cyDaQHsIDZhK s6dmsl
     try:
         tag = pinned(after)
         if tag is None or pinned(before) == tag:

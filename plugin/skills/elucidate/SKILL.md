@@ -213,7 +213,7 @@ something the statement does not already say. Then:
 **Make the best-in-class review before any question.** The first time you
 convert a run's words, build the review's prompt:
 
-<!-- @req+ REQ-13684791@_iUnF2f3QtDP dyekvt -->
+<!-- @req+ REQ-13684791@C0Dl1DhCdIyB dyekvt -->
 ```bash
 python3 ${CLAUDE_SKILL_DIR}/synthesis/review.py build --run .elucidate/<run>
 ```
@@ -304,7 +304,7 @@ declined list.
 
 Feed the answers back and convert again.
 
-<!-- @req+ REQ-13684791@_iUnF2f3QtDP msg57t -->
+<!-- @req+ REQ-13684791@C0Dl1DhCdIyB msg57t -->
 ## 2 -- Challenge
 
 ```bash
