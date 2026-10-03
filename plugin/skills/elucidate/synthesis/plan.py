@@ -900,8 +900,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
     sibling = siblings(held)
     if sibling is not None:
         shards.append(sibling)
-    batch = RECALL_BATCH
-    counted = sum(len(batched(judged_by(held, scope), batch))
+    counted = sum(len(batched(judged_by(held, scope), RECALL_BATCH))
                   for _, scope, _ in shards) + len(held)
     ceilinged(counted, AGENT_CEILING)
 
@@ -913,7 +912,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
                                     "trace": traces.get(str(number), [])}
                       for number, statement, path, kind in held},
         "shards": {name: {"scope": scope, "items": [uid for uid, _ in block],
-                          "batch": batch}
+                          "batch": RECALL_BATCH}
                    for name, scope, block in shards},
         "recall": {}, "judge": {}, "named": {},
     }
@@ -949,7 +948,8 @@ def build(run, chars, items, lines=PROMPT_LINES):
         print(f"retired {name}: the export it was judged against has moved")
     # @req> REQ-16868696@xXhoCmAQTytn js66h5
     print(f"{len(held)} proposal(s) over {len(shards)} shard(s) in batches of "
-          f"{batch}: {len(spawned)} recall agent(s), then one judge each")
+          f"{RECALL_BATCH}: {len(spawned)} recall agent(s), then one judge "
+          "each")
     print(f"  spawn     {where}")
     print(f"  prompts   {run / 'prompts' / 'recall'}/<shard>-b<n>.md")
     # @req> REQ-23060027@QKFI8tm_J5VF citfb2

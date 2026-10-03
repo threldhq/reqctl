@@ -1123,7 +1123,8 @@ def build_parser(root, fielded):
     s.set_defaults(func=cmd_trace)
 
     s = _command(sub, "tag",
-                 "cite a requirement at lines of a file, writing one comment "
+                 "cite a requirement, a guard, a parameter or a data item at "
+                 "lines of a file, writing one comment "
                  "over a single code statement and a pair of comments over "
                  "more; repeat --from, --to and --req to cite several, each "
                  "numbered as the file stands before the command")
@@ -1138,7 +1139,7 @@ def build_parser(root, fielded):
     s.set_defaults(func=cmd_tag)
 
     s = _command(sub, "repin",
-                 "re-pin a citation to the stamp its requirement carries now, "
+                 "re-pin a citation to the stamp its item carries now, "
                  "once the code is read against the statement that stands")
     s.add_argument("id")
     s.set_defaults(func=cmd_repin)
@@ -1148,16 +1149,16 @@ def build_parser(root, fielded):
     s.set_defaults(func=cmd_untag)
 
     s = _command(sub, "unlist",
-                 "remove from a requirement's citation list an identity that "
-                 "no citation of that requirement names")
+                 "remove from an item's citation list an identity that no "
+                 "citation of that item names")
     s.add_argument("uid")
     s.add_argument("id")
     s.set_defaults(func=cmd_unlist)
 
     s = _command(sub, "compare",
                  "state which citations this branch added, deleted, moved or "
-                 "changed since it left the default branch, and the "
-                 "requirements they name")
+                 "changed since it left the default branch, and the items "
+                 "they name")
     s.add_argument("--base")
     s.set_defaults(func=cmd_compare)
 
