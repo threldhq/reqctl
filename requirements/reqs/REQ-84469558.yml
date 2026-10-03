@@ -4,8 +4,8 @@ acceptance_criteria:
     covers
   when: the product stamps the code
 assessed:
-  citation_digest: 499sdBYIJoKry_oMRAfkZQUzvlHivFNzlIZimUbijyw
-  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  citation_digest: zaIcW6twyA6Shtvgk36zhODZNoZZkIX9Yhjg4c3UVv0
+  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
 citations:
   hp5jwl: eTIW9NDwT27X3S4S6ix-qieK1YPcxaHvV3yt9Ja8Uyo
 priority: medium

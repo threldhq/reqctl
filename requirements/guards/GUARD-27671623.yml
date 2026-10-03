@@ -18,7 +18,7 @@ acceptance_criteria:
   when: the build runs
 assessed:
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  statement_citation: y8wqQcs9ynK9zV1CFZy7DYo8zHpcSjCSsVWg6SOkzUQ
+  statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
 citations:
   7noe76: ypPTp6lkvyMhbwHch7ae2C0vtLisCqZPS4tpMw-7xx4
   hvzjkq: 2OT3XxB7_mXbhklkwENt_3jaNCzjs4Bx1UpdAqjGPU4
