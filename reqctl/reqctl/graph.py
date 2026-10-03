@@ -8,9 +8,10 @@ def unstamped(uid, path):
 
 def listing(tree, citations, uid=None):
     named = {(citation["uid"], citation["id"]) for citation in citations}
+    # @req> REQ-77594104@j8bc8SJ4n3Lz 7nucmz
     listed = {str(item.uid): corpus.mapping(item.data, corpus.CITATION_LIST)
               for item in corpus.items(tree)
-              if str(item.uid).startswith(("REQ-", "GUARD-"))}
+              if corpus.citable(item)}
     problems = []
     # @req> REQ-13384695@P9NXsZKZp683 3lmvqm
     for owner, held in listed.items():
@@ -75,19 +76,15 @@ def trace(tree, root, uid=None):
                 "implementation": files,
             }
         )
-        if current.startswith(("PARAM-", "DATA-", "TERM-")) and files:
-            noun, holds = (("term", "a definition")
-                           if current.startswith("TERM-")
-                           else ("parameter", "a value")
-                           if current.startswith("PARAM-")
-                           else ("data item", "a value"))
+        if files and not corpus.citable(item):
             problems.append(
-                f"{current}: referenced by {', '.join(files)} -- a {noun} "
-                f"is {holds}; nothing implements it. Tag the requirement "
-                "stated against it instead"
+                f"{current}: referenced by {', '.join(files)} -- only a "
+                "requirement, a guard, a parameter or a data item is cited. "
+                "Tag the requirement stated against it instead"
             )
         # @req> REQ-35979865@-t3USRO-BKGk iz2v2g
-        if (current.startswith(("REQ-", "GUARD-"))
+        # @req> REQ-77594104@j8bc8SJ4n3Lz tizjds
+        if (corpus.citable(item)
                 and data.get("status") == "deprecated" and cited):
             deprecated += [{"uid": current, "path": path} for path
                            in dict.fromkeys(p for p, pinned in cited if pinned)]
@@ -101,8 +98,9 @@ def trace(tree, root, uid=None):
                     f"{data.get('status')}, not approved"
                 )
             continue
-        if current.startswith(("REQ-", "GUARD-")):
-            held = corpus.tag_stamp(corpus.stamp(item)) if cited else None
+        # @req> REQ-77594104@j8bc8SJ4n3Lz lgfhiu
+        if corpus.citable(item):
+            held = corpus.cited_stamp(item) if cited else None
             for path, pinned in cited:
                 # @req> REQ-75161909@bnqFzGCM1y16 7df3my
                 if not pinned:
@@ -110,8 +108,8 @@ def trace(tree, root, uid=None):
                 elif pinned != held:
                     stale.append({"uid": current, "path": path,
                                   "pinned": pinned, "held": held})
-            if not files:
-                unimplemented.append(current)
+        if current.startswith(("REQ-", "GUARD-")) and not files:
+            unimplemented.append(current)
 
     if not uid:
         for tagged in sorted(tags):

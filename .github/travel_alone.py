@@ -12,8 +12,9 @@ LISTED = (corpus.CITATION_LIST,)
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
+# @req> REQ-41600593@dV84ANKBJqdk o3tsro
 STAMPED = re.compile(
-    rf"(@req[+>]\s+(?:{corpus.KINDS})-\d+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
+    rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
 ABSENT = object()
 
 

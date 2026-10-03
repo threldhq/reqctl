@@ -25,6 +25,8 @@ assessed:
   statement_citation: 0gg2_hrwUY-9513srrzws1cXLMourDctpydfn2u5aAk
 citations:
   4py3et: r19mBpwDHD8S0oSIAS7Nwq187Qn7yT1N6A-XRQzTkAE
+  mmgold: A3QA8Bt7ntmt5sDkq3kOc_1uElzgTV3E0EYjdUWF7Lo
+  udnw6h: gWX4P1PK7fJzfamZdWLHwXeJHULlMmZUeJH5GZPwpoY
 priority: medium
 relations:
   REQ-18272120: supersedes

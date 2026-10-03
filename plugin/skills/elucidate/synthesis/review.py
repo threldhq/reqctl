@@ -25,11 +25,18 @@ import shapes
 from reqctl import corpus
 
 FIELD = "governed_field"
-BOUND = "review_summary_lines"
-PAGE = "review_page_bytes"
-REDIRECTS = "review_redirects"
-SECONDS = "review_fetch_seconds"
-ATTEMPTS = "review_fetch_attempts"
+# @req+ REQ-87066486@uKF1dXTp7rGk mmgold
+# @req> review_summary_lines@gpqiM9kc6wV_ 4l32ki
+BOUND = 10
+# @req> review_page_bytes@TuS1V_5GViL- y2swyp
+PAGE = 5242880
+# @req> review_redirects@hL_venWbyEu_ vpsnks
+REDIRECTS = 5
+# @req> review_fetch_seconds@GSTHss8vIjb8 ehmws6
+SECONDS = 60
+# @req> review_fetch_attempts@Vc3KPadF5DCU i7na7o
+ATTEMPTS = 3
+# @req- mmgold
 ASKED = "asked.json"
 SPAWN = "review"
 HIDDEN = {"script", "style", "noscript", "template"}
@@ -485,11 +492,7 @@ def check(run):
     if review is None:
         print(f"{path}: the review {why}; {again}")
         return 1
-    records = plan.glossary()
-    found, pages = faults(review, plan.parameter(records, PAGE),
-                          plan.parameter(records, REDIRECTS),
-                          plan.parameter(records, SECONDS),
-                          plan.parameter(records, ATTEMPTS))
+    found, pages = faults(review, PAGE, REDIRECTS, SECONDS, ATTEMPTS)
     for fault in found:
         print(fault)
     if found:
@@ -500,7 +503,7 @@ def check(run):
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
               f"{remedy}")
         return 1
-    print("\n".join(summary(review, said, plan.parameter(records, BOUND))))
+    print("\n".join(summary(review, said, BOUND)))
     print()
     print("\n".join(table(review, said)))
     return 0

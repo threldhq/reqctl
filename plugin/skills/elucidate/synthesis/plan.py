@@ -38,10 +38,20 @@ SIBLINGS = "siblings"
 SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
-# @req> REQ-18272120@P5XOlho5WrkH o47rwb
-BOUNDS = ("recall_batch", "judge_bound", "judge_group", "floor_k",
-          "agent_ceiling")
+# @req+ REQ-87066486@uKF1dXTp7rGk udnw6h
+# @req> recall_batch@1MUqoxzBBHZd 7f7moo
+RECALL_BATCH = 40
+# @req> judge_bound@decGTil8BS2t pjbkc7
+JUDGE_BOUND = 45
+# @req> judge_group@V4NTMrVRGpDF tfddk2
+JUDGE_GROUP = 20
+# @req> floor_k@Kulp75919beA ol3y4x
+FLOOR_K = 10
+# @req> agent_ceiling@gIFXgBrYQYI1 ohe2ox
+AGENT_CEILING = 150
+# @req- udnw6h
 # @req> REQ-87066486@uKF1dXTp7rGk 4py3et
+# @req> elucidate_agents@V5-K1rlTkh2C kgnxgu
 AGENTS = {
     "best_in_class": {"model": "claude-sonnet-5-5", "effort": "high"},
     "coverage": {"model": "claude-sonnet-5-5", "effort": "high"},
@@ -304,26 +314,14 @@ def registered(name):
     return f"{json.loads(plugin.read_text())['name']}:{name}"
 
 
-def named_item(records, kind, name):
+def named_item(records, name):
     found = [(uid, data) for uid, data in records.items()
-             if corpus.kind_of(uid, data) == kind and data.get("name") == name]
+             if corpus.kind_of(uid, data) == "data" and data.get("name") == name]
     if len(found) != 1:
         raise SystemExit(
             f"the corpus defines {'no' if not found else 'more than one'} "
-            f"{kind} named {name}, and the build reads its bounds from it. "
-            "Mint one first.")
+            f"data item named {name}. Mint one first.")
     return found[0]
-
-
-def parameter(records, name):
-    # @req+ REQ-18272120@P5XOlho5WrkH dyeqka
-    _, data = named_item(records, "parameter", name)
-    held = list(corpus.entries(data) or {})
-    if len(held) != 1 or not str(held[0]).isdigit():
-        raise SystemExit(f"{name} states {held}, and the build is bounded by "
-                         "one whole number")
-    # @req- dyeqka
-    return int(held[0])
 
 
 def agent(name):
@@ -344,7 +342,7 @@ def agent(name):
 def dimensions(root, records):
     held = {}
     for name in corpus.binding_dimensions(root):
-        uid, data = named_item(records, "data", name)
+        uid, data = named_item(records, name)
         # @req+ REQ-29846444@iGWqcEzs6s52 zjcgv2
         members = set(corpus.entries(data) or {})
         if not members:
@@ -889,7 +887,6 @@ def build(run, chars, items, lines=PROMPT_LINES):
                 else "nothing was declined in this run")
     held = proposals(run)
     store, records = loaded()
-    bounds = {name: parameter(records, name) for name in BOUNDS}
     # @req> REQ-23060027@QKFI8tm_J5VF dxtamn
     agents = {name: agent(name) for name in AGENTS}
     settled_on = binding(run, held, corpus.find_root(), records)
@@ -903,20 +900,19 @@ def build(run, chars, items, lines=PROMPT_LINES):
     sibling = siblings(held)
     if sibling is not None:
         shards.append(sibling)
-    batch = bounds["recall_batch"]
-    counted = sum(len(batched(judged_by(held, scope), batch))
+    counted = sum(len(batched(judged_by(held, scope), RECALL_BATCH))
                   for _, scope, _ in shards) + len(held)
-    ceilinged(counted, bounds["agent_ceiling"])
+    ceilinged(counted, AGENT_CEILING)
 
     state_held = {
-        "bounds": bounds, "agents": agents, "lines": lines,
+        "agents": agents, "lines": lines,
         "proposals": {str(number): {"kind": kind, "statement": statement,
                                     "path": str(path),
                                     "binding": settled_on.get(number),
                                     "trace": traces.get(str(number), [])}
                       for number, statement, path, kind in held},
         "shards": {name: {"scope": scope, "items": [uid for uid, _ in block],
-                          "batch": batch}
+                          "batch": RECALL_BATCH}
                    for name, scope, block in shards},
         "recall": {}, "judge": {}, "named": {},
     }
@@ -952,7 +948,8 @@ def build(run, chars, items, lines=PROMPT_LINES):
         print(f"retired {name}: the export it was judged against has moved")
     # @req> REQ-16868696@xXhoCmAQTytn js66h5
     print(f"{len(held)} proposal(s) over {len(shards)} shard(s) in batches of "
-          f"{batch}: {len(spawned)} recall agent(s), then one judge each")
+          f"{RECALL_BATCH}: {len(spawned)} recall agent(s), then one judge "
+          "each")
     print(f"  spawn     {where}")
     print(f"  prompts   {run / 'prompts' / 'recall'}/<shard>-b<n>.md")
     # @req> REQ-23060027@QKFI8tm_J5VF citfb2
@@ -1185,22 +1182,19 @@ def judge(run):
               f"{manifest(run, 'recall', spawned)}")
         return 1
 
-    bounds = state_held["bounds"]
     index = indexed(records)
     plans = {}
     for number, spec in state_held["proposals"].items():
-        floored = floor(index, spec["kind"], spec["statement"],
-                        bounds["floor_k"])
+        floored = floor(index, spec["kind"], spec["statement"], FLOOR_K)
         for uid, shared in floored:
             named[number].setdefault(uid, []).append(
                 "floor: shares " + ", ".join(shared))
         names = sorted(named[number], key=lambda uid: (SIBLING.match(uid) is not None, uid))
-        plans[number] = (names, grouped(names, bounds["judge_bound"],
-                                        bounds["judge_group"]))
+        plans[number] = (names, grouped(names, JUDGE_BOUND, JUDGE_GROUP))
     counted = len(state_held["recall"]) + sum(
         1 if groups is None else len(groups) + 1
         for _, groups in plans.values())
-    ceilinged(counted, bounds["agent_ceiling"])
+    ceilinged(counted, AGENT_CEILING)
 
     prompts, spawned = {}, []
     for number, (names, groups) in plans.items():
