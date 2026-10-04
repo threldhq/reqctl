@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 import json
 import os
+import re
 import sys
+import tempfile
 import tomllib
+from pathlib import Path
 
-from corpus_write import Refused, ran
+from corpus_write import Refused, ran, run
 
 WHEEL = "reqctl/pyproject.toml"
 MARKETPLACE = ".claude-plugin/marketplace.json"
 MANIFEST = ".claude-plugin/plugin.json"
+LOCK = "reqctl/requirements-dev-lock.txt"
+BACKEND = re.compile(r"(?m)^setuptools==\S+(?: \\\n\s+--hash=\S+)+")
 
 
 def shown(commit, path, parse):
@@ -34,23 +39,74 @@ def pinned(commit):
     return tag if source.get("ref") == tag else None
 
 
-def main(before, after):
-    # @req+ GUARD-60575106@cyDaQHsIDZhK s6dmsl
+def marked(tag):
+    return ran("git", "rev-parse", "--verify", f"refs/tags/{tag}^{{commit}}",
+               check=False).stdout.strip() or None
+
+
+def released(repo, tag):
     try:
-        tag = pinned(after)
-        if tag is None or pinned(before) == tag:
-            return 0
-        if ran("git", "rev-parse", "--verify", f"refs/tags/{tag}",
-               check=False).returncode == 0:
-            return 0
-        ran("gh", "api", f"repos/{os.environ['GITHUB_REPOSITORY']}/git/refs",
-            "-f", f"ref=refs/tags/{tag}", "-f", f"sha={after}")
+        return run(("gh", "api", f"repos/{repo}/releases/tags/{tag}"))
     except Refused as refused:
+        if "(HTTP 404)" in str(refused):
+            return None
+        raise
+
+
+# @req> GUARD-14769016@T01UILpAY633 z2onys
+def attach(repo, tag, commit):
+    if ran("git", "rev-parse", "HEAD").stdout.strip() != commit:
+        raise Refused(f"the checkout is not at {commit}, the commit {tag} "
+                      "marks; check that commit out to build its wheel")
+    backend = BACKEND.search(Path(LOCK).read_text())
+    if backend is None:
+        raise Refused(f"{LOCK} pins no setuptools by hash; pin it there to "
+                      "build the wheel")
+    with tempfile.TemporaryDirectory() as out:
+        pins = Path(out) / "backend.txt"
+        pins.write_text(backend.group())
+        ran(sys.executable, "-m", "pip", "install", "--require-hashes",
+            "--no-deps", "--force-reinstall", "--only-binary", ":all:",
+            "-r", str(pins))
+        ran(sys.executable, "-m", "pip", "wheel", "--no-deps",
+            "--no-build-isolation", "--wheel-dir", out,
+            str(Path(WHEEL).resolve().parent))
+        wheel = next(Path(out).glob("*.whl"))
+        dist = wheel.name.partition("-")[0]
+        release = released(repo, tag)
+        if release is not None and any(
+                Path(str(asset.get("name"))).match(f"{dist}-*.whl")
+                for asset in release.get("assets") or []):
+            return f"the release for {tag} already carries a {dist} wheel"
+        if release is None:
+            ran("gh", "release", "create", tag, str(wheel), "--repo", repo,
+                "--verify-tag", "--title", tag, "--notes", "")
+        else:
+            ran("gh", "release", "upload", tag, str(wheel), "--repo", repo)
+        return f"attached {wheel.name} to the release for {tag}"
+
+
+def main(before, after):
+    repo = os.environ["GITHUB_REPOSITORY"]
+    try:
+        # @req+ GUARD-60575106@cyDaQHsIDZhK nc7w6k
+        tag = pinned(after)
+        if tag is None:
+            return 0
+        held = marked(tag)
+        if held is None and pinned(before) != tag:
+            ran("gh", "api", f"repos/{repo}/git/refs",
+                "-f", f"ref=refs/tags/{tag}", "-f", f"sha={after}")
+            print(f"pushed {tag} at {after}")
+            held = after
+        # @req- nc7w6k
+        # @req> GUARD-14769016@T01UILpAY633 huv5w6
+        if held == after:
+            print(attach(repo, tag, after))
+    except (Refused, OSError) as refused:
         print(f"::error::{refused}")
         return 1
-    print(f"pushed {tag} at {after}")
     return 0
-    # @req- s6dmsl
 
 
 def cli(argv):

@@ -15,6 +15,9 @@ assessed:
   GUARD-60575106: cyDaQHsIDZhKvI_k7z0nyfMVUPzfsgOz9El4ta0v_Pc
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
   reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+citations:
+  huv5w6: i9N2oOjGfhsOLcdLnQBMSoj9MKgiCJJOZ5EhtZZIhAg
+  z2onys: C2LW0Yo49dVvcohg6hlZH-Ku9Ubid9Tg6od18LRG91E
 relations:
   GUARD-60575106: depends_on
 status: approved
