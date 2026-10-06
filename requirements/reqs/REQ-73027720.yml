@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: an approved requirement that no [statement citation](statement_citation)
+    names
+  then: the product warns of the requirement and reports no problem for it
+  when: trace is run
+- given: an approved guard that no [statement citation](statement_citation) names
+  then: the product warns of the guard and reports no problem for it
+  when: trace is run
+- given: an approved parameter or data item that no [statement citation](statement_citation)
+    names
+  then: the product gives no warning of it
+  when: trace is run
+assessed:
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations: {}
+status: approved
+text: When trace is run, the product shall warn of each approved requirement and each
+  approved guard that no [statement citation](statement_citation) names.
+type: functional
+verification: inspection
