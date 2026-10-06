@@ -11,6 +11,8 @@ from . import baseline as _baseline
 from . import corpus
 
 SCHEMAS = ("requirement", "guard", "dictionary", "baseline")
+# @req> REQ-20325022@Rk58k1F_hWcP m2dmcp
+ALIAS_SEPARATOR = ","
 
 
 def _schemas_are_schemas(root):
@@ -220,6 +222,15 @@ def dictionary_rules(uid, data):
                             "word it is known by, as text; the entry key is a "
                             "handle and addresses it")
         # @req- iwiit6
+        # @req+ REQ-20325022@Rk58k1F_hWcP smwuev
+        aliases = corpus.term_fields(data).get("aliases")
+        for alias in aliases if isinstance(aliases, list) else []:
+            if ALIAS_SEPARATOR in str(alias):
+                problems.append(
+                    f"{uid}: alias {alias!r} holds {ALIAS_SEPARATOR!r}, which "
+                    "separates an alias list -- give each wording an alias of "
+                    "its own")
+        # @req- smwuev
         # @req> REQ-15469759@ETBwvNW6rbpC b6qizb
         for phrase, reason in corpus.unclaimed(data).items():
             if not reason.strip():
@@ -1167,6 +1178,24 @@ def _settled(path):
     return corpus.loads(text, path)
 
 
+# @req> REQ-21699310@XKeWkfefGruJ uv4bc5
+def _bound_guards(records, root):
+    nominated = set(corpus.binding_dimensions(root))
+    problems = []
+    for uid, data in sorted(records.items()):
+        if not nominated or corpus.kind_of(uid, data) != "guard":
+            continue
+        for address in (corpus.references(data)
+                        + corpus.concept_references(data)):
+            name = corpus.split_address(address)[0]
+            if name in nominated:
+                problems.append(
+                    f"{uid}: references {address}, which binds the guard to "
+                    f"{name} -- reword the guard without the reference, or "
+                    "state the rule as a requirement")
+    return problems
+
+
 def _named_schemas(records, root):
     # @req+ REQ-48136849@IqLDEuOZNuoa wljy47
     held = {corpus.name_of(uid, data) for uid, data in records.items()}
@@ -1222,6 +1251,7 @@ def run(root, exempt=None):
 
     problems += _guarded("corpus", _strays, root, paths)
     problems += _guarded("corpus", _named_schemas, records, root)
+    problems += _guarded("corpus", _bound_guards, records, root)
     problems += _guarded("corpus", _unlinked_terms, records, root)
     problems += _guarded("corpus", shared_quantities, records, root)
     problems += _guarded("corpus", approved_relations, records)

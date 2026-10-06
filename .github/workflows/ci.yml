@@ -157,9 +157,6 @@ jobs:
       - name: Names resolve
         run: python .github/guards/references.py
 
-      - name: A guard binds to no nominated dimension
-        run: python .github/guards/guard_binding.py
-
       - name: No write bypasses the journal
         run: python .github/guards/journal_writes.py
 
