@@ -15,7 +15,7 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:
-  ktu5yd: RXLi0W-mNpKBlwa8SzezrRs36RmLuAgYqxBH_sOMogo
+  ktu5yd: C07WH00NPyhAjLhabEe9n0F-8D6DV11QVdoJKxmz5iw
 priority: medium
 relations:
   REQ-38288492: derives_from

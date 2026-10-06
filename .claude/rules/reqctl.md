@@ -21,8 +21,8 @@ the number against the one it supersedes, so a merged file that happens to hold
 the right items passes while the number means two different things on two
 branches.
 
-The gates: `ruff check reqctl` and `mypy --config-file reqctl/pyproject.toml
-reqctl/reqctl`.
+Run `ruff check reqctl` and `mypy --config-file reqctl/pyproject.toml
+reqctl/reqctl` while working; `python .github/verify.py` runs the gates.
 
 `reqctl` is the product this repository builds, so a statement about what it
 does states "the product shall" and is a `REQ`. The code satisfying one cites

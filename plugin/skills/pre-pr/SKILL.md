@@ -65,8 +65,9 @@ the trade most simplifiers are tuned to make.
 The `pr-review-toolkit:silent-failure-hunter` agent over the branch diff.
 Sonnet.
 
-`reqctl` and the write-guard are gates. A gate that returns allowed when it
-errors is worse than no gate, and nothing else in this pass looks for that.
+`reqctl` and the requirements-guard hook are gates. A gate that returns allowed
+when it errors is worse than no gate, and nothing else in this pass looks for
+that.
 
 ## 4 -- Comments
 
@@ -88,3 +89,9 @@ again.
 
 Say in the pull request what each step changed. A step that found nothing is
 worth one line -- it tells the owner the pass ran.
+
+<!-- @req+ REQ-51001407@QuwiKleWxRpR hbi4d7 -->
+List in the pull request every requirement `reqctl compare` names, each with
+what reading the code citing it against the requirement found; where it names
+none, say that no requirement was touched.
+<!-- @req- hbi4d7 -->

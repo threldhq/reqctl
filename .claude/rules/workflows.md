@@ -17,8 +17,8 @@ line, or its steps run on every pull request.
 A step that imports a dependency runs after `Install`; before it, only the
 standard library is there.
 
-A directive a tool reads -- `zizmor: ignore`, `shellcheck disable` -- is the
-only comment CI allows. Run the tool with it and without it, show what the tool
-refuses without it, then name the file and the exact text in
-`comment_budget.ALLOWED`. An unregistered directive fails the comment budget
-like any other comment.
+Beside a statement citation, a directive a tool reads -- `zizmor: ignore`,
+`shellcheck disable` -- is the only comment CI allows. Run the tool with it and
+without it, show what the tool refuses without it, then name the file and the
+exact text in `comment_budget.ALLOWED`. An unregistered directive fails the
+comment budget like any other comment.
