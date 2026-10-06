@@ -114,6 +114,7 @@ def trace(tree, root, uid=None):
                 elif pinned != held:
                     stale.append({"uid": address, "path": path,
                                   "pinned": pinned, "held": held})
+        # @req> REQ-73027720@g_8t_ycPUJfp 3aqkc5
         if current.startswith(("REQ-", "GUARD-")) and not files:
             unimplemented.append(current)
 
