@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  rule_of_the_build:
+    aliases:
+    - rules of the build
+    definition: A rule only the repository's own check depends on.
+    word: rule of the build
+kind: term
+status: approved
