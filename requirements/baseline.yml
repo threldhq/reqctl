@@ -1,9 +1,5 @@
-baseline: 59
-<<<<<<< HEAD
-commit: e1cfb9c4de7554a27e55df051fa890d6268452e6
-=======
-commit: 539732e76df52db6fb19217d7f0e00d86bafc675
->>>>>>> origin/main
+baseline: 60
+commit: 807055e15492f1ac5488639d18fc65c640d120b7
 items:
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-12128145: mFuOqNbkyV1oY-6soAHFUkqGN-yitkrFm5SThHXJEzo
@@ -487,4 +483,4 @@ items:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
-supersedes: 58
+supersedes: 59
