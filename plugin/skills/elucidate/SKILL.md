@@ -124,7 +124,7 @@ something the statement does not already say. Then:
   concept to tell a shared budget from two numbers that happen to match.
   Values that bound or describe the same behaviour or the same thing -- a
   review's fetch limits, each agent's model and effort -- are entries of one
-  data item, never a parameter each: `revise review_limits --entry page_bytes
+  data item, never a parameter each: `revise review_limits --new-entry page_bytes
   --set quantity=5242880 --set unit=bytes --set definition=...`, referenced as
   `${review_limits.page_bytes.quantity}`. A value whose subject the corpus
   already holds a data item for is a new entry of that item. A count a reader

@@ -96,8 +96,9 @@ give a one-clause reason in clause. Set shard to "{shard}" and batch to
 
 SHARD = "Shard {shard}: {count} of the {total} {scope} the corpus holds, whole"
 OTHERS = "The run's {count} proposals, each recalled against the others"
+# @req> REQ-36422345@O-3IKmoFSYSG ghenbw
 WRITE = """Write the result as JSON matching this shape to {out} with the Write tool,
-then stop. Do not narrate.
+then return exactly what you wrote. Do not narrate.
 
 {shape}"""
 DICTIONARY = """## The dictionary: every term, parameter and data item the corpus defines
@@ -203,6 +204,7 @@ UNBOUND = """\
 This proposal states a build rule, which binds to no dimension. What it binds
 to is not a question about it."""
 
+# @req> REQ-36422345@O-3IKmoFSYSG aw3cqu
 COVERAGE = """You read the owner's words back against this run's proposals and
 its declined list, and name what neither accounts for. You have no tool to read
 anything, so everything you judge is below.
@@ -222,7 +224,8 @@ its place. Every quote is checked back against the owner's words, so copy rather
 than paraphrase, and write an empty list where you found nothing.
 
 That findings file is your only output. Do not write a note per item, do not
-restate the set, do not summarise before or after. Read, decide, write it, stop.
+restate the set, do not summarise before or after. Once it is written, return
+exactly what you wrote in it.
 """
 
 CARRIES = """
