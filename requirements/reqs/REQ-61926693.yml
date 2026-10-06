@@ -1,0 +1,34 @@
+acceptance_criteria:
+- given: a [corpus root](corpus_root) holding a [settings file](settings_file) that
+    states a value under review_limits.page_byte
+  then: the product refuses the corpus, naming the file and the key
+  when: the corpus is validated
+- given: a [corpus root](corpus_root) holding a [settings file](settings_file) that
+    states a whole number below one for the quantity of the fetch_attempts entry of
+    review_limits
+  then: the product refuses the corpus, naming the file, the key and the value
+  when: the corpus is validated
+- given: a [corpus root](corpus_root) holding no [settings file](settings_file)
+  then: the product does not refuse the corpus for want of one
+  when: the corpus is validated
+assessed:
+  REQ-15362279: 5WXOpa30Q64YWcji0TZ1nDwPpgNw_5xBELAHh1sCNQA
+  REQ-21585959: al8sJvdbZD8eyw7MwTSn-ZCR4BKopEhkmROC0Kzbp4Q
+  REQ-59792666: UNXEG-AsX0FssQmj_cz1TYtFTZ60ASq9jRipNCjxOk0
+  REQ-78887253: z3WFMhk0gyvks5DbR6th-ZBtJi-v7-v77YmcCv15l8A
+  REQ-99278123: eHQpe0z42j2Ch_TcNznBBygkZPs6SEXNEMDsQZchcaU
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+priority: medium
+relations:
+  REQ-15362279: depends_on
+  REQ-21585959: depends_on
+  REQ-59792666: depends_on
+  REQ-78887253: depends_on
+  REQ-99278123: depends_on
+status: approved
+text: If the [corpus root](corpus_root) being validated holds a [settings file](settings_file)
+  that the product would refuse on reading it, then the product shall refuse the corpus,
+  naming the file and each fault.
+type: functional
+verification: inspection

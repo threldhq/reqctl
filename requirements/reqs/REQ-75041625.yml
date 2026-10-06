@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) states the judge's model
+  then: the product prints the judge's model and the [settings file](settings_file)
+    that stated it
+  when: a run is built there
+- given: a repository whose [settings file](settings_file) states the page_bytes quantity
+    of review_limits and the judge's model
+  then: the product prints the page_bytes quantity and the file, and not the judge's
+    model
+  when: the [best-in-class review](best_in_class_review) is checked there
+assessed:
+  REQ-16868696: xXhoCmAQTytnVrvnTQYgjV8cwWwvJUq3oO1yFYNtDPE
+  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+priority: medium
+relations:
+  REQ-16868696: derives_from
+  REQ-40447106: depends_on
+status: approved
+text: When the product checks a [best-in-class review](best_in_class_review) or builds
+  a run, the product shall print each value it uses that a repository's [settings
+  file](settings_file) stated in place of a value the product ships, with its key
+  and the file that stated it.
+type: functional
+verification: inspection

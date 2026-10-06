@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) states the text forty for
+    the quantity of the recall_batch entry of challenge_bounds
+  then: the product refuses the run, naming the file, the key and the value
+  when: a run is built there
+- given: a repository whose [settings file](settings_file) states 20.0 for the quantity
+    of the judge_group entry of challenge_bounds
+  then: the product refuses the run, naming the file, the key and 20.0
+  when: a run is built there
+assessed:
+  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+priority: medium
+relations:
+  REQ-40447106: constrains
+  REQ-87066486: depends_on
+status: approved
+text: If a repository's [settings file](settings_file) states a value of another YAML
+  type than the value the product ships in its place, then the product shall refuse
+  each command that reads the [settings file](settings_file), naming the file and
+  each such key with its value.
+type: functional
+verification: inspection
