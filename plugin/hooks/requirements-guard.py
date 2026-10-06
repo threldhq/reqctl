@@ -50,19 +50,23 @@ SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
 OPENS_PAGER = re.compile(r"-[0-9A-Za-z]*O")
-FD_COPY = re.compile(r"\d*>&\s*(?:[12]|-)(?=[\s|&;()<>]|$)")
-NULL_SINK = re.compile(r"\d*>>?\s*/dev/null(?=\s|$)")
+FD_COPY = re.compile(r"(?<!\d)\d*>&\s*(?:[12]|-)(?=[\s|&;()<>]|$)")
+NULL_SINK = re.compile(r"(?<!\d)\d*>>?\s*/dev/null(?=\s|$)")
 WRITES_NOTHING = tuple(verb for verb in READ_VERBS
                        if verb not in ("less", "more", "file", "tree")) + (
-    "tr", "tac", "rev", "od", "paste", "fold", "fmt")
+    "tr", "tac", "rev", "od", "paste", "fold", "fmt", "cd")
 SORT_WRITES = re.compile(r"-[A-Za-z]*o|--o|--co")
+EXPANSION = re.compile(r"\$(?:\{[^{}]*\}|\([^()]*\)|[A-Za-z_]\w*|[-@*!#?$0-9]|(?=['\"]))"
+                       r"|`[^`]*`|\{[,'\"]*\}")
+EXPANSION_DEPTH = 16
+COMMAND_LIMIT = 50_000
 # @req- 2x3zhi
 GIT_READ = re.compile(
     r"^\s*git(\s+(-C\s+\S+|-[Pp]|--no-pager|--paginate))*"
     r"\s+(log|show|diff|status|blame|ls-files|add|commit)(?=\s|$)"
 )
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
-AMP_REDIRECT = re.compile(r"\d*>&\s*\d*|&>>?")
+AMP_REDIRECT = re.compile(r"(?<!\d)\d*>&\s*\d*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
 PUSH_SHORT_FORCE = re.compile(r"^-[a-zA-Z]*f[a-zA-Z]*$")
@@ -128,6 +132,12 @@ NOT_A_READ = (
     "only read.\n"
     "Search with grep, rg or git grep, piped only to reads such as head, cut, sort, "
     f"uniq or wc.\n{HAND_CITATION}"
+)
+
+LONG_COMMAND = (
+    "Shell command of {length} characters blocked: the guard reads a command of "
+    f"at most {COMMAND_LIMIT} characters.\n"
+    "Write a longer script to a file with the Write tool, then run the file."
 )
 
 UNREAD_COMMAND = (
@@ -339,7 +349,7 @@ def unreadable(part):
     for char in part:
         if char in "'\"" and quote in (None, char):
             quote = None if quote else char
-        elif (char in "\\$`" and quote != "'") or (char == "{" and not quote):
+        elif (char in "\\$`" and quote != "'") or (char in "{<()" and not quote):
             return f"'{char}'"
     return "a line break" if "\n" in part else None
 
@@ -350,9 +360,21 @@ def only_reads(words):
     if tool == "sort":
         return not any(SORT_WRITES.match(word) for word in rest)
     if tool == "uniq":
-        return "--" not in rest and sum(word == "-" or not word.startswith("-")
-                                        for word in rest) < 2
+        return ("--" not in rest and not any(GLOB_CHAR.search(word) for word in rest)
+                and sum(word == "-" or not word.startswith("-") for word in rest) < 2)
     return tool in WRITES_NOTHING
+
+
+# @req> REQ-38099593@DiCRfDZFomPB 4h5lnn
+def names_citation(cmd):
+    text = cmd.replace("\\\n", "")
+    for _ in range(EXPANSION_DEPTH):
+        if CITATION.search(text.translate(UNQUOTED)):
+            return True
+        text, count = EXPANSION.subn("", text)
+        if not count:
+            return False
+    return True
 
 
 def refuse_destructive_push(words):
@@ -572,7 +594,7 @@ def judge_citation_edit(tool, args):
 # @req> REQ-38099593@DiCRfDZFomPB cebvfg
 def judge_citation_shell(raw):
     cmd = ESCAPE.sub("", raw)
-    if not CITATION.search(cmd.replace("\\\n", "").translate(UNQUOTED)):
+    if not names_citation(cmd):
         return
     pipelines = scan(FD_COPY.sub(" ", cmd))
     for part in (part for pipeline in pipelines for part in pipeline):
@@ -582,11 +604,9 @@ def judge_citation_shell(raw):
         if ">" in NULL_SINK.sub("", masked(part)):
             deny(HAND_CITATION)
     for pipeline in pipelines:
-        if not any(CITATION.search(part.translate(UNQUOTED)) for part in pipeline):
-            continue
-        if SUBSHELL.search(" ".join(pipeline)) or OUTPUT_FLAG.search(" ".join(pipeline)):
+        if OUTPUT_FLAG.search(" ".join(pipeline).translate(UNQUOTED)):
             deny(HAND_CITATION)
-        for part in pipeline:
+        for part in filter(str.strip, (NULL_SINK.sub("", part) for part in pipeline)):
             tool, flag = searched(part)
             if flag:
                 deny(f"{tool} {flag} in a command naming a statement citation "
@@ -633,6 +653,9 @@ def decide(data: dict) -> None:
 
     judge_citation_edit(tool, args)
     for value in named_paths(args, COMMAND_KEY):
+        # @req> REQ-38099593@DiCRfDZFomPB xdj5ae
+        if len(value) > COMMAND_LIMIT:
+            deny(LONG_COMMAND.format(length=len(value)))
         judge_shell(value)
         judge_citation_shell(value)
 
