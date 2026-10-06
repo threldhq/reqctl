@@ -97,7 +97,7 @@ give a one-clause reason in clause. Set shard to "{shard}" and batch to
 SHARD = "Shard {shard}: {count} of the {total} {scope} the corpus holds, whole"
 OTHERS = "The run's {count} proposals, each recalled against the others"
 WRITE = """Write the result as JSON matching this shape to {out} with the Write tool,
-then stop. Do not narrate.
+then return exactly what you wrote. Do not narrate.
 
 {shape}"""
 DICTIONARY = """## The dictionary: every term, parameter and data item the corpus defines
@@ -222,7 +222,8 @@ its place. Every quote is checked back against the owner's words, so copy rather
 than paraphrase, and write an empty list where you found nothing.
 
 That findings file is your only output. Do not write a note per item, do not
-restate the set, do not summarise before or after. Read, decide, write it, stop.
+restate the set, do not summarise before or after. Once it is written, return
+exactly what you wrote in it.
 """
 
 CARRIES = """
