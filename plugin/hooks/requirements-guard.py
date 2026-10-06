@@ -536,7 +536,7 @@ def judge_citation_shell(raw):
             deny(HAND_CITATION)
         for part in pipeline:
             invocation = masked(part.split("\n", 1)[0])
-            if ">" in invocation:
+            if ">" in invocation or "=" in (invocation.split() or [""])[0]:
                 deny(HAND_CITATION)
             tool, flag = searched(part)
             if flag:
