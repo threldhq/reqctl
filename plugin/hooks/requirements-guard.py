@@ -46,6 +46,11 @@ SINK = re.compile(
     r"^\s*(sort|uniq|awk|sed|tr|tac|rev|xxd|od|paste|fold|fmt)\b"
 )
 SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
+# @req+ REQ-38099593@DiCRfDZFomPB 2x3zhi
+SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag", "ack")
+WRAPPERS = ("env", "command", "time", "xargs")
+RUNS_PROGRAM = re.compile(r"-[A-Za-z]*O|--open-files-in-pager|--pre(?:=|$)")
+# @req- 2x3zhi
 GIT_READ = re.compile(
     r"^\s*git(\s+(-[cC]\s+\S+|-[Pp]|--no-pager|--paginate))*"
     r"\s+(log|show|diff|status|blame|ls-files|add|commit)\b"
@@ -294,6 +299,20 @@ def git_subcommand(words):
     return None, []
 
 
+# @req> REQ-38099593@DiCRfDZFomPB bc4mmq
+def searched(part):
+    words = tokens_of(part.split("\n", 1)[0])
+    at = 0
+    while at < len(words) and (words[at] in WRAPPERS or "=" in words[at]
+                               or words[at].startswith("-")):
+        at += 1
+    if at == len(words):
+        return None, []
+    tool, rest = ((words[at], words[at + 1:]) if words[at] != "git"
+                  else git_subcommand(words[at:]))
+    return (tool, rest) if tool in SEARCHES else (None, [])
+
+
 def refuse_destructive_push(words):
     subcommand, rest = git_subcommand(words)
     if subcommand != "push":
@@ -519,7 +538,14 @@ def judge_citation_shell(raw):
             invocation = masked(part.split("\n", 1)[0])
             if ">" in invocation:
                 deny(HAND_CITATION)
-            if READ.search(part) or GIT_READ.search(part):
+            tool, rest = searched(part)
+            for word in rest:
+                flag = RUNS_PROGRAM.match(word)
+                if flag:
+                    deny(f"{tool} {flag.group().rstrip('=')} blocked: it runs "
+                         "another program over the files it searches.\n"
+                         f"{HAND_CITATION}")
+            if tool or READ.search(part) or GIT_READ.search(part):
                 continue
             if SINK.search(part) and not SINK_WRITES.search(invocation):
                 continue
