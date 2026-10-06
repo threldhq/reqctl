@@ -12,6 +12,9 @@ acceptance_criteria:
   when: trace is run
 assessed:
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  3aqkc5: Q7FedDR4Mtd8sC_yxrHZIcQF7FK3H6sg9jz5OhK1-cQ
+  iy3utt: nxPQrp1WBWEUdJeF1Zjbph8SUr0_G1M1351oGHvW_CY
 priority: medium
 relations: {}
 status: approved
