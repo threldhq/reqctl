@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a repository whose corpus holds a data item named review_limits stating another
+    page_bytes quantity, and whose [settings file](settings_file) states none
+  then: the product reads no more of a page than the bytes it ships
+  when: the [best-in-class review](best_in_class_review) is checked there
+- given: a file stating values in the home folder of the user running the product,
+    and a repository holding no [settings file](settings_file)
+  then: the product uses the values it ships
+  when: a run is built in that repository
+assessed:
+  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+priority: medium
+relations:
+  REQ-40447106: constrains
+  REQ-87066486: derives_from
+status: approved
+text: The product shall read a value in place of the value it ships for one of its
+  own parameters, or for a field of an entry of one of its own data items, from no
+  source other than the [settings file](settings_file) of the repository it runs in.
+type: functional
+verification: inspection

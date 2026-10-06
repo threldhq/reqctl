@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) states a model and no effort
+    for the recall entry
+  then: the product refuses the run, naming the file and recall
+  when: a run is built there
+- given: a repository whose [settings file](settings_file) states an effort and no
+    model for the coverage entry
+  then: the product refuses the run, naming the file and coverage
+  when: a run is built there
+assessed:
+  REQ-23060027: QKFI8tm_J5VF5FlpyYn7ENn8OIvvcTXbZ_-9Z0mJhIo
+  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  REQ-96661837: hTUc2_9HnHBvLECseYfzFKS2_7oSN3lYcyJ8RypaiXo
+  elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
+  elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+priority: medium
+relations:
+  REQ-23060027: constrains
+  REQ-40447106: constrains
+  REQ-96661837: derives_from
+status: approved
+text: If a repository's [settings file](settings_file) states a model for an entry
+  of ${elucidate_agents} without an effort, or an effort without a model, then the
+  product shall refuse each command that reads the [settings file](settings_file),
+  naming the file and the entry.
+type: functional
+verification: inspection

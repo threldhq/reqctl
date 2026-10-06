@@ -1,15 +1,18 @@
 acceptance_criteria:
-- given: a repository whose corpus holds no data item named review_limits
+- given: a repository whose corpus holds no data item named review_limits, and whose
+    [settings file](settings_file) states no page_bytes quantity
   then: the product reads no more of a page than ${review_limits.page_bytes.quantity}
     bytes
   when: the [best-in-class review](best_in_class_review) is checked there
 - given: a repository whose corpus holds a data item named review_limits whose page_bytes
-    entry states another quantity
+    entry states another quantity, and whose [settings file](settings_file) states
+    no page_bytes quantity
   then: the product reads no more of a page than ${review_limits.page_bytes.quantity}
     bytes
   when: the [best-in-class review](best_in_class_review) is checked there
 - given: a repository whose corpus states a challenge_roles data item, or an elucidate_agents
-    data item naming other models or efforts
+    data item naming other models or efforts, and whose [settings file](settings_file)
+    states no model or effort for any agent
   then: the product spawns each agent on the model and at the effort that ${elucidate_agents}
     states for it
   when: a run is built there
@@ -24,6 +27,7 @@ assessed:
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   review_limits: UPSuHlsQZqT7GXjskz-Z-rhN826eBPukAOBjuJvU6aU
   review_limits.page_bytes: Vg7TUFPrj8IMJZtVMCxzt38RWdLgb38ApIdTuKZs57w
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
   4py3et: r19mBpwDHD8S0oSIAS7Nwq187Qn7yT1N6A-XRQzTkAE
