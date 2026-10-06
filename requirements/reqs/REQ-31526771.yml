@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a repository whose default branch carries no [settings file](settings_file)
+  then: the product spawns each agent on the model and at the effort it ships for
+    that agent
+  when: a run is built there
+- given: a repository whose [settings file](settings_file) states a value only for
+    the page_bytes entry of review_limits
+  then: the product follows no more redirects than the number it ships
+  when: the [best-in-class review](best_in_class_review) is checked there
+assessed:
+  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+priority: medium
+relations:
+  REQ-40447106: constrains
+  REQ-87066486: derives_from
+status: approved
+text: Where a repository holds no [settings file](settings_file), or its [settings
+  file](settings_file) states no value for a parameter or field whose value a [settings
+  file](settings_file) may replace, the product shall use, in that repository, the
+  value the product ships for it.
+type: functional
+verification: inspection

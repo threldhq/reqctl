@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) states a value under review_limits.page_byte
+  then: the product refuses the command, naming the file and review_limits.page_byte
+  when: a command that reads the [settings file](settings_file) runs there
+- given: a repository whose [settings file](settings_file) states a value for the
+    definition field of an entry of git_read_forms, which neither the reqctl command
+    nor the elucidate skill uses
+  then: the product refuses the command, naming the file and the key
+  when: a command that reads the [settings file](settings_file) runs there
+- given: a repository whose [settings file](settings_file) states a value for the
+    page_bytes entry of review_limits rather than for one of its fields
+  then: the product refuses the command, naming the file and the key
+  when: a command that reads the [settings file](settings_file) runs there
+assessed:
+  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+priority: medium
+relations:
+  REQ-40447106: depends_on
+status: approved
+text: If a repository's [settings file](settings_file) states a key naming no parameter
+  and no field whose value a [settings file](settings_file) may replace, then the
+  product shall refuse each command that reads the [settings file](settings_file),
+  naming the file and each such key.
+type: functional
+verification: inspection

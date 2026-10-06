@@ -18,7 +18,6 @@ from .corpus import ReqctlError
 
 EXIT_OK = 0
 EXIT_INVALID = 1
-EXIT_USAGE = 2
 
 BETWEEN_ITEMS = "\n\n" + "-" * 60 + "\n\n"
 
