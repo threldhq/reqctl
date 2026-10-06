@@ -39,22 +39,21 @@ READ_VERBS = ("cat", "head", "tail", "less", "more", "nl", "wc", "ls", "stat",
               "tree", "realpath", "basename", "dirname", "column", "test")
 NAME_ONLY = ("ls", "stat", "file", "reqctl", "echo", "printf", "du", "tree",
              "realpath", "basename", "dirname", "test")
-READ = re.compile(rf"^\s*({'|'.join(READ_VERBS)})\b")
+READ = re.compile(rf"^\s*({'|'.join(READ_VERBS)})(?=\s|$)")
 CONTENT_READ = re.compile(
-    rf"^\s*({'|'.join(v for v in READ_VERBS if v not in NAME_ONLY)})\b")
+    rf"^\s*({'|'.join(v for v in READ_VERBS if v not in NAME_ONLY)})(?=\s|$)")
 SINK = re.compile(
-    r"^\s*(sort|uniq|awk|sed|tr|tac|rev|xxd|od|paste|fold|fmt)\b"
+    r"^\s*(sort|uniq|awk|sed|tr|tac|rev|xxd|od|paste|fold|fmt)(?=\s|$)"
 )
 SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
 # @req+ REQ-38099593@DiCRfDZFomPB 2x3zhi
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
 OPENS_PAGER = re.compile(r"-[A-Za-z]*O")
-GIT_CONFIGURES = ("-c", "--config-env", "--exec-path")
 # @req- 2x3zhi
 GIT_READ = re.compile(
-    r"^\s*git(\s+(-[cC]\s+\S+|-[Pp]|--no-pager|--paginate))*"
-    r"\s+(log|show|diff|status|blame|ls-files|add|commit)\b"
+    r"^\s*git(\s+(-C\s+\S+|-[Pp]|--no-pager|--paginate))*"
+    r"\s+(log|show|diff|status|blame|ls-files|add|commit)(?=\s|$)"
 )
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"\d*>&\s*\d*|&>>?")
@@ -314,16 +313,6 @@ def searched(part):
     return tool, None
 
 
-# @req> REQ-38099593@DiCRfDZFomPB dpbhas
-def git_configured(part):
-    words = tokens_of(part.split("\n", 1)[0])
-    subcommand, rest = git_subcommand(words)
-    if words[:1] != ["git"] or subcommand is None:
-        return None
-    return next((word for word in words[1:len(words) - len(rest) - 1]
-                 if word.split("=", 1)[0] in GIT_CONFIGURES), None)
-
-
 def refuse_destructive_push(words):
     subcommand, rest = git_subcommand(words)
     if subcommand != "push":
@@ -547,17 +536,12 @@ def judge_citation_shell(raw):
             deny(HAND_CITATION)
         for part in pipeline:
             invocation = masked(part.split("\n", 1)[0])
-            if ">" in invocation or "=" in (invocation.split() or [""])[0]:
+            if ">" in invocation:
                 deny(HAND_CITATION)
             tool, flag = searched(part)
             if flag:
                 deny(f"{tool} {flag} blocked: it makes {tool} run another "
                      f"program.\n{HAND_CITATION}")
-            configured = git_configured(part)
-            if configured:
-                deny(f"git {configured} blocked: configuration set on the "
-                     f"command line can make git run another program.\n"
-                     f"{HAND_CITATION}")
             if tool or READ.search(part) or GIT_READ.search(part):
                 continue
             if SINK.search(part) and not SINK_WRITES.search(invocation):
