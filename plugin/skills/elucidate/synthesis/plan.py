@@ -96,6 +96,7 @@ give a one-clause reason in clause. Set shard to "{shard}" and batch to
 
 SHARD = "Shard {shard}: {count} of the {total} {scope} the corpus holds, whole"
 OTHERS = "The run's {count} proposals, each recalled against the others"
+# @req> REQ-36422345@O-3IKmoFSYSG ghenbw
 WRITE = """Write the result as JSON matching this shape to {out} with the Write tool,
 then return exactly what you wrote. Do not narrate.
 
@@ -203,6 +204,7 @@ UNBOUND = """\
 This proposal states a build rule, which binds to no dimension. What it binds
 to is not a question about it."""
 
+# @req> REQ-36422345@O-3IKmoFSYSG aw3cqu
 COVERAGE = """You read the owner's words back against this run's proposals and
 its declined list, and name what neither accounts for. You have no tool to read
 anything, so everything you judge is below.
