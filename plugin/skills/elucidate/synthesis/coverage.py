@@ -8,6 +8,8 @@ from reqctl import corpus, write
 
 LISTS = ("unclaimed", "renamed")
 NAMES = LISTS + ("quote", "owner", "reason", "statement", "proposal")
+# @req> REQ-13591264@tle-mDzkWdnR ybhob6
+BOUNDS = {"reason": 300, "owner": 60}
 
 
 def spoken(text):
@@ -64,6 +66,17 @@ def faults(found, words):
             held.append(f"names a word the owner did not use: {entry['owner']!r}")
     # @req- c3jev7
     # @req- y4zpw2
+    # @req> REQ-13591264@tle-mDzkWdnR ieflg7
+    for one in LISTS:
+        for entry in found[one]:
+            if not isinstance(entry, dict):
+                continue
+            for name, bound in BOUNDS.items():
+                said = entry.get(name)
+                if isinstance(said, str) and len(said) > bound:
+                    held.append(f"{one}: an entry's {name} runs to {len(said)} "
+                                f"characters, past the {bound} the coverage shape "
+                                "allows")
     return held
 
 

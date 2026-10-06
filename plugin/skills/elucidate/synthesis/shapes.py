@@ -1,4 +1,4 @@
-from coverage import LISTS, NAMES
+from coverage import BOUNDS, LISTS, NAMES
 
 BEARINGS = ["same", "overlaps", "contradicts", "parent", "prerequisite",
             "restricted_by", "related"]
@@ -109,11 +109,19 @@ REVIEW = _object(["practices"], {
 
 # @req+ REQ-36422345@O-3IKmoFSYSG lq44vs
 QUOTED = {"type": "string", "pattern": "\\S"}
-NAMED = {name: {"type": ["string", "integer"]} for name in NAMES
+
+
+# @req+ REQ-13591264@tle-mDzkWdnR qpryf4
+def _bounded(name, shape):
+    return {**shape, "maxLength": BOUNDS[name]} if name in BOUNDS else shape
+
+
+NAMED = {name: _bounded(name, {"type": ["string", "integer"]}) for name in NAMES
          if name not in LISTS}
 
 COVERAGE = _object(list(LISTS), {
     "unclaimed": _list(_object(["quote"], {**NAMED, "quote": QUOTED})),
-    "renamed": _list(_object(["owner"], {**NAMED, "owner": QUOTED})),
+    "renamed": _list(_object(["owner"], {**NAMED, "owner": _bounded("owner", QUOTED)})),
 })
+# @req- qpryf4
 # @req- lq44vs

@@ -10,6 +10,10 @@ acceptance_criteria:
   then: the product accepts the findings
   when: the findings are checked
 assessed: {}
+citations:
+  ieflg7: ik_7Q9xIrluITq70TQGfmL6Qf5WVNaSOqewpSGth2AY
+  qpryf4: clM-NYdimt2cbCU9oInm-lbNe6dzxsfImHsEYXhxFro
+  ybhob6: Pp2vp2UJNk6lmsQSvHOL3e0FdsSxJ_RLC4MPDclSwI8
 priority: medium
 relations: {}
 status: approved
