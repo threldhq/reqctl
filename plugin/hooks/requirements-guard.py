@@ -49,7 +49,9 @@ SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
 # @req+ REQ-38099593@DiCRfDZFomPB 2x3zhi
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
-OPENS_PAGER = re.compile(r"-[A-Za-z]*O")
+OPENS_PAGER = re.compile(r"-[0-9A-Za-z]*O")
+FD_COPY = re.compile(r"\d*>&\s*(?:[12](?!\d)|-)")
+NULL_SINK = re.compile(r"\d*>>?\s*/dev/null(?=\s|$)")
 # @req- 2x3zhi
 GIT_READ = re.compile(
     r"^\s*git(\s+(-C\s+\S+|-[Pp]|--no-pager|--paginate))*"
@@ -115,6 +117,13 @@ DISCARDS_WORK = (
 HAND_CITATION = (
     "A statement citation is written only by reqctl.\n"
     "  reqctl tag PATH --from N --to M --req UID | reqctl repin ID | reqctl untag ID"
+)
+
+UNREAD_COMMAND = (
+    "{found} in a command naming a statement citation blocked: the guard reads "
+    "such a command only on one line, with no backslash, $, backtick or unquoted "
+    "brace outside single quotes.\n"
+    "Put its pattern and options in single quotes, on one line."
 )
 
 INEXACT = (
@@ -311,6 +320,17 @@ def searched(part):
         if short or (len(name) > 2 and any(flag.startswith(name) for flag in RUNS_PROGRAM)):
             return tool, short.group() if short else name
     return tool, None
+
+
+# @req> REQ-38099593@DiCRfDZFomPB dek4pk
+def unreadable(part):
+    quote = None
+    for char in part:
+        if char in "'\"" and quote in (None, char):
+            quote = None if quote else char
+        elif (char in "\\$`" and quote != "'") or (char == "{" and not quote):
+            return f"'{char}'"
+    return "a line break" if "\n" in part else None
 
 
 def refuse_destructive_push(words):
@@ -529,22 +549,29 @@ def judge_citation_edit(tool, args):
 
 # @req> REQ-38099593@DiCRfDZFomPB cebvfg
 def judge_citation_shell(raw):
-    for pipeline in scan(AMP_REDIRECT.sub(" ", flatten(ESCAPE.sub("", raw)))):
+    cmd = flatten(ESCAPE.sub("", raw))
+    if not CITATION.search(cmd.replace("\\\n", "").translate(UNQUOTED)):
+        return
+    pipelines = scan(FD_COPY.sub(" ", cmd))
+    for part in (part for pipeline in pipelines for part in pipeline):
+        found = unreadable(part)
+        if found:
+            deny(UNREAD_COMMAND.format(found=found))
+        if ">" in NULL_SINK.sub("", masked(part)):
+            deny(HAND_CITATION)
+    for pipeline in pipelines:
         if not any(CITATION.search(part.translate(UNQUOTED)) for part in pipeline):
             continue
         if SUBSHELL.search(" ".join(pipeline)) or OUTPUT_FLAG.search(" ".join(pipeline)):
             deny(HAND_CITATION)
         for part in pipeline:
-            invocation = masked(part.split("\n", 1)[0])
-            if ">" in invocation:
-                deny(HAND_CITATION)
             tool, flag = searched(part)
             if flag:
-                deny(f"{tool} {flag} blocked: it makes {tool} run another "
-                     f"program.\n{HAND_CITATION}")
+                deny(f"{tool} {flag} in a command naming a statement citation "
+                     f"blocked: such a command may only read.\nSearch without {flag}.")
             if tool or READ.search(part) or GIT_READ.search(part):
                 continue
-            if SINK.search(part) and not SINK_WRITES.search(invocation):
+            if SINK.search(part) and not SINK_WRITES.search(masked(part)):
                 continue
             deny(HAND_CITATION)
 
