@@ -320,7 +320,7 @@ def git_configured(part):
     subcommand, rest = git_subcommand(words)
     if words[:1] != ["git"] or subcommand is None:
         return None
-    return next((word.split("=", 1)[0] for word in words[1:len(words) - len(rest) - 1]
+    return next((word for word in words[1:len(words) - len(rest) - 1]
                  if word.split("=", 1)[0] in GIT_CONFIGURES), None)
 
 

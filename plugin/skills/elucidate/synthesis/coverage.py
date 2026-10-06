@@ -67,16 +67,11 @@ def faults(found, words):
     # @req- c3jev7
     # @req- y4zpw2
     # @req> REQ-13591264@tle-mDzkWdnR ieflg7
-    for one in LISTS:
-        for entry in found[one]:
-            if not isinstance(entry, dict):
-                continue
-            for name, bound in BOUNDS.items():
-                said = entry.get(name)
-                if isinstance(said, str) and len(said) > bound:
-                    held.append(f"{one}: an entry's {name} runs to {len(said)} "
-                                f"characters, past the {bound} the coverage shape "
-                                "allows")
+    held += [f"{one}: an entry's {name} runs to {len(entry[name])} characters, "
+             f"past the {bound} the coverage shape allows"
+             for one in LISTS for entry in found[one] if isinstance(entry, dict)
+             for name, bound in BOUNDS.items()
+             if isinstance(entry.get(name), str) and len(entry[name]) > bound]
     return held
 
 

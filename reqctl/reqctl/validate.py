@@ -1180,20 +1180,16 @@ def _settled(path):
 
 # @req> REQ-21699310@XKeWkfefGruJ uv4bc5
 def _bound_guards(records, root):
-    nominated = set(corpus.binding_dimensions(root))
-    problems = []
-    for uid, data in sorted(records.items()):
-        if not nominated or corpus.kind_of(uid, data) != "guard":
-            continue
-        for address in (corpus.references(data)
-                        + corpus.concept_references(data)):
-            name = corpus.split_address(address)[0]
-            if name in nominated:
-                problems.append(
-                    f"{uid}: references {address}, which binds the guard to "
-                    f"{name} -- reword the guard without the reference, or "
-                    "state the rule as a requirement")
-    return problems
+    nominated = corpus.binding_dimensions(root)
+    return [
+        f"{uid}: references {address}, which binds the guard to {name} -- "
+        "reword the guard without the reference, or state the rule as a "
+        "requirement"
+        for uid, data in sorted(records.items())
+        if corpus.kind_of(uid, data) == "guard"
+        for address in corpus.references(data) + corpus.concept_references(data)
+        for name in [corpus.split_address(address)[0]]
+        if name in nominated]
 
 
 def _named_schemas(records, root):
