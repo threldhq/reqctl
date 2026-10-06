@@ -27,19 +27,18 @@ hard: coverage that is partial, a conflict stated in other units, an obligation
 nobody asked for.
 
 Recall is read from what this run's own recall pass returned and what the judge
-prompt then carried, not from a ranking of this harness's own. A source recall
-never reached that the judge prompt still named is the floor carrying the run
-rather than the reading. Nothing here says how much of the corpus a reading had
-to admit to reach anything: the sweep over cuts that measured that is gone with
-the ranking it swept.
+prompt then carried. A source recall never reached that the judge prompt still
+named is the floor carrying the run rather than the reading. Nothing here says
+how much of the corpus a reading had to admit to reach anything.
 
 The key states what the corpus declares, not everything a correct verdict may
 name, so a citation outside the key is counted and never penalised.
 
-A sibling pair is the floor of what Pass B exists to catch, not its measure: one
-statement beside its own verbatim restatement, and one beside the neighbour the
-corpus already says it leans on. Both are labelled by the corpus rather than
-paraphrased, so a pass that misses them has not failed at something hard.
+A sibling pair is the floor of what the siblings shard exists to catch, not its
+measure: one statement beside its own verbatim restatement, and one beside the
+neighbour the corpus already says it leans on. Both are labelled by the corpus
+rather than paraphrased, so a pass that misses them has not failed at something
+hard.
 
 Neighbours found is a floor, not a rate. A probe is its source with the numbers
 filled in, so an agent holding the source finds a whole duplicate -- and the
@@ -348,7 +347,8 @@ def report(rows, absent, unread, totals):
               _line("siblings named", totals["siblings_stated"],
                     totals["sibling_probes"]),
               _line("siblings found", totals["siblings_found"],
-                    totals["sibling_probes"], "what Pass B alone can see")]
+                    totals["sibling_probes"],
+                    "what only the siblings shard reaches")]
     # @req- cx4ygh
     # @req+ REQ-22288699@6DWNPu-0CCxf tdrp6q
     if absent:
