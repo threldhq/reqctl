@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) states 0 for the quantity
+    of the fetch_attempts entry of review_limits
+  then: the product refuses the check, naming the file, the key and 0
+  when: the [best-in-class review](best_in_class_review) is checked there
+- given: a repository whose [settings file](settings_file) states a negative whole
+    number for the quantity of the redirects entry of review_limits
+  then: the product refuses the check, naming the file, the key and the value
+  when: the [best-in-class review](best_in_class_review) is checked there
+assessed:
+  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+priority: medium
+relations:
+  REQ-40447106: constrains
+status: approved
+text: If a repository's [settings file](settings_file) states, for the field named
+  quantity of a data item's entry, a value that is not a whole number of at least
+  one, then the product shall refuse each command that reads the [settings file](settings_file),
+  naming the file and each such key with its value.
+type: functional
+verification: inspection
