@@ -34,8 +34,15 @@ than the branch under review, so the agent would read the wrong code.
 
 First: every behavioural change on the branch cites its governing approved
 requirement -- run `reqctl trace`, then read the diff for changes carrying no
-`@req` tag. What builds the system cites none -- see CLAUDE.md. A change with
-no governing requirement stops the pass; ask the owner to create one.
+`@req` tag.
+
+<!-- @req+ REQ-54415118@omQkMsNtao3Q tzrban -->
+Code enforcing a rule of the build cites its approved `GUARD` instead; what
+only carries the build -- dependency pins, CI wiring, lockfiles -- cites
+nothing. Cite what is missing with `reqctl tag` before going on. A change
+owing a citation that no statement governs stops the pass; ask the owner to
+create one.
+<!-- @req- tzrban -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->
 `python .github/verify.py`, where the repository carries it: it reads every

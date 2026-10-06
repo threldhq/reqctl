@@ -18,7 +18,6 @@ from .corpus import ReqctlError
 
 EXIT_OK = 0
 EXIT_INVALID = 1
-EXIT_USAGE = 2
 
 BETWEEN_ITEMS = "\n\n" + "-" * 60 + "\n\n"
 
@@ -731,6 +730,7 @@ def cmd_trace(args):
             print(f"{row['uid']}  {row['status']}")
             for path in row["implementation"]:
                 print(f"    impl  {path}")
+        # @req> REQ-73027720@g_8t_ycPUJfp iy3utt
         if data["unimplemented"]:
             print("\nawaiting implementation: " + ", ".join(data["unimplemented"]))
         # @req> REQ-35979865@-t3USRO-BKGk wht4dr
