@@ -38,7 +38,7 @@ SIBLINGS = "siblings"
 SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
-# @req+ REQ-87066486@lrbuj-bgSDF8 udnw6h
+# @req+ REQ-87066486@KWWtPxhU0AiE udnw6h
 # @req> challenge_bounds.recall_batch@DGBoxybgFaOo 24eqhj
 RECALL_BATCH = 40
 # @req> challenge_bounds.judge_bound@KpTZxRxtu6PE cwon42
@@ -50,7 +50,7 @@ FLOOR_K = 10
 # @req> challenge_bounds.agent_ceiling@l4qzZij69kI8 nelsvq
 AGENT_CEILING = 150
 # @req- udnw6h
-# @req> REQ-87066486@lrbuj-bgSDF8 4py3et
+# @req> REQ-87066486@KWWtPxhU0AiE 4py3et
 # @req> elucidate_agents@V5-K1rlTkh2C kgnxgu
 AGENTS = {
     "best_in_class": {"model": "claude-sonnet-5-5", "effort": "high"},

@@ -25,7 +25,7 @@ import shapes
 from reqctl import corpus
 
 FIELD = "governed_field"
-# @req+ REQ-87066486@lrbuj-bgSDF8 mmgold
+# @req+ REQ-87066486@KWWtPxhU0AiE mmgold
 # @req> review_limits.summary_lines@4hQ6ynB1F_5x zuyxaz
 BOUND = 10
 # @req> review_limits.page_bytes@CK3zn6szcyR_ dkutyi

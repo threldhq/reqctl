@@ -6,6 +6,9 @@ acceptance_criteria:
   then: the item stands
   when: the corpus is validated
 assessed: {}
+citations:
+  m2dmcp: LTSazXELIPolR8E7YW_zOL3eZfYPV6rHhBufr3yWNOU
+  smwuev: 9AX4kxartJ2rNZnNAEB0-uf-cMT7Rt3VBmHxto-RODY
 priority: medium
 relations: {}
 status: approved
