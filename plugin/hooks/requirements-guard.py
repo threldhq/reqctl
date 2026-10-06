@@ -47,9 +47,9 @@ SINK = re.compile(
 )
 SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
 # @req+ REQ-38099593@DiCRfDZFomPB 2x3zhi
-SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag", "ack")
-WRAPPERS = ("env", "command", "time", "xargs")
-RUNS_PROGRAM = re.compile(r"-[A-Za-z]*O|--open-files-in-pager|--pre(?:=|$)")
+SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
+RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
+OPENS_PAGER = re.compile(r"-[A-Za-z]*O")
 # @req- 2x3zhi
 GIT_READ = re.compile(
     r"^\s*git(\s+(-[cC]\s+\S+|-[Pp]|--no-pager|--paginate))*"
@@ -302,15 +302,15 @@ def git_subcommand(words):
 # @req> REQ-38099593@DiCRfDZFomPB bc4mmq
 def searched(part):
     words = tokens_of(part.split("\n", 1)[0])
-    at = 0
-    while at < len(words) and (words[at] in WRAPPERS or "=" in words[at]
-                               or words[at].startswith("-")):
-        at += 1
-    if at == len(words):
-        return None, []
-    tool, rest = ((words[at], words[at + 1:]) if words[at] != "git"
-                  else git_subcommand(words[at:]))
-    return (tool, rest) if tool in SEARCHES else (None, [])
+    tool, rest = (("git grep", words[2:]) if words[:2] == ["git", "grep"]
+                  else (words[0], words[1:]) if words[:1] and words[0] in SEARCHES
+                  else (None, []))
+    for word in rest:
+        name = word.split("=", 1)[0]
+        short = OPENS_PAGER.match(word)
+        if short or (len(name) > 2 and any(flag.startswith(name) for flag in RUNS_PROGRAM)):
+            return tool, short.group() if short else name
+    return tool, None
 
 
 def refuse_destructive_push(words):
@@ -538,13 +538,10 @@ def judge_citation_shell(raw):
             invocation = masked(part.split("\n", 1)[0])
             if ">" in invocation:
                 deny(HAND_CITATION)
-            tool, rest = searched(part)
-            for word in rest:
-                flag = RUNS_PROGRAM.match(word)
-                if flag:
-                    deny(f"{tool} {flag.group().rstrip('=')} blocked: it runs "
-                         "another program over the files it searches.\n"
-                         f"{HAND_CITATION}")
+            tool, flag = searched(part)
+            if flag:
+                deny(f"{tool} {flag} blocked: it makes {tool} run another "
+                     f"program.\n{HAND_CITATION}")
             if tool or READ.search(part) or GIT_READ.search(part):
                 continue
             if SINK.search(part) and not SINK_WRITES.search(invocation):
