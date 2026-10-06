@@ -27,10 +27,11 @@ assessed:
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  2x3zhi: ZF4XmInMtQdWOn5T-vRUnwuJjwbx8tH1VvEQYmCXwqs
+  2x3zhi: 39Bx7-3LFWek1bt5-H4xSf3ASNKExZOB1LNuYTclUSs
   3yvytz: qJgqalsuj7jG2WaubHmir6oARN6QBZlujEnENBwwUzw
   bc4mmq: Gp6Ii3vZTCW7xHy34zCjywFvHeLyevjyDn8X04KgstU
-  cebvfg: 8-2ExpQHiS3OfXcKL5vlEcDtDJsALGIbeXlUP7KdNso
+  cebvfg: 6-nvMt8bJLyBHdGVxKqVw9AH1rrhuXKPxlKtsIN-piY
+  dpbhas: P3avQQHsZJayzo9NTCNN1PADgViB_lx3sv3LzUeL6Ao
 priority: medium
 relations:
   REQ-18833394: depends_on

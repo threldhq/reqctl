@@ -50,6 +50,7 @@ SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
 OPENS_PAGER = re.compile(r"-[A-Za-z]*O")
+GIT_CONFIGURES = ("-c", "--config-env", "--exec-path")
 # @req- 2x3zhi
 GIT_READ = re.compile(
     r"^\s*git(\s+(-[cC]\s+\S+|-[Pp]|--no-pager|--paginate))*"
@@ -313,6 +314,16 @@ def searched(part):
     return tool, None
 
 
+# @req> REQ-38099593@DiCRfDZFomPB dpbhas
+def git_configured(part):
+    words = tokens_of(part.split("\n", 1)[0])
+    subcommand, rest = git_subcommand(words)
+    if words[:1] != ["git"] or subcommand is None:
+        return None
+    return next((word.split("=", 1)[0] for word in words[1:len(words) - len(rest) - 1]
+                 if word.split("=", 1)[0] in GIT_CONFIGURES), None)
+
+
 def refuse_destructive_push(words):
     subcommand, rest = git_subcommand(words)
     if subcommand != "push":
@@ -542,6 +553,11 @@ def judge_citation_shell(raw):
             if flag:
                 deny(f"{tool} {flag} blocked: it makes {tool} run another "
                      f"program.\n{HAND_CITATION}")
+            configured = git_configured(part)
+            if configured:
+                deny(f"git {configured} blocked: configuration set on the "
+                     f"command line can make git run another program.\n"
+                     f"{HAND_CITATION}")
             if tool or READ.search(part) or GIT_READ.search(part):
                 continue
             if SINK.search(part) and not SINK_WRITES.search(invocation):
