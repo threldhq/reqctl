@@ -5,6 +5,7 @@ import os
 import subprocess
 import re
 import secrets
+import stat
 import tokenize
 from pathlib import Path
 
@@ -124,6 +125,22 @@ def cut(path, text, spans):
     return problems
 
 
+# @req+ REQ-82335572@jy-6pa6WK1sz jflstj
+# @req+ REQ-79989567@oWj5HjnXcM0G 6fth2x
+REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
+           **dict.fromkeys((".md", ".html"), re.compile(r"<!--[\s\S]*?(?:-->|\Z)")),
+           ".js": re.compile(r"""(?P<kept>"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
+                             r"""|`(?:\\[\s\S]|[^`\\])*`)|//[^\n]*|/\*[\s\S]*?(?:\*/|\Z)""")}
+
+
+def hollow(path, text, first, last):
+    bare = REMARKS[Path(path).suffix].sub(
+        lambda found: found.groupdict().get("kept") or "\n" * found[0].count("\n"), text)
+    return not "".join(_feed_lines(bare)[first - 1:last]).strip()
+# @req- 6fth2x
+# @req- jflstj
+
+
 def read(root, digested=False):
     sources = list(_sources(root))
     citations, problems = parse(sources)
@@ -133,6 +150,12 @@ def read(root, digested=False):
         for citation in citations:
             citation["digest"] = digest(citation["path"], texts[citation["path"]],
                                         citation["lines"])
+    # @req+ REQ-79989567@oWj5HjnXcM0G bz6frh
+    texts = dict(sources)
+    problems += [f"{c['path']}: citation {c['id']} covers no code statement"
+                 for c in citations if len(c["marks"]) == 2
+                 and hollow(c["path"], texts[c["path"]], c["first"], c["last"])]
+    # @req- bz6frh
     return citations, problems + list(former(sources))
 
 
@@ -156,6 +179,7 @@ def cited(citations):
 def parse(sources):
     opened, problems, seen = [], [], {}
     for relative, text in sources:
+        # @req> REQ-35805881@37XtC4gyD98k 5h3hpr
         if text is None:
             problems.append(f"{relative}: unreadable while scanning for "
                             "statement citations")
@@ -280,24 +304,31 @@ def covered(citations):
 def _sources(root):
     root = Path(root)
     corpus_dir = root / "requirements"
+    # @req+ REQ-35805881@37XtC4gyD98k ofycdw
+    unread = []
     # @req> REQ-81857516@chYOQDPmuDuW ldlf2u
-    for folder, subdirs, files in os.walk(root):
+    for folder, subdirs, files in os.walk(root, onerror=unread.append):
         subdirs[:] = [name for name in subdirs
                       if name not in corpus.SCAN_SKIP
                       and not name.endswith(".egg-info")
                       and Path(folder) / name != corpus_dir]
         for name in files:
             path = Path(folder) / name
-            if not path.is_file():
-                continue
             try:
+                if not stat.S_ISREG(path.stat().st_mode):
+                    continue
                 raw = path.read_bytes()
+            except FileNotFoundError:
+                continue
             except OSError:
                 yield str(path.relative_to(root)), None
                 continue
             if b"\0" in raw:
                 continue
             yield str(path.relative_to(root)), raw.decode(errors="ignore")
+    for failure in unread:
+        yield str(Path(failure.filename).relative_to(root)), None
+    # @req- ofycdw
 
 
 def mint(held):
@@ -370,7 +401,11 @@ def tagged(root, path, asked, exclusive=False):
     for first, last, _, _ in asked:
         if not 1 <= first <= last <= len(lines):
             raise ReqctlError(f"{path}: lines {first}-{last} are not in the file")
-    held, _ = read(root)
+    sources = list(_sources(root))
+    held, problems = parse(sources)
+    # @req> REQ-35805881@37XtC4gyD98k kz4urn
+    if any(text is None for _, text in sources):
+        raise ReqctlError("the code's citations do not read:\n" + "\n".join(problems))
     taken = {c["id"] for c in held}
     lead, tail = COMMENTS[target.suffix]
     word = " exclusive" if exclusive else ""
@@ -396,11 +431,17 @@ def tagged(root, path, asked, exclusive=False):
     written = _inserted(lines, before, after)
     # @req- k2lzwu
     # @req- kmbhnk
-    found, _ = parse([(path, written)])
+    found, dropped = parse([(path, written)])
     new = [c for identity in minted for c in found if c["id"] == identity]
+    # @req> REQ-82335572@jy-6pa6WK1sz stzuaz
+    if len(new) < len(minted):
+        raise ReqctlError("\n".join(dropped))
     # @req+ REQ-65738797@3jHtqzLVQUal zkxsxx
     problems = cut(path, written, [(c["id"], c["first"], c["last"])
                                    for c in new if len(c["marks"]) == 2])
+    # @req> REQ-82335572@jy-6pa6WK1sz 5lq35y
+    problems += [f"{path}: lines {first}-{last} hold no code statement"
+                 for first, last, _, _ in asked if hollow(path, text, first, last)]
     problems += _duplicates(path, found, dict(zip(minted, asked)))
     if problems:
         raise ReqctlError("\n".join(problems))
@@ -552,8 +593,9 @@ def _carried(root, commit):
 def compare(root, ref):
     commit = _git(root, "merge-base", "HEAD", ref).strip()
     was_texts = dict(_carried(root, commit))
+    # @req> REQ-35805881@37XtC4gyD98k wge7e5
     now_texts = {relative: text for relative, text in _sources(root)
-                 if text is not None and SIGN.search(text)}
+                 if text is None or SIGN.search(text)}
     was, _ = parse(was_texts.items())
     now, problems = parse(now_texts.items())
     if problems:
