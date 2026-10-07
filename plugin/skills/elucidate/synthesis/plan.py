@@ -712,7 +712,7 @@ def judged_by(held, scope):
 
 def dictionary(records):
     lines = []
-    # @req> REQ-48772986@tSSCZbvyNKAC 4xoc6j
+    # @req> REQ-48772986@H_ZJCh_1gmKN 4xoc6j
     for uid, data in sorted(records.items()):
         kind = corpus.kind_of(uid, data)
         if kind == "term":
