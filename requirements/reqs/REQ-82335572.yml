@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: lines holding only blank lines or comments
+  then: the product refuses and writes no citation
+  when: the product is asked to write a [statement citation](statement_citation) over
+    them
+assessed:
+  REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
+  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-42668747: depends_on
+  REQ-52925332: depends_on
+  REQ-60346603: constrains
+  REQ-62782894: constrains
+status: approved
+text: If the product is asked to write a [statement citation](statement_citation)
+  that would cover no [code statement](code_statement), then the product shall refuse
+  to write the citation.
+type: functional
+verification: inspection
