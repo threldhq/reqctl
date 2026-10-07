@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a pair of comments carrying a [statement citation](statement_citation) around
+    only blank lines or comments
+  then: the product reports the citation as a problem
+  when: trace is run
+assessed:
+  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
+  REQ-95865306: K4a2U5EVbqcvZEbMKU6G6okjJvdb_AsIH_80HL1iDkw
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-52925332: depends_on
+  REQ-95865306: derives_from
+status: approved
+text: When trace is run, the product shall report as a problem each [statement citation](statement_citation)
+  carried by a pair of comments whose lines hold no [code statement](code_statement).
+type: functional
+verification: inspection
