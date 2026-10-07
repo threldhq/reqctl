@@ -1099,7 +1099,8 @@ def build_parser(root, fielded):
     s = _command(sub, "context",
                  "everything around each item named: fields, links, suspicion, "
                  "code. Inspection only -- what it cannot read it marks, and it "
-                 "fails only when nothing named resolves")
+                 "fails only when nothing named resolves or the scan for code "
+                 "citations meets a file or folder it cannot read")
     s.add_argument("uid", nargs="+", metavar="UID")
     s.set_defaults(func=cmd_context)
 

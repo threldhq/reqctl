@@ -107,7 +107,7 @@ def cut(path, text, spans):
     try:
         depths, starts, ends = read(text)
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
-        return [(None, f"{path}: cannot read its nest levels ({broken}), so no "
+        return [(path, f"{path}: cannot read its nest levels ({broken}), so no "
                        "citation in it can be checked")]
     problems = []
     for identity, first, last in spans:
@@ -276,7 +276,7 @@ def _parse(sources, nests=True):
             opened.append(_citation(held, relative, number, span[1], *span,
                                     [number]))
         # @req> REQ-51709712@D0x4hZmSHgiW l3wdgx
-        faults += cut(relative, text, spans) if nests else []
+        faults += cut(relative, text, spans if nests else [])
     return covered(opened), faults
 
 
@@ -509,10 +509,12 @@ def standing(root, citation):
 # @req+ REQ-62685242@nMlCr6nshoNZ yqdz42
 def readable(root, identity=EVERY, nests=True):
     held, faults = _parse(_sources(root), nests)
-    against = [fault for about, fault in faults if about in (identity, EVERY)]
+    found = [citation for citation in held if identity in (EVERY, citation["id"])]
+    files = () if identity is EVERY else [citation["path"] for citation in found]
+    against = [fault for about, fault in faults if about in (identity, EVERY, *files)]
     if against:
         raise ReqctlError("the code's citations do not read:\n" + "\n".join(against))
-    return [citation for citation in held if identity in (EVERY, citation["id"])]
+    return found
 
 
 def named(root, identity, nests=True):
