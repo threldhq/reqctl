@@ -1,8 +1,8 @@
 import re
 from pathlib import Path
 
-from .baseline import DEFAULT_HEAD, REMOTE, _git
-from .corpus import ReqctlError, loads
+from .baseline import _default_ref, _git
+from .corpus import ReqctlError, loads, mapping
 
 SETTINGS = Path("requirements") / "settings.yml"
 PINNED = re.compile(r"claude-[a-z0-9.-]*[0-9][a-z0-9.-]*")
@@ -51,29 +51,19 @@ def path(root):
 # @req> REQ-42769459@zwnRdoOn0Efh ipg3lp
 def _default(root):
     try:
-        listed = _git(root, "remote")
-        if listed.returncode or REMOTE not in listed.stdout.split():
-            return None
-        named = _git(root, "symbolic-ref", "-q", DEFAULT_HEAD)
-        ref = named.stdout.strip()
-        if named.returncode or _git(root, "rev-parse", "-q", "--verify",
-                                    f"{ref}^{{commit}}").returncode:
-            return None
-        return ref
+        return _default_ref(root)
     except ReqctlError:
         return None
 
 
 def _leaves(held, shipped, at):
-    if not isinstance(held, dict) or not (shipped is None
-                                          or isinstance(shipped, dict)):
+    if not isinstance(held, dict) or not isinstance(shipped, dict):
         yield at, held, shipped
         return
-    if not held and shipped is None:
+    if not held and not shipped:
         yield at, held, shipped
     for key, value in held.items():
-        yield from _leaves(value, None if shipped is None else shipped.get(key),
-                           (*at, key))
+        yield from _leaves(value, shipped.get(key, {}), (*at, key))
 
 
 def faults(document):
@@ -86,7 +76,7 @@ def faults(document):
     found = []
     for at, value, shipped in _leaves(document, SHIPPED, ()):
         key = ".".join(map(str, at))
-        if shipped is None or isinstance(shipped, dict):
+        if isinstance(shipped, dict):
             # @req> REQ-99278123@eHQpe0z42j2C qgpb6a
             found.append(f"{key} names no value a settings file may replace -- "
                          "state each value under its data item, entry and "
@@ -104,8 +94,7 @@ def faults(document):
             found.append(f"{key}: {value!r} is not a pinned model ID, such as "
                          "claude-opus-5-5")
     # @req+ REQ-59792666@UNXEG-AsX0Fs sspl2m
-    agents = document.get(AGENTS)
-    for entry, fields in agents.items() if isinstance(agents, dict) else ():
+    for entry, fields in mapping(document, AGENTS).items():
         if (isinstance(fields, dict) and {"model", "effort"} & fields.keys()
                 and not (fields.get("model") and fields.get("effort"))):
             found.append(f"{AGENTS}.{entry} states a model without an effort, "

@@ -279,15 +279,15 @@ def written(out, shape):
     return WRITE.format(out=out, shape=json.dumps(shape, indent=1))
 
 
-def spawn(run, folder, name, label, shape, settings):
+def spawn(run, folder, name, label, shape, held):
     return {"label": label, "path": str(run / "prompts" / folder / f"{name}.md"),
             "out": str(run / "returns" / folder / f"{name}.json"),
-            "schema": shape, **settings}
+            "schema": shape, **held}
 
 
-def inline(label, prompt, shape, kind, settings):
+def inline(label, prompt, shape, kind, held):
     return {"label": label, "prompt": prompt, "schema": shape, "agent": kind,
-            **settings}
+            **held}
 
 
 def registered(name):
