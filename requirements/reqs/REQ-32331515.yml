@@ -13,6 +13,9 @@ assessed:
   REQ-31526771: xDrG26asEe5Rmnaho_nkoTkb_EXsfwIUosUaoGmTMdA
   REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+citations:
+  bl2ps5: FLVrksLLhrbwS7xy8AP06ssG2Hjy0WPUKj0LIzBGgpg
+  m5bqyr: MARTQr813Qyak7V3NAacnXhXdFCcUNjoaBViOPXDk7w
 priority: medium
 relations:
   REQ-31526771: constrains

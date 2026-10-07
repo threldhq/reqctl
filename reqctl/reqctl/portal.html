@@ -119,6 +119,7 @@ dialog.wide { max-width: none; height: calc(100vh - 28px);
 <div id="app"></div>
 
 <script type="application/json" id="kind-fields"></script>
+<script type="application/json" id="token-permissions"></script>
 <script>
 const VIEW = "corpus-view";
 const FLOW = "corpus-write.yml";
@@ -1033,6 +1034,9 @@ function forgetToken() {
   setupScreen("The token was forgotten.");
 }
 
+<!-- @req> REQ-84459416@zkSEOhONwdzg uzvzat -->
+const PERMISSIONS = JSON.parse(document.getElementById("token-permissions").textContent);
+
 function setupScreen(problem) {
   const place = repo();
   <!-- @req+ REQ-80115998@5Q31K4gVM_b7 rhi3cu -->
@@ -1051,8 +1055,9 @@ function setupScreen(problem) {
         <button class="thin" id="forget">Forget token</button></p>` : `<ol>
         <li>On any account that can reach ${place ? `<span class="mono">${esc(place)}</span>`
           : "the repository"}, create a fine-grained personal access token scoped to it.</li>
-        <li>Give it exactly three repository permissions:
-          <b>Contents: read</b>, <b>Actions: read and write</b>, <b>Pull requests: read</b>.</li>
+        <li>Give it exactly these repository permissions:
+          ${Object.entries(PERMISSIONS).map(([name, {access}]) => `<b>${esc(name[0].toUpperCase()
+            + name.slice(1).replaceAll("_", " "))}: ${esc(access)}</b>`).join(", ")}.</li>
         <li>Paste it below. It is kept in this browser only and never leaves it
           except as an <span class="mono">Authorization</span> header to GitHub.</li>
       </ol>

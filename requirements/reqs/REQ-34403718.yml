@@ -12,6 +12,8 @@ assessed:
   REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+citations:
+  7tnuse: MARTQr813Qyak7V3NAacnXhXdFCcUNjoaBViOPXDk7w
 priority: medium
 relations:
   REQ-40447106: constrains

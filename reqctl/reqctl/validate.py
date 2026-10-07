@@ -9,6 +9,7 @@ from jsonschema.exceptions import best_match
 
 from . import baseline as _baseline
 from . import corpus
+from . import settings as _settings
 
 SCHEMAS = ("requirement", "guard", "dictionary", "baseline")
 # @req> REQ-20325022@Rk58k1F_hWcP m2dmcp
@@ -1143,7 +1144,9 @@ def _strays(root, paths):
     problems = []
     # @req> REQ-69003763@V8Kam1_6cnnC 4ljfwh
     for held in sorted(corpus_dir.rglob("*.yml")) + sorted(corpus_dir.rglob("*.yaml")):
-        if held in claimed or held == _baseline.path(root):
+        # @req> REQ-61926693@Ah7479L3kmsf snr2ig
+        if held in claimed or held in (_baseline.path(root),
+                                       _settings.path(root)):
             continue
         if any(skip in held.parents for skip in skipped):
             continue
@@ -1152,6 +1155,15 @@ def _strays(root, paths):
             "requirements/(reqs|params|terms|data)/UID.yml; move or delete it"
         )
     return problems
+
+
+# @req> REQ-61926693@Ah7479L3kmsf cf76cn
+def _stated(root):
+    where = _settings.path(root)
+    if not where.is_file():
+        return []
+    held = corpus.loads(corpus.read_text(where), _settings.SETTINGS)
+    return [f"{_settings.SETTINGS}: {fault}" for fault in _settings.faults(held)]
 
 
 def _guarded(where, check, *args):
@@ -1246,6 +1258,7 @@ def run(root, exempt=None):
         problems += _guarded(uid, _assessed, uid, data, records, reachable, known)
 
     problems += _guarded("corpus", _strays, root, paths)
+    problems += _guarded("corpus", _stated, root)
     problems += _guarded("corpus", _named_schemas, records, root)
     problems += _guarded("corpus", _bound_guards, records, root)
     problems += _guarded("corpus", _unlinked_terms, records, root)

@@ -30,9 +30,7 @@ assessed:
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
-  4py3et: r19mBpwDHD8S0oSIAS7Nwq187Qn7yT1N6A-XRQzTkAE
-  mmgold: A3QA8Bt7ntmt5sDkq3kOc_1uElzgTV3E0EYjdUWF7Lo
-  udnw6h: gWX4P1PK7fJzfamZdWLHwXeJHULlMmZUeJH5GZPwpoY
+  7yxrtp: -ZX9WZ2ww-S5MGSpTPOuer0auvmuizeHx-xKndy0DG0
 priority: medium
 relations:
   REQ-18272120: supersedes

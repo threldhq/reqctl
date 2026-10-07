@@ -13,6 +13,9 @@ assessed:
   REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
   REQ-75041625: fdufkvO5WYz7KFJPtyhJppjVjaZZRPnPp34h5cjF0xA
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+citations:
+  6rmd3o: 0u2msgFkm0K-dwYGjjQ1I31LUBqDWKXM86jb_nETBGI
+  6vslgs: O9rhg_xiGu02lWI6Odks7CIv6vqVV9NjUAgweS2eGPI
 priority: medium
 relations:
   REQ-21373303: derives_from
