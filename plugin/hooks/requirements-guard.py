@@ -61,8 +61,8 @@ SPLITS = "$`{}"
 INPUT_LIMIT = 20_000
 # @req- 2x3zhi
 GIT_READ = re.compile(
-    r"^\s*git(\s+(-C\s+\S+|-[Pp]|--no-pager|--paginate))*"
-    r"\s+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=\s|$)"
+    r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
+    r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
 )
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
