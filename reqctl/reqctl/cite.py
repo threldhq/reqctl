@@ -100,8 +100,15 @@ NESTS = {".py": _depths, ".yml": _indents, ".yaml": _indents}
 
 def cut(path, text, spans):
     read = NESTS.get(Path(path).suffix)
+    # @req> REQ-82335572@jy-6pa6WK1sz btknw6
+    # @req> REQ-79989567@oWj5HjnXcM0G dqj5en
     if read is None:
-        return []
+        lead = COMMENTS[Path(path).suffix][0].strip()
+        held = {n for n, line in enumerate(_feed_lines(text), start=1)
+                if line.strip() and not line.strip().startswith(lead)}
+        return [f"{path}: citation {identity} covers no code statement"
+                for identity, first, last in spans
+                if held.isdisjoint(range(first, last + 1))]
     try:
         depths, starts, ends = read(text)
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
@@ -110,7 +117,10 @@ def cut(path, text, spans):
     problems = []
     for identity, first, last in spans:
         code = [n for n in range(first, last + 1) if n in depths]
+        # @req> REQ-82335572@jy-6pa6WK1sz rulmwi
+        # @req> REQ-79989567@oWj5HjnXcM0G dzthce
         if not code:
+            problems.append(f"{path}: citation {identity} covers no code statement")
             continue
         level = depths[code[0]]
         after = [n for n in depths if n > last]
@@ -156,6 +166,7 @@ def cited(citations):
 def parse(sources):
     opened, problems, seen = [], [], {}
     for relative, text in sources:
+        # @req> REQ-35805881@37XtC4gyD98k 5h3hpr
         if text is None:
             problems.append(f"{relative}: unreadable while scanning for "
                             "statement citations")
@@ -280,8 +291,10 @@ def covered(citations):
 def _sources(root):
     root = Path(root)
     corpus_dir = root / "requirements"
+    # @req+ REQ-35805881@37XtC4gyD98k ofycdw
+    unread = []
     # @req> REQ-81857516@chYOQDPmuDuW ldlf2u
-    for folder, subdirs, files in os.walk(root):
+    for folder, subdirs, files in os.walk(root, onerror=unread.append):
         subdirs[:] = [name for name in subdirs
                       if name not in corpus.SCAN_SKIP
                       and not name.endswith(".egg-info")
@@ -298,6 +311,9 @@ def _sources(root):
             if b"\0" in raw:
                 continue
             yield str(path.relative_to(root)), raw.decode(errors="ignore")
+    for failure in unread:
+        yield str(Path(failure.filename).relative_to(root)), None
+    # @req- ofycdw
 
 
 def mint(held):
@@ -552,8 +568,9 @@ def _carried(root, commit):
 def compare(root, ref):
     commit = _git(root, "merge-base", "HEAD", ref).strip()
     was_texts = dict(_carried(root, commit))
+    # @req> REQ-35805881@37XtC4gyD98k wge7e5
     now_texts = {relative: text for relative, text in _sources(root)
-                 if text is not None and SIGN.search(text)}
+                 if text is None or SIGN.search(text)}
     was, _ = parse(was_texts.items())
     now, problems = parse(now_texts.items())
     if problems:

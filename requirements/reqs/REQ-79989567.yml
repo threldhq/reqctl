@@ -8,6 +8,9 @@ assessed:
   REQ-95865306: K4a2U5EVbqcvZEbMKU6G6okjJvdb_AsIH_80HL1iDkw
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  dqj5en: sR3XF1Erqunfq3Uqacnszz7JQa0K_Ei5ejTw2j81Izw
+  dzthce: FJRL_sHn30MzZFbFYkYymQwf1mfmhtIi-MVL3CqW9wA
 priority: medium
 relations:
   REQ-52925332: depends_on
