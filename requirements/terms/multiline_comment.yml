@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  multiline_comment:
+    aliases:
+    - multiline comments
+    definition: A comment the language the code is written in reads as one comment,
+      whose text runs across more than one line.
+    word: multiline comment
+kind: term
+status: approved
