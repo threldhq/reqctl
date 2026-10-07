@@ -97,8 +97,9 @@ again.
 Say in the pull request what each step changed. A step that found nothing is
 worth one line -- it tells the owner the pass ran.
 
-<!-- @req+ REQ-51001407@QuwiKleWxRpR hbi4d7 -->
-List in the pull request every requirement `reqctl compare` names, each with
-what reading the code citing it against the requirement found; where it names
-none, say that no requirement was touched.
+<!-- @req+ REQ-51001407@WpLV0NRsS_qb hbi4d7 -->
+List in the pull request every requirement, guard, parameter and data item
+`reqctl compare` names -- the data item for a citation of one of its entries --
+each with what reading the code citing it against the item found; where it
+names none, say that none was touched.
 <!-- @req- hbi4d7 -->
