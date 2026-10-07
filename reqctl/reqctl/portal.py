@@ -77,11 +77,9 @@ def with_forms(page, root):
 # @req> REQ-84459416@zkSEOhONwdzg ufhxxr
 def with_permissions(page, root):
     _, stated = _settings.read(root)
-    held = {name: fields["access"] for name, fields
-            in _settings.table(stated, "portal_token_permissions").items()}
     before, after = page.split(PERMISSIONS_AT)
-    return (before + PERMISSIONS_AT
-            + json.dumps(held).translate(UNSAFE).encode() + after)
+    return (before + PERMISSIONS_AT + json.dumps(_settings.table(
+        stated, "portal_token_permissions")).translate(UNSAFE).encode() + after)
 
 
 # @req> REQ-56725181@knOj5NP_RuL_ 52i7vh

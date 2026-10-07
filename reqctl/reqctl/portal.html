@@ -1056,7 +1056,7 @@ function setupScreen(problem) {
         <li>On any account that can reach ${place ? `<span class="mono">${esc(place)}</span>`
           : "the repository"}, create a fine-grained personal access token scoped to it.</li>
         <li>Give it exactly these repository permissions:
-          ${Object.entries(PERMISSIONS).map(([name, access]) => `<b>${esc(name[0].toUpperCase()
+          ${Object.entries(PERMISSIONS).map(([name, {access}]) => `<b>${esc(name[0].toUpperCase()
             + name.slice(1).replaceAll("_", " "))}: ${esc(access)}</b>`).join(", ")}.</li>
         <li>Paste it below. It is kept in this browser only and never leaves it
           except as an <span class="mono">Authorization</span> header to GitHub.</li>
