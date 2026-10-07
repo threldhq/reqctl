@@ -50,19 +50,22 @@ SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
 OPENS_PAGER = re.compile(r"-[0-9A-Za-z]*O")
-FD_COPY = re.compile(r"\d*>&\s*(?:[12]|-)(?=[\s|&;()<>]|$)")
-NULL_SINK = re.compile(r"\d*>>?\s*/dev/null(?=\s|$)")
+QUIET_REDIRECT = re.compile(
+    r"[0-9]?>(?:&[ \t]*(?:[12]|-)|>?[ \t]*/dev/null)(?=[ \t\n|&;()<>]|$)")
 WRITES_NOTHING = tuple(verb for verb in READ_VERBS
                        if verb not in ("less", "more", "file", "tree")) + (
-    "tr", "tac", "rev", "od", "paste", "fold", "fmt")
+    "tr", "tac", "rev", "od", "paste", "fold", "fmt", "cd")
 SORT_WRITES = re.compile(r"-[A-Za-z]*o|--o|--co")
+OPENER = "@req"
+SPLITS = "$`{}"
+INPUT_LIMIT = 20_000
 # @req- 2x3zhi
 GIT_READ = re.compile(
     r"^\s*git(\s+(-C\s+\S+|-[Pp]|--no-pager|--paginate))*"
     r"\s+(log|show|diff|status|blame|ls-files|add|commit)(?=\s|$)"
 )
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
-AMP_REDIRECT = re.compile(r"\d*>&\s*\d*|&>>?")
+AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
 PUSH_SHORT_FORCE = re.compile(r"^-[a-zA-Z]*f[a-zA-Z]*$")
@@ -71,7 +74,6 @@ QUOTED_REDIRECT = re.compile(r"""(>>?\s*)(['"])([^'"]*)\2""")
 GLOB_CHAR = re.compile(r"[*?\[\]{}]")
 LITERAL_CHAR = re.compile(r"[^*?\[\]{}]")
 
-CITATION = re.compile(r"@req[+>-]")
 UNQUOTED = str.maketrans("", "", "'\"\\")
 CITATION_LINE = re.compile(r"^\s*(?:(?:#+|<!--|//)\s*)?@req[+>-](?:\s|$)")
 
@@ -130,11 +132,19 @@ NOT_A_READ = (
     f"uniq or wc.\n{HAND_CITATION}"
 )
 
+LONG_INPUT = (
+    "{key} of {length} characters blocked: the guard reads a path or command of at "
+    f"most {INPUT_LIMIT} characters.\n"
+    "Write a longer script to a file with the Write tool and run the file, or name "
+    "the path without redundant segments."
+)
+
 UNREAD_COMMAND = (
     "{found} in a command naming a statement citation blocked: the guard reads "
-    "such a command only on one line, with no backslash, $, backtick or unquoted "
-    "brace outside single quotes.\n"
-    "Put its pattern and options in single quotes, on one line."
+    "such a command only on one line, with no backslash, $ or backtick outside "
+    "single quotes and no unquoted brace, parenthesis or <.\n"
+    "Put its pattern and options in single quotes, on one line, and name files "
+    "as operands."
 )
 
 INEXACT = (
@@ -152,6 +162,9 @@ UNTRACKED_ONLY = ("??",)
 
 def named_paths(value, keys=PATH_KEY, key=""):
     if isinstance(value, str):
+        # @req> REQ-38099593@DiCRfDZFomPB okrfi5
+        if keys.search(key) and len(value) > INPUT_LIMIT:
+            deny(LONG_INPUT.format(key=key, length=len(value)))
         return [value] if keys.search(key) else []
     if isinstance(value, dict):
         return [found for k, v in value.items() for found in named_paths(v, keys, k)]
@@ -339,7 +352,7 @@ def unreadable(part):
     for char in part:
         if char in "'\"" and quote in (None, char):
             quote = None if quote else char
-        elif (char in "\\$`" and quote != "'") or (char == "{" and not quote):
+        elif (char in "\\$`" and quote != "'") or (char in "{<()" and not quote):
             return f"'{char}'"
     return "a line break" if "\n" in part else None
 
@@ -350,9 +363,28 @@ def only_reads(words):
     if tool == "sort":
         return not any(SORT_WRITES.match(word) for word in rest)
     if tool == "uniq":
-        return "--" not in rest and sum(word == "-" or not word.startswith("-")
-                                        for word in rest) < 2
+        return ("--" not in rest and not GLOB_CHAR.search(" ".join(rest))
+                and sum(word == "-" or not word.startswith("-") for word in rest) < 2)
     return tool in WRITES_NOTHING
+
+
+# @req> REQ-38099593@DiCRfDZFomPB 4h5lnn
+def names_citation(cmd):
+    reach = [{"split"}] + [set() for _ in OPENER]
+    for char in cmd.replace("\\\n", "").translate(UNQUOTED):
+        step = [set() for _ in reach]
+        for matched, gaps in enumerate(reach):
+            for gap in gaps:
+                step[matched].add("split" if char in SPLITS else "plain" if gap == "empty" else gap)
+                if gap == "plain":
+                    continue
+                if matched == len(OPENER):
+                    if char in "+>-":
+                        return True
+                elif char == OPENER[matched]:
+                    step[matched + 1].add("empty")
+        reach = step
+    return False
 
 
 def refuse_destructive_push(words):
@@ -572,29 +604,23 @@ def judge_citation_edit(tool, args):
 # @req> REQ-38099593@DiCRfDZFomPB cebvfg
 def judge_citation_shell(raw):
     cmd = ESCAPE.sub("", raw)
-    if not CITATION.search(cmd.replace("\\\n", "").translate(UNQUOTED)):
+    if not names_citation(cmd):
         return
-    pipelines = scan(FD_COPY.sub(" ", cmd))
-    for part in (part for pipeline in pipelines for part in pipeline):
+    for part in (part for pipeline in scan(QUIET_REDIRECT.sub(" ", cmd))
+                 for part in pipeline):
         found = unreadable(part)
         if found:
             deny(UNREAD_COMMAND.format(found=found))
-        if ">" in NULL_SINK.sub("", masked(part)):
+        if ">" in masked(part) or OUTPUT_FLAG.search(part.translate(UNQUOTED)):
             deny(HAND_CITATION)
-    for pipeline in pipelines:
-        if not any(CITATION.search(part.translate(UNQUOTED)) for part in pipeline):
+        tool, flag = searched(part)
+        if flag:
+            deny(f"{tool} {flag} in a command naming a statement citation "
+                 f"blocked: such a command may only read.\nSearch without {flag}.")
+        words = tokens_of(part)
+        if tool or GIT_READ.search(part) or only_reads(words):
             continue
-        if SUBSHELL.search(" ".join(pipeline)) or OUTPUT_FLAG.search(" ".join(pipeline)):
-            deny(HAND_CITATION)
-        for part in pipeline:
-            tool, flag = searched(part)
-            if flag:
-                deny(f"{tool} {flag} in a command naming a statement citation "
-                     f"blocked: such a command may only read.\nSearch without {flag}.")
-            words = tokens_of(part)
-            if tool or GIT_READ.search(part) or only_reads(words):
-                continue
-            deny(NOT_A_READ.format(tool=words[0] if words else part.strip()))
+        deny(NOT_A_READ.format(tool=words[0]))
 
 
 def decide(data: dict) -> None:

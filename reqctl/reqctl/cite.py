@@ -583,6 +583,6 @@ def compare(root, ref):
             rows.append({"id": identity, "uid": new["uid"], "path": new["path"],
                          "state": state})
         # @req- bicxbc
-    # @req> REQ-70581878@7_JGPxsumznG w6qryd
+    # @req> REQ-70581878@qWy6X2qJfi1h w6qryd
     touched = sorted({row["uid"] for row in rows if row["state"] != ["moved"]})
     return {"base": commit, "citations": rows, "touches": touched}
