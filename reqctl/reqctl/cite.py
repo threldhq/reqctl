@@ -127,7 +127,7 @@ def cut(path, text, spans):
 
 # @req+ REQ-82335572@jy-6pa6WK1sz jflstj
 # @req+ REQ-79989567@oWj5HjnXcM0G 6fth2x
-REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"^[ \t]*#[^\n]*", re.M)),
+REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
            **dict.fromkeys((".md", ".html"), re.compile(r"<!--[\s\S]*?(?:-->|\Z)")),
            ".js": re.compile(r"""(?P<kept>"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
                              r"""|`(?:\\[\s\S]|[^`\\])*`)|//[^\n]*|/\*[\s\S]*?(?:\*/|\Z)""")}
@@ -136,18 +136,11 @@ REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"^[ \t]*#[^\n]*
 def hollow(texts, citations):
     problems = []
     for citation in citations:
-        path, text = citation["path"], texts[citation["path"]]
-        read = NESTS.get(Path(path).suffix)
-        try:
-            code = set(read(text)[0]) if read else None
-        except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError):
-            code = None
-        if code is None:
-            bare = REMARKS[Path(path).suffix].sub(
-                lambda found: found.groupdict().get("kept") or "\n" * found[0].count("\n"),
-                text)
-            code = {n for n, line in enumerate(_feed_lines(bare), start=1) if line.strip()}
-        if code.isdisjoint(range(citation["first"], citation["last"] + 1)):
+        path = citation["path"]
+        bare = REMARKS[Path(path).suffix].sub(
+            lambda found: found.groupdict().get("kept") or "\n" * found[0].count("\n"),
+            texts[path])
+        if not "".join(_feed_lines(bare)[citation["first"] - 1:citation["last"]]).strip():
             problems.append(f"{path}: citation {citation['id']} covers no code statement")
     return problems
 # @req- 6fth2x
