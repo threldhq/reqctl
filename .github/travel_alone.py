@@ -20,7 +20,7 @@ ABSENT = object()
 
 def _git(*args):
     return subprocess.run(["git", *args], capture_output=True, text=True,
-                          check=False)
+                          errors="surrogateescape", check=False)
 
 
 def without(ref, path, keys):
