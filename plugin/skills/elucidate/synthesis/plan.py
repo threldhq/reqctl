@@ -14,7 +14,7 @@ import coverage as _coverage
 import shapes
 from coverage import NAMES
 
-from reqctl import corpus, validate, write
+from reqctl import corpus, settings, validate, write
 
 ANCHOR = re.compile(
     rf'^<a id="((?:{corpus.KINDS})-\d{{8}}|{corpus.NAME})"></a>$', re.MULTILINE)
@@ -22,7 +22,6 @@ RELATION = re.compile(rf"^- (?:{'|'.join(write.RELATIONS)}) (REQ-\d{{8}})$")
 USED_BY = "- used by: "
 TOKEN = re.compile(r"\$\{[^}]*\}?")
 SIBLING = re.compile(r"^proposal (\d+)$")
-PINNED = re.compile(r"claude-[a-z0-9.-]*[0-9][a-z0-9.-]*")
 PLUGIN = Path(".claude-plugin") / "plugin.json"
 BINDS = "binds"
 CRITERIA = "criteria"
@@ -38,26 +37,8 @@ SIBLINGS = "siblings"
 SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
-# @req+ REQ-87066486@KWWtPxhU0AiE udnw6h
-# @req> challenge_bounds.recall_batch@DGBoxybgFaOo 24eqhj
-RECALL_BATCH = 40
-# @req> challenge_bounds.judge_bound@KpTZxRxtu6PE cwon42
-JUDGE_BOUND = 45
-# @req> challenge_bounds.judge_group@y0rL6wAKSjE1 2qxagy
-JUDGE_GROUP = 20
-# @req> challenge_bounds.floor_k@kGgaA97AwCMJ qut2ab
-FLOOR_K = 10
-# @req> challenge_bounds.agent_ceiling@l4qzZij69kI8 nelsvq
-AGENT_CEILING = 150
-# @req- udnw6h
-# @req> REQ-87066486@KWWtPxhU0AiE 4py3et
-# @req> elucidate_agents@V5-K1rlTkh2C kgnxgu
-AGENTS = {
-    "best_in_class": {"model": "claude-sonnet-5-5", "effort": "high"},
-    "coverage": {"model": "claude-sonnet-5-5", "effort": "high"},
-    "recall": {"model": "claude-sonnet-5-5", "effort": "medium"},
-    "judge": {"model": "claude-opus-5-5", "effort": "high"},
-}
+STATED = "stated.json"
+CHALLENGERS = ("coverage", "recall", "judge")
 
 BEARING = """A statement bears on a proposal when it states the same obligation in
 other words (same), states part of it or more than it (overlaps), would be
@@ -299,15 +280,15 @@ def written(out, shape):
     return WRITE.format(out=out, shape=json.dumps(shape, indent=1))
 
 
-def spawn(run, folder, name, label, shape, settings):
+def spawn(run, folder, name, label, shape, held):
     return {"label": label, "path": str(run / "prompts" / folder / f"{name}.md"),
             "out": str(run / "returns" / folder / f"{name}.json"),
-            "schema": shape, **settings}
+            "schema": shape, **held}
 
 
-def inline(label, prompt, shape, kind, settings):
+def inline(label, prompt, shape, kind, held):
     return {"label": label, "prompt": prompt, "schema": shape, "agent": kind,
-            **settings}
+            **held}
 
 
 def registered(name):
@@ -327,19 +308,41 @@ def named_item(records, name):
     return found[0]
 
 
-def agent(name):
-    model, effort = (AGENTS[name].get(field) for field in ("model", "effort"))
+def agent(name, held):
+    model, effort = (held[name].get(field) for field in ("model", "effort"))
     # @req> REQ-96661837@hTUc2_9HnHBv hz4zip
     if bool(model) != bool(effort):
         raise SystemExit(f"elucidate_agents' {name} entry states a model "
                          "without an effort, or an effort without a model; "
                          "state both")
     # @req> REQ-82356895@VikBiVGZE3m5 yj46qn
-    if not isinstance(model, str) or not PINNED.fullmatch(model):
+    if not isinstance(model, str) or not settings.PINNED.fullmatch(model):
         raise SystemExit(f"elucidate_agents' {name} entry names its model as "
                          f"{model!r}, which is not a pinned model ID such as "
                          "claude-opus-5-5")
     return {"model": model, "effort": effort}
+
+
+def used(run):
+    path = run / STATED
+    return json.loads(path.read_text()) if path.is_file() else {}
+
+
+def configured(run, uses):
+    where, overrides = settings.read(corpus.find_root())
+    taken = {key: value for key, value in overrides.items()
+             if key.startswith(uses)}
+    # @req> REQ-75041625@fdufkvO5WYz7 rx7gce
+    for key, value in sorted(taken.items()):
+        print(f"{key}: {json.dumps(value)}, stated by {where}")
+    # @req+ REQ-41970990@LllsbvPcoF0q 6rmd3o
+    kept = {key: held for key, held in used(run).items()
+            if not key.startswith(uses)}
+    corpus.atomic_write(run / STATED, json.dumps(
+        kept | {key: {"value": value, "file": where}
+                for key, value in taken.items()}, indent=1) + "\n")
+    # @req- 6rmd3o
+    return overrides
 
 
 def dimensions(root, records):
@@ -890,8 +893,16 @@ def build(run, chars, items, lines=PROMPT_LINES):
                 else "nothing was declined in this run")
     held = proposals(run)
     store, records = loaded()
+    # @req+ REQ-40447106@qf0g3PvFcpT0 zmbxny
+    # @req+ REQ-75041625@fdufkvO5WYz7 of23ld
+    overrides = configured(run, ("challenge_bounds.", *(
+        f"{settings.AGENTS}.{name}." for name in CHALLENGERS)))
+    bounds = settings.quantities(overrides, "challenge_bounds")
+    crew = settings.table(overrides, settings.AGENTS)
+    # @req- of23ld
+    # @req- zmbxny
     # @req> REQ-23060027@QKFI8tm_J5VF dxtamn
-    agents = {name: agent(name) for name in AGENTS}
+    agents = {name: agent(name, crew) for name in CHALLENGERS}
     settled_on = binding(run, held, corpus.find_root(), records)
     traces = traced(run, words, held)
     carried = stated(run)
@@ -903,19 +914,19 @@ def build(run, chars, items, lines=PROMPT_LINES):
     sibling = siblings(held)
     if sibling is not None:
         shards.append(sibling)
-    counted = sum(len(batched(judged_by(held, scope), RECALL_BATCH))
+    counted = sum(len(batched(judged_by(held, scope), bounds["recall_batch"]))
                   for _, scope, _ in shards) + len(held)
-    ceilinged(counted, AGENT_CEILING)
+    ceilinged(counted, bounds["agent_ceiling"])
 
     state_held = {
-        "agents": agents, "lines": lines,
+        "agents": agents, "bounds": bounds, "lines": lines,
         "proposals": {str(number): {"kind": kind, "statement": statement,
                                     "path": str(path),
                                     "binding": settled_on.get(number),
                                     "trace": traces.get(str(number), [])}
                       for number, statement, path, kind in held},
         "shards": {name: {"scope": scope, "items": [uid for uid, _ in block],
-                          "batch": RECALL_BATCH}
+                          "batch": bounds["recall_batch"]}
                    for name, scope, block in shards},
         "recall": {}, "judge": {}, "named": {},
     }
@@ -951,8 +962,8 @@ def build(run, chars, items, lines=PROMPT_LINES):
         print(f"retired {name}: the export it was judged against has moved")
     # @req> REQ-16868696@xXhoCmAQTytn js66h5
     print(f"{len(held)} proposal(s) over {len(shards)} shard(s) in batches of "
-          f"{RECALL_BATCH}: {len(spawned)} recall agent(s), then one judge "
-          "each")
+          f"{bounds['recall_batch']}: {len(spawned)} recall agent(s), then one "
+          "judge each")
     print(f"  spawn     {where}")
     print(f"  prompts   {run / 'prompts' / 'recall'}/<shard>-b<n>.md")
     # @req> REQ-23060027@QKFI8tm_J5VF citfb2
@@ -1186,18 +1197,21 @@ def judge(run):
         return 1
 
     index = indexed(records)
+    # @req> REQ-40447106@qf0g3PvFcpT0 ksolp2
+    bounds = state_held["bounds"]
     plans = {}
     for number, spec in state_held["proposals"].items():
-        floored = floor(index, spec["kind"], spec["statement"], FLOOR_K)
+        floored = floor(index, spec["kind"], spec["statement"], bounds["floor_k"])
         for uid, shared in floored:
             named[number].setdefault(uid, []).append(
                 "floor: shares " + ", ".join(shared))
         names = sorted(named[number], key=lambda uid: (SIBLING.match(uid) is not None, uid))
-        plans[number] = (names, grouped(names, JUDGE_BOUND, JUDGE_GROUP))
+        plans[number] = (names, grouped(names, bounds["judge_bound"],
+                                        bounds["judge_group"]))
     counted = len(state_held["recall"]) + sum(
         1 if groups is None else len(groups) + 1
         for _, groups in plans.values())
-    ceilinged(counted, AGENT_CEILING)
+    ceilinged(counted, bounds["agent_ceiling"])
 
     prompts, spawned = {}, []
     for number, (names, groups) in plans.items():
@@ -1366,6 +1380,13 @@ def describe(run):
     lines += (([declined] if declined else []) + declined_practices(run)
               or ["Nothing was declined in this run."])
     # @req- vxerce
+    # @req+ REQ-41970990@LllsbvPcoF0q 6vslgs
+    overrides = used(run)
+    if overrides:
+        lines += ["", "### settings", ""] + [
+            f"- {key}: {json.dumps(held['value'])}, stated by {held['file']}"
+            for key, held in sorted(overrides.items())]
+    # @req- 6vslgs
     print("\n".join(lines))
     # @req- qzk6eu
     return 0

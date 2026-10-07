@@ -11,6 +11,9 @@ assessed:
   REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+citations:
+  blmk44: gTwJ1zsXKsOQzxJY0hYaLV7zxMNRGCOnU7LHZbPIYdE
+  qjsy3y: jxYzESICcDKz2cvHkzv3qOI_PzsBwv80Lgk5WALhd-A
 priority: medium
 relations:
   REQ-40447106: constrains

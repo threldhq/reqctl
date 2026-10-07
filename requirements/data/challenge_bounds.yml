@@ -2,11 +2,7 @@ assessed:
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
-  24eqhj: iNyeUC2TuPmVnhluk18f3tO1q1PD9PWNDLWisRxm9Jo
-  2qxagy: m7ANNOWQIwgIn4p0Y1V0hP1nMuMUgK2dsPOn8wAwYJg
-  cwon42: atGfzsDupscvGVNqQMHmbBMBOAYZoDwUcaLjAtBDCjo
-  nelsvq: 5ZmFJAHBy9swQjiT1giy1Wme4UMmmOFq4giJtRQWW4M
-  qut2ab: yiI8RrAvyvvyZywyDOAwCm0k9iLkOVrM2lKlAHcqdjg
+  j6wvnl: mGDq78YeU5hU-HH6QIk_ID7HL5c2qZNVbedFtU9XBFA
 entries:
   agent_ceiling:
     definition: The most agents one run spawns before the build refuses the run
