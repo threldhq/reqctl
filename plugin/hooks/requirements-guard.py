@@ -56,10 +56,9 @@ WRITES_NOTHING = tuple(verb for verb in READ_VERBS
                        if verb not in ("less", "more", "file", "tree")) + (
     "tr", "tac", "rev", "od", "paste", "fold", "fmt", "cd")
 SORT_WRITES = re.compile(r"-[A-Za-z]*o|--o|--co")
-EXPANSION = re.compile(r"\$(?:\{[^{}]*\}|\([^()]*\)|[A-Za-z_]\w*|[-@*!#?$0-9]|(?=['\"]))"
-                       r"|`[^`]*`|\{[^{}]*\}")
-EXPANSION_DEPTH = 16
-COMMAND_LIMIT = 20_000
+OPENER = "@req"
+SPLITS = "$`{}"
+INPUT_LIMIT = 20_000
 # @req- 2x3zhi
 GIT_READ = re.compile(
     r"^\s*git(\s+(-C\s+\S+|-[Pp]|--no-pager|--paginate))*"
@@ -75,7 +74,6 @@ QUOTED_REDIRECT = re.compile(r"""(>>?\s*)(['"])([^'"]*)\2""")
 GLOB_CHAR = re.compile(r"[*?\[\]{}]")
 LITERAL_CHAR = re.compile(r"[^*?\[\]{}]")
 
-CITATION = re.compile(r"@req[+>-]")
 UNQUOTED = str.maketrans("", "", "'\"\\")
 CITATION_LINE = re.compile(r"^\s*(?:(?:#+|<!--|//)\s*)?@req[+>-](?:\s|$)")
 
@@ -134,10 +132,11 @@ NOT_A_READ = (
     f"uniq or wc.\n{HAND_CITATION}"
 )
 
-LONG_COMMAND = (
-    "Shell command of {length} characters blocked: the guard reads a command of "
-    f"at most {COMMAND_LIMIT} characters.\n"
-    "Write a longer script to a file with the Write tool, then run the file."
+LONG_INPUT = (
+    "{key} of {length} characters blocked: the guard reads a path or command of at "
+    f"most {INPUT_LIMIT} characters.\n"
+    "Write a longer script to a file with the Write tool and run the file, or name "
+    "the path without redundant segments."
 )
 
 UNREAD_COMMAND = (
@@ -163,6 +162,9 @@ UNTRACKED_ONLY = ("??",)
 
 def named_paths(value, keys=PATH_KEY, key=""):
     if isinstance(value, str):
+        # @req> REQ-38099593@DiCRfDZFomPB okrfi5
+        if keys.search(key) and len(value) > INPUT_LIMIT:
+            deny(LONG_INPUT.format(key=key, length=len(value)))
         return [value] if keys.search(key) else []
     if isinstance(value, dict):
         return [found for k, v in value.items() for found in named_paths(v, keys, k)]
@@ -368,14 +370,21 @@ def only_reads(words):
 
 # @req> REQ-38099593@DiCRfDZFomPB 4h5lnn
 def names_citation(cmd):
-    text = cmd.replace("\\\n", "")
-    for _ in range(EXPANSION_DEPTH):
-        if CITATION.search(text.translate(UNQUOTED)):
-            return True
-        text, count = EXPANSION.subn("", text)
-        if not count:
-            return False
-    return True
+    reach = [{"split"}] + [set() for _ in OPENER]
+    for char in cmd.replace("\\\n", "").translate(UNQUOTED):
+        step = [set() for _ in reach]
+        for matched, gaps in enumerate(reach):
+            for gap in gaps:
+                step[matched].add("split" if char in SPLITS else "plain" if gap == "empty" else gap)
+                if gap == "plain":
+                    continue
+                if matched == len(OPENER):
+                    if char in "+>-":
+                        return True
+                elif char == OPENER[matched]:
+                    step[matched + 1].add("empty")
+        reach = step
+    return False
 
 
 def refuse_destructive_push(words):
@@ -650,9 +659,6 @@ def decide(data: dict) -> None:
 
     judge_citation_edit(tool, args)
     for value in named_paths(args, COMMAND_KEY):
-        # @req> REQ-38099593@DiCRfDZFomPB xdj5ae
-        if len(value) > COMMAND_LIMIT:
-            deny(LONG_COMMAND.format(length=len(value)))
         judge_shell(value)
         judge_citation_shell(value)
 
