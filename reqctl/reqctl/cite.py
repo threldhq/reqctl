@@ -133,16 +133,10 @@ REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
                              r"""|`(?:\\[\s\S]|[^`\\])*`)|//[^\n]*|/\*[\s\S]*?(?:\*/|\Z)""")}
 
 
-def hollow(texts, citations):
-    problems = []
-    for citation in citations:
-        path = citation["path"]
-        bare = REMARKS[Path(path).suffix].sub(
-            lambda found: found.groupdict().get("kept") or "\n" * found[0].count("\n"),
-            texts[path])
-        if not "".join(_feed_lines(bare)[citation["first"] - 1:citation["last"]]).strip():
-            problems.append(f"{path}: citation {citation['id']} covers no code statement")
-    return problems
+def hollow(path, text, first, last):
+    bare = REMARKS[Path(path).suffix].sub(
+        lambda found: found.groupdict().get("kept") or "\n" * found[0].count("\n"), text)
+    return not "".join(_feed_lines(bare)[first - 1:last]).strip()
 # @req- 6fth2x
 # @req- jflstj
 
@@ -156,8 +150,12 @@ def read(root, digested=False):
         for citation in citations:
             citation["digest"] = digest(citation["path"], texts[citation["path"]],
                                         citation["lines"])
-    # @req> REQ-79989567@oWj5HjnXcM0G x7gvxd
-    problems += hollow(dict(sources), [c for c in citations if len(c["marks"]) == 2])
+    # @req+ REQ-79989567@oWj5HjnXcM0G bz6frh
+    texts = dict(sources)
+    problems += [f"{c['path']}: citation {c['id']} covers no code statement"
+                 for c in citations if len(c["marks"]) == 2
+                 and hollow(c["path"], texts[c["path"]], c["first"], c["last"])]
+    # @req- bz6frh
     return citations, problems + list(former(sources))
 
 
@@ -433,13 +431,17 @@ def tagged(root, path, asked, exclusive=False):
     written = _inserted(lines, before, after)
     # @req- k2lzwu
     # @req- kmbhnk
-    found, _ = parse([(path, written)])
+    found, dropped = parse([(path, written)])
     new = [c for identity in minted for c in found if c["id"] == identity]
+    # @req> REQ-82335572@jy-6pa6WK1sz stzuaz
+    if len(new) < len(minted):
+        raise ReqctlError("\n".join(dropped))
     # @req+ REQ-65738797@3jHtqzLVQUal zkxsxx
     problems = cut(path, written, [(c["id"], c["first"], c["last"])
                                    for c in new if len(c["marks"]) == 2])
     # @req> REQ-82335572@jy-6pa6WK1sz 5lq35y
-    problems += hollow({path: written}, new)
+    problems += [f"{path}: lines {first}-{last} hold no code statement"
+                 for first, last, _, _ in asked if hollow(path, text, first, last)]
     problems += _duplicates(path, found, dict(zip(minted, asked)))
     if problems:
         raise ReqctlError("\n".join(problems))

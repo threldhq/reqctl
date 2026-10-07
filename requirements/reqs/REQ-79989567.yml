@@ -9,8 +9,8 @@ assessed:
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
-  6fth2x: AtdoLN1ZarJ7teEonQxX5Jlv_nBLodq3vj53EoUbKRc
-  x7gvxd: 5Lz_kSmDpOvan6M6TKo64V5dJ6MYsLjBagXHK37NIdU
+  6fth2x: 1IWS-9ZAOswzBa3IElhZwcgHzKxCWnTlX24f6TQbzp4
+  bz6frh: GNNl90lDMFiYSDTkwHpCIJ3kHAeHp_0JeIQoPwV8Ee4
 priority: medium
 relations:
   REQ-52925332: depends_on
