@@ -7,6 +7,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from . import fields as _fields
+from . import settings as _settings
 from . import write as _write
 from .baseline import _git
 from .corpus import ReqctlError
@@ -14,6 +15,7 @@ from .corpus import ReqctlError
 PAGE = Path(__file__).resolve().parent / "portal.html"
 SCRIPT = re.compile(rb"<script>(.*?)</script>", re.S)
 FIELDS_AT = b'<script type="application/json" id="kind-fields">'
+PERMISSIONS_AT = b'<script type="application/json" id="token-permissions">'
 UNSAFE = {ord(char): f"\\u{ord(char):04x}" for char in "<>&"}
 HOST, PORT = "127.0.0.1", 8374
 GITHUB = re.compile(r"(?:(?:https?|ssh|git)://(?:[^@/]+@)?|[^@/:]+@)"
@@ -71,6 +73,17 @@ def with_forms(page, root):
 # @req- avcfk3
 
 
+# @req> REQ-40447106@qf0g3PvFcpT0 uwkxa6
+# @req> REQ-84459416@zkSEOhONwdzg ufhxxr
+def with_permissions(page, root):
+    _, stated = _settings.read(root)
+    held = {name: fields["access"] for name, fields
+            in _settings.table(stated, "portal_token_permissions").items()}
+    before, after = page.split(PERMISSIONS_AT)
+    return (before + PERMISSIONS_AT
+            + json.dumps(held).translate(UNSAFE).encode() + after)
+
+
 # @req> REQ-56725181@knOj5NP_RuL_ 52i7vh
 def policy_of(page):
     script = SCRIPT.search(page).group(1).replace(b"\r\n", b"\n").replace(b"\r", b"\n")
@@ -103,7 +116,8 @@ class Page(BaseHTTPRequestHandler):
 
 # @req> REQ-49576265@pFihs7WdIwGS uor45m
 def server():
-    Page.body = with_forms(PAGE.read_bytes(), _fields.root())
+    root = _fields.root()
+    Page.body = with_permissions(with_forms(PAGE.read_bytes(), root), root)
     Page.policy = policy_of(Page.body)
     try:
         return ThreadingHTTPServer((HOST, PORT), Page)

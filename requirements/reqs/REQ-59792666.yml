@@ -14,6 +14,9 @@ assessed:
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+citations:
+  sspl2m: L5WtRVZrhYX_VcyllqbKSrzaDchPF6956Rl3Z44GHS8
+  txoz2e: gTwJ1zsXKsOQzxJY0hYaLV7zxMNRGCOnU7LHZbPIYdE
 priority: medium
 relations:
   REQ-23060027: constrains

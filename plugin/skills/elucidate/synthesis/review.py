@@ -22,21 +22,9 @@ import coverage
 import plan
 import shapes
 
-from reqctl import corpus
+from reqctl import corpus, settings
 
 FIELD = "governed_field"
-# @req+ REQ-87066486@KWWtPxhU0AiE mmgold
-# @req> review_limits.summary_lines@4hQ6ynB1F_5x zuyxaz
-BOUND = 10
-# @req> review_limits.page_bytes@CK3zn6szcyR_ dkutyi
-PAGE = 5242880
-# @req> review_limits.redirects@Ms3KxYv4Tp83 s34v53
-REDIRECTS = 5
-# @req> review_limits.fetch_seconds@isM6z8L-G64k aliyyn
-SECONDS = 60
-# @req> review_limits.fetch_attempts@BPNGFlQ1EkHJ qdopar
-ATTEMPTS = 3
-# @req- mmgold
 ASKED = "asked.json"
 SPAWN = "review"
 HIDDEN = {"script", "style", "noscript", "template"}
@@ -153,11 +141,14 @@ def build(run, answered):
     prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
         words=words, readme=text)
+    # @req> REQ-40447106@qf0g3PvFcpT0 evxzj5
+    crew = settings.table(plan.configured(
+        run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
     # @req> REQ-61616834@ocFeB1JGP518 dnioty
     # @req> REQ-23060027@QKFI8tm_J5VF zq3w3z
     spawning = plan.manifest(run, SPAWN, [plan.inline(
         "review", prompt, shapes.REVIEW, plan.registered("best-in-class"),
-        plan.agent("best_in_class"))])
+        plan.agent("best_in_class", crew))])
     print(field)
     # @req> REQ-61616834@ocFeB1JGP518 b2u3gj
     print(f"spawn the best-in-class agent through the workflow with {spawning}")
@@ -492,7 +483,12 @@ def check(run):
     if review is None:
         print(f"{path}: the review {why}; {again}")
         return 1
-    found, pages = faults(review, PAGE, REDIRECTS, SECONDS, ATTEMPTS)
+    # @req> REQ-40447106@qf0g3PvFcpT0 xbu22f
+    # @req> REQ-75041625@fdufkvO5WYz7 kehox2
+    limits = settings.quantities(plan.configured(run, ("review_limits.",)),
+                                 "review_limits")
+    found, pages = faults(review, limits["page_bytes"], limits["redirects"],
+                          limits["fetch_seconds"], limits["fetch_attempts"])
     for fault in found:
         print(fault)
     if found:
@@ -503,7 +499,7 @@ def check(run):
         print(f"\n{len(found)} fault(s): the run does not act on this review; "
               f"{remedy}")
         return 1
-    print("\n".join(summary(review, said, BOUND)))
+    print("\n".join(summary(review, said, limits["summary_lines"])))
     print()
     print("\n".join(table(review, said)))
     return 0

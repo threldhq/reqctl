@@ -33,6 +33,13 @@ assessed:
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+citations:
+  evxzj5: nKCSRWC0nNC-l_rgIbDhTY5H0jaWan4tA4VIsCiwsqw
+  jyttul: G7vjnQA_LpVVB9ww0IZSXFyDLUrT0ue_PnQChbHxMgQ
+  ksolp2: mv5HzsuJ3WOEQLoxAgCAcgO-bwj4I0ezqX6jFB45FeM
+  uwkxa6: JB7gYUEpbDdb7LVHBLi6CniuLa6J_CaZF2CjnEnO1lc
+  xbu22f: HjelHxsIO9T2vMp7RX36MCXQdtxRUMON2LszE0YddbQ
+  zmbxny: G2rsCTX88oMmkBuqgPMzHfKRCsQe5vWVF7wVhGKAo28
 priority: medium
 relations:
   REQ-16875926: constrains

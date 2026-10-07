@@ -14,6 +14,10 @@ acceptance_criteria:
 assessed:
   REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+citations:
+  fv2afe: VwIEpfI4G_Ee-CWGGaZ3mTyuC5UX1yYXHOkdVW9xQ8A
+  lcnls5: gTwJ1zsXKsOQzxJY0hYaLV7zxMNRGCOnU7LHZbPIYdE
+  qgpb6a: PJAumxl3S3LARHo7KQhDS6OEke7IN-aSRHncJOxNLE4
 priority: medium
 relations:
   REQ-40447106: depends_on

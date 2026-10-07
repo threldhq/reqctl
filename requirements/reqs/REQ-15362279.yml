@@ -10,6 +10,9 @@ assessed:
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+citations:
+  3pjtrt: z4LoJPeVsznwMhSykOhEHufjbxDU1QrPPo45tmxUxWw
+  fxnobd: gTwJ1zsXKsOQzxJY0hYaLV7zxMNRGCOnU7LHZbPIYdE
 priority: medium
 relations:
   REQ-40447106: constrains

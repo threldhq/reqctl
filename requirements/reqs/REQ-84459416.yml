@@ -9,7 +9,9 @@ assessed:
   portal_token_permissions: gx7wfxrBqtaSYiVl9RtKG_S57wCIbFYcaQc1uXNuoFg
   portal_token_permissions.*: P9Vk9NTmHF_Xqh0DEuNqbm1oqK0YM3EYBrKTa7iTZC0
 citations:
-  uiu4t5: _1nZYIxu5IwJzEtQHawlmbPN022Dpe7jPx9UR81LpEg
+  ufhxxr: JB7gYUEpbDdb7LVHBLi6CniuLa6J_CaZF2CjnEnO1lc
+  uiu4t5: VKaxwIxvs3Sh_uLjWSbqdb-eXc48FxZSkaLyDRvqM0o
+  uzvzat: 36Nmfe3wsJyni690eHVNmWu7Qcg4Kn50YrEaPoKDCCQ
 priority: medium
 relations:
   REQ-80115998: constrains
