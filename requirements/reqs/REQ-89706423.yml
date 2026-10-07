@@ -2,17 +2,20 @@ acceptance_criteria:
 - given: lines of code whose first line is blank
   then: the [code base](code_base) gains only the lines holding a comment that carries
     the [statement citation](statement_citation), and the [citation list](citation_list)
-    of the requirement gains only the citation
-  when: the product cites a requirement at them
+    of the requirement gains only the [statement citation](statement_citation)
+  when: the product writes a [statement citation](statement_citation) naming a requirement
+    at them
 - given: a file whose lines end in a carriage return and a line feed
   then: every line ending the file held is unchanged
-  when: the product cites a requirement at lines of it
+  when: the product writes a [statement citation](statement_citation) naming a requirement
+    at lines of it
 - given: a file whose last line ends without a line break
-  then: the text of that line is unchanged and the comment closing the citation stands
-    on a line of its own
-  when: the product cites a requirement at lines ending on that line
+  then: the text of that line is unchanged and the comment closing the [statement
+    citation](statement_citation) stands on a line of its own
+  when: the product writes a [statement citation](statement_citation) naming a requirement
+    at lines ending on that line
 assessed:
-  REQ-12235023: KTrFHiMXF64eZiXy5t01GDKOSlXQFPK5fXFpmTb94PU
+  REQ-12235023: uEMBe2x_2uwpUPWALnQh0Su8WNFBtxP5TCyeBq7vQcs
   REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
   REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
   citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
@@ -29,10 +32,11 @@ relations:
   REQ-60346603: constrains
   REQ-75539229: depends_on
 status: approved
-text: When the product cites a requirement at lines of code, the product shall change
-  the [code base](code_base) only by adding, for each comment that carries the [statement
-  citation](statement_citation), one line holding nothing but white space and that
-  comment as a [single-line comment](single_line_comment), and by adding the citation
-  to the [citation list](citation_list) of the requirement.
+text: When the product writes a [statement citation](statement_citation) naming a
+  requirement at lines of code, the product shall change the [code base](code_base)
+  only by adding, for each comment that carries the [statement citation](statement_citation),
+  one line holding nothing but white space and that comment as a [single-line comment](single_line_comment),
+  and by adding the [statement citation](statement_citation) to the [citation list](citation_list)
+  of the requirement.
 type: functional
 verification: inspection

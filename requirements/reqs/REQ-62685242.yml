@@ -1,17 +1,18 @@
 acceptance_criteria:
 - given: the product refuses one [statement citation](statement_citation) the [code
     base](code_base) holds
-  then: the product re-pins it and reports nothing of the refused citation
+  then: the product re-pins it and reports nothing of the refused [statement citation](statement_citation)
   when: the product is asked to re-pin a [statement citation](statement_citation)
     naming a different [citation identity](citation_identity)
 - given: the product refuses one [statement citation](statement_citation) the [code
     base](code_base) holds
-  then: the product removes it and reports nothing of the refused citation
+  then: the product removes it and reports nothing of the refused [statement citation](statement_citation)
   when: the product is asked to remove a [statement citation](statement_citation)
     naming a different [citation identity](citation_identity)
 - given: the product refuses one [statement citation](statement_citation) the [code
     base](code_base) holds
-  then: the product removes the identity and reports nothing of the refused citation
+  then: the product removes the identity and reports nothing of the refused [statement
+    citation](statement_citation)
   when: the product is asked to remove from a [citation list](citation_list) a [citation
     identity](citation_identity) no [statement citation](statement_citation) names
 - given: two [statement citations](statement_citation) the [code base](code_base)
@@ -46,7 +47,8 @@ relations:
   REQ-95865306: constrains
 status: approved
 text: If the product refuses a [statement citation](statement_citation) the [code
-  base](code_base) holds, or the code holding one, then the product shall not refuse
-  for it a command that names a different [citation identity](citation_identity).
+  base](code_base) holds, or the code holding a [statement citation](statement_citation),
+  then the product shall not, on that ground, refuse a command that names a different
+  [citation identity](citation_identity).
 type: functional
 verification: inspection

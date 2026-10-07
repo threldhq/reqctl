@@ -11,6 +11,7 @@ relations:
 status: approved
 text: If the product refuses a [statement citation](statement_citation) carried by
   a pair of comments for the [nest levels](nest_level) of the lines it covers, then
-  the product shall still remove the citation when asked to.
+  the product shall still remove the [statement citation](statement_citation) when
+  asked to.
 type: functional
 verification: inspection
