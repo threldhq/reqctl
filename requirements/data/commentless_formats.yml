@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  json:
+    definition: .json
+kind: data
+name: commentless_formats
+status: approved
+text: the file formats that cannot carry a comment

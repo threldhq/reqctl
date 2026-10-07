@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: code carrying a [citation marker](citation_marker) followed directly by the
+    item it names
+  then: the product refuses the code, naming the file and the line
+  when: the product reads the code
+- given: code carrying a [citation marker](citation_marker) followed by a tab
+  then: the product does not refuse it on that ground
+  when: the product reads the code
+assessed:
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  citation_marker: PIwiVw0PtA6YbmzdHivRCKCzPw-Rq-JX6IIehV5RfU0
+priority: medium
+relations:
+  REQ-60346603: constrains
+status: approved
+text: If code carries a [citation marker](citation_marker) with no space after its
+  sign, then the product shall refuse the code.
+type: functional
+verification: inspection

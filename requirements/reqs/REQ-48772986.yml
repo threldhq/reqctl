@@ -1,6 +1,10 @@
 acceptance_criteria:
 - given: a data item whose entries carry fields
-  then: the prompt names the item and states no field of any entry
+  then: the prompt states the item's name, definition and entry names, and no field
+    of any entry
+  when: the run is built
+- given: a parameter holding values and a unit
+  then: the prompt states the parameter's name, definition, values and unit
   when: the run is built
 - given: a term holding aliases
   then: the prompt states the term's word, aliases and definition
@@ -15,6 +19,7 @@ relations:
   REQ-90454282: constrains
 status: approved
 text: When a [challenge](challenge) prompt is built, the product shall state each
-  term, parameter and data item by name and definition alone, and no entry field.
+  term, parameter and data item by name and definition, with a data item's entry names
+  and a parameter's values and unit, and no entry field.
 type: functional
 verification: inspection
