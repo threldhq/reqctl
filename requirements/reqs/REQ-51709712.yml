@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
+  REQ-41552912: euPwJfYbRxVHf07XCM-m51KRmjBorpF9AOGiEs-fV7Y
+  nest_level: ZBG5hueA94O71Lx_L6dhMkqhJ-nCJXsbS_pjI3Hm6CI
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-26984738: derives_from
+  REQ-41552912: constrains
+status: approved
+text: If the product refuses a [statement citation](statement_citation) carried by
+  a pair of comments for the [nest levels](nest_level) of the lines it covers, then
+  the product shall still remove the citation when asked to.
+type: functional
+verification: inspection

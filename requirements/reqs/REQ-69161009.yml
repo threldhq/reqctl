@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: the first line a [statement citation](statement_citation) is asked to cover
+    lies inside a [multiline comment](multiline_comment) that opens on an earlier
+    line
+  then: the product refuses and writes no citation
+  when: the product is asked to write the citation
+- given: the last line a pair of comments is asked to cover lies inside a [multiline
+    comment](multiline_comment) that closes on a later line
+  then: the product refuses and writes no citation
+  when: the product is asked to write the citation
+- given: a [multiline comment](multiline_comment) lies wholly within lines that also
+    hold a [code statement](code_statement)
+  then: the product writes the citation
+  when: the product is asked to write a [statement citation](statement_citation) over
+    those lines
+assessed:
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-60346603: constrains
+  REQ-62782894: constrains
+status: approved
+text: If the product is asked to write a [statement citation](statement_citation)
+  any comment of which would fall inside an existing [multiline comment](multiline_comment),
+  then the product shall refuse to write the citation.
+type: functional
+verification: inspection

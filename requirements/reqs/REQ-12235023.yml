@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a line inside a [multiline comment](multiline_comment) holds what would otherwise
+    read as a [statement citation](statement_citation)
+  then: the product reports the line as a problem and takes no [statement citation](statement_citation)
+    from it
+  when: the product reads the [code base](code_base)
+- given: a line holds code and then a comment holding what would otherwise read as
+    a [statement citation](statement_citation)
+  then: the product reports the line as a problem and takes no [statement citation](statement_citation)
+    from it
+  when: the product reads the [code base](code_base)
+- given: a line holds white space and then one [single-line comment](single_line_comment)
+    carrying a [statement citation](statement_citation)
+  then: the product takes the [statement citation](statement_citation) from it
+  when: the product reads the [code base](code_base)
+assessed:
+  REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
+  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
+  single_line_comment: Jus2ZEVegmdWsrD-TXdgIGqqNN_fpp6pgjgcwGu3oPw
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-42668747: constrains
+  REQ-52925332: constrains
+status: approved
+text: If a line holds what would otherwise read as a [statement citation](statement_citation)
+  and more than white space and one [single-line comment](single_line_comment), then
+  the product shall report the line as a problem and read no citation from it.
+type: functional
+verification: inspection

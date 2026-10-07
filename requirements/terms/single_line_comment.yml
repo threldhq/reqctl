@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  single_line_comment:
+    aliases:
+    - single-line comments
+    definition: A comment that opens and closes on one line.
+    word: single-line comment
+kind: term
+status: approved
