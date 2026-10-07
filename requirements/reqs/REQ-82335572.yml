@@ -10,6 +10,10 @@ assessed:
   REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  5lq35y: QNH3Ozg1Fr9BL7i0eWZuvP5vawIhOHML4JMaClQyURM
+  jflstj: 1IWS-9ZAOswzBa3IElhZwcgHzKxCWnTlX24f6TQbzp4
+  stzuaz: vDyS52BEcO7utyxzreYAnPUxC21P1NhevY4u2FmumMg
 priority: medium
 relations:
   REQ-42668747: depends_on
