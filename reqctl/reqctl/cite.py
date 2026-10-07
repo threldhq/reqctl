@@ -158,17 +158,10 @@ def _alone(path, text):
                   else _scalars(text) if suffix in (".yml", ".yaml") else {})
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError):
         spoken = {}
-    ends = {found.start(): found.end() for found in REMARKS[suffix].finditer(text)
-            if not found.groupdict().get("kept")}
-    held, at = set(), 0
-    for number, line in enumerate(_feed_lines(text), start=1):
-        close = ends.get(at + len(_indent(line)))
-        end = at + len(line.rstrip("\n"))
-        if (number not in spoken and close is not None and close <= end
-                and not text[close:end].strip()):
-            held.add(number)
-        at += len(line)
-    return held
+    bare = REMARKS[suffix].sub(lambda found: found[0] if "\n" in found[0]
+                               or found.groupdict().get("kept") else "\0", text)
+    return {number for number, line in enumerate(_feed_lines(bare), start=1)
+            if number not in spoken and line.strip() == "\0"}
 # @req- njbuvc
 
 
@@ -283,8 +276,7 @@ def _parse(sources, nests=True):
             opened.append(_citation(held, relative, number, span[1], *span,
                                     [number]))
         # @req> REQ-51709712@D0x4hZmSHgiW l3wdgx
-        if nests:
-            faults += cut(relative, text, spans)
+        faults += cut(relative, text, spans) if nests else []
     return covered(opened), faults
 
 
