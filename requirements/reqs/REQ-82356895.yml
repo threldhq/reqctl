@@ -14,7 +14,7 @@ assessed:
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
 citations:
-  yj46qn: bE61NtuLobiuKovlNQhKF9Kt706xiHMSolMRKAMoAhw
+  yj46qn: Wz7Cj3X6p7E9rAXrzyeXLIEotXzcmf9ahUcZPNuM_BI
 priority: medium
 relations:
   REQ-23060027: constrains

@@ -11,8 +11,8 @@ assessed:
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
-  2rsevi: qq6_H6ZC602xS0nsn07xwZ1lE6Lg4eyV1YJRRnkWoW8
-  6ahzuj: fd3zj9UQeQhJLcvj3SB1acJDmVxfh6ceUQ_C97B0ImE
+  2rsevi: vbpBhzfk8K-FBuIc2NkRDvFkSv4Ut42eiHYTquRGQ8A
+  6ahzuj: bPeB6fboB-GFPQoZ85NxFZ-hboiUuZgMfkaVO45PwwQ
 priority: medium
 relations:
   REQ-68873210: depends_on

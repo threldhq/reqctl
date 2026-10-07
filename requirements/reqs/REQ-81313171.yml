@@ -8,7 +8,7 @@ assessed:
   mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  3dpv3v: JiQRjlMbDO4pMmXBmblxkYeqcNJErySwIrJQCSvBkcY
+  3dpv3v: eBo3Q4cIWAs9lDFj16vMCrKNFEapuo01AOpgL2bpM1c
 priority: medium
 relations:
   REQ-57492239: derives_from

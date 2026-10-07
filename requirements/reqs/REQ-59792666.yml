@@ -15,8 +15,8 @@ assessed:
   elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
   settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
 citations:
-  sspl2m: ai_UiG8rnhmIK7LFG2QMLZMr8Tucb3UpIuMSbppfORE
-  txoz2e: gTwJ1zsXKsOQzxJY0hYaLV7zxMNRGCOnU7LHZbPIYdE
+  sspl2m: UBgYWNpXPvHvhfgkWtgx1WuDGM-Ejp4vf7bT-fmQjJk
+  txoz2e: sMdSnANV7UfKLHD9sRK_Xd8wspLX10i1il5nn3WBmgU
 priority: medium
 relations:
   REQ-23060027: constrains

@@ -13,7 +13,7 @@ acceptance_criteria:
   when: an entry key other than true or false is written
 assessed: {}
 citations:
-  da5737: rqh_mKqn_Z8gnFlSdgHSRIkXbZiCN6op8DjV-uXiAls
+  da5737: WDF1V_g21Gy6h8_g6n80TKH-eJw79s9B_l27g9pds6s
 priority: medium
 relations: {}
 status: approved

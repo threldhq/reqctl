@@ -10,7 +10,7 @@ acceptance_criteria:
   when: revise is run naming a new handle for the term
 assessed: {}
 citations:
-  7pv66p: Gq12G6AAbIvpnupbLffV50OkZ4FtD-9EcjB5ozfJy04
+  7pv66p: RyFsWtejlPZSpnu4GlNMwirtVtKBtEkVdWVE-YeD66s
 priority: medium
 relations: {}
 status: approved

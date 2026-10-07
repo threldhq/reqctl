@@ -15,8 +15,8 @@ assessed:
   review_limits: UPSuHlsQZqT7GXjskz-Z-rhN826eBPukAOBjuJvU6aU
   review_limits.page_bytes: Vg7TUFPrj8IMJZtVMCxzt38RWdLgb38ApIdTuKZs57w
 citations:
-  4c6q6e: 0lo2z1CT0_7HwV333T-GCK9i54opp_UEKnzJUiMjuyI
-  f4kwgo: gFBttjnMYqPNTt0nhvEmeNik-r6LjWQ0bwNIYAZxi_Y
+  4c6q6e: gZzSp6JSjX2gOnUEFoXmcVhMqEQuIVRWGkhgsAnocow
+  f4kwgo: C1kdtDXgc9SpYT6IWn_EuPPlXN31LF7XzgXxyCUIKSQ
 priority: medium
 relations:
   REQ-46144308: constrains

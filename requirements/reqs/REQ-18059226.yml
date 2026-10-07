@@ -12,7 +12,7 @@ assessed:
   REQ-79013939: bHJwWtA0cgeGylANm5kpe06YlFr6uZuhEb2AQRL_7gQ
   mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
 citations:
-  2troxr: TM0QSjEFxN9lpdlhTEtIodDUwaXq6ui_osuUtJXKp0g
+  2troxr: 1Kin8_p8eY-2r9yUKPAg5qGA0zfuolPBFKpdiVY9xks
 priority: medium
 relations:
   REQ-79013939: depends_on

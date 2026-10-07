@@ -16,8 +16,8 @@ assessed:
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
   reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
 citations:
-  el2tax: zzQAfW3WF6P7Wg6K6XmzjEv-m6nrirGh2-jh2Nat40o
-  zykp4x: E0V6bn_vn3qzlBVCN7ErUOhrpp8gRfry-rC82PkfooU
+  el2tax: 58vo9JY5tm7w4ACFZOiQtvaXRQSGvZtvob3reLUyUoA
+  zykp4x: 08NDXntDPvQh1fBW8B0LtomwubLmJ0TTzkFuO_GZecE
 relations:
   GUARD-56838909: depends_on
 status: approved

@@ -16,7 +16,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  uv4bc5: ywFhTYnlemNwFMAen_1Wx2_rXaOUuX-STt0z-cWGQPs
+  uv4bc5: jdJ3GjZIaUalB4PLlt7OTASdLfQEt6mbC-m9UZQG5vw
 priority: medium
 relations: {}
 status: approved

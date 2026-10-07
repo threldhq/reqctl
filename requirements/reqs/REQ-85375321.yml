@@ -5,7 +5,7 @@ acceptance_criteria:
 assessed:
   REQ-94917590: UDuLOE8d-fQZFA_CiyI7B_S8kBHUl4qYGonNRQX4EhQ
 citations:
-  yvehmw: 35-mMLd7WgeoADE-6PohJvGHuULVgTCvpslktYcEJNc
+  yvehmw: igx9o2GjNuneWM2RucismbqhhqV66NrKHctshX9w-Bc
 priority: medium
 relations:
   REQ-94917590: depends_on

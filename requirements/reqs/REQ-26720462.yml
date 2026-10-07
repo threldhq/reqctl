@@ -7,7 +7,7 @@ assessed:
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
   REQ-68873467: KplV4u6qSuvJl8DrYu8EuAlhwNG6N9aSjwfrUqGWkXA
 citations:
-  fdqj6u: T1pwJ9dFtNqYo5ZcGAfjbxvcpxTorRQrGv8fzPRoEjI
+  fdqj6u: UkGPXCmD_97laXdUKyGE2_b2-OTKKtbYY3f4cMy9g3Q
 priority: medium
 relations:
   REQ-18405752: depends_on

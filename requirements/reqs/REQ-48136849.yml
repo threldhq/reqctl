@@ -11,7 +11,7 @@ acceptance_criteria:
 assessed:
   kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
 citations:
-  wljy47: J91SKxLGHMwI0zgqnKlqmiRC3TWRgF8rO_0v_SLUTMM
+  wljy47: yZVOFo7OISro0jzXs2nyo_gDHv18I5sW6p9COcgS9sw
 priority: high
 rationale: A schema named for an item is the repository saying its corpus holds one.
   Holding it to that is how a project requires a data item to exist without the product

@@ -10,7 +10,7 @@ assessed:
   REQ-48762557: awBU6cqFJEkKXAqTfW9LPJgd7WeTwb0_DFX12zHFaj8
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
-  5zcmh2: Vn5Jlv1JDV5L4lYWrVRj5Hd5YoxXZnlvdAmmm_F24dw
+  5zcmh2: yfXLq7H_cQjNr0tjeMcPYM3fhdPC02tNQxf3wtlsOpo
 priority: medium
 relations:
   REQ-30631052: depends_on

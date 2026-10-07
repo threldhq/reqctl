@@ -10,8 +10,8 @@ assessed:
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
-  adhfwh: CfFPCdTQzW44AOvyzRinZrAcxPhzVU1iIsoszchLyp0
-  v3dukx: qtpmsTzgbAzzRNwOXHohL4Ef0QfmvpAcaWI6UBRCXHE
+  adhfwh: liQiXnAncWXTP8ExXWbRSqWgxJVD268nrQMkGaWWet8
+  v3dukx: 0HokAJz5kgtC0h0PwaRcMagasK1KIW7O2BVQUw1DmFc
 priority: medium
 relations:
   REQ-30631052: depends_on

@@ -11,7 +11,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  pcswfe: koGYHE5Ftkvlz4fpARuUG5kzHGYlujBIrlsTESY2O8w
+  pcswfe: HlzBzBhqJ7kt8mVV7tnpYrdI6QiK-29sW8kAy8Jk7Kk
 priority: medium
 relations: {}
 status: approved

@@ -10,7 +10,7 @@ acceptance_criteria:
 assessed:
   REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
 citations:
-  bg3tyu: SwUG96oiTQFhe5VM37gVabAIqqqtD9EeESukcS2OkCQ
+  bg3tyu: 4o4h2CQ2poMWc840jvSX8q5KhhLs6SslrMLi6zrtVN8
 priority: medium
 relations:
   REQ-79222815: constrains

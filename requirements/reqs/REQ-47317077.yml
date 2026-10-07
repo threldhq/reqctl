@@ -14,7 +14,7 @@ acceptance_criteria:
 assessed:
   REQ-79013939: bHJwWtA0cgeGylANm5kpe06YlFr6uZuhEb2AQRL_7gQ
 citations:
-  iwiit6: cKzvACY4mYHZo9w9qnrG4_1WKW2h1zhtRp-q6tBtQjY
+  iwiit6: 6xfCMwImlzexDY6ZFpG2BDzeRDxm5Q9YYnQ8WnuhvOQ
 priority: medium
 relations:
   REQ-79013939: depends_on

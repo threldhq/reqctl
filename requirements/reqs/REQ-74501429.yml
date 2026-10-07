@@ -8,7 +8,7 @@ acceptance_criteria:
   when: the findings are checked
 assessed: {}
 citations:
-  rzcign: SeD9bKTnuHOMr4mYtJozGwaGg8RJyn5v5YS5aN_6wGQ
+  rzcign: -joRonk3Bvyz02BwPa0cLw7fWSP9OjMuOSSUgzF1qm0
 priority: medium
 relations: {}
 status: approved

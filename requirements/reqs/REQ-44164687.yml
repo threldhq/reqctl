@@ -23,7 +23,7 @@ assessed:
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 citations:
-  q2mqfm: vkEnl0GxYm42ZNI5OeS2MVDpphzTn0b6A7XT1fgab_0
+  q2mqfm: ShDRHphHNflSOUU8QSGSiAIoxtMzDZXU_9XvDP5wsdo
 priority: medium
 relations:
   REQ-52925332: depends_on

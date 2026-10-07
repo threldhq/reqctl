@@ -792,7 +792,7 @@ def cmd_tag(args):
     # @req- nmyxfc
     changes = [change]
     # @req> REQ-75539229@OyOJtrpdfVnQ c7r3ff
-    # @req> REQ-89706423@_mbcyBulaUGb wrzqdw
+    # @req> REQ-89706423@fyVHTsenA51D wrzqdw
     for uid in dict.fromkeys(uid for _, uid, _ in written):
         changes += _listed(tree, uid, {identity: taken
                                        for identity, named, taken in written

@@ -8,7 +8,7 @@ acceptance_criteria:
 assessed:
   REQ-19913588: Pbi1CR5jtivz8qi3AlI320-7pRuKcedppG7UpnOk2TU
 citations:
-  5wu7pz: MHYA3z2PHMHThRKGaxqeyKcyRBgghd8d0sPXjmyEuzo
+  5wu7pz: Q7uuQumiThaPaQUuTi12nKSlUE02rvlRd66XALnDANM
 priority: medium
 relations:
   REQ-19913588: constrains

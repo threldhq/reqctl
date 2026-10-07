@@ -5,7 +5,8 @@ root="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}
 venv="$root/.venv"
 cd "$root"
 
-"$venv/bin/python" -c "" 2>/dev/null || python3 -m venv --clear "$venv"
+"$venv/bin/python" -c 'import sys; sys.exit(sys.version_info[:2] != (3, 13))' 2>/dev/null \
+  || python3.13 -m venv --clear "$venv"
 
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   line="export PATH=\"$venv/bin:\$PATH\""

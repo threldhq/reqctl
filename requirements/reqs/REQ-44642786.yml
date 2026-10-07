@@ -13,7 +13,7 @@ acceptance_criteria:
   when: baseline --check is run
 assessed: {}
 citations:
-  rfw24o: k9DFW6izFiV2sU2EEEwi0mHU3cjGGhXy4s_NTai-Bz0
+  rfw24o: cCRvStZtel2Wg4k5fS8WRED86BT7vR3VFcNR1bK2pXw
 priority: medium
 relations: {}
 status: approved

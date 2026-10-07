@@ -10,8 +10,8 @@ assessed:
   field_of_the_governed_software: jL-3rawb_a5mG9L4XUWQZxlBCv0zHsaJjJXBbj80Z-4
 citations:
   cbcn57: 9VyI8XENYpxjYPz3ObqvPmOwZHmCf7sVeDJcxL-BOVE
-  ebdhuf: w9GcXLiUUinjgSWt_MFSz9-ORmc8xUG2YuVaA_L4oDk
-  ozmc4j: iY7qFqN7AAyIHT-tRX4FQtu9B7HUlL1AacNDKEhBKCw
+  ebdhuf: 99Z4Ixjw_tP1ys2RG3E8vydpORRK87SVffm1a5ndXkA
+  ozmc4j: u99DlQU2KNrxQdFxlfzmOTAqjpP9dGgAIcxrcU801qY
 priority: medium
 relations:
   REQ-12222066: depends_on

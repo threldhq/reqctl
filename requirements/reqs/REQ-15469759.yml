@@ -5,7 +5,7 @@ acceptance_criteria:
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
 citations:
-  b6qizb: 4Cok8lh30v9cMKrhF85iyXqknRmCLyuj8gWlcA-XpG4
+  b6qizb: LjczYqn7qGjZYxZO7KUpNqc9TwWmYGrPAb9TpLzOgEA
 priority: medium
 relations:
   REQ-24481048: constrains

@@ -12,8 +12,8 @@ assessed:
   REQ-77158001: R7FsOlV5L_rO_9fZ2osiXtC-_I4Q7HjQuiD_-Yh924o
 citations:
   25cppk: rpNhMt0cSV38WOvZpfBbIbp8ONKCVaMUX7iMfOrGdWg
-  cd7owj: bkbcqeMB8u_Dfpu39BQUwqnVu2nGX-nIHgp3ubETVe8
-  zijwjm: Xb3tJLf7Y-QuIkJJTG_iAAO74P8oKHgsDm-LlsrazYA
+  cd7owj: 4jgpPgqZ5BthbgKrxWWZqouw-FwraQwbbOM_bQZ7QpY
+  zijwjm: MaUCznzRLBHLJytId5ACGw_QqCZZc1-0DFYSnc42zcM
 priority: medium
 relations:
   REQ-77158001: supersedes

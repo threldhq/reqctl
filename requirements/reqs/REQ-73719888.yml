@@ -9,9 +9,9 @@ acceptance_criteria:
   when: the item's context is read
 assessed: {}
 citations:
-  3wgrmj: N3qKADRDi-fZRoUjQl264-Ms16T704Q3YpJj5YQgWDk
-  5ubj6l: 6HjZVgjDYnIU1tBdoy6Brk3rPt5KKRYc6PCfleNZU-M
-  g5txax: iwHKpAx83cfJfY63lMZah_YO-X--HLqlJDXFgUlTpzU
+  3wgrmj: GZHpyUZVDgaF6Zw0XuQCs6Nf31PSVXwi-hatg-YCg1o
+  5ubj6l: 2qK6_JvD0c8T8iPJVdL2faHwOIBVuPpd0gzNSEQ68JM
+  g5txax: b8NdgeurzCJjvGgvDHFfbAtHQBvFjo2PHafjEUfRhEs
 priority: medium
 relations: {}
 status: approved
