@@ -20,6 +20,10 @@ assessed:
   multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
   single_line_comment: Jus2ZEVegmdWsrD-TXdgIGqqNN_fpp6pgjgcwGu3oPw
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  4s3qrw: fOKXyUOMjOYbpD5oOosbf_GyvKSbO_80md-CW0s5ATA
+  njbuvc: orEsIVRSrX34pWx0olqNB-l6HqSaYG6XO3_3DAU9RME
+  sbc4do: -ntIjYOr57PDxid7wUN6ujSHv2XBXjcrssfzxg4W3b0
 priority: medium
 relations:
   REQ-42668747: constrains
