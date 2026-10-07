@@ -3,6 +3,10 @@ acceptance_criteria:
     requirement
   then: the product names the requirement
   when: the product states what the change touches
+- given: a change deleting a [statement citation](statement_citation) that names a
+    guard, a parameter or a data item
+  then: the product names the guard, the parameter or the data item
+  when: the product states what the change touches
 assessed:
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
@@ -11,7 +15,7 @@ priority: medium
 relations: {}
 status: approved
 text: When the product states what a change touches, the product shall name every
-  requirement any [statement citation](statement_citation) of which the product states
-  as changed, as added or as deleted.
+  requirement, guard, parameter and data item any [statement citation](statement_citation)
+  of which the product states as changed, as added or as deleted.
 type: functional
 verification: inspection

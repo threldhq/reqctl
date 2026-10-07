@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: a folder of the [code base](code_base) the product cannot read
+  then: the product reports the folder as a problem
+  when: the product scans the [code base](code_base) for [statement citations](statement_citation)
+- given: a file of the [code base](code_base) the product cannot read
+  then: the product reports the file as a problem
+  when: the product scans the [code base](code_base) for [statement citations](statement_citation)
+- given: a file or folder of the [code base](code_base) the product cannot read
+  then: the command fails rather than passes
+  when: trace or another command that scans for [statement citations](statement_citation)
+    is run
+- given: a folder or file the scan skips by design, such as the [corpus root](corpus_root),
+    a build, dist or venv folder, or a binary file
+  then: the product reports no problem for it
+  when: the product scans the [code base](code_base) for [statement citations](statement_citation)
+assessed:
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations: {}
+status: approved
+text: If the product cannot read a file or a folder of the [code base](code_base)
+  while it scans for [statement citations](statement_citation), then the product shall
+  report the file or folder as a problem.
+type: functional
+verification: inspection
