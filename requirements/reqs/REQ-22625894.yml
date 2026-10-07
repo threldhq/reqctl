@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: each skill of the plugin that writes [statement citations](statement_citation),
+    as shipped
+  then: they direct the [statement citation](statement_citation) to cover the code
+    that decides a clause or acceptance criterion of the item it names, or the code
+    stating the value of the parameter, data item or entry it names
+  when: its steps for citing code are read
+- given: a helper that the code deciding a clause calls
+  then: the [statement citation](statement_citation) does not cover the helper
+  when: a skill of the plugin cites the item
+- given: code incidental to every clause and acceptance criterion of an item
+  then: the [statement citation](statement_citation) does not cover that code
+  when: a skill of the plugin cites the item
+- given: a data item whose entries one part of the code states and another part reads
+  then: the [statement citation](statement_citation) covers the code stating the entries
+    and not the code reading them
+  when: a skill of the plugin cites the data item
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-54415118: omQkMsNtao3Q-BrxyP8LGZ8I9pofBxK694QWYmqYQ90
+  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-38288492: derives_from
+  REQ-54415118: constrains
+  REQ-60346603: constrains
+  REQ-87066486: constrains
+status: approved
+text: When a skill of the product's Claude Code plugin writes a [statement citation](statement_citation),
+  the product shall make the [statement citation](statement_citation) cover the code
+  that decides a clause or acceptance criterion of the item it names, or, for a parameter,
+  data item or entry, the code stating its value, and no helper or incidental code.
+type: functional
+verification: inspection

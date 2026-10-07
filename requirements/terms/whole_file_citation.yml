@@ -1,0 +1,12 @@
+assessed:
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+entries:
+  whole_file_citation:
+    aliases:
+    - whole-file citations
+    definition: A citation an item holds of an entire file of the [code base](code_base)
+      rather than a [statement citation](statement_citation) of lines in it.
+    word: whole-file citation
+kind: term
+status: approved

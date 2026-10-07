@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: the Claude Code plugin as shipped
+  then: it registers the requirements guard hook to run before a [tool call](tool_call)
+    of any tool
+  when: its hooks.json is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.requirements_guard_hook: bsEpBlz70dMjs201-N7cgF_Jh9EiOlUA0xppZa1HcrE
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: derives_from
+status: approved
+text: The product shall register the ${plugin_components.requirements_guard_hook}
+  in its Claude Code plugin's hooks.json to run before each [tool call](tool_call).
+type: functional
+verification: inspection

@@ -13,7 +13,8 @@ acceptance_criteria:
     through unchanged
   then: the product does not refuse it on that ground
   when: the [tool call](tool_call) is made
-- given: a shell command that searches for [statement citations](statement_citation)
+- given: a shell command on one line that searches for [statement citations](statement_citation),
+    with its pattern in single quotes and its output piped only to commands that read
   then: the product does not refuse it
   when: the [tool call](tool_call) is made
 - given: reqctl citing, re-pinning or removing a [statement citation](statement_citation)
