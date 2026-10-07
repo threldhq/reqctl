@@ -5,6 +5,7 @@ import os
 import subprocess
 import re
 import secrets
+import stat
 import tokenize
 from pathlib import Path
 
@@ -100,15 +101,8 @@ NESTS = {".py": _depths, ".yml": _indents, ".yaml": _indents}
 
 def cut(path, text, spans):
     read = NESTS.get(Path(path).suffix)
-    # @req> REQ-82335572@jy-6pa6WK1sz btknw6
-    # @req> REQ-79989567@oWj5HjnXcM0G dqj5en
     if read is None:
-        lead = COMMENTS[Path(path).suffix][0].strip()
-        held = {n for n, line in enumerate(_feed_lines(text), start=1)
-                if line.strip() and not line.strip().startswith(lead)}
-        return [f"{path}: citation {identity} covers no code statement"
-                for identity, first, last in spans
-                if held.isdisjoint(range(first, last + 1))]
+        return []
     try:
         depths, starts, ends = read(text)
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
@@ -117,10 +111,7 @@ def cut(path, text, spans):
     problems = []
     for identity, first, last in spans:
         code = [n for n in range(first, last + 1) if n in depths]
-        # @req> REQ-82335572@jy-6pa6WK1sz rulmwi
-        # @req> REQ-79989567@oWj5HjnXcM0G dzthce
         if not code:
-            problems.append(f"{path}: citation {identity} covers no code statement")
             continue
         level = depths[code[0]]
         after = [n for n in depths if n > last]
@@ -134,6 +125,35 @@ def cut(path, text, spans):
     return problems
 
 
+# @req+ REQ-82335572@jy-6pa6WK1sz jflstj
+# @req+ REQ-79989567@oWj5HjnXcM0G 6fth2x
+REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"^[ \t]*#[^\n]*", re.M)),
+           **dict.fromkeys((".md", ".html"), re.compile(r"<!--[\s\S]*?(?:-->|\Z)")),
+           ".js": re.compile(r"""(?P<kept>"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
+                             r"""|`(?:\\[\s\S]|[^`\\])*`)|//[^\n]*|/\*[\s\S]*?(?:\*/|\Z)""")}
+
+
+def hollow(texts, citations):
+    problems = []
+    for citation in citations:
+        path, text = citation["path"], texts[citation["path"]]
+        read = NESTS.get(Path(path).suffix)
+        try:
+            code = set(read(text)[0]) if read else None
+        except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError):
+            code = None
+        if code is None:
+            bare = REMARKS[Path(path).suffix].sub(
+                lambda found: found.groupdict().get("kept") or "\n" * found[0].count("\n"),
+                text)
+            code = {n for n, line in enumerate(_feed_lines(bare), start=1) if line.strip()}
+        if code.isdisjoint(range(citation["first"], citation["last"] + 1)):
+            problems.append(f"{path}: citation {citation['id']} covers no code statement")
+    return problems
+# @req- 6fth2x
+# @req- jflstj
+
+
 def read(root, digested=False):
     sources = list(_sources(root))
     citations, problems = parse(sources)
@@ -143,6 +163,8 @@ def read(root, digested=False):
         for citation in citations:
             citation["digest"] = digest(citation["path"], texts[citation["path"]],
                                         citation["lines"])
+    # @req> REQ-79989567@oWj5HjnXcM0G x7gvxd
+    problems += hollow(dict(sources), [c for c in citations if len(c["marks"]) == 2])
     return citations, problems + list(former(sources))
 
 
@@ -301,10 +323,12 @@ def _sources(root):
                       and Path(folder) / name != corpus_dir]
         for name in files:
             path = Path(folder) / name
-            if not path.is_file():
-                continue
             try:
+                if not stat.S_ISREG(path.stat().st_mode):
+                    continue
                 raw = path.read_bytes()
+            except FileNotFoundError:
+                continue
             except OSError:
                 yield str(path.relative_to(root)), None
                 continue
@@ -386,7 +410,11 @@ def tagged(root, path, asked, exclusive=False):
     for first, last, _, _ in asked:
         if not 1 <= first <= last <= len(lines):
             raise ReqctlError(f"{path}: lines {first}-{last} are not in the file")
-    held, _ = read(root)
+    sources = list(_sources(root))
+    held, problems = parse(sources)
+    # @req> REQ-35805881@37XtC4gyD98k kz4urn
+    if any(text is None for _, text in sources):
+        raise ReqctlError("the code's citations do not read:\n" + "\n".join(problems))
     taken = {c["id"] for c in held}
     lead, tail = COMMENTS[target.suffix]
     word = " exclusive" if exclusive else ""
@@ -417,6 +445,8 @@ def tagged(root, path, asked, exclusive=False):
     # @req+ REQ-65738797@3jHtqzLVQUal zkxsxx
     problems = cut(path, written, [(c["id"], c["first"], c["last"])
                                    for c in new if len(c["marks"]) == 2])
+    # @req> REQ-82335572@jy-6pa6WK1sz 5lq35y
+    problems += hollow({path: written}, new)
     problems += _duplicates(path, found, dict(zip(minted, asked)))
     if problems:
         raise ReqctlError("\n".join(problems))
