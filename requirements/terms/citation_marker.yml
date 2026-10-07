@@ -1,0 +1,12 @@
+assessed:
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+entries:
+  citation_marker:
+    aliases:
+    - citation markers
+    definition: 'The text opening a [statement citation](statement_citation) together
+      with the sign after it: > for a single comment, + for the comment opening a
+      pair, - for the comment closing one.'
+    word: citation marker
+kind: term
+status: approved

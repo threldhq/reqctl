@@ -25,8 +25,8 @@ acceptance_criteria:
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  git_read_forms: KqdhNS1T-3ElSWF_7yxqSdSuolEKTUV95lMxbe_MlKs
-  git_read_forms.*: zK1-V8hs9QJkFFo65BxT1tY5HTUUzcQJC1g-FP5yNcs
+  git_read_forms: jGCtTdda9WNXa1rXATNTiECAtYUUxt7TuH6lDl_ecj4
+  git_read_forms.*: WTgW9BX-AEne-iUAff1maNbMWIUpwqiNNNjYCidZnJo
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 priority: medium
 relations:

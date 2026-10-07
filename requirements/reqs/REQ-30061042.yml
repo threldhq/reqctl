@@ -1,0 +1,39 @@
+acceptance_criteria:
+- given: a file of the [code base](code_base) in ${commentless_formats.json}
+  then: the item holds the file's path and a digest of its entire content
+  when: an item is cited against the whole file
+- given: an item holding a [whole-file citation](whole_file_citation)
+  then: the product reports the citation as a problem
+  when: a key or value in the file changes after the item took its digest and trace
+    is run
+- given: an item holding a [whole-file citation](whole_file_citation) pinned to a
+    stamp the item no longer carries
+  then: the product reports the citation as a problem
+  when: trace is given no base branch
+- given: an item holding a [whole-file citation](whole_file_citation) of a file that
+    reads as [code tokens](code_token)
+  then: the product reports no problem for the citation
+  when: only the white space between its tokens changes and trace is run
+- given: an item holding a [whole-file citation](whole_file_citation)
+  then: the product reports no problem for the citation
+  when: only the file's line endings change and trace is run
+- given: a file of the [code base](code_base) in none of the ${commentless_formats}
+  then: the product refuses it
+  when: a [whole-file citation](whole_file_citation) of it is asked for
+assessed:
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  code_token: RKSwa_7GLOrcUd7V_FstnVgDVX3CvlQnuD650a2b5qs
+  commentless_formats: cVPhw5hQwyUGb9ILeidRO2QKQe0GITBz6lOxlnyAeUU
+  commentless_formats.*: 1i5BXhUNKrqkdy_DHOGkVg9eejiXqrs9Le7aRSS6d_4
+  commentless_formats.json: BFA9aNDBIR_h8VmjfMZukxij1Co6Z6KuFCp9acic5YY
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  whole_file_citation: bqFo2dkcyWiKR-NCipMnZ3mwEWv38FjsBrA5l6NUDuE
+priority: medium
+relations: {}
+status: approved
+text: Where a file of the [code base](code_base) is in one of the ${commentless_formats},
+  the product shall let an item hold a [whole-file citation](whole_file_citation)
+  of the file, pinned to the item's stamp as a [statement citation](statement_citation)
+  is, and holding a digest of the entire file.
+type: functional
+verification: inspection
