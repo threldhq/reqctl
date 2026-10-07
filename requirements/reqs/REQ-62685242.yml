@@ -1,0 +1,54 @@
+acceptance_criteria:
+- given: the product refuses one [statement citation](statement_citation) the [code
+    base](code_base) holds
+  then: the product re-pins it and reports nothing of the refused [statement citation](statement_citation)
+  when: the product is asked to re-pin a [statement citation](statement_citation)
+    naming a different [citation identity](citation_identity)
+- given: the product refuses one [statement citation](statement_citation) the [code
+    base](code_base) holds
+  then: the product removes it and reports nothing of the refused [statement citation](statement_citation)
+  when: the product is asked to remove a [statement citation](statement_citation)
+    naming a different [citation identity](citation_identity)
+- given: the product refuses one [statement citation](statement_citation) the [code
+    base](code_base) holds
+  then: the product removes the identity and reports nothing of the refused [statement
+    citation](statement_citation)
+  when: the product is asked to remove from a [citation list](citation_list) a [citation
+    identity](citation_identity) no [statement citation](statement_citation) names
+- given: two [statement citations](statement_citation) the [code base](code_base)
+    holds name one [citation identity](citation_identity)
+  then: the product refuses the command
+  when: a command names that identity
+- given: a folder of the [code base](code_base) the product cannot read
+  then: the command fails rather than passes
+  when: a command names a [citation identity](citation_identity)
+assessed:
+  REQ-11268295: pg6jZYgo_ewwlsjsguS9V3q1k1B7GlITXpMjSuNEtMs
+  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
+  REQ-41552912: euPwJfYbRxVHf07XCM-m51KRmjBorpF9AOGiEs-fV7Y
+  REQ-44424329: FMmHjrkfDEYRCx1n2GhkH0m-aUQg4OZL4rv5u7T2iVw
+  REQ-59136977: 5NZtW-PM9X2OOiZgf5rDE9IouDL_tKWJpcAAzbj8lWo
+  REQ-73349683: BNT8xnMPL2bnpZe_jKARumLYJXIfWZ-TYLxGblD2GAo
+  REQ-95865306: K4a2U5EVbqcvZEbMKU6G6okjJvdb_AsIH_80HL1iDkw
+  citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
+  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+priority: medium
+relations:
+  REQ-11268295: constrains
+  REQ-18833394: constrains
+  REQ-26984738: constrains
+  REQ-41552912: constrains
+  REQ-44424329: constrains
+  REQ-59136977: constrains
+  REQ-73349683: constrains
+  REQ-95865306: constrains
+status: approved
+text: If the product refuses a [statement citation](statement_citation) the [code
+  base](code_base) holds, or the code holding a [statement citation](statement_citation),
+  then the product shall not, on that ground, refuse a command that names a different
+  [citation identity](citation_identity).
+type: functional
+verification: inspection
