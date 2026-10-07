@@ -13,7 +13,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  pkvikc: 9XQCx2ur6-z5FdgjHFkwpkNYt2kRPilVFxyEk0lFkRo
+  pkvikc: ydD3x8X1qVLDYrc4zkMqK9uSz5NSiVFHIsbZdglPKsU
 priority: medium
 relations: {}
 status: approved

@@ -10,7 +10,7 @@ acceptance_criteria:
   when: revise is run with the reword
 assessed: {}
 citations:
-  gainxj: O_rzUosHPLdLEXhNfyJMt6bQdn7NEhJPMJlj5F3YN6k
+  gainxj: Q-f-6khEUZjzjApsYZNFksaqej2HfbNfwMfq2hOrVp8
 priority: medium
 relations: {}
 status: approved

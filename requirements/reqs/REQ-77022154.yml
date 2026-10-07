@@ -12,7 +12,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  loruif: a8jwodaYsMl8V8v9W8PlMoPj8JnVpFqLmvLuGm-zNnE
+  loruif: IK3th_YxkldID6dl6fbPRPtv2H4ht4enDF-MSDifrYM
 priority: medium
 relations: {}
 status: approved

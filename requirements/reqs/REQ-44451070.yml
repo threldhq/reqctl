@@ -9,7 +9,7 @@ acceptance_criteria:
 assessed:
   kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
 citations:
-  idgq2r: 6Q1Kg79u5WC1GmJsEQhoN8YPicAz3s-Un4MtX0zOhlk
+  idgq2r: s9rbb1_fq3Fdv9KYu5wZjNKKaMcS8WzZBJ6JoDRz_AE
 priority: high
 rationale: A repository adopting reqctl as an installed package holds no schema of
   its own until it writes one. Shipping the [kind schemas](kind_schema) with the package

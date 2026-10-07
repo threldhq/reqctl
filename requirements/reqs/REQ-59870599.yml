@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the findings are checked
 assessed: {}
 citations:
-  uffga6: D2LYVBVF7Fev2CvBPOhVhUReZ8bp4SjdgvtKevF--AQ
+  uffga6: 0PvAUW0AgZ-G86-FbQoEfpnBeJOUH8KCEEYbqxzQhXI
 priority: medium
 relations: {}
 status: approved

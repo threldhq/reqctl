@@ -10,7 +10,7 @@ acceptance_criteria:
   when: revise is run
 assessed: {}
 citations:
-  4k5e4z: aP5c_5Cc3FKZmLrlJoBeCemc8IeBKffLJXGMJkYjZcg
+  4k5e4z: HaG7cQOQGi_uCOHihuNS4WzePebpzMfBpoCcOOG4_Jk
 priority: medium
 relations: {}
 status: approved

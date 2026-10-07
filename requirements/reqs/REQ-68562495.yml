@@ -16,7 +16,7 @@ acceptance_criteria:
   when: the statement is exported
 assessed: {}
 citations:
-  i2bing: CxxK_4pvmZuT9a3V2-UdaKeVmx97eHGqSZ-Zm-b4neE
+  i2bing: AERmmg1mYwFJr-31W2vXQexe2X3Frp5gNL6_8O5nySE
 priority: medium
 relations: {}
 status: approved

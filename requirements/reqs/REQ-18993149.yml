@@ -10,7 +10,7 @@ acceptance_criteria:
   when: the corpus is exported
 assessed: {}
 citations:
-  s5nw3l: KcJc6mcXVQpWniGmA07uEQ12VQuKV0_ZPnPRiLDcW28
+  s5nw3l: fg6ETxGJLFqkKXiavj9cU2bQ7CfHTYtrXTC2mtYYxhI
 priority: medium
 relations: {}
 status: approved

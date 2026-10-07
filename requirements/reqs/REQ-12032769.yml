@@ -9,7 +9,7 @@ acceptance_criteria:
   when: the findings are checked
 assessed: {}
 citations:
-  n2lx2b: Xvokc0FDBJyn-IE7pM9xFvKF9hrl1nGpzfVCj6EF_kM
+  n2lx2b: obckrpokrsr_7Y4I-4PVxiCxNkPBrgA-WNJGTIb2mng
 priority: medium
 relations: {}
 status: approved

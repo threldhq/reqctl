@@ -13,8 +13,8 @@ acceptance_criteria:
   when: revise is run to approve the superseding item
 assessed: {}
 citations:
-  qxi4hb: IYngeIPay0hW_cwLCYnCr1duwosmdGG6OTb_8wQv80I
-  ssmh6o: m1EHKJ15QsYpuZKZSzQNP985JHUqTGNyl75L40exYAg
+  qxi4hb: AbRuHpIhrz7BlQlo40o3Bt5oYrT27aazHFMg_Ypj4yo
+  ssmh6o: ikhqpKEIEEMsA8N-ILbn0yo-60asIfVcbZ8Z5ksCcDU
   xpj5go: qNYonJT_VhCo-SQWL0appWLRtqzF_N9quYH4AZ20vic
 priority: medium
 relations: {}

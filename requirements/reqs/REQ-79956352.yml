@@ -16,8 +16,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  5uqc7i: 0eu7n7wXk8GicrE9PV64x-qzpS1Yv7JwLAAPHaVXm5M
-  7g4u3w: ojcBpomGGpsuvEDEgkz8DwHntgtGxee1QRViBsCGa_s
+  5uqc7i: uilDK5klmLG6MMqTPvSDk_j0aFuf-iFPFm9UcqeDu7k
+  7g4u3w: KD3CL94GkRhcB-zYEz0-XnlIsfVS_UK3ixSgw2BjYG4
 priority: medium
 relations: {}
 status: approved

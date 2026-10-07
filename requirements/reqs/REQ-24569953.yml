@@ -4,7 +4,7 @@ acceptance_criteria:
   when: the names the findings check accepts are compared against the prompt
 assessed: {}
 citations:
-  ssc6p2: wEl-mCupEltXWd9uN82vaAZ7FuZetzCqNMUxhMguuoE
+  ssc6p2: mYfxAoobKehVOAvaZ2ON20FkN2OmGT-TA-vjj6PrKDM
 priority: medium
 relations: {}
 status: approved

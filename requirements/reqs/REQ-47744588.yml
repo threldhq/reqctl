@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the coverage prompt is built
 assessed: {}
 citations:
-  a7rnsw: wEl-mCupEltXWd9uN82vaAZ7FuZetzCqNMUxhMguuoE
+  a7rnsw: mYfxAoobKehVOAvaZ2ON20FkN2OmGT-TA-vjj6PrKDM
 priority: medium
 relations: {}
 status: approved

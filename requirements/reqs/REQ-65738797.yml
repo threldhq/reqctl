@@ -12,8 +12,8 @@ assessed:
   REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
-  msfg5w: ntJJeU6fqxc7z1lMWZ7cbn6phVfCLD1RTowS9_Ql9yI
-  zkxsxx: J1mEzGEdT9pdeQdJBJUSbBuUUlWQYDR5nn2AITtUHD8
+  msfg5w: _ot2TgKUcDSZeLUjNdO-HoXM93UqvTy1KE0kORqJvQc
+  zkxsxx: R_pUVqzGdb7JNy2t5kXpY91ZDPoQvG-3a3tgFD-ABzQ
 priority: medium
 relations:
   REQ-60346603: constrains

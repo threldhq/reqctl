@@ -18,7 +18,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  vtxlpz: 6d6UNweOrpMnZGi7UemMFuG4IHpCxoHlTMipCVxEW_0
+  vtxlpz: rJZ3zQamQdhD9dyt7tfmlzG01bNmMVX5l6tRLxwAq0o
 priority: medium
 relations: {}
 status: approved

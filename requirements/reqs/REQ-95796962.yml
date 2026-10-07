@@ -6,7 +6,7 @@ acceptance_criteria:
 assessed:
   REQ-53764133: s638VvRMfEgiuyNbCQqTKtcyV4K8QQdVi-o-3V8gI58
 citations:
-  2v7p2v: 78jxnUxMhOho4eJAPhVwnZhCDfKDrxepmycgNi_KcE0
+  2v7p2v: ZpKliaKxMvfPmjysNeen52q4Wrgsh3UsUjFJ_oJBysU
 priority: medium
 relations:
   REQ-53764133: constrains

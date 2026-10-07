@@ -5,7 +5,7 @@ acceptance_criteria:
 assessed:
   REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
 citations:
-  p5hfxl: kVpenG54lKeLYFW4dJMkVL7IGBvbXkbTSdN-hO3_8b8
+  p5hfxl: vSdd9Gr27wsCxMnv1wA9FJ2bx-wOsDkdJUFw3RB7UIg
 priority: medium
 relations:
   REQ-79222815: constrains

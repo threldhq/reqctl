@@ -14,8 +14,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  e5vzf6: Ig21iAOY3btotmMmOyDdGgOepMNxYU99klTp_bnrZHc
-  mtmaxs: He1RSDCfnchP_TXcnCbSLtULdxxotNGtTPsFZgNWWec
+  e5vzf6: IrcQjQ1IKPch-6BgeHdEmPM18tw1b67dRqLcMIurIUs
+  mtmaxs: Jr43Gb54HOaOJrJFYJ2cfe4WVBx6TQnFb-gFLXGnVXc
 priority: medium
 relations: {}
 status: approved

@@ -8,7 +8,7 @@ acceptance_criteria:
 assessed:
   REQ-21699310: XKeWkfefGruJjoLqEt3Ike69aKvNUkYHX-ifNPVZv7o
 citations:
-  2p6w7j: IPRXctnYXqc9iCpDD6vMb9FkgSA17CjI4IV-EVRfVXc
+  2p6w7j: lS097rHuncxFUWY4Q0WMTZ8m3B5qQKPL2cB-soXrrZQ
 priority: medium
 relations:
   REQ-21699310: derives_from

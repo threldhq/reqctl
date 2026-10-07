@@ -34,8 +34,8 @@ assessed:
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
 citations:
-  jaw6mg: -Ld3srnmH2_swvmCNtkySQeGGXoJH0geJa983Jpkraw
-  thjjmg: mTCvHx71rCUvNDovtbeV1j2ExRZfQcGgL2R-4QQ7JIE
+  jaw6mg: u5adlHbTmS_JmvTxLbUBtjdgw8pIEXep8P5jR4rrI7Y
+  thjjmg: 9tHiu-ATfIxUAeZgD1Hb_IqBCtFLpI42mhF1p64qbbg
 priority: medium
 relations:
   REQ-54851939: depends_on

@@ -15,7 +15,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  4h2aan: mcQK4NcUK987fIyZSHfkJU9HvkijHZVt3rOV8EtMy_M
+  4h2aan: b5cb9Bv-QDqBvOuqHJBiStQB1-Fm2uSlZ2lIyaSoT4Q
 priority: medium
 relations: {}
 status: approved

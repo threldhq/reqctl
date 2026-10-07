@@ -9,8 +9,8 @@ assessed:
   REQ-83939497: o4e6KsfHMIgpZNUMun5sxU_LTejAce5WMR5k_5XAUb4
   proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
 citations:
-  do2uo3: u-i6nochjxW4-FV2vGDktb6T7bvT72exPdtZFcZN1Go
-  fw5ou4: vXQ2E1L6tq8sx_nMSow2hOxcJ7o5mTqYq3-eqeilKWQ
+  do2uo3: NrLYdM_oDHpDpDsCH99qA99bO06xBWC7v9icB3uRAYg
+  fw5ou4: _GfbU8QJ3g5xM6T6jjE-_8M4K0AP2BN9xW52TBw6bBQ
 priority: medium
 relations:
   REQ-83939497: constrains

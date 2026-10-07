@@ -13,7 +13,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  kgrg4l: igqPyiSA285nmgSR8ydZzI4S_atazQQ70e6ElZASV_I
+  kgrg4l: RGovUDWyloK3mptpRhriP-zp71-JbhRTiSpty9dMlAY
 priority: medium
 relations: {}
 status: approved

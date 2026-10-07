@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the findings are checked
 assessed: {}
 citations:
-  c3jev7: SFP8Mb_MKFqBmkvKpPFORNbs1P6gxg1kEF8txRxW6-c
+  c3jev7: jUaTEhdZeUoCkQ7ThnBRXma6On2M1NkCKuBGvPyHHdk
 priority: medium
 relations: {}
 status: approved

@@ -14,7 +14,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  xx2sp7: 1gMli6OKlSH3OnHxuBfV6xFxaolMOYUwfZ0gmqnBNXA
+  xx2sp7: uSyGFUfA86jOpO_vO9hJYoPSlHLKxX4RtPyZz2Sp_aE
 priority: medium
 relations: {}
 status: approved

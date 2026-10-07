@@ -4,7 +4,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  v3b5cc: kHi7HHfRgF86sKl0RDWe700Ws6_IM_p3K6VHmZIpgnE
+  v3b5cc: BVd25SPe2B0LwqAUS3yBpgweCDQ8wusOpMXfK_TVt_o
 priority: medium
 relations: {}
 status: approved

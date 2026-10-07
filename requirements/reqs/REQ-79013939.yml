@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  wcl7vt: ZpewVjjPMJtB9xJM6A0A06tmo1qJ6JBhXPytpSaDWIk
+  wcl7vt: 9KUtyTzG1aXgGre_zCuYjMEKJD7fw2HyqXhQPXM7pIQ
 priority: medium
 relations: {}
 status: approved
