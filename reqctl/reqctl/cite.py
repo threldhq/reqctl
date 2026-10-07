@@ -163,7 +163,7 @@ def _alone(path, text):
     held, at = set(), 0
     for number, line in enumerate(_feed_lines(text), start=1):
         close = ends.get(at + len(_indent(line)))
-        end = at + len(line.rstrip("\r\n"))
+        end = at + len(line.rstrip("\n"))
         if (number not in spoken and close is not None and close <= end
                 and not text[close:end].strip()):
             held.add(number)
