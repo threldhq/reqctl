@@ -53,10 +53,10 @@ def repins_only(base, path):
 
 # @req+ REQ-43374441@ycLimfxvD8w2 qya7yo
 def classify(base):
-    found = _git("diff", "--no-renames", "--name-only", f"{base}...HEAD")
+    found = _git("diff", "--no-renames", "--name-only", "-z", f"{base}...HEAD")
     if found.returncode != 0:
         raise SystemExit(f"cannot diff against {base}: {found.stderr.strip()}")
-    changed = [path for path in found.stdout.splitlines()
+    changed = [path for path in found.stdout.split("\0")
                if path and path != DERIVED]
     governed = [path for path in changed if path.startswith(GOVERNED)]
     other = [path for path in changed if not path.startswith(GOVERNED)]
