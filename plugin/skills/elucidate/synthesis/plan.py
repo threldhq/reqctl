@@ -38,6 +38,7 @@ SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
 STATED = "stated.json"
+CHALLENGERS = ("coverage", "recall", "judge")
 
 BEARING = """A statement bears on a proposal when it states the same obligation in
 other words (same), states part of it or more than it (overlaps), would be
@@ -894,13 +895,14 @@ def build(run, chars, items, lines=PROMPT_LINES):
     store, records = loaded()
     # @req+ REQ-40447106@qf0g3PvFcpT0 zmbxny
     # @req+ REQ-75041625@fdufkvO5WYz7 of23ld
-    overrides = configured(run, ("challenge_bounds.", f"{settings.AGENTS}."))
+    overrides = configured(run, ("challenge_bounds.", *(
+        f"{settings.AGENTS}.{name}." for name in CHALLENGERS)))
     bounds = settings.quantities(overrides, "challenge_bounds")
     crew = settings.table(overrides, settings.AGENTS)
     # @req- of23ld
     # @req- zmbxny
     # @req> REQ-23060027@QKFI8tm_J5VF dxtamn
-    agents = {name: agent(name, crew) for name in crew}
+    agents = {name: agent(name, crew) for name in CHALLENGERS}
     settled_on = binding(run, held, corpus.find_root(), records)
     traces = traced(run, words, held)
     carried = stated(run)

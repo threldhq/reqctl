@@ -7,6 +7,8 @@ from .corpus import ReqctlError, loads, mapping
 SETTINGS = Path("requirements") / "settings.yml"
 PINNED = re.compile(r"claude-[a-z0-9.-]*[0-9][a-z0-9.-]*")
 AGENTS = "elucidate_agents"
+NESTED = ("nest each value under its data item, entry and field, as "
+          "review_limits: {page_bytes: {quantity: 10485760}}")
 # @req+ REQ-87066486@KWWtPxhU0AiE 7yxrtp
 # @req> review_limits@S5WLKWwLWBaM ulaguu
 REVIEW_LIMITS = {
@@ -72,15 +74,14 @@ def faults(document):
     # @req> REQ-99278123@eHQpe0z42j2C fv2afe
     if not isinstance(document, dict):
         return [f"{document!r} names no value a settings file may replace -- "
-                "state each value under its data item, entry and field"]
+                f"{NESTED}"]
     found = []
     for at, value, shipped in _leaves(document, SHIPPED, ()):
         key = ".".join(map(str, at))
         if isinstance(shipped, dict):
             # @req> REQ-99278123@eHQpe0z42j2C qgpb6a
             found.append(f"{key} names no value a settings file may replace -- "
-                         "state each value under its data item, entry and "
-                         "field, as review_limits.page_bytes.quantity")
+                         f"{NESTED}")
         elif type(value) is not type(shipped):
             # @req> REQ-78887253@z3WFMhk0gyvk yaohat
             found.append(f"{key}: {value!r} is not of the YAML type of the "
