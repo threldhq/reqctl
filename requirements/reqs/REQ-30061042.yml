@@ -6,6 +6,10 @@ acceptance_criteria:
   then: the product reports the citation as a problem
   when: a key or value in the file changes after the item took its digest and trace
     is run
+- given: an item holding a [whole-file citation](whole_file_citation) pinned to a
+    stamp the item no longer carries
+  then: the product reports the citation as a problem
+  when: trace is given no base branch
 - given: an item holding a [whole-file citation](whole_file_citation) of a file that
     reads as [code tokens](code_token)
   then: the product reports no problem for the citation
@@ -22,12 +26,14 @@ assessed:
   commentless_formats: cVPhw5hQwyUGb9ILeidRO2QKQe0GITBz6lOxlnyAeUU
   commentless_formats.*: 1i5BXhUNKrqkdy_DHOGkVg9eejiXqrs9Le7aRSS6d_4
   commentless_formats.json: BFA9aNDBIR_h8VmjfMZukxij1Co6Z6KuFCp9acic5YY
-  whole_file_citation: E7McZAhWzxy3-OccjGuQG4h_tCu16lRq-KmBYpKExTk
+  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  whole_file_citation: bqFo2dkcyWiKR-NCipMnZ3mwEWv38FjsBrA5l6NUDuE
 priority: medium
 relations: {}
 status: approved
 text: Where a file of the [code base](code_base) is in one of the ${commentless_formats},
   the product shall let an item hold a [whole-file citation](whole_file_citation)
-  of the file, pinned by a digest of the entire file.
+  of the file, pinned to the item's stamp as a [statement citation](statement_citation)
+  is, and holding a digest of the entire file.
 type: functional
 verification: inspection
