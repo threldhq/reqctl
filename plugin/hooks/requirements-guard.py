@@ -62,7 +62,7 @@ INPUT_LIMIT = 20_000
 # @req- 2x3zhi
 GIT_READ = re.compile(
     r"^\s*git(\s+(-C\s+\S+|-[Pp]|--no-pager|--paginate))*"
-    r"\s+(?P<form>log|show|diff|status|blame|ls-files|add|commit)(?=\s|$)"
+    r"\s+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=\s|$)"
 )
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
@@ -619,7 +619,7 @@ def judge_citation_shell(raw):
                  f"blocked: such a command may only read.\nSearch without {flag}.")
         words = tokens_of(part)
         git = GIT_READ.search(part)
-        if tool or (git and git["form"] not in ("add", "commit")) or only_reads(words):
+        if tool or (git and git["read"]) or only_reads(words):
             continue
         deny(NOT_A_READ.format(tool=words[0]))
 
