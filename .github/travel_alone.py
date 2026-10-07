@@ -19,8 +19,10 @@ ABSENT = object()
 
 
 def _git(*args):
-    return subprocess.run(["git", *args], capture_output=True, text=True,
-                          errors="surrogateescape", check=False)
+    done = subprocess.run(["git", *args], capture_output=True, check=False)
+    done.stdout = done.stdout.decode(errors="surrogateescape")
+    done.stderr = done.stderr.decode(errors="surrogateescape")
+    return done
 
 
 def without(ref, path, keys):
