@@ -1,0 +1,37 @@
+acceptance_criteria:
+- given: a corpus holding a [data item](data_item) named value_types that holds no
+    [entry](entry) named duration
+  then: the product refuses the parameter and names duration as no [entry](entry)
+    of value_types
+  when: a parameter stating the value type duration is written
+- given: a corpus holding a [data item](data_item) named value_types that holds an
+    [entry](entry) named count
+  then: the product accepts the value type
+  when: an [entry](entry) of a [data item](data_item) stating the value type count
+    is written
+- given: a corpus holding a [data item](data_item) named value_types that holds no
+    [entry](entry) named size
+  then: the product refuses the [data item](data_item) and names size as no [entry](entry)
+    of value_types
+  when: an [entry](entry) of a [data item](data_item) stating the value type size
+    is written
+- given: a corpus holding no [data item](data_item) named value_types
+  then: the product accepts the value type
+  when: a parameter stating the value type duration is written
+assessed:
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  REQ-93210750: EGkfkA3YBorCXXLrS35IxOz5AJOJocQr3xsZvvCJC1M
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-44451070: constrains
+  REQ-93210750: depends_on
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for parameters and [data
+  items](data_item) marking the value_type field of a parameter and of an [entry](entry)
+  of a [data item](data_item) as taking an [entry](entry) of the [data item](data_item)
+  named value_types.
+type: functional
+verification: inspection

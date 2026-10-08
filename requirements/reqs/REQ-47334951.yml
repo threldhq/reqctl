@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a corpus holding no [data item](data_item) named value_types
+  then: the product refuses, stating that the corpus holds no [data item](data_item)
+    named value_types, and writes nothing
+  when: reqctl refile is given a [data item](data_item) for a parameter
+- given: a corpus holding no [data item](data_item) named value_types
+  then: the product files the parameter as the [data item](data_item) it is, as before
+  when: reqctl refile is given a parameter and no [data item](data_item)
+assessed:
+  REQ-32527326: 4rB9PLMN6_YV7RY-FvvXv4TyVv7ddphCzIGfw_zhK7g
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+priority: medium
+relations:
+  REQ-32527326: constrains
+status: approved
+text: If reqctl refile is given a [data item](data_item) to file a parameter into
+  where the corpus holds no [data item](data_item) named value_types, then the product
+  shall refuse the refile.
+type: functional
+verification: inspection

@@ -1,0 +1,34 @@
+acceptance_criteria:
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) whose at_most names an [entry](entry) the [data item](data_item)
+    does not hold
+  then: the product refuses the [data item](data_item) and names the at_most
+  when: the [data item](data_item) is written
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) whose at_least names an [entry](entry) stating no
+    quantity
+  then: the product refuses the [data item](data_item) and names the at_least
+  when: the [data item](data_item) is written
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    stating the value type duration whose at_least names an [entry](entry) stating
+    the value type size
+  then: the product refuses the [data item](data_item), stating that a duration and
+    a size cannot be compared
+  when: the [data item](data_item) is written
+- given: a corpus holding no [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) whose at_most names an [entry](entry) the [data item](data_item)
+    does not hold
+  then: the product accepts the [data item](data_item)
+  when: the corpus is validated
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations: {}
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall refuse a [data item](data_item) in which an [entry](entry)'s at_least or at_most
+  names no [entry](entry) of that [data item](data_item) stating a quantity of the
+  [entry](entry)'s own value type.
+type: functional
+verification: inspection

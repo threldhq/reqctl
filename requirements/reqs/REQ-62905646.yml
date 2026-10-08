@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating the value type duration, the quantity sixty
+    and the unit seconds
+  then: the reference is shown as the quantity, a space and seconds
+  when: a statement referencing the [entry](entry) is exported
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating the value type count and the quantity three
+  then: the reference is shown as the quantity alone
+  when: a statement referencing the [entry](entry) is exported
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating no value type
+  then: the reference is shown as the [entry](entry)'s key, as before
+  when: a statement referencing the [entry](entry) is exported
+- given: a corpus holding a [data item](data_item) named value_types, and a statement
+    referencing the quantity field of an [entry](entry) stating a value type
+  then: the reference is shown as the quantity alone, as before
+  when: the statement is exported
+- given: a corpus holding no [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating a value type, a quantity and a unit
+  then: the reference is shown as the [entry](entry)'s key, as before
+  when: a statement referencing the [entry](entry) is exported
+assessed:
+  REQ-70783238: _ngMgAcYCcxFdyTmbVvaMrJNW7-BlNadK5fcakwnicg
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-70783238: derives_from
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall export a statement referencing an [entry](entry) of a [data item](data_item)
+  that states a value type and a quantity with the quantity, followed by the unit
+  the [entry](entry) states, in place of the reference.
+type: functional
+verification: inspection

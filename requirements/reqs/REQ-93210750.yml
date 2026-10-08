@@ -1,0 +1,43 @@
+acceptance_criteria:
+- given: a [kind schema](kind_schema) marking a field as taking an [entry](entry)
+    of a [data item](data_item) the corpus holds
+  then: the product refuses the [item](item), naming the field, the value and the
+    [data item](data_item)
+  when: an [item](item) whose value in that field names no [entry](entry) of that
+    [data item](data_item) is written, revised or linted
+- given: a [kind schema](kind_schema) marking a field as taking an [entry](entry)
+    of a [data item](data_item) the corpus holds
+  then: the product accepts the value
+  when: an [item](item) whose value in that field names an [entry](entry) of that
+    [data item](data_item) is written
+- given: a [kind schema](kind_schema) marking a field as taking an [entry](entry)
+    of a [data item](data_item) the corpus holds, and a list in that field
+  then: the product refuses the [item](item), naming the member
+  when: a member of the list names no [entry](entry) of that [data item](data_item)
+- given: a [kind schema](kind_schema) marking a field as taking an [entry](entry)
+    of a [data item](data_item) the corpus does not hold
+  then: the product refuses nothing for that value
+  when: an [item](item) stating any value in that field is written
+- given: a corpus holding an [item](item) whose value in a field so marked names no
+    [entry](entry) of the [data item](data_item)
+  then: the product refuses the [item](item)
+  when: the corpus is validated
+assessed:
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-33359142: u8vbxFMjrV6ZEjaoq9bwThPUP1_QAfMn21fCFwgd1Lc
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-13148397: depends_on
+  REQ-33359142: derives_from
+  REQ-44451070: depends_on
+status: approved
+text: Where a [kind schema](kind_schema) marks a field as taking an [entry](entry)
+  of a [data item](data_item) the corpus holds, the product shall refuse an [item](item)
+  whose value in that field names no [entry](entry) of that [data item](data_item).
+type: functional
+verification: inspection

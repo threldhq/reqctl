@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a corpus holding no [data item](data_item) named value_types, and a repository's
+    own copy of the [kind schema](kind_schema) for parameters and [data items](data_item)
+    lacking the [schema marker](schema_marker) that names value_types
+  then: the product refuses nothing for the marker the copy lacks
+  when: the corpus is validated
+- given: a corpus holding a [data item](data_item) named value_types, and a repository's
+    own copy of the [kind schema](kind_schema) for parameters and [data items](data_item)
+    lacking the [schema marker](schema_marker) that names value_types
+  then: the product refuses the copy, naming the marker it lacks
+  when: the corpus is validated
+assessed:
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-14895892: JjrTwHoJqTReTo_OwA6ivi6bQq7h8Umt_go-kN2xY0s
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  schema_marker: aUPBsCbKNXsnZ9A1k4uL3ic-N6BgBilXd4Qx3mqWpLM
+priority: medium
+relations:
+  REQ-13148397: depends_on
+  REQ-14895892: constrains
+status: approved
+text: Where a [schema marker](schema_marker) that the shipped [kind schema](kind_schema)
+  carries names a [data item](data_item) the corpus does not hold, the product shall
+  exclude that marker from the markers a repository's own copy of the [kind schema](kind_schema)
+  must carry.
+type: functional
+verification: inspection
