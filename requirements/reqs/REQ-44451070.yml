@@ -1,13 +1,14 @@
 acceptance_criteria:
 - given: a repository whose requirements folder holds no schema file
-  then: each item is read through the [kind schema](kind_schema) the package ships
-    and the corpus validates
+  then: each [item](item) is read through the [kind schema](kind_schema) the package
+    ships and the corpus validates
   when: the corpus is validated
 - given: a repository holding no schema file and no packaged schema of that name
   then: the product refuses and names the path the repository would state it at
   when: a schema of that name is asked for
 assessed:
-  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
   idgq2r: s9rbb1_fq3Fdv9KYu5wZjNKKaMcS8WzZBJ6JoDRz_AE
 priority: high

@@ -1,22 +1,23 @@
 acceptance_criteria:
-- given: a Read, Grep or Glob [tool call](tool_call) naming a corpus item's file,
-    a folder of corpus items, the [corpus root](corpus_root) or the baseline
+- given: a Read, Grep or Glob [tool call](tool_call) naming a corpus [item](item)'s
+    file, a folder of corpus [items](item), the [corpus root](corpus_root) or the
+    baseline
   then: the product refuses it and names reqctl context and reqctl export as the route
   when: the [tool call](tool_call) is made
-- given: a shell command reading or searching a corpus item's file or the baseline
-    through cat, head, tail, wc, jq, grep, diff, cmp or a checksum, alone or piped
-    onward
+- given: a shell command reading or searching a corpus [item](item)'s file or the
+    baseline through cat, head, tail, wc, jq, grep, diff, cmp or a checksum, alone
+    or piped onward
   then: the product refuses it
   when: the [tool call](tool_call) is made
 - given: a shell command searching the [corpus root](corpus_root) recursively through
     grep
   then: the product refuses it
   when: the [tool call](tool_call) is made
-- given: a shell command running ls, stat or du on a corpus item's file
+- given: a shell command running ls, stat or du on a corpus [item](item)'s file
   then: the product does not refuse it
   when: the [tool call](tool_call) is made
 - given: a shell command running git log, show, diff, status, blame or ls-files on
-    a corpus item's file
+    a corpus [item](item)'s file
   then: the product does not refuse it
   when: the [tool call](tool_call) is made
 - given: a Read [tool call](tool_call) naming a schema of the corpus
@@ -24,9 +25,10 @@ acceptance_criteria:
   when: the [tool call](tool_call) is made
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   git_read_forms: jGCtTdda9WNXa1rXATNTiECAtYUUxt7TuH6lDl_ecj4
   git_read_forms.*: WTgW9BX-AEne-iUAff1maNbMWIUpwqiNNNjYCidZnJo
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   37auve: vaAvB4mqmEnZJl7f9J_WwBam8jj06Hqcn5WJlStxwjQ
@@ -35,9 +37,9 @@ priority: medium
 relations:
   REQ-38288492: depends_on
 status: approved
-text: If a [tool call](tool_call) reads or searches a corpus item's file, a folder
-  of corpus items, the [corpus root](corpus_root) or the baseline, other than through
-  reqctl, one of git's ${git_read_forms} or a command that shows only names and file
-  metadata, then the product shall refuse the [tool call](tool_call).
+text: If a [tool call](tool_call) reads or searches a corpus [item](item)'s file,
+  a folder of corpus [items](item), the [corpus root](corpus_root) or the baseline,
+  other than through reqctl, one of git's ${git_read_forms} or a command that shows
+  only names and file metadata, then the product shall refuse the [tool call](tool_call).
 type: functional
 verification: inspection

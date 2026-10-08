@@ -1,17 +1,19 @@
 acceptance_criteria:
-- given: a statement referencing an entry of a dictionary item
+- given: a statement referencing an [entry](entry) of a [dictionary item](dictionary_item)
   then: the product refuses and names the statement
-  when: the entry is dropped
-- given: a statement referencing a field of an entry
+  when: the [entry](entry) is dropped
+- given: a statement referencing a field of an [entry](entry)
   then: the product refuses and names the statement
   when: the field is dropped
-assessed: {}
+assessed:
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
   qgjwmq: qNYonJT_VhCo-SQWL0appWLRtqzF_N9quYH4AZ20vic
 priority: medium
 relations: {}
 status: approved
-text: If a request would drop an entry or an entry field that a statement references,
-  then the product shall refuse the request.
+text: If a request would drop an [entry](entry) or an [entry](entry) field that a
+  statement references, then the product shall refuse the request.
 type: functional
 verification: inspection

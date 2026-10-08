@@ -7,8 +7,8 @@ acceptance_criteria:
   then: no pull request opens, and the product states the generation's fault
   when: the batch is applied
 assessed:
-  REQ-44642786: TqRUT-VDn-ps_LzEHAIHw9Dtkpqnw8r02ffj22913E4
-  REQ-64308807: X_7rJjBIYt8CUE-ktXAa7y9c_0CONCW2KFnjxAqXBrw
+  REQ-44642786: f_tuj97sj5Zn01LbYR3BF1VbXP6to7k0yPyEqjcLa80
+  REQ-64308807: iKbY25rf_BLR4Q70Yu4V1MIYfurJamQS27-heXXqo7s
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   66kdp3: ejzLv9nDHA9sdcB9pBtY6GgtUGfKw5Q9mYvslnUDC5M

@@ -1,0 +1,18 @@
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+entries:
+  entry:
+    aliases:
+    - entries
+    definition: One member of what a term, a parameter or a [data item](data_item)
+      holds, under a key of its own.
+    unclaimed:
+      holding entries for two: answers in a recall return
+      omits an entry: an answer a recall return owes
+      renamed entries: findings of the coverage agent
+      renamed entry: a finding of the coverage agent
+      unclaimed entries: findings of the coverage agent
+      unclaimed entry: a finding of the coverage agent
+    word: entry
+kind: term
+status: approved

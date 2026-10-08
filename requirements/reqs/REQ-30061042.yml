@@ -1,21 +1,21 @@
 acceptance_criteria:
 - given: a file of the [code base](code_base) in ${commentless_formats.json}
-  then: the item holds the file's path and a digest of its entire content
-  when: an item is cited against the whole file
-- given: an item holding a [whole-file citation](whole_file_citation)
-  then: the product reports the citation as a problem
-  when: a key or value in the file changes after the item took its digest and trace
-    is run
-- given: an item holding a [whole-file citation](whole_file_citation) pinned to a
-    stamp the item no longer carries
-  then: the product reports the citation as a problem
+  then: the [item](item) holds the file's path and a digest of its entire content
+  when: an [item](item) is cited against the whole file
+- given: an [item](item) holding a [whole-file citation](whole_file_citation)
+  then: the product reports the [citation](whole_file_citation) as a problem
+  when: a key or value in the file changes after the [item](item) took its digest
+    and trace is run
+- given: an [item](item) holding a [whole-file citation](whole_file_citation) [pinned](pin)
+    to a [stamp](stamp) the [item](item) no longer carries
+  then: the product reports the [citation](whole_file_citation) as a problem
   when: trace is given no base branch
-- given: an item holding a [whole-file citation](whole_file_citation) of a file that
-    reads as [code tokens](code_token)
-  then: the product reports no problem for the citation
+- given: an [item](item) holding a [whole-file citation](whole_file_citation) of a
+    file that reads as [code tokens](code_token)
+  then: the product reports no problem for the [citation](whole_file_citation)
   when: only the white space between its tokens changes and trace is run
-- given: an item holding a [whole-file citation](whole_file_citation)
-  then: the product reports no problem for the citation
+- given: an [item](item) holding a [whole-file citation](whole_file_citation)
+  then: the product reports no problem for the [citation](whole_file_citation)
   when: only the file's line endings change and trace is run
 - given: a file of the [code base](code_base) in none of the ${commentless_formats}
   then: the product refuses it
@@ -26,14 +26,17 @@ assessed:
   commentless_formats: cVPhw5hQwyUGb9ILeidRO2QKQe0GITBz6lOxlnyAeUU
   commentless_formats.*: 1i5BXhUNKrqkdy_DHOGkVg9eejiXqrs9Le7aRSS6d_4
   commentless_formats.json: BFA9aNDBIR_h8VmjfMZukxij1Co6Z6KuFCp9acic5YY
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
-  whole_file_citation: bqFo2dkcyWiKR-NCipMnZ3mwEWv38FjsBrA5l6NUDuE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 priority: medium
 relations: {}
 status: approved
 text: Where a file of the [code base](code_base) is in one of the ${commentless_formats},
-  the product shall let an item hold a [whole-file citation](whole_file_citation)
-  of the file, pinned to the item's stamp as a [statement citation](statement_citation)
-  is, and holding a digest of the entire file.
+  the product shall let an [item](item) hold a [whole-file citation](whole_file_citation)
+  of the file, [pinned](pin) to the [item](item)'s [stamp](stamp) as a [statement
+  citation](statement_citation) is, and holding a digest of the entire file.
 type: functional
 verification: inspection

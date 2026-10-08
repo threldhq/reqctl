@@ -1,15 +1,15 @@
 acceptance_criteria:
 - given: lines holding only blank lines or comments
-  then: the product refuses and writes no citation
+  then: the product refuses and writes no [citation](statement_citation)
   when: the product is asked to write a [statement citation](statement_citation) over
     them
 assessed:
-  REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
-  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
-  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-62782894: x4o_oB5H0-tYQk5UAEXKJd01T1euR2jsAXAG9i9u048
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   5lq35y: vlCXAdChyjz79NAFwP6791j34v_5eRVzazpTFmqCuek
   jflstj: 1IWS-9ZAOswzBa3IElhZwcgHzKxCWnTlX24f6TQbzp4
@@ -23,6 +23,6 @@ relations:
 status: approved
 text: If the product is asked to write a [statement citation](statement_citation)
   that would cover no [code statement](code_statement), then the product shall refuse
-  to write the citation.
+  to write the [citation](statement_citation).
 type: functional
 verification: inspection

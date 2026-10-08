@@ -3,7 +3,7 @@ acceptance_criteria:
   then: the product refuses the run and names the [proposal](proposal)
   when: the run is built
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   ny4y6f: 6bbRP1bX7WF9m6_7CL7gr8YqZsmiP-bDG-0biQBw5Ik
 priority: medium

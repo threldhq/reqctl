@@ -15,11 +15,11 @@ acceptance_criteria:
   when: the product is asked to write a [statement citation](statement_citation) over
     those lines
 assessed:
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
-  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-62782894: x4o_oB5H0-tYQk5UAEXKJd01T1euR2jsAXAG9i9u048
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
   multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   n5z4vo: aCR2YsjSWPRGx_ZSGzfVIYqFP7zisld5ASzO3lwLUOU
 priority: medium

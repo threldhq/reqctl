@@ -4,21 +4,22 @@ acceptance_criteria:
   then: the product refuses the corpus, naming the file and the key
   when: the corpus is validated
 - given: a [corpus root](corpus_root) holding a [settings file](settings_file) that
-    states a whole number below one for the quantity of the fetch_attempts entry of
-    review_limits
+    states a whole number below one for the quantity of the fetch_attempts [entry](entry)
+    of review_limits
   then: the product refuses the corpus, naming the file, the key and the value
   when: the corpus is validated
 - given: a [corpus root](corpus_root) holding no [settings file](settings_file)
   then: the product does not refuse the corpus for want of one
   when: the corpus is validated
 assessed:
-  REQ-15362279: 5WXOpa30Q64YWcji0TZ1nDwPpgNw_5xBELAHh1sCNQA
-  REQ-21585959: al8sJvdbZD8eyw7MwTSn-ZCR4BKopEhkmROC0Kzbp4Q
-  REQ-59792666: UNXEG-AsX0FssQmj_cz1TYtFTZ60ASq9jRipNCjxOk0
-  REQ-78887253: z3WFMhk0gyvks5DbR6th-ZBtJi-v7-v77YmcCv15l8A
-  REQ-99278123: eHQpe0z42j2Ch_TcNznBBygkZPs6SEXNEMDsQZchcaU
-  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  REQ-15362279: YwMnA4sMLpfFHiuYgg5_8oBqcwz3xmviTkTsivi4IZo
+  REQ-21585959: QkioE_CiddehowSdKeR4GPIm6OBnx6cqwc5AudtmWHI
+  REQ-59792666: dkbVbhN0Y4FSM_pr3fC3ada6w7zTIx20g35V3eq5UhI
+  REQ-78887253: ZroFZuS_zv0qVg2jyOPEXEMvYT7b3lZjiQHplODSY8U
+  REQ-99278123: vBQXVC8aZZp3mj2zVYWTd44R0G3mNepRpPyZ0Mg6w_w
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   cf76cn: VBPFPS9OlqP9vuB8CXrZF4MQfwmQQcUGNW2rVeuLovU
   snr2ig: rVyPui2HYLVA4cMQmhgbXqP8px8vNHP9CL6C61tyz_Q

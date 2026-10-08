@@ -1,28 +1,29 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) whose requirement's item file
-    the product cannot read
+- given: a [statement citation](statement_citation) whose requirement's [item](item)
+    file the product cannot read
   then: the product reports an error and every line the [code base](code_base) holds
     is unchanged
-  when: the product is asked to remove the citation
+  when: the product is asked to remove the [citation](statement_citation)
 - given: a [citation list](citation_list) the product cannot write
   then: the product reports an error and every line the [code base](code_base) holds
     is unchanged
   when: the product is asked to cite, re-pin or remove a [statement citation](statement_citation)
     naming its requirement
 assessed:
-  REQ-13298390: OIZCRlURf3pq-ZhHeyKdDSnceHIMsqnrRUQPpcjLOS8
-  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
-  REQ-24406170: M08jCONzg-4unbIjswcpNFFuynYzysf9JZj5KZch_QA
-  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
-  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
-  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
-  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
+  REQ-13298390: Pum5hwaVAaJoYdAcZYw13D38cI-LY3s2RQboqgQJ6tY
+  REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
+  REQ-24406170: ffuKefeAdU7p5xPcOyYgqcQVsbzm9Mk1SpLxmkZVACI
+  REQ-26984738: 2Cu-ngxaDd6zI2TwmFRCzBrxeAWxGDX1sZQrNQvfa74
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-62782894: x4o_oB5H0-tYQk5UAEXKJd01T1euR2jsAXAG9i9u048
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  REQ-75539229: 263gd_-RLfVLJTxPjnM8Lcc2AlTeCxUZZH9498fcB_w
   REQ-79557189: 9se-A9aoBjZxhv3vIF32skwQLTi9xgDeHwOyO5srVf8
-  REQ-81275367: rZszCCP31YAUF8OI_m6qTAE3rFLUI2taSxCDDjYEk-E
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  REQ-81275367: 2q0tIHQCM4br59gvDPycGTyQnW3E_1HGUty3T2rg1bU
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   34djjj: syNRnP4VNL6rlG_WgnoeEsLtwryVSsrpqCJJ12xUE2g
   4pj4jj: syNRnP4VNL6rlG_WgnoeEsLtwryVSsrpqCJJ12xUE2g

@@ -1,5 +1,5 @@
 acceptance_criteria:
-- given: a corpus holding no [challenge](challenge) roles item
+- given: a corpus holding no [challenge](challenge) roles [item](item)
   then: each role uses the model the product ships for it
   when: the [challenge](challenge) is prepared
 - given: a corpus stating a model for one role only
@@ -7,6 +7,7 @@ acceptance_criteria:
   when: the [challenge](challenge) is prepared
 assessed:
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 priority: high
 rationale: Which model plays a role is the tool's own operating configuration, not
   a statement about any product, so a repository adopting the tool inherits one rather

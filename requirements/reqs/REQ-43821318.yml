@@ -1,14 +1,15 @@
 acceptance_criteria:
-- given: an approved item in the corpus
+- given: an approved [item](item) in the corpus
   then: the product refuses and names the deprecation revision as the route
-  when: removal of the approved item is requested
-assessed: {}
+  when: removal of the approved [item](item) is requested
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   qhlga3: YkiB3ezeaO5LgYeijsov0Xyqu6GnCzt443vCJXPt5Fo
 priority: medium
 relations: {}
 status: approved
-text: If a request would remove an item the corpus has approved, then the product
-  shall refuse the removal.
+text: If a request would remove an [item](item) the corpus has approved, then the
+  product shall refuse the removal.
 type: functional
 verification: inspection

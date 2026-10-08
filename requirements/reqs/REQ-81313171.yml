@@ -1,11 +1,12 @@
 acceptance_criteria:
-- given: a batch whose first step [mints](mint) an item and whose second step holds
-    a positional argument that is exactly $N with N zero
+- given: a batch whose first step [mints](mint) an [item](item) and whose second step
+    holds a positional argument that is exactly $N with N zero
   then: the second step receives the uid the first step [minted](mint)
   when: the batch is applied
 assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   3dpv3v: eBo3Q4cIWAs9lDFj16vMCrKNFEapuo01AOpgL2bpM1c

@@ -1,0 +1,19 @@
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+entries:
+  data:
+    definition: a named set of words or of records, each under a key of its own, that
+      statements reference
+  guard:
+    definition: a statement of what the build shall do
+  parameter:
+    definition: a named value, or the tiers of one quantity, that statements reference
+  requirement:
+    definition: a statement of what the product shall do
+  term:
+    definition: a word the corpus defines, which statements link wherever they use
+      it
+kind: data
+name: item_kinds
+status: approved
+text: each kind of [item](item) reqctl stores

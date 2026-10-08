@@ -3,11 +3,12 @@ acceptance_criteria:
   then: the pull request carries a new baseline, which the product checked before
     opening the pull request
   when: the batch is applied
-- given: a batch that only adds a draft item
+- given: a batch that only adds a draft [item](item)
   then: the pull request leaves the baseline as the default branch holds it
   when: the batch is applied
 assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   pgupaf: 9Cgk8mOhR34ool2G9XVY02k-samTNyOuUhJI3qyxQhE

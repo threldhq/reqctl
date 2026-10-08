@@ -1,17 +1,18 @@
 acceptance_criteria:
-- given: a corpus holding an item under a uid
+- given: a corpus holding an [item](item) under a uid
   then: the product refuses the [mint](mint)
-  when: an item is [minted](mint) under that uid
+  when: an [item](item) is [minted](mint) under that uid
 assessed:
-  REQ-73115701: OR6yfOsRwhRHeQRTo0klKsPhy6CZjIG85J78aj2n9pg
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  REQ-73115701: _3WJxxfhIo7LaXcAtSbUDoRMhIRAPHzQL3c2oOIEI8A
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   5xsesf: j6p-u0OlUnA5o8kJ16wbdQR8Vj6lZAS8bK7ilObcVKg
 priority: medium
 relations:
   REQ-73115701: constrains
 status: approved
-text: If the uid given for a [mint](mint) is one an item the corpus holds carries,
-  then the product shall refuse the [mint](mint).
+text: If the uid given for a [mint](mint) is one an [item](item) the corpus holds
+  carries, then the product shall refuse the [mint](mint).
 type: functional
 verification: inspection

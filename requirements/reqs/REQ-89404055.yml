@@ -7,14 +7,15 @@ acceptance_criteria:
   then: the block does not list that requirement
   when: the run is built
 assessed:
-  REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
+  REQ-18405752: FCxc3x0E2EZUNqmp06MeH34UxsaAniBz3rPit2klDEU
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   grxatb: dDeGob9EywLMJtyhJKQM0gJtJ4bEtFitxYMiGyxtPZs
 priority: medium
 relations:
   REQ-18405752: constrains
 status: approved
-text: When a shard states an item's block, the product shall list under the item only
-  the other items that shard holds.
+text: When a shard states an [item](item)'s block, the product shall list under the
+  [item](item) only the other [items](item) that shard holds.
 type: functional
 verification: inspection

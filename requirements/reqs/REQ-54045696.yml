@@ -5,13 +5,14 @@ acceptance_criteria:
 - given: a corpus stating one binding dimension
   then: the product accepts the [proposal](proposal)
   when: a [proposal](proposal)'s record matches its text
-- given: a [proposal](proposal) referencing a member the dimension's item does not
-    define
-  then: the product refuses and names the members the item defines
+- given: a [proposal](proposal) referencing a member the dimension's [item](item)
+    does not define
+  then: the product refuses and names the members the [item](item) defines
   when: the run is built
 assessed:
-  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  REQ-68873210: e7MRMGqsYrnxhzHTt0XMmx14YUpYBmgSSNHW5F-ZA8s
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   f57qfn: NeHBrm_2vdukt1brxAq_1miyJmbZUPIhpM5wqDxlB3g
 priority: high

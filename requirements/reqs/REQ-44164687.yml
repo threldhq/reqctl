@@ -1,26 +1,28 @@
 acceptance_criteria:
-- given: 'code carrying a comment that names a requirement and its stamp in the @req:
-    form'
-  then: the product reports a problem naming the file and the item, directing the
-    reader to cite it with reqctl tag
+- given: 'code carrying a comment that names a requirement and its [stamp](stamp)
+    in the @req: form'
+  then: the product reports a problem naming the file and the [item](item), directing
+    the reader to cite it with reqctl tag
   when: trace is run
-- given: 'code carrying a module-level mapping whose values name items in the @req:
-    form'
+- given: 'code carrying a module-level mapping whose values name [items](item) in
+    the @req: form'
   then: the product reports a problem for each value
   when: trace is run
 - given: 'a [test](test) carrying the @req: form'
   then: the product reports the problem as it does outside every [test](test)
   when: trace is run
-- given: 'code naming an item''s identifier without the @req: form, as data or in
-    a string'
+- given: 'code naming an [item](item)''s identifier without the @req: form, as data
+    or in a string'
   then: the product reports no problem for it
   when: trace is run
-- given: code citing items only through [statement citations](statement_citation)
-  then: the product reports no problem for the form of any citation
+- given: code citing [items](item) only through [statement citations](statement_citation)
+  then: the product reports no problem for the form of any [citation](statement_citation)
   when: trace is run
 assessed:
-  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 citations:
   q2mqfm: ShDRHphHNflSOUU8QSGSiAIoxtMzDZXU_9XvDP5wsdo
@@ -29,6 +31,6 @@ relations:
   REQ-52925332: depends_on
 status: approved
 text: 'When trace is run, the product shall report as a problem every place where
-  code names an item in the @req: form rather than by a [statement citation](statement_citation).'
+  code names an [item](item) in the @req: form rather than by a [statement citation](statement_citation).'
 type: functional
 verification: inspection

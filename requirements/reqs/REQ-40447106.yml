@@ -1,38 +1,40 @@
 acceptance_criteria:
 - given: a repository whose [settings file](settings_file) states 10485760 for the
-    quantity of the page_bytes entry of review_limits
+    quantity of the page_bytes [entry](entry) of review_limits
   then: the product reads no more of a page than 10485760 bytes
   when: the [best-in-class review](best_in_class_review) is checked there
-- given: a repository whose [settings file](settings_file) states, for the judge entry
+- given: a repository whose [settings file](settings_file) states, for the judge [entry](entry)
     of elucidate_agents, a [pinned model ID](pinned_model_id) of a lower tier than
     the model the product ships for the judge, at effort low
   then: each judge is spawned on that model at that effort
   when: a run's judges are spawned there
 - given: a repository whose [settings file](settings_file) states 100000 for the quantity
-    of the agent_ceiling entry of challenge_bounds
+    of the agent_ceiling [entry](entry) of challenge_bounds
   then: the product does not refuse the run for the count of its agents
   when: a run that would spawn 200 agents is built there
 - given: a repository whose [settings file](settings_file) states read for the access
-    field of the actions entry of portal_token_permissions
+    field of the actions [entry](entry) of portal_token_permissions
   then: the screen asks for a token granting read access to actions
   when: reqctl portal serves the setup screen there
 assessed:
   REQ-16875926: rLub1dpB7yu_y9tFU3C_dapG5BhwSggMmYInqr9QW3k
-  REQ-23060027: QKFI8tm_J5VF5FlpyYn7ENn8OIvvcTXbZ_-9Z0mJhIo
+  REQ-23060027: zeNeSryv-0-1-V7CNGTlk3RN2_KxE0P3zV9SCZD6ZSs
   REQ-37635213: hDGHrxRYQZ75fw8TCtb3d7QeXPrKx_2iwieh8SSntlc
   REQ-44823271: AviNJLM07SOZcD2QNC5Ueo_z-64lpX4Y2mnCYreJ3Y4
   REQ-48148587: wA7bmyxqWF2Zyx_B5SQ9MYQnHdmvjYgBCyR5jwnCrqM
-  REQ-48762557: awBU6cqFJEkKXAqTfW9LPJgd7WeTwb0_DFX12zHFaj8
+  REQ-48762557: jm9fn2mpwhmlR3rOqfNUCUB2pspY7Gy1WkktVhDxj1k
   REQ-61943665: YLTr2dPn2Pw8NXIrD7IT8S2SIHVPtFToyPwwzFIzu8A
-  REQ-80191784: Tk5avoqVWwY-vg7yG9-E84O5Bvz0nXYCeaG9CgD8NwM
-  REQ-84459416: zkSEOhONwdzg_cicD_ZZTgXBUnPt9uMTZzNPiHUCGrk
-  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
+  REQ-80191784: ahIlNt8S6BrFfMdXGWoEPZCYDwomcrq8OVpoz8u_4Lw
+  REQ-84459416: ZlrZpYNBUh8Qcc4SEVYaHeNwpPUdCLDbXn3kTSczv58
+  REQ-87066486: AtzPEAcAbJ1vtpLCqCZnXdrS-wd-THi3TvLIgx4VcF0
   REQ-88584597: SIv6i6OT97j3iTzO9jzu9v40eBlbRtT9-yUZsPtF6hE
   REQ-94426583: 8JHtrZp73dHbt0YdrxVVJJCwoQIjtjEQO5VDptA7dRQ
   REQ-99188850: t4pvJTwe8prh9Ie_uJgxncKBItjdHtnluEFwI7OBwhk
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   evxzj5: yiZVV-7FzdQn4nv3mG-pLCHV7N8lE1KIfnORUy4htJQ
   jyttul: X1saIvFnTsUfKtRV9qs6kUTKeWcJk3gdewptmnPz1bs
@@ -57,9 +59,9 @@ relations:
   REQ-99188850: constrains
 status: approved
 text: Where a repository's [settings file](settings_file) states a value for one of
-  the product's own parameters, or for a field of an entry of one of its own data
-  items, and the reqctl command or the elucidate skill uses the value that parameter
-  or field holds, the product shall use the stated value in that repository in place
-  of the value the product ships.
+  the product's own parameters, or for a field of an [entry](entry) of one of its
+  own [data items](data_item), and the reqctl command or the elucidate skill uses
+  the value that parameter or field holds, the product shall use the stated value
+  in that repository in place of the value the product ships.
 type: functional
 verification: inspection

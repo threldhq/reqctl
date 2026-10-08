@@ -6,8 +6,8 @@ acceptance_criteria:
   then: the product renders it
   when: the description is rendered
 assessed:
-  REQ-21373303: mNM6_z8-kXLhLCB8rf03UPG_5xAvu0uuOBJNM1J4p98
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   4flmpq: t0w8lfaJWXg-KWRT5mgBq749Pz5duH4EWG4Q_uEErHc
 priority: medium

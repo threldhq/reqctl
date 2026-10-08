@@ -8,7 +8,7 @@ acceptance_criteria:
   then: the report states how many of them were retired
   when: probes are minted into it
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   4avsug: oSiJ7fZ_-3xFLns07ognkxxapaRzpjBeWGhZ43PUDTM
   u3gura: 8EsP6t_icaef6xUWuy428VKsx5S4kMB4aGrUJg66zhY

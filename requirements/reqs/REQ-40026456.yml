@@ -1,7 +1,7 @@
 acceptance_criteria:
 - given: a parameter whose value type is text holding two members
   then: the product refuses the parameter and names reqctl refile as the way to file
-    it as a data item
+    it as a [data item](data_item)
   when: the corpus is validated
 - given: a parameter whose value type is text holding one member
   then: the product does not refuse the parameter
@@ -15,6 +15,7 @@ acceptance_criteria:
 assessed:
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.taxonomy: 1-kPwGhwdiAZiu29Q4Yq5wdClFdIclFkPvK4znC_dTU
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
 priority: medium
 relations: {}
 status: approved

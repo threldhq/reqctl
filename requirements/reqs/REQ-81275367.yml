@@ -1,15 +1,15 @@
 acceptance_criteria:
 - given: a [statement citation](statement_citation) carried in a pair of comments
   then: every line between the comments is unchanged
-  when: the product removes the citation
+  when: the product removes the [citation](statement_citation)
 assessed:
-  REQ-13298390: OIZCRlURf3pq-ZhHeyKdDSnceHIMsqnrRUQPpcjLOS8
-  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-13298390: Pum5hwaVAaJoYdAcZYw13D38cI-LY3s2RQboqgQJ6tY
+  REQ-26984738: 2Cu-ngxaDd6zI2TwmFRCzBrxeAWxGDX1sZQrNQvfa74
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   REQ-61906662: vIt4Qdb6Q01LJ5VHMe8kkG9Wsh5fJEM0IPWOAXSSzsU
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   5gkn5k: v_rK_IBFTsu41-c2Ggk9O96iIQULR1TZ1ivApGyqMT8
   olrtj5: q-SIChARCD0Wh13KP6Yv94fJTA2EPCcz7O2A3KdaQM8
@@ -22,9 +22,9 @@ relations:
 status: approved
 text: When the product removes a [statement citation](statement_citation), the product
   shall leave unchanged every line the [code base](code_base) holds other than the
-  lines holding a comment that carries the citation, other than the lines holding
-  what the [citation list](citation_list) of the requirement it names holds for the
-  citation, and other than the lines holding that list where it holds nothing for
-  any other citation.
+  lines holding a comment that carries the [citation](statement_citation), other than
+  the lines holding what the [citation list](citation_list) of the requirement it
+  names holds for the [citation](statement_citation), and other than the lines holding
+  that list where it holds nothing for any other [citation](statement_citation).
 type: functional
 verification: inspection

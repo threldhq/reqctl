@@ -6,19 +6,20 @@ acceptance_criteria:
     or ends in a traceback
   then: the file holds what it held before the command
   when: the product runs the command
-- given: an item that statements name, and a write to one of those statements that
-    fails
-  then: the item's file stands where it stood holding what it held, and no file the
-    rename created remains
-  when: the product renames the item
+- given: an [item](item) that statements name, and a write to one of those statements
+    that fails
+  then: the [item](item)'s file stands where it stood holding what it held, and no
+    file the rename created remains
+  when: the product renames the [item](item)
 - given: a run whose build has written some of its prompts, and a write that fails
   then: every file the build wrote holds what it held before the build
   when: the product builds the run
 assessed:
-  REQ-62782894: QlfQx33Br2KTMGVJnQ7IgxkGkGpi-4M4AJgiIbyhw90
-  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
-  REQ-73115701: OR6yfOsRwhRHeQRTo0klKsPhy6CZjIG85J78aj2n9pg
+  REQ-62782894: x4o_oB5H0-tYQk5UAEXKJd01T1euR2jsAXAG9i9u048
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  REQ-73115701: _3WJxxfhIo7LaXcAtSbUDoRMhIRAPHzQL3c2oOIEI8A
   REQ-79557189: 9se-A9aoBjZxhv3vIF32skwQLTi9xgDeHwOyO5srVf8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   3ofubr: -zaDlfP4I7h3OutkzSSV7MLqzx1Bni3Rxv1G_Ulti5o
   5uyr4v: DhhA8b0N21YQxr2iBY-42iwwqjCo6FQS4JkhoQjzTqE

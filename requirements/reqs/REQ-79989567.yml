@@ -1,13 +1,13 @@
 acceptance_criteria:
 - given: a pair of comments carrying a [statement citation](statement_citation) around
     only blank lines or comments
-  then: the product reports the citation as a problem
+  then: the product reports the [citation](statement_citation) as a problem
   when: trace is run
 assessed:
-  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
-  REQ-95865306: K4a2U5EVbqcvZEbMKU6G6okjJvdb_AsIH_80HL1iDkw
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  REQ-95865306: 6u2XMnjDwlvRWL5-_pKrk8iVp0_3hH-ZmMG-kwF55DA
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   6fth2x: 1IWS-9ZAOswzBa3IElhZwcgHzKxCWnTlX24f6TQbzp4
   bz6frh: zPvouri2t95GxUWmtVnBLEbYJuyBRuXAC2Avg07ebhA

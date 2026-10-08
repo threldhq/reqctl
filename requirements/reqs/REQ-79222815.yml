@@ -1,19 +1,25 @@
 acceptance_criteria:
-- given: a dictionary item two of whose entries state a field true
-  then: the address shows both entries
-  when: context is asked for a statement addressing the item by that field
-- given: a dictionary item holding one entry that states a field true, one that states
-    the field false and one that does not carry the field
-  then: the address shows the entry stating the field true and neither of the others
-  when: context is asked for a statement addressing the item by that field
-assessed: {}
+- given: a [dictionary item](dictionary_item) two of whose [entries](entry) state
+    a field true
+  then: the address shows both [entries](entry)
+  when: context is asked for a statement addressing the [item](item) by that field
+- given: a [dictionary item](dictionary_item) holding one [entry](entry) that states
+    a field true, one that states the field false and one that does not carry the
+    field
+  then: the address shows the [entry](entry) stating the field true and neither of
+    the others
+  when: context is asked for a statement addressing the [item](item) by that field
+assessed:
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   3wyszr: IZNe91sGWJsazCnX_mHg8fpjjl3jkj1DoOMb1Gcj21w
 priority: medium
 relations: {}
 status: approved
-text: Where a statement addresses a dictionary item by a field the item's entries
-  carry, the product shall resolve the address to the entries that state the field
-  true.
+text: Where a statement addresses a [dictionary item](dictionary_item) by a field
+  the [item](item)'s [entries](entry) carry, the product shall resolve the address
+  to the [entries](entry) that state the field true.
 type: functional
 verification: inspection

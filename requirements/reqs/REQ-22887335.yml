@@ -1,15 +1,21 @@
 acceptance_criteria:
-- given: a dictionary item and an entry keyed for the membership address
-  then: the product refuses and states that address pins the item's membership
-  when: the entry is [minted](mint) or revised into the item
+- given: a [dictionary item](dictionary_item) and an [entry](entry) keyed for the
+    membership address
+  then: the product refuses and states that address [pins](pin) the [item](item)'s
+    membership
+  when: the [entry](entry) is [minted](mint) or revised into the [item](item)
 assessed:
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
 citations:
   idfqw5: bkTGBDfho0ANvWyRVd2MEzd1hBYxASapS9qqoaYNPc0
 priority: medium
 relations: {}
 status: approved
-text: If an entry would be keyed for the address that pins an item's membership, then
-  the product shall refuse the entry.
+text: If an [entry](entry) would be keyed for the address that [pins](pin) an [item](item)'s
+  membership, then the product shall refuse the [entry](entry).
 type: functional
 verification: inspection

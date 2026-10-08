@@ -1,14 +1,16 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) naming a stamp the requirement
+- given: a [statement citation](statement_citation) naming a [stamp](stamp) the requirement
     it names no longer carries
-  then: the citation names the stamp the requirement carries
-  when: the product re-pins the citation by its [citation identity](citation_identity)
+  then: the [citation](statement_citation) names the [stamp](stamp) the requirement
+    carries
+  when: the product re-pins the [citation](statement_citation) by its [citation identity](citation_identity)
 assessed:
   REQ-44424329: FMmHjrkfDEYRCx1n2GhkH0m-aUQg4OZL4rv5u7T2iVw
-  REQ-54851939: Iw_Sa4bHHJhi7YAvxvfvfhnK8zGwvVQyh8XONls3_GY
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-54851939: n6YOz94UUTn7qlBLIhltdfT7UD6BNEW5cnz7S6_AkiA
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   62bkhg: BkKc9VJjMtCg-6lrdYZ8EBOyu5syvU8zJ_EHXiSv2KA
 priority: medium
@@ -18,7 +20,8 @@ relations:
   REQ-60346603: depends_on
 status: approved
 text: When the product re-pins the [statement citation](statement_citation) naming
-  a [citation identity](citation_identity), the product shall replace the stamp the
-  citation names with the stamp the requirement the citation names carries.
+  a [citation identity](citation_identity), the product shall replace the [stamp](stamp)
+  the [citation](statement_citation) names with the [stamp](stamp) the requirement
+  the [citation](statement_citation) names carries.
 type: functional
 verification: inspection

@@ -1,5 +1,6 @@
 acceptance_criteria:
-- given: the [kind schema](kind_schema) changes which fields a kind of item requires
+- given: the [kind schema](kind_schema) changes which fields a kind of [item](item)
+    requires
   then: the form creating that kind marks exactly those fields as required, with no
     edit to the page
   when: reqctl portal serves the page
@@ -7,7 +8,7 @@ acceptance_criteria:
   then: the page's forms follow that repository's schema
   when: reqctl portal serves the page in that repository
 - given: the page reqctl portal serves
-  then: it holds no list of fields of its own for any kind of item
+  then: it holds no list of fields of its own for any kind of [item](item)
   when: it is read
 - given: the [kind schema](kind_schema) holds a field the page has no display setting
     for
@@ -17,12 +18,13 @@ acceptance_criteria:
   then: the text reaches the page as data and runs as no script
   when: reqctl portal serves the page
 assessed:
-  REQ-13148397: XXob_8TNNhHNxQ0WHfaFlfOb0AM_DHtJIkCKTBVfhm0
-  REQ-21522236: FSo8K6fhdHTuVSvKOzHvo8LiMHpCRv5h-WO8rKcbtlY
-  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-21522236: jupFEITq3NmshFFQh4JS2_Z-l-n8NuFSqudDu7xMQIo
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   REQ-49576265: pFihs7WdIwGSo9e5kkPdFZLxtJJRQIRHfXC3rdxNwAs
-  REQ-69283350: XSe9n-OwepOPSdNidPSzte-ujbjXmNKNJg9-bSgDCKo
-  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+  REQ-69283350: vYYldulaXQvcEUAywcmyFqL2JODMTJn1tatxCyKl0bc
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   avcfk3: q1qrOJ0AAua2MliU82rCbcqVw5UodS_yX1bkfHRm-lc
@@ -38,6 +40,6 @@ relations:
   REQ-69283350: constrains
 status: approved
 text: When reqctl portal serves the [portal](portal), the product shall build each
-  form on the page that creates or revises an item from the [kind schema](kind_schema).
+  form on the page that creates or revises an [item](item) from the [kind schema](kind_schema).
 type: constraint
 verification: inspection

@@ -8,8 +8,8 @@ acceptance_criteria:
   then: the product refuses the batch, naming the reference
   when: the batch is applied
 assessed:
-  REQ-81313171: ZHINyeZGDkmi5Oji-Wh97bMVW7xZP5xfBolpuyuiYBE
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  REQ-81313171: 7j0AmKa_kopiVm-Tipo5BlSpSNzCDXY2Q-H7P4APxZk
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   rkzzkl: pveFYvtYcYIPulU_0eZUQg5mrIfz7fAyx6lK81iEHPE

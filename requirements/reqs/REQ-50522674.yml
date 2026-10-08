@@ -3,13 +3,14 @@ acceptance_criteria:
     does not define
   then: the product refuses the run, naming the member and the members defined
   when: the run is built
-- given: a [proposal](proposal) whose text references a member the dimension's data
-    item does not define
+- given: a [proposal](proposal) whose text references a member the dimension's [data
+    item](data_item) does not define
   then: the product refuses the run
   when: the run is built
 assessed:
-  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  REQ-68873210: e7MRMGqsYrnxhzHTt0XMmx14YUpYBmgSSNHW5F-ZA8s
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   2rsevi: vbpBhzfk8K-FBuIc2NkRDvFkSv4Ut42eiHYTquRGQ8A
   6ahzuj: bPeB6fboB-GFPQoZ85NxFZ-hboiUuZgMfkaVO45PwwQ
@@ -19,6 +20,6 @@ relations:
 status: approved
 text: Where the corpus states a binding dimension, the product shall refuse a run
   in which a [proposal](proposal)'s binding or text names a member the dimension's
-  data item does not define.
+  [data item](data_item) does not define.
 type: functional
 verification: inspection

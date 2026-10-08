@@ -1,8 +1,8 @@
 acceptance_criteria:
 - given: a requirement or a guard carrying a criterion whose given begins with the
     word given
-  then: the product refuses the item, naming the criterion and the part
-  when: the item is [minted](mint) or revised to carry the criterion
+  then: the product refuses the [item](item), naming the criterion and the part
+  when: the [item](item) is [minted](mint) or revised to carry the criterion
 - given: a corpus holding a requirement whose criterion has a when beginning with
     the word when
   then: the product refuses the corpus, naming the requirement and the part
@@ -14,7 +14,8 @@ acceptance_criteria:
   then: the product accepts the requirement
   when: a requirement carrying the criterion is [minted](mint)
 assessed:
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   gvf6gm: bnnkJ7OqpK3HYqNTVOV7BUZi_JLGgAW0dXMzgLVB-Vo
 priority: medium

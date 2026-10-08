@@ -4,14 +4,15 @@ acceptance_criteria:
     that agent
   when: a run is built there
 - given: a repository whose [settings file](settings_file) states a value only for
-    the page_bytes entry of review_limits
+    the page_bytes [entry](entry) of review_limits
   then: the product follows no more redirects than the number it ships
   when: the [best-in-class review](best_in_class_review) is checked there
 assessed:
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
-  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-87066486: AtzPEAcAbJ1vtpLCqCZnXdrS-wd-THi3TvLIgx4VcF0
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   ncvzwe: X1saIvFnTsUfKtRV9qs6kUTKeWcJk3gdewptmnPz1bs
   wa4iuz: balmVEVDwIejDcJDB3Ek1xo-oESGPs5pQ45O_6n9QsI

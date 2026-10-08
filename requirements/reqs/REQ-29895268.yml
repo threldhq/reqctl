@@ -6,7 +6,7 @@ acceptance_criteria:
   then: the job prompt states the owner words and the declined list
   when: the run is built
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   cq5zif: D_73fPI9niQ6W3kbOZv_zAbtCRxgoQsLl--ZnIaWy_o
 priority: medium

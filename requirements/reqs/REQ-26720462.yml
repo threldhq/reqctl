@@ -1,11 +1,12 @@
 acceptance_criteria:
-- given: a group judge's return naming an item its group prompt did not state
-  then: the product refuses the return, naming the item
+- given: a group judge's return naming an [item](item) its group prompt did not state
+  then: the product refuses the return, naming the [item](item)
   when: the final judges are built
 assessed:
-  REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
+  REQ-18405752: FCxc3x0E2EZUNqmp06MeH34UxsaAniBz3rPit2klDEU
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
-  REQ-68873467: KplV4u6qSuvJl8DrYu8EuAlhwNG6N9aSjwfrUqGWkXA
+  REQ-68873467: 3-Wc7R2vtu7-18N7BIWJSxtAfsuv2MxGgV409rzQMRQ
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   fdqj6u: UkGPXCmD_97laXdUKyGE2_b2-OTKKtbYY3f4cMy9g3Q
 priority: medium
@@ -14,7 +15,7 @@ relations:
   REQ-46162234: derives_from
   REQ-68873467: depends_on
 status: approved
-text: If a group judge's return names an item its group did not state, then the product
-  shall refuse the return.
+text: If a group judge's return names an [item](item) its group did not state, then
+  the product shall refuse the return.
 type: functional
 verification: inspection

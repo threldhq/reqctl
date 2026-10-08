@@ -1,10 +1,12 @@
 acceptance_criteria:
 - given: the setup screen with no token saved
   then: it asks for a fine-grained token scoped to the repository, granting each of
-    the ${portal_token_permissions} at the access its entry states and no other permission
+    the ${portal_token_permissions} at the access its [entry](entry) states and no
+    other permission
   when: it is read
 assessed:
   REQ-80115998: 5Q31K4gVM_b7814S0s7RqdPwYFiAEpqF6SqJLiWlcJU
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
   portal_token_permissions: gx7wfxrBqtaSYiVl9RtKG_S57wCIbFYcaQc1uXNuoFg
   portal_token_permissions.*: P9Vk9NTmHF_Xqh0DEuNqbm1oqK0YM3EYBrKTa7iTZC0

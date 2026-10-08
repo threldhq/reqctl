@@ -1,9 +1,9 @@
 acceptance_criteria:
 - given: lines a [statement citation](statement_citation) is to cover
-  then: the product writes the comments carrying the citation
+  then: the product writes the comments carrying the [citation](statement_citation)
   when: the product cites the requirement at the lines
 assessed:
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   e2efde: tgIAV0odqhlwXitEgsgMA4bLCfcFtT-I1CkN9P82jp4
   ulk4ve: C-7tzzVGxp1Cr5IFWlYU7K-p07dUY6xrREwwvekmfpY

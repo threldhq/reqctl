@@ -1,16 +1,24 @@
 acceptance_criteria:
 - given: a [statement citation](statement_citation) of a parameter
-  then: the citation names a stamp the parameter no longer carries
+  then: the [citation](statement_citation) names a [stamp](stamp) the parameter no
+    longer carries
   when: the parameter's value is revised
-- given: a [statement citation](statement_citation) of a data item
-  then: the citation names a stamp the data item no longer carries
-  when: a field of one of the data item's entries is revised
+- given: a [statement citation](statement_citation) of a [data item](data_item)
+  then: the [citation](statement_citation) names a [stamp](stamp) the [data item](data_item)
+    no longer carries
+  when: a field of one of the [data item](data_item)'s [entries](entry) is revised
 - given: a [statement citation](statement_citation) of a parameter
-  then: the citation names the stamp the parameter carries
+  then: the [citation](statement_citation) names the [stamp](stamp) the parameter
+    carries
   when: the parameter's rationale is revised
 assessed:
-  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   r63o2r: tZDPE_rlhSw5AUukYm1OiGkjx6SQxqK93OYbwHWe_t8
   wkv6gw: pcTKh-lzPFNMoS099LkrCqccvHxaWQZwPluwdWamtqs
@@ -18,8 +26,8 @@ priority: medium
 relations:
   REQ-88203622: depends_on
 status: approved
-text: The product shall pin a [statement citation](statement_citation) of a parameter
-  or a data item to a stamp taken over the item's own stamp and over every entry the
-  item holds.
+text: The product shall [pin](pin) a [statement citation](statement_citation) of a
+  parameter or a [data item](data_item) to a [stamp](stamp) taken over the [item](item)'s
+  own [stamp](stamp) and over every [entry](entry) the [item](item) holds.
 type: functional
 verification: inspection

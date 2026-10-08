@@ -1,18 +1,19 @@
 acceptance_criteria:
 - given: a field the governing schema constrains to a date, holding a number another
-    item states as a quantity
-  then: the product accepts both items
+    [item](item) states as a quantity
+  then: the product accepts both [items](item)
   when: the corpus is validated
 - given: a field the governing schema does not constrain to a date, holding a number
-    another item states as a quantity
-  then: the product refuses the item
+    another [item](item) states as a quantity
+  then: the product refuses the [item](item)
   when: the corpus is validated
 - given: a field the governing schema constrains to a date, holding a value that is
     not a date
   then: the product refuses the field
   when: the corpus is validated
 assessed:
-  REQ-31827606: 1tyZUHjYl_sV4i0yQaZ_ZicBMOyorn7fBbNxeU1cFRU
+  REQ-31827606: LqXaOXp6DLBG4aOCyP0U-zpI-zSfqD_lGFJ72CQ1Pqw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   hlxm3m: B95nFYCxQwHnth5_Y0Q5FE5AqUNG786dXUzzjj4Hy7Q
   npwa4k: cirqflN7RohHk0K0c-FcsAJGzabpprIr5g23Du90C_M
@@ -21,6 +22,6 @@ relations:
   REQ-31827606: constrains
 status: approved
 text: Where the governing schema constrains a field to a date, the product shall exclude
-  that field from every check that reads an item's quantities.
+  that field from every check that reads an [item](item)'s quantities.
 type: functional
 verification: inspection

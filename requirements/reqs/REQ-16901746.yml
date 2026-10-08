@@ -1,11 +1,12 @@
 acceptance_criteria:
-- given: a [proposal](proposal) whose text references the dimension's data item without
-    naming a member
+- given: a [proposal](proposal) whose text references the dimension's [data item](data_item)
+    without naming a member
   then: the product refuses the run
   when: the run is built
 assessed:
-  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  REQ-68873210: e7MRMGqsYrnxhzHTt0XMmx14YUpYBmgSSNHW5F-ZA8s
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   7yvsul: At3TlajyBZ0iJTvQ99qaKEyjxIuSmei4GQzT4Zn5he0
 priority: medium
@@ -13,7 +14,7 @@ relations:
   REQ-68873210: depends_on
 status: approved
 text: Where the corpus states a binding dimension, the product shall refuse a run
-  whose [proposal](proposal) references the dimension's data item without naming a
-  member.
+  whose [proposal](proposal) references the dimension's [data item](data_item) without
+  naming a member.
 type: functional
 verification: inspection

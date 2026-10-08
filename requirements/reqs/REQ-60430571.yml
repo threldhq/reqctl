@@ -1,14 +1,16 @@
 acceptance_criteria:
-- given: an unapproved item stated by no baseline but reached by other items
-  then: the product refuses and names every item that reaches the unapproved item
-  when: removal of the unapproved item is requested
-assessed: {}
+- given: an unapproved [item](item) stated by no baseline but reached by other [items](item)
+  then: the product refuses and names every [item](item) that reaches the unapproved
+    [item](item)
+  when: removal of the unapproved [item](item) is requested
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   ebwpu6: kR_SMkevH20GGPUXXiamNop4DzqfnxNthuo51KZPaLg
 priority: medium
 relations: {}
 status: approved
-text: If a request would remove an unapproved item that no baseline states and another
-  item reaches, then the product shall refuse the removal.
+text: If a request would remove an unapproved [item](item) that no baseline states
+  and another [item](item) reaches, then the product shall refuse the removal.
 type: functional
 verification: inspection

@@ -4,11 +4,11 @@ acceptance_criteria:
   when: the product is asked to remove its [citation identity](citation_identity)
     from the [citation list](citation_list) of the requirement it names
 assessed:
-  REQ-59136977: 5NZtW-PM9X2OOiZgf5rDE9IouDL_tKWJpcAAzbj8lWo
+  REQ-59136977: -tsi9nTBSL9-E5z25cvfg39BI53Vw4aLjSKhOFE3_oQ
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   rphl5n: UGmgos3VEtcNrwc3e2B0ntMiavdQcqbwoshZCjJkGeI
 priority: medium
@@ -19,6 +19,6 @@ text: If the product is asked to remove from the [citation list](citation_list) 
   a requirement a [citation identity](citation_identity) that a [statement citation](statement_citation)
   the [code base](code_base) holds names together with that requirement, then the
   product shall refuse the removal and name untag and repin as the commands that act
-  on that citation.
+  on that [citation](statement_citation).
 type: functional
 verification: inspection

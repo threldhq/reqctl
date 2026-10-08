@@ -8,14 +8,15 @@ acceptance_criteria:
 - given: a link requested toward a uid the corpus does not hold
   then: the product refuses and names the uid
   when: the link is written
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   cx6r6x: fd1y9IVleRC4YXmSrjURT7X9yndcuEH2A-3HXuPC3yE
   r2xftu: u5AUjHR1HOKCNlMC9PMpAzMM3o9wL1yxf19t98A07K8
 priority: medium
 relations: {}
 status: approved
-text: If a link an item records toward another item names an item the corpus does
-  not hold, then the product shall refuse the link.
+text: If a link an [item](item) records toward another [item](item) names an [item](item)
+  the corpus does not hold, then the product shall refuse the link.
 type: functional
 verification: inspection

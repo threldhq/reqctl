@@ -1,24 +1,25 @@
 acceptance_criteria:
-- given: an item holding a field its [kind schema](kind_schema) does not admit
-  then: the product refuses the item and names the field
+- given: an [item](item) holding a field its [kind schema](kind_schema) does not admit
+  then: the product refuses the [item](item) and names the field
   when: the corpus is validated
-- given: an item lacking a field its [kind schema](kind_schema) requires
-  then: the product refuses the item and names the field
+- given: an [item](item) lacking a field its [kind schema](kind_schema) requires
+  then: the product refuses the [item](item) and names the field
   when: the corpus is validated
-- given: an item whose field holds a value its [kind schema](kind_schema) does not
-    admit
-  then: the product refuses the item and names the field
+- given: an [item](item) whose field holds a value its [kind schema](kind_schema)
+    does not admit
+  then: the product refuses the [item](item) and names the field
   when: the corpus is validated
 assessed:
-  REQ-13148397: XXob_8TNNhHNxQ0WHfaFlfOb0AM_DHtJIkCKTBVfhm0
-  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
-  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 priority: medium
 relations:
   REQ-13148397: depends_on
   REQ-44451070: depends_on
 status: approved
-text: When the corpus is validated, the product shall refuse each item that does not
-  fit its [kind schema](kind_schema).
+text: When the corpus is validated, the product shall refuse each [item](item) that
+  does not fit its [kind schema](kind_schema).
 type: functional
 verification: inspection

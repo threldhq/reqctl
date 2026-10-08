@@ -2,16 +2,17 @@ acceptance_criteria:
 - given: a parameter
   then: the product refuses and names the target
   when: relate names the parameter as the target
-- given: a data item
+- given: a [data item](data_item)
   then: the product refuses and names the target
-  when: relate names the data item as the target
-assessed: {}
+  when: relate names the [data item](data_item) as the target
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
 citations:
   nso2i7: tRFNxx_qnOP-JNGsRADOQS34gqf_X582S6sscd00rWc
 priority: medium
 relations: {}
 status: approved
-text: If a link would target a parameter or a data item, then the product shall refuse
-  the link.
+text: If a link would target a parameter or a [data item](data_item), then the product
+  shall refuse the link.
 type: functional
 verification: inspection

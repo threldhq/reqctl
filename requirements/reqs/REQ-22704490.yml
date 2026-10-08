@@ -1,11 +1,11 @@
 acceptance_criteria:
-- given: a [tool call](tool_call) that edits, writes or notebook-edits a corpus item's
+- given: a [tool call](tool_call) that edits, writes or notebook-edits a corpus [item](item)'s
     file, or a connector call whose path, file, destination, output or folder field
     names one
   then: the product refuses it and names reqctl as the route
   when: the [tool call](tool_call) is made
-- given: a shell command that names a corpus item's file to a redirect, tee, sed -i,
-    an editor, a copy, move, removal, truncation, download or archive extraction
+- given: a shell command that names a corpus [item](item)'s file to a redirect, tee,
+    sed -i, an editor, a copy, move, removal, truncation, download or archive extraction
   then: the product refuses it
   when: the [tool call](tool_call) is made
 - given: a shell command that removes, moves, links, archives or changes the mode
@@ -30,15 +30,16 @@ acceptance_criteria:
   then: the product does not refuse it
   when: the [tool call](tool_call) is made
 - given: a path in the corpus schemas, or in a folder whose name only resembles a
-    folder of corpus items or the [corpus root](corpus_root)
+    folder of corpus [items](item) or the [corpus root](corpus_root)
   then: the product does not refuse it
   when: the [tool call](tool_call) is made
-- given: reqctl writing a corpus item's file or the baseline
+- given: reqctl writing a corpus [item](item)'s file or the baseline
   then: the product does not refuse it
   when: the [tool call](tool_call) running reqctl is made
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   ak47k7: 4IZG-G5Pra-pIFiD8YYIM606mA08zA2BqLm2H3DcodQ
@@ -47,10 +48,10 @@ priority: medium
 relations:
   REQ-38288492: depends_on
 status: approved
-text: If a [tool call](tool_call) names the path of a corpus item's file, a folder
-  of corpus items, the baseline or the [corpus root](corpus_root), then the product
-  shall refuse the [tool call](tool_call), however the path is spelled, unless each
-  command or tool in the call that names the path is reqctl or one the product can
-  tell only reads.
+text: If a [tool call](tool_call) names the path of a corpus [item](item)'s file,
+  a folder of corpus [items](item), the baseline or the [corpus root](corpus_root),
+  then the product shall refuse the [tool call](tool_call), however the path is spelled,
+  unless each command or tool in the call that names the path is reqctl or one the
+  product can tell only reads.
 type: functional
 verification: inspection

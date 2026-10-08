@@ -13,13 +13,13 @@ acceptance_criteria:
   then: the product takes the [statement citation](statement_citation) from it
   when: the product reads the [code base](code_base)
 assessed:
-  REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
-  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
   citation_marker: PIwiVw0PtA6YbmzdHivRCKCzPw-Rq-JX6IIehV5RfU0
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
   single_line_comment: Jus2ZEVegmdWsrD-TXdgIGqqNN_fpp6pgjgcwGu3oPw
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   4s3qrw: fOKXyUOMjOYbpD5oOosbf_GyvKSbO_80md-CW0s5ATA
   njbuvc: 57FHl6_3CfvT7QH1ToB2JZ5P3t7AJyYO5wtG2V9udcE

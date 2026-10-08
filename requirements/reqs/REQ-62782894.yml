@@ -1,13 +1,13 @@
 acceptance_criteria:
 - given: one command names lines of a file for a [statement citation](statement_citation)
-    of one requirement and other lines for a citation of another
-  then: the file carries both citations
+    of one requirement and other lines for a [citation](statement_citation) of another
+  then: the file carries both [citations](statement_citation)
   when: the product runs the command
 assessed:
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   REQ-61906662: vIt4Qdb6Q01LJ5VHMe8kkG9Wsh5fJEM0IPWOAXSSzsU
   REQ-92239556: 4-oyw0syx-xAO9sJxlsWvRkyA-90e12AVtnTCF2GKJ4
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   k2lzwu: glOn8NBvj4EOakhP0hAxBx3iYn8q_1OXCbbG3No5rm4
   nmyxfc: KdTg0j8n1hMqdEnEJ9l_PBJQnjfpADkLDs6lyPjo5kE

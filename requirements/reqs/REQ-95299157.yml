@@ -1,28 +1,31 @@
 acceptance_criteria:
-- given: an item whose unresolved merge reaches a field other than its pins and its
-    [citation list](citation_list)
+- given: an [item](item) whose unresolved merge reaches a field other than its [pins](pin)
+    and its [citation list](citation_list)
   then: the product refuses and names the field it will not resolve
-  when: that item is resolved
-- given: an item whose unresolved merge falls within its pins alone
-  then: the item holds what both sides state alike and every pin the merge conflicted
-    is gone
-  when: that item is resolved
-- given: an item whose unresolved merge falls within its [citation list](citation_list)
+  when: that [item](item) is resolved
+- given: an [item](item) whose unresolved merge falls within its [pins](pin) alone
+  then: the [item](item) holds what both sides state alike and every [pin](pin) the
+    merge conflicted is gone
+  when: that [item](item) is resolved
+- given: an [item](item) whose unresolved merge falls within its [citation list](citation_list)
     alone
   then: the [citation list](citation_list) holds what both sides hold alike, and holds
     no [citation identity](citation_identity) the merge conflicted
-  when: that item is resolved
+  when: that [item](item) is resolved
 assessed:
-  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
 citations:
   w4qjbn: Vqc9Yeq845mS2y1O2xrYuubuZLqtV9jmd854GU_Gaqc
 priority: medium
 relations:
   REQ-64846889: depends_on
 status: approved
-text: If an item holding an unresolved merge outside its pins and its [citation list](citation_list)
-  would be resolved, then the product shall refuse the resolution.
+text: If an [item](item) holding an unresolved merge outside its [pins](pin) and its
+  [citation list](citation_list) would be resolved, then the product shall refuse
+  the resolution.
 type: functional
 verification: inspection

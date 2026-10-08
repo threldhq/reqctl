@@ -6,7 +6,7 @@ acceptance_criteria:
   then: that role uses its own model and every other uses the default
   when: the [challenge](challenge) is prepared
 assessed:
-  REQ-68127788: BccauyYFIuLms3wnvh3sB52RUT3lWSxaONwYB8RtWDI
+  REQ-68127788: azZDTFJFko7yBy0jADp2zmh7L4PRlWsTzd8QVohc_rU
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
 priority: high
 rationale: A repository overriding every role writes one model rather than repeating

@@ -1,0 +1,14 @@
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+entries:
+  stamp:
+    aliases:
+    - stamps
+    definition: The digest an [item](item), or an [entry](entry) of one, carries of
+      the fields that state it.
+    unclaimed:
+      stamps the code: the verb, for what tag writes into the code
+    word: stamp
+kind: term
+status: approved

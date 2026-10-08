@@ -10,9 +10,9 @@ acceptance_criteria:
   then: the product uses the values it ships
   when: a run is built on that branch
 assessed:
-  REQ-31526771: xDrG26asEe5Rmnaho_nkoTkb_EXsfwIUosUaoGmTMdA
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  REQ-31526771: dzOAej5vGh2YoOyjJmOYn98wVQGEPZvE3y_ShYgjGaM
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   bl2ps5: FLVrksLLhrbwS7xy8AP06ssG2Hjy0WPUKj0LIzBGgpg
   m5bqyr: 11Z0BZL-NCxgmVRwwGvnIhMtP3jLpJi8qZRqoLlxDQs

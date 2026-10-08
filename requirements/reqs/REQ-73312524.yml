@@ -1,17 +1,18 @@
 acceptance_criteria:
-- given: a corpus holding an item file changed since the last commit
+- given: a corpus holding an [item](item) file changed since the last commit
   then: the product refuses and names every uncommitted file
   when: baseline --generate is run
-- given: a corpus holding an item file never committed
+- given: a corpus holding an [item](item) file never committed
   then: the product refuses and names every uncommitted file
   when: baseline --generate is run
-- given: a corpus holding two uncommitted item files
+- given: a corpus holding two uncommitted [item](item) files
   then: the product refuses and names both files
   when: baseline --generate is run
 - given: a corpus every file of which the commit the baseline would record holds
   then: the product writes the baseline
   when: baseline --generate is run
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   mgwroy: etSr0NofjQHjXermQGbh9PtbH9nF2V9n_weqFGjg4Gs
 priority: medium

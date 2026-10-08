@@ -6,7 +6,7 @@ acceptance_criteria:
   then: the product builds the prompt
   when: the coverage prompt is built
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   omzjq4: mYfxAoobKehVOAvaZ2ON20FkN2OmGT-TA-vjj6PrKDM
 priority: medium

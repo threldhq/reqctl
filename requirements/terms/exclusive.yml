@@ -1,9 +1,10 @@
 assessed:
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 entries:
   exclusive:
     definition: Written on a [statement citation](statement_citation) so that a line
-      it covers is covered by no citation that is not written so.
+      it covers is covered by no [citation](statement_citation) that is not written
+      so.
     word: exclusive
 kind: term
 status: approved

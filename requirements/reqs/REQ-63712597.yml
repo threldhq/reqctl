@@ -1,21 +1,27 @@
 acceptance_criteria:
-- given: a statement pinned to an address naming a field a dictionary item's entries
-    carry
-  then: the pin stands
-  when: an entry that does not state the field true is added to the item
-- given: a statement pinned to an address naming a field a dictionary item's entries
-    carry
-  then: the pin is suspect
-  when: a further entry is revised to state the field true
+- given: a statement [pinned](pin) to an address naming a field a [dictionary item](dictionary_item)'s
+    [entries](entry) carry
+  then: the [pin](pin) stands
+  when: an [entry](entry) that does not state the field true is added to the [item](item)
+- given: a statement [pinned](pin) to an address naming a field a [dictionary item](dictionary_item)'s
+    [entries](entry) carry
+  then: the [pin](pin) is suspect
+  when: a further [entry](entry) is revised to state the field true
 assessed:
-  REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+  REQ-79222815: smBL1zf2tP96ieg8mVjCeX_0ab2XSS5PpMzqf5Psxdk
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
 citations:
   okjacr: jdMWreEog8OIfWl_9vhyG4OI7Zqj9f-0Sb5P-0TfkJQ
 priority: medium
 relations:
   REQ-79222815: depends_on
 status: approved
-text: The product shall take the stamp of an address naming a field a dictionary item's
-  entries carry from only the entries that state the field true.
+text: The product shall take the [stamp](stamp) of an address naming a field a [dictionary
+  item](dictionary_item)'s [entries](entry) carry from only the [entries](entry) that
+  state the field true.
 type: functional
 verification: inspection

@@ -6,7 +6,7 @@ acceptance_criteria:
   then: the product accepts the unit
   when: the parameter is written
 assessed:
-  REQ-83702299: IgLtX0BfZTksPIEqT99UOB-9FZ_Zv9UHjv-slw_7VrQ
+  REQ-83702299: kBGzIwAyKDHLaQr2uEZDpQDAHRtNn5Lkk6r0WFUdTvA
 citations:
   bzk766: POhWsx-hhb9QbSK2PSY6jfTHRbZ4KoOrOJEakZk2TUk
 priority: medium

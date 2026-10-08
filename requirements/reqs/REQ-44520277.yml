@@ -1,14 +1,16 @@
 acceptance_criteria:
-- given: two items already joined by derives_from, by depends_on or by supersedes
-  then: the product refuses and names the items in the cycle
+- given: two [items](item) already joined by derives_from, by depends_on or by supersedes
+  then: the product refuses and names the [items](item) in the cycle
   when: relate is run for a link of that same kind closing the cycle
-- given: items forming a loop only by mixing derives_from, depends_on and supersedes
+- given: '[items](item) forming a loop only by mixing derives_from, depends_on and
+    supersedes'
   then: the product treats the mixed loop as no cycle
   when: relate is run for the link closing that mixed loop
-- given: items joined only by constrains, or paired by conflicts_with
+- given: '[items](item) joined only by constrains, or paired by conflicts_with'
   then: the product treats the loop as no cycle
   when: relate is run for a further constrains or conflicts_with link
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   2pebps: irAQsPen5YsptXvCRFCivoukF5dMfB3VLzNw0p3DTYw
   6sepga: oK9KZn1GqiQEs8tCKlWtcu435z5_rMRmjv4dV8xONfs

@@ -1,6 +1,7 @@
 acceptance_criteria:
-- given: a repository whose corpus holds a data item named review_limits stating another
-    page_bytes quantity, and whose [settings file](settings_file) states none
+- given: a repository whose corpus holds a [data item](data_item) named review_limits
+    stating another page_bytes quantity, and whose [settings file](settings_file)
+    states none
   then: the product reads no more of a page than the bytes it ships
   when: the [best-in-class review](best_in_class_review) is checked there
 - given: a file stating values in the home folder of the user running the product,
@@ -8,10 +9,12 @@ acceptance_criteria:
   then: the product uses the values it ships
   when: a run is built in that repository
 assessed:
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
-  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-87066486: AtzPEAcAbJ1vtpLCqCZnXdrS-wd-THi3TvLIgx4VcF0
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   7tnuse: 11Z0BZL-NCxgmVRwwGvnIhMtP3jLpJi8qZRqoLlxDQs
 priority: medium
@@ -20,7 +23,8 @@ relations:
   REQ-87066486: derives_from
 status: approved
 text: The product shall read a value in place of the value it ships for one of its
-  own parameters, or for a field of an entry of one of its own data items, from no
-  source other than the [settings file](settings_file) of the repository it runs in.
+  own parameters, or for a field of an [entry](entry) of one of its own [data items](data_item),
+  from no source other than the [settings file](settings_file) of the repository it
+  runs in.
 type: functional
 verification: inspection

@@ -1,13 +1,15 @@
 acceptance_criteria:
-- given: an item whose field holds a list of citations
+- given: an [item](item) whose field holds a list of [citations](statement_citation)
   then: no value in the export is written in the notation of the language the product
     is written in
   when: the corpus is exported
-- given: an item whose field holds a list of citations
+- given: an [item](item) whose field holds a list of [citations](statement_citation)
   then: no value shown is written in the notation of the language the product is written
     in
-  when: the item's context is read
-assessed: {}
+  when: the [item](item)'s context is read
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   3wgrmj: GZHpyUZVDgaF6Zw0XuQCs6Nf31PSVXwi-hatg-YCg1o
   5ubj6l: 2qK6_JvD0c8T8iPJVdL2faHwOIBVuPpd0gzNSEQ68JM
@@ -15,7 +17,7 @@ citations:
 priority: medium
 relations: {}
 status: approved
-text: When the product shows an item, the product shall show no value in the notation
-  of the language the product is written in.
+text: When the product shows an [item](item), the product shall show no value in the
+  notation of the language the product is written in.
 type: functional
 verification: inspection

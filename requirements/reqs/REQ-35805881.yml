@@ -15,8 +15,8 @@ acceptance_criteria:
   when: the product scans the [code base](code_base) for [statement citations](statement_citation)
 assessed:
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   5h3hpr: pLs_BK_3I329FT6dsZBnVYsDV5c-ct9inLDRNKm0YDQ
   dktwfq: CUnYcgpWljFKoLwyuNsHOgqIjOoD_rrttmxquTCYCt8

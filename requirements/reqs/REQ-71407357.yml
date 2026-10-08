@@ -8,7 +8,7 @@ acceptance_criteria:
   then: that option value reaches the batch unchanged, as $N with N zero
   when: the [portal](portal) sends them as one batch
 assessed:
-  REQ-81313171: ZHINyeZGDkmi5Oji-Wh97bMVW7xZP5xfBolpuyuiYBE
+  REQ-81313171: 7j0AmKa_kopiVm-Tipo5BlSpSNzCDXY2Q-H7P4APxZk
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   nodqc4: JaC_shpRA7BtjWZj-4WVtdwDF2UZknvygAfDwpH5bRI

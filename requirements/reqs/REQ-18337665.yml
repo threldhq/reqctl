@@ -1,14 +1,15 @@
 acceptance_criteria:
-- given: a [proposal](proposal) whose named items were split into three groups
-  then: the report states the items named for it and three groups
+- given: a [proposal](proposal) whose named [items](item) were split into three groups
+  then: the report states the [items](item) named for it and three groups
   when: the judge prompts are built
-- given: a [proposal](proposal) whose named items were not split
-  then: the report states the items named for it and no group
+- given: a [proposal](proposal) whose named [items](item) were not split
+  then: the report states the [items](item) named for it and no group
   when: the judge prompts are built
 assessed:
-  REQ-30631052: YipkKcwzRStRgjQYay9Wr1bz3AU80L23gLwgBpCP3Go
-  REQ-48762557: awBU6cqFJEkKXAqTfW9LPJgd7WeTwb0_DFX12zHFaj8
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  REQ-30631052: xqJkQgCU4pW_mDKnN6Qgjkkg6YYSS5et_YyN8rWVZU4
+  REQ-48762557: jm9fn2mpwhmlR3rOqfNUCUB2pspY7Gy1WkktVhDxj1k
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   5zcmh2: yfXLq7H_cQjNr0tjeMcPYM3fhdPC02tNQxf3wtlsOpo
 priority: medium
@@ -17,7 +18,7 @@ relations:
   REQ-48762557: depends_on
 status: approved
 text: When judge prompts are built, the product shall report how many judge agents
-  to spawn and, for each [proposal](proposal), how many items were named for it and
-  into how many groups they were split.
+  to spawn and, for each [proposal](proposal), how many [items](item) were named for
+  it and into how many groups they were split.
 type: functional
 verification: inspection

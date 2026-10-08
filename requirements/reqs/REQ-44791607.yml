@@ -1,25 +1,27 @@
 acceptance_criteria:
-- given: prose carrying a parameter reference no item the corpus holds resolves
+- given: prose carrying a parameter reference no [item](item) the corpus holds resolves
   then: the product refuses and names the reference
   when: the prose is written
-- given: prose carrying a link no item the corpus holds resolves
+- given: prose carrying a link no [item](item) the corpus holds resolves
   then: the product refuses and names the link
   when: the prose is written
-- given: an item whose rationale carries a reference no item the corpus holds resolves
+- given: an [item](item) whose rationale carries a reference no [item](item) the corpus
+    holds resolves
   then: the product refuses and names the reference
   when: the rationale is written
-- given: an item on disk whose prose carries a reference or a link resolving to no
-    item
+- given: an [item](item) on disk whose prose carries a reference or a link resolving
+    to no [item](item)
   then: the product refuses and names the reference or the link
   when: the corpus is validated
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   e5vzf6: IrcQjQ1IKPch-6BgeHdEmPM18tw1b67dRqLcMIurIUs
   mtmaxs: Jr43Gb54HOaOJrJFYJ2cfe4WVBx6TQnFb-gFLXGnVXc
 priority: medium
 relations: {}
 status: approved
-text: If an item's prose carries a reference or a link that resolves to no item the
-  corpus holds, then the product shall refuse the prose.
+text: If an [item](item)'s prose carries a reference or a link that resolves to no
+  [item](item) the corpus holds, then the product shall refuse the prose.
 type: functional
 verification: inspection

@@ -1,14 +1,15 @@
 acceptance_criteria:
 - given: a term the corpus holds, renamed and then renamed again
-  then: the item records both names the term carried
+  then: the [item](item) records both names the term carried
   when: the corpus is read
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   7xvisp: 1WF1KRkdNE82yIBLX0x_k4Os3Abg_xIaak6Zw9REWsY
 priority: medium
 relations: {}
 status: approved
-text: When an item is renamed, the product shall record on the item every name the
-  item has carried.
+text: When an [item](item) is renamed, the product shall record on the [item](item)
+  every name the [item](item) has carried.
 type: functional
 verification: inspection

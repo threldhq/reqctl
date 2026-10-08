@@ -1,8 +1,10 @@
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 entries:
   '45': {}
 kind: parameter
 name: judge_bound
 status: deprecated
-text: The most items one judge prompt holds before the items are split into groups
+text: The most [items](item) one judge prompt holds before the [items](item) are split
+  into groups
 value_type: count

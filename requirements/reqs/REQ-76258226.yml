@@ -6,17 +6,18 @@ acceptance_criteria:
   when: trace is run
 - given: an approved requirement whose verification is automated_test, cited outside
     every [test](test) and cited in a [test](test) by a [statement citation](statement_citation)
-    carrying a stamp
+    carrying a [stamp](stamp)
   then: the product reports no problem for want of a [test](test)
   when: trace is run
 - given: an approved requirement whose verification is automated_test, cited outside
-    every [test](test) and cited by a [test](test) carrying a stamp the requirement
+    every [test](test) and cited by a [test](test) carrying a [stamp](stamp) the requirement
     no longer holds
-  then: the product reports the [test](test) citation as behind the corpus and reports
-    no problem for want of a [test](test)
+  then: the product reports the [test](test) [citation](statement_citation) as behind
+    the corpus and reports no problem for want of a [test](test)
   when: trace is run
 assessed:
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 priority: medium
 relations: {}

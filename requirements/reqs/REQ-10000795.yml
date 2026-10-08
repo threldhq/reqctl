@@ -1,21 +1,26 @@
 acceptance_criteria:
-- given: a dictionary item whose entries carry a field and none states it true
-  then: the product refuses and states that no entry of the item states the field
-    true
-  when: a statement addressing the item by that field is written
-- given: a corpus holding a statement addressing a dictionary item by a field no entry
-    states true
-  then: the statement is named as selecting no entry
+- given: a [dictionary item](dictionary_item) whose [entries](entry) carry a field
+    and none states it true
+  then: the product refuses and states that no [entry](entry) of the [item](item)
+    states the field true
+  when: a statement addressing the [item](item) by that field is written
+- given: a corpus holding a statement addressing a [dictionary item](dictionary_item)
+    by a field no [entry](entry) states true
+  then: the statement is named as selecting no [entry](entry)
   when: the corpus is validated
 assessed:
-  REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+  REQ-79222815: smBL1zf2tP96ieg8mVjCeX_0ab2XSS5PpMzqf5Psxdk
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   bg3tyu: 4o4h2CQ2poMWc840jvSX8q5KhhLs6SslrMLi6zrtVN8
 priority: medium
 relations:
   REQ-79222815: constrains
 status: approved
-text: If a statement addresses a dictionary item by a field the item's entries carry
-  and no entry states the field true, then the product shall refuse the statement.
+text: If a statement addresses a [dictionary item](dictionary_item) by a field the
+  [item](item)'s [entries](entry) carry and no [entry](entry) states the field true,
+  then the product shall refuse the statement.
 type: functional
 verification: inspection

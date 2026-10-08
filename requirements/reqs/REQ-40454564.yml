@@ -8,7 +8,7 @@ acceptance_criteria:
   then: no shard of guards is built
   when: the run is built
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   kostqz: 4X8E1DXJT1jXbgPu4qJCQocVmCg8eJiwtMCMjYM9dsE
 priority: medium

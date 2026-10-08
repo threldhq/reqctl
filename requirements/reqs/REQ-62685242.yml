@@ -23,18 +23,18 @@ acceptance_criteria:
   then: the command fails rather than passes
   when: a command names a [citation identity](citation_identity)
 assessed:
-  REQ-11268295: pg6jZYgo_ewwlsjsguS9V3q1k1B7GlITXpMjSuNEtMs
-  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
-  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
-  REQ-41552912: euPwJfYbRxVHf07XCM-m51KRmjBorpF9AOGiEs-fV7Y
+  REQ-11268295: s4gX4poitxmMFgpOmFTj_Woyt8IuBU_7CfpTR6KtmWo
+  REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
+  REQ-26984738: 2Cu-ngxaDd6zI2TwmFRCzBrxeAWxGDX1sZQrNQvfa74
+  REQ-41552912: 53pYi6X7YqhpC01kK6HBkdIxazffynfimm8ZdVR-p4c
   REQ-44424329: FMmHjrkfDEYRCx1n2GhkH0m-aUQg4OZL4rv5u7T2iVw
-  REQ-59136977: 5NZtW-PM9X2OOiZgf5rDE9IouDL_tKWJpcAAzbj8lWo
+  REQ-59136977: -tsi9nTBSL9-E5z25cvfg39BI53Vw4aLjSKhOFE3_oQ
   REQ-73349683: BNT8xnMPL2bnpZe_jKARumLYJXIfWZ-TYLxGblD2GAo
-  REQ-95865306: K4a2U5EVbqcvZEbMKU6G6okjJvdb_AsIH_80HL1iDkw
+  REQ-95865306: 6u2XMnjDwlvRWL5-_pKrk8iVp0_3hH-ZmMG-kwF55DA
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   cwxoe2: UGmgos3VEtcNrwc3e2B0ntMiavdQcqbwoshZCjJkGeI
   yqdz42: wuiq9PniRNMgVD_mQRl1Qzm6HzHkK_qQ0njQdgvyQL4

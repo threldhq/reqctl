@@ -1,25 +1,26 @@
 acceptance_criteria:
-- given: a term whose entry states no word
+- given: a term whose [entry](entry) states no word
   then: the product refuses and states that a term states the word the term is known
     by, as text
   when: the corpus is validated
-- given: a term whose entry states a word of whitespace alone
+- given: a term whose [entry](entry) states a word of whitespace alone
   then: the product refuses and states that a term states the word the term is known
     by, as text
   when: the corpus is validated
-- given: a term whose entry states a word that is not text
+- given: a term whose [entry](entry) states a word that is not text
   then: the product refuses and states that a term states the word the term is known
     by, as text
   when: the corpus is validated
 assessed:
-  REQ-79013939: bHJwWtA0cgeGylANm5kpe06YlFr6uZuhEb2AQRL_7gQ
+  REQ-79013939: LHWesLk8a6d7Nz6MIWvKECc-xqQW8pxjMo0bdCD2kkI
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
   iwiit6: 6xfCMwImlzexDY6ZFpG2BDzeRDxm5Q9YYnQ8WnuhvOQ
 priority: medium
 relations:
   REQ-79013939: depends_on
 status: approved
-text: The product shall refuse a term whose entry does not state the term's word as
-  text that is not blank.
+text: The product shall refuse a term whose [entry](entry) does not state the term's
+  word as text that is not blank.
 type: functional
 verification: inspection

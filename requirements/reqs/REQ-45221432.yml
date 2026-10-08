@@ -6,7 +6,7 @@ acceptance_criteria:
   then: the product refuses the run
   when: the run is built
 assessed:
-  REQ-21699310: XKeWkfefGruJjoLqEt3Ike69aKvNUkYHX-ifNPVZv7o
+  REQ-21699310: HJWvkB2QKjezjtqzZI9C7DUH10znW_JI74idG6b09tM
 citations:
   2p6w7j: lS097rHuncxFUWY4Q0WMTZ8m3B5qQKPL2cB-soXrrZQ
 priority: medium

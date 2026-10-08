@@ -1,28 +1,30 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) naming a stamp the approved parameter
-    it names no longer carries
-  then: the product reports the citation as a problem
+- given: a [statement citation](statement_citation) naming a [stamp](stamp) the approved
+    parameter it names no longer carries
+  then: the product reports the [citation](statement_citation) as a problem
   when: trace is given no base branch
-- given: a [statement citation](statement_citation) of a data item whose [citation
-    digest](citation_digest) differs from the one the data item's [citation list](citation_list)
-    holds for it
-  then: the product reports the citation as a problem
+- given: a [statement citation](statement_citation) of a [data item](data_item) whose
+    [citation digest](citation_digest) differs from the one the [data item](data_item)'s
+    [citation list](citation_list) holds for it
+  then: the product reports the [citation](statement_citation) as a problem
   when: trace is run
 - given: a [test](test) carrying a [statement citation](statement_citation) of a parameter
-  then: the product reports the citation as a problem and names no [test](test) among
-    what cites the parameter
+  then: the product reports the [citation](statement_citation) as a problem and names
+    no [test](test) among what cites the parameter
   when: trace is run
 assessed:
   REQ-13384695: P9NXsZKZp683hy0Csa1HeSwHpU5MeNs-vEcM2BbccvM
-  REQ-18176935: u-uprH5qBxMTk7RLhLVJ39PV5F5depbLxxBYrr2xkWY
+  REQ-18176935: A6AhLhUZ7MdW9hwmBteIS6PgGLCXGQZTf7lwxGt04mo
   REQ-19896380: 2sOnckMwnWfx54LPxaP0CI5eHt16m804M_5H5fFPhcQ
-  REQ-32191310: ot16I3lSs2Nu4P6630ojNQEKWmJJU0EywrhZK2VN4Uk
-  REQ-37671861: eoVPY6SstgbetS0rAHq4o5hHXcsjM7IcFqoGd47cswk
+  REQ-32191310: aZkvQ6hvIwPv7dwtDhJL8Ueb_kDpcyzi1J_lbXQYl0g
+  REQ-37671861: FYhkOL5YKzhGd_URbF6YvbaJWFY2yPX6asNbQIFxmsQ
   REQ-67655319: ezp6TxUzJ72EeXlq0cOSWQ13pMcIBZgw_tCI2-n2jDI
-  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
-  citation_digest: P0B_wyGMXd0g87oxCpk-YqeQLW01MECv1WuzJa3yS6Q
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 citations:
   7nucmz: _j4m7u2QfK8sEajd4Njs2w-iJKA_SZwajrI-Jz2fuT4
@@ -39,7 +41,7 @@ relations:
   REQ-88203622: depends_on
 status: approved
 text: When trace is run, the product shall report each [statement citation](statement_citation)
-  of a parameter or a data item exactly as the product reports a [statement citation](statement_citation)
-  of a requirement.
+  of a parameter or a [data item](data_item) exactly as the product reports a [statement
+  citation](statement_citation) of a requirement.
 type: functional
 verification: inspection

@@ -1,5 +1,5 @@
 acceptance_criteria:
-- given: reqctl --json context naming an item the corpus does not hold
+- given: reqctl --json context naming an [item](item) the corpus does not hold
   then: 'standard error holds the one line reqctl: followed by the message, and reqctl
     ends with a non-zero exit status'
   when: the standard output is closed before the fault is written
@@ -12,6 +12,7 @@ acceptance_criteria:
   when: the command ends
 assessed:
   REQ-19913588: Pbi1CR5jtivz8qi3AlI320-7pRuKcedppG7UpnOk2TU
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   7acuon: VtvX4ObWWQFZF-d0VGdSOEE4SrrKppKST--aqmWG-Eg
   s75lcl: 2gLwaf56_jtOUKbDoAp7OokT4D9pwzb7y-9sEX-TUfE

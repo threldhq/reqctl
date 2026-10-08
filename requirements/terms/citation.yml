@@ -1,0 +1,17 @@
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+entries:
+  citation:
+    aliases:
+    - citations
+    definition: 'What names an [item](item), or an [entry](entry) of one, for the
+      code it covers: a [statement citation](statement_citation), or a record the
+      [item](item) holds of an entire file.'
+    unclaimed:
+      citations fell outside the key: addresses a judge's verdict names, counted by
+        the probe harness
+    word: citation
+kind: term
+status: approved

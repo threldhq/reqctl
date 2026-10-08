@@ -1,17 +1,18 @@
 acceptance_criteria:
-- given: the [kind schema](kind_schema) gains a field for a kind of item
+- given: the [kind schema](kind_schema) gains a field for a kind of [item](item)
   then: reqctl accepts the flag, with no edit to reqctl's parser
   when: reqctl new runs with that field's flag for that kind
 - given: the [kind schema](kind_schema) changes the values a field allows
   then: reqctl refuses the value, with no edit to reqctl's parser
   when: reqctl new runs with a value the schema no longer allows
 - given: reqctl's parser
-  then: it names no flag of its own for an item's field
+  then: it names no flag of its own for an [item](item)'s field
   when: it is read
 assessed:
-  REQ-13148397: XXob_8TNNhHNxQ0WHfaFlfOb0AM_DHtJIkCKTBVfhm0
-  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
-  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
   f7bkcf: UOYPZoP_vEGHAolBRjG1EaOXsUO6juTrfpSG6hY5ItE
 priority: medium
@@ -19,7 +20,7 @@ relations:
   REQ-13148397: depends_on
   REQ-44451070: depends_on
 status: approved
-text: The product shall build the flags that reqctl new takes for an item's fields
-  from the [kind schema](kind_schema).
+text: The product shall build the flags that reqctl new takes for an [item](item)'s
+  fields from the [kind schema](kind_schema).
 type: constraint
 verification: inspection
