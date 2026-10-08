@@ -66,6 +66,7 @@ def paths_named(text, holder, known):
     faults = []
     if Path(holder).name == "SKILL.md":
         text = text.replace(SKILL_DIR, str(Path(holder).parent))
+    # @req> GUARD-22794969@9zSROQYCCtPU rubhxs
     for number, line in enumerate(text.splitlines(), 1):
         for found in PATHISH.finditer(line):
             named = found.group(0)
@@ -83,6 +84,7 @@ def paths_named(text, holder, known):
 
 def flags_named(text, holder, defined):
     faults = []
+    # @req> GUARD-50817018@Yqq4j4T1WIhv bndeye
     for number, line in enumerate(text.splitlines(), 1):
         for found in QUOTED_FLAG.finditer(line):
             if found.group(1) not in defined:

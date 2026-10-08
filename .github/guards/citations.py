@@ -9,6 +9,7 @@ SETTLING = "SETTLING"
 
 
 def traced():
+    # @req+ GUARD-87780053@FAmfCmKiJnLk t2bzx7
     try:
         found = subprocess.run(["reqctl", "--json", "trace"],
                                capture_output=True, text=True, check=False)
@@ -19,6 +20,7 @@ def traced():
     except json.JSONDecodeError:
         raise SystemExit("cannot read trace: "
                          f"{found.stderr.strip() or found.stdout.strip()}")
+    # @req- t2bzx7
 
 
 def _stale(data):
@@ -41,6 +43,7 @@ def deferred(data, settling):
 
 
 def main():
+    # @req+ GUARD-12397751@ZZpZOVKQVB3u 7skmd6
     data = traced()
     settling = os.environ.get(SETTLING) == "true"
     found = faults(data, settling)
@@ -50,6 +53,7 @@ def main():
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0
+    # @req- 7skmd6
 
 
 if __name__ == "__main__":

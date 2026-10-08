@@ -19,9 +19,11 @@ Ideas in, a requirements pull request out. Nothing here approves anything: the
 merge is the approval, and only the owner merges.
 
 <!-- @req+ REQ-12222066@fbTfN4X4xFUs bzkv6x -->
+<!-- @req+ REQ-89642091@-fsID3Q5hG8u 7wkwzy -->
 No further step runs while a question you put the owner is unanswered. Post the
 questions, then end your turn; under a goal, where that does not wait, collect
 the answers with the question picker.
+<!-- @req- 7wkwzy -->
 <!-- @req- bzkv6x -->
 
 ```
@@ -131,6 +133,7 @@ something the statement does not already say. Then:
   would say aloud -- one type, both organisations -- is written as a word and
   governs nothing.
 
+<!-- @req+ REQ-39992377@fcd_dP7gzFbL 32ma5e -->
 - **A set of words is a data item; one quantity's tiers are a parameter.**
   Providers, formats, view types are words: mint one `DATA` --
   `reqctl new data --name export_formats --entry json --entry markdown` -- and
@@ -139,6 +142,7 @@ something the statement does not already say. Then:
   count`, exactly as a lone threshold. `.github/guards/taxonomy.py` states the
   line and refuses the wrong side of it, so it is not restated here.
   Either way it is one named place, versioned, and adding a member re-reviews
+<!-- @req- 32ma5e -->
   everything stated against it. Do not spell the members out inside a
   statement, and do not mint a requirement per option. Each member is an
   entry: `--default` names the one `${name.default}` selects, and

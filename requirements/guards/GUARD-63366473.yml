@@ -13,6 +13,8 @@ assessed:
   comment_markers.*: sKVxZqeKEsdmvnSvKzQK3c2emeFoUWxgNGlWTZKxnGI
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  dbfg3l: jZf8TWOC4u7C4u9cvbYZrXva-2ag7YYLABhWNrHIwI4
 relations: {}
 status: approved
 text: If a comment or docstring outside the [corpus root](corpus_root) holds one of

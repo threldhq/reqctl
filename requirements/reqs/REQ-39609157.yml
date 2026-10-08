@@ -19,6 +19,8 @@ acceptance_criteria:
 assessed:
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.baseline_numbering: ATiWO51GU0WqKs1hKWHG4J6MBrjuM6meiHzxG3u9ovk
+citations:
+  tycvj6: 9ICHtlJL5DieXsKCV9MxQdBembCTw21lUInnR-mEOiM
 priority: medium
 relations: {}
 status: approved

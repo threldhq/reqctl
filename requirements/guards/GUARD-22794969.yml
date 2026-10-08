@@ -17,6 +17,8 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   path_suffixes: Xra8WAFW9yj6q5X3w79Fxzu-ZKQIgGPH3AukLp2J9rs
   path_suffixes.*: bmng8G3uhq9TttUzoObCrQD3SGwXiZlfYAUswfU4poY
+citations:
+  rubhxs: fXCnkniyowLn9WnT8nMVwe8uX-YxvA9XSSIXEVdfeHI
 relations: {}
 status: approved
 text: If a markdown file outside the [corpus root](corpus_root) names a file path

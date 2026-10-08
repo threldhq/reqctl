@@ -22,12 +22,14 @@ NOT_FOUND = 127
 MISSING = re.compile(r"([\w./-]+): command not found")
 
 PASS, FAIL, SKIP = "pass", "FAIL", "skip"
+# @req> GUARD-63869848@V9lllz-dAIsM ykvsgh
 DIRTY = ("the working tree holds uncommitted changes, and what this touches was "
          "read from committed history only -- commit first, or pass --event "
          "workflow_dispatch to run every step")
 
 
 def caveat(status):
+    # @req> GUARD-38013284@PVuWil-RXTeh gdabnx
     if status.returncode:
         sys.exit("cannot tell whether the working tree is committed: "
                  + (status.stderr.strip()
@@ -149,8 +151,10 @@ def main(argv=None):
     changed = {key.rsplit(".", 1)[-1] for key, value in found.items()
                if value == "true"}
     print(f"this tree touches: {', '.join(sorted(changed)) or 'nothing'}")
+    # @req+ GUARD-63869848@V9lllz-dAIsM 5xmujr
     uncommitted = caveat(run("git status --porcelain", {}))
     print(f"{uncommitted}\n" if uncommitted else "")
+    # @req- 5xmujr
 
     for job, step in steps_of(doc) + steps_of(gates):
         name = step.get("name") or step.get("id") or "unnamed"
@@ -179,8 +183,10 @@ def main(argv=None):
             report(SKIP, name, "provisions the environment")
             continue
         settings.setdefault("GITHUB_EVENT_NAME", context["github.event_name"])
+        # @req+ GUARD-29439031@Yrqmt10udLze e2sjnw
         where = step.get("working-directory")
         done = run(step["run"], settings, ROOT / where if where else ROOT)
+        # @req- e2sjnw
         if done.returncode == NOT_FOUND:
             counts[SKIP] += 1
             absent = MISSING.search(done.stderr or "")
