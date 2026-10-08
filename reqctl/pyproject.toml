@@ -32,7 +32,6 @@ select = ["E4", "E7", "E9", "F", "TID251"]
 
 [tool.ruff.lint.per-file-ignores]
 "reqctl/corpus.py" = ["TID251"]
-"tests/**" = ["TID251"]
 
 [tool.mypy]
 python_version = "3.13"

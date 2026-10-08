@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
+          cache-dependency-path: |
+            reqctl/requirements-lock.txt
+            reqctl/requirements-dev-lock.txt
 
       - name: What this change touches
         id: touched
@@ -133,6 +136,9 @@ jobs:
 
       - name: Workflow syntax
         run: actionlint
+
+      - name: Shell scripts
+        run: git ls-files -z '*.sh' | xargs -0 shellcheck
 
       - name: Workflow security
         run: zizmor --offline .github/workflows

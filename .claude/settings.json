@@ -59,12 +59,6 @@
       "Edit(requirements/terms/**)",
       "Edit(requirements/data/**)",
       "Edit(requirements/baseline.yml)",
-      "Write(requirements/reqs/**)",
-      "Write(requirements/guards/**)",
-      "Write(requirements/params/**)",
-      "Write(requirements/terms/**)",
-      "Write(requirements/data/**)",
-      "Write(requirements/baseline.yml)",
       "Skill(mattpocock-skills:domain-modeling)",
       "Skill(mattpocock-skills:research)"
     ]
