@@ -472,8 +472,7 @@ def discarded(words):
         return WHOLE_TREE, False, False
     if subcommand == "checkout" and operands:
         tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"])
-        named = operands[1:] if tree is not None else operands
-        return (named or None), False, False
+        return (operands[1:] if tree is not None else operands) or None, False, False
     return None, False, False
 
 
@@ -728,7 +727,7 @@ def decide(data: dict) -> None:
             values = values + named_paths(args, GLOB_KEY)
         for value in values:
             named = flatten(value.replace("\\", "/"))
-            if names_corpus(named):
+            if CORPUS_DIR.search(named) or is_corpus_root(named):
                 deny(DIRECT_READ.format(target=value))
 
     judge_citation_edit(tool, args)
