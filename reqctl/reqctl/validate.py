@@ -608,14 +608,11 @@ def quantities(text):
 
 
 def _quantities(data):
-    entries = corpus.entries(data)
-    if entries:
-        data = dict(data, entries={
-            key: {**{name: value for name, value in fields.items() if name != "unit"},
-                  "quantity": f"{fields['quantity']} {fields['unit']}"}
-            if isinstance(fields, dict) and "quantity" in fields and fields.get("unit")
-            else fields
-            for key, fields in entries.items()})
+    data = dict(data, entries={
+        key: {**fields, "quantity": f"{fields['quantity']} {fields['unit']}"}
+        if isinstance(fields, dict) and "quantity" in fields and fields.get("unit")
+        else fields
+        for key, fields in (corpus.entries(data) or {}).items()})
     return quantities(
         corpus.PARAM_REF.sub(" ", corpus.CONCEPT_LINK.sub(r"\1", corpus.prose(data))))
 
