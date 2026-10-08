@@ -3,7 +3,7 @@ acceptance_criteria:
   then: the report lists the question under its [proposal](proposal)
   when: the verdicts are read
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   v3dvwn: 8sOwnxYhQBPUH9KWYmjULWebrur0TBRf9Rckqzeo6kA
 priority: medium

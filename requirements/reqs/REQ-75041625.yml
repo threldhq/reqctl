@@ -10,9 +10,9 @@ acceptance_criteria:
   when: the [best-in-class review](best_in_class_review) is checked there
 assessed:
   REQ-16868696: xXhoCmAQTytnVrvnTQYgjV8cwWwvJUq3oO1yFYNtDPE
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   kehox2: HjelHxsIO9T2vMp7RX36MCXQdtxRUMON2LszE0YddbQ
   of23ld: crISqMFeJex7H9iH9K-dJ30fhpyoJnRDjRYPTF-zR70

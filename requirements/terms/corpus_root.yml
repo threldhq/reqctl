@@ -1,8 +1,9 @@
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 entries:
   corpus_root:
     definition: 'The folder named requirements that holds a repository''s corpus:
-      its folders of items, its schemas and its baseline.'
+      its folders of [items](item), its schemas and its baseline.'
     word: corpus root
 kind: term
 status: approved

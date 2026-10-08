@@ -1,25 +1,27 @@
 acceptance_criteria:
-- given: an item stating a quantity and a unit that another item already states
-  then: the product names both items and states that a single parameter both reference
-    is where the quantity belongs
-  when: the item is written
-- given: two items each stating the same quantity with no unit
-  then: the product refuses and names both items
+- given: an [item](item) stating a quantity and a unit that another [item](item) already
+    states
+  then: the product names both [items](item) and states that a single parameter both
+    reference is where the quantity belongs
+  when: the [item](item) is written
+- given: two [items](item) each stating the same quantity with no unit
+  then: the product refuses and names both [items](item)
   when: the corpus is validated
-- given: an item stating a quantity with a unit and another item stating the same
-    number with no unit
-  then: the product accepts both items
+- given: an [item](item) stating a quantity with a unit and another [item](item) stating
+    the same number with no unit
+  then: the product accepts both [items](item)
   when: the corpus is validated
-- given: two items stating the same quantity in different units
-  then: the product accepts the items
+- given: two [items](item) stating the same quantity in different units
+  then: the product accepts the [items](item)
   when: the corpus is validated
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   4h2aan: b5cb9Bv-QDqBvOuqHJBiStQB1-Fm2uSlZ2lIyaSoT4Q
 priority: medium
 relations: {}
 status: approved
-text: If more than one item states the same quantity in the same unit, then the product
-  shall refuse the item.
+text: If more than one [item](item) states the same quantity in the same unit, then
+  the product shall refuse the [item](item).
 type: functional
 verification: inspection

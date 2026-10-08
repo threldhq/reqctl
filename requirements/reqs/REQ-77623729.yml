@@ -1,17 +1,21 @@
 acceptance_criteria:
-- given: an item stating a default and a statement selecting default on the item
+- given: an [item](item) stating a default and a statement selecting default on the
+    [item](item)
   then: the product finds the reference resolved
   when: the reference is checked for resolution
-- given: an item stating no default and a statement selecting default on the item
-  then: the product names the item as stating no default
+- given: an [item](item) stating no default and a statement selecting default on the
+    [item](item)
+  then: the product names the [item](item) as stating no default
   when: the reference is checked for resolution
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   elfpax: WYlpmhMtltgbjcbRCdZ4Idh9sGw8aZpFDS48im9ir9U
 priority: medium
 relations: {}
 status: approved
-text: When a reference is checked for resolution against the members an item carries,
-  the product shall count default among the members only where the item states a default.
+text: When a reference is checked for resolution against the members an [item](item)
+  carries, the product shall count default among the members only where the [item](item)
+  states a default.
 type: functional
 verification: inspection

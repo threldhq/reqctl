@@ -1,15 +1,16 @@
 acceptance_criteria:
 - given: a repository stating its own schema for a kind
-  then: each item of that kind is read through the repository's schema and not the
-    packaged one
+  then: each [item](item) of that kind is read through the repository's schema and
+    not the packaged one
   when: the corpus is validated
 - given: a repository whose own schema for a kind does not compile
   then: the product reports that schema as broken rather than falling back to the
     packaged one
   when: the corpus is validated
 assessed:
-  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
-  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
   4fsesd: sWBmKBb8AlLIEHAV49_K9f_rtF85m1B8V5GNVCBdbo0
 priority: high

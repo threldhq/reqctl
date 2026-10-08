@@ -1,12 +1,12 @@
 acceptance_criteria:
 - given: a one-comment [statement citation](statement_citation) with no [code statement](code_statement)
     after it before the end of the file
-  then: the product refuses the citation
+  then: the product refuses the [citation](statement_citation)
   when: the product reads the code
 assessed:
-  REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   ytqmle: W2NcyQzYFvey8EgGMYemmU5VH_Jn2c0WLyuB-snWq_c
 priority: medium
@@ -14,6 +14,6 @@ relations:
   REQ-42668747: constrains
 status: approved
 text: If no [code statement](code_statement) follows a one-comment [statement citation](statement_citation),
-  then the product shall refuse the citation.
+  then the product shall refuse the [citation](statement_citation).
 type: functional
 verification: inspection

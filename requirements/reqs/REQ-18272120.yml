@@ -8,7 +8,7 @@ acceptance_criteria:
   when: a run is built
 assessed:
   REQ-48148587: wA7bmyxqWF2Zyx_B5SQ9MYQnHdmvjYgBCyR5jwnCrqM
-  REQ-48762557: awBU6cqFJEkKXAqTfW9LPJgd7WeTwb0_DFX12zHFaj8
+  REQ-48762557: jm9fn2mpwhmlR3rOqfNUCUB2pspY7Gy1WkktVhDxj1k
 priority: medium
 relations:
   REQ-48148587: constrains

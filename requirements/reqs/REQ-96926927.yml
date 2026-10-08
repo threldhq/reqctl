@@ -1,8 +1,9 @@
 acceptance_criteria:
-- given: an item the corpus holds
+- given: an [item](item) the corpus holds
   then: the product refuses the revision
   when: revise is run naming no field
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   q2ou3q: 3ZCrdPsC0-O2uldHKM-xDrzDGglPh92Ke8NcvQHZWws
 priority: medium

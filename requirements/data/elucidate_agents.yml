@@ -1,6 +1,7 @@
 assessed:
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   bmtivj: gdXzEAupbBx0TkShP79UZTCg-dkmQmquKSwQ0YHb9pc
 entries:
@@ -19,8 +20,8 @@ entries:
     effort: high
     model: claude-opus-5-5
   recall:
-    definition: an agent that names, from one shard of the corpus, the items bearing
-      on a run's [proposals](proposal)
+    definition: an agent that names, from one shard of the corpus, the [items](item)
+      bearing on a run's [proposals](proposal)
     effort: medium
     model: claude-sonnet-5-5
 kind: data

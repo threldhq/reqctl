@@ -1,19 +1,22 @@
 acceptance_criteria:
-- given: a data item is given a name and no entry
-  then: reqctl refuses the item, naming --entry, and writes no file
+- given: a [data item](data_item) is given a name and no [entry](entry)
+  then: reqctl refuses the [item](item), naming --entry, and writes no file
   when: reqctl new runs
 - given: a parameter is given a name, a text and a value, and no value type
-  then: reqctl refuses the item, naming --value-type
+  then: reqctl refuses the [item](item), naming --value-type
   when: reqctl new runs
 - given: a requirement is given a text and no verification
   then: reqctl [mints](mint) the requirement
   when: reqctl new runs
 assessed:
-  REQ-13148397: XXob_8TNNhHNxQ0WHfaFlfOb0AM_DHtJIkCKTBVfhm0
-  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
-  REQ-71965656: LcOQ8O1Sqy_nLhwZqAOb7fWRt-a_sZidII4lZiliL8Q
-  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  REQ-71965656: F8ulVugEMpD-KciC93Ppv6DJGlz_QdY_TQ7CH57K7hw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   4zgzmu: bKFvt9Ejgzy5m0OVuE3gw4tmOG6qKuRvd-zF9jUKkYY
 priority: medium
@@ -23,7 +26,7 @@ relations:
   REQ-71965656: depends_on
 status: approved
 text: If reqctl new is not given a flag for every field that the [kind schema](kind_schema)
-  requires and reqctl fills in no default for, then the product shall refuse the item,
+  requires and reqctl fills in no default for, then the product shall refuse the [item](item),
   naming each flag it lacks.
 type: functional
 verification: inspection

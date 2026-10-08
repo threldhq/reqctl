@@ -9,7 +9,8 @@ acceptance_criteria:
 - given: a change to the baseline and to a code file
   then: the product reports no problem
   when: the change is checked against its base branch
-- given: a change only to the pins a corpus item holds, and to a code file
+- given: a change only to the [pins](pin) a corpus [item](item) holds, and to a code
+    file
   then: the product reports no problem
   when: the change is checked against its base branch
 - given: a change to a requirement's text and an added [statement citation](statement_citation)
@@ -24,13 +25,16 @@ acceptance_criteria:
   then: the product reports no problem
   when: the change is checked against its base branch
 assessed:
-  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
-  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  REQ-75539229: 263gd_-RLfVLJTxPjnM8Lcc2AlTeCxUZZH9498fcB_w
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.travel_alone: xaRPsjgxbPYBMGiOCJLRgvNdNNM9Z_uxjF7sdEvA8XA
-  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   c6qh2i: fIcx0gXAAIubm8I4M5fj4fkAvjDJ9WV0Lo-_qRZweAQ
   qya7yo: 6gqIuxlvm25E6LmyvkzX85xHMEOgFr8CQpFaVp0G0B8
@@ -40,9 +44,10 @@ relations:
   REQ-75539229: depends_on
 status: approved
 text: If a change touches both a file under the [corpus root](corpus_root) other than
-  the baseline, in more than its pins and its [citation list](citation_list), and
-  a file outside the [corpus root](corpus_root), in more than the stamps its [statement
-  citations](statement_citation) name, then the product shall report a problem when
-  the ${corpus_gates.travel_alone} gate checks the change against its base branch.
+  the baseline, in more than its [pins](pin) and its [citation list](citation_list),
+  and a file outside the [corpus root](corpus_root), in more than the [stamps](stamp)
+  its [statement citations](statement_citation) name, then the product shall report
+  a problem when the ${corpus_gates.travel_alone} gate checks the change against its
+  base branch.
 type: functional
 verification: inspection

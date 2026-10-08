@@ -2,15 +2,16 @@ acceptance_criteria:
 - given: a build asked for with a shard bound below one character
   then: the product refuses the run and writes no prompt
   when: the run is built
-- given: a build asked for with a shard bound below one item
+- given: a build asked for with a shard bound below one [item](item)
   then: the product refuses the run
   when: the run is built
 - given: a build asked for with a line bound below one line
   then: the product refuses the run
   when: the run is built
 assessed:
-  REQ-43761464: pFlii3nabPOTuWWSHzIo1C68Txtw5FfEGYZqOyxB-7U
+  REQ-43761464: FjNB-AZH1A0m4TkxK-5qCov9uh1hK4rEo9MSIQwhuVU
   REQ-80951798: Yv9lsMtU3XdIOfhWtWTfHptWO9bkmyp3LS4FmYVkfDM
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   7e7svw: ZMdrZnoOn3FnVIR8DoznYV8mKvVdXyni2icfVm-ujv4
 priority: medium
@@ -19,6 +20,6 @@ relations:
   REQ-80951798: constrains
 status: approved
 text: If a run is to be built with a bound below one on a shard's characters, a shard's
-  items or a prompt's lines, then the product shall refuse the run.
+  [items](item) or a prompt's lines, then the product shall refuse the run.
 type: functional
 verification: inspection

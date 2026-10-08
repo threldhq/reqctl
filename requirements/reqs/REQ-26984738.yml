@@ -1,16 +1,16 @@
 acceptance_criteria:
 - given: a [statement citation](statement_citation) carried in a pair of comments
   then: neither line holding one of the comments remains
-  when: the product removes the citation by its [citation identity](citation_identity)
+  when: the product removes the [citation](statement_citation) by its [citation identity](citation_identity)
 - given: a [statement citation](statement_citation) carried in one comment
   then: the line holding the comment no longer remains
-  when: the product removes the citation by its [citation identity](citation_identity)
+  when: the product removes the [citation](statement_citation) by its [citation identity](citation_identity)
 assessed:
-  REQ-42668747: GGAkEqZHFwdIrZLerMwJ2tU793X3S8b9PSH3xSI1NkU
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
   REQ-44424329: FMmHjrkfDEYRCx1n2GhkH0m-aUQg4OZL4rv5u7T2iVw
-  REQ-52925332: wlFlbfJQbQ2gqIjErGfBauLYXHtxjsRI5YchAUMzbPY
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   a4ywox: v_rK_IBFTsu41-c2Ggk9O96iIQULR1TZ1ivApGyqMT8
 priority: medium
@@ -21,6 +21,6 @@ relations:
 status: approved
 text: When the product removes the [statement citation](statement_citation) naming
   a [citation identity](citation_identity), the product shall delete every line holding
-  a comment that carries the citation.
+  a comment that carries the [citation](statement_citation).
 type: functional
 verification: inspection

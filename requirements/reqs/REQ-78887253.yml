@@ -1,16 +1,17 @@
 acceptance_criteria:
 - given: a repository whose [settings file](settings_file) states the text forty for
-    the quantity of the recall_batch entry of challenge_bounds
+    the quantity of the recall_batch [entry](entry) of challenge_bounds
   then: the product refuses the run, naming the file, the key and the value
   when: a run is built there
 - given: a repository whose [settings file](settings_file) states 20.0 for the quantity
-    of the judge_group entry of challenge_bounds
+    of the judge_group [entry](entry) of challenge_bounds
   then: the product refuses the run, naming the file, the key and 20.0
   when: a run is built there
 assessed:
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
-  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-87066486: AtzPEAcAbJ1vtpLCqCZnXdrS-wd-THi3TvLIgx4VcF0
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   iywc46: sMdSnANV7UfKLHD9sRK_Xd8wspLX10i1il5nn3WBmgU
   yaohat: sedlIZcHl_Zcg2fD-1YXPL4zHSEiu6QyuKJE19pBAvY

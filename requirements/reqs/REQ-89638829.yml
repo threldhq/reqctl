@@ -1,9 +1,10 @@
 acceptance_criteria:
 - given: the setup screen is submitted with a repository not of the form owner/repo
   then: the product remembers nothing and states that the form is owner/repo
-  when: the entry is checked
+  when: the [entry](entry) is checked
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
   vcqk3a: hg5w-yIKpr9g6pqt3afoWoJlFri949mLAHBt9IDIhjo
 priority: medium
@@ -11,6 +12,6 @@ relations:
   REQ-38789214: constrains
 status: approved
 text: If the repository entered on the setup screen is not of the form owner/repo,
-  then the product shall refuse the entry and state the form it expects.
+  then the product shall refuse the [entry](entry) and state the form it expects.
 type: functional
 verification: inspection

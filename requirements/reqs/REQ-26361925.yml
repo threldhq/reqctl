@@ -1,16 +1,17 @@
 acceptance_criteria:
 - given: an approved requirement whose verification is inspection, cited by a [statement
-    citation](statement_citation) carrying a stamp and cited by no [test](test)
+    citation](statement_citation) carrying a [stamp](stamp) and cited by no [test](test)
   then: the product reports no problem for the requirement
   when: trace is run
 - given: an approved requirement whose verification is inspection, cited only by code
-    carrying a stamp the requirement no longer holds
-  then: the product reports the citation as behind the corpus and reports no problem
-    for want of a [test](test)
+    carrying a [stamp](stamp) the requirement no longer holds
+  then: the product reports the [citation](statement_citation) as behind the corpus
+    and reports no problem for want of a [test](test)
   when: trace is run
 assessed:
-  REQ-76258226: 8oshGhfGWgBFGznGPQjp4TUQB00QeANN6QlKdQho8ew
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-76258226: ApbOmIZEiGx1tu0fiHRsRDgOLVZAOtLA-LvPQSIFcX8
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 priority: medium
 relations:

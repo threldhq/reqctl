@@ -8,7 +8,7 @@ acceptance_criteria:
   when: a revision made in the [portal](portal)'s Revise form with the box unchanged
     is applied
 assessed:
-  REQ-52483245: aBzpGUKfyp4PnSJq46E27oVwb_uZVff24uHTZI8hoRE
+  REQ-52483245: NPXNQr0pzcshlWoH9mR0xZXIdLrBW_nRw9jutJWfLug
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   REQ-59010401: pkTwqJqZIeSw-huBiWyR5oqxIBYaRmYIRIdb6MyFIhI
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ

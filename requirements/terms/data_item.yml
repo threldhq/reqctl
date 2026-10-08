@@ -1,0 +1,12 @@
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  item_kinds: t75HAgoBM1uNpqk8NBtfqHIonFl3FyBu7Z2omwAA9ms
+  item_kinds.data: SFFXvEnISFosE8hgrjrs7ixtDUZ-mjEecw5Wn77d6jA
+entries:
+  data_item:
+    aliases:
+    - data items
+    definition: An [item](item) of the ${item_kinds.data} kind.
+    word: data item
+kind: term
+status: approved

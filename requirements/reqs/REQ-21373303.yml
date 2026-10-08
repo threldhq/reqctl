@@ -11,7 +11,8 @@ acceptance_criteria:
   when: the description is rendered
 assessed:
   REQ-83939497: o4e6KsfHMIgpZNUMun5sxU_LTejAce5WMR5k_5XAUb4
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   qzk6eu: N0-dmIgL1PYdFWZlKFZBed6dTGgTZMMX7BN-T6zhK1Q
   vadyl4: aNaW9O6St8YvRZAIKWemSQoH1UowuphMb-1lyGuI9IE
@@ -21,7 +22,7 @@ relations:
 status: approved
 text: When a run's pull request description is rendered, the product shall state for
   each [proposal](proposal) the owner's words the [proposal](proposal) traces to,
-  each item the [proposal](proposal)'s verdict names with the verdict on that item,
-  and the run's declined list.
+  each [item](item) the [proposal](proposal)'s verdict names with the verdict on that
+  [item](item), and the run's declined list.
 type: functional
 verification: inspection

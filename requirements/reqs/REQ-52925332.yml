@@ -1,16 +1,16 @@
 acceptance_criteria:
 - given: code carrying a comment that opens a [statement citation](statement_citation)
     and a comment that closes it
-  then: the product takes the lines between the two comments as the lines the citation
+  then: the product takes the lines between the two comments as the lines the [citation](statement_citation)
     covers
-  when: the product reads the citation
+  when: the product reads the [citation](statement_citation)
 - given: code carrying two [statement citations](statement_citation) open at once
-  then: the product closes the citation naming the [citation identity](citation_identity)
-    that comment names
+  then: the product closes the [citation](statement_citation) naming the [citation
+    identity](citation_identity) that comment names
   when: the product reads a closing comment
 assessed:
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   cczml5: iUJvqQ3NDZ-N1nsyq6xErms0WEl6VWaRtCgyCvTLZ6s
   tup4w2: -PX0aIn0MECu0OINH53cogA095iLuIw7Q-x3XfBUFFc
@@ -20,7 +20,7 @@ relations: {}
 status: approved
 text: The product shall take a [statement citation](statement_citation) carried in
   a comment as covering the lines that fall between that comment and the comment that
-  closes the citation by naming the [citation identity](citation_identity) the citation
-  names.
+  closes the [citation](statement_citation) by naming the [citation identity](citation_identity)
+  the [citation](statement_citation) names.
 type: functional
 verification: inspection

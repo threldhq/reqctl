@@ -1,13 +1,16 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) of one entry of a data item
-  then: the comments carrying it and what the data item's [citation list](citation_list)
+- given: a [statement citation](statement_citation) of one [entry](entry) of a [data
+    item](data_item)
+  then: the comments carrying it and what the [data item](data_item)'s [citation list](citation_list)
     holds for it are gone
-  when: the product removes the citation
+  when: the product removes the [citation](statement_citation)
 assessed:
-  REQ-22755763: jWQQtKhJ8JoO_gFCNaK6GDJCv93GcomxUpOHsgzRt7w
-  REQ-44322088: XOM-uvuGSwbDBMDqFG3C2HIIj_FlcHKbfIS1AJzbW-I
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-22755763: lFaaseccSg81IX_v5DMXnn03ZufehG0M9UKFDpAdjnw
+  REQ-44322088: sDoz9XZ22EBjbjTIoG2zLwRbFHveW40iiTtuKa0dzwI
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   iwdu5n: q-SIChARCD0Wh13KP6Yv94fJTA2EPCcz7O2A3KdaQM8
 priority: medium
@@ -15,8 +18,8 @@ relations:
   REQ-22755763: depends_on
   REQ-44322088: derives_from
 status: approved
-text: The product shall remove a [statement citation](statement_citation) of one entry
-  of a data item exactly as the product removes a [statement citation](statement_citation)
-  of the data item.
+text: The product shall remove a [statement citation](statement_citation) of one [entry](entry)
+  of a [data item](data_item) exactly as the product removes a [statement citation](statement_citation)
+  of the [data item](data_item).
 type: functional
 verification: inspection

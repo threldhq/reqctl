@@ -8,9 +8,9 @@ acceptance_criteria:
   then: the product builds the run
   when: the run is built
 assessed:
-  REQ-29846444: iGWqcEzs6s52xVYwT50drAGnMzrNvkfAKADoRzuEkco
-  REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  REQ-29846444: V-kcyDuwiOZSTAGHr1TaUtOy8may7zsjZqHPCnWpoeM
+  REQ-68873210: e7MRMGqsYrnxhzHTt0XMmx14YUpYBmgSSNHW5F-ZA8s
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   5nfu7e: oZcmidbldIG2m8o0QR7MJOH2TAC7n1s5EEB9uxekQUc
   6bxg5g: IKes0cH_4bShvoWHBYz97xiTkznVTz7KcB04rnTLVsY

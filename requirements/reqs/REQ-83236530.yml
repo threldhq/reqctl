@@ -6,7 +6,7 @@ acceptance_criteria:
   when: the product runs the command
 assessed:
   REQ-19913588: Pbi1CR5jtivz8qi3AlI320-7pRuKcedppG7UpnOk2TU
-  REQ-24406170: M08jCONzg-4unbIjswcpNFFuynYzysf9JZj5KZch_QA
+  REQ-24406170: ffuKefeAdU7p5xPcOyYgqcQVsbzm9Mk1SpLxmkZVACI
   REQ-81667762: 82D0B66GuW3u_auRLnUBOJleTdKVNEUz289s-BTS_2o
 citations:
   3j7lib: U7u0lmqgNZ0M8Yt8FdZlxDMgFlpfDqjld3Gyg0HOewE

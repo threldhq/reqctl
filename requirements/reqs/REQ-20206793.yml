@@ -4,7 +4,7 @@ acceptance_criteria:
   when: reqctl revise is asked to remove one of them
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
-  REQ-91205530: RtIsl4zWjUDcyDQYk_c3Zjjr1JyT6AFU2_BHsNGQ6fY
+  REQ-91205530: FiUaykViw6dQBHW7EnBC6n0Z561dMImVZMcXtg1FxdA
 citations:
   xna7hd: BJuKV2e6syJuTvnOE4Txy8MtVR_jyCEGuRozIYk4iKk
 priority: medium

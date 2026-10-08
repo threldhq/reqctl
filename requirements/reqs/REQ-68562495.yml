@@ -1,26 +1,28 @@
 acceptance_criteria:
-- given: a citation naming no item the corpus holds
-  then: the product shows the citation as written
+- given: a reference naming no [item](item) the corpus holds
+  then: the product shows the reference as written
   when: the statement is exported
-- given: a citation naming an item that carries no entries
-  then: the product shows the citation as written
+- given: a reference naming an [item](item) that carries no [entries](entry)
+  then: the product shows the reference as written
   when: the statement is exported
-- given: a citation selecting the default of an item that names no default
-  then: the product shows the citation as written
+- given: a reference selecting the default of an [item](item) that names no default
+  then: the product shows the reference as written
   when: the statement is exported
-- given: a citation naming an entry the item does not hold
-  then: the product shows the citation as written
+- given: a reference naming an [entry](entry) the [item](item) does not hold
+  then: the product shows the reference as written
   when: the statement is exported
-- given: a citation naming a field the named entry does not hold
-  then: the product shows the citation as written
+- given: a reference naming a field the named [entry](entry) does not hold
+  then: the product shows the reference as written
   when: the statement is exported
-assessed: {}
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   i2bing: AERmmg1mYwFJr-31W2vXQexe2X3Frp5gNL6_8O5nySE
 priority: medium
 relations: {}
 status: approved
-text: When a statement citing a parameter the corpus cannot resolve is exported, the
-  product shall show the citation unchanged.
+text: When a statement referencing a parameter the corpus cannot resolve is exported,
+  the product shall show the reference unchanged.
 type: functional
 verification: inspection

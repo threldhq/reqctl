@@ -1,17 +1,18 @@
 acceptance_criteria:
-- given: a kind whose items reach the size bound before the kind is exhausted
+- given: a kind whose [items](item) reach the size bound before the kind is exhausted
   then: the shard ends at the size bound
   when: a run is built
-- given: a kind whose items reach the item bound before the size bound
-  then: the shard ends at the item bound
+- given: a kind whose [items](item) reach the [item](item) bound before the size bound
+  then: the shard ends at the [item](item) bound
   when: a run is built
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   n7x4xq: LoTx5rblhrfYFpqGXEKuRJ3ROeplMUmZ5p_7cv5BCQY
 priority: medium
 relations: {}
 status: approved
-text: The product shall bound a shard by the characters and by the items the shard
-  holds, whichever is reached first.
+text: The product shall bound a shard by the characters and by the [items](item) the
+  shard holds, whichever is reached first.
 type: functional
 verification: inspection

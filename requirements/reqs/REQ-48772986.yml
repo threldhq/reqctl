@@ -1,7 +1,7 @@
 acceptance_criteria:
-- given: a data item whose entries carry fields
-  then: the prompt states the item's name, definition and entry names, and no field
-    of any entry
+- given: a [data item](data_item) whose [entries](entry) carry fields
+  then: the prompt states the [item](item)'s name, definition and [entry](entry) names,
+    and no field of any [entry](entry)
   when: the run is built
 - given: a parameter holding values and a unit
   then: the prompt states the parameter's name, definition, values and unit
@@ -12,6 +12,9 @@ acceptance_criteria:
 assessed:
   REQ-90454282: M0OdZ2RxH5qSAggaNA3jqFbkTXkdvD7VSStQiH-FPdw
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   4xoc6j: KUhX89u2u1ZrWzt4GYONlDGUt5puRXwbNYiQ-yJt8Ug
 priority: medium
@@ -19,7 +22,8 @@ relations:
   REQ-90454282: constrains
 status: approved
 text: When a [challenge](challenge) prompt is built, the product shall state each
-  term, parameter and data item by name and definition, with a data item's entry names
-  and a parameter's values and unit, and no entry field.
+  term, parameter and [data item](data_item) by name and definition, with a [data
+  item](data_item)'s [entry](entry) names and a parameter's values and unit, and no
+  [entry](entry) field.
 type: functional
 verification: inspection

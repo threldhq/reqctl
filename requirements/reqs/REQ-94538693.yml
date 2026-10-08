@@ -4,7 +4,7 @@ acceptance_criteria:
   then: the product refuses the return
   when: the recall returns are read
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   4xyeq2: OxScr7LRA5JRDWGlKkBkgPKxPJ7GDVXCVz4KfWU8F2I
 priority: medium

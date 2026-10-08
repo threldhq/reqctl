@@ -1,11 +1,11 @@
 acceptance_criteria: []
 assessed:
-  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
-  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
-  citation_digest: P0B_wyGMXd0g87oxCpk-YqeQLW01MECv1WuzJa3yS6Q
+  REQ-26984738: 2Cu-ngxaDd6zI2TwmFRCzBrxeAWxGDX1sZQrNQvfa74
+  REQ-75539229: 263gd_-RLfVLJTxPjnM8Lcc2AlTeCxUZZH9498fcB_w
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   utmfsc: q-SIChARCD0Wh13KP6Yv94fJTA2EPCcz7O2A3KdaQM8
 priority: medium
@@ -14,8 +14,8 @@ relations:
   REQ-75539229: depends_on
 status: approved
 text: When the product removes a [statement citation](statement_citation), the product
-  shall remove the citation's [citation identity](citation_identity) and its [citation
-  digest](citation_digest) from the [citation list](citation_list) of the requirement
-  the citation names.
+  shall remove the [citation](statement_citation)'s [citation identity](citation_identity)
+  and its [citation digest](citation_digest) from the [citation list](citation_list)
+  of the requirement the [citation](statement_citation) names.
 type: functional
 verification: inspection

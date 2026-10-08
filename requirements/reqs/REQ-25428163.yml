@@ -1,14 +1,15 @@
 acceptance_criteria:
 - given: code carrying a [citation marker](citation_marker) followed directly by the
-    item it names
+    [item](item) it names
   then: the product refuses the code, naming the file and the line
   when: the product reads the code
 - given: code carrying a [citation marker](citation_marker) followed by a tab
   then: the product does not refuse it on that ground
   when: the product reads the code
 assessed:
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   citation_marker: PIwiVw0PtA6YbmzdHivRCKCzPw-Rq-JX6IIehV5RfU0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 priority: medium
 relations:
   REQ-60346603: constrains

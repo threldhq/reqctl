@@ -1,14 +1,15 @@
 acceptance_criteria:
-- given: a schema marking the item it governs as one statements bind to
-  then: the item is among them
+- given: a schema marking the [item](item) it governs as one statements bind to
+  then: the [item](item) is among them
   when: the binding dimensions are asked for
-- given: a repository whose schemas mark no item
+- given: a repository whose schemas mark no [item](item)
   then: none is reported
   when: the binding dimensions are asked for
-- given: a repository marking two items
+- given: a repository marking two [items](item)
   then: both are reported
   when: the binding dimensions are asked for
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   up7le5: xQE3981noEjpPCIc0sXE15WCgjygyT9GZYrc6KRoEj8
 priority: high
@@ -16,7 +17,7 @@ rationale: The product names no dimension of its own. A repository nominates eac
   one by marking its schema, so a project may have none, one or many.
 relations: {}
 status: approved
-text: Where a schema marks the item it governs as one statements bind to, the product
-  shall report that item as a binding dimension.
+text: Where a schema marks the [item](item) it governs as one statements bind to,
+  the product shall report that [item](item) as a binding dimension.
 type: functional
 verification: inspection

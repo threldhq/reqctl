@@ -1,22 +1,24 @@
 acceptance_criteria:
-- given: an approved item stating conflicts_with toward a draft item
+- given: an approved [item](item) stating conflicts_with toward a draft [item](item)
   then: the product refuses and states deprecating one, superseding both or rewriting
     both as the fix
-  when: the draft item is approved
-- given: an approved item on disk stating conflicts_with toward another approved item
-  then: the product refuses and names both items
+  when: the draft [item](item) is approved
+- given: an approved [item](item) on disk stating conflicts_with toward another approved
+    [item](item)
+  then: the product refuses and names both [items](item)
   when: the corpus is validated
-- given: an approved item stating conflicts_with toward an item that is deprecated
-    or superseded
-  then: the product accepts the approved item
+- given: an approved [item](item) stating conflicts_with toward an [item](item) that
+    is deprecated or superseded
+  then: the product accepts the approved [item](item)
   when: the corpus is validated
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   loruif: IK3th_YxkldID6dl6fbPRPtv2H4ht4enDF-MSDifrYM
 priority: medium
 relations: {}
 status: approved
-text: If a change would leave an approved item stating conflicts_with toward an item
-  that is still approved, then the product shall refuse the change.
+text: If a change would leave an approved [item](item) stating conflicts_with toward
+  an [item](item) that is still approved, then the product shall refuse the change.
 type: functional
 verification: inspection

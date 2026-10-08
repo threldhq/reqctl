@@ -7,9 +7,9 @@ acceptance_criteria:
   when: the run is scored
 assessed:
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
-  REQ-62710822: tuR0HPyf8X-cHcxcgvULtKHBOZXfVE5aa6EWLqcZUzM
-  REQ-75438506: GIywOiWYUqgHSl1TAe7_XUF_YpwOWZZrWPqOPGuhdFc
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  REQ-62710822: DZLgFus7Dgs-Q8gFosJyoTNjgFfwKtYltTX3_10J5eE
+  REQ-75438506: DQIXYiIoQ0eV9KHwCGKaaVhe4ph0O67hiZwas5SA_1c
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   tgcyaj: QMSY0mePrAH_v1JmkDXOV7d1XCRMfoTNYY-sUl6vWV8
 priority: medium

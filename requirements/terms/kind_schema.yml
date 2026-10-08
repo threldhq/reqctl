@@ -1,11 +1,12 @@
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 entries:
   kind_schema:
     aliases:
     - kind schemas
-    definition: The schema that states the fields an item of a kind carries and the
-      values each field may hold, as the product ships it or as a repository states
-      its own.
+    definition: The schema that states the fields an [item](item) of a kind carries
+      and the values each field may hold, as the product ships it or as a repository
+      states its own.
     word: kind schema
 kind: term
 status: approved

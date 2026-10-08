@@ -1,15 +1,19 @@
 acceptance_criteria:
-- given: a rationale written with an authoring form naming one item the corpus holds
+- given: a rationale written with an authoring form naming one [item](item) the corpus
+    holds
   then: the stored rationale carries the resolved link
-  when: the item is written
-- given: an entry field the schema declares as prose written with an authoring form
+  when: the [item](item) is written
+- given: an [entry](entry) field the schema declares as prose written with an authoring
+    form
   then: the stored field carries the resolved link
-  when: the item is written
+  when: the [item](item) is written
 - given: a field the schema does not declare as prose written with an authoring form
   then: the stored field carries the form unchanged
-  when: the item is written
+  when: the [item](item) is written
 assessed:
-  REQ-77158001: R7FsOlV5L_rO_9fZ2osiXtC-_I4Q7HjQuiD_-Yh924o
+  REQ-77158001: Sf2OYI6iHgVHAStputsOcyF5_qyyox_gbzf5pD2I5so
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   25cppk: rpNhMt0cSV38WOvZpfBbIbp8ONKCVaMUX7iMfOrGdWg
   cd7owj: 4jgpPgqZ5BthbgKrxWWZqouw-FwraQwbbOM_bQZ7QpY
@@ -18,7 +22,7 @@ priority: medium
 relations:
   REQ-77158001: supersedes
 status: approved
-text: When an item is written, the product shall resolve each field the schema declares
-  as prose exactly as the product resolves a statement's text.
+text: When an [item](item) is written, the product shall resolve each field the schema
+  declares as prose exactly as the product resolves a statement's text.
 type: functional
 verification: inspection

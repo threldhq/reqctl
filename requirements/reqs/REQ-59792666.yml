@@ -1,19 +1,20 @@
 acceptance_criteria:
 - given: a repository whose [settings file](settings_file) states a model and no effort
-    for the recall entry
+    for the recall [entry](entry)
   then: the product refuses the run, naming the file and recall
   when: a run is built there
 - given: a repository whose [settings file](settings_file) states an effort and no
-    model for the coverage entry
+    model for the coverage [entry](entry)
   then: the product refuses the run, naming the file and coverage
   when: a run is built there
 assessed:
-  REQ-23060027: QKFI8tm_J5VF5FlpyYn7ENn8OIvvcTXbZ_-9Z0mJhIo
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
-  REQ-96661837: hTUc2_9HnHBvLECseYfzFKS2_7oSN3lYcyJ8RypaiXo
+  REQ-23060027: zeNeSryv-0-1-V7CNGTlk3RN2_KxE0P3zV9SCZD6ZSs
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-96661837: HbvreaRTySWHNKeDM1KVA-6Dn1OiEd-DEbPofoccQi0
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
-  elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  elucidate_agents.*: wpfamgxi_mt-7nuX3IW0mErlSS94rF11TjMeODKUmbc
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   sspl2m: UBgYWNpXPvHvhfgkWtgx1WuDGM-Ejp4vf7bT-fmQjJk
   txoz2e: sMdSnANV7UfKLHD9sRK_Xd8wspLX10i1il5nn3WBmgU
@@ -23,9 +24,9 @@ relations:
   REQ-40447106: constrains
   REQ-96661837: derives_from
 status: approved
-text: If a repository's [settings file](settings_file) states a model for an entry
+text: If a repository's [settings file](settings_file) states a model for an [entry](entry)
   of ${elucidate_agents} without an effort, or an effort without a model, then the
   product shall refuse each command that reads the [settings file](settings_file),
-  naming the file and the entry.
+  naming the file and the [entry](entry).
 type: functional
 verification: inspection

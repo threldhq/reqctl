@@ -1,7 +1,7 @@
 acceptance_criteria:
 - given: a [test](test) carrying a [statement citation](statement_citation)
-  then: the product reports a problem naming the [test](test) and the item the citation
-    names
+  then: the product reports a problem naming the [test](test) and the [item](item)
+    the [citation](statement_citation) names
   when: trace is run
 - given: a [test](test) carrying a [statement citation](statement_citation) of a statement
     the corpus has deprecated
@@ -9,11 +9,12 @@ acceptance_criteria:
   when: trace is run
 - given: code outside every [test](test) carrying a [statement citation](statement_citation)
   then: the product reports no problem on the ground that a [test](test) carries the
-    citation
+    [citation](statement_citation)
   when: trace is run
 assessed:
-  REQ-35979865: -t3USRO-BKGkFmCUvKqJ_cSTwi20euD4Q8IKl-fBNOg
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-35979865: pd7CVJ7isMysdGRWtSiA9tncgR6hvR0HbUISCwzuunQ
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 priority: medium
 relations:

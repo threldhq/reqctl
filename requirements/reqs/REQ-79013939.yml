@@ -1,16 +1,17 @@
 acceptance_criteria:
-- given: a term holding two entries
-  then: the product refuses and states that a term holds exactly one entry
+- given: a term holding two [entries](entry)
+  then: the product refuses and states that a term holds exactly one [entry](entry)
   when: the corpus is validated
-- given: a term holding no entry
-  then: the product refuses and states that a term holds exactly one entry
+- given: a term holding no [entry](entry)
+  then: the product refuses and states that a term holds exactly one [entry](entry)
   when: the corpus is validated
-assessed: {}
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
   wcl7vt: 9KUtyTzG1aXgGre_zCuYjMEKJD7fw2HyqXhQPXM7pIQ
 priority: medium
 relations: {}
 status: approved
-text: The product shall refuse a term that does not hold exactly one entry.
+text: The product shall refuse a term that does not hold exactly one [entry](entry).
 type: functional
 verification: inspection

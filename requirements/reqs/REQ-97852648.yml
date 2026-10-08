@@ -1,13 +1,13 @@
 acceptance_criteria:
 - given: a line covered by two [statement citations](statement_citation) written as
     [exclusive](exclusive)
-  then: the line is in the [citation digest](citation_digest) of the citation opened
-    last and not in the other's
+  then: the line is in the [citation digest](citation_digest) of the [citation](statement_citation)
+    opened last and not in the other's
   when: the product takes the [citation digest](citation_digest) of each
 assessed:
-  citation_digest: P0B_wyGMXd0g87oxCpk-YqeQLW01MECv1WuzJa3yS6Q
-  exclusive: ftFiuRgKKCdydqi1cV1oWJ4T-OQSgt0UuIcMGh19S6o
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  exclusive: 3JKd7AntKjXMn7QIJ76uUWL2l24QYnfM3o0sstKLCsY
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   fto5gh: G6qnT5pWSmIPvP8OC-OJObLFjIoUlIozAgLH-juS4Rg
 priority: medium

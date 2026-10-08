@@ -3,8 +3,8 @@ acceptance_criteria:
   then: the description states the question with the owner's answer
   when: the description is rendered
 - given: a run whose verdict raises a question the corpus settled
-  then: the description states the question with the uid of each item that settled
-    it and the clause quoted from that item
+  then: the description states the question with the uid of each [item](item) that
+    settled it and the clause quoted from that [item](item)
   when: the description is rendered
 - given: a run whose verdict raises a question that neither the owner's answer nor
     corpus evidence settled
@@ -12,7 +12,8 @@ acceptance_criteria:
     own
   when: the description is rendered
 assessed:
-  REQ-21373303: mNM6_z8-kXLhLCB8rf03UPG_5xAvu0uuOBJNM1J4p98
+  REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 priority: medium
 relations:
   REQ-21373303: derives_from

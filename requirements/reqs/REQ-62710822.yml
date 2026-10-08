@@ -2,13 +2,14 @@ acceptance_criteria:
 - given: a verdict for [proposal](proposal) 3 that answers [proposal](proposal) 4
   then: the product refuses the verdict
   when: the verdicts are read
-- given: a verdict naming an item its judge prompt did not state
+- given: a verdict naming an [item](item) its judge prompt did not state
   then: the product refuses the verdict
   when: the verdicts are read
 assessed:
-  REQ-30631052: YipkKcwzRStRgjQYay9Wr1bz3AU80L23gLwgBpCP3Go
+  REQ-30631052: xqJkQgCU4pW_mDKnN6Qgjkkg6YYSS5et_YyN8rWVZU4
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   adhfwh: liQiXnAncWXTP8ExXWbRSqWgxJVD268nrQMkGaWWet8
   v3dukx: 0HokAJz5kgtC0h0PwaRcMagasK1KIW7O2BVQUw1DmFc
@@ -18,7 +19,7 @@ relations:
   REQ-46162234: derives_from
 status: approved
 text: If a judge's verdict answers a [proposal](proposal) other than the one its judge
-  prompt carried, or cites an item its prompt did not state, then the product shall
-  refuse the verdict.
+  prompt carried, or cites an [item](item) its prompt did not state, then the product
+  shall refuse the verdict.
 type: functional
 verification: inspection

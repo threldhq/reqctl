@@ -2,21 +2,21 @@ acceptance_criteria:
 - given: a [statement citation](statement_citation) whose covered lines are respaced
     and rewrapped after the [citation list](citation_list) of the requirement it names
     took their digest
-  then: the product reports no problem for the citation
+  then: the product reports no problem for the [citation](statement_citation)
   when: trace is run
 - given: a [statement citation](statement_citation) in whose covered lines a name
     is changed after the [citation list](citation_list) of the requirement it names
     took their digest
-  then: the product reports the citation as a problem
+  then: the product reports the [citation](statement_citation) as a problem
   when: trace is run
 assessed:
   REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
   REQ-31471659: hKmNhTkU9xOAFkZt4GkdGC-Prnfl7nQD1cBEFSp2-so
-  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
-  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
-  citation_digest: P0B_wyGMXd0g87oxCpk-YqeQLW01MECv1WuzJa3yS6Q
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  REQ-75539229: 263gd_-RLfVLJTxPjnM8Lcc2AlTeCxUZZH9498fcB_w
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   65dur7: ybtLZZjU8jA0jA8g_A-vj38GumO249jzSUEgSmxJv5k
   pmll7c: rujGWMFQ5O3pbh_-8-4jnKrIvu3LXD2SxmK4RcBt5Ko

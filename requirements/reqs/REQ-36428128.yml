@@ -1,12 +1,13 @@
 acceptance_criteria:
 - given: a [statement citation](statement_citation) whose covered lines have moved
     to another file and changed
-  then: the product matches it to the citation naming the same [citation identity](citation_identity)
+  then: the product matches it to the [citation](statement_citation) naming the same
+    [citation identity](citation_identity)
   when: the product compares the code against the newest state the branch and the
     default branch both carry
 assessed:
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   a5i7lc: JxeVovFj710bKpG66TcEGN0oZ_Fp8l1VMvqInKq72No
 priority: medium

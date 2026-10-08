@@ -4,12 +4,13 @@ acceptance_criteria:
     it runs as a command
   when: the step runs
 - given: an option value that is exactly $N with N zero, after a first step that [minted](mint)
-    an item
+    an [item](item)
   then: reqctl receives $N with N zero unchanged as that option's value
   when: the step runs
 assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   eburqo: VhEwOXC89AtxFguX2noFeS2YK5uvE1SsRvACqAXGUFA

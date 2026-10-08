@@ -1,18 +1,19 @@
 acceptance_criteria:
-- given: two accepted verdicts naming one item as covering
-  then: the report lists the item once, under it both [proposals](proposal) with their
-    reasons
+- given: two accepted verdicts naming one [item](item) as covering
+  then: the report lists the [item](item) once, under it both [proposals](proposal)
+    with their reasons
   when: the verdicts are read
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   7xe5ny: asl74Nqt_sDHNbNN2pgHykA67cFChOGnfY36EvRxwUg
   ih4cxu: TZb9FEa6Kim7T4hYyJdjhs4Qs8KZuB_kQIPsYc8Zz_0
 priority: medium
 relations: {}
 status: approved
-text: When verdicts are read, the product shall list each item the accepted verdicts
-  name as covering, conflicting, related or nearest, and under it every [proposal](proposal)
+text: When verdicts are read, the product shall list each [item](item) the accepted
+  verdicts name as covering, conflicting, related or nearest, and under it every [proposal](proposal)
   that named it so, with the reason given.
 type: functional
 verification: inspection

@@ -9,10 +9,10 @@ acceptance_criteria:
   then: the description states no such value
   when: the run's pull request description is rendered
 assessed:
-  REQ-21373303: mNM6_z8-kXLhLCB8rf03UPG_5xAvu0uuOBJNM1J4p98
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
+  REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
   REQ-75041625: fdufkvO5WYz7KFJPtyhJppjVjaZZRPnPp34h5cjF0xA
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   6rmd3o: 0u2msgFkm0K-dwYGjjQ1I31LUBqDWKXM86jb_nETBGI
   6vslgs: xW5f1seF6eKVEmT59SChuaW1WrcVvTjVuH7pf31oIV8

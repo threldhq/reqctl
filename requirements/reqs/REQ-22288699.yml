@@ -10,7 +10,7 @@ acceptance_criteria:
   then: the report states that the run did not work rather than measuring badly
   when: the run is scored
 assessed:
-  REQ-75438506: GIywOiWYUqgHSl1TAe7_XUF_YpwOWZZrWPqOPGuhdFc
+  REQ-75438506: DQIXYiIoQ0eV9KHwCGKaaVhe4ph0O67hiZwas5SA_1c
 citations:
   tdrp6q: oJD8Qtx9qdMdxyT8frA26truOQkHdyNEr8WfFCK6oHg
 priority: medium

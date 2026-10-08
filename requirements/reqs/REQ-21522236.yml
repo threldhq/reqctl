@@ -2,10 +2,11 @@ acceptance_criteria:
 - given: the form for a term
   then: it offers no field reqctl refuses for a term, such as text or rationale
   when: it is read
-- given: the form for each kind of item
+- given: the form for each kind of [item](item)
   then: every field it offers is one reqctl accepts for that kind
   when: it is read
 assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   fuavre: N8cHjKytf696kQur1foI7kTpJ5378-DsjijTdzYtqtQ
@@ -13,7 +14,7 @@ citations:
 priority: medium
 relations: {}
 status: approved
-text: The product shall offer in the [portal](portal), for each kind of item, only
-  the fields reqctl accepts for that kind.
+text: The product shall offer in the [portal](portal), for each kind of [item](item),
+  only the fields reqctl accepts for that kind.
 type: functional
 verification: inspection

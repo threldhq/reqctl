@@ -1,17 +1,19 @@
 acceptance_criteria:
-- given: code carrying one [statement citation](statement_citation) with a stamp and
-    one [statement citation](statement_citation) without a stamp
-  then: the product reports the citation without a stamp
+- given: code carrying one [statement citation](statement_citation) with a [stamp](stamp)
+    and one [statement citation](statement_citation) without a [stamp](stamp)
+  then: the product reports the [citation](statement_citation) without a [stamp](stamp)
   when: trace is run
 assessed:
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   7df3my: fnWgRvKvC1V_n5bpipjvxEFzZMlFRFd5Ks-ftJa5k78
 priority: medium
 relations: {}
 status: approved
-text: If code carries a [statement citation](statement_citation) that names no stamp,
-  then the product shall report the citation even where a pinned citation stands beside
-  the unpinned citation.
+text: If code carries a [statement citation](statement_citation) that names no [stamp](stamp),
+  then the product shall report the [citation](statement_citation) even where a [pinned](pin)
+  [citation](statement_citation) stands beside the unpinned [citation](statement_citation).
 type: functional
 verification: inspection

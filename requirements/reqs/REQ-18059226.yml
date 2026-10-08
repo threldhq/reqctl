@@ -9,8 +9,8 @@ acceptance_criteria:
   then: the product refuses and names both terms
   when: the corpus is validated
 assessed:
-  REQ-79013939: bHJwWtA0cgeGylANm5kpe06YlFr6uZuhEb2AQRL_7gQ
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  REQ-79013939: LHWesLk8a6d7Nz6MIWvKECc-xqQW8pxjMo0bdCD2kkI
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   2troxr: 1Kin8_p8eY-2r9yUKPAg5qGA0zfuolPBFKpdiVY9xks
 priority: medium

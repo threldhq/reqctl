@@ -1,8 +1,9 @@
 acceptance_criteria:
-- given: a uid no item in the corpus carries
+- given: a uid no [item](item) in the corpus carries
   then: the product refuses and names the uid
   when: trace names the uid
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   dyday2: r526ssWNyEA2PdsqD7seO-etXTLtM89qbqktkTVkHPE
 priority: medium

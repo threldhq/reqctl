@@ -1,18 +1,18 @@
 acceptance_criteria:
 - given: a [statement citation](statement_citation) whose covered lines are changed
-  then: the product takes the [citation identity](citation_identity) the citation
+  then: the product takes the [citation identity](citation_identity) the [citation](statement_citation)
     named before
-  when: the product reads the citation again
+  when: the product reads the [citation](statement_citation) again
 assessed:
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   dsvgt4: MmBT7dlIXqicGLFVQ8kzsL-5E0Z1m_a21roS9IartcM
 priority: medium
 relations: {}
 status: approved
 text: The product shall take the [citation identity](citation_identity) a [statement
-  citation](statement_citation) names as unchanged by what the lines the citation
+  citation](statement_citation) names as unchanged by what the lines the [citation](statement_citation)
   covers hold.
 type: functional
 verification: inspection

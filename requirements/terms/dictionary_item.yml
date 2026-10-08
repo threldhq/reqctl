@@ -1,0 +1,16 @@
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  item_kinds: t75HAgoBM1uNpqk8NBtfqHIonFl3FyBu7Z2omwAA9ms
+  item_kinds.data: SFFXvEnISFosE8hgrjrs7ixtDUZ-mjEecw5Wn77d6jA
+  item_kinds.parameter: udGKv-9OLUir1v8khfAEz4sZQx6Z-RSH5Ak49Z9TJcE
+  item_kinds.term: EqOGsdo1PhLmozqn-mWLm1OZZM5PahRQk7gCRwAxuto
+entries:
+  dictionary_item:
+    aliases:
+    - dictionary items
+    definition: 'An [item](item) of the ${item_kinds.term}, ${item_kinds.parameter}
+      or ${item_kinds.data} kind: one holding [entries](entry) under keys.'
+    word: dictionary item
+kind: term
+status: approved

@@ -12,7 +12,7 @@ acceptance_criteria:
   when: the returns are read
 assessed:
   REQ-94426583: 8JHtrZp73dHbt0YdrxVVJJCwoQIjtjEQO5VDptA7dRQ
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   moar22: WsQI7F6tfDfTEeY6PQVs7LCE7jjIaki7M8iGYxr14Y4
 priority: medium

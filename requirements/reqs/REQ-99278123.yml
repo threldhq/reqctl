@@ -3,17 +3,18 @@ acceptance_criteria:
   then: the product refuses the command, naming the file and review_limits.page_byte
   when: a command that reads the [settings file](settings_file) runs there
 - given: a repository whose [settings file](settings_file) states a value for the
-    definition field of an entry of git_read_forms, which neither the reqctl command
-    nor the elucidate skill uses
+    definition field of an [entry](entry) of git_read_forms, which neither the reqctl
+    command nor the elucidate skill uses
   then: the product refuses the command, naming the file and the key
   when: a command that reads the [settings file](settings_file) runs there
 - given: a repository whose [settings file](settings_file) states a value for the
-    page_bytes entry of review_limits rather than for one of its fields
+    page_bytes [entry](entry) of review_limits rather than for one of its fields
   then: the product refuses the command, naming the file and the key
   when: a command that reads the [settings file](settings_file) runs there
 assessed:
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   fv2afe: IQciVlWWBgpVeLzuVeez4VLs8R1S3-5hS7lg7jCbk7A
   lcnls5: sMdSnANV7UfKLHD9sRK_Xd8wspLX10i1il5nn3WBmgU

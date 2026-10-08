@@ -14,11 +14,11 @@ acceptance_criteria:
   then: the draft appears in exactly one shard, as draft
   when: the run is built
 assessed:
-  REQ-18405752: 9yj8huqrivwPmoUns5MtGyGv9JhqwpERyFg_NUCLEEs
+  REQ-18405752: FCxc3x0E2EZUNqmp06MeH34UxsaAniBz3rPit2klDEU
   REQ-46098858: EClgM52w1AQKHZDYcVndKOOpVNl5cT8ecuifP1X9u1Q
   REQ-65835654: TC6sNHeoW6okeelf4FXw2sSvftUjHU-YJ-3e_XVszhM
   REQ-89295483: BBk6Cgz0clRjDHyWrw9K8h--GTqLibL1z2MMi94E49Q
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   yp35nb: yUQyVk2wJq_VQUrYdWg6PhDbRlT-33LwU-oeNnlc68E
 priority: medium

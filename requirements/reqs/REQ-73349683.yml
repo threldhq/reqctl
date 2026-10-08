@@ -12,7 +12,7 @@ acceptance_criteria:
   when: the product reads the code
 assessed:
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   gqpqj6: F7veOz-5o8j_OdshFekGV4DPoWbQRqoS6sr7WddBcg8
 priority: medium

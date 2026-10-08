@@ -1,13 +1,13 @@
 acceptance_criteria:
-- given: an entry stating a model and an effort for coverage
+- given: an [entry](entry) stating a model and an effort for coverage
   then: the coverage agent is spawned on that model at that effort
   when: the product spawns the coverage agent
-- given: an entry stating a model and an effort for best_in_class
+- given: an [entry](entry) stating a model and an effort for best_in_class
   then: the agent making it is spawned on that model at that effort
   when: the product makes the [best-in-class review](best_in_class_review)
-- given: one entry for recall and another for judge
-  then: each recall agent is spawned on the recall entry's model and effort, and each
-    judge, group judge and final judge on the judge entry's
+- given: one [entry](entry) for recall and another for judge
+  then: each recall agent is spawned on the recall [entry](entry)'s model and effort,
+    and each judge, group judge and final judge on the judge [entry](entry)'s
   when: the product spawns a run's recall agents, judges, group judges and final judges
 - given: the [elucidate workflow](elucidate_workflow) spawning a run's agents
   then: it names no model and no effort, and each agent's model and effort reach it
@@ -16,11 +16,12 @@ acceptance_criteria:
 assessed:
   REQ-10470323: pMpSTZR3Eeq9TWBXU_41KPr3WlzvBlOwFCa1wwyH36U
   REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
-  REQ-68127788: BccauyYFIuLms3wnvh3sB52RUT3lWSxaONwYB8RtWDI
+  REQ-68127788: azZDTFJFko7yBy0jADp2zmh7L4PRlWsTzd8QVohc_rU
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
-  elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
+  elucidate_agents.*: wpfamgxi_mt-7nuX3IW0mErlSS94rF11TjMeODKUmbc
   elucidate_workflow: LLnSfqUTLbwl39eM7HWxSLD1q97stP7Pc5uZbHCJu_o
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
   6y5rvz: LxVgQyZSzNKgWVx_3BGRWmhOqzQJnyl_QuE8TJ-xk4Y
   7pvcrn: J2DF51g6PnmXiqXQiLnLQcPRs-5K787pogbtYlQDk10
@@ -40,6 +41,6 @@ relations:
   REQ-68127788: supersedes
 status: approved
 text: When the product spawns an agent named in ${elucidate_agents}, the product shall
-  spawn it on the model and at the effort that the agent's entry states.
+  spawn it on the model and at the effort that the agent's [entry](entry) states.
 type: functional
 verification: inspection

@@ -1,16 +1,21 @@
 acceptance_criteria:
-- given: two items, one binding an entry of a dictionary item and one binding a different
-    entry of the same item
-  then: the product makes the binder of the revised entry suspect and leaves the other
-    binder pinned
-  when: the first entry is revised
-assessed: {}
+- given: two [items](item), one binding an [entry](entry) of a [dictionary item](dictionary_item)
+    and one binding a different [entry](entry) of the same [item](item)
+  then: the product makes the binder of the revised [entry](entry) suspect and leaves
+    the other binder [pinned](pin)
+  when: the first [entry](entry) is revised
+assessed:
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
 citations:
   nvrect: eCWGmwO2Cw4Y3wFBO4AoBONnFrjaH_EkrzJN-x2wUNw
 priority: medium
 relations: {}
 status: approved
-text: When an entry of a dictionary item is revised, the product shall make suspect
-  every item binding that entry and no other item.
+text: When an [entry](entry) of a [dictionary item](dictionary_item) is revised, the
+  product shall make suspect every [item](item) binding that [entry](entry) and no
+  other [item](item).
 type: functional
 verification: inspection

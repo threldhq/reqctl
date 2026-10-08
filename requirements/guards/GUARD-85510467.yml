@@ -1,13 +1,14 @@
 acceptance_criteria:
 - given: a manually started run on a branch that changes a file under the [corpus
-    root](corpus_root), over a [statement citation](statement_citation) naming a stamp
+    root](corpus_root), over a [statement citation](statement_citation) naming a [stamp](stamp)
     that the approved requirement it names no longer carries
   then: the build refuses the change
   when: the build runs
 assessed:
   GUARD-12397751: ZZpZOVKQVB3u8515qCOsND-187sMqV_SPBN85IW9_Qw
-  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 relations:
   GUARD-12397751: constrains
 status: approved

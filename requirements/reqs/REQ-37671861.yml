@@ -1,38 +1,39 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) naming a stamp that the approved
-    requirement it names no longer carries
-  then: the product reports the citation as behind the corpus and reports no problem
-    for it
+- given: a [statement citation](statement_citation) naming a [stamp](stamp) that the
+    approved requirement it names no longer carries
+  then: the product reports the [citation](statement_citation) as behind the corpus
+    and reports no problem for it
   when: trace is given a base branch from which the change touches a file under the
     [corpus root](corpus_root) in more than its [citation list](citation_list)
-- given: a [statement citation](statement_citation) naming a stamp that the approved
-    requirement it names no longer carries
-  then: the product reports the citation as a problem
+- given: a [statement citation](statement_citation) naming a [stamp](stamp) that the
+    approved requirement it names no longer carries
+  then: the product reports the [citation](statement_citation) as a problem
   when: trace is given a base branch from which the change touches no file under the
     [corpus root](corpus_root)
-- given: a [statement citation](statement_citation) naming a stamp that the approved
-    requirement it names no longer carries
-  then: the product reports the citation as a problem
+- given: a [statement citation](statement_citation) naming a [stamp](stamp) that the
+    approved requirement it names no longer carries
+  then: the product reports the [citation](statement_citation) as a problem
   when: trace is given no base branch
 - given: a pull request that touches no file under the [corpus root](corpus_root)
-    and carries a [statement citation](statement_citation) naming a stamp that the
-    approved requirement it names no longer carries
+    and carries a [statement citation](statement_citation) naming a [stamp](stamp)
+    that the approved requirement it names no longer carries
   then: the product refuses the pull request
   when: the ${corpus_gates.traceability} gate runs trace against the pull request's
     base branch
-- given: a [statement citation](statement_citation) naming a stamp that the approved
-    requirement it names no longer carries
-  then: the product reports the citation as a problem
+- given: a [statement citation](statement_citation) naming a [stamp](stamp) that the
+    approved requirement it names no longer carries
+  then: the product reports the [citation](statement_citation) as a problem
   when: trace is given a base branch from which the change touches files under the
     [corpus root](corpus_root) only in their [citation lists](citation_list)
 assessed:
-  REQ-54851939: Iw_Sa4bHHJhi7YAvxvfvfhnK8zGwvVQyh8XONls3_GY
-  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  REQ-54851939: n6YOz94UUTn7qlBLIhltdfT7UD6BNEW5cnz7S6_AkiA
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.traceability: t2g-SZWxzs7WMpla0grhVUnoKO8CIuhvL89nPt4vwQQ
-  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   jaw6mg: u5adlHbTmS_JmvTxLbUBtjdgw8pIEXep8P5jR4rrI7Y
   thjjmg: 9tHiu-ATfIxUAeZgD1Hb_IqBCtFLpI42mhF1p64qbbg
@@ -42,8 +43,8 @@ relations:
   REQ-64846889: depends_on
 status: approved
 text: When trace is run, the product shall report as a problem each [statement citation](statement_citation)
-  naming a stamp that the approved requirement it names no longer carries, unless
-  trace is given a base branch from which the change touches a file under the [corpus
-  root](corpus_root) in more than its [citation list](citation_list).
+  naming a [stamp](stamp) that the approved requirement it names no longer carries,
+  unless trace is given a base branch from which the change touches a file under the
+  [corpus root](corpus_root) in more than its [citation list](citation_list).
 type: functional
 verification: inspection
