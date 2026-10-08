@@ -26,13 +26,17 @@ from reqctl import corpus, settings
 
 FIELD = "governed_field"
 ASKED = "asked.json"
+REFUSED = "refused.json"
 SPAWN = "review"
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
 WAIT = 30
+# @req> REQ-81751575@u9IqdcfRFLSM rkliio
+SHELL = "serves no readable text without running scripts; cite another page"
 
 # @req> REQ-79800652@-RuBVIjAa4FV isjntr
 # @req> REQ-82432523@VoDkIJau94BB sfrez4
+# @req> REQ-77111862@VElNe_CxEa09 qoac2a
 PROMPT = """You make the best-in-class review of the owner's words below: what
 each idea they hold would look like as best in class in the idea's field, and
 what market leaders do in the fields similar to the governed software. You
@@ -46,7 +50,8 @@ the field it belongs to, the leaders that show it, and the sources it rests on,
 each source the web address of a page you read with a passage of one sentence
 or less copied from that page exactly as it stands. A script fetches every
 source and refuses the whole review where a page does not hold its passage, so
-copy rather than paraphrase.
+copy rather than paraphrase. Quote the text the page shows its reader, never a
+description its meta elements state.
 
 A practice may name only a source you read while making this review: a page
 you fetched. A page you saw only in search results was not read. Where you
@@ -73,23 +78,41 @@ README = """
 {text}
 """
 
+# @req> REQ-55217837@PsKdezweHHNp b3vk77
+REFUSALS = """
+## Sources the check refused
 
+The script refused an earlier review of these words over each source below. No
+practice may name one of them: cite another page.
+
+{sources}
+"""
+
+
+# @req> REQ-56262611@ZUTJf7RGA59b wqyc67
+# @req> REQ-81751575@u9IqdcfRFLSM nctcuj
 class PageText(HTMLParser):
     def __init__(self):
         super().__init__()
-        self.held, self.hidden = [], 0
+        self.held, self.hidden, self.titled, self.shown = [], 0, 0, False
 
     def handle_starttag(self, tag, attrs):
         if tag in HIDDEN:
             self.hidden += 1
+        elif tag == "title":
+            self.titled += 1
 
     def handle_endtag(self, tag):
         if tag in HIDDEN and self.hidden:
             self.hidden -= 1
+        elif tag == "title" and self.titled:
+            self.titled -= 1
 
     def handle_data(self, data):
         if not self.hidden:
             self.held.append(data)
+            self.shown = self.shown or (not self.titled
+                                        and re.search(r"\w", data) is not None)
 
 
 def stated_field(records):
@@ -138,9 +161,10 @@ def build(run, answered):
     # @req> REQ-57259870@9aNmMpV7yL55 vmnzm3
     text = "" if source is None else README.format(
         text=corpus.read_text(source))
+    # @req> REQ-55217837@PsKdezweHHNp nq24wh
     prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
-        words=words, readme=text)
+        words=words, readme=text) + refusals(earlier(run))
     # @req> REQ-40447106@xVwoSkyU3_rG evxzj5
     crew = settings.table(plan.configured(
         run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
@@ -158,6 +182,23 @@ def build(run, answered):
 def words(text):
     spaced = re.sub(r"[.,!?;:]", r" \g<0> ", text)
     return re.sub(r"[^\w.,!?;:]+", " ", spaced).strip()
+
+
+# @req> REQ-50807701@e_fFW6ql7kJY 5yws4o
+def clipped(passage):
+    return re.sub(r"[\s.!?]+$", "", words(passage))
+
+
+def earlier(run):
+    path = run / REFUSED
+    return json.loads(path.read_text()) if path.is_file() else []
+
+
+# @req> REQ-55217837@PsKdezweHHNp dtlb52
+def refusals(held):
+    return REFUSALS.format(sources="\n".join(
+        f"- {one['url']}, quoting {one['passage']!r}: {one['fault']}"
+        for one in held)) if held else ""
 
 
 current = threading.local()
@@ -323,7 +364,9 @@ def timed(url, fetch, bound, seconds, attempts):
     reader = PageText()
     reader.feed(body)
     reader.close()
-    return words(" ".join(reader.held)), None
+    # @req> REQ-56262611@ZUTJf7RGA59b qmyfnd
+    # @req> REQ-81751575@u9IqdcfRFLSM cwwryv
+    return words(" ".join(reader.held)), None if reader.shown else SHELL
 
 
 def host(url):
@@ -347,7 +390,7 @@ def faults(review, bound, redirects, seconds, attempts):
                           for url in held], hosts.values())
                  for url, read in fetched}
     # @req- mtrs7n
-    found = []
+    found, refused = [], []
     for number, practice in enumerate(review["practices"], 1):
         # @req> REQ-32352887@xGar-bj5ZAXn dx3v2z
         if not practice["sources"]:
@@ -359,14 +402,21 @@ def faults(review, bound, redirects, seconds, attempts):
             text, why = pages[url]
             if text is None:
                 # @req+ REQ-16875926@rLub1dpB7yu_ zrdwyr
-                line = f"practice {number}: {url} cannot be read: {why}"
-                found.append(Transient(f"{line} (a transient failure)")
-                             if isinstance(why, Transient) else line)
+                fault = f"cannot be read: {why}"
+                if isinstance(why, Transient):
+                    fault = Transient(f"{fault} (a transient failure)")
                 # @req- zrdwyr
-            elif not holds(text, words(source["passage"])):
-                found.append(f"practice {number}: {url} does not hold "
-                             f"{source['passage']!r}")
-    return found, pages
+            elif not holds(text, clipped(source["passage"])):
+                # @req> REQ-81751575@u9IqdcfRFLSM ot73lz
+                fault = why or f"does not hold {source['passage']!r}"
+            else:
+                continue
+            line = f"practice {number}: {url} {fault}"
+            found.append(Transient(line) if isinstance(fault, Transient)
+                         else line)
+            # @req> REQ-55217837@PsKdezweHHNp 3soeou
+            refused.append({**source, "fault": fault})
+    return found, pages, refused
 
 
 def holds(text, passage):
@@ -468,6 +518,19 @@ def decline(run):
     return check(run)
 
 
+# @req> REQ-55217837@PsKdezweHHNp rqqfbr
+def bar(run, refused):
+    before = earlier(run)
+    after = before + [one for one in refused if one not in before]
+    spawning = plan.manifested(run, SPAWN)
+    held = json.loads(spawning.read_text())
+    prompt = held["prompts"][0]["prompt"]
+    held["prompts"][0]["prompt"] = (prompt.removesuffix(refusals(before))
+                                    + refusals(after))
+    corpus.atomic_write(run / REFUSED, json.dumps(after))
+    corpus.atomic_write(spawning, json.dumps(held, indent=1) + "\n")
+
+
 def check(run):
     said = coverage.plain(plan.said(run, "words.md",
                                     "the review is read against the owner's "
@@ -487,11 +550,14 @@ def check(run):
     # @req> REQ-75041625@fdufkvO5WYz7 kehox2
     limits = settings.quantities(plan.configured(run, ("review_limits.",)),
                                  "review_limits")
-    found, pages = faults(review, limits["page_bytes"], limits["redirects"],
-                          limits["fetch_seconds"], limits["fetch_attempts"])
+    found, pages, refused = faults(
+        review, limits["page_bytes"], limits["redirects"],
+        limits["fetch_seconds"], limits["fetch_attempts"])
     for fault in found:
         print(fault)
     if found:
+        # @req> REQ-55217837@PsKdezweHHNp l7u2tv
+        bar(run, refused)
         # @req> REQ-46711731@rqojAeSdcYOn uput5b
         remedy = (asked(run, review, pages, again)
                   if all(isinstance(fault, Transient) for fault in found)
