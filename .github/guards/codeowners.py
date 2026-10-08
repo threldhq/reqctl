@@ -53,11 +53,13 @@ def faults(text):
 
 
 def main():
+    # @req+ GUARD-83168738@zhoOQpGgBd9R jakglm
     try:
         text = OWNERS.read_text()
-    except OSError as broken:
+    except (OSError, UnicodeDecodeError) as broken:
         print(f"::error::cannot read {OWNERS}: {broken}")
         return 1
+    # @req- jakglm
     found = faults(text)
     for fault in found:
         print(f"::error::{fault}")
