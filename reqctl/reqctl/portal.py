@@ -42,8 +42,8 @@ def repository(where):
     return found.group(1)
 
 
-# @req+ REQ-87847146@zR5tHnA8xAWx avcfk3
-# @req> REQ-69283350@XSe9n-OwepOP cgzp5c
+# @req+ REQ-87847146@3MkrB9EtSIEF avcfk3
+# @req> REQ-69283350@vYYldulaXQvc cgzp5c
 # @req> REQ-14679866@V0QsDEPmgOq3 357tly
 def _offered(kind, field):
     once = kind == "parameter" and field.name == _fields.ENTRIES
@@ -55,7 +55,7 @@ def _offered(kind, field):
             "form": _write.FORMS.get(field.name)}
 
 
-# @req> REQ-21522236@FSo8K6fhdHTu vldi2d
+# @req> REQ-21522236@jupFEITq3Nms vldi2d
 def forms(root):
     offered = {}
     for kind in _write.KINDS:
@@ -73,8 +73,8 @@ def with_forms(page, root):
 # @req- avcfk3
 
 
-# @req> REQ-40447106@qf0g3PvFcpT0 uwkxa6
-# @req> REQ-84459416@zkSEOhONwdzg ufhxxr
+# @req> REQ-40447106@xVwoSkyU3_rG uwkxa6
+# @req> REQ-84459416@ZlrZpYNBUh8Q ufhxxr
 def with_permissions(page, root):
     _, stated = _settings.read(root)
     before, after = page.split(PERMISSIONS_AT)

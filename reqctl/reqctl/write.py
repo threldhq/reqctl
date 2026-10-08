@@ -116,7 +116,7 @@ def scalar(text):
     return number if math.isfinite(number) else stripped
 
 
-# @req> REQ-79956352@eYUCCnssLbl5 7g4u3w
+# @req> REQ-79956352@NXkZ4OmQ3Qb4 7g4u3w
 def _refuse_hidden(label, value):
     hidden = _validate.hidden(str(value))
     if hidden is not None:
@@ -217,7 +217,7 @@ def _prune_assessed(store, uid, data):
 
 
 def _refuse_unknown_references(store, data):
-    # @req+ REQ-44791607@jSOQJ6WGpg_l mtmaxs
+    # @req+ REQ-44791607@x6AI0pz32jQK mtmaxs
     known = corpus.addressable(
         {item.uid: item.data for item in corpus.items(store)})
     unknown = sorted({corpus.split_address(address)[0]
@@ -368,7 +368,7 @@ def resolve_names(store, text, index=None):
     return resolved
 
 
-# @req> REQ-76604940@HbN3En3lfKzD 25cppk
+# @req> REQ-76604940@SEVyiDrbH-Ez 25cppk
 def _resolved_prose(store, uid, data):
     paths = set(_validate.prose_paths(store.root, uid, data))
     index = _name_index(store)
@@ -382,7 +382,7 @@ def entry_key(member):
     return str(member)
 
 
-# @req> REQ-76604940@HbN3En3lfKzD cd7owj
+# @req> REQ-76604940@SEVyiDrbH-Ez cd7owj
 def _set_fields(entry, pairs):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
@@ -425,7 +425,7 @@ def _appended(where, steps):
     return where, list(held or [])
 
 
-# @req> REQ-76604940@HbN3En3lfKzD zijwjm
+# @req> REQ-76604940@SEVyiDrbH-Ez zijwjm
 def _append_fields(entry, pairs):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
@@ -667,7 +667,7 @@ def _named(data, kind, new_name):
     return dict(data, entries={new_name: held[word]})
 
 
-# @req> REQ-53177302@IIPp8ha5oKcr 7bhax4
+# @req> REQ-53177302@oSukBFyA3jXq 7bhax4
 def _refuse_unusable_name(store, name, held=None):
     if not corpus.DATA_KEY.match(name):
         raise ReqctlError(f"{name}: a name is snake_case")
@@ -699,7 +699,7 @@ def rename(store, uid, new_name):
     after = {held_uid: _readdressed_item(data, olds, new_name)
              for held_uid, data in before.items()}
     # @req- jjk7ud
-    # @req> REQ-94917590@UDuLOE8d-fQZ 7xvisp
+    # @req> REQ-94917590@2yP1VjEjzn4- 7xvisp
     after[item.uid] = _named(
         _carrying(item.uid, after[item.uid], old_name, new_name),
         kind, new_name)
@@ -772,7 +772,7 @@ def _entered(value):
                 f"without them U+{ord(separator):04X} is not a separator but part "
                 "of the one member's name"
             )
-    # @req+ REQ-42544082@OLwWLVzt5GvE ghvzto
+    # @req+ REQ-42544082@VRPSEgM9tJWs ghvzto
     members = value if isinstance(value, list) else [value]
     if len(set(members)) != len(members):
         raise ReqctlError("a set member is duplicated")
@@ -787,7 +787,7 @@ def _taken(folder, uid):
     return any((folder / f"{uid}{suffix}").exists() for suffix in (".yml", ".yaml"))
 
 
-# @req> REQ-57781505@6gvPA-9Mhwyo cmxvxt
+# @req> REQ-57781505@5YGB5n_NZmnc cmxvxt
 def _placeholder_for(kind, uid):
     prefix = KINDS[kind]
     given = GIVEN_UID.match(uid)
@@ -803,10 +803,10 @@ def mint(store, kind, name=None, placeholder=None):
         _refuse_unusable_name(store, name)
         return name, folder / f"{name}.yml"
     prefix = KINDS[kind]
-    # @req+ REQ-73115701@OR6yfOsRwhRH j3ijco
+    # @req+ REQ-73115701@_3WJxxfhIo7L j3ijco
     if placeholder is not None:
         uid = f"{prefix}-{placeholder}"
-        # @req> REQ-64236823@RxfiDLC17yGo 5xsesf
+        # @req> REQ-64236823@S--_1RHFn9pW 5xsesf
         if _taken(folder, uid):
             raise ReqctlError(f"{uid}: the corpus already holds an item under it")
         return uid, folder / f"{uid}.yml"
@@ -821,7 +821,7 @@ def mint(store, kind, name=None, placeholder=None):
 
 def prepare(store, kind, fields, placeholder=None):
     own = _fields.of(store.root, kind)
-    # @req+ REQ-48998966@HRHIfriQphFB 4zgzmu
+    # @req+ REQ-48998966@TUTQjlZtGDUP 4zgzmu
     missing = [field.flag for field in own
                if field.required and fields.get(field.dest) is None]
     if missing:
@@ -879,7 +879,7 @@ def prepare(store, kind, fields, placeholder=None):
                 raise ReqctlError(f"--default {default}: not an entry")
             data["default"] = chosen
 
-    # @req+ REQ-73115701@OR6yfOsRwhRH yorgmf
+    # @req+ REQ-73115701@_3WJxxfhIo7L yorgmf
     if placeholder is None and fields.get("uid") is not None:
         placeholder = _placeholder_for(kind, fields["uid"])
     uid, path = mint(store, kind, named, placeholder)
@@ -897,8 +897,8 @@ def prepare(store, kind, fields, placeholder=None):
 
 def create(store, kind, fields):
     # @req+ REQ-25589226@gN1zcZG8pbON fqpvnt
-    # @req+ REQ-67914848@CoWJ0QyQOZsG ytoyxl
-    # @req+ REQ-42544082@OLwWLVzt5GvE 4cg2e4
+    # @req+ REQ-67914848@cRb9rHls6z6c ytoyxl
+    # @req+ REQ-42544082@VRPSEgM9tJWs 4cg2e4
     uid, path, data, problems = prepare(store, kind, fields)
     if problems:
         raise ReqctlError("\n".join(problems))
@@ -974,7 +974,7 @@ def _revision(store, uid, fields):
     if stray:
         raise ReqctlError(f"{', '.join(stray)} does not apply to a {kind}")
     # @req- 5apnio
-    # @req+ REQ-61755382@oWxB5-1lwQ9G 7pv66p
+    # @req+ REQ-61755382@LGJAUmpv4utG 7pv66p
     if fields.get("handle") is not None:
         if kind != "term":
             raise ReqctlError(
@@ -985,7 +985,7 @@ def _revision(store, uid, fields):
             "--handle: a term's handle is the address the corpus reaches it "
             f"by; `reqctl rename {uid} HANDLE` moves the file with it"
         )
-    # @req> REQ-91205530@RtIsl4zWjUDc hc64tl
+    # @req> REQ-91205530@FiUaykViw6dQ hc64tl
     for field in own:
         if field.address and fields.get(field.dest) is not None:
             noun = "a data item" if kind == "data" else f"a {kind}"
@@ -1044,7 +1044,7 @@ def _revision(store, uid, fields):
     acks = fields.get("ack") or []
 
     prospective = dict(before)
-    # @req> REQ-34694183@iiEJLoDQUuRu i7ubge
+    # @req> REQ-34694183@DRvdPekHL7hR i7ubge
     prospective["assessed"] = _assessed_map(uid, before)
     if fields.get("kind") is not None:
         if kind in ("requirement", "guard"):
@@ -1154,8 +1154,8 @@ def _revision(store, uid, fields):
             or fields.get("set") or fields.get("append")):
         _refuse_unknown_references(store, prospective)
     _refuse_new_schema_faults(store, uid, before, prospective)
-    # @req+ REQ-53480164@R-Vze1T10x-h xpj5go
-    # @req+ REQ-62819035@LB2IzcLq4nTI qgjwmq
+    # @req+ REQ-53480164@5yFhCLJmuTBt xpj5go
+    # @req+ REQ-62819035@SRb6tL8xEERF qgjwmq
     stranded = _new_corpus_faults(store, uid, prospective)
     if stranded:
         raise ReqctlError("\n".join(stranded))
@@ -1212,7 +1212,7 @@ def _revision(store, uid, fields):
                     f"--reword {pair}: no link shows {asked!r}, so the reword "
                     "placed no word"
                 )
-    # @req> REQ-96926927@HugEvFR4Eh82 q2ou3q
+    # @req> REQ-96926927@JrkNpeQqNUl0 q2ou3q
     if not changed and not (spread and spread["done"]):
         asked = [key for key in OPERATIONS
                  + tuple(field.dest for field in own)
@@ -1234,7 +1234,7 @@ def _revision(store, uid, fields):
 
 
 def revise(store, uid, fields):
-    # @req+ REQ-98666936@8CkDXfV6m3Ir 4k5e4z
+    # @req+ REQ-98666936@TeGjonYXb0EM 4k5e4z
     try:
         changed, written = _revision(store, uid, fields)
     except ReqctlError as error:
@@ -1263,7 +1263,7 @@ def relate(store, source_uid, relation, target_uid):
     if source_uid == target_uid:
         raise ReqctlError("an item cannot link to itself")
     source = corpus.find(store, source_uid)
-    # @req> REQ-35877465@UZWrwK_xKhBH r2xftu
+    # @req> REQ-35877465@zMIttKgLLwy- r2xftu
     target = corpus.find(store, target_uid)
     stating = corpus.kind_of(source.uid, source.data)
     if stating not in STATEMENTS:
@@ -1271,7 +1271,7 @@ def relate(store, source_uid, relation, target_uid):
     kind = corpus.kind_of(target.uid, target.data)
     address = corpus.name_of(target.uid, target.data) or target_uid
     pin = f" -- pin it with `reqctl revise {source_uid} --ack {target_uid}`"
-    # @req> REQ-10503329@WLWOt9-DSU1S nso2i7
+    # @req> REQ-10503329@rcywmd_10OQY nso2i7
     if kind in ("parameter", "data"):
         noun = "a parameter" if kind == "parameter" else "a data item"
         raise ReqctlError(
@@ -1294,12 +1294,12 @@ def relate(store, source_uid, relation, target_uid):
     prospective["assessed"] = _assessed_map(source_uid, source.data)
     prospective["relations"] = kinds
     _prune_assessed(store, source_uid, prospective)
-    # @req+ REQ-44520277@sKFaJ_af6JS6 6sepga
+    # @req+ REQ-44520277@w92ngdeF87Mm 6sepga
     closed = _new_cycles(store, source_uid, prospective)
     if closed:
         raise ReqctlError("\n".join(closed) + f"\n{source_uid} was not changed")
     # @req- 6sepga
-    # @req+ REQ-53480164@R-Vze1T10x-h ssmh6o
+    # @req+ REQ-53480164@5yFhCLJmuTBt ssmh6o
     stranded = _new_corpus_faults(store, source_uid, prospective)
     if stranded:
         raise ReqctlError("\n".join(stranded) + f"\n{source_uid} was not changed")
@@ -1325,14 +1325,14 @@ def _stated(root):
 def delete(tree, uid):
     item = corpus.find(tree, uid)
     status = corpus.raw(item).get("status")
-    # @req> REQ-43821318@fwDcRRhE6tEQ qhlga3
+    # @req> REQ-43821318@iOP6I3zudijr qhlga3
     if status == "approved":
         raise ReqctlError(
             f"{uid} is approved -- what the corpus promises is deprecated, "
             f"not removed: `reqctl revise {uid} --status deprecated`"
         )
-    # @req+ REQ-80226740@PZjI5BrUS5hq d223dk
-    # @req+ REQ-13861816@banV6DgxKI1S nmlqee
+    # @req+ REQ-80226740@xxeoTjMyDC-h d223dk
+    # @req+ REQ-13861816@OGhn1Q-Xs0__ nmlqee
     name = corpus.name_of(item.uid, item.data)
     identity = {item.uid} | ({name} if name is not None else set())
     wore = set(corpus.carried_of(item.uid, item.data))
@@ -1344,7 +1344,7 @@ def delete(tree, uid):
         )
     # @req- nmlqee
     # @req- d223dk
-    # @req+ REQ-60430571@hgaKmodLJQdG ebwpu6
+    # @req+ REQ-60430571@Moalg6_VN3cT ebwpu6
     holders = sorted(
         other.uid
         for other in corpus.items(tree)
@@ -1360,7 +1360,7 @@ def delete(tree, uid):
             "would leave them pointing at nothing; unlink first"
         )
     # @req- ebwpu6
-    # @req+ REQ-42065260@f4qBCU4zNhSm s7iyuc
+    # @req+ REQ-42065260@-CAtOHQmOIfh s7iyuc
     corpus.remove(item.path)
     corpus.invalidate(tree)
     return item.path

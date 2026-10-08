@@ -18,7 +18,7 @@ description: >
 Ideas in, a requirements pull request out. Nothing here approves anything: the
 merge is the approval, and only the owner merges.
 
-<!-- @req+ REQ-12222066@H7OEdnWlOPCR bzkv6x -->
+<!-- @req+ REQ-12222066@fbTfN4X4xFUs bzkv6x -->
 No further step runs while a question you put the owner is unanswered. Post the
 questions, then end your turn; under a goal, where that does not wait, collect
 the answers with the question picker.
@@ -110,7 +110,7 @@ something the statement does not already say. Then:
   lean on a product statement is two rules, not one.
 <!-- @req- nvqukv -->
 <!-- @req- dsbvv7 -->
-<!-- @req+ REQ-79715634@qXK-LHf6SP8u ktu5yd -->
+<!-- @req+ REQ-79715634@W0ZctNofFGC8 ktu5yd -->
 - **A lone value is a parameter; a record is a data item.** The entry key settles it:
   a parameter's key *is* the value, typed by `--value-type` and carrying
   `--unit` -- `30` is the thirty, `utc` is the fallback zone. A data item's key
@@ -329,7 +329,7 @@ python3 ${CLAUDE_SKILL_DIR}/synthesis/verdicts.py --run DIR       # returns in, 
 
 Read that report, not the returns.
 
-<!-- @req+ REQ-23060027@QKFI8tm_J5VF 7pvcrn -->
+<!-- @req+ REQ-23060027@zeNeSryv-0-1 7pvcrn -->
 The coverage agent is spawned through the workflow with the manifest `build`
 names for it, once the answers are in, and
 `python3 ${CLAUDE_SKILL_DIR}/synthesis/coverage.py --words FILE
@@ -423,7 +423,7 @@ verdict and never created fails silently, and so does a value the owner agreed
 to share that was minted twice -- nothing validates recall. Wire what the
 read-back finds missing, or put it to the owner, before the pull request opens.
 
-<!-- @req+ REQ-21373303@mNM6_z8-kXLh vadyl4 -->
+<!-- @req+ REQ-21373303@Y7R6bZxRXU-G vadyl4 -->
 The pull request body carries the declined list and any UNJUDGED slot the
 owner accepted. Nothing else durably records either, and a reader who cannot
 see what was considered and dropped reads the corpus as everything that was

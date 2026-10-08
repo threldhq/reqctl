@@ -8,11 +8,11 @@ import yaml
 from reqctl import corpus
 
 LISTED = (corpus.CITATION_LIST,)
-# @req> REQ-43374441@ycLimfxvD8w2 c6qh2i
+# @req> REQ-43374441@7pCJVe7pf8Mg c6qh2i
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
-# @req> REQ-41600593@dV84ANKBJqdk o3tsro
+# @req> REQ-41600593@dauTiMee9rmb o3tsro
 STAMPED = re.compile(
     rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
 ABSENT = object()
@@ -53,7 +53,7 @@ def repins_only(base, path):
     return without_stamps(base, path) == without_stamps("HEAD", path)
 
 
-# @req+ REQ-43374441@ycLimfxvD8w2 qya7yo
+# @req+ REQ-43374441@7pCJVe7pf8Mg qya7yo
 def classify(base):
     found = _git("diff", "--no-renames", "--name-only", "-z", f"{base}...HEAD")
     if found.returncode != 0:

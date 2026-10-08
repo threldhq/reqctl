@@ -15,7 +15,7 @@ def _side(text, where):
 
 
 def resolve(store, uid):
-    # @req+ REQ-95299157@Z_SeD7Nr_zYz w4qjbn
+    # @req+ REQ-95299157@dJzPK-VOKyQG w4qjbn
     path = path_for(store.root, uid)
     text = read_text(path)
     if not CONFLICTED.search(text):

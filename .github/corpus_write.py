@@ -31,7 +31,7 @@ def bare(word):
 
 
 def resolve(value, minted):
-    # @req+ REQ-81313171@ZHINyeZGDkmi 3dpv3v
+    # @req+ REQ-81313171@7j0AmKa_kopi 3dpv3v
     found = MINTED.fullmatch(value)
     if not found:
         return value
@@ -98,7 +98,7 @@ def argv(step, minted):
             made.append(f"--{name}")
             continue
         for each in value if isinstance(value, list) else [value]:
-            # @req> REQ-52483245@aBzpGUKfyp4P eburqo
+            # @req> REQ-52483245@NPXNQr0pzcsh eburqo
             made.append(f"--{name}={each}")
     return made
 
@@ -145,7 +145,7 @@ def proposed(raw, env):
     if not ran("git", "diff", "--cached", "--name-only").stdout.strip():
         raise Refused("the change altered nothing")
     ran("git", "commit", "-m", title)
-    # @req> REQ-64308807@X_7rJjBIYt8C pgupaf
+    # @req> REQ-64308807@iKbY25rf_BLR pgupaf
     if ran("reqctl", "baseline", "--check", check=False).returncode:
         ran("git", "remote", "set-head", "origin", trunk)
         # @req+ REQ-44733670@C8Ng3PpXQx7j 66kdp3

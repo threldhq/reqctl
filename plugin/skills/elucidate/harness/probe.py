@@ -467,7 +467,7 @@ def main(argv=None):
 if __name__ == "__main__":
     # @req+ REQ-29234402@b5_8tR6bNR44 3sr6w7
     try:
-        # @req> REQ-24406170@M08jCONzg-4u 5uyr4v
+        # @req> REQ-24406170@ffuKefeAdU7p 5uyr4v
         sys.exit(corpus.atomically(main))
     except (corpus.ReqctlError, OSError, UnicodeError) as unreadable:
         sys.exit(f"{Path(__file__).name}: " + " ".join(str(unreadable).split()))

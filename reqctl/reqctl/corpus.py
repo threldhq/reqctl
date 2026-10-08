@@ -52,7 +52,7 @@ POLICED_SKIP = ("aliases", "word", "name", "carried")
 # @req> REQ-68407569@9WdKt66SbMuQ bzk766
 POLICED_ITEM_SKIP = POLICED_SKIP + ("default", "unit")
 CITATION_LIST = "citations"
-# @req> REQ-88203622@QLXb8abUOMT3 otmh6w
+# @req> REQ-88203622@wlZ9orsr9c7q otmh6w
 CITABLE = ("requirement", "guard", "parameter", "data")
 ITEM_SKIP = ("entries", "acceptance_criteria", "text",
              "assessed", "relations", "status", CITATION_LIST)
@@ -152,7 +152,7 @@ def loads(text, where):
     try:
         node = loader.get_single_node()
         twice = _repeated(node)
-        # @req> REQ-84465433@Ci_xHI8aFBMN pkvikc
+        # @req> REQ-84465433@iXBRKIfkf18a pkvikc
         if twice:
             raise ReqctlError(
                 f"{where} states {', '.join(twice)} more than once -- YAML "
@@ -302,7 +302,7 @@ def atomic_write(path, content):
     temp = target.with_name(f"{target.name}.{secrets.token_hex(8)}.tmp")
     staged = False
     try:
-        # @req> REQ-24406170@M08jCONzg-4u ig234p
+        # @req> REQ-24406170@ffuKefeAdU7p ig234p
         _hold(target)
         # @req> REQ-81667762@82D0B66GuW3u lkbxat
         make_folder(target.parent)
@@ -325,14 +325,14 @@ def atomic_write(path, content):
                 temp.unlink()
 
 
-# @req> REQ-65668011@6eXnj2-53DtA l5i6id
+# @req> REQ-65668011@WuPZe9UcmiaP l5i6id
 def write_all(changes):
     with all_or_nothing():
         for path, content in changes:
             atomic_write(path, content)
 
 
-# @req+ REQ-24406170@M08jCONzg-4u u5qcba
+# @req+ REQ-24406170@ffuKefeAdU7p u5qcba
 _held = None
 _made = None
 
@@ -503,10 +503,10 @@ def addressable(records):
 
 
 def stamp_of(uid, data):
-    # @req> REQ-54851939@Iw_Sa4bHHJhi 4jhey4
+    # @req> REQ-54851939@n6YOz94UUTn7 4jhey4
     if uid.startswith(("REQ-", "GUARD-")):
         return digest([uid, {k: data.get(k) for k in STATEMENT_STAMPED}])
-    # @req+ REQ-56581795@IfY71qSXm5yz s7alzx
+    # @req+ REQ-56581795@KcbOaSZB6LPV s7alzx
     if kind_of(uid, data) == "term":
         return _term_digest(uid, term_fields(data))
     return digest([uid, {k: data.get(k) for k in ITEM_STAMPED}])
@@ -525,7 +525,7 @@ def flagged(data, flag):
                if isinstance(fields, dict) and flag in fields]
     if not carried:
         return None
-    # @req> REQ-79222815@kx_jWO6UU-11 3wyszr
+    # @req> REQ-79222815@smBL1zf2tP96 3wyszr
     return {key: fields for key, fields in held.items()
             if isinstance(fields, dict) and fields.get(flag) is True}
 
@@ -555,7 +555,7 @@ def entry_at(data, key):
 
 
 def entry_stamp_of(uid, data, key):
-    # @req+ REQ-23898341@cjkAewZpMCHU nvrect
+    # @req+ REQ-23898341@oXCyxMhvY0ka nvrect
     fields = entry_at(data, key)
     if fields is None:
         return None
@@ -570,7 +570,7 @@ def address_stamp_of(uid, data, entry_key):
         return stamp_of(uid, data)
     if entry_key == MEMBERS:
         return digest([uid, MEMBERS, entries(data) or {}])
-    # @req+ REQ-63712597@H2PNhNLn6GfY okjacr
+    # @req+ REQ-63712597@Lvnsc2CjyqjN okjacr
     held = flagged(data, entry_key)
     if held is not None:
         return digest([uid, entry_key, held])
@@ -586,13 +586,13 @@ def stamp(item):
     return stamp_of(item.uid, item.data)
 
 
-# @req> REQ-88203622@QLXb8abUOMT3 zi6xxa
+# @req> REQ-88203622@wlZ9orsr9c7q zi6xxa
 def citable(item):
     return kind_of(item.uid, item.data) in CITABLE
 
 
-# @req> REQ-18176935@u-uprH5qBxMT r63o2r
-# @req> REQ-34330878@Zd73-2hLzA6M ymaadg
+# @req> REQ-18176935@A6AhLhUZ7MdW r63o2r
+# @req> REQ-34330878@E2ViDxqgA25l ymaadg
 def cited_stamp(item, entry=None):
     held = stamp(item)
     if entry or kind_of(item.uid, item.data) in ("parameter", "data"):
@@ -606,7 +606,7 @@ def cited_entries(item):
     return entries(item.data) or {}
 
 
-# @req> REQ-22755763@jWQQtKhJ8JoO ez4hkv
+# @req> REQ-22755763@lFaaseccSg81 ez4hkv
 def cited_item(store, address):
     named, entry = split_address(address)
     item = find(store, named)
@@ -680,14 +680,14 @@ def concept_references(data):
 
 
 def unlinked_prose(data):
-    # @req> REQ-96763217@Dg9sKJOE-5NX vintgg
+    # @req> REQ-96763217@3jJWb99oL6GQ vintgg
     if data.get("kind") == "data":
         data = {**data, "entries": {
             key: {name: value for name, value in fields.items()
                   if name != "unit" or isinstance(value, dict)}
             if isinstance(fields, dict) else fields
             for key, fields in (entries(data) or {}).items()}}
-    # @req> REQ-83702299@IgLtX0BfZTks et7k4t
+    # @req> REQ-83702299@kBGzIwAyKDHL et7k4t
     return PARAM_REF.sub(
         " ", CONCEPT_LINK.sub(" ", "\n".join(
             [prose(data, POLICED_SKIP, item=False)]
@@ -856,11 +856,11 @@ def packaged_schema_path(name):
 
 
 def schema(root, name):
-    # @req+ REQ-13148397@XXob_8TNNhHN 4fsesd
+    # @req+ REQ-13148397@Oh5WbBj3LiW0 4fsesd
     stated = schema_path(root, name)
     path = stated
     # @req- 4fsesd
-    # @req> REQ-44451070@VVBRK8IWFyvq idgq2r
+    # @req> REQ-44451070@AlFXBWPH1jnw idgq2r
     if not path.is_file():
         path = packaged_schema_path(name)
         if not path.is_file():
@@ -935,7 +935,7 @@ def named_schemas(root):
 
 
 def binding_dimensions(root):
-    # @req> REQ-68873210@hUPNlhiYKqih up7le5
+    # @req> REQ-68873210@e7MRMGqsYrnx up7le5
     return [name for name in named_schemas(root)
             if schema(root, name).get(BINDING) is True]
 
