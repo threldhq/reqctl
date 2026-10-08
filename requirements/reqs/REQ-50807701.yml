@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a passage ending in a full stop, whose page holds its words followed by a
+    comma
+  then: the product names no fault for the source
+  when: the review is checked
+- given: a passage ending in a full stop and a closing quotation mark, whose page
+    holds its words followed by a comma
+  then: the product names no fault for the source
+  when: the review is checked
+- given: a passage holding a full stop before its last word, whose page holds its
+    words with a comma in place of that full stop
+  then: the product refuses the review and names the source as not holding the passage
+  when: the review is checked
+- given: a passage holding nothing but full stops, exclamation marks and question
+    marks
+  then: the product refuses the review
+  when: the review is checked
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-46144308: constrains
+status: approved
+text: When the product matches the passage that a [practice](practice) of the [best-in-class
+  review](best_in_class_review) quotes against the page at its source, the product
+  shall drop the run of full stops, exclamation marks and question marks that ends
+  the passage once its punctuation is normalised.
+type: functional
+verification: inspection
