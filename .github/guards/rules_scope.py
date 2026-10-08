@@ -58,7 +58,7 @@ def faults(text, where, files):
     # @req+ GUARD-83168738@zhoOQpGgBd9R us6trr
     try:
         held = yaml.safe_load(front.group(1))
-    except yaml.YAMLError as broken:
+    except (yaml.YAMLError, ValueError) as broken:
         return [f"{where}: frontmatter is not YAML: {broken}"]
     # @req- us6trr
     if not isinstance(held, dict):

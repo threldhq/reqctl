@@ -76,7 +76,7 @@ def faults(text, where, gates=None):
     # @req+ GUARD-83168738@zhoOQpGgBd9R bwk6ho
     try:
         held = yaml.safe_load(text)
-    except yaml.YAMLError as broken:
+    except (yaml.YAMLError, ValueError) as broken:
         return [f"{where}: is not YAML: {broken}"]
     # @req- bwk6ho
     if not isinstance(held, dict):
