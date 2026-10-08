@@ -3,6 +3,10 @@ acceptance_criteria:
     no data item of that name
   then: the product refuses the run and names the dimension
   when: a run is built
+- given: a corpus whose schema marks an item as a binding dimension and that holds
+    no data item of that name
+  then: the product refuses before it spawns any agent
+  when: a run is built
 assessed:
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
   REQ-73044308: 1NhpMHsqlbOX-6uLKELhtIbvtAIKntdW0vjSPZVc0YQ
