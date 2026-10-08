@@ -15,6 +15,11 @@ assessed:
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+citations:
+  cwwryv: ilM61BK_9tHRGSnWu6gGuzAx4lSy1dv5e3J9a1JLD7Y
+  nctcuj: pV-NqbnfLVqNGBe7Nn6xCEbiaR7tWxAKGsHcTkr2iRg
+  ot73lz: 7o4zl2ViYKmV_ZjSLmh1nGjgX0YeHDJ_TWvVwSX0Oxs
+  rkliio: kdv1e9rv8EUI_X_KTk8DqRxhHtg5njBXWJPz7KtiIDM
 priority: medium
 relations:
   REQ-46144308: derives_from

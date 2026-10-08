@@ -19,6 +19,8 @@ assessed:
   REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+citations:
+  5yws4o: ZpouIdfghpRtON6ZVYt3uvemvhijp5MHOxygnvBLm70
 priority: medium
 relations:
   REQ-46144308: constrains

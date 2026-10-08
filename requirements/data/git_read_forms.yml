@@ -1,5 +1,7 @@
 assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  r2wro4: iWVJDCHVHuBtNbDoU6gcKMSev19pljpsugm-ffb2GXg
 entries:
   add:
     definition: git add
