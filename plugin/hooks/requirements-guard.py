@@ -92,7 +92,7 @@ GIT_READ = re.compile(
     r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
 )
-HEREDOC = re.compile(r"(?<![<\\])<<(?!<)-?\s*(['\"]?)(\w+)\1")
+HEREDOC = re.compile(r"(?<![<\\])(?:\\\\)*<<(?!<)-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
@@ -312,7 +312,7 @@ def scan(cmd: str) -> list[list[str]]:
             continue
         joined = "".join(buf)
         opened = next((found for found in HEREDOC.finditer(joined)
-                       if masked(joined)[found.start()] == "<"), None)
+                       if masked(joined)[joined.index("<", found.start())] == "<"), None)
         if opened:
             body, row = [], row + 1
             while row < len(lines) and lines[row].strip() != opened.group(2):
@@ -364,11 +364,11 @@ def heading(part):
 
 
 def tokens_of(part):
-    words, buf, quote, seen, escaped = [], [], None, False, False
-    for char in part + " ":
+    words, buf, quote, seen, escaped, dollars = [], [], None, False, False, 0
+    for char in part:
         if escaped:
             buf.append(char)
-            escaped = False
+            escaped, dollars = False, 0
             continue
         if char == "\\" and quote != "'":
             escaped = True
@@ -380,17 +380,18 @@ def tokens_of(part):
                 buf.append(char)
             continue
         if char in "'\"":
-            quote = opened_quote(char, buf)
+            quote = opened_quote(char, ["$"] * dollars)
             del buf[len(buf) - len(quote) + 1:]
-            seen = True
+            seen, dollars = True, 0
             continue
+        dollars = dollars + 1 if char == "$" else 0
         if char.isspace():
             if buf or seen:
                 words.append("".join(buf))
                 buf, seen = [], False
             continue
         buf.append(char)
-    return words
+    return words + ["".join(buf)] if buf or seen else words
 
 
 def invoked(words):
