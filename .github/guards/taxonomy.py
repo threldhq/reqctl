@@ -30,6 +30,7 @@ def faults(root):
         if not isinstance(data, dict):
             sys.exit(f"{path}: item file is not a mapping")
         uid = path.stem
+        # @req+ REQ-40026456@tmXkAn-osOnn 5os7ey
         if corpus.kind_of(uid, data) != "parameter":
             continue
         if data.get("value_type") != VOCABULARY:
@@ -39,6 +40,7 @@ def faults(root):
         found.append(
             f"{uid}: a parameter of {VOCABULARY} holding more than one member "
             f"is a data item -- `reqctl refile {uid}`")
+        # @req- 5os7ey
     return sorted(found)
 
 

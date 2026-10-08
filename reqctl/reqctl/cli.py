@@ -154,12 +154,14 @@ def _nests(fields):
     return any(isinstance(value, dict) for value in (fields or {}).values())
 
 
-def _entry_lines(key, fields, depth=0):
+def _entry_lines(key, fields, depth=0, anchor=None):
+    # @req> REQ-22770949@2z1l08YISr1R cglw6c
+    label = f'<a id="{anchor}"></a>{key}' if anchor else key
     if depth == 0 and not _nests(fields):
         shown = _entry_fields(fields)
-        return [f"- {key}" + (f" — {shown}" if shown else "")]
+        return [f"- {label}" + (f" — {shown}" if shown else "")]
     # @req+ REQ-18993149@_rRKZ1ZI21lt s5nw3l
-    held = [f"{'  ' * depth}- {key}"]
+    held = [f"{'  ' * depth}- {label}"]
     for name, value in (fields or {}).items():
         if isinstance(value, dict):
             held += _entry_lines(name, value, depth + 1)
@@ -317,13 +319,19 @@ def _resolved(text, store):
     # @req> REQ-73719888@SQkvdemRTgC1 5ubj6l
     def term(match):
         uid, rest = corpus.split_address(match.group(2))
+        # @req+ REQ-13364391@mP1skaGV3Fbm o72rua
         try:
             found = corpus.find(store, uid)
         except ReqctlError:
-            return match.group(1)
-        if rest is not None and rest not in (corpus.entries(found.data) or {}):
-            return match.group(1)
-        return f"[{match.group(1)}](#{found.uid})"
+            return match.group(0)
+        # @req- o72rua
+        if rest is None:
+            return f"[{match.group(1)}](#{found.uid})"
+        # @req> REQ-13364391@mP1skaGV3Fbm fgekao
+        if rest not in (corpus.entries(found.data) or {}):
+            return match.group(0)
+        # @req> REQ-22770949@2z1l08YISr1R 54eioc
+        return f"[{match.group(1)}](#{found.uid}.{rest})"
 
     text = corpus.PARAM_REF.sub(parameter, " ".join(str(text or "").split()))
     return corpus.CONCEPT_LINK.sub(term, text)
@@ -372,9 +380,14 @@ def cmd_export(args):
         # @req- 6drjr2
         lines.append(f'<a id="{uid}"></a>')
         lines.append(f"## {uid}")
+        # @req> REQ-22770949@2z1l08YISr1R okkskg
+        marks = "".join(f'<a id="{uid}.{key}"></a>'
+                        for key in corpus.entries(data) or {}
+                        if corpus.DATA_KEY.match(str(key)))
         if corpus.kind_of(uid, data) == "term":
             fields = corpus.term_fields(data)
-            lines.append(f"**{corpus.term_word(data)}** — "
+            # @req> REQ-22770949@2z1l08YISr1R nnfbvp
+            lines.append(f"{marks}**{corpus.term_word(data)}** — "
                          f"{' '.join(str(fields.get('definition') or '').split())}")
             aliases = fields.get("aliases") or []
             if aliases:
@@ -403,10 +416,12 @@ def cmd_export(args):
             if data.get("text"):
                 lines.append(str(data.get("text")))
             for key, fields in (corpus.entries(data) or {}).items():
-                lines += _entry_lines(key, fields)
+                # @req> REQ-22770949@2z1l08YISr1R qc2ek5
+                lines += _entry_lines(key, fields, anchor=f"{uid}.{key}")
             lines.append(f"- status: {data.get('status')}")
         else:
-            lines.append(f"{str(data.get('text') or '')} "
+            # @req> REQ-22770949@2z1l08YISr1R adyi2v
+            lines.append(f"{marks}{str(data.get('text') or '')} "
                          f"**{_shown(data)}** "
                          f"(`{data.get('name')}`)")
             for key, fields in (corpus.entries(data) or {}).items():
