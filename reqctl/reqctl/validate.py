@@ -486,9 +486,9 @@ def _bare_terms(uid, data, defined):
 
 
 def exempted(records, root):
-    # @req> REQ-88221320@tXvROEk2-d6r 5gpgix
+    # @req> REQ-88221320@04q8T91NApFU 5gpgix
     return sorted({
-        f"{uid}: \"{' '.join(found.group().split())}\" is not {term_uid} -- {reason}"
+        f"{uid}: \"{' '.join(found.group().split())}\" accepted unlinked, a phrase recorded on term {term_uid} -- {reason}"
         for term_uid, _, _, phrases in term_index(_approved(records))
         for uid, data in records.items() if uid != term_uid
         for phrase, reason in phrases
