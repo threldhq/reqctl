@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a source whose page holds the passage a [practice](practice) quotes from
+    it only in the content of its description, og:description and twitter:description
+    meta elements
+  then: the product refuses the review and names the source as not holding the passage
+  when: the review is checked
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-46144308: derives_from
+status: approved
+text: When the product matches the passage that a [practice](practice) of the [best-in-class
+  review](best_in_class_review) quotes against the page at its source, the product
+  shall match it against the [page text](page_text) of that page alone.
+type: functional
+verification: inspection

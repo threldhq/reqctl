@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a source whose page as served holds words only in its title element, its
+    script elements and its meta description, and not the passage a [practice](practice)
+    quotes from it
+  then: the product refuses the review, names the source as serving no readable text
+    without running scripts and names citing another page as the way to clear it,
+    and does not name the source as not holding the passage
+  when: the review is checked
+- given: a source whose [page text](page_text) holds a word outside its title elements
+    and does not hold the passage a [practice](practice) quotes from it
+  then: the product refuses the review and names the source as not holding the passage
+  when: the review is checked
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-46144308: derives_from
+status: approved
+text: If the [page text](page_text) of the page at a source that a [practice](practice)
+  of the [best-in-class review](best_in_class_review) names does not hold the passage
+  the [practice](practice) quotes from that source and holds no word outside the page's
+  title elements, then the product shall refuse the review, naming the source as serving
+  no readable text without running scripts.
+type: functional
+verification: inspection
