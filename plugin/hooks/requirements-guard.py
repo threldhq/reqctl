@@ -219,11 +219,8 @@ def named_paths(value, keys=PATH_KEY, key=""):
 def bare_paths(value):
     if isinstance(value, str):
         return [value] if len(value) <= INPUT_LIMIT and PATH_SHAPE.fullmatch(value) else []
-    if isinstance(value, dict):
-        return [found for v in value.values() for found in bare_paths(v)]
-    if isinstance(value, list):
-        return [found for v in value for found in bare_paths(v)]
-    return []
+    items = value.values() if isinstance(value, dict) else value if isinstance(value, list) else []
+    return [found for v in items for found in bare_paths(v)]
 
 
 def flatten(text: str) -> str:
@@ -334,6 +331,7 @@ def opened_quote(char, before):
     return "$'" if char == "'" and before == ["$"] else char
 
 
+@functools.cache
 def masked(cmd):
     out, quote = [], None
     i = 0
@@ -346,6 +344,10 @@ def masked(cmd):
                 continue
             out.append(" " if char != quote[-1] else char)
             quote = None if char == quote[-1] else quote
+        elif char == "\\" and i + 1 < len(cmd):
+            out.append(cmd[i:i + 2])
+            i += 2
+            continue
         elif char in "'\"":
             quote = opened_quote(char, list(cmd[i - 1:i]))
             out.append(char)
@@ -361,16 +363,24 @@ def heading(part):
 
 
 def tokens_of(part):
-    words, buf, quote, seen = [], [], None, False
+    words, buf, quote, seen, escaped = [], [], None, False, False
     for char in part + " ":
+        if escaped:
+            buf.append(char)
+            escaped = False
+            continue
+        if char == "\\" and quote != "'":
+            escaped = True
+            continue
         if quote:
-            if char == quote:
+            if char == quote[-1]:
                 quote = None
             else:
                 buf.append(char)
             continue
         if char in "'\"":
-            quote = char
+            quote = opened_quote(char, buf[-1:])
+            del buf[len(buf) - len(quote) + 1:]
             seen = True
             continue
         if char.isspace():
@@ -452,19 +462,16 @@ def lists_files(words):
 
 
 def sink_runs(words):
-    tool, rest = (words[0], words[1:]) if words else ("", [])
+    tool, *rest = words or [""]
     if tool == "awk":
         return any(word.startswith(AWK_PROGRAM_FILE) or (
             not word.startswith("-") and AWK_RUNS.search(word)) for word in rest)
     if tool != "sed":
         return False
-    scripts, valued = [], False
-    for word in rest:
-        if valued:
-            scripts.append(word)
-            valued = False
-        elif word in ("-e", "--expression"):
-            valued = True
+    scripts, args = [], iter(rest)
+    for word in args:
+        if word in ("-e", "--expression"):
+            scripts.extend(itertools.islice(args, 1))
         elif word.startswith("--expression="):
             scripts.append(word.partition("=")[2])
         elif word.startswith("-") and not SED_QUIET.fullmatch(word):
@@ -695,26 +702,10 @@ def corpus_folders(project):
     for folder in [*ITEM_FOLDERS, "baselines"]:
         path = os.path.join(root, folder)
         try:
-            names = tuple(os.listdir(path))
+            folders.append((path, os.listdir(path)))
         except OSError:
-            names = ()
-        folders.append((tuple(path.split("/")), names))
-    files = [tuple(os.path.join(root, name).split("/"))
-             for name in ("baseline.yml", "baseline.yaml")]
-    return folders, files
-
-
-def globbed(pattern, path):
-    reach = {0}
-    for glob in pattern:
-        if glob == "**":
-            reach = set(range(min(reach), len(path) + 1))
-        else:
-            reach = {i + 1 for i in reach if i < len(path)
-                     and fnmatch.fnmatchcase(path[i], glob.replace("[^", "[!"))}
-        if not reach:
-            return False
-    return len(path) in reach
+            folders.append((path, []))
+    return folders, [os.path.join(root, name) for name in ("baseline.yml", "baseline.yaml")]
 
 
 @functools.lru_cache(maxsize=4096)
@@ -724,21 +715,17 @@ def reaches_corpus(word, cwd):
     if not project or not value or "$" in value or "`" in value:
         return False
     folders, files = corpus_folders(project)
-    for alt in itertools.islice(braced(os.path.expanduser(value)), 257):
-        pattern = tuple(os.path.normpath(os.path.join(cwd, alt)).split("/"))
-        if not GLOB_CHAR.search(alt):
-            if any(pattern[:len(top)] == top
-                   for top in [folder for folder, _ in folders] + files):
-                return True
-            continue
-        if any(globbed(pattern, top) for top in files):
+    paths = [os.path.normpath(os.path.join(cwd, alt))
+             for alt in itertools.islice(braced(os.path.expanduser(value)), 257)]
+    if any(path.startswith(top + "/") or expands_to(path, top)
+           for path in paths for top in [folder for folder, _ in folders] + files):
+        return True
+    for folder, names in folders:
+        last = {name for head, _, name in (path.rpartition("/") for path in paths)
+                if expands_to(head, folder)}
+        if last and names and any(map(re.compile("|".join(
+                fnmatch.translate(glob.replace("[^", "[!")) for glob in last)).match, names)):
             return True
-        for folder, names in folders:
-            if globbed(pattern, folder) or names and (
-                    globbed(pattern, folder + names[:1]) if pattern[-1] == "**"
-                    else globbed(pattern[:-1], folder)
-                    and fnmatch.filter(names, pattern[-1].replace("[^", "[!"))):
-                return True
     return False
 
 
@@ -760,9 +747,13 @@ def judge_shell(raw, cwd):
     if redirect:
         deny(NOT_A_KNOWN_READ.format(target=unquoted[redirect.start():redirect.end()]))
     written = scan(AMP_REDIRECT.sub(" ", ESCAPE.sub("", raw)))
-    for index, pipeline in enumerate(scan(AMP_REDIRECT.sub(" ", cmd))):
-        said = written[index] if index < len(written) else []
-        said = said if len(said) == len(pipeline) else pipeline
+    pipelines = scan(AMP_REDIRECT.sub(" ", cmd))
+    running = next((heading(part).strip() for pipeline in written for part in pipeline
+                    for words in [tokens_of(heading(part))]
+                    if lists_files(words) or sink_runs(words)), None)
+    if list(map(len, written)) != list(map(len, pipelines)):
+        running = running or heading(raw).strip()
+    for pipeline in pipelines:
         for part in pipeline:
             judge_command(tokens_of(part))
             invocation = heading(part)
@@ -776,15 +767,14 @@ def judge_shell(raw, cwd):
         flag = SUBSHELL.search(whole) or OUTPUT_FLAG.search(whole)
         if flag:
             deny(NOT_A_KNOWN_READ.format(target=flag.group()))
-        for part, as_written in zip(pipeline, said):
-            words = tokens_of(heading(as_written))
-            # @req> REQ-54260750@MTrWbA9_HZWY qrdgnw
-            if lists_files(words):
-                deny(DIRECT_READ.format(target=heading(part).strip()))
+        # @req> REQ-54260750@MTrWbA9_HZWY qrdgnw
+        if running:
+            deny(NOT_A_KNOWN_READ.format(target=running))
+        for part in pipeline:
             if READ.search(part) or GIT_READ.search(part):
                 continue
             if (part not in naming and SINK.search(part)
-                    and not SINK_WRITES.search(part) and not sink_runs(words)):
+                    and not SINK_WRITES.search(part)):
                 continue
             deny(NOT_A_KNOWN_READ.format(target=heading(part).strip()))
     # @req- ak47k7
@@ -828,9 +818,16 @@ def notebook_edited(args):
         deny(UNREADABLE)
     if not isinstance(new, str) or not isinstance(cells, list):
         deny(UNREADABLE)
+    index = re.fullmatch(r"cell-(\d+)", str(args.get("cell_id")))
     held = next((cell for cell in cells if isinstance(cell, dict)
-                 and cell.get("id") == args.get("cell_id")), {})
-    source = held.get("source", "") if mode != "insert" else ""
+                 and cell.get("id") == args.get("cell_id")), None)
+    if held is None and index and int(index[1]) < len(cells):
+        held = cells[int(index[1])]
+    if mode == "insert":
+        held = {}
+    if not isinstance(held, dict):
+        deny(UNREADABLE)
+    source = held.get("source", "")
     before = "".join(map(str, source)) if isinstance(source, list) else str(source)
     return before, "" if mode == "delete" else new
 
@@ -890,8 +887,7 @@ def decide(data: dict) -> None:
 
     # @req> REQ-22704490@0I1yKEFWt0tX qfasw3
     if tool not in ("Bash", "Read", "Grep", "Glob"):
-        paths = named_paths(args)
-        for value in paths + [value for value in bare_paths(args) if value not in paths]:
+        for value in named_paths(args) + bare_paths(args):
             named = flatten(value.replace("\\", "/"))
             if ITEM.search(named):
                 deny(f"Direct write of a requirement item blocked: {value}\n{USE_REQCTL}")
