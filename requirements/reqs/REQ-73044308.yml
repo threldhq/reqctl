@@ -2,7 +2,8 @@ acceptance_criteria:
 - given: a corpus whose schemas mark no item as a binding dimension
   then: the run is built and records no binding
   when: a run is built
-- given: a corpus holding no data item at all
+- given: a corpus whose schemas mark no item as a binding dimension and that holds
+    no data item at all
   then: the run is built
   when: a run is built
 assessed:
