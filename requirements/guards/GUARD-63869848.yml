@@ -7,6 +7,9 @@ acceptance_criteria:
   then: the build gives no such warning
   when: .github/verify.py runs
 assessed: {}
+citations:
+  5xmujr: S-vEU6rWcsPSUwzzhLeSxamwPFNvnCGyvY6En3E_K_Y
+  ykvsgh: CZdvpKp-qjHp2sEx7DCo1SpH2OjKYw-NCNJJYLqqsao
 relations: {}
 status: approved
 text: When .github/verify.py runs over a working tree holding uncommitted changes,

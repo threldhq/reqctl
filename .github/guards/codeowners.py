@@ -21,25 +21,31 @@ def rules(text):
 
 def faults(text):
     held = rules(text)
+    # @req+ GUARD-96541664@oB0GqG8AdVP9 nfk4cl
     if not held:
         return [f"{OWNERS}: names no owner, so nothing waits for approval"]
     found = []
     if not any(pattern == EVERYTHING for _, pattern, _ in held):
         found.append(f"{OWNERS}: has no {EVERYTHING} rule, so a new top-level "
                      "path arrives matched by nothing and merges unapproved")
+    # @req- nfk4cl
+    # @req> GUARD-10823996@bfm-dN6H_Udf lmpkxv
     for wanted in OWNED:
         if not any(pattern == wanted for _, pattern, _ in held):
             found.append(f"{OWNERS}: does not name {wanted}; an agent that can "
                          "reach it can approve its own work indirectly")
+    # @req> GUARD-27748979@G-APnovHS9P3 hgyrkk
     places = [spot for spot, (_, pattern, _) in enumerate(held)
               if pattern in OWNED]
     for spot, (number, pattern, owners) in enumerate(held):
+        # @req> GUARD-27748979@G-APnovHS9P3 a2bfib
         if places and spot > min(places) and pattern not in OWNED:
             found.append(
                 f"{OWNERS}:{number}: {pattern} follows the owned paths. GitHub "
                 "takes the last matching rule, so this answers for whatever it "
                 "also matches and lifts the owner's approval from it; a "
                 "carve-out goes above them, never under")
+        # @req> GUARD-32820195@-N_pWkH7K8rC 32oezj
         if not owners:
             found.append(f"{OWNERS}:{number}: {pattern} names no owner, which "
                          "removes approval rather than requiring it")

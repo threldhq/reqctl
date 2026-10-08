@@ -55,6 +55,7 @@ def reaches(step, gates):
 
 
 def settled(steps, where, gates):
+    # @req+ GUARD-12128145@mFuOqNbkyV1o 3a5aqb
     at = next((index for index, step in enumerate(steps)
                if ACCEPTS.search(str(step.get("run") or ""))), None)
     if at is None:
@@ -66,6 +67,7 @@ def settled(steps, where, gates):
             f"{VALIDATES!r} -- move it after, so no gate judges a corpus "
             "reqctl has not accepted"
             for step in steps[:at] if reaches(step, gates)]
+    # @req- 3a5aqb
 
 
 def faults(text, where, gates=None):
@@ -77,8 +79,10 @@ def faults(text, where, gates=None):
         return [f"{where}: is not a mapping"]
     found = []
     who = Path(where).name
+    # @req> REQ-74823322@YWZT0Srw2y2d fbf7lm
     if SECRET.search(text) and who not in WIELDS:
         found.append(f"{where}: reaches the secrets context")
+    # @req> REQ-81795630@6p2bA0ZHqY-j 6nwnpn
     if who in WIELDS:
         for fired in sorted(UNTRUSTED & triggers(held)):
             found.append(f"{where}: wields a secret and fires on {fired}")
@@ -92,6 +96,7 @@ def faults(text, where, gates=None):
     jobs = held.get("jobs") or {}
     if not isinstance(jobs, dict):
         return [*found, f"{where}: jobs is not a mapping"]
+    # @req> GUARD-37835776@0Spg60Mwp26J ayey6b
     if len(jobs) != JOBS:
         found.append(f"{where}: has {len(jobs)} jobs, not {JOBS}")
     # @req> GUARD-52037270@OztX8T4vOmsH ls2q44
@@ -109,9 +114,11 @@ def faults(text, where, gates=None):
                          f"{allowed!r}")
         # @req- w4sjw2
         steps = [step for step in job.get("steps") or [] if isinstance(step, dict)]
+        # @req> GUARD-85664071@zrnITtEG0Lqc yekzpu
         for uses in [job.get("uses")] + [step.get("uses") for step in steps]:
             if uses and not PINNED.search(str(uses)):
                 found.append(f"{where}: {uses} is not pinned to a commit")
+        # @req> GUARD-40603760@BjP6UvmNcOQT yrydmh
         for step in steps:
             if step.get("continue-on-error"):
                 found.append(
@@ -126,9 +133,11 @@ def installs(text, where):
     for line in PIP.findall(CONTINUED.sub(" ", text)):
         held = " ".join(line.split())
         spaced = f" {held} "
+        # @req> GUARD-26421773@Fprcs5aDvwE8 kt5es3
         if " -r " in spaced and "--require-hashes" not in spaced:
             found.append(f"{where}: `{held}` installs from a lockfile without "
                          "--require-hashes")
+        # @req> GUARD-72877772@JfdZ18LPQLEi bbo2z6
         if " -e " in spaced and "--no-build-isolation" not in spaced:
             found.append(f"{where}: `{held}` builds an editable install without "
                          "--no-build-isolation")

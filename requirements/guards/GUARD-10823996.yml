@@ -5,6 +5,8 @@ acceptance_criteria:
 assessed:
   owned_paths: 5uBm_4PmH1-c0tHvRRkdcOHNjbipvaGXy4nBbbhG0iY
   owned_paths.*: NQsnvnfjF2CIy4YOe4lpO7lb9Lc7n8SKOLGRWLstbfg
+citations:
+  lmpkxv: cu8Tkw5S5Z-3Bk1qSLYoBqE-DnoxHKkhBBquDTbLgc8
 relations: {}
 status: approved
 text: If the CODEOWNERS file holds no rule for one of the ${owned_paths}, then the

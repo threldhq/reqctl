@@ -4,6 +4,8 @@ acceptance_criteria:
   then: the build refuses the change
   when: the build runs
 assessed: {}
+citations:
+  3qoaja: ockilMVJS4bbcMX4V-Cd6OGWguRTeSNuW36aQhXl90A
 relations: {}
 status: approved
 text: If the path patterns that a rules file states together match every file the

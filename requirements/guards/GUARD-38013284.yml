@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the build stops .github/verify.py and names the exit status git gave
   when: .github/verify.py runs
 assessed: {}
+citations:
+  gdabnx: ffN9jpVh41ZfYC_TK8kJ_HRXeANL-TATipH_JiWfgqY
 relations: {}
 status: approved
 text: If git cannot report whether the working tree holds uncommitted changes when

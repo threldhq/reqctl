@@ -857,6 +857,7 @@ def _entry_selection(records):
                 continue
             existing = corpus.entries(held)
             key = rest.split(".")[0]
+            # @req+ REQ-62329029@wjRs5FRIhJ3C rc5mmy
             if existing is None:
                 problems.append(
                     f"{uid}: selects {address} but {target} has no entries"
@@ -904,6 +905,7 @@ def _entry_selection(records):
                         f"{uid}: selects {address} but entry {key!r} of "
                         f"{target} has no field {field!r}"
                     )
+            # @req- rc5mmy
     return problems
 
 

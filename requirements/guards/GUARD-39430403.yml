@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the build runs
 assessed:
   GUARD-46665858: h9A_bfvOyNF798rZcGrXlTytNuqPfcYKBwZJph4bO58
+citations:
+  yvynus: 6hPQKvtFJinPwjSInGBXZC578GariVPdXpE6W55fflE
 relations:
   GUARD-46665858: depends_on
 status: approved
