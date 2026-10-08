@@ -1133,7 +1133,7 @@ def _typed_entries(records):
                 f"{uid}: entry {key}", fields["value_type"],
                 [(f"quantity {fields['quantity']!r}",
                   _written(fields["quantity"]))] if "quantity" in fields else [],
-                fields.get("unit"))]
+                fields.get("unit") or None)]
 
 
 def _duplicate_names(records):
