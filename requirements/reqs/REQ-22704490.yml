@@ -40,6 +40,9 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  ak47k7: 4IZG-G5Pra-pIFiD8YYIM606mA08zA2BqLm2H3DcodQ
+  qfasw3: uZHoglVm27bmRfdGEswUtysLu7yTT624MXEw9mSvek0
 priority: medium
 relations:
   REQ-38288492: depends_on

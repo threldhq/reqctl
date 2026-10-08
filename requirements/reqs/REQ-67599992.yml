@@ -14,6 +14,8 @@ assessed:
   REQ-70178381: 2GE_TPwGTZKUXOdQLkRk_snwp88Ig8YbmO-_Fa1WkDw
   REQ-74982341: IIwAqzZV1bP38NHqXLXpGbdbA7tUIoqD6Upg6wk7gaE
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  jzjikg: -U_S8Q2vn4TltMn4oHciO8lP1J7lM6vvn_9wqKUs-tw
 priority: medium
 relations:
   REQ-18701923: constrains
