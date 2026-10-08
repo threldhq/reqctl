@@ -1,0 +1,44 @@
+acceptance_criteria:
+- given: a corpus holding a [data item](data_item) named value_types, a parameter
+    holding one value, a [data item](data_item) the corpus holds, and a key the [data
+    item](data_item) does not hold
+  then: the [data item](data_item) holds an [entry](entry) under the key stating the
+    parameter's value as its quantity, the parameter's value type and unit, and the
+    parameter's text as its definition
+  when: reqctl refile files the parameter into the [data item](data_item) under the
+    key
+- given: a corpus holding a [data item](data_item) named value_types, a parameter
+    holding one value, a [data item](data_item) the corpus holds, and a key the [data
+    item](data_item) does not hold
+  then: every reference to the parameter references the [entry](entry) instead, and
+    renders as it did
+  when: reqctl refile files the parameter into the [data item](data_item) under the
+    key
+- given: a corpus holding a [data item](data_item) named value_types, a parameter
+    holding one value, a [data item](data_item) the corpus holds, and a key the [data
+    item](data_item) does not hold
+  then: the parameter is deprecated
+  when: reqctl refile files the parameter into the [data item](data_item) under the
+    key
+- given: a corpus holding a [data item](data_item) named value_types, and a parameter
+    holding more than one value
+  then: the product refuses, naming the values, and writes nothing
+  when: reqctl refile is asked to file the parameter into a [data item](data_item)
+- given: a corpus holding a [data item](data_item) named value_types, and a [data
+    item](data_item) already holding the key given
+  then: the product refuses, naming the key, and writes nothing
+  when: reqctl refile is asked to file a parameter under that key
+assessed:
+  REQ-62905646: _RkSNpGGoJXvqerZ8har6jnbpCKdaaRT_Em2zoOCshg
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-62905646: depends_on
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall file a parameter that reqctl refile is given with a [data item](data_item)
+  and an [entry](entry) key as an [entry](entry) of that [data item](data_item) under
+  that key, in place of the parameter.
+type: functional
+verification: inspection
