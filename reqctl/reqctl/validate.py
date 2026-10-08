@@ -168,6 +168,7 @@ KEY_SHAPES = {
     "text": re.compile(r"^.+$"),
 }
 UNITLESS = ("count", "ratio", "boolean", "text")
+VALUE_TYPES = "value_types"
 
 
 NESTING = 100
@@ -186,6 +187,36 @@ def _nesting(uid, held, path=(), seen=()):
         for name, value in fields.items():
             if isinstance(value, dict) and id(value) not in seen:
                 problems += _nesting(uid, value, where + (str(name),), seen)
+    return problems
+
+
+def _written(value):
+    if isinstance(value, bool):
+        return str(value).lower()
+    if isinstance(value, float):
+        return format(value, "f")
+    return str(value) if isinstance(value, (int, str)) else ""
+
+
+def _typed(where, value_type, stated, unit):
+    problems = []
+    shape = KEY_SHAPES.get(value_type)
+    if shape is None and isinstance(value_type, str):
+        problems.append(f"{where}: value_type {value_type} is not a type "
+                        "reqctl reads an entry key as")
+    if shape is not None:
+        # @req> REQ-41697188@IRR8A-_NbYw4 fv4qpq
+        for named, written in stated:
+            if not shape.match(written):
+                problems.append(f"{where}: {named} does not parse as "
+                                f"{value_type}")
+    # @req+ REQ-57061306@grhOhf7rpAJV gf75aj
+    if value_type in UNITLESS and unit is not None:
+        problems.append(f"{where}: unit does not apply to {value_type}")
+    if (value_type is not None and value_type not in UNITLESS
+            and unit is None):
+        problems.append(f"{where}: {value_type} carries a unit")
+    # @req- gf75aj
     return problems
 
 
@@ -251,25 +282,11 @@ def dictionary_rules(uid, data):
                 problems.append(f"{uid}: entry key {key!r} is not a snake_case "
                                 "handle")
         return problems
-    value_type = data.get("value_type")
-    shape = KEY_SHAPES.get(value_type)
-    if shape is None and isinstance(value_type, str):
-        problems.append(f"{uid}: value_type {value_type} is not a type reqctl "
-                        "reads an entry key as")
-    if shape is not None:
-        # @req> REQ-41697188@i8kIpXZ1C_H7 da5737
-        for key in held:
-            if not isinstance(key, str) or not shape.match(key):
-                problems.append(f"{uid}: entry key {key!r} does not parse as "
-                                f"{value_type}")
-    # @req+ REQ-57061306@KwSVtwHyHRCj clnvsb
-    if value_type in UNITLESS and data.get("unit") is not None:
-        problems.append(f"{uid}: unit does not apply to {value_type}")
-    if (value_type is not None and value_type not in UNITLESS
-            and data.get("unit") is None):
-        problems.append(f"{uid}: {value_type} carries a unit")
-    # @req- clnvsb
-    return problems
+    return problems + _typed(
+        uid, data.get("value_type"),
+        [(f"entry key {key!r}", key if isinstance(key, str) else "")
+         for key in held],
+        data.get("unit"))
 
 
 def text_values(uid, data):
@@ -1098,7 +1115,25 @@ def _entry_term_fields(records, root):
 def coherence(records, root):
     return (_approved_bindings(records) + _shared_words(records)
             + _circular_definitions(records) + _entry_selection(records)
-            + _duplicate_names(records) + _entry_term_fields(records, root))
+            + _duplicate_names(records) + _entry_term_fields(records, root)
+            + _typed_entries(records))
+
+
+def _typed_entries(records):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    return [problem
+            for uid, data in sorted(records.items())
+            if corpus.kind_of(uid, data) == "data"
+            for key, fields in (corpus.entries(data) or {}).items()
+            if isinstance(fields, dict)
+            and str(fields.get("value_type")) in KEY_SHAPES
+            for problem in _typed(
+                f"{uid}: entry {key}", fields["value_type"],
+                [(f"quantity {fields['quantity']!r}",
+                  _written(fields["quantity"]))] if "quantity" in fields else [],
+                fields.get("unit") or None)]
 
 
 def _duplicate_names(records):
