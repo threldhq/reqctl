@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import fnmatch
+import itertools
 import json
-import math
 import os
 import re
 import subprocess
@@ -348,11 +348,10 @@ def tokens_of(part):
 
 def invoked(words):
     i = 0
-    while i < len(words) and (os.path.basename(words[i]) in WRAPPERS or "=" in words[i]
-                              or (i and (words[i].startswith("-") or words[i][:1].isdigit()))):
+    while i < len(words) and (os.path.basename(words[i]) in WRAPPERS or "=" in words[i] or (i and (
+            words[i].startswith("-") or words[i][:1].isdigit()
+            or words[i - 1].startswith("-") and os.path.basename(words[i]) not in JUDGED))):
         i += 1
-    if i and i < len(words) and os.path.basename(words[i]) not in JUDGED:
-        i = next((j for j in range(i, len(words)) if os.path.basename(words[j]) in JUDGED), i)
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
 
 
@@ -466,13 +465,14 @@ def discarded(words):
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
     before = rest[:rest.index("--")] if separated else rest
-    valued = [word.startswith("-") and (word.endswith("e") and not word.startswith("--")
-                                        or len(word) > 3 and "--exclude".startswith(word))
-              for word in before]
-    flags = [next((full for full in LONG_FLAGS if len(word) > 3
-                  and full.startswith(word.split("=", 1)[0])), word)
-             for i, word in enumerate(before) if word.startswith("-")
-             and not (i and valued[i - 1])]
+    flags, valued = [], False
+    for word in before:
+        if not valued and word.startswith("-"):
+            flags.append(next((full for full in LONG_FLAGS if len(word) > 3
+                               and full.startswith(word.split("=", 1)[0])), word))
+        valued = not valued and word.startswith("-") and (
+            not word.startswith("--") and word.find("e") == len(word) - 1
+            or len(word) > 3 and "--exclude".startswith(word))
     operands = [word for word in rest if not word.startswith("-")]
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if subcommand == "reset":
@@ -525,7 +525,9 @@ def refuse_commit_on_default(words):
     # @req+ REQ-74982341@IIwAqzZV1bP3 zm6qoo
     subcommand, rest = git_subcommand(words)
     if subcommand != "commit" and (subcommand not in NO_COMMIT
-                                   or any(w in NO_COMMIT[subcommand] for w in rest)):
+                                   or any(w in NO_COMMIT[subcommand] for w in rest) and not any(
+                                       w in ("--commit", "--no-squash", "--ff", "--no-ff")
+                                       for w in rest)):
         return
     branch = git_reads(["branch", "--show-current"])
     if branch is None:
@@ -565,13 +567,14 @@ def judge_command(words):
             for w in operands):
         project = os.environ.get("CLAUDE_PROJECT_DIR", "").rstrip("/")
         above = [project, *map(str, Path(project).parents)] if project else []
+        alternatives = {w: list(itertools.islice(braced(os.path.expanduser(w)), 257))
+                        for w in operands}
         swept = next(
             (w for w in operands if os.path.normpath(w) in BARE_SWEEP
              or "$" in w or "`" in w or w.startswith(("~+", "~-"))
-             or ("{" in w and (w.count("{") != len(BRACE.findall(w)) or math.prod(
-                 group.count(",") + 1 for group in BRACE.findall(w)) > 256))
+             or len(alternatives[w]) > 256
              or any(expands_to(os.path.normpath(os.path.join(project, alt)), path)
-                    for alt in braced(os.path.expanduser(w)) for path in above)),
+                    for alt in alternatives[w] for path in above)),
             None)
         if swept:
             deny(f"rm -r of '{swept}' blocked: it sweeps the requirements "
@@ -586,9 +589,10 @@ def judge_command(words):
 def braced(word):
     found = BRACE.search(word)
     if not found:
-        return [word]
-    return [alt for choice in found.group(1).split(",")
-            for alt in braced(word[:found.start()] + choice + word[found.end():])]
+        yield word
+        return
+    for choice in found.group(1).split(","):
+        yield from braced(word[:found.start()] + choice + word[found.end():])
 
 
 def expands_to(pattern, path):
