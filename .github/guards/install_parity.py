@@ -37,8 +37,18 @@ def installs(text):
     return found
 
 
-hook = installs((ROOT / ".claude" / "hooks" / "session-start.sh").read_text())
-ci = installs((ROOT / ".github" / "workflows" / "ci.yml").read_text())
+def read(path):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R trthdg
+    try:
+        return path.read_text()
+    except (OSError, UnicodeDecodeError) as broken:
+        print(f"{path.relative_to(ROOT)}: cannot read: {broken}")
+        sys.exit(1)
+    # @req- trthdg
+
+
+hook = installs(read(ROOT / ".claude" / "hooks" / "session-start.sh"))
+ci = installs(read(ROOT / ".github" / "workflows" / "ci.yml"))
 
 if not hook or not ci:
     print(f"found {len(hook)} hook install(s) and {len(ci)} CI install(s); "

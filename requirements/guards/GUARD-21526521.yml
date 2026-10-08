@@ -10,6 +10,9 @@ acceptance_criteria:
   when: the build runs
 assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+citations:
+  pcvm4c: NkZqL_OqMBWdFyRkL-wBcVDho2Q8Z-_B7J2V6CZv8_0
+  v4ifk3: siOLBHgxlGrjvsTEEjLFOAhZpoBaXB--W83Mmd-K2BA
 relations: {}
 status: approved
 text: If the number of help, description and epilog strings given to argument parsers

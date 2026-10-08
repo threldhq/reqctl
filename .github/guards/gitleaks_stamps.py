@@ -151,11 +151,13 @@ def faults(config):
 
 
 def main():
+    # @req+ GUARD-83168738@zhoOQpGgBd9R sfnyhq
     try:
         config = tomllib.loads(CONFIG.read_text())
-    except (OSError, tomllib.TOMLDecodeError) as broken:
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as broken:
         print(f"::error::cannot read {CONFIG}: {broken}")
         return 1
+    # @req- sfnyhq
     found = faults(config)
     for fault in found:
         print(f"::error::{fault}")

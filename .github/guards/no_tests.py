@@ -9,11 +9,13 @@ def tracked():
     found = subprocess.run(
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
         capture_output=True, text=True, check=False)
+    # @req+ GUARD-83168738@zhoOQpGgBd9R jihqmu
     if found.returncode != 0:
         raise SystemExit(f"cannot list files: {found.stderr.strip()}")
     held = sorted({path for path in found.stdout.split("\0") if path})
     if not held:
         raise SystemExit("cannot list files: git lists none")
+    # @req- jihqmu
     return held
 
 

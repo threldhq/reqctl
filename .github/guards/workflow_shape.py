@@ -35,11 +35,13 @@ def triggers(held):
 def corpus_gates(folder=GUARDS):
     held = set()
     for path in sorted(folder.glob("*.py")):
+        # @req+ GUARD-83168738@zhoOQpGgBd9R raavax
         try:
             text = path.read_text()
-        except (OSError, UnicodeDecodeError):
-            held.add(path.stem)
-            continue
+        except (OSError, UnicodeDecodeError) as broken:
+            raise SystemExit(
+                f"{path.as_posix()}: cannot read: {broken}") from broken
+        # @req- raavax
         if IMPORTS.search(text):
             held.add(path.stem)
     return held
@@ -71,10 +73,12 @@ def settled(steps, where, gates):
 
 
 def faults(text, where, gates=None):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R bwk6ho
     try:
         held = yaml.safe_load(text)
     except yaml.YAMLError as broken:
         return [f"{where}: is not YAML: {broken}"]
+    # @req- bwk6ho
     if not isinstance(held, dict):
         return [f"{where}: is not a mapping"]
     found = []
@@ -153,11 +157,13 @@ def main():
                      "ordering check holds nothing -- run this from the "
                      "repository root")
     for path in paths:
+        # @req+ GUARD-83168738@zhoOQpGgBd9R xqino3
         try:
             text = path.read_text()
-        except OSError as broken:
+        except (OSError, UnicodeDecodeError) as broken:
             found.append(f"{path.as_posix()}: cannot read: {broken}")
             continue
+        # @req- xqino3
         found += faults(text, path.as_posix(), gates)
     for fault in found:
         print(f"::error::{fault}")
