@@ -191,16 +191,15 @@ def _nesting(uid, held, path=(), seen=()):
 
 
 def _entries_within(held, path=(), seen=()):
-    if len(seen) >= NESTING:
+    if not isinstance(held, dict) or id(held) in seen or len(seen) >= NESTING:
         return
     seen = seen + (id(held),)
-    for key, fields in (held or {}).items():
+    for key, fields in held.items():
         if isinstance(fields, dict):
             where = path + (str(key),)
             yield where, fields
             for name, value in fields.items():
-                if isinstance(value, dict) and id(value) not in seen:
-                    yield from _entries_within(value, where + (str(name),), seen)
+                yield from _entries_within(value, where + (str(name),), seen)
 
 
 def _written(value):
