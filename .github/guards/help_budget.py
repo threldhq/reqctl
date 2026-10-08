@@ -48,14 +48,13 @@ def named(node):
 
 
 def forwarders(tree):
-    sinks, forwarded, owners, spread = {}, set(), {}, {}
+    sinks, owners = {}, {}
     for node in ast.walk(tree):
         if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             continue
-        placed = [arg.arg for arg in node.args.posonlyargs + node.args.args]
-        taken = placed + [arg.arg for arg in node.args.kwonlyargs]
-        if node.args.kwarg:
-            spread[node.name] = node.args.kwarg.arg
+        slots = ({arg.arg: at for at, arg in
+                  enumerate(node.args.posonlyargs + node.args.args)}
+                 | {arg.arg: None for arg in node.args.kwonlyargs})
         for inner in ast.walk(node):
             if not isinstance(inner, ast.Call):
                 continue
@@ -65,30 +64,10 @@ def forwarders(tree):
                     continue
                 if not isinstance(keyword.value, ast.Name):
                     continue
-                if keyword.value.id in taken:
-                    name = keyword.value.id
+                if keyword.value.id in slots:
                     sinks.setdefault(node.name, set()).add(
-                        (placed.index(name) if name in placed else None, name))
-                    forwarded.add((node.name, name))
-    return sinks, forwarded, owners, spread
-
-
-def spreaders(tree, owners, spread):
-    held, grown = set(PARSERS), True
-    while grown:
-        grown = False
-        for node in ast.walk(tree):
-            if not isinstance(node, ast.Call) or named(node) not in held:
-                continue
-            owner = owners.get(id(node))
-            if owner in held or owner not in spread:
-                continue
-            if any(keyword.arg is None and isinstance(keyword.value, ast.Name)
-                   and keyword.value.id == spread[owner]
-                   for keyword in node.keywords):
-                held.add(owner)
-                grown = True
-    return held
+                        (slots[keyword.value.id], keyword.value.id))
+    return sinks, owners
 
 
 def survey(paths):
@@ -97,29 +76,23 @@ def survey(paths):
     # @req> GUARD-83751348@rb37sHKC5bnL nafhnh
     for path in paths:
         tree = parsed_tree(path)
-        sinks, forwarded, owners, spread = forwarders(tree)
-        spreading = spreaders(tree, owners, spread)
+        sinks, owners = forwarders(tree)
         for node in ast.walk(tree):
             if not isinstance(node, ast.Call):
                 continue
             name = named(node)
-            given = {keyword.arg: keyword.value for keyword in node.keywords}
-            own = spread.get(owners.get(id(node)))
-            for keyword in node.keywords:
-                if keyword.arg is not None or not (
-                        name in spreading or name in sinks):
-                    continue
-                if not (name in spreading and isinstance(keyword.value, ast.Name)
-                        and keyword.value.id == own):
-                    refused.append(
-                        (path, keyword.value.lineno,
-                         f"{name}() is given ** keywords this guard cannot "
-                         "read; write each one out"))
+            if name in PARSERS or name in sinks:
+                refused += [(path, keyword.value.lineno,
+                             f"{name}() is given ** keywords this guard cannot "
+                             "read; write each one out")
+                            for keyword in node.keywords if keyword.arg is None]
             for spot, param in sinks.get(name, ()):
                 if spot is not None and spot < len(node.args):
                     said = node.args[spot]
                 else:
-                    said = None if param in SINKS else given.get(param)
+                    said = None if param in SINKS else next(
+                        (keyword.value for keyword in node.keywords
+                         if keyword.arg == param), None)
                 if said is not None:
                     if is_literal(said):
                         counted += 1
@@ -139,7 +112,8 @@ def survey(paths):
                     if path != CLI:
                         refused.append((path, keyword.value.lineno, STRAY))
                 elif isinstance(keyword.value, ast.Name):
-                    if (owners.get(id(node)), keyword.value.id) not in forwarded:
+                    if keyword.value.id not in {
+                            param for _, param in sinks.get(owners.get(id(node)), ())}:
                         refused.append(
                             (path, keyword.value.lineno,
                              f"{keyword.arg}= is given a name this guard "

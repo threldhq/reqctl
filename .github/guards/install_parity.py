@@ -42,8 +42,7 @@ def read(path):
     try:
         return path.read_text()
     except (OSError, UnicodeDecodeError) as broken:
-        print(f"{path.relative_to(ROOT)}: cannot read: {broken}")
-        sys.exit(1)
+        raise SystemExit(f"cannot read {path}: {broken}") from broken
     # @req- trthdg
 
 
