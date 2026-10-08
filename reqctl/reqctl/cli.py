@@ -710,7 +710,7 @@ def cmd_validate(args):
         _emit(args, {"valid": not problems, "items": count, "problems": problems,
                      "unclaimed": exempted}, "")
         return EXIT_INVALID if problems else EXIT_OK
-    # @req> REQ-88221320@tXvROEk2-d6r gvnev6
+    # @req> REQ-88221320@04q8T91NApFU gvnev6
     if exempted:
         print("\n".join(exempted))
     if problems:

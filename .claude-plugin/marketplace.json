@@ -10,7 +10,7 @@
         "source": "git-subdir",
         "url": "https://github.com/threldhq/reqctl.git",
         "path": "plugin",
-        "ref": "reqctl--v0.1.6"
+        "ref": "reqctl--v0.1.7"
       }
     }
   ]

@@ -458,6 +458,7 @@ def settled(run, dims):
 
 def binding(run, held, root, records):
     dims = dimensions(root, records)
+    # @req> REQ-73044308@1NhpMHsqlbOX 6sk2ng
     if not dims:
         return {}
     # @req+ REQ-92272837@JyGx2T7SRoWI owkvnp
@@ -483,11 +484,15 @@ def binding(run, held, root, records):
                     "which is how a statement binding to every member reads.")
         stray = unresolved(records, statement)
         if stray:
+            named = {corpus.PARAM_REF.fullmatch(ref).group(1) for ref in stray}
             raise SystemExit(
                 f"proposal {number} carries {', '.join(sorted(stray))}, which "
                 "the corpus resolves to no parameter, data item or member of "
                 "one. A reference to nothing binds nothing rather than failing "
-                "to parse, so it reads here as binding to every member.")
+                "to parse, so it reads here as binding to every member."
+                + "".join(f" The {name} members are {', '.join(sorted(members))}."
+                          for name, (_, members) in sorted(dims.items())
+                          if name in named))
         # @req- usq427
         settled_on = {}
         for name, (uid, members) in dims.items():
@@ -523,6 +528,7 @@ def binding(run, held, root, records):
                     "the member, or reference nothing and record the proposal "
                     "as all.")
             # @req> REQ-50522674@hH-3OoBrOd0Y 2rsevi
+            # @req+ REQ-54045696@ksBhFVMWU0aT f57qfn
             if written - members:
                 raise SystemExit(
                     f"proposal {number} references "
@@ -536,6 +542,7 @@ def binding(run, held, root, records):
                     f"statement references {', '.join(sorted(written)) or 'none'}"
                     ". A statement bound to fewer than all the members names "
                     "each in its own text; reword it, or correct the record.")
+            # @req- f57qfn
             settled_on[name] = ", ".join(sorted(wanted)) or "all of them"
         chosen[number] = settled_on
     return chosen
