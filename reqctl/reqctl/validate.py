@@ -303,6 +303,10 @@ def text_values(uid, data):
                 f"{uid}: text value {member!r} is shaped like a quantity -- "
                 "give it a numeric value_type, or reword the name"
             )
+    # @req> REQ-40026456@tmXkAn-osOnn 6qstia
+    if len(corpus.entries(data) or {}) > 1:
+        problems.append(f"{uid}: a parameter of text holding more than one "
+                        f"member is a data item -- `reqctl refile {uid}`")
     return problems
 
 
