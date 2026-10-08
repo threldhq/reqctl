@@ -648,12 +648,17 @@ def concept_references(data):
 
 
 def unlinked_prose(data):
-    # @req> REQ-96763217@Dg9sKJOE-5NX gzq547
-    skip = POLICED_SKIP + (("unit",) if data.get("kind") == "data" else ())
+    # @req> REQ-96763217@Dg9sKJOE-5NX vintgg
+    if data.get("kind") == "data":
+        data = {**data, "entries": {
+            key: {name: value for name, value in fields.items()
+                  if name != "unit" or isinstance(value, dict)}
+            if isinstance(fields, dict) else fields
+            for key, fields in (entries(data) or {}).items()}}
     # @req> REQ-83702299@IgLtX0BfZTks et7k4t
     return PARAM_REF.sub(
         " ", CONCEPT_LINK.sub(" ", "\n".join(
-            [prose(data, skip, item=False)]
+            [prose(data, POLICED_SKIP, item=False)]
             + _stated(data, ITEM_SKIP + POLICED_ITEM_SKIP))))
 
 

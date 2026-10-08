@@ -16,7 +16,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  et7k4t: Ir5VvZSeVOITpZs7O0wav0rv6fOOsElWFHH6s-gDTJ8
+  et7k4t: ImyyU6Y2coFoagbgoS_jV4slw-c4xiQsVG5ODPUet4o
   tmczgb: pt8QVkLfSnxQLEcZIjyEpvHxd_4fr8GwCp528aQh9D4
 priority: medium
 relations: {}
