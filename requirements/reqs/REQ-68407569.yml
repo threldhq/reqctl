@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: an approved term, and a parameter whose unit states the word the term defines
+  then: the product accepts the unit
+  when: the corpus is validated
+- given: an approved term, and a parameter whose unit states the word the term defines
+  then: the product accepts the unit
+  when: the parameter is written
+assessed:
+  REQ-83702299: IgLtX0BfZTksPIEqT99UOB-9FZ_Zv9UHjv-slw_7VrQ
+priority: medium
+relations:
+  REQ-83702299: constrains
+status: approved
+text: The product shall accept, without a link, the word or an alias of an approved
+  term in the unit a parameter states.
+type: functional
+verification: inspection

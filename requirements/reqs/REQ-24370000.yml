@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a term recording a phrase it does not claim, whose reason links an approved
+    term
+  then: the product accepts the reason
+  when: the corpus is validated
+- given: a term recording a phrase it does not claim, whose reason states the word
+    another approved term defines without linking it
+  then: the product refuses the reason and states writing the link or rewording as
+    the fix
+  when: the corpus is validated
+assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
+  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+priority: medium
+relations:
+  REQ-24481048: depends_on
+  REQ-44451070: constrains
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for terms declaring as
+  prose the reason a term records for each phrase it does not claim.
+type: functional
+verification: inspection
