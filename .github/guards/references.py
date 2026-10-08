@@ -22,6 +22,7 @@ def tracked(*globs):
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard",
          *globs],
         capture_output=True, text=True, check=False)
+    # @req> GUARD-83168738@zhoOQpGgBd9R 7erdmq
     if found.returncode != 0:
         raise SystemExit(f"cannot list files: {found.stderr.strip()}")
     return sorted({path for path in found.stdout.split("\0") if path})
@@ -33,17 +34,21 @@ def listed(*globs):
 
 
 def read(path):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R sljc3r
     try:
         return Path(path).read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as broken:
         raise SystemExit(f"cannot read {path}: {broken}") from broken
+    # @req- sljc3r
 
 
 def parsed(path):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R sc63be
     try:
         return ast.parse(read(path), filename=str(path))
     except SyntaxError as broken:
         raise SystemExit(f"cannot read {path}: {broken}") from broken
+    # @req- sc63be
 
 
 def flags_defined():

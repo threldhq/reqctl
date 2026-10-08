@@ -11,10 +11,12 @@ REPOSITORY = "https://github.com/threldhq/reqctl.git"
 
 
 def read(root, path, parse):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R uu4kqm
     try:
         held = parse((root / path).read_text())
     except (OSError, UnicodeDecodeError, ValueError) as broken:
         return None, f"{path}: cannot read it: {broken}"
+    # @req- uu4kqm
     if not isinstance(held, dict):
         return None, f"{path}: cannot read it: it is not a mapping"
     return held, None

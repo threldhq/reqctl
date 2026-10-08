@@ -1,6 +1,6 @@
 [project]
 name = "reqctl"
-version = "0.1.7"
+version = "0.1.8"
 description = "Requirements control: schema, impact closure, baselines, traceability."
 license = "Apache-2.0"
 requires-python = ">=3.13"
@@ -32,7 +32,6 @@ select = ["E4", "E7", "E9", "F", "TID251"]
 
 [tool.ruff.lint.per-file-ignores]
 "reqctl/corpus.py" = ["TID251"]
-"tests/**" = ["TID251"]
 
 [tool.mypy]
 python_version = "3.13"

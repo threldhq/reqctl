@@ -38,8 +38,14 @@ def minted(root, where, name, value_type, members):
 
 
 def checked(path):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R 5ycu2s
+    try:
+        text = path.read_text()
+    except (OSError, UnicodeDecodeError) as broken:
+        return [f"{path}: cannot read: {broken}"]
+    # @req- 5ycu2s
     found_faults = []
-    for where, block in enumerate(paragraphs(path.read_text()), 1):
+    for where, block in enumerate(paragraphs(text), 1):
         found = SET.search(block)
         if not found:
             if LOOSE.search(block):
@@ -60,6 +66,7 @@ def checked(path):
             root = Path(room)
             held = minted(root, f"{path.name} paragraph {where}",
                           "shown_set", typed.group(1), members)
+            # @req+ GUARD-83168738@zhoOQpGgBd9R 7zat7y
             try:
                 mint_faults = taxonomy.faults(root)
             except SystemExit as broken:
@@ -67,6 +74,7 @@ def checked(path):
                     f"{path}: paragraph {where} shows values that do not "
                     f"mint readable YAML -- {broken}")
                 mint_faults = []
+            # @req- 7zat7y
             for fault in mint_faults:
                 found_faults.append(
                     f"{path}: paragraph {where} mints what the corpus refuses "

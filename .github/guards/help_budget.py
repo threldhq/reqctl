@@ -6,6 +6,10 @@ import sys
 from pathlib import Path
 
 SINKS = ("help", "description", "epilog")
+PARSERS = ("ArgumentParser", "add_argument", "add_argument_group",
+           "add_mutually_exclusive_group", "add_parser", "add_subparsers")
+POSITIONAL = {"ArgumentParser": {2: "description", 3: "epilog"},
+              "add_argument_group": {1: "description"}}
 GOVERNED = "requirements/"
 CLI = "reqctl/reqctl/cli.py"
 STRAY = f"gives an argument parser help text, which only {CLI} may; delete it"
@@ -16,6 +20,7 @@ def scanned():
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard",
          "*.py"],
         capture_output=True, text=True, check=False)
+    # @req> GUARD-83168738@zhoOQpGgBd9R prznio
     if found.returncode != 0:
         raise SystemExit(f"cannot list files: {found.stderr.strip()}")
     return sorted({path for path in found.stdout.split("\0")
@@ -23,11 +28,13 @@ def scanned():
 
 
 def parsed_tree(path):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R agarbl
     try:
         return ast.parse(Path(path).read_text(encoding="utf-8"),
                          filename=str(path))
     except (OSError, UnicodeDecodeError, SyntaxError) as broken:
         raise SystemExit(f"cannot read {path}: {broken}") from broken
+    # @req- agarbl
 
 
 def is_literal(node):
@@ -43,11 +50,19 @@ def named(node):
 
 
 def forwarders(tree):
-    sinks, forwarded, owners = {}, set(), {}
+    sinks, owners, faults = {}, {}, []
     for node in ast.walk(tree):
         if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             continue
-        taken = [arg.arg for arg in node.args.args]
+        whole = node.args.posonlyargs + node.args.args
+        placed = whole[1:] if whole and whole[0].arg in ("self", "cls") else whole
+        defaulted = ({arg.arg for arg in whole[len(whole) - len(node.args.defaults):]}
+                     | {arg.arg for arg, value in
+                        zip(node.args.kwonlyargs, node.args.kw_defaults)
+                        if value is not None})
+        took = set()
+        slots = ({arg.arg: at for at, arg in enumerate(placed)}
+                 | {arg.arg: None for arg in node.args.kwonlyargs})
         for inner in ast.walk(node):
             if not isinstance(inner, ast.Call):
                 continue
@@ -57,25 +72,54 @@ def forwarders(tree):
                     continue
                 if not isinstance(keyword.value, ast.Name):
                     continue
-                if keyword.value.id in taken:
+                if keyword.value.id in slots:
+                    took.add(keyword.value.id)
                     sinks.setdefault(node.name, set()).add(
-                        taken.index(keyword.value.id))
-                    forwarded.add((node.name, keyword.value.id))
-    return sinks, forwarded, owners
+                        (slots[keyword.value.id], keyword.value.id))
+        # @req+ GUARD-83751348@rb37sHKC5bnL icqk2j
+        if took and node.name in ("__init__", "__call__"):
+            faults.append((node.lineno, f"{node.name}() passes help text on, "
+                           "which this guard cannot follow; use a function"))
+        faults += [(node.lineno, f"{node.name}() gives {param} a default this "
+                    "guard cannot count; pass it at each call")
+                   for param in sorted(took & defaulted)]
+        # @req- icqk2j
+    return sinks, owners, faults
 
 
 def survey(paths):
-    counted, refused = 0, []
-    for path in paths:
-        tree = parsed_tree(path)
-        sinks, forwarded, owners = forwarders(tree)
+    counted, refused, sinks, owners = 0, [], {}, {}
+    trees = [(path, parsed_tree(path)) for path in paths]
+    for path, tree in trees:
+        found, held, faults = forwarders(tree)
+        refused += [(path, line, why) for line, why in faults]
+        for helper, slots in found.items():
+            sinks.setdefault(helper, set()).update(slots)
+        owners.update(held)
+    # @req> GUARD-21526521@G_BddcqGKnJP pcvm4c
+    # @req> GUARD-83751348@rb37sHKC5bnL nafhnh
+    for path, tree in trees:
         for node in ast.walk(tree):
             if not isinstance(node, ast.Call):
                 continue
             name = named(node)
-            for spot in sinks.get(name, ()):
-                if spot < len(node.args):
+            if name in PARSERS or name in sinks:
+                refused += [(path, keyword.value.lineno,
+                             f"{name}() is given ** keywords this guard cannot "
+                             "read; write each one out")
+                            for keyword in node.keywords if keyword.arg is None]
+                refused += [(path, given.lineno,
+                             f"{name}() is given * positionals this guard cannot "
+                             "read; write each one out")
+                            for given in node.args if isinstance(given, ast.Starred)]
+            for spot, param in sinks.get(name, ()):
+                if spot is not None and spot < len(node.args):
                     said = node.args[spot]
+                else:
+                    said = None if param in SINKS else next(
+                        (keyword.value for keyword in node.keywords
+                         if keyword.arg == param), None)
+                if said is not None:
                     if is_literal(said):
                         counted += 1
                         # @req> GUARD-75672058@ekQlMqKRpmul mb63cn
@@ -85,24 +129,29 @@ def survey(paths):
                         refused.append(
                             (path, said.lineno,
                              f"{name}() is given help text this guard cannot read"))
-            for keyword in node.keywords:
-                if keyword.arg not in SINKS:
+            given = [(keyword.arg, keyword.value) for keyword in node.keywords]
+            given += [(sink, node.args[at])
+                      for at, sink in POSITIONAL.get(name, {}).items()
+                      if at < len(node.args)]
+            for sink, value in given:
+                if sink not in SINKS:
                     continue
-                if is_literal(keyword.value):
+                if is_literal(value):
                     counted += 1
                     # @req> GUARD-75672058@ekQlMqKRpmul vdrexj
                     if path != CLI:
-                        refused.append((path, keyword.value.lineno, STRAY))
-                elif isinstance(keyword.value, ast.Name):
-                    if (owners.get(id(node)), keyword.value.id) not in forwarded:
+                        refused.append((path, value.lineno, STRAY))
+                elif isinstance(value, ast.Name):
+                    if value.id not in {
+                            param for _, param in sinks.get(owners.get(id(node)), ())}:
                         refused.append(
-                            (path, keyword.value.lineno,
-                             f"{keyword.arg}= is given a name this guard "
+                            (path, value.lineno,
+                             f"{sink}= is given a name this guard "
                              "cannot resolve to its text"))
                 else:
                     refused.append(
-                        (path, keyword.value.lineno,
-                         f"{keyword.arg}= is built by an expression this guard "
+                        (path, value.lineno,
+                         f"{sink}= is built by an expression this guard "
                          "cannot read"))
     return counted, refused
 
@@ -114,6 +163,7 @@ def main(ceiling):
     print(f"{counted} help strings")
     if refused:
         return 1
+    # @req> GUARD-21526521@G_BddcqGKnJP v4ifk3
     if counted != ceiling:
         fix = ("Delete it, or raise the ceiling in ci.yml and say who "
                "reads it."

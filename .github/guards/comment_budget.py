@@ -72,6 +72,7 @@ def scanned():
     found = subprocess.run(
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
         capture_output=True, text=True, check=False)
+    # @req> GUARD-83168738@zhoOQpGgBd9R 5sthkd
     if found.returncode != 0:
         raise SystemExit(f"cannot list files: {found.stderr.strip()}")
     root = Path.cwd().resolve()
@@ -81,6 +82,7 @@ def scanned():
 
 
 def read(path):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R jrafqj
     try:
         raw = Path(path).read_bytes()
     except OSError as broken:
@@ -91,6 +93,7 @@ def read(path):
         return raw.decode("utf-8")
     except UnicodeDecodeError as broken:
         raise SystemExit(f"cannot read {path}: {broken}") from broken
+    # @req- jrafqj
 
 
 def generated(text):
@@ -105,6 +108,7 @@ def syntax_of(path):
 # @req+ GUARD-27671623@3zDwoF3LwQkw ka4pr4
 def python_found(path, text):
     held = []
+    # @req+ GUARD-83168738@zhoOQpGgBd9R a4eyx6
     try:
         for token in tokenize.generate_tokens(io.StringIO(text).readline):
             if token.type != tokenize.COMMENT:
@@ -119,6 +123,7 @@ def python_found(path, text):
         tree = ast.parse(text, filename=str(path))
     except SyntaxError as broken:
         raise SystemExit(f"cannot read {path}: {broken}") from broken
+    # @req- a4eyx6
     for node in ast.walk(tree):
         if not isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef,
                                  ast.AsyncFunctionDef)):

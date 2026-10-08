@@ -6,6 +6,31 @@ acceptance_criteria:
   then: the build refuses the change and names the file
   when: a check reads the file
 assessed: {}
+citations:
+  4kckqu: wTTxxviz5DvrQKGJ_ZcvGp09URh2Z3_iY475QG6C0V8
+  5mm65b: rTeKfTwCsavxRoqBupxe0NZJYa5Wf38MLmejwuK6Z1k
+  5sthkd: rTeKfTwCsavxRoqBupxe0NZJYa5Wf38MLmejwuK6Z1k
+  5ycu2s: XmLkIU89b3PWFG89STBc1WZOGOmEhhD8PlmL4mIGGVk
+  7erdmq: rTeKfTwCsavxRoqBupxe0NZJYa5Wf38MLmejwuK6Z1k
+  7zat7y: Zg3dGpSKnSAociKhNaRiA9ahvcz1nzJpyzY7DvMhY0w
+  a4eyx6: EYp2BnK5zIe7OsDPbVx_F1ggDv5mJuWhtjJJ9LinT6Q
+  agarbl: iIgFuNiiRmEb-oZdwAUjUT9P3xc1mef2n8XzOHFxBgU
+  benleo: B9l4wFbe9uQISKrI66yeye1UQrPH1Jqrg5fowP-1eTQ
+  bwk6ho: ktjcIgBz1g9GUgUTQu3CmiUyxx7JBnv-LnVik60s7xQ
+  jakglm: 3eKM0CYWS3G7z9Sq1SRptD1ukqf-x-YQV-gtLhDJNl4
+  jihqmu: _TEm7k5MexpHgaEDYiAzhyo3uWLJ2TNkSGIPrqLSZ8A
+  jrafqj: PYScfA5MnKxBfbvUlg_3aiO04TflcYvHc00DJ9bQe5M
+  mdhv4d: 8JrZ4ofh3oJ0I0tBNMol0FBA_IBqroewUnQKceUccDA
+  prznio: rTeKfTwCsavxRoqBupxe0NZJYa5Wf38MLmejwuK6Z1k
+  raavax: 4ClHOc5odryvcv-qLO8s7XWnqNEu-7E7R7HRBJyZH5U
+  sc63be: 7NH_cGgktGoBNOKbGl1CvrAL-Ol9LcbWqP-oTeChKl0
+  sfnyhq: a-KcdwzxgXssuZGnCHd6E4dH9wa6du98ok4GuU0Hsjk
+  sljc3r: OxAkZZfOx6hNOLyvh5XbprSnONO4Sn_jP4O2GpyH0LQ
+  trthdg: NBiPx4p66xQaI_wArpnzkEFo_AmSVQJvpEK2bcrUu9U
+  us6trr: 5b-cVMAzltHSZGYR9okzQrzG_IL6wOUUHfxe8GgfeuQ
+  uu4kqm: BLZ98-veq5R5j8lJNedXNRC9Vj3j6H_NExcqnhbNRLw
+  xqino3: 1irsBY3ySlegGnlSr6JkcJExftdEzeX-3z5oN-d5x6Q
+  zcq4et: 6D5sqdFu278Y2M6klRL99k7hxrrb2GiPj7BVgOfNDgo
 relations: {}
 status: approved
 text: If a check the build runs cannot list the files the repository tracks, or cannot

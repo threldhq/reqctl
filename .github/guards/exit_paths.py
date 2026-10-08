@@ -8,11 +8,13 @@ HOOKS = Path(__file__).resolve().parents[2] / "plugin" / "hooks"
 faults, scanned = [], 0
 for path in sorted(HOOKS.rglob("*.py")):
     scanned += 1
+    # @req+ GUARD-83168738@zhoOQpGgBd9R 4kckqu
     try:
         tree = ast.parse(path.read_text())
     except (OSError, UnicodeDecodeError, SyntaxError) as error:
         faults.append(f"{path.relative_to(HOOKS)}: cannot parse: {error}")
         continue
+    # @req- 4kckqu
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
             func = node.func

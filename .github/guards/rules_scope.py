@@ -15,6 +15,7 @@ def tracked():
     found = subprocess.run(
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
         capture_output=True, text=True, check=False)
+    # @req> GUARD-83168738@zhoOQpGgBd9R 5mm65b
     if found.returncode != 0:
         raise SystemExit(f"cannot list files: {found.stderr.strip()}")
     return sorted({path for path in found.stdout.split("\0") if path})
@@ -54,10 +55,12 @@ def faults(text, where, files):
     front = FRONT.match(text)
     if not front:
         return [f"{where}: {UNSCOPED}"]
+    # @req+ GUARD-83168738@zhoOQpGgBd9R us6trr
     try:
         held = yaml.safe_load(front.group(1))
-    except yaml.YAMLError as broken:
+    except (yaml.YAMLError, ValueError) as broken:
         return [f"{where}: frontmatter is not YAML: {broken}"]
+    # @req- us6trr
     if not isinstance(held, dict):
         return [f"{where}: frontmatter is not a mapping"]
     patterns = held.get("paths")
@@ -103,11 +106,13 @@ def main():
         found = []
         for path in sorted(RULES.rglob("*.md")):
             where = str(path)
+            # @req+ GUARD-83168738@zhoOQpGgBd9R benleo
             try:
                 text = path.read_text()
-            except OSError as broken:
+            except (OSError, UnicodeDecodeError) as broken:
                 found.append(f"cannot read {where}: {broken}")
                 continue
+            # @req- benleo
             found.extend(faults(text, where, files))
     # @req- bgj4ii
     for fault in found:
