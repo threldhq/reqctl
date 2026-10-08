@@ -484,11 +484,15 @@ def binding(run, held, root, records):
                     "which is how a statement binding to every member reads.")
         stray = unresolved(records, statement)
         if stray:
+            named = {corpus.PARAM_REF.fullmatch(ref).group(1) for ref in stray}
             raise SystemExit(
                 f"proposal {number} carries {', '.join(sorted(stray))}, which "
                 "the corpus resolves to no parameter, data item or member of "
                 "one. A reference to nothing binds nothing rather than failing "
-                "to parse, so it reads here as binding to every member.")
+                "to parse, so it reads here as binding to every member."
+                + "".join(f" The {name} members are {', '.join(sorted(members))}."
+                          for name, (_, members) in sorted(dims.items())
+                          if name in named))
         # @req- usq427
         settled_on = {}
         for name, (uid, members) in dims.items():
