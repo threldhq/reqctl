@@ -12,6 +12,8 @@ acceptance_criteria:
 assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  rc5mmy: VYrS6aYZ_5xXeX7ADJSeGWOZHXxJbrR6_5bgiyXH9sE
 priority: medium
 relations: {}
 status: approved

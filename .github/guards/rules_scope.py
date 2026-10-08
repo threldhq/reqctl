@@ -50,6 +50,7 @@ def matcher(pattern):
 
 
 def faults(text, where, files):
+    # @req+ GUARD-46596073@qu9cFP2Awo-x hcbzdh
     front = FRONT.match(text)
     if not front:
         return [f"{where}: {UNSCOPED}"]
@@ -64,11 +65,14 @@ def faults(text, where, files):
         return [f"{where}: {UNSCOPED}"]
     if not isinstance(patterns, list) or not patterns:
         return [f"{where}: paths is {patterns!r}, not a list of globs"]
+    # @req- hcbzdh
     found, reached = [], set()
     for pattern in patterns:
+        # @req> GUARD-46596073@qu9cFP2Awo-x gfzndj
         if not isinstance(pattern, str):
             found.append(f"{where}: path {pattern!r} is not a string")
             continue
+        # @req+ GUARD-46665858@h9A_bfvOyNF7 innerm
         if "{" in pattern or "}" in pattern:
             found.append(f"{where}: {pattern!r} expands braces; write each "
                          "pattern out")
@@ -78,16 +82,20 @@ def faults(text, where, files):
         except re.error as broken:
             found.append(f"{where}: {pattern!r} is not a glob: {broken}")
             continue
+        # @req- innerm
         hit = {path for path in files if reads.match(path)}
+        # @req> GUARD-39430403@Gm7cxHsAQzHL yvynus
         if not hit:
             found.append(f"{where}: {pattern!r} matches no file in the tree")
         reached |= hit
+    # @req> GUARD-95027749@peJtUX9xJXL_ 3qoaja
     if files and reached == set(files):
         found.append(f"{where}: matches every file in the tree")
     return found
 
 
 def main():
+    # @req+ GUARD-46596073@qu9cFP2Awo-x bgj4ii
     if not RULES.is_dir():
         found = [f"{RULES}: does not exist"]
     else:
@@ -101,6 +109,7 @@ def main():
                 found.append(f"cannot read {where}: {broken}")
                 continue
             found.extend(faults(text, where, files))
+    # @req- bgj4ii
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0

@@ -3,6 +3,8 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-40026456: tmXkAn-osOnnrwWRC2Gq_yySQDfUfkECMacSzjbiE3w
   mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
+citations:
+  rovgdr: baRuhCrsrS2pS5ODgE3LMHW4Lqu4EVUvGP63Kmci68A
 priority: medium
 relations:
   REQ-38288492: constrains

@@ -8,6 +8,9 @@ acceptance_criteria:
   then: the product reports the number each side claims
   when: the baseline is checked
 assessed: {}
+citations:
+  7qnfkg: Re6EbMFGxpHJnLJ45C8X_1IpSP3EqQFTECQ7DxMyJmw
+  njzhlf: -qI1AJtbw3u10p5qu2R8UBojWvTW02Chkj66WD_1X1A
 priority: medium
 relations: {}
 status: approved

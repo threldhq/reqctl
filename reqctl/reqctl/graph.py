@@ -56,6 +56,7 @@ def trace(tree, root, uid=None):
 
     rows, problems, unimplemented, stale, deprecated = [], list(cited_problems), [], [], []
     # @req> REQ-19896380@2sOnckMwnWfx aes6o5
+    # @req> REQ-52825760@f9HMlzmiwhyn 5aendb
     for citation in citations:
         if corpus.is_test(citation["path"]) and (not uid or citation["uid"] == uid):
             problems.append(

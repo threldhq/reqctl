@@ -129,6 +129,7 @@ def item_files(root):
             if not path.name.startswith(".")
         )
     seen = {}
+    # @req> REQ-17446443@86KE0VfkVuKG 2mb54k
     for path in found:
         first = seen.setdefault(path.stem, path)
         if first is not path:

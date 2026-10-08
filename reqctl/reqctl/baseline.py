@@ -68,6 +68,7 @@ def _unresolved(where):
     if not CONFLICTED.search(text):
         return None
     claimed = []
+    # @req> REQ-10024282@x7WPiNHGRX8n 7qnfkg
     for side in sides(text):
         try:
             held = loads(side, where)
@@ -252,6 +253,7 @@ def check(tree, root):
         return None, problems
 
     # @req+ REQ-52307457@2GAIsxcSUISq w27scf
+    # @req+ REQ-10024282@x7WPiNHGRX8n njzhlf
     claimed = _unresolved(path(root))
     if claimed is not None:
         stated = " and ".join(str(one) for one in sorted(set(claimed)))
@@ -259,6 +261,7 @@ def check(tree, root):
             f"{path(root).name}: holds an unresolved merge claiming {stated} "
             "-- `reqctl baseline --generate` cuts the one that follows both"
         ]
+    # @req- njzhlf
     # @req- w27scf
 
     manifest = read(path(root))

@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the build refuses the change and names what reqctl printed
   when: the build runs
 assessed: {}
+citations:
+  t2bzx7: JGZpRp2SqD479CxKDbgQZ60Ne5xrg9PhsQkvM90jan8
 relations: {}
 status: approved
 text: If reqctl cannot run, or the build cannot read the trace that reqctl prints,

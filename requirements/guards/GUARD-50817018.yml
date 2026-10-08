@@ -10,6 +10,8 @@ acceptance_criteria:
   when: the build runs
 assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+citations:
+  bndeye: C5WS_ZdJqT1FJO4LhvTqSkx-aHCX8bCpeneSPu4vhUY
 relations: {}
 status: approved
 text: If a markdown file outside the [corpus root](corpus_root) names a flag alone

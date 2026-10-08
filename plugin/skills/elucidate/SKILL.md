@@ -19,9 +19,11 @@ Ideas in, a requirements pull request out. Nothing here approves anything: the
 merge is the approval, and only the owner merges.
 
 <!-- @req+ REQ-12222066@fbTfN4X4xFUs bzkv6x -->
+<!-- @req+ REQ-89642091@-fsID3Q5hG8u 7wkwzy -->
 No further step runs while a question you put the owner is unanswered. Post the
 questions, then end your turn; under a goal, where that does not wait, collect
 the answers with the question picker.
+<!-- @req- 7wkwzy -->
 <!-- @req- bzkv6x -->
 
 ```
@@ -131,6 +133,7 @@ something the statement does not already say. Then:
   would say aloud -- one type, both organisations -- is written as a word and
   governs nothing.
 
+<!-- @req+ REQ-39992377@fcd_dP7gzFbL rovgdr -->
 - **A set of words is a data item; one quantity's tiers are a parameter.**
   Providers, formats, view types are words: mint one `DATA` --
   `reqctl new data --name export_formats --entry json --entry markdown` -- and
@@ -145,6 +148,7 @@ something the statement does not already say. Then:
   `revise --entry MEMBER --set definition=...` gives a member its own
   meaning, so a statement may cite one member -- `${name.member}` --
   without binding the rest.
+<!-- @req- rovgdr -->
 <!-- @req- ktu5yd -->
 - **A named record is a data item.** Formats, colours, settings --
   records that are values, not obligations: mint one `DATA` per
