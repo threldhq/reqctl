@@ -327,8 +327,8 @@ def agent(name, held):
 def read_json(path):
     # @req+ REQ-29234402@b5_8tR6bNR44 vvxruf
     try:
-        held = json.loads(path.read_text())
-    except (json.JSONDecodeError, UnicodeDecodeError) as broken:
+        held = json.loads(corpus.read_text(path))
+    except (ValueError, RecursionError) as broken:
         raise corpus.ReqctlError(f"{path}: not JSON -- {broken}") from broken
     if not isinstance(held, dict):
         raise corpus.ReqctlError(f"{path}: holds {type(held).__name__}, not the "
@@ -998,7 +998,7 @@ def read_return(path, shape):
         return None, "returned nothing"
     try:
         data = json.loads(path.read_text())
-    except (json.JSONDecodeError, UnicodeDecodeError) as broken:
+    except (ValueError, RecursionError) as broken:
         return None, f"does not parse as JSON: {broken}"
     found = sorted(Draft202012Validator(shape).iter_errors(data), key=str)
     if found:

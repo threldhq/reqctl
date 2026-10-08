@@ -186,7 +186,7 @@ def _unreadable(value):
     stack = [(value, False)]
     while stack:
         node, closing = stack.pop()
-        if not isinstance(node, (dict, list)):
+        if not isinstance(node, (dict, list, tuple)):
             continue
         children = list(node.values() if isinstance(node, dict) else node)
         if closing:
