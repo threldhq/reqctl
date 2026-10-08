@@ -257,12 +257,12 @@ def dictionary_rules(uid, data):
         problems.append(f"{uid}: value_type {value_type} is not a type reqctl "
                         "reads an entry key as")
     if shape is not None:
-        # @req> REQ-41697188@IRR8A-_NbYw4 da5737
+        # @req> REQ-41697188@i8kIpXZ1C_H7 da5737
         for key in held:
             if not isinstance(key, str) or not shape.match(key):
                 problems.append(f"{uid}: entry key {key!r} does not parse as "
                                 f"{value_type}")
-    # @req+ REQ-57061306@grhOhf7rpAJV clnvsb
+    # @req+ REQ-57061306@KwSVtwHyHRCj clnvsb
     if value_type in UNITLESS and data.get("unit") is not None:
         problems.append(f"{uid}: unit does not apply to {value_type}")
     if (value_type is not None and value_type not in UNITLESS

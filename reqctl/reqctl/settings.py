@@ -139,7 +139,7 @@ def read(root):
                    for at, value, _ in _leaves(document or {}, SHIPPED, ())}
 
 
-# @req> REQ-40447106@_7d9O2HDnoPr jyttul
+# @req> REQ-40447106@xVwoSkyU3_rG jyttul
 # @req> REQ-31526771@dzOAej5vGh2Y ncvzwe
 def table(stated, item):
     return {entry: {field: stated.get(f"{item}.{entry}.{field}", value)
