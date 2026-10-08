@@ -406,16 +406,17 @@ def faults(review, bound, redirects, seconds, attempts):
                 if isinstance(why, Transient):
                     fault = Transient(f"{fault} (a transient failure)")
                 # @req- zrdwyr
+                named = "cannot be read"
             elif not holds(text, clipped(source["passage"])):
                 # @req> REQ-81751575@u9IqdcfRFLSM ot73lz
-                fault = why or f"does not hold {source['passage']!r}"
+                fault = named = why or f"does not hold {source['passage']!r}"
             else:
                 continue
             line = f"practice {number}: {url} {fault}"
             found.append(Transient(line) if isinstance(fault, Transient)
                          else line)
             # @req> REQ-55217837@PsKdezweHHNp 3soeou
-            refused.append({**source, "fault": fault})
+            refused.append({**source, "fault": named})
     return found, pages, refused
 
 
