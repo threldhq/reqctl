@@ -39,7 +39,7 @@ def main(base):
         return 1
     if was is ABSENT or now is ABSENT or was == now:
         return 0
-    # @req+ REQ-39609157@Xvc7Almjs75w tycvj6
+    # @req+ REQ-39609157@gIkaMkxCsl9Z tycvj6
     if type(before) is not int or type(after) is not int:
         print(f"::error::the baseline states {after!r} where {base} states "
               f"{before!r}, and a baseline names its number as a whole number; "

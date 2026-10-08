@@ -576,7 +576,7 @@ def proposals(run):
             raise SystemExit(f"{path.name}: a proposal is numbered, as 01.md -- "
                              "the number is what a verdict answers")
         number = int(path.stem)
-        # @req> REQ-73186885@4_M1ckHi0Z70 twr3xe
+        # @req> REQ-73186885@Q7CKwi3s629S twr3xe
         if number in numbered:
             raise SystemExit(
                 f"{numbered[number]} and {path.name} are both numbered "
