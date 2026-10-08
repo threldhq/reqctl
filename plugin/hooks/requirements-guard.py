@@ -461,9 +461,11 @@ def discarded(words):
         return None, False, False
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
+    before = rest[:rest.index("--")] if separated else rest
     flags = [next((full for full in LONG_FLAGS if len(word) > 3
                   and full.startswith(word.split("=", 1)[0])), word)
-             for word in rest if word.startswith("-")]
+             for i, word in enumerate(before) if word.startswith("-")
+             and not (i and before[i - 1] in ("-e", "--exclude"))]
     operands = [word for word in rest if not word.startswith("-")]
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if subcommand == "reset":
@@ -583,7 +585,7 @@ def braced(word):
 def expands_to(pattern, path):
     wanted, held = pattern.split("/"), path.split("/")
     return len(wanted) == len(held) and all(
-        fnmatch.fnmatchcase(name, glob) for glob, name in zip(wanted, held))
+        fnmatch.fnmatchcase(name, glob.replace("[^", "[!")) for glob, name in zip(wanted, held))
 
 
 def glob_alternatives(segment):
