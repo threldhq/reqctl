@@ -491,8 +491,8 @@ def binding(run, held, root, records):
                 "one. A reference to nothing binds nothing rather than failing "
                 "to parse, so it reads here as binding to every member."
                 + "".join(f" The {name} members are {', '.join(sorted(members))}."
-                          for name, (uid, members) in sorted(dims.items())
-                          if named & {name, uid}))
+                          for name, (_, members) in sorted(dims.items())
+                          if name in named))
         # @req- usq427
         settled_on = {}
         for name, (uid, members) in dims.items():
