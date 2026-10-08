@@ -742,8 +742,7 @@ def refile(store, uid):
          if key not in dropped}, kind="data")
     after.update(_repin(after, {item.uid}))
 
-    problems = _validate.dictionary_rules(item.uid, after[item.uid],
-                                          _validate.holds_value_types(after))
+    problems = _validate.dictionary_rules(item.uid, after[item.uid])
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
     problems += [fault for fault in found if fault not in stood]
@@ -891,8 +890,7 @@ def prepare(store, kind, fields, placeholder=None):
     problems += _validate.ears(uid, data)
     problems += _validate.text_values(uid, data)
     problems += _validate.repeated_labels(uid, data)
-    problems += _validate.dictionary_rules(uid, data, _validate.holds_value_types(
-        {found.uid: found.data for found in corpus.items(store)}))
+    problems += _validate.dictionary_rules(uid, data)
     problems += _new_corpus_faults(store, uid, data)
     return uid, path, data, problems
 
@@ -942,18 +940,16 @@ def _new_cycles(store, uid, prospective):
 
 
 def _refuse_new_schema_faults(store, uid, before, prospective):
-    value_types = _validate.holds_value_types(
-        {found.uid: found.data for found in corpus.items(store)})
     existing = (_validate.schema_problems(store.root, uid, before)
                 + _validate.text_values(uid, before)
                 + _validate.repeated_labels(uid, before)
-                + _validate.dictionary_rules(uid, before, value_types))
+                + _validate.dictionary_rules(uid, before))
     introduced = [
         problem
         for problem in _validate.schema_problems(store.root, uid, prospective)
         + _validate.text_values(uid, prospective)
         + _validate.repeated_labels(uid, prospective)
-        + _validate.dictionary_rules(uid, prospective, value_types)
+        + _validate.dictionary_rules(uid, prospective)
         if problem not in existing
     ]
     if introduced:

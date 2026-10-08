@@ -190,19 +190,37 @@ def _nesting(uid, held, path=(), seen=()):
     return problems
 
 
-def holds_value_types(records):
-    return corpus.kind_of(VALUE_TYPES, records.get(VALUE_TYPES)) == "data"
-
-
 def _written(value):
     if isinstance(value, bool):
         return str(value).lower()
     if isinstance(value, float):
         return format(value, "f")
-    return str(value) if isinstance(value, (int, str)) else None
+    return str(value) if isinstance(value, (int, str)) else ""
 
 
-def dictionary_rules(uid, data, value_types):
+def _typed(where, value_type, stated, unit):
+    problems = []
+    shape = KEY_SHAPES.get(value_type)
+    if shape is None and isinstance(value_type, str):
+        problems.append(f"{where}: value_type {value_type} is not a type "
+                        "reqctl reads an entry key as")
+    if shape is not None:
+        # @req> REQ-41697188@IRR8A-_NbYw4 fv4qpq
+        for named, written in stated:
+            if not shape.match(written):
+                problems.append(f"{where}: {named} does not parse as "
+                                f"{value_type}")
+    # @req+ REQ-57061306@grhOhf7rpAJV gf75aj
+    if value_type in UNITLESS and unit is not None:
+        problems.append(f"{where}: unit does not apply to {value_type}")
+    if (value_type is not None and value_type not in UNITLESS
+            and unit is None):
+        problems.append(f"{where}: {value_type} carries a unit")
+    # @req- gf75aj
+    return problems
+
+
+def dictionary_rules(uid, data):
     problems = []
     item_kind = corpus.kind_of(uid, data)
     declared = data.get("kind")
@@ -263,39 +281,12 @@ def dictionary_rules(uid, data, value_types):
             if not corpus.DATA_KEY.match(str(key)):
                 problems.append(f"{uid}: entry key {key!r} is not a snake_case "
                                 "handle")
-        typed = [(f"{uid}: entry {key}", fields["value_type"],
-                  [(f"quantity {fields['quantity']!r}",
-                    _written(fields["quantity"]))] if "quantity" in fields else [],
-                  fields.get("unit"))
-                 for key, fields in held.items()
-                 if value_types and isinstance(fields, dict)
-                 and isinstance(fields.get("value_type"), str)
-                 and fields["value_type"] in KEY_SHAPES]
-    else:
-        value_type = data.get("value_type")
-        if KEY_SHAPES.get(value_type) is None and isinstance(value_type, str):
-            problems.append(f"{uid}: value_type {value_type} is not a type "
-                            "reqctl reads an entry key as")
-        typed = [(uid, value_type,
-                  [(f"entry key {key!r}", key if isinstance(key, str) else None)
-                   for key in held],
-                  data.get("unit"))]
-    for where, value_type, stated, unit in typed:
-        shape = KEY_SHAPES.get(value_type)
-        if shape is not None:
-            # @req> REQ-41697188@IRR8A-_NbYw4 vcrw5z
-            for named, written in stated:
-                if written is None or not shape.match(written):
-                    problems.append(f"{where}: {named} does not parse as "
-                                    f"{value_type}")
-        # @req+ REQ-57061306@grhOhf7rpAJV fjzdr2
-        if value_type in UNITLESS and unit is not None:
-            problems.append(f"{where}: unit does not apply to {value_type}")
-        if (value_type is not None and value_type not in UNITLESS
-                and unit is None):
-            problems.append(f"{where}: {value_type} carries a unit")
-        # @req- fjzdr2
-    return problems
+        return problems
+    return problems + _typed(
+        uid, data.get("value_type"),
+        [(f"entry key {key!r}", key if isinstance(key, str) else "")
+         for key in held],
+        data.get("unit"))
 
 
 def text_values(uid, data):
@@ -1124,7 +1115,25 @@ def _entry_term_fields(records, root):
 def coherence(records, root):
     return (_approved_bindings(records) + _shared_words(records)
             + _circular_definitions(records) + _entry_selection(records)
-            + _duplicate_names(records) + _entry_term_fields(records, root))
+            + _duplicate_names(records) + _entry_term_fields(records, root)
+            + _typed_entries(records))
+
+
+def _typed_entries(records):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    return [problem
+            for uid, data in sorted(records.items())
+            if corpus.kind_of(uid, data) == "data"
+            for key, fields in (corpus.entries(data) or {}).items()
+            if isinstance(fields, dict)
+            and str(fields.get("value_type")) in KEY_SHAPES
+            for problem in _typed(
+                f"{uid}: entry {key}", fields["value_type"],
+                [(f"quantity {fields['quantity']!r}",
+                  _written(fields["quantity"]))] if "quantity" in fields else [],
+                fields.get("unit"))]
 
 
 def _duplicate_names(records):
@@ -1258,7 +1267,6 @@ def run(root, exempt=None):
             records[path.stem] = data
     reachable = corpus.reachable(records)
     known = {path.stem for path in paths} | set(reachable)
-    value_types = holds_value_types(records)
 
     for path in paths:
         uid = path.stem
@@ -1281,7 +1289,7 @@ def run(root, exempt=None):
         problems += _guarded(uid, text_values, uid, data)
         problems += _guarded(uid, repeated_labels, uid, data)
         problems += _guarded(uid, hidden_values, uid, data)
-        problems += _guarded(uid, dictionary_rules, uid, data, value_types)
+        problems += _guarded(uid, dictionary_rules, uid, data)
         problems += _guarded(uid, _relations, uid, data, records,
                              reachable, known)
         problems += _guarded(uid, _references, uid, data, known, root)
