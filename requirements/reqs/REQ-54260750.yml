@@ -30,7 +30,7 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   37auve: vaAvB4mqmEnZJl7f9J_WwBam8jj06Hqcn5WJlStxwjQ
-  xkcay3: Of3N1c1t9cb0ZfC6eUvSbJducc-A8BKuCqIVpRm3rSQ
+  xkcay3: KL5tw7DkHnLz92P7GRxk0MFb3owxVt1n5kVXVbLws6I
 priority: medium
 relations:
   REQ-38288492: depends_on

@@ -70,9 +70,9 @@ HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
-PUSH_SHORT_DESTRUCTIVE = re.compile(r"^-[a-zA-Z]*[fd][a-zA-Z]*$")
 PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
-                         "--mirror", "--delete")
+                         "--mirror", "--delete", "--prune")
+GLUED_OPTION = re.compile(r"^-+[A-Za-z0-9]*?(?=requirements)")
 ESCAPE = re.compile(r"\\(?=[A-Za-z0-9/])")
 QUOTED_REDIRECT = re.compile(r"""(>>?\s*)(['"])([^'"]*)\2""")
 GLOB_CHAR = re.compile(r"[*?\[\]{}]")
@@ -213,8 +213,8 @@ def deny(reason: str) -> None:
     # @req+ REQ-51060455@DPy54WGr0ngb kfua34
     try:
         while decision:
-            decision = decision[os.write(sys.stdout.fileno(), decision):]
-    except (OSError, ValueError):
+            decision = decision[os.write(1, decision):]
+    except OSError:
         pass
     sys.exit(0)
     # @req- kfua34
@@ -423,7 +423,7 @@ def refuse_destructive_push(words):
         name = word.split("=", 1)[0]
         if ((len(name) > 2 and name.startswith("--")
              and any(flag.startswith(name) for flag in PUSH_LONG_DESTRUCTIVE))
-                or PUSH_SHORT_DESTRUCTIVE.match(word)
+                or short_flagged([word], "f") or short_flagged([word], "d")
                 or (len(word) > 1 and word[0] in "+:")):
             deny(f"Push with {word} blocked: it rewrites or deletes remote "
                  "history. Ask the owner if that is really wanted.")
@@ -457,7 +457,8 @@ def discarded(words):
     if subcommand == "reset":
         return (WHOLE_TREE, False, False) if "--hard" in flags else (None, False, False)
     if subcommand == "clean":
-        if not forced or short_flagged(flags, "n") or "--dry-run" in flags:
+        if not forced or any(not f.startswith("--") and "n" in f[1:].split("e", 1)[0]
+                                for f in flags) or "--dry-run" in flags:
             return None, False, False
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
         return (after or operands or WHOLE_TREE), True, ignored
@@ -511,8 +512,9 @@ def refuse_commit_on_default(words):
     default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"])
     if default is None:
         deny(NO_DEFAULT)
-    if branch.strip() and default.strip() == f"origin/{branch.strip()}":
-        deny(ON_DEFAULT.format(branch=branch.strip()))
+    branch = branch.strip()
+    if default.strip() == f"origin/{branch}":
+        deny(ON_DEFAULT.format(branch=branch))
     # @req- zm6qoo
 
 
@@ -528,6 +530,7 @@ def judge_command(words):
              "patch, where this guard cannot see them. Use the editing tools, "
              "and reqctl for the corpus.")
     called = invoked(words)
+    operands = called[1:]
     plain = called[0] if called else None
     if plain == "patch":
         deny("patch(1) blocked: the paths it writes live inside the diff, "
@@ -535,15 +538,16 @@ def judge_command(words):
              "reqctl for the corpus.")
     # @req- dbuwzq
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
-    if plain == "rm" and any(w == "--recursive" or (
-            w.startswith("-") and not w.startswith("--") and "r" in w.lower())
-            for w in called[1:]):
+    if plain == "rm" and any(
+            (len(w) > 2 and "--recursive".startswith(w))
+            or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
+            for w in operands):
         project = os.environ.get("CLAUDE_PROJECT_DIR", "").rstrip("/")
         resolved = {w: os.path.normpath(os.path.join(project, w))
-                    for w in called[1:]} if project else {}
+                    for w in operands} if project else {}
         above = [project, *map(str, Path(project).parents)] if project else []
         swept = next(
-            (w for w in called[1:] if os.path.normpath(w) in BARE_SWEEP
+            (w for w in operands if os.path.normpath(w) in BARE_SWEEP
              or w.startswith(("$", "`"))
              or (project and resolved[w] == project)
              or (project and project.startswith(resolved[w] + "/"))
@@ -589,7 +593,7 @@ def is_corpus_root(word):
 def names_corpus(part):
     if CORPUS_DIR.search(part):
         return True
-    operands = tokens_of(part.split("\n", 1)[0])
+    operands = [GLUED_OPTION.sub("", word) for word in tokens_of(part.split("\n", 1)[0])]
     return any(CORPUS_DIR.search(word) or is_corpus_root(word)
                for word in operands)
 
@@ -724,7 +728,7 @@ def decide(data: dict) -> None:
             values = values + named_paths(args, GLOB_KEY)
         for value in values:
             named = flatten(value.replace("\\", "/"))
-            if CORPUS_DIR.search(named) or is_corpus_root(named):
+            if names_corpus(named):
                 deny(DIRECT_READ.format(target=value))
 
     judge_citation_edit(tool, args)
