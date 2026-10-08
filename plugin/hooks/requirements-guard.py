@@ -576,6 +576,7 @@ def judge_command(words):
             (w for w in operands if os.path.normpath(w) in BARE_SWEEP
              or "$" in w or "`" in w or w.startswith(("~+", "~-"))
              or len(alternatives[w]) > 256 or SEQUENCE.search(w)
+             or any("{" in alt and "," in alt for alt in alternatives[w])
              or any(expands_to(os.path.normpath(os.path.join(project, alt)), path)
                     for alt in alternatives[w] for path in above)),
             None)
