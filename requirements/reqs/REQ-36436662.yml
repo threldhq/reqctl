@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a corpus holding no [data item](data_item) named value_types, and two [items](item)
+    whose rationales write the same number in figures, one before minutes and one
+    before min
+  then: the product refuses both [items](item) as stating the same quantity
+  when: the corpus is validated
+- given: a corpus holding no [data item](data_item) named value_types, and two [items](item)
+    whose rationales write the same number in figures, one before months and one before
+    month
+  then: the product accepts both [items](item), reading neither word as a unit it
+    ships
+  when: the corpus is validated
+assessed:
+  REQ-31827606: LqXaOXp6DLBG4aOCyP0U-zpI-zSfqD_lGFJ72CQ1Pqw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-31827606: constrains
+status: approved
+text: Where the corpus holds no [data item](data_item) named value_types, the product
+  shall read as a unit, in each check of the quantities that prose states, only a
+  spelling in the list of units the product ships.
+type: functional
+verification: inspection

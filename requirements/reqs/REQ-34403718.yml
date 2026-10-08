@@ -9,7 +9,7 @@ acceptance_criteria:
   then: the product uses the values it ships
   when: a run is built in that repository
 assessed:
-  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
   REQ-87066486: AtzPEAcAbJ1vtpLCqCZnXdrS-wd-THi3TvLIgx4VcF0
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo

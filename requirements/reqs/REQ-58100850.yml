@@ -1,0 +1,38 @@
+acceptance_criteria:
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    stating the value type count and the quantity twenty whose at_most names an [entry](entry)
+    of the same [data item](data_item) stating the value type count and the quantity
+    forty-five
+  then: the product accepts the [data item](data_item)
+  when: the [data item](data_item) is written
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    stating the quantity fifty whose at_most names an [entry](entry) stating the quantity
+    forty-five in the same unit
+  then: the product refuses the [data item](data_item), naming both [entries](entry)
+    and their quantities
+  when: the [data item](data_item) is written
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    whose at_least names an [entry](entry) stating a greater quantity in the same
+    unit
+  then: the product refuses the [data item](data_item), naming both [entries](entry)
+  when: the [data item](data_item) is written
+- given: a corpus holding no [data item](data_item) named value_types, and an [entry](entry)
+    whose quantity exceeds that of the [entry](entry) its at_most names
+  then: the product accepts the [data item](data_item)
+  when: the corpus is validated
+assessed:
+  REQ-20469423: IrHZJUp5R992hwOQDLDy-e5K4DqQFQ2Dz5eBxWd_KFI
+  REQ-75293842: Une663jQ8uUZ5ISFJpdT7k85dKeLi83sV_GZg9etibI
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-20469423: depends_on
+  REQ-75293842: depends_on
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall refuse a [data item](data_item) holding an [entry](entry) whose quantity is
+  less than that of the [entry](entry) its at_least names, or more than that of the
+  [entry](entry) its at_most names.
+type: functional
+verification: inspection

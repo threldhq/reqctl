@@ -1,0 +1,48 @@
+acceptance_criteria:
+- given: a [data item](data_item) named value_types listing for duration the unit
+    d with the spelling days
+  then: the product refuses the [item](item), naming the quantity and stating that
+    referencing the parameter or [entry](entry) holding it is the fix
+  when: a criterion writing a number in figures before days is written
+- given: a [data item](data_item) named value_types listing for duration the unit
+    d with the spelling days
+  then: the product refuses the [item](item), naming the quantity
+  when: a criterion writing a number in words before days is written
+- given: a [data item](data_item) named value_types listing for duration the unit
+    s
+  then: the product refuses the [item](item), naming the quantity
+  when: a criterion writes a number in figures joined to s
+- given: a [data item](data_item) named value_types listing for duration the unit
+    d with the spelling days
+  then: the product accepts the statement
+  when: a statement references an [entry](entry) stating the value type duration and
+    writes no number before a unit
+- given: a [data item](data_item) named value_types listing for duration the unit
+    d with the spelling days
+  then: the product accepts the rationale
+  when: an [item](item)'s rationale writes a number of days in figures or in words
+- given: a [data item](data_item) named value_types listing for duration the unit
+    d with the spelling days
+  then: the product accepts the criterion
+  when: a criterion writes a number, in figures or in words, before a word that value_types
+    lists as no unit
+- given: a corpus holding no [data item](data_item) named value_types
+  then: the product accepts the criterion
+  when: a criterion writing a number in figures or in words before days is written
+assessed:
+  REQ-57721566: kHs1aOC7uW84NIBjZCG5udGahFuL5y037cqPHcDRD_8
+  REQ-62905646: _RkSNpGGoJXvqerZ8har6jnbpCKdaaRT_Em2zoOCshg
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-57721566: depends_on
+  REQ-62905646: depends_on
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall refuse a requirement or a guard whose statement or acceptance criterion writes
+  a number, in figures or in words, before a symbol or a spelling of a unit that value_types
+  lists.
+type: functional
+verification: inspection

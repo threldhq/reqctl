@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a [data item](data_item) named value_types listing for duration the unit
+    min with the spelling minutes, and two [items](item) whose rationales write the
+    same number in figures, one before minutes and one before min
+  then: the product refuses both [items](item) as stating the same quantity
+  when: the corpus is validated
+- given: a [data item](data_item) named value_types listing for duration the unit
+    min without the spelling mins, and two [items](item) whose rationales write the
+    same number in figures, one before mins and one before min
+  then: the product accepts both [items](item), reading mins as no unit
+  when: the corpus is validated
+assessed:
+  REQ-31827606: LqXaOXp6DLBG4aOCyP0U-zpI-zSfqD_lGFJ72CQ1Pqw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-31827606: constrains
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall read as a unit, in each check of the quantities that prose states, only a
+  symbol or a spelling that value_types lists.
+type: functional
+verification: inspection
