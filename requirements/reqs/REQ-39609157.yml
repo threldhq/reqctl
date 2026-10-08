@@ -1,10 +1,10 @@
 acceptance_criteria:
-- given: a base branch carrying baseline 19 and a branch that changes the baseline
-    while still stating 19
+- given: a base branch carrying baseline 18 and a branch that changes the baseline
+    while still stating 18
   then: the product reports both numbers and names merging the base branch, then generating
     the baseline
   when: the baseline is checked against the base branch
-- given: a base branch carrying baseline 19 and a branch stating baseline 20
+- given: a base branch carrying baseline 18 and a branch stating baseline 19
   then: the product reports no problem
   when: the baseline is checked against the base branch
 - given: a branch whose baseline states a number that is not a whole number

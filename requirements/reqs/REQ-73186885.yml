@@ -1,6 +1,6 @@
 acceptance_criteria:
-- given: a run holding a [proposal](proposal) named 01.md and a [proposal](proposal)
-    named 1.md
+- given: a run holding a [proposal](proposal) named 07.md and a [proposal](proposal)
+    named 7.md
   then: the product refuses the run and names both files
   when: the run is built
 assessed:
