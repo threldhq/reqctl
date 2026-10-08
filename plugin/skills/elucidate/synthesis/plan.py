@@ -295,7 +295,7 @@ def registered(name):
     plugin = Path(sys.argv[0]).absolute().parents[3] / PLUGIN
     if not plugin.is_file():
         return name
-    return f"{json.loads(plugin.read_text())['name']}:{name}"
+    return f"{read_json(plugin)['name']}:{name}"
 
 
 def named_item(records, name):
@@ -324,9 +324,22 @@ def agent(name, held):
     return {"model": model, "effort": effort}
 
 
+def read_json(path):
+    # @req+ REQ-29234402@b5_8tR6bNR44 vvxruf
+    try:
+        held = json.loads(path.read_text())
+    except (json.JSONDecodeError, UnicodeDecodeError) as broken:
+        raise corpus.ReqctlError(f"{path}: not JSON -- {broken}") from broken
+    if not isinstance(held, dict):
+        raise corpus.ReqctlError(f"{path}: holds {type(held).__name__}, not the "
+                                 "JSON object the run writes")
+    return held
+    # @req- vvxruf
+
+
 def used(run):
     path = run / STATED
-    return json.loads(path.read_text()) if path.is_file() else {}
+    return read_json(path) if path.is_file() else {}
 
 
 def configured(run, uses):
@@ -852,7 +865,7 @@ def state(run):
     if not path.is_file():
         raise SystemExit(f"{path}: the run was not built; run `plan.py build` "
                          "first")
-    return json.loads(path.read_text())
+    return read_json(path)
 
 
 def saved(run, held):
@@ -1460,8 +1473,14 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # @req+ REQ-29234402@b5_8tR6bNR44 ownlqe
     try:
         # @req> REQ-24406170@M08jCONzg-4u yny6rh
         sys.exit(corpus.atomically(main))
-    except (corpus.ReqctlError, OSError) as unreadable:
-        sys.exit(f"{Path(__file__).name}: {unreadable}")
+    except (corpus.ReqctlError, OSError, UnicodeError) as unreadable:
+        sys.exit(f"{Path(__file__).name}: " + " ".join(str(unreadable).split()))
+    except SystemExit as stop:
+        if isinstance(stop.code, str):
+            sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
+        raise
+    # @req- ownlqe

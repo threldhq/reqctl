@@ -19,6 +19,13 @@ acceptance_criteria:
   then: the traceback stands rather than a single line
   when: the fault reaches the caller
 assessed: {}
+citations:
+  3sr6w7: vCdx5-3epX9m61Vo_TuPpXZt9KepSIIZQb3ZA1849dg
+  gwnavy: vCdx5-3epX9m61Vo_TuPpXZt9KepSIIZQb3ZA1849dg
+  ifziur: 9Gd-28tZ-KOFXOj98rbwxoPJmdNEbeWEppcfbBcra7s
+  ownlqe: vCdx5-3epX9m61Vo_TuPpXZt9KepSIIZQb3ZA1849dg
+  vihdxq: vCdx5-3epX9m61Vo_TuPpXZt9KepSIIZQb3ZA1849dg
+  vvxruf: HaQJhGTlIQ4toJ9UH-qGXNM_xKogxFGWIMBfcWzxWQ8
 priority: medium
 relations: {}
 status: approved

@@ -130,8 +130,14 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # @req+ REQ-29234402@b5_8tR6bNR44 vihdxq
     try:
         # @req> REQ-24406170@M08jCONzg-4u ei57as
         sys.exit(corpus.atomically(main))
-    except (corpus.ReqctlError, OSError) as unreadable:
-        sys.exit(f"{Path(__file__).name}: {unreadable}")
+    except (corpus.ReqctlError, OSError, UnicodeError) as unreadable:
+        sys.exit(f"{Path(__file__).name}: " + " ".join(str(unreadable).split()))
+    except SystemExit as stop:
+        if isinstance(stop.code, str):
+            sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
+        raise
+    # @req- vihdxq

@@ -18,6 +18,7 @@ from referencing import Registry
 from referencing.jsonschema import DRAFT202012, specification_with
 
 Loader = yaml.CSafeLoader if yaml.__with_libyaml__ else yaml.SafeLoader
+NEST_LIMIT = 64
 
 CONFLICTED = re.compile(r"^<{7}", re.M)
 
@@ -159,19 +160,50 @@ def loads(text, where):
             )
         # @req+ REQ-19913588@Pbi1CR5jtivz 3222m4
         try:
-            return loader.construct_document(node) if node is not None else None
+            document = loader.construct_document(node) if node is not None else None
         except (yaml.YAMLError, RecursionError):
             raise
         except Exception as error:
             raise ReqctlError(f"{where} holds a value YAML cannot build -- "
                               f"{type(error).__name__}: {error}") from error
         # @req- 3222m4
+        # @req> REQ-39368456@fHW3SvGcMIr_ 2zx2qh
+        for field, value in (document.items() if isinstance(document, dict) else ()):
+            fault = _unreadable(value)
+            if fault:
+                raise ReqctlError(f"{where}: {field} {fault}")
+        return document
     except yaml.YAMLError as error:
         raise ReqctlError(f"{where} is not YAML: {error}") from error
     except RecursionError as error:
         raise ReqctlError(f"{where} nests too deeply to read") from error
     finally:
         loader.dispose()
+
+
+def _unreadable(value):
+    height, open_ = {}, set()
+    stack = [(value, False)]
+    while stack:
+        node, closing = stack.pop()
+        if not isinstance(node, (dict, list)):
+            continue
+        children = list(node.values() if isinstance(node, dict) else node)
+        if closing:
+            open_.discard(id(node))
+            height[id(node)] = 1 + max((height.get(id(child), 0) for child in children),
+                                       default=0)
+            if height[id(node)] > NEST_LIMIT:
+                return (f"nests deeper than {NEST_LIMIT} levels, so it cannot be read "
+                        "as text -- state it flatter")
+        elif id(node) in open_:
+            return ("forms a cycle, so it cannot be read as text -- state it "
+                    "without an alias to itself")
+        elif id(node) not in height:
+            open_.add(id(node))
+            stack.append((node, True))
+            stack.extend((child, False) for child in children)
+    return None
 
 
 def read_text(path):

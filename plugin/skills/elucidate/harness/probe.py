@@ -431,7 +431,7 @@ def cmd_score(args):
     # @req> REQ-32019340@Ce9zMv1R_f5m cwfhxj
     if not where.is_file():
         raise SystemExit(f"{where}: no key here; mint the probes first")
-    key = json.loads(where.read_text())
+    key = plan.read_json(where)
     recalled, named, unread = reach(run, plan.state(run))
     held, absent = returned(run, key)
     rows = measure(key, held, recalled, named)
@@ -465,5 +465,14 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    # @req> REQ-24406170@M08jCONzg-4u 5uyr4v
-    sys.exit(corpus.atomically(main))
+    # @req+ REQ-29234402@b5_8tR6bNR44 3sr6w7
+    try:
+        # @req> REQ-24406170@M08jCONzg-4u 5uyr4v
+        sys.exit(corpus.atomically(main))
+    except (corpus.ReqctlError, OSError, UnicodeError) as unreadable:
+        sys.exit(f"{Path(__file__).name}: " + " ".join(str(unreadable).split()))
+    except SystemExit as stop:
+        if isinstance(stop.code, str):
+            sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
+        raise
+    # @req- 3sr6w7
