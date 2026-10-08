@@ -50,13 +50,17 @@ def named(node):
 
 
 def forwarders(tree):
-    sinks, owners = {}, {}
+    sinks, owners, faults = {}, {}, []
     for node in ast.walk(tree):
         if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             continue
-        placed = node.args.posonlyargs + node.args.args
-        if placed and placed[0].arg in ("self", "cls"):
-            placed = placed[1:]
+        whole = node.args.posonlyargs + node.args.args
+        placed = whole[1:] if whole and whole[0].arg in ("self", "cls") else whole
+        defaulted = ({arg.arg for arg in whole[len(whole) - len(node.args.defaults):]}
+                     | {arg.arg for arg, value in
+                        zip(node.args.kwonlyargs, node.args.kw_defaults)
+                        if value is not None})
+        took = set()
         slots = ({arg.arg: at for at, arg in enumerate(placed)}
                  | {arg.arg: None for arg in node.args.kwonlyargs})
         for inner in ast.walk(node):
@@ -69,16 +73,26 @@ def forwarders(tree):
                 if not isinstance(keyword.value, ast.Name):
                     continue
                 if keyword.value.id in slots:
+                    took.add(keyword.value.id)
                     sinks.setdefault(node.name, set()).add(
                         (slots[keyword.value.id], keyword.value.id))
-    return sinks, owners
+        # @req+ GUARD-83751348@rb37sHKC5bnL icqk2j
+        if took and node.name in ("__init__", "__call__"):
+            faults.append((node.lineno, f"{node.name}() passes help text on, "
+                           "which this guard cannot follow; use a function"))
+        faults += [(node.lineno, f"{node.name}() gives {param} a default this "
+                    "guard cannot count; pass it at each call")
+                   for param in sorted(took & defaulted)]
+        # @req- icqk2j
+    return sinks, owners, faults
 
 
 def survey(paths):
     counted, refused, sinks, owners = 0, [], {}, {}
     trees = [(path, parsed_tree(path)) for path in paths]
-    for _, tree in trees:
-        found, held = forwarders(tree)
+    for path, tree in trees:
+        found, held, faults = forwarders(tree)
+        refused += [(path, line, why) for line, why in faults]
         for helper, slots in found.items():
             sinks.setdefault(helper, set()).update(slots)
         owners.update(held)
@@ -94,6 +108,10 @@ def survey(paths):
                              f"{name}() is given ** keywords this guard cannot "
                              "read; write each one out")
                             for keyword in node.keywords if keyword.arg is None]
+                refused += [(path, given.lineno,
+                             f"{name}() is given * positionals this guard cannot "
+                             "read; write each one out")
+                            for given in node.args if isinstance(given, ast.Starred)]
             for spot, param in sinks.get(name, ()):
                 if spot is not None and spot < len(node.args):
                     said = node.args[spot]

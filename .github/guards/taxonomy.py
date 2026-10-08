@@ -21,10 +21,12 @@ def faults(root):
             text = corpus.read_text(path)
         except corpus.ReqctlError as broken:
             sys.exit(str(broken))
+        # @req+ GUARD-83168738@zhoOQpGgBd9R zcq4et
         try:
             data = yaml.safe_load(text)
-        except yaml.YAMLError as broken:
+        except (yaml.YAMLError, ValueError) as broken:
             sys.exit(f"{path}: not YAML: {broken}")
+        # @req- zcq4et
         if not isinstance(data, dict):
             sys.exit(f"{path}: item file is not a mapping")
         uid = path.stem

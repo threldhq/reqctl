@@ -12,7 +12,8 @@ acceptance_criteria:
 assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
 citations:
-  nafhnh: NTHn2NHGWbDGPPay0PZQ0zpM4R3Ij7vdo6bzL8cEaog
+  icqk2j: 2qE0C7ngkjH3k0FjUXy8xVo6dw6j6QIMR8Cymp1Hafw
+  nafhnh: 6ezZ_3Mx-EAO60F0_nN_xSLpLs4TYJr5N3BEaMKgcjU
 relations: {}
 status: approved
 text: If an argument parser outside the [corpus root](corpus_root) is given a help,
