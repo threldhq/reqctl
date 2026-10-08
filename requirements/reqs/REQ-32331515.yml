@@ -11,7 +11,7 @@ acceptance_criteria:
   when: a run is built on that branch
 assessed:
   REQ-31526771: dzOAej5vGh2YoOyjJmOYn98wVQGEPZvE3y_ShYgjGaM
-  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   bl2ps5: FLVrksLLhrbwS7xy8AP06ssG2Hjy0WPUKj0LIzBGgpg

@@ -9,7 +9,7 @@ acceptance_criteria:
   when: a run is built there
 assessed:
   REQ-23060027: zeNeSryv-0-1-V7CNGTlk3RN2_KxE0P3zV9SCZD6ZSs
-  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
   REQ-96661837: HbvreaRTySWHNKeDM1KVA-6Dn1OiEd-DEbPofoccQi0
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
   elucidate_agents.*: wpfamgxi_mt-7nuX3IW0mErlSS94rF11TjMeODKUmbc

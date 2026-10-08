@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the build refuses the change
   when: the build runs
 assessed: {}
+citations:
+  bbo2z6: Ty2yYlDq2nHjfbdes3KdRxZhTGhjWY0U-JuU9x10aaI
 relations: {}
 status: approved
 text: If a workflow makes an editable install with build isolation, then the build

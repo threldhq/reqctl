@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the build runs
 assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+citations:
+  whxw2b: u4seuKjTzR25ab6KJmAPozb5ZkNOQOMcd0cly2H-VNo
 relations: {}
 status: approved
 text: If a file outside the [corpus root](corpus_root) is of a type the comment budget

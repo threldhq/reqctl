@@ -54,6 +54,7 @@ def named_faults(config):
                 "regex(es); one states the uid shape and this check holds it to "
                 "what reqctl mints"]
     found = []
+    # @req+ REQ-91184727@qgpF6mhsmj-W fllahn
     if held.get("regexTarget") != "secret":
         found.append(
             f"{CONFIG}: the {RULE} uid allowlist states regexTarget "
@@ -73,6 +74,7 @@ def named_faults(config):
             found.append(
                 f"{CONFIG}: {written[0]} does not match the uid {uid!r} that "
                 "reqctl mints, so a citation of one still fails the scan")
+    # @req- fllahn
     for near in ("REQ-8492710", "REQ-849271034", "req-84927103", "REQX-84927103",
                  "REQ-8492710a", "sk-live-84927103aBcDeFgHiJkLmNoP"):
         if shape.fullmatch(near):
@@ -104,6 +106,7 @@ def faults(config):
             "conditions with OR unless AND is stated, and under OR the path "
             "admits every secret in the corpus whatever its shape; state "
             "condition = \"AND\"")
+    # @req> REQ-90593907@77_4Pvs9T0Oa ugruo2
     if held.get("regexTarget") != "secret":
         found.append(
             f"{CONFIG}: the {RULE} allowlist states regexTarget "
@@ -123,10 +126,12 @@ def faults(config):
             "the corpus. A stamp is only ever written by reqctl into the "
             "corpus, so a scope reaching past it admits this shape from a "
             "hand that is not reqctl's")
+    # @req> REQ-90593907@77_4Pvs9T0Oa ef2ben
     if scope and not any(one.search(INSIDE) for one in scope):
         found.append(
             f"{CONFIG}: the {RULE} allowlist does not admit {INSIDE}, where "
             "reqctl writes stamps, so every real stamp fails the scan")
+    # @req+ REQ-90593907@77_4Pvs9T0Oa waiych
     shape = re.compile(written[0])
     for stamp in stamps():
         if not shape.fullmatch(stamp):
@@ -135,6 +140,7 @@ def faults(config):
                 "reqctl writes. The allowlist admits a shape reqctl no longer "
                 "produces, so a real stamp now fails the secret scan and the "
                 "shape it does admit means nothing")
+    # @req- waiych
     for near in ("A" * 42, "A" * 44, "A" * 42 + "+"):
         if shape.fullmatch(near):
             found.append(

@@ -9,6 +9,10 @@ acceptance_criteria:
   then: the build refuses the change and names the folder
   when: the build runs
 assessed: {}
+citations:
+  bgj4ii: M98yZCxbAOd3JIqnRx6GCaU6fFOHTggT6V5OjPOti_A
+  gfzndj: 5Mk8yZ9GW1X-L3ePUN6IaFy2g4dLghQDHm70L43f_Ic
+  hcbzdh: _FOu5Tv3afuqeu7gKj67Vf_iwonx4rGaj-nIH9qbVrc
 relations: {}
 status: approved
 text: If a rules file under .claude/rules states no path patterns in the frontmatter

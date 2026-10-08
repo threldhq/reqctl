@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a [data item](data_item) named value_types listing for duration the unit
+    min with the factor sixty, and an [entry](entry) of another [data item](data_item)
+    stating the value type duration, the quantity sixty and the unit min
+  then: the product accepts both [data items](data_item)
+  when: the corpus is validated
+assessed:
+  REQ-31827606: LqXaOXp6DLBG4aOCyP0U-zpI-zSfqD_lGFJ72CQ1Pqw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-31827606: constrains
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall exclude value_types from each check of the quantities that an [item](item)'s
+  prose states.
+type: functional
+verification: inspection

@@ -12,7 +12,7 @@ acceptance_criteria:
   then: the product refuses the command, naming the file and the key
   when: a command that reads the [settings file](settings_file) runs there
 assessed:
-  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:

@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the product refuses and names both files
   when: the corpus is validated
 assessed: {}
+citations:
+  2mb54k: Xppvo5eDat06apFzef5MWHrUnUMLbfzFQZ3xSLANv3Q
 priority: medium
 relations: {}
 status: approved

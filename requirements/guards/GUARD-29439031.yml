@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the step runs from that folder
   when: .github/verify.py runs the step
 assessed: {}
+citations:
+  e2sjnw: Ey4DuXCe9BG0Ee9sWhJ6M-ODz683i_fcYQzn5t8HRZs
 relations: {}
 status: approved
 text: When .github/verify.py runs a step of the check job in the CI workflow, the

@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  REQ-56262611: ZUTJf7RGA59bLDi8MJiUy8lYJjK-wYcBk_9khae-wcE
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-46144308: constrains
+  REQ-56262611: depends_on
+  REQ-82432523: depends_on
+status: approved
+text: When the prompt of the [best-in-class review](best_in_class_review) is built,
+  the product shall state in the prompt that a [practice](practice) quotes its passage
+  from the text a page shows its reader and not from a description that the page's
+  meta elements state.
+type: functional
+verification: inspection

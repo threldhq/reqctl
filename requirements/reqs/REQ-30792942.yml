@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a corpus holding a [data item](data_item) named value_types, and two [data
+    items](data_item) each holding an [entry](entry) stating the value type count
+    and the quantity ten
+  then: the product accepts both [data items](data_item)
+  when: the corpus is validated
+- given: a corpus holding no [data item](data_item) named value_types, and two [data
+    items](data_item) each holding an [entry](entry) stating the quantity ten in the
+    same unit
+  then: the product refuses both [data items](data_item) as stating the same quantity
+  when: the corpus is validated
+assessed:
+  REQ-31827606: LqXaOXp6DLBG4aOCyP0U-zpI-zSfqD_lGFJ72CQ1Pqw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-31827606: constrains
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall exclude the quantity that an [entry](entry) of a [data item](data_item) states,
+  where the [entry](entry) states a value type, from the check for a quantity that
+  more than one [item](item) states.
+type: functional
+verification: inspection

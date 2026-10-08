@@ -141,7 +141,7 @@ def build(run, answered):
     prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
         words=words, readme=text)
-    # @req> REQ-40447106@xVwoSkyU3_rG evxzj5
+    # @req> REQ-40447106@_7d9O2HDnoPr evxzj5
     crew = settings.table(plan.configured(
         run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
     # @req> REQ-61616834@ocFeB1JGP518 dnioty
@@ -483,7 +483,7 @@ def check(run):
     if review is None:
         print(f"{path}: the review {why}; {again}")
         return 1
-    # @req> REQ-40447106@xVwoSkyU3_rG xbu22f
+    # @req> REQ-40447106@_7d9O2HDnoPr xbu22f
     # @req> REQ-75041625@fdufkvO5WYz7 kehox2
     limits = settings.quantities(plan.configured(run, ("review_limits.",)),
                                  "review_limits")
@@ -523,8 +523,14 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # @req+ REQ-29234402@b5_8tR6bNR44 gwnavy
     try:
         # @req> REQ-24406170@ffuKefeAdU7p w4b4wb
         sys.exit(corpus.atomically(main))
-    except (corpus.ReqctlError, OSError) as unreadable:
-        sys.exit(f"{Path(__file__).name}: {unreadable}")
+    except (corpus.ReqctlError, OSError, UnicodeError) as unreadable:
+        sys.exit(f"{Path(__file__).name}: " + " ".join(str(unreadable).split()))
+    except SystemExit as stop:
+        if isinstance(stop.code, str):
+            sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
+        raise
+    # @req- gwnavy

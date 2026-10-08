@@ -1,0 +1,114 @@
+assessed: {}
+entries:
+  count:
+    definition: A whole number of things, stated with no unit
+  duration:
+    definition: A length of time, each unit stating its factor in seconds
+    units:
+      d:
+        factor: 86400
+        spellings:
+        - day
+        - days
+      h:
+        factor: 3600
+        spellings:
+        - hr
+        - hrs
+        - hour
+        - hours
+      min:
+        factor: 60
+        spellings:
+        - mins
+        - minute
+        - minutes
+      month:
+        least: 2419200
+        most: 2678400
+        spellings:
+        - months
+      ms:
+        factor: 0.001
+        spellings:
+        - msec
+        - msecs
+        - millisecond
+        - milliseconds
+      ns:
+        factor: 1.0e-09
+        spellings:
+        - nanosecond
+        - nanoseconds
+      s:
+        factor: 1
+        spellings:
+        - sec
+        - secs
+        - second
+        - seconds
+      µs:
+        factor: 1.0e-06
+        spellings:
+        - us
+        - microsecond
+        - microseconds
+  percentage:
+    definition: A proportion of a whole, in hundredths
+    units:
+      '%':
+        factor: 1
+        spellings:
+        - percent
+        - pct
+  size:
+    definition: An amount of data, each unit stating its factor in bytes
+    units:
+      B:
+        factor: 1
+        spellings:
+        - byte
+        - bytes
+      GB:
+        factor: 1000000000
+        spellings:
+        - gigabyte
+        - gigabytes
+      GiB:
+        factor: 1073741824
+        spellings:
+        - gibibyte
+        - gibibytes
+      KiB:
+        factor: 1024
+        spellings:
+        - kibibyte
+        - kibibytes
+      MB:
+        factor: 1000000
+        spellings:
+        - megabyte
+        - megabytes
+      MiB:
+        factor: 1048576
+        spellings:
+        - mebibyte
+        - mebibytes
+      TB:
+        factor: 1000000000000
+        spellings:
+        - terabyte
+        - terabytes
+      bit:
+        factor: 0.125
+        spellings:
+        - bits
+      kB:
+        factor: 1000
+        spellings:
+        - kilobyte
+        - kilobytes
+kind: data
+name: value_types
+status: approved
+text: each value type the quantities of the corpus take, and the units each permits

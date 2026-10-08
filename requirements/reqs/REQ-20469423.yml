@@ -1,0 +1,40 @@
+acceptance_criteria:
+- given: a [data item](data_item) named value_types stating a factor for the unit
+    d, and a least and a most for the unit month
+  then: the product accepts the at_most
+  when: an [entry](entry) stating d, whose quantity is less than the least of month
+    counted in d, states at_most an [entry](entry) stating month and the quantity
+    one
+- given: the same [data item](data_item) named value_types
+  then: the product refuses the at_most, since a month may be shorter
+  when: an [entry](entry) stating d, whose quantity lies between the least and the
+    most of month counted in d, states at_most an [entry](entry) stating month and
+    the quantity one
+- given: the same [data item](data_item) named value_types
+  then: the product accepts the at_least
+  when: an [entry](entry) stating month and the quantity one states at_least an [entry](entry)
+    stating d, whose quantity is the least of month counted in d
+- given: the same [data item](data_item) named value_types
+  then: the product accepts the at_most, comparing the quantities in the one unit
+  when: an [entry](entry) stating month states at_most another [entry](entry) stating
+    month and a greater quantity
+- given: a [data item](data_item) named value_types stating the factor of the unit
+    min as sixty times that of the unit s
+  then: the product accepts the at_most
+  when: an [entry](entry) stating s, whose quantity is less than sixty times that
+    of an [entry](entry) stating min, states at_most that [entry](entry)
+assessed:
+  REQ-39867440: lNag_-a2yKhidQL4LoSqRvKsKQTpakYHMSTQHUkctLU
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-39867440: depends_on
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall count a quantity more than one of the same value type in a different unit
+  where it is more at some pair of sizes the two units can take, and less where it
+  is less at some such pair, a unit taking its factor or any size from its least to
+  its most.
+type: functional
+verification: inspection

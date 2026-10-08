@@ -1,0 +1,39 @@
+acceptance_criteria:
+- given: a review refused over a source whose page does not hold the passage quoted
+    from it
+  then: the prompt names the source's web address, the passage and the fault, and
+    states that no [practice](practice) may name the source
+  when: the review is made again
+- given: two [practices](practice) quoting different passages from one source over
+    which the review is refused
+  then: the prompt names both passages
+  when: the review is made again
+- given: a run whose review was refused over one source, then made again and refused
+    over another
+  then: the prompt names both sources
+  when: the review is made again
+- given: a review refused only over [transient failures](transient_failure), whose
+    [question for the owner](question_for_the_owner) the owner answers by making the
+    review again
+  then: the prompt names each source that failed
+  when: the review is made again
+assessed:
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  REQ-46711731: rqojAeSdcYOnIgKWWfTXSfGr9gWGYpBFMtEHxbCuE80
+  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+  transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+priority: medium
+relations:
+  REQ-46144308: depends_on
+  REQ-46711731: constrains
+  REQ-82432523: depends_on
+status: approved
+text: When the product refuses the [best-in-class review](best_in_class_review) of
+  a run over a source, the product shall state in the prompt of each review the run
+  makes again that no [practice](practice) may name the source, naming its web address,
+  each passage quoted from it and the fault the product named.
+type: functional
+verification: inspection

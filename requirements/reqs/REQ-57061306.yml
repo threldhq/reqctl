@@ -5,14 +5,32 @@ acceptance_criteria:
 - given: a parameter whose value type is duration, size, percentage or currency
   then: the product refuses and states that the value type carries a unit
   when: the parameter states no unit
-assessed: {}
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating the value type count
+  then: the product refuses the [data item](data_item) and states that a unit does
+    not apply to count
+  when: the [entry](entry) states a unit
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating the value type duration
+  then: the product refuses the [data item](data_item) and states that duration carries
+    a unit
+  when: the [entry](entry) states no unit
+- given: a corpus holding no [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating the value type count and a unit
+  then: the product accepts the [entry](entry)
+  when: the corpus is validated
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  clnvsb: X7Vv9U6WQhTRinH2btRY3NxeyPYdwbAiBOw6jmPn3w8
+  gf75aj: MbhS6CvgdoTRO0uUuuWVIlMUTLkJ_M0zvLdFXBNY-Ac
 priority: medium
 relations: {}
 status: approved
-text: If a parameter states a unit where the parameter's value type carries no unit,
-  or states no unit where the value type requires one, then the product shall refuse
-  the parameter.
+text: If a parameter, or an [entry](entry) of a [data item](data_item) that states
+  a value type where the corpus holds a [data item](data_item) named value_types,
+  states a unit where its value type carries no unit, or states no unit where its
+  value type requires one, then the product shall refuse the [item](item).
 type: functional
 verification: inspection

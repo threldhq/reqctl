@@ -11,14 +11,32 @@ acceptance_criteria:
 - given: a parameter whose value type is boolean
   then: the product refuses and names the key as not parsing as boolean
   when: an [entry](entry) key other than true or false is written
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating the value type count
+  then: the product refuses the [data item](data_item) and names the quantity as not
+    parsing as count
+  when: the [entry](entry) states a quantity with a fraction
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating the value type duration
+  then: the product refuses the [data item](data_item) and names the quantity as not
+    parsing as duration
+  when: the [entry](entry) states a quantity with a sign
+- given: a corpus holding no [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating the value type count
+  then: the product accepts the quantity
+  when: the [entry](entry) states a quantity with a fraction
 assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  da5737: WDF1V_g21Gy6h8_g6n80TKH-eJw79s9B_l27g9pds6s
+  fv4qpq: -qBq5nqET_qq3xh2J3O9BgOFTZzNuwevady3kyepgrc
 priority: medium
 relations: {}
 status: approved
-text: If an [entry](entry) key of a parameter does not parse as the parameter's value
-  type, then the product shall refuse the parameter.
+text: If an [entry](entry) key of a parameter, or the quantity that an [entry](entry)
+  of a [data item](data_item) states where the corpus holds a [data item](data_item)
+  named value_types, does not parse as the value type the parameter or the [entry](entry)
+  states, then the product shall refuse the [item](item).
 type: functional
 verification: inspection
