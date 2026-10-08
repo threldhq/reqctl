@@ -92,7 +92,7 @@ GIT_READ = re.compile(
     r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
 )
-HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
+HEREDOC = re.compile(r"(?<![<\\])<<(?!<)-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
@@ -282,7 +282,7 @@ def scan(cmd: str) -> list[list[str]]:
                 i += 1
                 continue
             if char in "'\"":
-                quote = opened_quote(char, buf[-1:])
+                quote = opened_quote(char, buf)
                 buf.append(char)
                 i += 1
                 continue
@@ -328,7 +328,8 @@ def scan(cmd: str) -> list[list[str]]:
 
 
 def opened_quote(char, before):
-    return "$'" if char == "'" and before == ["$"] else char
+    run = next((i for i, chunk in enumerate(reversed(before)) if chunk != "$"), len(before))
+    return "$'" if char == "'" and run % 2 else char
 
 
 @functools.cache
@@ -339,17 +340,17 @@ def masked(cmd):
         char = cmd[i]
         if quote:
             if quote in ('"', "$'") and char == "\\" and i + 1 < len(cmd):
-                out.append("  ")
+                out.append("__")
                 i += 2
                 continue
-            out.append(" " if char != quote[-1] else char)
+            out.append("_" if char != quote[-1] else char)
             quote = None if char == quote[-1] else quote
         elif char == "\\" and i + 1 < len(cmd):
             out.append(cmd[i:i + 2])
             i += 2
             continue
         elif char in "'\"":
-            quote = opened_quote(char, list(cmd[i - 1:i]))
+            quote = opened_quote(char, out)
             out.append(char)
         else:
             out.append(char)
@@ -379,7 +380,7 @@ def tokens_of(part):
                 buf.append(char)
             continue
         if char in "'\"":
-            quote = opened_quote(char, buf[-1:])
+            quote = opened_quote(char, buf)
             del buf[len(buf) - len(quote) + 1:]
             seen = True
             continue
@@ -457,7 +458,8 @@ def only_reads(words):
 
 
 def lists_files(words):
-    return (any(word.startswith(LISTS_FILES) for word in words)
+    return (any(len(name) > 2 and any(flag.startswith(name) for flag in LISTS_FILES)
+                for name in (word.split("=", 1)[0] for word in words if word.startswith("--")))
             or words[:1] == ["file"] and short_flagged(words[1:], "f"))
 
 
@@ -743,7 +745,8 @@ def judge_shell(raw, cwd):
     unquoted = QUOTED_REDIRECT.sub(r"\1\3", cmd)
     redirect = REDIRECT.search(masked(unquoted)) or next(
         (found for found in REDIRECT_TARGET.finditer(masked(unquoted))
-         if reaches_corpus(unquoted[found.start(1):found.end(1)], cwd)), None)
+         if any(CORPUS_DIR.search(word) or reaches_corpus(word, cwd)
+                for word in tokens_of(unquoted[found.start(1):found.end(1)]))), None)
     if redirect:
         deny(NOT_A_KNOWN_READ.format(target=unquoted[redirect.start():redirect.end()]))
     written = scan(AMP_REDIRECT.sub(" ", ESCAPE.sub("", raw)))
