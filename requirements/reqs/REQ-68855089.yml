@@ -10,6 +10,8 @@ acceptance_criteria:
 assessed:
   REQ-68873210: hUPNlhiYKqihQ-80Di3uOLVU93CGNLP0CvD1-VI5djA
   REQ-73044308: 1NhpMHsqlbOX-6uLKELhtIbvtAIKntdW0vjSPZVc0YQ
+citations:
+  t6wldu: J0nLPuC9JWkH6BVAafMgXV5fQSd2HKhWNm8silW0HiQ
 priority: medium
 relations:
   REQ-68873210: depends_on

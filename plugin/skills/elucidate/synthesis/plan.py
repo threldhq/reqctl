@@ -301,6 +301,7 @@ def registered(name):
 def named_item(records, name):
     found = [(uid, data) for uid, data in records.items()
              if corpus.kind_of(uid, data) == "data" and data.get("name") == name]
+    # @req> REQ-68855089@6GvfvM66mzih t6wldu
     if len(found) != 1:
         raise SystemExit(
             f"the corpus defines {'no' if not found else 'more than one'} "
