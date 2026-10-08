@@ -190,6 +190,19 @@ def _nesting(uid, held, path=(), seen=()):
     return problems
 
 
+def _entries_within(held, path=(), seen=()):
+    if len(seen) >= NESTING:
+        return
+    seen = seen + (id(held),)
+    for key, fields in (held or {}).items():
+        if isinstance(fields, dict):
+            where = path + (str(key),)
+            yield where, fields
+            for name, value in fields.items():
+                if isinstance(value, dict) and id(value) not in seen:
+                    yield from _entries_within(value, where + (str(name),), seen)
+
+
 def _written(value):
     if isinstance(value, bool):
         return str(value).lower()
@@ -1119,6 +1132,8 @@ def coherence(records, root):
             + _typed_entries(records))
 
 
+# @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
+# @req> REQ-57061306@grhOhf7rpAJV 23uhdj
 def _typed_entries(records):
     held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
     if corpus.kind_of(held, records.get(held)) != "data":
@@ -1126,11 +1141,10 @@ def _typed_entries(records):
     return [problem
             for uid, data in sorted(records.items())
             if corpus.kind_of(uid, data) == "data"
-            for key, fields in (corpus.entries(data) or {}).items()
-            if isinstance(fields, dict)
-            and str(fields.get("value_type")) in KEY_SHAPES
+            for where, fields in _entries_within(corpus.entries(data))
+            if str(fields.get("value_type")) in KEY_SHAPES
             for problem in _typed(
-                f"{uid}: entry {key}", fields["value_type"],
+                f"{uid}: entry {'.'.join(where)}", fields["value_type"],
                 [(f"quantity {fields['quantity']!r}",
                   _written(fields["quantity"]))] if "quantity" in fields else [],
                 fields.get("unit") or None)]
