@@ -167,6 +167,7 @@ def loads(text, where):
             raise ReqctlError(f"{where} holds a value YAML cannot build -- "
                               f"{type(error).__name__}: {error}") from error
         # @req- 3222m4
+        # @req> REQ-39368456@pX8wTz05ESJB bpdfcl
         for field, value in (document.items() if isinstance(document, dict) else ()):
             fault = _unreadable(value)
             if fault:
