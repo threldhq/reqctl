@@ -17,33 +17,33 @@ from .corpus import ReqctlError
 OPEN, CLOSE, SINGLE = "+", "-", ">"
 EVERY = object()
 SIGN = re.compile(r"@req([+>-])(?=\s|$)")
-# @req> REQ-88203622@QLXb8abUOMT3 y644wh
-# @req> REQ-22755763@jWQQtKhJ8JoO 5upe6v
+# @req> REQ-88203622@wlZ9orsr9c7q y644wh
+# @req> REQ-22755763@lFaaseccSg81 5upe6v
 MARKER = re.compile(
     rf"\A@req(?P<sign>[+>-])(?:\s+(?P<uid>(?:{corpus.KINDS})-\d+"
     rf"|{corpus.NAME}(?:\.{corpus.NAME})?(?=@))"
     r"(?:@(?P<stamp>\S*))?)?(?:\s+(?P<id>\S+))?(?:\s+(?P<exclusive>exclusive))?\Z")
 FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
-# @req+ REQ-52925332@wlFlbfJQbQ2g tup4w2
+# @req+ REQ-52925332@8dtaEN9KH9jO tup4w2
 MARKUP = re.compile(r"\A\s*<!--\s*|\s*-->\s*\Z")
 DELIMITERS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"\A\s*#+\s*")),
               ".js": re.compile(r"\A\s*//\s*")}
 # @req- tup4w2
 ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
-# @req> REQ-60346603@eKFixVFgV9Xt ulk4ve
+# @req> REQ-60346603@FI4Rjvk1iDNp ulk4ve
 COMMENTS = {**dict.fromkeys((".py", ".yml", ".yaml"), ("# ", "")),
             ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
 
 
-# @req> REQ-52925332@wlFlbfJQbQ2g cczml5
+# @req> REQ-52925332@8dtaEN9KH9jO cczml5
 def _feed_lines(text):
     return io.StringIO(text).readlines()
 
 
 def markers(text, suffix):
     for number, line in enumerate(_feed_lines(text), start=1):
-        # @req+ REQ-52925332@wlFlbfJQbQ2g yuyqhd
-        # @req+ REQ-12490145@DQLuzMctTPb5 dsvgt4
+        # @req+ REQ-52925332@8dtaEN9KH9jO yuyqhd
+        # @req+ REQ-12490145@aKVRSLNQy976 dsvgt4
         if not SIGN.search(line):
             continue
         body = DELIMITERS.get(suffix, MARKUP).sub("", line).strip()
@@ -116,7 +116,7 @@ def cut(path, text, spans):
             continue
         level = depths[code[0]]
         after = [n for n in depths if n > last]
-        # @req> REQ-41552912@euPwJfYbRxVH fu7y6n
+        # @req> REQ-41552912@53pYi6X7Yqhp fu7y6n
         if (code[0] not in starts or code[-1] not in ends
                 or any(depths[n] < level for n in code)
                 or (after and depths[min(after)] > level)):
@@ -126,8 +126,8 @@ def cut(path, text, spans):
     return problems
 
 
-# @req+ REQ-82335572@jy-6pa6WK1sz jflstj
-# @req+ REQ-79989567@oWj5HjnXcM0G 6fth2x
+# @req+ REQ-82335572@EEu579sUxCO2 jflstj
+# @req+ REQ-79989567@oaSFUA9o3D48 6fth2x
 REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
            **dict.fromkeys((".md", ".html"), re.compile(r"<!--[\s\S]*?(?:-->|\Z)")),
            ".js": re.compile(r"""(?P<kept>"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
@@ -168,13 +168,13 @@ def _alone(path, text):
 def read(root, digested=False):
     sources = list(_sources(root))
     citations, problems = parse(sources)
-    # @req> REQ-32191310@ot16I3lSs2Nu yjp5s6
+    # @req> REQ-32191310@aZkvQ6hvIwPv yjp5s6
     if digested:
         texts = dict(sources)
         for citation in citations:
             citation["digest"] = digest(citation["path"], texts[citation["path"]],
                                         citation["lines"])
-    # @req+ REQ-79989567@oWj5HjnXcM0G bz6frh
+    # @req+ REQ-79989567@oaSFUA9o3D48 bz6frh
     texts = dict(sources)
     problems += [f"{c['path']}: citation {c['id']} covers no code statement"
                  for c in citations if len(c["marks"]) == 2
@@ -184,7 +184,7 @@ def read(root, digested=False):
 
 
 def former(sources):
-    # @req> REQ-44164687@lSjyIVOw_1BK q2mqfm
+    # @req> REQ-44164687@2UxalfYloyMd q2mqfm
     for relative, text in sources:
         for number, line in enumerate(_feed_lines(text or ""), start=1):
             for uid in FORMER.findall(line):
@@ -232,7 +232,7 @@ def _parse(sources, nests=True):
                                      "and more than white space and one single-line "
                                      "comment, so no citation is read from it"))
                 continue
-            # @req> REQ-11268295@pg6jZYgo_eww q7622j
+            # @req> REQ-11268295@s4gX4poitxmM q7622j
             if parsed is None or not parsed["id"]:
                 faults.append((None, f"{relative}:{number}: `{body}` names no "
                                      "citation identity"))
@@ -268,7 +268,7 @@ def _parse(sources, nests=True):
         # @req- gqpqj6
         for number, held in singles:
             span = following(relative, text, number)
-            # @req> REQ-95865306@K4a2U5EVbqcv ytqmle
+            # @req> REQ-95865306@6u2XMnjDwlvR ytqmle
             if span is None:
                 faults.append((held["id"], f"{relative}:{number}: citation "
                                            f"{held['id']} has no code statement after it"))
@@ -280,7 +280,7 @@ def _parse(sources, nests=True):
     return covered(opened), faults
 
 
-# @req> REQ-22755763@jWQQtKhJ8JoO rafirp
+# @req> REQ-22755763@lFaaseccSg81 rafirp
 def _citation(held, relative, start, close, first, last, marks):
     uid, _, entry = held["uid"].partition(".")
     return {"id": held["id"], "uid": uid, "entry": entry or None,
@@ -297,7 +297,7 @@ def following(path, text, number):
             depths, starts, _ = read(text)
         except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError):
             depths = None
-        # @req> REQ-42668747@GGAkEqZHFwdI cfabxh
+        # @req> REQ-42668747@CRvKDa_F_lxE cfabxh
         if depths is not None:
             later = sorted(n for n in starts if n > number)
             if not later:
@@ -309,7 +309,7 @@ def following(path, text, number):
                        if first <= n and (not beyond or n < beyond[0]))
             return first, last
     lines = _feed_lines(text)
-    # @req> REQ-37846580@Hp5GeJsazpl4 lrybex
+    # @req> REQ-37846580@oqAWJFdNHvDo lrybex
     for at in range(number, len(lines)):
         if lines[at].strip() and not SIGN.search(lines[at]):
             return at + 1, at + 1
@@ -325,8 +325,8 @@ def covered(citations):
                 continue
             spanning = [c for c in citations if c["path"] == citation["path"]
                         and c["first"] <= line <= c["last"]]
-            # @req+ REQ-33202540@RFae-fb4VZk9 6o76zm
-            # @req+ REQ-97852648@wuO70aYdOpyH fto5gh
+            # @req+ REQ-33202540@Y-kVcYdmW6zT 6o76zm
+            # @req+ REQ-97852648@9PG_RRu-Iv2o fto5gh
             claimed = [c for c in spanning if c["exclusive"]]
             # @req> REQ-17608335@ejFjhGoCg5c7 4makw7
             owners = ([max(claimed, key=lambda c: c["open"])] if claimed
@@ -404,7 +404,7 @@ def _inserted(lines, before, after):
     return "".join(out)
 
 
-# @req> REQ-73851379@mlF6V9oGscj_ 26lc4r
+# @req> REQ-73851379@CGbsH1UOrU8C 26lc4r
 def _duplicates(path, found, asked):
     marks = {line for citation in found for line in citation["marks"]}
     spanned = {citation["id"]: tuple(n for n in range(citation["first"],
@@ -427,7 +427,7 @@ def _duplicates(path, found, asked):
     return problems
 
 
-# @req> REQ-60346603@eKFixVFgV9Xt e2efde
+# @req> REQ-60346603@FI4Rjvk1iDNp e2efde
 def tagged(root, path, asked, exclusive=False):
     target = Path(path)
     if target.suffix not in COMMENTS:
@@ -447,8 +447,8 @@ def tagged(root, path, asked, exclusive=False):
     taken = {c["id"] for c in held}
     lead, tail = COMMENTS[target.suffix]
     word = " exclusive" if exclusive else ""
-    # @req+ REQ-81417723@gBALpnqtdVL6 kmbhnk
-    # @req+ REQ-62782894@QlfQx33Br2KT k2lzwu
+    # @req+ REQ-81417723@q6UfXsP6e-N7 kmbhnk
+    # @req+ REQ-62782894@x4o_oB5H0-tY k2lzwu
     before, after, minted = {}, {}, []
     for at, (first, last, uid, stamp) in enumerate(asked):
         identity = mint(taken)
@@ -458,7 +458,7 @@ def tagged(root, path, asked, exclusive=False):
         # @req+ REQ-61906662@vIt4Qdb6Q01L 4z5goa
         single = _statement(path, text, first, last)
         sign = SINGLE if single else OPEN
-        # @req+ REQ-84469558@lQYICZeT2eTO hp5jwl
+        # @req+ REQ-84469558@zZGF1hH7cNnc hp5jwl
         before.setdefault(first, []).append(
             (-last, at, f"{indent}{lead}@req{sign} {uid}@{stamp} {identity}{word}{tail}"))
         if not single:
@@ -482,14 +482,14 @@ def tagged(root, path, asked, exclusive=False):
     # @req- n5z4vo
     found, dropped = parse([(path, written)])
     new = [c for identity in minted for c in found if c["id"] == identity]
-    # @req> REQ-82335572@jy-6pa6WK1sz stzuaz
+    # @req> REQ-82335572@EEu579sUxCO2 stzuaz
     if len(new) < len(minted):
         raise ReqctlError("\n".join(dropped))
     # @req+ REQ-65738797@3jHtqzLVQUal zkxsxx
     problems = [problem for _, problem in cut(
         path, written, [(c["id"], c["first"], c["last"])
                         for c in new if len(c["marks"]) == 2])]
-    # @req> REQ-82335572@jy-6pa6WK1sz 5lq35y
+    # @req> REQ-82335572@EEu579sUxCO2 5lq35y
     problems += [f"{path}: lines {first}-{last} hold no code statement"
                  for first, last, _, _ in asked if hollow(path, text, first, last)]
     problems += _duplicates(path, found, dict(zip(minted, asked)))
@@ -500,7 +500,7 @@ def tagged(root, path, asked, exclusive=False):
             [(c["id"], c["uid"], digest(path, written, c["lines"])) for c in new])
 
 
-# @req> REQ-64846889@pHOO0sEc7V1K 6vgx2i
+# @req> REQ-64846889@TSG5uy3nM0nk 6vgx2i
 def standing(root, citation):
     text = (Path(root) / citation["path"]).read_bytes().decode()
     return digest(citation["path"], text, citation["lines"])
@@ -520,8 +520,8 @@ def readable(root, identity=EVERY, nests=True):
 def named(root, identity, nests=True):
     for citation in readable(root, identity, nests):
         return citation
-    # @req> REQ-51778557@SqqYYPmC67aK 2j6t3u
-    # @req> REQ-41024637@zO8Xp3QDg6LT cdi6vq
+    # @req> REQ-51778557@2aIQFI4KxvJ3 2j6t3u
+    # @req> REQ-41024637@JaitgDKH7S2S cdi6vq
     raise ReqctlError(f"no statement citation names {identity}")
 # @req- yqdz42
 
@@ -532,11 +532,11 @@ def _lines(root, citation):
 
 
 def repinned(root, citation, stamp):
-    # @req+ REQ-17757558@4j9rQN-e61OY lqd5pz
+    # @req+ REQ-17757558@XeiCnIpn4RLV lqd5pz
     target, lines = _lines(root, citation)
     at = citation["open"] - 1
     pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['address'])})(?:@\S*)?")
-    # @req> REQ-18833394@wnCdGzhY7m6Z 62bkhg
+    # @req> REQ-18833394@iNDqEsjKcVn- 62bkhg
     lines[at] = pinned.sub(lambda found: f"{found.group(1)}@{stamp}", lines[at], count=1)
     return target, "".join(lines).encode()
     # @req- lqd5pz
@@ -545,8 +545,8 @@ def repinned(root, citation, stamp):
 def untagged(root, citation):
     target, lines = _lines(root, citation)
     marks = set(citation["marks"])
-    # @req> REQ-81275367@rZszCCP31YAU 5gkn5k
-    # @req> REQ-26984738@nD05toE71g-O a4ywox
+    # @req> REQ-81275367@2q0tIHQCM4br 5gkn5k
+    # @req> REQ-26984738@2Cu-ngxaDd6z a4ywox
     return target, "".join(line for number, line in enumerate(lines, start=1)
                            if number not in marks).encode()
 
@@ -613,7 +613,7 @@ def _rest(text, citation):
 
 
 def crossed(was, was_text, now, now_text):
-    # @req+ REQ-56906371@rALaP5YBvHg7 vvu3g7
+    # @req+ REQ-56906371@wq3BL0IRTLVV vvu3g7
     if was["path"] != now["path"]:
         return True
     old, old_before = _rest(was_text, was)
@@ -655,14 +655,14 @@ def compare(root, ref):
     if problems:
         raise ReqctlError("the code's citations do not read:\n"
                           + "\n".join(problems))
-    # @req+ REQ-36428128@leY8_I39CMWw a5i7lc
+    # @req+ REQ-36428128@pWyff7uDBZIK a5i7lc
     before = {c["id"]: c for c in was}
     after = {c["id"]: c for c in now}
     # @req- a5i7lc
     rows = []
     for identity in sorted(set(before) | set(after)):
         old, new = before.get(identity), after.get(identity)
-        # @req+ REQ-56906371@rALaP5YBvHg7 bicxbc
+        # @req+ REQ-56906371@wq3BL0IRTLVV bicxbc
         if old is None or new is None:
             held = new or old
             rows.append({"id": identity, "uid": held["uid"],
@@ -679,6 +679,6 @@ def compare(root, ref):
             rows.append({"id": identity, "uid": new["uid"], "path": new["path"],
                          "state": state})
         # @req- bicxbc
-    # @req> REQ-70581878@qWy6X2qJfi1h w6qryd
+    # @req> REQ-70581878@Oua6NaKONA27 w6qryd
     touched = sorted({row["uid"] for row in rows if row["state"] != ["moved"]})
     return {"base": commit, "citations": rows, "touches": touched}
