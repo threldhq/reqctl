@@ -4,6 +4,9 @@ acceptance_criteria:
   when: the build runs
 assessed:
   GUARD-21526521: G_BddcqGKnJPYgbJBcuSMquQ5wWClxj7LjSrvaIfn68
+citations:
+  mb63cn: iDo5cP8oSxJaRAYFfuzOVo4n-oegvXfUffc-ERMNHtw
+  vdrexj: aErpG-zs-xOwLLP2S0ZrWQQ1uTqany2hyiSWzlWL-Bs
 relations:
   GUARD-21526521: constrains
 status: approved

@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: a [data item](data_item) named value_types listing for duration a unit stating
+    no factor, no least and no most
+  then: the product refuses value_types and names the unit
+  when: the corpus is validated
+- given: a [data item](data_item) named value_types listing for duration a unit stating
+    a least and no most
+  then: the product refuses value_types and names the unit
+  when: the corpus is validated
+- given: a [data item](data_item) named value_types listing for duration a unit stating
+    a least and a most
+  then: the product accepts the unit
+  when: the corpus is validated
+- given: a [data item](data_item) named value_types listing for duration a unit stating
+    a factor beside a least and a most
+  then: the product refuses value_types and names the unit
+  when: the corpus is validated
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+priority: medium
+relations: {}
+status: approved
+text: If a unit that the [data item](data_item) named value_types lists states other
+  than exactly one of a factor, or a least together with a most, then the product
+  shall refuse the [data item](data_item).
+type: functional
+verification: inspection

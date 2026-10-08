@@ -16,6 +16,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+citations:
+  5aendb: W969Wp2_uAh7Qp1fm_WuZxC9lkixnPOR8wa2lFfdMes
 priority: medium
 relations:
   REQ-35979865: constrains

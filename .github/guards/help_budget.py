@@ -78,6 +78,7 @@ def survey(paths):
                     said = node.args[spot]
                     if is_literal(said):
                         counted += 1
+                        # @req> GUARD-75672058@ekQlMqKRpmul mb63cn
                         if path != CLI:
                             refused.append((path, said.lineno, STRAY))
                     else:
@@ -89,6 +90,7 @@ def survey(paths):
                     continue
                 if is_literal(keyword.value):
                     counted += 1
+                    # @req> GUARD-75672058@ekQlMqKRpmul vdrexj
                     if path != CLI:
                         refused.append((path, keyword.value.lineno, STRAY))
                 elif isinstance(keyword.value, ast.Name):

@@ -97,7 +97,13 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # @req+ REQ-29234402@b5_8tR6bNR44 ifziur
     try:
         sys.exit(main())
-    except corpus.ReqctlError as unreadable:
-        sys.exit(f"{Path(__file__).name}: {unreadable}")
+    except (corpus.ReqctlError, OSError, UnicodeError) as unreadable:
+        sys.exit(f"{Path(__file__).name}: " + " ".join(str(unreadable).split()))
+    except SystemExit as stop:
+        if isinstance(stop.code, str):
+            sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
+        raise
+    # @req- ifziur

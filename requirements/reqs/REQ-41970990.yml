@@ -10,7 +10,7 @@ acceptance_criteria:
   when: the run's pull request description is rendered
 assessed:
   REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
-  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
   REQ-75041625: fdufkvO5WYz7KFJPtyhJppjVjaZZRPnPp34h5cjF0xA
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:

@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the [item](item) is read
 assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  bpdfcl: 4itRw1M9mcMR9pdCwtvt6z8XE_d8fci1SvwCozJhKHM
 priority: medium
 relations: {}
 status: approved

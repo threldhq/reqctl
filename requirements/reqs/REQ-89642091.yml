@@ -6,6 +6,8 @@ acceptance_criteria:
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+citations:
+  7wkwzy: f1qAEuV-qK83Z4-0F3jv8iTaDby_BsvuOIWrBwNTGr4
 priority: medium
 relations:
   REQ-38288492: depends_on

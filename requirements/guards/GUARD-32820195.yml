@@ -3,6 +3,8 @@ acceptance_criteria:
   then: the build refuses the change and names the line of the rule
   when: the build runs
 assessed: {}
+citations:
+  32oezj: cZyAxjwCbfAnOfarFUFgpstueX6ffT5OzvMW7qbFaMM
 relations: {}
 status: approved
 text: If a rule in the CODEOWNERS file names no owner, then the build shall refuse

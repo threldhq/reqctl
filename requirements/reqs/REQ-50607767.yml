@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a [data item](data_item) named value_types holding an [entry](entry) keyed
+    weight
+  then: the product refuses value_types and names weight as no value type the [kind
+    schema](kind_schema) for parameters lists
+  when: the corpus is validated
+- given: a [data item](data_item) named value_types
+  then: the product refuses the [entry](entry) and names weight as no value type the
+    [kind schema](kind_schema) for parameters lists
+  when: an [entry](entry) keyed weight is added to it
+- given: a [data item](data_item) named value_types holding [entries](entry) keyed
+    duration, size and count
+  then: the product accepts the [entries](entry)
+  when: the corpus is validated
+assessed:
+  REQ-52544202: FdBPIIOU8f_vUkT30XYkCn77NWut8-qqjIRi3gWLPuo
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-52544202: constrains
+status: approved
+text: If the [data item](data_item) named value_types holds an [entry](entry) whose
+  key is not a value type that the [kind schema](kind_schema) for parameters lists,
+  then the product shall refuse the [data item](data_item).
+type: functional
+verification: inspection
