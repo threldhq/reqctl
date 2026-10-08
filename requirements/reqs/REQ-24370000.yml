@@ -12,6 +12,8 @@ assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
   REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
   kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+citations:
+  xdlrrr: anNqR3G_Zh0QvDojyyneigewF3pNAvS3fcX9Ss-BDoY
 priority: medium
 relations:
   REQ-24481048: depends_on

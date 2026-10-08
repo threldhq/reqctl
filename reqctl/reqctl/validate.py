@@ -835,7 +835,8 @@ def _cycle_problems(edges, noun, tail):
 
 def _circular_definitions(records):
     # @req+ REQ-49321694@sgj-Dt7t_niN ijccb5
-    edges = {uid: sorted(corpus.concept_references(data))
+    edges = {uid: sorted({found for _, found in corpus.CONCEPT_LINK.findall(
+                 str(corpus.term_fields(data).get("definition")))})
              for uid, data in records.items()
              if corpus.kind_of(uid, data) == "term"}
     return _cycle_problems(edges, "definition",

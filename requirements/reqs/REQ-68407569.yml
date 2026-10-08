@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the parameter is written
 assessed:
   REQ-83702299: IgLtX0BfZTksPIEqT99UOB-9FZ_Zv9UHjv-slw_7VrQ
+citations:
+  bzk766: POhWsx-hhb9QbSK2PSY6jfTHRbZ4KoOrOJEakZk2TUk
 priority: medium
 relations:
   REQ-83702299: constrains
