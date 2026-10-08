@@ -382,7 +382,8 @@ def cmd_export(args):
         lines.append(f"## {uid}")
         # @req> REQ-22770949@2z1l08YISr1R okkskg
         marks = "".join(f'<a id="{uid}.{key}"></a>'
-                        for key in corpus.entries(data) or {})
+                        for key in corpus.entries(data) or {}
+                        if corpus.DATA_KEY.match(str(key)))
         if corpus.kind_of(uid, data) == "term":
             fields = corpus.term_fields(data)
             # @req> REQ-22770949@2z1l08YISr1R nnfbvp
