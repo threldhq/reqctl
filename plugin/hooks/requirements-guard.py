@@ -35,6 +35,15 @@ PATH_KEY = re.compile(
     r"|to|uri)$", re.I)
 COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
+GREP_GLOB_KEY = re.compile(r"^glob$")
+BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
+WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
+            "exec", "xargs", "stdbuf")
+LONG_FLAGS = ("--force", "--hard", "--discard-changes", "--dry-run", "--staged",
+              "--worktree")
+NO_COMMIT = {"merge": ("--ff-only", "--abort", "--quit"),
+             "cherry-pick": ("-n", "--no-commit", "--abort", "--quit", "--skip"),
+             "revert": ("-n", "--no-commit", "--abort", "--quit", "--skip")}
 READ_VERBS = ("cat", "head", "tail", "less", "more", "nl", "wc", "ls", "stat",
               "file", "grep", "rg", "diff", "cut", "jq", "reqctl", "echo", "printf",
               "cmp", "sha1sum", "sha256sum", "sha512sum", "md5sum", "cksum", "du",
@@ -337,9 +346,10 @@ def tokens_of(part):
 
 def invoked(words):
     i = 0
-    while i < len(words) and (words[i] in ("env", "command") or "=" in words[i]):
+    while i < len(words) and (os.path.basename(words[i]) in WRAPPERS or "=" in words[i]
+                              or (i and (words[i].startswith("-") or words[i][:1].isdigit()))):
         i += 1
-    return words[i:]
+    return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
 
 
 def git_subcommand(words):
@@ -349,7 +359,7 @@ def git_subcommand(words):
     i = 1
     while i < len(words):
         word = words[i]
-        if word in ("-c", "-C", "--work-tree", "--git-dir"):
+        if word in ("-c", "-C", "--work-tree", "--git-dir", "--namespace", "--config-env"):
             i += 2
             continue
         if word.startswith("-"):
@@ -451,7 +461,9 @@ def discarded(words):
         return None, False, False
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
-    flags = [word for word in rest if word.startswith("-")]
+    flags = [next((full for full in LONG_FLAGS if len(word) > 3
+                  and full.startswith(word.split("=", 1)[0])), word)
+             for word in rest if word.startswith("-")]
     operands = [word for word in rest if not word.startswith("-")]
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if subcommand == "reset":
@@ -461,7 +473,7 @@ def discarded(words):
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (after or operands or WHOLE_TREE), True, ignored
+        return (after or WHOLE_TREE), True, ignored
     if subcommand == "restore":
         if "--staged" in flags and "--worktree" not in flags:
             return None, False, False
@@ -502,8 +514,9 @@ def refuse_discarding_work(words):
 
 def refuse_commit_on_default(words):
     # @req+ REQ-74982341@IIwAqzZV1bP3 zm6qoo
-    subcommand, _ = git_subcommand(words)
-    if subcommand != "commit":
+    subcommand, rest = git_subcommand(words)
+    if subcommand != "commit" and (subcommand not in NO_COMMIT
+                                   or any(w in NO_COMMIT[subcommand] for w in rest)):
         return
     branch = git_reads(["branch", "--show-current"])
     if branch is None:
@@ -542,16 +555,12 @@ def judge_command(words):
             or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
             for w in operands):
         project = os.environ.get("CLAUDE_PROJECT_DIR", "").rstrip("/")
-        resolved = {w: os.path.normpath(os.path.join(project, w))
-                    for w in operands} if project else {}
         above = [project, *map(str, Path(project).parents)] if project else []
         swept = next(
             (w for w in operands if os.path.normpath(w) in BARE_SWEEP
-             or w.startswith(("$", "`"))
-             or (project and resolved[w] == project)
-             or (project and project.startswith(resolved[w] + "/"))
-             or (GLOB_CHAR.search(w) and any(expands_to(resolved[w], path)
-                                             for path in above))),
+             or "$" in w or "`" in w or w.count("{") > 8
+             or any(expands_to(os.path.normpath(os.path.join(project, alt)), path)
+                    for alt in braced(os.path.expanduser(w)) for path in above)),
             None)
         if swept:
             deny(f"rm -r of '{swept}' blocked: it sweeps the requirements "
@@ -561,6 +570,14 @@ def judge_command(words):
             refuse_destructive_push(tokens_of(word))
     refuse_commit_on_default(words)
     refuse_discarding_work(words)
+
+
+def braced(word):
+    found = BRACE.search(word)
+    if not found:
+        return [word]
+    return [alt for choice in found.group(1).split(",")
+            for alt in braced(word[:found.start()] + choice + word[found.end():])]
 
 
 def expands_to(pattern, path):
@@ -723,8 +740,7 @@ def decide(data: dict) -> None:
     # @req> REQ-54260750@trzUfC0yF7lT xkcay3
     if tool in ("Read", "Grep", "Glob"):
         values = named_paths(args)
-        if tool == "Glob":
-            values = values + named_paths(args, GLOB_KEY)
+        values = values + named_paths(args, GLOB_KEY if tool == "Glob" else GREP_GLOB_KEY)
         for value in values:
             named = flatten(value.replace("\\", "/"))
             if CORPUS_DIR.search(named) or is_corpus_root(named):
