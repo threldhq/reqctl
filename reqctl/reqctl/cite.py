@@ -15,6 +15,7 @@ from . import corpus
 from .corpus import ReqctlError
 
 OPEN, CLOSE, SINGLE = "+", "-", ">"
+EVERY = object()
 SIGN = re.compile(r"@req([+>-])(?=\s|$)")
 # @req> REQ-88203622@QLXb8abUOMT3 y644wh
 # @req> REQ-22755763@jWQQtKhJ8JoO 5upe6v
@@ -106,8 +107,8 @@ def cut(path, text, spans):
     try:
         depths, starts, ends = read(text)
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
-        return [f"{path}: cannot read its nest levels ({broken}), so no "
-                "citation in it can be checked"]
+        return [(path, f"{path}: cannot read its nest levels ({broken}), so no "
+                       "citation in it can be checked")]
     problems = []
     for identity, first, last in spans:
         code = [n for n in range(first, last + 1) if n in depths]
@@ -119,9 +120,9 @@ def cut(path, text, spans):
         if (code[0] not in starts or code[-1] not in ends
                 or any(depths[n] < level for n in code)
                 or (after and depths[min(after)] > level)):
-            problems.append(
-                f"{path}: citation {identity} cuts a block -- it must cover "
-                "whole statements at the nest level of its first line")
+            problems.append((identity,
+                             f"{path}: citation {identity} cuts a block -- it must "
+                             "cover whole statements at the nest level of its first line"))
     return problems
 
 
@@ -139,6 +140,29 @@ def hollow(path, text, first, last):
     return not "".join(_feed_lines(bare)[first - 1:last]).strip()
 # @req- 6fth2x
 # @req- jflstj
+
+
+# @req+ REQ-12235023@uEMBe2x_2uwp njbuvc
+@functools.cache
+def _scalars(text):
+    return {number for event in yaml.parse(text, Loader=corpus.Loader)
+            if isinstance(event, yaml.ScalarEvent)
+            for number in range(event.start_mark.line + 1,
+                                event.end_mark.line + 1 + bool(event.end_mark.column))}
+
+
+def _alone(path, text):
+    suffix = Path(path).suffix
+    try:
+        spoken = (_depths(text)[0] if suffix == ".py"
+                  else _scalars(text) if suffix in (".yml", ".yaml") else {})
+    except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError):
+        spoken = {}
+    bare = REMARKS[suffix].sub(lambda found: found[0] if "\n" in found[0]
+                               or found.groupdict().get("kept") else "\0", text)
+    return {number for number, line in enumerate(_feed_lines(bare), start=1)
+            if number not in spoken and line.strip() == "\0"}
+# @req- njbuvc
 
 
 def read(root, digested=False):
@@ -177,69 +201,83 @@ def cited(citations):
 
 
 def parse(sources):
-    opened, problems, seen = [], [], {}
+    citations, faults = _parse(sources)
+    return citations, [fault for _, fault in faults]
+
+
+def _parse(sources, nests=True):
+    opened, faults, seen = [], [], {}
     for relative, text in sources:
         # @req> REQ-35805881@37XtC4gyD98k 5h3hpr
         if text is None:
-            problems.append(f"{relative}: unreadable while scanning for "
-                            "statement citations")
+            faults.append((EVERY, f"{relative}: unreadable while scanning for "
+                                  "statement citations"))
             continue
         found = list(markers(text, Path(relative).suffix))
         if not found:
             continue
         if Path(relative).suffix not in COMMENTS:
-            problems.append(
-                f"{relative}: carries a statement citation, but citations are "
-                f"read only in {', '.join(sorted(COMMENTS))} files")
+            faults.append((None,
+                           f"{relative}: carries a statement citation, but citations "
+                           f"are read only in {', '.join(sorted(COMMENTS))} files"))
             continue
+        # @req> REQ-12235023@uEMBe2x_2uwp 4s3qrw
+        alone = _alone(relative, text)
         live, spans, singles = {}, [], []
         # @req+ REQ-73349683@BNT8xnMPL2bn gqpqj6
         for number, body, parsed in found:
+            # @req> REQ-12235023@uEMBe2x_2uwp sbc4do
+            if number not in alone:
+                faults.append((None, f"{relative}:{number}: holds a citation marker "
+                                     "and more than white space and one single-line "
+                                     "comment, so no citation is read from it"))
+                continue
             # @req> REQ-11268295@pg6jZYgo_eww q7622j
             if parsed is None or not parsed["id"]:
-                problems.append(f"{relative}:{number}: `{body}` names no "
-                                "citation identity")
+                faults.append((None, f"{relative}:{number}: `{body}` names no "
+                                     "citation identity"))
                 continue
             identity = parsed["id"]
             if parsed["sign"] in (OPEN, SINGLE):
                 if not parsed["uid"]:
-                    problems.append(f"{relative}:{number}: citation {identity} "
-                                    "names no requirement")
+                    faults.append((identity, f"{relative}:{number}: citation "
+                                             f"{identity} names no requirement"))
                     continue
                 # @req> REQ-44424329@FMmHjrkfDEYR det3om
                 if identity in seen:
-                    problems.append(
-                        f"{relative}:{number}: citation {identity} is also "
-                        f"opened at {seen[identity]} -- an identity names one "
-                        "citation")
+                    faults.append((identity,
+                                   f"{relative}:{number}: citation {identity} is also "
+                                   f"opened at {seen[identity]} -- an identity names "
+                                   "one citation"))
                 seen.setdefault(identity, f"{relative}:{number}")
                 if parsed["sign"] == SINGLE:
                     singles.append((number, parsed))
                     continue
                 live[identity] = (number, parsed)
             elif identity not in live:
-                problems.append(f"{relative}:{number}: closes citation "
-                                f"{identity}, which is not open here")
+                faults.append((identity, f"{relative}:{number}: closes citation "
+                                         f"{identity}, which is not open here"))
             else:
                 start, held = live.pop(identity)
                 spans.append((identity, start + 1, number - 1))
                 opened.append(_citation(held, relative, start, number,
                                         start + 1, number - 1, [start, number]))
         for identity, (number, _) in live.items():
-            problems.append(f"{relative}:{number}: opens citation {identity} "
-                            "and never closes it")
+            faults.append((identity, f"{relative}:{number}: opens citation "
+                                     f"{identity} and never closes it"))
         # @req- gqpqj6
         for number, held in singles:
             span = following(relative, text, number)
             # @req> REQ-95865306@K4a2U5EVbqcv ytqmle
             if span is None:
-                problems.append(f"{relative}:{number}: citation {held['id']} "
-                                "has no code statement after it")
+                faults.append((held["id"], f"{relative}:{number}: citation "
+                                           f"{held['id']} has no code statement after it"))
                 continue
             opened.append(_citation(held, relative, number, span[1], *span,
                                     [number]))
-        problems += cut(relative, text, spans)
-    return covered(opened), problems
+        # @req> REQ-51709712@D0x4hZmSHgiW l3wdgx
+        faults += cut(relative, text, spans if nests else [])
+    return covered(opened), faults
 
 
 # @req> REQ-22755763@jWQQtKhJ8JoO rafirp
@@ -431,14 +469,26 @@ def tagged(root, path, asked, exclusive=False):
     written = _inserted(lines, before, after)
     # @req- k2lzwu
     # @req- kmbhnk
+    # @req+ REQ-69161009@gmE3x-nnaEYM n5z4vo
+    alone = _alone(path, written)
+    falling = {parsed["id"] for number, _, parsed in markers(written, target.suffix)
+               if parsed and number not in alone}
+    inside = [f"{path}: lines {first}-{last}: a comment carrying the citation would "
+              "fall inside a multiline comment or string"
+              for identity, (first, last, _, _) in zip(minted, asked)
+              if identity in falling]
+    if inside:
+        raise ReqctlError("\n".join(inside))
+    # @req- n5z4vo
     found, dropped = parse([(path, written)])
     new = [c for identity in minted for c in found if c["id"] == identity]
     # @req> REQ-82335572@jy-6pa6WK1sz stzuaz
     if len(new) < len(minted):
         raise ReqctlError("\n".join(dropped))
     # @req+ REQ-65738797@3jHtqzLVQUal zkxsxx
-    problems = cut(path, written, [(c["id"], c["first"], c["last"])
-                                   for c in new if len(c["marks"]) == 2])
+    problems = [problem for _, problem in cut(
+        path, written, [(c["id"], c["first"], c["last"])
+                        for c in new if len(c["marks"]) == 2])]
     # @req> REQ-82335572@jy-6pa6WK1sz 5lq35y
     problems += [f"{path}: lines {first}-{last} hold no code statement"
                  for first, last, _, _ in asked if hollow(path, text, first, last)]
@@ -456,20 +506,24 @@ def standing(root, citation):
     return digest(citation["path"], text, citation["lines"])
 
 
-def readable(root):
-    held, problems = parse(_sources(root))
-    if problems:
-        raise ReqctlError("the code's citations do not read:\n" + "\n".join(problems))
-    return held
+# @req+ REQ-62685242@nMlCr6nshoNZ yqdz42
+def readable(root, identity=EVERY, nests=True):
+    held, faults = _parse(_sources(root), nests)
+    found = [citation for citation in held if identity in (EVERY, citation["id"])]
+    files = () if identity is EVERY else [citation["path"] for citation in found]
+    against = [fault for about, fault in faults if about in (identity, EVERY, *files)]
+    if against:
+        raise ReqctlError("the code's citations do not read:\n" + "\n".join(against))
+    return found
 
 
-def named(root, identity):
-    for citation in readable(root):
-        if citation["id"] == identity:
-            return citation
+def named(root, identity, nests=True):
+    for citation in readable(root, identity, nests):
+        return citation
     # @req> REQ-51778557@SqqYYPmC67aK 2j6t3u
     # @req> REQ-41024637@zO8Xp3QDg6LT cdi6vq
     raise ReqctlError(f"no statement citation names {identity}")
+# @req- yqdz42
 
 
 def _lines(root, citation):

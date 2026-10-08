@@ -20,6 +20,8 @@ assessed:
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
   multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  n5z4vo: aCR2YsjSWPRGx_ZSGzfVIYqFP7zisld5ASzO3lwLUOU
 priority: medium
 relations:
   REQ-60346603: constrains

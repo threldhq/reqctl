@@ -4,6 +4,9 @@ assessed:
   REQ-41552912: euPwJfYbRxVHf07XCM-m51KRmjBorpF9AOGiEs-fV7Y
   nest_level: ZBG5hueA94O71Lx_L6dhMkqhJ-nCJXsbS_pjI3Hm6CI
   statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+citations:
+  j65lln: mD2VZsu5He1-FsJrwtcFNICCtEiXRdYmerNzYmbR7OU
+  l3wdgx: 21n3LVAERhgKWAiVcGQh6XcpLl8p-SaD-lHTkmzOPP0
 priority: medium
 relations:
   REQ-26984738: derives_from

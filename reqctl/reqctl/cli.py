@@ -594,7 +594,8 @@ def _context(store, item, dependents, tags):
 
 def cmd_context(args):
     store, root = corpus.load()
-    tags = cite.cited(cite.read(root)[0])
+    # @req> REQ-35805881@37XtC4gyD98k dktwfq
+    tags = cite.cited(cite.readable(root))
     dependents = {}
     for other in corpus.items(store):
         for target in {corpus.split_address(a)[0]
@@ -829,7 +830,8 @@ def cmd_repin(args):
 
 def cmd_untag(args):
     tree, root = corpus.load()
-    citation = cite.named(root, args.id)
+    # @req> REQ-51709712@D0x4hZmSHgiW j65lln
+    citation = cite.named(root, args.id, nests=False)
     changes = [cite.untagged(root, citation)]
     # @req> REQ-13298390@OIZCRlURf3pq utmfsc
     # @req> REQ-81275367@rZszCCP31YAU olrtj5
@@ -854,8 +856,8 @@ def cmd_unlist(args):
         raise ReqctlError(f"{uid}: its citation list does not hold {args.id}")
     # @req+ REQ-59136977@5NZtW-PM9X2O s3g7ya
     # @req> REQ-81063063@J51Kuu-RKFjK rphl5n
-    if any(citation["id"] == args.id and citation["uid"] == uid
-           for citation in cite.readable(root)):
+    # @req> REQ-62685242@nMlCr6nshoNZ cwxoe2
+    if any(citation["uid"] == uid for citation in cite.readable(root, args.id)):
         raise ReqctlError(
             f"{uid}: a statement citation names {args.id} -- reqctl untag "
             f"{args.id} removes the citation, reqctl repin {args.id} re-pins it")
@@ -1097,7 +1099,8 @@ def build_parser(root, fielded):
     s = _command(sub, "context",
                  "everything around each item named: fields, links, suspicion, "
                  "code. Inspection only -- what it cannot read it marks, and it "
-                 "fails only when nothing named resolves")
+                 "fails only when nothing named resolves or the scan for code "
+                 "citations meets a file or folder it cannot read")
     s.add_argument("uid", nargs="+", metavar="UID")
     s.set_defaults(func=cmd_context)
 
