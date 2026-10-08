@@ -914,7 +914,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
                 else "nothing was declined in this run")
     held = proposals(run)
     store, records = loaded()
-    # @req+ REQ-40447106@xVwoSkyU3_rG zmbxny
+    # @req+ REQ-40447106@_7d9O2HDnoPr zmbxny
     # @req+ REQ-75041625@fdufkvO5WYz7 of23ld
     overrides = configured(run, ("challenge_bounds.", *(
         f"{settings.AGENTS}.{name}." for name in CHALLENGERS)))
@@ -1218,7 +1218,7 @@ def judge(run):
         return 1
 
     index = indexed(records)
-    # @req> REQ-40447106@xVwoSkyU3_rG ksolp2
+    # @req> REQ-40447106@_7d9O2HDnoPr ksolp2
     bounds = state_held["bounds"]
     plans = {}
     for number, spec in state_held["proposals"].items():
