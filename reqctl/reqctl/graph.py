@@ -8,7 +8,7 @@ def unstamped(uid, path):
 
 def listing(tree, citations, uid=None):
     named = {(citation["uid"], citation["id"]) for citation in citations}
-    # @req> REQ-77594104@j8bc8SJ4n3Lz 7nucmz
+    # @req> REQ-77594104@x3D--4236Dno 7nucmz
     listed = {str(item.uid): corpus.mapping(item.data, corpus.CITATION_LIST)
               for item in corpus.items(tree)
               if corpus.citable(item)}
@@ -27,7 +27,7 @@ def listing(tree, citations, uid=None):
         if (uid and owner != uid) or owner not in listed:
             continue
         # @req+ REQ-67655319@ezp6TxUzJ72E wqruf3
-        # @req+ REQ-32191310@ot16I3lSs2Nu pmll7c
+        # @req+ REQ-32191310@aZkvQ6hvIwPv pmll7c
         if identity not in listed[owner]:
             problems.append(
                 f"{citation['path']}: citation {identity} of {owner} is not in "
@@ -49,7 +49,7 @@ def trace(tree, root, uid=None):
     shown = [c for c in citations if not corpus.is_test(c["path"])]
     tags = cite.cited(shown)
     # @req- 6rtw6m
-    # @req> REQ-76962559@j8u3NeYOT_2k dyday2
+    # @req> REQ-76962559@NU0P43-PPSGC dyday2
     if uid:
         corpus.find(tree, uid)
     known = {str(item.uid) for item in corpus.items(tree)}
@@ -63,7 +63,7 @@ def trace(tree, root, uid=None):
                 f"{citation['uid']} is in a test -- reqctl untag {citation['id']}")
     for item in corpus.items(tree):
         current = str(item.uid)
-        # @req> REQ-64570886@39w5gpQE9c9Z jzenja
+        # @req> REQ-64570886@Zckz3LzHUzXn jzenja
         if uid and current != uid:
             continue
         data = corpus.raw(item)
@@ -82,8 +82,8 @@ def trace(tree, root, uid=None):
                 "requirement, a guard, a parameter or a data item is cited. "
                 "Tag the requirement stated against it instead"
             )
-        # @req> REQ-35979865@-t3USRO-BKGk iz2v2g
-        # @req> REQ-77594104@j8bc8SJ4n3Lz tizjds
+        # @req> REQ-35979865@pd7CVJ7isMys iz2v2g
+        # @req> REQ-77594104@x3D--4236Dno tizjds
         if (corpus.citable(item)
                 and data.get("status") == "deprecated" and cited):
             deprecated += [{"uid": current, "path": path} for path
@@ -98,23 +98,23 @@ def trace(tree, root, uid=None):
                     f"{data.get('status')}, not approved"
                 )
             continue
-        # @req> REQ-77594104@j8bc8SJ4n3Lz lgfhiu
+        # @req> REQ-77594104@x3D--4236Dno lgfhiu
         if corpus.citable(item):
             for path, pinned, entry in cited:
-                # @req+ REQ-74122607@VDvRKpUj1amL pbsx4y
+                # @req+ REQ-74122607@f-RdDZCNkgqC pbsx4y
                 address = f"{current}.{entry}" if entry else current
                 if entry and entry not in corpus.cited_entries(item):
                     problems.append(f"{address}: referenced by {path} but no such entry")
                     continue
                 held = corpus.cited_stamp(item, entry)
                 # @req- pbsx4y
-                # @req> REQ-75161909@bnqFzGCM1y16 7df3my
+                # @req> REQ-75161909@GUQmRsLIBj6Z 7df3my
                 if not pinned:
                     problems.append(unstamped(address, path))
                 elif pinned != held:
                     stale.append({"uid": address, "path": path,
                                   "pinned": pinned, "held": held})
-        # @req> REQ-73027720@g_8t_ycPUJfp 3aqkc5
+        # @req> REQ-73027720@SebUlS2i_noq 3aqkc5
         if current.startswith(("REQ-", "GUARD-")) and not files:
             unimplemented.append(current)
 
@@ -129,7 +129,7 @@ def trace(tree, root, uid=None):
                 )
     # @req> REQ-67655319@ezp6TxUzJ72E eznv3q
     # @req> REQ-13384695@P9NXsZKZp683 qtu6ly
-    # @req> REQ-32191310@ot16I3lSs2Nu 65dur7
+    # @req> REQ-32191310@aZkvQ6hvIwPv 65dur7
     problems += listing(tree, citations, uid)
 
     return {"rows": rows, "problems": problems, "stale": stale,

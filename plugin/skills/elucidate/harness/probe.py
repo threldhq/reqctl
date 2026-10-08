@@ -226,7 +226,7 @@ def reach(run, state_held):
 
 
 def measure(key, held, recalled, named):
-    # @req+ REQ-75438506@GIywOiWYUqgH 733yqr
+    # @req+ REQ-75438506@DQIXYiIoQ0eV 733yqr
     rows = []
     for probe in key["probes"]:
         verdict = held.get(probe["proposal"])
@@ -276,7 +276,7 @@ def measure(key, held, recalled, named):
 
 
 def _totals(rows):
-    # @req+ REQ-75438506@GIywOiWYUqgH xwdm24
+    # @req+ REQ-75438506@DQIXYiIoQ0eV xwdm24
     duplicates = [row for row in rows if row["kind"] == "duplicate"]
     faults = [row for row in rows if row["kind"] == "fault"]
     siblings = [row for row in rows if row["kind"] == "sibling"]
@@ -310,7 +310,7 @@ def _line(label, part, whole, note=""):
 
 
 def report(rows, absent, unread, totals):
-    # @req+ REQ-75438506@GIywOiWYUqgH cx4ygh
+    # @req+ REQ-75438506@DQIXYiIoQ0eV cx4ygh
     lines = [f"{'proposal':>8}  {'kind':<9}  {'recall':<7}{'named':<7}"
              f"{'result':<32}outside the key"]
     for row in rows:
@@ -465,5 +465,5 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    # @req> REQ-24406170@M08jCONzg-4u 5uyr4v
+    # @req> REQ-24406170@ffuKefeAdU7p 5uyr4v
     sys.exit(corpus.atomically(main))

@@ -145,7 +145,7 @@ def _plain(value):
 
 
 def _entry_fields(fields):
-    # @req> REQ-73719888@XIgPxcvuvzqA 3wgrmj
+    # @req> REQ-73719888@SQkvdemRTgC1 3wgrmj
     return ", ".join(f"{name}: {_plain(value)}"
                      for name, value in (fields or {}).items())
 
@@ -158,13 +158,13 @@ def _entry_lines(key, fields, depth=0):
     if depth == 0 and not _nests(fields):
         shown = _entry_fields(fields)
         return [f"- {key}" + (f" — {shown}" if shown else "")]
-    # @req+ REQ-18993149@VIDeNo4AUi4V s5nw3l
+    # @req+ REQ-18993149@_rRKZ1ZI21lt s5nw3l
     held = [f"{'  ' * depth}- {key}"]
     for name, value in (fields or {}).items():
         if isinstance(value, dict):
             held += _entry_lines(name, value, depth + 1)
         else:
-            # @req> REQ-73719888@XIgPxcvuvzqA g5txax
+            # @req> REQ-73719888@SQkvdemRTgC1 g5txax
             held.append(f"{'  ' * (depth + 1)}- {name}: {_plain(value)}")
     return held
     # @req- s5nw3l
@@ -250,7 +250,7 @@ def cmd_unrelate(args):
 
 def cmd_delete(args):
     tree, root = corpus.load()
-    # @req> REQ-43148967@9Lf3h_L4BXne nghnwd
+    # @req> REQ-43148967@m7D9pWqoVs3j nghnwd
     _refuse_invalid(root, "remove")
     where = _write.delete(tree, args.uid)
     _emit(args, {"uid": args.uid, "path": str(where)},
@@ -278,8 +278,8 @@ def cmd_refile(args):
 
 
 def _resolved(text, store):
-    # @req+ REQ-70783238@WJenY0g8kyTE lxx4c3
-    # @req> REQ-68562495@N9XFtOP49a-e i2bing
+    # @req+ REQ-70783238@_ngMgAcYCcxF lxx4c3
+    # @req> REQ-68562495@YhDgLuskl6yq i2bing
     def parameter(match):
         try:
             item = corpus.find(store, match.group(1))
@@ -314,7 +314,7 @@ def _resolved(text, store):
         return f"[**{shown}**](#{item.uid})"
     # @req- lxx4c3
 
-    # @req> REQ-73719888@XIgPxcvuvzqA 5ubj6l
+    # @req> REQ-73719888@SQkvdemRTgC1 5ubj6l
     def term(match):
         uid, rest = corpus.split_address(match.group(2))
         try:
@@ -362,7 +362,7 @@ def cmd_export(args):
         count += 1
         uid = str(item.uid)
         _refuse_broken(uid, stored)
-        # @req+ REQ-59874866@yPeFb-1_Yaja 6drjr2
+        # @req+ REQ-59874866@fH6bFHN-Lwa8 6drjr2
         try:
             declared = set(_validate.prose_paths(root, uid, stored))
         except ReqctlError as unreadable:
@@ -731,10 +731,10 @@ def cmd_trace(args):
             print(f"{row['uid']}  {row['status']}")
             for path in row["implementation"]:
                 print(f"    impl  {path}")
-        # @req> REQ-73027720@g_8t_ycPUJfp iy3utt
+        # @req> REQ-73027720@SebUlS2i_noq iy3utt
         if data["unimplemented"]:
             print("\nawaiting implementation: " + ", ".join(data["unimplemented"]))
-        # @req> REQ-35979865@-t3USRO-BKGk wht4dr
+        # @req> REQ-35979865@pd7CVJ7isMys wht4dr
         if data["deprecated"]:
             print("\ncited though deprecated")
             for row in data["deprecated"]:
@@ -750,10 +750,10 @@ def cmd_trace(args):
     return EXIT_INVALID if data["problems"] or data["stale"] else EXIT_OK
 
 
-# @req> REQ-78685242@62t3Pc4LqF05 da5qxm
+# @req> REQ-78685242@0TbO1Puhk4VD da5qxm
 def _listed(store, uid, entries):
     item = corpus.find(store, uid)
-    # @req> REQ-88203622@QLXb8abUOMT3 3xsagz
+    # @req> REQ-88203622@wlZ9orsr9c7q 3xsagz
     if not corpus.citable(item):
         return []
     before = corpus.mapping(item.data, corpus.CITATION_LIST)
@@ -774,31 +774,31 @@ def _listed(store, uid, entries):
 
 def cmd_tag(args):
     tree, root = corpus.load()
-    # @req+ REQ-62782894@QlfQx33Br2KT nmyxfc
+    # @req+ REQ-62782894@x4o_oB5H0-tY nmyxfc
     if not len(args.first) == len(args.last) == len(args.req):
         raise ReqctlError("name --from, --to and --req once for each citation")
     asked = []
     for first, last, req in zip(args.first, args.last, args.req):
         item, entry = corpus.cited_item(tree, req)
-        # @req> REQ-88203622@QLXb8abUOMT3 myjx5s
+        # @req> REQ-88203622@wlZ9orsr9c7q myjx5s
         if not corpus.citable(item):
             raise ReqctlError(f"{req}: only a requirement, a guard, a parameter, "
                               "a data item or one entry of a data item is cited")
-        # @req> REQ-22755763@jWQQtKhJ8JoO yiibpx
-        # @req> REQ-34330878@Zd73-2hLzA6M nqvtul
-        # @req> REQ-18176935@u-uprH5qBxMT wkv6gw
+        # @req> REQ-22755763@lFaaseccSg81 yiibpx
+        # @req> REQ-34330878@E2ViDxqgA25l nqvtul
+        # @req> REQ-18176935@A6AhLhUZ7MdW wkv6gw
         asked.append((first, last, f"{item.uid}.{entry}" if entry else str(item.uid),
                       corpus.cited_stamp(item, entry)))
     change, written = cite.tagged(root, args.path, asked, args.exclusive)
     # @req- nmyxfc
     changes = [change]
-    # @req> REQ-75539229@OyOJtrpdfVnQ c7r3ff
+    # @req> REQ-75539229@263gd_-RLfVL c7r3ff
     # @req> REQ-89706423@fyVHTsenA51D wrzqdw
     for uid in dict.fromkeys(uid for _, uid, _ in written):
         changes += _listed(tree, uid, {identity: taken
                                        for identity, named, taken in written
                                        if named == uid})
-    # @req> REQ-65668011@6eXnj2-53DtA 4pj4jj
+    # @req> REQ-65668011@WuPZe9UcmiaP 4pj4jj
     corpus.write_all(changes)
     identities = [identity for identity, _, _ in written]
     _emit(args, {"ids": identities, "path": args.path}, "\n".join(identities))
@@ -808,20 +808,20 @@ def cmd_tag(args):
 def cmd_repin(args):
     tree, root = corpus.load()
     citation = cite.named(root, args.id)
-    # @req+ REQ-57688239@5uLv_U76DmQs 4yael4
+    # @req+ REQ-57688239@Pv7jzOAUDd-O 4yael4
     item, entry = corpus.cited_item(tree, citation["address"])
-    # @req> REQ-70626698@ybHsrTlF-wU1 dhjmro
+    # @req> REQ-70626698@nJ3cW5CgMJtE dhjmro
     if corpus.raw(item).get("status") == "deprecated":
         raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
                           f"is removed, not re-pinned: `reqctl untag {args.id}`")
-    # @req> REQ-41600593@dV84ANKBJqdk rsw2w2
+    # @req> REQ-41600593@dauTiMee9rmb rsw2w2
     stamp = corpus.cited_stamp(item, entry)
     # @req- 4yael4
     changes = [cite.repinned(root, citation, stamp)]
-    # @req> REQ-64846889@pHOO0sEc7V1K 7dhw4d
-    # @req> REQ-17757558@4j9rQN-e61OY tevb2p
+    # @req> REQ-64846889@TSG5uy3nM0nk 7dhw4d
+    # @req> REQ-17757558@XeiCnIpn4RLV tevb2p
     changes += _listed(tree, citation["uid"], {args.id: cite.standing(root, citation)})
-    # @req> REQ-65668011@6eXnj2-53DtA 34djjj
+    # @req> REQ-65668011@WuPZe9UcmiaP 34djjj
     corpus.write_all(changes)
     _emit(args, {"id": args.id, "path": citation["path"], "stamp": stamp},
           f"{args.id} in {citation['path']} pinned @{stamp}")
@@ -833,12 +833,12 @@ def cmd_untag(args):
     # @req> REQ-51709712@D0x4hZmSHgiW j65lln
     citation = cite.named(root, args.id, nests=False)
     changes = [cite.untagged(root, citation)]
-    # @req> REQ-13298390@OIZCRlURf3pq utmfsc
-    # @req> REQ-81275367@rZszCCP31YAU olrtj5
-    # @req> REQ-28888702@HmZifhO5eMD9 iwdu5n
+    # @req> REQ-13298390@Pum5hwaVAaJo utmfsc
+    # @req> REQ-81275367@2q0tIHQCM4br olrtj5
+    # @req> REQ-28888702@sxS9aXY0y0Ed iwdu5n
     if citation["uid"] in {str(item.uid) for item in corpus.items(tree)}:
         changes += _listed(tree, citation["uid"], {args.id: None})
-    # @req> REQ-65668011@6eXnj2-53DtA jwd2cj
+    # @req> REQ-65668011@WuPZe9UcmiaP jwd2cj
     corpus.write_all(changes)
     _emit(args, {"id": args.id, "path": citation["path"]},
           f"{args.id} removed from {citation['path']}")
@@ -850,12 +850,12 @@ def cmd_unlist(args):
     item = corpus.find(tree, args.uid)
     uid = str(item.uid)
     # @req> REQ-97939970@lyVUGGzeSEQW xrna4u
-    # @req> REQ-44322088@XOM-uvuGSwbD 7e5dqc
+    # @req> REQ-44322088@sDoz9XZ22EBj 7e5dqc
     if (not corpus.citable(item)
             or args.id not in corpus.mapping(item.data, corpus.CITATION_LIST)):
         raise ReqctlError(f"{uid}: its citation list does not hold {args.id}")
-    # @req+ REQ-59136977@5NZtW-PM9X2O s3g7ya
-    # @req> REQ-81063063@J51Kuu-RKFjK rphl5n
+    # @req+ REQ-59136977@-tsi9nTBSL9- s3g7ya
+    # @req> REQ-81063063@v5hfLK63eQj_ rphl5n
     # @req> REQ-62685242@nMlCr6nshoNZ cwxoe2
     if any(citation["uid"] == uid for citation in cite.readable(root, args.id)):
         raise ReqctlError(
@@ -993,7 +993,7 @@ def _field_arguments(s, flags, taken=()):
 
 def _item_arguments(s, flags):
     s.add_argument("kind", choices=list(_write.KINDS))
-    # @req> REQ-71965656@LcOQ8O1Sqy_n f7bkcf
+    # @req> REQ-71965656@F8ulVugEMpD- f7bkcf
     _field_arguments(s, flags)
 
 
@@ -1030,7 +1030,7 @@ def build_parser(root, fielded):
                  "change an item's fields, pin its links with --ack, or edit "
                  "a data entry")
     s.add_argument("uid")
-    # @req> REQ-91205530@RtIsl4zWjUDc ctnzp2
+    # @req> REQ-91205530@FiUaykViw6dQ ctnzp2
     _field_arguments(s, flags + clears, _write.OPERATIONS)
     s.add_argument("--ack", dest="ack", action="append",
                    metavar="NAME | NAME.ENTRY",
@@ -1138,7 +1138,7 @@ def build_parser(root, fielded):
                  "more; repeat --from, --to and --req to cite several, each "
                  "numbered as the file stands before the command")
     s.add_argument("path")
-    # @req+ REQ-62782894@QlfQx33Br2KT ou2zvt
+    # @req+ REQ-62782894@x4o_oB5H0-tY ou2zvt
     s.add_argument("--from", dest="first", type=int, action="append",
                    required=True)
     s.add_argument("--to", dest="last", type=int, action="append", required=True)
@@ -1201,7 +1201,7 @@ def _drop_output():
         pass
 
 
-# @req> REQ-61484030@n7khA9l0yAgr s75lcl
+# @req> REQ-61484030@LpHoz6FzkKeT s75lcl
 # @req> REQ-19913588@Pbi1CR5jtivz irna4n
 def _fault(as_json, error):
     try:
@@ -1227,7 +1227,7 @@ def main(argv=None):
     try:
         args = parser.parse_args(argv)
     except SystemExit as usage:
-        # @req> REQ-61484030@n7khA9l0yAgr 7acuon
+        # @req> REQ-61484030@LpHoz6FzkKeT 7acuon
         if "--json" in argv and usage.code:
             try:
                 print(json.dumps({"error": "usage: the fault is on stderr; "
@@ -1243,7 +1243,7 @@ def main(argv=None):
             reader, writer = os.pipe()
             os.close(reader)
             sys.stdout = os.fdopen(writer, "w")
-        # @req> REQ-24406170@M08jCONzg-4u 3ofubr
+        # @req> REQ-24406170@ffuKefeAdU7p 3ofubr
         with corpus.all_or_nothing():
             done = args.func(args)
             sys.stdout.flush()

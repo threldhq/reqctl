@@ -36,7 +36,7 @@ First: every behavioural change on the branch cites its governing approved
 requirement -- run `reqctl trace`, then read the diff for changes carrying no
 `@req` tag.
 
-<!-- @req+ REQ-54415118@omQkMsNtao3Q tzrban -->
+<!-- @req+ REQ-54415118@nySID1kfSK1I tzrban -->
 Code enforcing a rule of the build cites its approved `GUARD` instead; what
 only carries the build -- dependency pins, CI wiring, lockfiles -- cites
 nothing. Cite what is missing with `reqctl tag` before going on. A change
@@ -97,7 +97,7 @@ again.
 Say in the pull request what each step changed. A step that found nothing is
 worth one line -- it tells the owner the pass ran.
 
-<!-- @req+ REQ-51001407@WpLV0NRsS_qb hbi4d7 -->
+<!-- @req+ REQ-51001407@CLFQHU6-XTzd hbi4d7 -->
 List in the pull request every requirement, guard, parameter and data item
 `reqctl compare` names -- the data item for a citation of one of its entries --
 each with what reading the code citing it against the item found; where it

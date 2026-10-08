@@ -136,7 +136,7 @@ properties:
       type: string
       minLength: 1
 
-  # @req> REQ-88203622@QLXb8abUOMT3 jez5bu
+  # @req> REQ-88203622@wlZ9orsr9c7q jez5bu
   citations:
     type: object
     readOnly: true
