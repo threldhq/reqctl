@@ -133,7 +133,7 @@ something the statement does not already say. Then:
   would say aloud -- one type, both organisations -- is written as a word and
   governs nothing.
 
-<!-- @req+ REQ-39992377@fcd_dP7gzFbL 32ma5e -->
+<!-- @req+ REQ-39992377@fcd_dP7gzFbL rovgdr -->
 - **A set of words is a data item; one quantity's tiers are a parameter.**
   Providers, formats, view types are words: mint one `DATA` --
   `reqctl new data --name export_formats --entry json --entry markdown` -- and
@@ -142,13 +142,13 @@ something the statement does not already say. Then:
   count`, exactly as a lone threshold. `.github/guards/taxonomy.py` states the
   line and refuses the wrong side of it, so it is not restated here.
   Either way it is one named place, versioned, and adding a member re-reviews
-<!-- @req- 32ma5e -->
   everything stated against it. Do not spell the members out inside a
   statement, and do not mint a requirement per option. Each member is an
   entry: `--default` names the one `${name.default}` selects, and
   `revise --entry MEMBER --set definition=...` gives a member its own
   meaning, so a statement may cite one member -- `${name.member}` --
   without binding the rest.
+<!-- @req- rovgdr -->
 <!-- @req- ktu5yd -->
 - **A named record is a data item.** Formats, colours, settings --
   records that are values, not obligations: mint one `DATA` per
