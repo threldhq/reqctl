@@ -14,23 +14,25 @@ ITEM_FOLDERS = {"reqs": "REQ", "guards": "GUARD", "params": "PARAM",
 _ITEMS = "|".join(ITEM_FOLDERS)
 _UIDS = "|".join(ITEM_FOLDERS.values())
 _CORPUS = f"{_ITEMS}|baselines"
-_BASELINE_FILE = r"requirements/baseline\.ya?ml"
+_ROOT = r"(?<![\w.-])requirements"
+_BASELINE_FILE = rf"{_ROOT}/baseline\.ya?ml"
 
-ITEM = re.compile(rf"requirements/({_ITEMS})/({_UIDS})-\d{{8}}\.ya?ml$")
-BASELINE = re.compile(rf"requirements/baselines/|{_BASELINE_FILE}")
+ITEM = re.compile(rf"{_ROOT}/({_ITEMS})/({_UIDS})-\d{{8}}\.ya?ml$")
+BASELINE = re.compile(rf"{_ROOT}/baselines/|{_BASELINE_FILE}")
 CORPUS_DIR = re.compile(
-    rf"requirements/({_CORPUS})(?![\w.-])"
+    rf"{_ROOT}/({_CORPUS})(?![\w.-])"
     rf"|{_BASELINE_FILE}"
-    r"|requirements/[^/\s]*[*?{\[]"
-    r"|\bcd\s+requirements\b"
+    rf"|{_ROOT}" r"/[^/\s]*[*?{\[]"
+    r"|\bcd\s+requirements(?![\w.-])"
 )
 CORPUS_ROOT_NAME = "requirements"
-REDIRECT = re.compile(rf">>?\s*\S*(requirements/({_CORPUS})|{_BASELINE_FILE})")
+REDIRECT = re.compile(rf">>?\s*\S*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
 REDUNDANT = re.compile(r"/(?:\./)+|//+")
 PARENT = re.compile(r"(^|/)(?!\.\./)[^/]+/\.\./")
 PATH_KEY = re.compile(
     r"(^|_|[a-z])(path|paths|pathname|file|files|filename|filenames|dest"
-    r"|destination|dir|directory|target|output|src|dst|source|to|uri)$", re.I)
+    r"|destination|dir|directory|folder|folders|target|output|src|dst|source"
+    r"|to|uri)$", re.I)
 COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 READ_VERBS = ("cat", "head", "tail", "less", "more", "nl", "wc", "ls", "stat",
@@ -68,7 +70,9 @@ HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
-PUSH_SHORT_FORCE = re.compile(r"^-[a-zA-Z]*f[a-zA-Z]*$")
+PUSH_SHORT_DESTRUCTIVE = re.compile(r"^-[a-zA-Z]*[fd][a-zA-Z]*$")
+PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
+                         "--mirror", "--delete")
 ESCAPE = re.compile(r"\\(?=[A-Za-z0-9/])")
 QUOTED_REDIRECT = re.compile(r"""(>>?\s*)(['"])([^'"]*)\2""")
 GLOB_CHAR = re.compile(r"[*?\[\]{}]")
@@ -77,6 +81,8 @@ LITERAL_CHAR = re.compile(r"[^*?\[\]{}]")
 UNQUOTED = str.maketrans("", "", "'\"\\")
 CITATION_LINE = re.compile(r"^\s*(?:(?:#+|<!--|//)\s*)?@req[+>-](?:\s|$)")
 
+# @req+ REQ-51296881@8h-e1bOYkZtT etn3fq
+# @req+ REQ-67599992@TMfnHY-C4hOv jzjikg
 UNREADABLE = (
     "The requirements guard could not read this tool call, so it cannot judge "
     "it.\n"
@@ -94,11 +100,11 @@ USE_REQCTL = (
 
 NOT_A_KNOWN_READ = (
     "Shell command reaching the requirements corpus outside the known-safe "
-    f"forms blocked.\n{USE_REQCTL}"
+    "forms blocked: {target}\n" + USE_REQCTL
 )
 
 DIRECT_READ = (
-    "Direct read of the requirements corpus blocked.\n"
+    "Direct read of the requirements corpus blocked: {target}\n"
     "Read it through reqctl instead: `reqctl context UID`, `reqctl export`."
 )
 
@@ -108,10 +114,16 @@ BLIND_GIT = (
     "owner if this repeats."
 )
 
-ON_MAIN = (
-    "Commit on main blocked.\n"
+ON_DEFAULT = (
+    "Commit on the default branch {branch} blocked.\n"
     "  git checkout -b claude/<name>\n"
-    "main is what the owner merges into, never what an agent commits to."
+    "{branch} is what the owner merges into, never what an agent commits to."
+)
+
+NO_DEFAULT = (
+    "Commit blocked: origin names no default branch, so the guard cannot tell "
+    "whether this commit lands on it.\n"
+    "  git remote set-head origin --auto"
 )
 
 DISCARDS_WORK = (
@@ -152,6 +164,8 @@ INEXACT = (
     "a statement citation.\n"
     "Give old_string exactly as the file holds it, quotes and escapes included."
 )
+# @req- etn3fq
+# @req- jzjikg
 
 WHOLE_TREE: list[str] = []
 FORCE = ("-f", "--force", "--discard-changes")
@@ -170,6 +184,7 @@ def named_paths(value, keys=PATH_KEY, key=""):
         return [found for k, v in value.items() for found in named_paths(v, keys, k)]
     if isinstance(value, list):
         return [found for v in value for found in named_paths(v, keys, key)]
+    # @req> REQ-18701923@7CvKXOjSI6Kb pbu5yx
     if keys.search(key):
         deny(UNREADABLE)
     return []
@@ -185,17 +200,24 @@ def flatten(text: str) -> str:
 
 
 def deny(reason: str) -> None:
-    json.dump(
+    # @req> REQ-60211288@pREpt1tBYPFJ tvcxjf
+    decision = json.dumps(
         {
             "hookSpecificOutput": {
                 "hookEventName": "PreToolUse",
                 "permissionDecision": "deny",
                 "permissionDecisionReason": reason,
             }
-        },
-        sys.stdout,
-    )
+        }
+    ).encode()
+    # @req+ REQ-51060455@DPy54WGr0ngb kfua34
+    try:
+        while decision:
+            decision = decision[os.write(sys.stdout.fileno(), decision):]
+    except (OSError, ValueError):
+        pass
     sys.exit(0)
+    # @req- kfua34
 
 
 def scan(cmd: str) -> list[list[str]]:
@@ -313,13 +335,18 @@ def tokens_of(part):
     return words
 
 
-def git_subcommand(words):
+def invoked(words):
     i = 0
     while i < len(words) and (words[i] in ("env", "command") or "=" in words[i]):
         i += 1
-    if i >= len(words) or words[i] != "git":
+    return words[i:]
+
+
+def git_subcommand(words):
+    words = invoked(words)
+    if not words or words[0] != "git":
         return None, []
-    i += 1
+    i = 1
     while i < len(words):
         word = words[i]
         if word in ("-c", "-C", "--work-tree", "--git-dir"):
@@ -388,16 +415,19 @@ def names_citation(cmd):
 
 
 def refuse_destructive_push(words):
+    # @req+ REQ-60587913@a-D0sKfFEs62 4aiv2n
     subcommand, rest = git_subcommand(words)
     if subcommand != "push":
         return
     for word in rest:
-        if (word in ("--force", "--force-if-includes", "--mirror", "--delete", "-d")
-                or word.startswith("--force-with-lease")
-                or PUSH_SHORT_FORCE.match(word)
+        name = word.split("=", 1)[0]
+        if ((len(name) > 2 and name.startswith("--")
+             and any(flag.startswith(name) for flag in PUSH_LONG_DESTRUCTIVE))
+                or PUSH_SHORT_DESTRUCTIVE.match(word)
                 or (len(word) > 1 and word[0] in "+:")):
             deny(f"Push with {word} blocked: it rewrites or deletes remote "
                  "history. Ask the owner if that is really wanted.")
+    # @req- 4aiv2n
 
 
 def git_reads(args):
@@ -427,7 +457,7 @@ def discarded(words):
     if subcommand == "reset":
         return (WHOLE_TREE, False, False) if "--hard" in flags else (None, False, False)
     if subcommand == "clean":
-        if not forced:
+        if not forced or short_flagged(flags, "n") or "--dry-run" in flags:
             return None, False, False
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
         return (after or operands or WHOLE_TREE), True, ignored
@@ -439,10 +469,18 @@ def discarded(words):
         return after, False, False
     if forced or "." in operands:
         return WHOLE_TREE, False, False
+    if subcommand == "checkout" and operands:
+        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"])
+        named = operands[1:] if tree is not None else operands
+        return (named or None), False, False
     return None, False, False
 
 
 def refuse_discarding_work(words):
+    # @req+ REQ-36282702@sK_P4PZZM9_w uivqls
+    subcommand, _ = git_subcommand(words)
+    if subcommand in RESTORES and git_reads(["rev-parse", "--git-dir"]) is None:
+        deny(BLIND_GIT)
     paths, sweeps_untracked, sweeps_ignored = discarded(words)
     if paths is None:
         return
@@ -459,17 +497,23 @@ def refuse_discarding_work(words):
                and (line[:2] in swept) == sweeps_untracked]
     if at_risk:
         deny(DISCARDS_WORK.format(listing="\n".join(at_risk)))
+    # @req- uivqls
 
 
-def refuse_commit_on_main(words):
+def refuse_commit_on_default(words):
+    # @req+ REQ-74982341@IIwAqzZV1bP3 zm6qoo
     subcommand, _ = git_subcommand(words)
     if subcommand != "commit":
         return
     branch = git_reads(["branch", "--show-current"])
     if branch is None:
         deny(BLIND_GIT)
-    if branch.strip() == "main":
-        deny(ON_MAIN)
+    default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"])
+    if default is None:
+        deny(NO_DEFAULT)
+    if branch.strip() and default.strip() == f"origin/{branch.strip()}":
+        deny(ON_DEFAULT.format(branch=branch.strip()))
+    # @req- zm6qoo
 
 
 BARE_SWEEP = (".", "..", "/", "~", "*")
@@ -477,26 +521,34 @@ BARE_SWEEP = (".", "..", "/", "~", "*")
 
 def judge_command(words):
     refuse_destructive_push(words)
+    # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
     if subcommand in ("apply", "am"):
         deny(f"git {subcommand} blocked: the paths it writes live inside the "
              "patch, where this guard cannot see them. Use the editing tools, "
              "and reqctl for the corpus.")
-    plain = next((w for w in words if "=" not in w), None)
+    called = invoked(words)
+    plain = called[0] if called else None
     if plain == "patch":
         deny("patch(1) blocked: the paths it writes live inside the diff, "
              "where this guard cannot see them. Use the editing tools, and "
              "reqctl for the corpus.")
-    if plain == "rm" and any(w.startswith("-") and "r" in w.lower()
-                             for w in words):
+    # @req- dbuwzq
+    # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
+    if plain == "rm" and any(w == "--recursive" or (
+            w.startswith("-") and not w.startswith("--") and "r" in w.lower())
+            for w in called[1:]):
         project = os.environ.get("CLAUDE_PROJECT_DIR", "").rstrip("/")
         resolved = {w: os.path.normpath(os.path.join(project, w))
-                    for w in words} if project else {}
+                    for w in called[1:]} if project else {}
+        above = [project, *map(str, Path(project).parents)] if project else []
         swept = next(
-            (w for w in words if os.path.normpath(w) in BARE_SWEEP
-             or w.startswith("$")
+            (w for w in called[1:] if os.path.normpath(w) in BARE_SWEEP
+             or w.startswith(("$", "`"))
              or (project and resolved[w] == project)
-             or (project and project.startswith(resolved[w] + "/"))),
+             or (project and project.startswith(resolved[w] + "/"))
+             or (GLOB_CHAR.search(w) and any(expands_to(resolved[w], path)
+                                             for path in above))),
             None)
         if swept:
             deny(f"rm -r of '{swept}' blocked: it sweeps the requirements "
@@ -504,8 +556,14 @@ def judge_command(words):
     for word in words:
         if "git" in word and "push" in word and word not in ("git", "push"):
             refuse_destructive_push(tokens_of(word))
-    refuse_commit_on_main(words)
+    refuse_commit_on_default(words)
     refuse_discarding_work(words)
+
+
+def expands_to(pattern, path):
+    wanted, held = pattern.split("/"), path.split("/")
+    return len(wanted) == len(held) and all(
+        fnmatch.fnmatchcase(name, glob) for glob, name in zip(wanted, held))
 
 
 def glob_alternatives(segment):
@@ -537,28 +595,34 @@ def names_corpus(part):
 
 
 def judge_shell(raw):
+    # @req+ REQ-22704490@-kCeQBvIuODs ak47k7
     cmd = flatten(ESCAPE.sub("", raw))
-    if REDIRECT.search(masked(QUOTED_REDIRECT.sub(r"\1\3", cmd))):
-        deny(NOT_A_KNOWN_READ)
+    unquoted = QUOTED_REDIRECT.sub(r"\1\3", cmd)
+    redirect = REDIRECT.search(masked(unquoted))
+    if redirect:
+        deny(NOT_A_KNOWN_READ.format(target=unquoted[redirect.start():redirect.end()]))
     for pipeline in scan(AMP_REDIRECT.sub(" ", cmd)):
         for part in pipeline:
             judge_command(tokens_of(part))
             invocation = part.split("\n", 1)[0]
-            if CONTENT_READ.search(invocation) and CORPUS_DIR.search(invocation):
-                deny(DIRECT_READ)
+            # @req> REQ-54260750@trzUfC0yF7lT 37auve
+            if CONTENT_READ.search(invocation) and names_corpus(invocation):
+                deny(DIRECT_READ.format(target=invocation.strip()))
         naming = [part for part in pipeline if names_corpus(part)]
         if not naming:
             continue
         whole = " ".join(pipeline)
-        if SUBSHELL.search(whole) or OUTPUT_FLAG.search(whole):
-            deny(NOT_A_KNOWN_READ)
+        flag = SUBSHELL.search(whole) or OUTPUT_FLAG.search(whole)
+        if flag:
+            deny(NOT_A_KNOWN_READ.format(target=flag.group()))
         for part in pipeline:
             if READ.search(part) or GIT_READ.search(part):
                 continue
             if (part not in naming and SINK.search(part)
                     and not SINK_WRITES.search(part)):
                 continue
-            deny(NOT_A_KNOWN_READ)
+            deny(NOT_A_KNOWN_READ.format(target=part.split("\n", 1)[0].strip()))
+    # @req- ak47k7
 
 
 def citations(text):
@@ -598,7 +662,7 @@ def judge_citation_edit(tool, args):
     if not isinstance(after, str):
         deny(UNREADABLE)
     if citations(before) != citations(after):
-        deny(HAND_CITATION)
+        deny(f"{HAND_CITATION}\nIn {args.get('file_path')}.")
 
 
 # @req> REQ-38099593@ZV7vXqWoh9NV cebvfg
@@ -612,7 +676,7 @@ def judge_citation_shell(raw):
         if found:
             deny(UNREAD_COMMAND.format(found=found))
         if ">" in masked(part) or OUTPUT_FLAG.search(part.translate(UNQUOTED)):
-            deny(HAND_CITATION)
+            deny(f"{HAND_CITATION}\nIn {part.strip()}")
         tool, flag = searched(part)
         if flag:
             deny(f"{tool} {flag} in a command naming a statement citation "
@@ -627,6 +691,7 @@ def judge_citation_shell(raw):
 def decide(data: dict) -> None:
     tool = str(data.get("tool_name") or "")
     args = data.get("tool_input")
+    # @req+ REQ-18701923@7CvKXOjSI6Kb hyuozw
     if args is None:
         args = {}
     if not isinstance(args, dict):
@@ -634,29 +699,33 @@ def decide(data: dict) -> None:
     for key in ("file_path", "notebook_path", "command"):
         if args.get(key) is not None and not isinstance(args[key], str):
             deny(UNREADABLE)
+    # @req- hyuozw
 
+    # @req> REQ-22704490@-kCeQBvIuODs qfasw3
     if tool not in ("Bash", "Read", "Grep", "Glob"):
         for value in named_paths(args):
             named = flatten(value.replace("\\", "/"))
             if ITEM.search(named):
-                deny(f"Direct write of a requirement item blocked.\n{USE_REQCTL}")
+                deny(f"Direct write of a requirement item blocked: {value}\n{USE_REQCTL}")
             if BASELINE.search(named):
                 deny(
-                    "Baselines are generated, never written directly. Use "
-                    "`reqctl baseline --generate`; approval is the owner's, on "
-                    "a pull request."
+                    f"Baselines are generated, never written directly: {value}\n"
+                    "Use `reqctl baseline --generate`; approval is the owner's, "
+                    "on a pull request."
                 )
             if CORPUS_DIR.search(named):
-                deny(f"Direct write into the requirements corpus blocked.\n{USE_REQCTL}")
+                deny(f"Direct write into the requirements corpus blocked: {value}\n"
+                     f"{USE_REQCTL}")
 
+    # @req> REQ-54260750@trzUfC0yF7lT xkcay3
     if tool in ("Read", "Grep", "Glob"):
         values = named_paths(args)
         if tool == "Glob":
             values = values + named_paths(args, GLOB_KEY)
         for value in values:
             named = flatten(value.replace("\\", "/"))
-            if CORPUS_DIR.search(named):
-                deny(DIRECT_READ)
+            if CORPUS_DIR.search(named) or is_corpus_root(named):
+                deny(DIRECT_READ.format(target=value))
 
     judge_citation_edit(tool, args)
     for value in named_paths(args, COMMAND_KEY):
@@ -665,17 +734,21 @@ def decide(data: dict) -> None:
 
 
 def main() -> None:
+    # @req+ REQ-18701923@7CvKXOjSI6Kb mvehq6
     try:
         data = json.load(sys.stdin)
     except Exception:
         deny(UNREADABLE)
     if not isinstance(data, dict):
         deny(UNREADABLE)
+    # @req- mvehq6
+    # @req+ REQ-51060455@DPy54WGr0ngb 4gmqti
     try:
         decide(data)
     except Exception:
         deny(UNREADABLE)
     sys.exit(0)
+    # @req- 4gmqti
 
 
 if __name__ == "__main__":

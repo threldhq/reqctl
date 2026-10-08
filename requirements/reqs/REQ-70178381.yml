@@ -6,6 +6,8 @@ acceptance_criteria:
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  dbuwzq: Hw8GLiZI1iEvESwWvoe_RGRRqyGcYKDxd8qy3xaPzoU
 priority: medium
 relations:
   REQ-38288492: depends_on
