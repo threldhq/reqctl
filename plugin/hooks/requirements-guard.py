@@ -38,6 +38,7 @@ COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
+SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf")
 JUDGED = ("git", "rm", "patch")
@@ -352,6 +353,8 @@ def invoked(words):
             words[i].startswith("-") or words[i][:1].isdigit()
             or words[i - 1].startswith("-") and os.path.basename(words[i]) not in JUDGED))):
         i += 1
+    if i and i < len(words) and os.path.basename(words[i]) not in JUDGED:
+        i = next((j for j in range(i, len(words)) if os.path.basename(words[j]) in ("git", "rm")), i)
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
 
 
@@ -524,10 +527,10 @@ def refuse_discarding_work(words):
 def refuse_commit_on_default(words):
     # @req+ REQ-74982341@IIwAqzZV1bP3 zm6qoo
     subcommand, rest = git_subcommand(words)
-    if subcommand != "commit" and (subcommand not in NO_COMMIT
-                                   or any(w in NO_COMMIT[subcommand] for w in rest) and not any(
-                                       w in ("--commit", "--no-squash", "--ff", "--no-ff")
-                                       for w in rest)):
+    if subcommand != "commit" and (subcommand not in NO_COMMIT or next(
+            (w for w in reversed(rest) if w in NO_COMMIT[subcommand]
+             or w in ("--commit", "--no-squash", "--ff", "--no-ff")), None)
+            in NO_COMMIT[subcommand]):
         return
     branch = git_reads(["branch", "--show-current"])
     if branch is None:
@@ -572,7 +575,7 @@ def judge_command(words):
         swept = next(
             (w for w in operands if os.path.normpath(w) in BARE_SWEEP
              or "$" in w or "`" in w or w.startswith(("~+", "~-"))
-             or len(alternatives[w]) > 256
+             or len(alternatives[w]) > 256 or SEQUENCE.search(w)
              or any(expands_to(os.path.normpath(os.path.join(project, alt)), path)
                     for alt in alternatives[w] for path in above)),
             None)
