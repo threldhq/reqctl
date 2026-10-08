@@ -25,6 +25,13 @@ assessed:
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+citations:
+  3soeou: QLtJNBPfgz9FG1RPPm3IG_vvT3FOvX-_sxn0Qr6m10k
+  b3vk77: 4ELIXuQWaij2EQxugmEVoapTc9_qmYo0rdfw4fXRBRM
+  dtlb52: QN8U3e8A8yyNzl9czhfxV2dVQa287UkO9mBwQrEtZE8
+  l7u2tv: 1yedwk2cAekykEI8-QshAr9vSjoH0xUn74B0h97fUfU
+  nq24wh: Sn5sfrHeXFYoRJ8vDS8R5ahtImW11BO4UlDL8p-gC2g
+  rqqfbr: -9TDGtO08O8zZehw3EfjLHKIRKm3yfI_GR22rgnSL6A
 priority: medium
 relations:
   REQ-46144308: depends_on
