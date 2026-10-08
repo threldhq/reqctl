@@ -42,8 +42,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  ak47k7: 4IZG-G5Pra-pIFiD8YYIM606mA08zA2BqLm2H3DcodQ
-  qfasw3: uZHoglVm27bmRfdGEswUtysLu7yTT624MXEw9mSvek0
+  ak47k7: pCHwJnPaHT8QwQG8O722ddoMT3Wuxt_7gbw4iG1Qhog
+  qfasw3: nZcV4540S1I4weyrRfdrT2c9QnlN5gm3b5o6Czl0O4U
 priority: medium
 relations:
   REQ-38288492: depends_on

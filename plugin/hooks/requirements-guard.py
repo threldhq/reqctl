@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import fnmatch
+import functools
 import itertools
 import json
 import os
@@ -27,13 +28,15 @@ CORPUS_DIR = re.compile(
     r"|\bcd\s+requirements(?![\w.-])"
 )
 CORPUS_ROOT_NAME = "requirements"
-REDIRECT = re.compile(rf">>?\s*\S*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
+REDIRECT = re.compile(rf">>?&?\s*[^\s>]*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
+REDIRECT_TARGET = re.compile(r">>?&?[ \t]*([^\s<>;&|()]+)")
 REDUNDANT = re.compile(r"/(?:\./)+|//+")
 PARENT = re.compile(r"(^|/)(?!\.\./)[^/]+/\.\./")
 PATH_KEY = re.compile(
     r"(^|_|[a-z])(path|paths|pathname|file|files|filename|filenames|dest"
     r"|destination|dir|directory|folder|folders|target|output|src|dst|source"
     r"|to|uri)$", re.I)
+PATH_SHAPE = re.compile(r"[^\s'\"`$();|<>]+")
 COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
@@ -60,6 +63,16 @@ SINK = re.compile(
     r"^\s*(sort|uniq|awk|sed|tr|tac|rev|xxd|od|paste|fold|fmt)(?=\s|$)"
 )
 SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
+LISTS_FILES = ("--files0-from", "--files-from", "--fromfile")
+AWK_RUNS = re.compile(r"getline|system|[|@]")
+AWK_PROGRAM_FILE = ("-f", "-E", "-i", "-l", "--f", "--e", "--i", "--l")
+SED_QUIET = re.compile(r"-[nErusz]+|--(?:quiet|silent|regexp-extended|posix|null-data"
+                       r"|unbuffered|separate)")
+_SED_ADDRESS = r"(?:\d+|\$|/(?:\\.|[^/\\\n])*/I?)"
+SED_SCRIPT = re.compile(
+    rf"(?:\s*(?:{_SED_ADDRESS}(?:,{_SED_ADDRESS})?!?\s*)?"
+    r"(?:s(?P<d>[^\\\n\w\s])(?:\\.|(?!(?P=d))[^\\\n])*(?P=d)"
+    r"(?:\\.|(?!(?P=d))[^\\\n])*(?P=d)[gpIiMm0-9]*|[pdqP=])\s*(?:;|$))+")
 # @req+ REQ-38099593@_nWaC_p_1ziz 2x3zhi
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
@@ -74,6 +87,7 @@ OPENER = "@req"
 SPLITS = "$`{}"
 INPUT_LIMIT = 20_000
 # @req- 2x3zhi
+# @req> git_read_forms@5d0_Etfuv7Lx r2wro4
 GIT_READ = re.compile(
     r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
@@ -202,6 +216,16 @@ def named_paths(value, keys=PATH_KEY, key=""):
     return []
 
 
+def bare_paths(value):
+    if isinstance(value, str):
+        return [value] if len(value) <= INPUT_LIMIT and PATH_SHAPE.fullmatch(value) else []
+    if isinstance(value, dict):
+        return [found for v in value.values() for found in bare_paths(v)]
+    if isinstance(value, list):
+        return [found for v in value for found in bare_paths(v)]
+    return []
+
+
 def flatten(text: str) -> str:
     previous = None
     while previous != text:
@@ -252,16 +276,16 @@ def scan(cmd: str) -> list[list[str]]:
         while i < len(line):
             char = line[i]
             if quote:
-                if quote == '"' and char == "\\" and i + 1 < len(line):
+                if quote in ('"', "$'") and char == "\\" and i + 1 < len(line):
                     buf.append(line[i:i + 2])
                     i += 2
                     continue
                 buf.append(char)
-                quote = None if char == quote else quote
+                quote = None if char == quote[-1] else quote
                 i += 1
                 continue
             if char in "'\"":
-                quote = char
+                quote = opened_quote(char, buf[-1:])
                 buf.append(char)
                 i += 1
                 continue
@@ -289,7 +313,9 @@ def scan(cmd: str) -> list[list[str]]:
             buf.pop()
             row += 1
             continue
-        opened = HEREDOC.search("".join(buf))
+        joined = "".join(buf)
+        opened = next((found for found in HEREDOC.finditer(joined)
+                       if masked(joined)[found.start()] == "<"), None)
         if opened:
             body, row = [], row + 1
             while row < len(lines) and lines[row].strip() != opened.group(2):
@@ -304,25 +330,34 @@ def scan(cmd: str) -> list[list[str]]:
             if any(s.strip() for s in p)]
 
 
+def opened_quote(char, before):
+    return "$'" if char == "'" and before == ["$"] else char
+
+
 def masked(cmd):
     out, quote = [], None
     i = 0
     while i < len(cmd):
         char = cmd[i]
         if quote:
-            if quote == '"' and char == "\\" and i + 1 < len(cmd):
+            if quote in ('"', "$'") and char == "\\" and i + 1 < len(cmd):
                 out.append("  ")
                 i += 2
                 continue
-            out.append(" " if char != quote else char)
-            quote = None if char == quote else quote
+            out.append(" " if char != quote[-1] else char)
+            quote = None if char == quote[-1] else quote
         elif char in "'\"":
-            quote = char
+            quote = opened_quote(char, list(cmd[i - 1:i]))
             out.append(char)
         else:
             out.append(char)
         i += 1
     return "".join(out)
+
+
+def heading(part):
+    cut = masked(part).find("\n")
+    return part if cut < 0 else part[:cut]
 
 
 def tokens_of(part):
@@ -409,6 +444,34 @@ def only_reads(words):
         return ("--" not in rest and not GLOB_CHAR.search(" ".join(rest))
                 and sum(word == "-" or not word.startswith("-") for word in rest) < 2)
     return tool in WRITES_NOTHING
+
+
+def lists_files(words):
+    return (any(word.startswith(LISTS_FILES) for word in words)
+            or words[:1] == ["file"] and short_flagged(words[1:], "f"))
+
+
+def sink_runs(words):
+    tool, rest = (words[0], words[1:]) if words else ("", [])
+    if tool == "awk":
+        return any(word.startswith(AWK_PROGRAM_FILE) or (
+            not word.startswith("-") and AWK_RUNS.search(word)) for word in rest)
+    if tool != "sed":
+        return False
+    scripts, valued = [], False
+    for word in rest:
+        if valued:
+            scripts.append(word)
+            valued = False
+        elif word in ("-e", "--expression"):
+            valued = True
+        elif word.startswith("--expression="):
+            scripts.append(word.partition("=")[2])
+        elif word.startswith("-") and not SED_QUIET.fullmatch(word):
+            return True
+        elif not word.startswith("-") and not scripts:
+            scripts.append(word)
+    return not scripts or not all(SED_SCRIPT.fullmatch(script) for script in scripts)
 
 
 # @req> REQ-38099593@_nWaC_p_1ziz 4h5lnn
@@ -625,42 +688,105 @@ def is_corpus_root(word):
         for segment in trimmed.split("/"))
 
 
-def names_corpus(part):
+@functools.lru_cache(maxsize=1)
+def corpus_folders(project):
+    root = os.path.join(project, CORPUS_ROOT_NAME)
+    folders = []
+    for folder in [*ITEM_FOLDERS, "baselines"]:
+        path = os.path.join(root, folder)
+        try:
+            names = tuple(os.listdir(path))
+        except OSError:
+            names = ()
+        folders.append((tuple(path.split("/")), names))
+    files = [tuple(os.path.join(root, name).split("/"))
+             for name in ("baseline.yml", "baseline.yaml")]
+    return folders, files
+
+
+def globbed(pattern, path):
+    reach = {0}
+    for glob in pattern:
+        if glob == "**":
+            reach = set(range(min(reach), len(path) + 1))
+        else:
+            reach = {i + 1 for i in reach if i < len(path)
+                     and fnmatch.fnmatchcase(path[i], glob.replace("[^", "[!"))}
+        if not reach:
+            return False
+    return len(path) in reach
+
+
+@functools.lru_cache(maxsize=4096)
+def reaches_corpus(word, cwd):
+    project = os.environ.get("CLAUDE_PROJECT_DIR")
+    value = word.rpartition("=")[2]
+    if not project or not value or "$" in value or "`" in value:
+        return False
+    folders, files = corpus_folders(project)
+    for alt in itertools.islice(braced(os.path.expanduser(value)), 257):
+        pattern = tuple(os.path.normpath(os.path.join(cwd, alt)).split("/"))
+        if not GLOB_CHAR.search(alt):
+            if any(pattern[:len(top)] == top
+                   for top in [folder for folder, _ in folders] + files):
+                return True
+            continue
+        if any(globbed(pattern, top) for top in files):
+            return True
+        for folder, names in folders:
+            if globbed(pattern, folder) or names and (
+                    globbed(pattern, folder + names[:1]) if pattern[-1] == "**"
+                    else globbed(pattern[:-1], folder)
+                    and fnmatch.filter(names, pattern[-1].replace("[^", "[!"))):
+                return True
+    return False
+
+
+def names_corpus(part, cwd):
     if CORPUS_DIR.search(part):
         return True
-    operands = [GLUED_OPTION.sub("", word) for word in tokens_of(part.split("\n", 1)[0])]
+    operands = [GLUED_OPTION.sub("", word) for word in tokens_of(heading(part))]
     return any(CORPUS_DIR.search(word) or is_corpus_root(word)
-               for word in operands)
+               or reaches_corpus(word, cwd) for word in operands)
 
 
-def judge_shell(raw):
+def judge_shell(raw, cwd):
     # @req+ REQ-22704490@0I1yKEFWt0tX ak47k7
     cmd = flatten(ESCAPE.sub("", raw))
     unquoted = QUOTED_REDIRECT.sub(r"\1\3", cmd)
-    redirect = REDIRECT.search(masked(unquoted))
+    redirect = REDIRECT.search(masked(unquoted)) or next(
+        (found for found in REDIRECT_TARGET.finditer(masked(unquoted))
+         if reaches_corpus(unquoted[found.start(1):found.end(1)], cwd)), None)
     if redirect:
         deny(NOT_A_KNOWN_READ.format(target=unquoted[redirect.start():redirect.end()]))
-    for pipeline in scan(AMP_REDIRECT.sub(" ", cmd)):
+    written = scan(AMP_REDIRECT.sub(" ", ESCAPE.sub("", raw)))
+    for index, pipeline in enumerate(scan(AMP_REDIRECT.sub(" ", cmd))):
+        said = written[index] if index < len(written) else []
+        said = said if len(said) == len(pipeline) else pipeline
         for part in pipeline:
             judge_command(tokens_of(part))
-            invocation = part.split("\n", 1)[0]
+            invocation = heading(part)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
-            if CONTENT_READ.search(invocation) and names_corpus(invocation):
+            if CONTENT_READ.search(invocation) and names_corpus(invocation, cwd):
                 deny(DIRECT_READ.format(target=invocation.strip()))
-        naming = [part for part in pipeline if names_corpus(part)]
+        naming = [part for part in pipeline if names_corpus(part, cwd)]
         if not naming:
             continue
         whole = " ".join(pipeline)
         flag = SUBSHELL.search(whole) or OUTPUT_FLAG.search(whole)
         if flag:
             deny(NOT_A_KNOWN_READ.format(target=flag.group()))
-        for part in pipeline:
+        for part, as_written in zip(pipeline, said):
+            words = tokens_of(heading(as_written))
+            # @req> REQ-54260750@MTrWbA9_HZWY qrdgnw
+            if lists_files(words):
+                deny(DIRECT_READ.format(target=heading(part).strip()))
             if READ.search(part) or GIT_READ.search(part):
                 continue
             if (part not in naming and SINK.search(part)
-                    and not SINK_WRITES.search(part)):
+                    and not SINK_WRITES.search(part) and not sink_runs(words)):
                 continue
-            deny(NOT_A_KNOWN_READ.format(target=part.split("\n", 1)[0].strip()))
+            deny(NOT_A_KNOWN_READ.format(target=heading(part).strip()))
     # @req- ak47k7
 
 
@@ -693,15 +819,34 @@ def edited(tool, args):
     return before, after
 
 
+def notebook_edited(args):
+    target = Path(os.environ.get("CLAUDE_PROJECT_DIR") or ".", args.get("notebook_path") or "")
+    mode, new = args.get("edit_mode") or "replace", args.get("new_source", "")
+    try:
+        cells = json.loads(target.read_bytes()).get("cells") if target.is_file() else []
+    except (OSError, ValueError, AttributeError):
+        deny(UNREADABLE)
+    if not isinstance(new, str) or not isinstance(cells, list):
+        deny(UNREADABLE)
+    held = next((cell for cell in cells if isinstance(cell, dict)
+                 and cell.get("id") == args.get("cell_id")), {})
+    source = held.get("source", "") if mode != "insert" else ""
+    before = "".join(map(str, source)) if isinstance(source, list) else str(source)
+    return before, "" if mode == "delete" else new
+
+
 # @req> REQ-38099593@_nWaC_p_1ziz 3yvytz
 def judge_citation_edit(tool, args):
-    if tool not in ("Edit", "MultiEdit", "Write"):
+    if tool == "NotebookEdit":
+        before, after = notebook_edited(args)
+    elif tool in ("Edit", "MultiEdit", "Write"):
+        before, after = edited(tool, args)
+    else:
         return
-    before, after = edited(tool, args)
     if not isinstance(after, str):
         deny(UNREADABLE)
     if citations(before) != citations(after):
-        deny(f"{HAND_CITATION}\nIn {args.get('file_path')}.")
+        deny(f"{HAND_CITATION}\nIn {args.get('file_path') or args.get('notebook_path')}.")
 
 
 # @req> REQ-38099593@_nWaC_p_1ziz cebvfg
@@ -739,10 +884,14 @@ def decide(data: dict) -> None:
         if args.get(key) is not None and not isinstance(args[key], str):
             deny(UNREADABLE)
     # @req- hyuozw
+    cwd = data.get("cwd")
+    if not isinstance(cwd, str) or not cwd:
+        cwd = os.environ.get("CLAUDE_PROJECT_DIR") or "."
 
     # @req> REQ-22704490@0I1yKEFWt0tX qfasw3
     if tool not in ("Bash", "Read", "Grep", "Glob"):
-        for value in named_paths(args):
+        paths = named_paths(args)
+        for value in paths + [value for value in bare_paths(args) if value not in paths]:
             named = flatten(value.replace("\\", "/"))
             if ITEM.search(named):
                 deny(f"Direct write of a requirement item blocked: {value}\n{USE_REQCTL}")
@@ -752,22 +901,23 @@ def decide(data: dict) -> None:
                     "Use `reqctl baseline --generate`; approval is the owner's, "
                     "on a pull request."
                 )
-            if CORPUS_DIR.search(named):
+            if CORPUS_DIR.search(named) or reaches_corpus(named, cwd):
                 deny(f"Direct write into the requirements corpus blocked: {value}\n"
                      f"{USE_REQCTL}")
 
     # @req> REQ-54260750@MTrWbA9_HZWY xkcay3
     if tool in ("Read", "Grep", "Glob"):
-        values = named_paths(args)
-        values = values + named_paths(args, GLOB_KEY if tool == "Glob" else GREP_GLOB_KEY)
+        paths = named_paths(args)
+        values = paths + named_paths(args, GLOB_KEY if tool == "Glob" else GREP_GLOB_KEY)
         for value in values:
             named = flatten(value.replace("\\", "/"))
-            if CORPUS_DIR.search(named) or is_corpus_root(named):
+            if (CORPUS_DIR.search(named) or is_corpus_root(named)
+                    or value in paths and reaches_corpus(named, cwd)):
                 deny(DIRECT_READ.format(target=value))
 
     judge_citation_edit(tool, args)
     for value in named_paths(args, COMMAND_KEY):
-        judge_shell(value)
+        judge_shell(value, cwd)
         judge_citation_shell(value)
 
 
