@@ -1,7 +1,7 @@
 acceptance_criteria:
-- given: a recall return naming an item its prompt did not state
-  then: the product reports the return and the item, and lists that return's agent
-    to spawn again
+- given: a recall return naming an [item](item) its prompt did not state
+  then: the product reports the return and the [item](item), and lists that return's
+    agent to spawn again
   when: the recall returns are read
 - given: a recall return that does not parse
   then: the product reports the return and why, and lists the agents of the rebuilt
@@ -15,7 +15,8 @@ acceptance_criteria:
   then: the product refuses the run and lists no agent to spawn
   when: the recall returns are read
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   fnjvuz: 9CAddfyRrGpEYjxdlKboxNE8iaBC86VWg9XnloAYwlY
   fzv4pc: uRN2Wira7Ox12ifKEgpDMMYCNy_YOb9qsTAMphUO8z4

@@ -2,12 +2,12 @@ acceptance_criteria:
 - given: a [citation identity](citation_identity) no [statement citation](statement_citation)
     the [code base](code_base) holds names
   then: the product refuses and the [code base](code_base) is unchanged
-  when: the product is asked to re-pin the citation naming it
+  when: the product is asked to re-pin the [citation](statement_citation) naming it
 assessed:
-  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
+  REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   cdi6vq: zMB5i74_KiNNQ1AQphSkgwTo69i38X4ME3TSTEPvHNM
 priority: medium

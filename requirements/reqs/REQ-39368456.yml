@@ -1,15 +1,16 @@
 acceptance_criteria:
-- given: an item field that forms a cycle
-  then: the product refuses the item and names the field
-  when: the item is read
-- given: an item field nesting past the reader limit
-  then: the product refuses the item and names the field
-  when: the item is read
-assessed: {}
+- given: an [item](item) field that forms a cycle
+  then: the product refuses the [item](item) and names the field
+  when: the [item](item) is read
+- given: an [item](item) field nesting past the reader limit
+  then: the product refuses the [item](item) and names the field
+  when: the [item](item) is read
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 priority: medium
 relations: {}
 status: approved
-text: If a field an item states cannot be read as text because the field nests too
-  deeply or forms a cycle, then the product shall refuse the item.
+text: If a field an [item](item) states cannot be read as text because the field nests
+  too deeply or forms a cycle, then the product shall refuse the [item](item).
 type: functional
 verification: inspection

@@ -6,9 +6,9 @@ acceptance_criteria:
   then: the product writes a pair of comments
   when: the product cites a requirement at them
 assessed:
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   4z5goa: 30PtQsml_1MEZrSS1OxPU2XNOw78s9Vo1tU8Zvy1C6g
 priority: medium

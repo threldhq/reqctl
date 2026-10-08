@@ -1,13 +1,14 @@
 acceptance_criteria:
-- given: a baseline stating a name, and a corpus holding exactly one item that records
-    that name as a name the item carried
+- given: a baseline stating a name, and a corpus holding exactly one [item](item)
+    that records that name as a name the [item](item) carried
   then: the product does not refuse
   when: a baseline is generated
 assessed:
-  REQ-44642786: TqRUT-VDn-ps_LzEHAIHw9Dtkpqnw8r02ffj22913E4
-  REQ-60430571: hgaKmodLJQdGahO5_r15MnxDafoE1KVigi8X6RypMwM
-  REQ-80226740: PZjI5BrUS5hqmfMUgoT6TSIUyFbu9MT_JM0W8qyM5Nk
-  REQ-94917590: UDuLOE8d-fQZFA_CiyI7B_S8kBHUl4qYGonNRQX4EhQ
+  REQ-44642786: f_tuj97sj5Zn01LbYR3BF1VbXP6to7k0yPyEqjcLa80
+  REQ-60430571: Moalg6_VN3cTwlBuWj71M6bXUNdTouPjCIxXJFE3HHY
+  REQ-80226740: xxeoTjMyDC-hQXxzQHFqJDH2V7FXD9FCrT-IiggoTDE
+  REQ-94917590: 2yP1VjEjzn4-QYnaf6_2LW-F1vjIzDSpE-vV8yPzr7A
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   db6w7v: T6MJQgynrOEfjmWhzEbGiIY9Iibf7mg9b7AOn47-BIc
   nmlqee: LjZOTBcgvXqIgArejBTVy3TB0cpLqrvpbq4mwuMOUVM
@@ -18,7 +19,8 @@ relations:
   REQ-80226740: constrains
   REQ-94917590: depends_on
 status: approved
-text: Where a baseline states a name exactly one item the corpus holds records as
-  a name the item carried, the product shall take the baseline as stating that item.
+text: Where a baseline states a name exactly one [item](item) the corpus holds records
+  as a name the [item](item) carried, the product shall take the baseline as stating
+  that [item](item).
 type: functional
 verification: inspection

@@ -2,14 +2,15 @@ acceptance_criteria:
 - given: the page reqctl portal serves
   then: it holds no list of kinds of its own
   when: it is read
-- given: the product gains a kind of item
-  then: the [portal](portal)'s list shows the items of that kind, with no edit to
-    the page
+- given: the product gains a kind of [item](item)
+  then: the [portal](portal)'s list shows the [items](item) of that kind, with no
+    edit to the page
   when: reqctl portal serves the page
 assessed:
-  REQ-42771008: YigdTUSV_OGUH2KJteo2hH-vg21pVIfZg6ap6Ng4PN8
+  REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
   REQ-49576265: pFihs7WdIwGSo9e5kkPdFZLxtJJRQIRHfXC3rdxNwAs
-  REQ-87847146: zR5tHnA8xAWxljTpeSDCDp0ewi3bq8TLBRCVV7Y_B7I
+  REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   7luynt: l6FaODuf9MAeGQloN_3X0GIkoQvuJZ37lTQ5ObxP8cM
@@ -20,6 +21,7 @@ relations:
   REQ-87847146: depends_on
 status: approved
 text: When reqctl portal serves the [portal](portal), the product shall take the kinds
-  of item the [portal](portal)'s list shows from the forms it serves with the page.
+  of [item](item) the [portal](portal)'s list shows from the forms it serves with
+  the page.
 type: constraint
 verification: inspection

@@ -1,21 +1,25 @@
 acceptance_criteria:
-- given: an item on disk holding a pin toward an address the item's prose does not
-    reference and the item's links do not name
-  then: the product reports the pin and names the address
+- given: an [item](item) on disk holding a [pin](pin) toward an address the [item](item)'s
+    prose does not reference and the [item](item)'s links do not name
+  then: the product reports the [pin](pin) and names the address
   when: the corpus is validated
-- given: an item holding a pin toward an address one of the item's links names
-  then: the product accepts the pin
+- given: an [item](item) holding a [pin](pin) toward an address one of the [item](item)'s
+    links names
+  then: the product accepts the [pin](pin)
   when: the corpus is validated
-- given: an item holding a pin toward an address the item's prose references
-  then: the product accepts the pin
+- given: an [item](item) holding a [pin](pin) toward an address the [item](item)'s
+    prose references
+  then: the product accepts the [pin](pin)
   when: the corpus is validated
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
 citations:
   pcswfe: HlzBzBhqJ7kt8mVV7tnpYrdI6QiK-29sW8kAy8Jk7Kk
 priority: medium
 relations: {}
 status: approved
-text: If an item holds a pin naming an address the item neither links nor references,
-  then the product shall report the pin.
+text: If an [item](item) holds a [pin](pin) naming an address the [item](item) neither
+  links nor references, then the product shall report the [pin](pin).
 type: functional
 verification: inspection

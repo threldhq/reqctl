@@ -1,21 +1,24 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) of a data item naming a stamp
-    the data item no longer carries
-  then: the citation names the stamp the data item carries
-  when: the product re-pins the citation
+- given: a [statement citation](statement_citation) of a [data item](data_item) naming
+    a [stamp](stamp) the [data item](data_item) no longer carries
+  then: the [citation](statement_citation) names the [stamp](stamp) the [data item](data_item)
+    carries
+  when: the product re-pins the [citation](statement_citation)
 - given: a [statement citation](statement_citation) of a parameter the corpus has
     deprecated
   then: the product refuses and the [code base](code_base) is unchanged
-  when: the product is asked to re-pin the citation
+  when: the product is asked to re-pin the [citation](statement_citation)
 assessed:
-  REQ-17757558: 4j9rQN-e61OYG38ijgByc3TLEHos-5NYvLjL6eo5Nng
-  REQ-18176935: u-uprH5qBxMTk7RLhLVJ39PV5F5depbLxxBYrr2xkWY
-  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
-  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
-  REQ-70626698: ybHsrTlF-wU1DJlKjkn2xPl6XzCm9kCorA_lVp1CsS8
-  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
+  REQ-17757558: XeiCnIpn4RLV2GwR8uJ2KMrHN9PP5mIqDMmTRKxZS8s
+  REQ-18176935: A6AhLhUZ7MdW9hwmBteIS6PgGLCXGQZTf7lwxGt04mo
+  REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  REQ-70626698: nJ3cW5CgMJtEFZZ9-28NJ9WTvptZ9QsN3id9Op-CXZo
+  REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   o3tsro: qU9hTfGQfCK074hqHBORbj1YmY9fjPcBgxYQHC3MshQ
   rsw2w2: ICIsTuxccSWWQOfQSVeuquwOtVviMV0i6kPycQElN2g
@@ -29,7 +32,7 @@ relations:
   REQ-88203622: depends_on
 status: approved
 text: The product shall re-pin a [statement citation](statement_citation) of a parameter
-  or a data item exactly as the product re-pins a [statement citation](statement_citation)
+  or a [data item](data_item) exactly as the product re-pins a [statement citation](statement_citation)
   of a requirement.
 type: functional
 verification: inspection

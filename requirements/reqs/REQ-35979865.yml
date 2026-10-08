@@ -1,18 +1,21 @@
 acceptance_criteria:
 - given: code citing a statement the corpus has deprecated
-  then: the product reports the citation and names no problem
+  then: the product reports the [citation](statement_citation) and names no problem
   when: trace is run
 - given: code citing a statement the corpus has deprecated
   then: the gate passes
-  when: the citations gate runs
-- given: code citing a statement the corpus has deprecated and a second citation naming
-    no stamp
-  then: the product names the citation without a stamp a problem
+  when: the [citations](statement_citation) gate runs
+- given: code citing a statement the corpus has deprecated and a second [citation](statement_citation)
+    naming no [stamp](stamp)
+  then: the product names the [citation](statement_citation) without a [stamp](stamp)
+    a problem
   when: trace is run
 - given: code citing no statement the corpus has deprecated
-  then: the product reports no citation as deprecated
+  then: the product reports no [citation](statement_citation) as deprecated
   when: trace is run
-assessed: {}
+assessed:
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   iz2v2g: Zz97gP03-0siUg1qhsnFmZqudKHuAVPKqitBY3-8fWE
   wht4dr: z5wzcoFJVLlWHoM1Q20M1qXb9Xnr7AZV3ZyZUWMA6AU
@@ -20,6 +23,6 @@ priority: medium
 relations: {}
 status: approved
 text: If code cites a statement the corpus has deprecated, then the product shall
-  report the citation.
+  report the [citation](statement_citation).
 type: functional
 verification: inspection

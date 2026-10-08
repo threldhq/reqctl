@@ -1,24 +1,28 @@
 acceptance_criteria:
-- given: a repository stating a schema named for an item the corpus does not hold
-  then: the product refuses and names the schema and the item it found none of
+- given: a repository stating a schema named for an [item](item) the corpus does not
+    hold
+  then: the product refuses and names the schema and the [item](item) it found none
+    of
   when: the corpus is validated
-- given: a repository stating a schema named for an item the corpus holds
+- given: a repository stating a schema named for an [item](item) the corpus holds
   then: the product accepts it
   when: the corpus is validated
 - given: a repository stating only the [kind schemas](kind_schema)
-  then: the product accepts it, a [kind schema](kind_schema) naming no item
+  then: the product accepts it, a [kind schema](kind_schema) naming no [item](item)
   when: the corpus is validated
 assessed:
-  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
   wljy47: yZVOFo7OISro0jzXs2nyo_gDHv18I5sW6p9COcgS9sw
 priority: high
-rationale: A schema named for an item is the repository saying its corpus holds one.
-  Holding it to that is how a project requires a data item to exist without the product
-  naming the item.
+rationale: A schema named for an [item](item) is the repository saying its corpus
+  holds one. Holding it to that is how a project requires a [data item](data_item)
+  to exist without the product naming the [item](item).
 relations: {}
 status: approved
-text: Where a repository states a schema named for an item, the product shall refuse
-  a corpus holding no item of that name.
+text: Where a repository states a schema named for an [item](item), the product shall
+  refuse a corpus holding no [item](item) of that name.
 type: functional
 verification: inspection

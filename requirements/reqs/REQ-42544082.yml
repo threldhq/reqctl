@@ -5,21 +5,24 @@ acceptance_criteria:
 - given: a parameter whose value is revised to a bracketed set
   then: the product refuses and states that a set member is duplicated
   when: the set states one member more than once
-- given: a data item
+- given: a [data item](data_item)
   then: the product refuses and names the key given more than once
-  when: an entry list names one key more than once
+  when: an [entry](entry) list names one key more than once
 - given: a parameter whose value type is duration
   then: the product refuses and states that a set member is duplicated
   when: the set states one number in two spellings
 assessed:
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   4cg2e4: 7LbGrQ4dJ4-uLDZiUNg0dbmXWLx5CnGPxXadHe-x1xk
   ghvzto: xeW7WcFJRq1UHh_SLLo6MPWUX95hinthQ9h1BZXnUfY
 priority: medium
 relations: {}
 status: approved
-text: If a set or an entry list states one member more than once, then the product
-  shall refuse the item.
+text: If a set or an [entry](entry) list states one member more than once, then the
+  product shall refuse the [item](item).
 type: functional
 verification: inspection

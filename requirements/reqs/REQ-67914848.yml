@@ -2,20 +2,24 @@ acceptance_criteria:
 - given: a parameter whose value is a set
   then: the product refuses and states that the default is not a member of the set
   when: a default naming no member of the set is stated
-- given: a data item
-  then: the product refuses and states that the default is not an entry
-  when: a default naming no entry of the data item is stated
-- given: a corpus holding an item whose default names no entry of that item
+- given: a [data item](data_item)
+  then: the product refuses and states that the default is not an [entry](entry)
+  when: a default naming no [entry](entry) of the [data item](data_item) is stated
+- given: a corpus holding an [item](item) whose default names no [entry](entry) of
+    that [item](item)
   then: the product refuses and names the default
   when: the corpus is validated
-assessed: {}
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   fnsqos: X20ts9_6Ti5HzDVL7uZurDeANjLRi1WpJlBzrLiT8g4
   ytoyxl: 7LbGrQ4dJ4-uLDZiUNg0dbmXWLx5CnGPxXadHe-x1xk
 priority: medium
 relations: {}
 status: approved
-text: If an item states a default naming no entry the item holds, then the product
-  shall refuse the item.
+text: If an [item](item) states a default naming no [entry](entry) the [item](item)
+  holds, then the product shall refuse the [item](item).
 type: functional
 verification: inspection

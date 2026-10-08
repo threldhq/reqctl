@@ -2,17 +2,18 @@ acceptance_criteria:
 - given: a corpus holding a guard
   then: the list shows the guard
   when: the [portal](portal)'s list is read
-- given: each kind of item the [portal](portal) can create
-  then: the list shows the items of that kind
+- given: each kind of [item](item) the [portal](portal) can create
+  then: the list shows the [items](item) of that kind
   when: the [portal](portal)'s list is read
 assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   suyt4d: l6FaODuf9MAeGQloN_3X0GIkoQvuJZ37lTQ5ObxP8cM
 priority: medium
 relations: {}
 status: approved
-text: The product shall show in the [portal](portal)'s list the items of every kind
-  of item the [portal](portal) can create, guards included.
+text: The product shall show in the [portal](portal)'s list the [items](item) of every
+  kind of [item](item) the [portal](portal) can create, guards included.
 type: functional
 verification: inspection

@@ -1,17 +1,18 @@
 acceptance_criteria:
-- given: a corpus holding no item under a given uid
-  then: the corpus holds the item under that uid
-  when: an item whose uid the product would otherwise [mint](mint) is [minted](mint)
+- given: a corpus holding no [item](item) under a given uid
+  then: the corpus holds the [item](item) under that uid
+  when: an [item](item) whose uid the product would otherwise [mint](mint) is [minted](mint)
     under that uid
 assessed:
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   j3ijco: eC1_sCp8q49lJ3TOXAEB9BMFG-re6RyapiPIMjWMcAg
   yorgmf: nQqEjPLBezunffStJMeC9UaOwaKEAWGFKm0C5DY_gls
 priority: medium
 relations: {}
 status: approved
-text: Where a uid is given for an item whose uid the product would otherwise [mint](mint),
-  the product shall [mint](mint) the item under the given uid.
+text: Where a uid is given for an [item](item) whose uid the product would otherwise
+  [mint](mint), the product shall [mint](mint) the [item](item) under the given uid.
 type: functional
 verification: inspection

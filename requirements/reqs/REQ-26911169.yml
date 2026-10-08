@@ -1,14 +1,15 @@
 acceptance_criteria:
-- given: an item whose stored link names the item holding the link
+- given: an [item](item) whose stored link names the [item](item) holding the link
   then: the product reports the link
   when: the corpus is validated
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   v3b5cc: BVd25SPe2B0LwqAUS3yBpgweCDQ8wusOpMXfK_TVt_o
 priority: medium
 relations: {}
 status: approved
-text: If a link on disk names the item holding the link, then the product shall report
-  the link.
+text: If a link on disk names the [item](item) holding the link, then the product
+  shall report the link.
 type: functional
 verification: inspection

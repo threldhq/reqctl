@@ -1,8 +1,9 @@
 acceptance_criteria:
-- given: an item whose dependency cannot be read
+- given: an [item](item) whose dependency cannot be read
   then: the product names the dependency once
   when: validate is run
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   gxi4g4: i-kW-RtMjKI-xN62-PUzViPuIfvJiB9DTvFCTNcuDvQ
 priority: medium

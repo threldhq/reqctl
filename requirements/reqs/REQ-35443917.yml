@@ -3,10 +3,11 @@ acceptance_criteria:
   then: the product refuses
   when: the command runs
 - given: a requirement file stating automated_test as its verification
-  then: the product refuses the item
+  then: the product refuses the [item](item)
   when: the corpus is validated
 assessed:
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   efas27: _Fgkmdzlcfcf-rJxp23cMiLRVKEX2BOQAFUjiCp5ndo
   znhrrb: R39Tjcf6DPOGLSihmsCDJ8MiPHir2m5j2O1MT9tywEI

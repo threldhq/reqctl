@@ -2,21 +2,23 @@ acceptance_criteria:
 - given: a [statement citation](statement_citation) of a parameter
   then: the comments carrying it and what the parameter's [citation list](citation_list)
     holds for it are gone
-  when: the product removes the citation
-- given: a [citation list](citation_list) of a data item holding a [citation identity](citation_identity)
-    that no [statement citation](statement_citation) names
+  when: the product removes the [citation](statement_citation)
+- given: a [citation list](citation_list) of a [data item](data_item) holding a [citation
+    identity](citation_identity) that no [statement citation](statement_citation)
+    names
   then: the list no longer holds the identity
   when: the product is asked to remove the identity from the list
 assessed:
-  REQ-13298390: OIZCRlURf3pq-ZhHeyKdDSnceHIMsqnrRUQPpcjLOS8
-  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
-  REQ-59136977: 5NZtW-PM9X2OOiZgf5rDE9IouDL_tKWJpcAAzbj8lWo
-  REQ-81063063: J51Kuu-RKFjKtxqc3zlT27HAFl1_TAy_lK0VI9FlpSM
-  REQ-81275367: rZszCCP31YAUF8OI_m6qTAE3rFLUI2taSxCDDjYEk-E
-  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
+  REQ-13298390: Pum5hwaVAaJoYdAcZYw13D38cI-LY3s2RQboqgQJ6tY
+  REQ-26984738: 2Cu-ngxaDd6zI2TwmFRCzBrxeAWxGDX1sZQrNQvfa74
+  REQ-59136977: -tsi9nTBSL9-E5z25cvfg39BI53Vw4aLjSKhOFE3_oQ
+  REQ-81063063: v5hfLK63eQj_4fWYnF0ECIm0S-nX3StB6vSg7tGIq34
+  REQ-81275367: 2q0tIHQCM4br59gvDPycGTyQnW3E_1HGUty3T2rg1bU
+  REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   7e5dqc: GN2yROUNPy6lTTvime2ITk-KuazDMnrZvJ7YNZJPQ6g
 priority: medium
@@ -29,7 +31,7 @@ relations:
   REQ-88203622: depends_on
 status: approved
 text: The product shall remove a [statement citation](statement_citation) of a parameter
-  or a data item, and a [citation identity](citation_identity) from the [citation
-  list](citation_list) of one, exactly as the product does for a requirement.
+  or a [data item](data_item), and a [citation identity](citation_identity) from the
+  [citation list](citation_list) of one, exactly as the product does for a requirement.
 type: functional
 verification: inspection

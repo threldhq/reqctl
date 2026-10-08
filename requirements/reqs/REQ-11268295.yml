@@ -1,23 +1,23 @@
 acceptance_criteria:
 - given: a comment carrying a [statement citation](statement_citation) and naming
     no [citation identity](citation_identity)
-  then: the product refuses the citation
+  then: the product refuses the [citation](statement_citation)
   when: the product reads the code
 - given: a comment carrying a [statement citation](statement_citation) whose [citation
     identity](citation_identity) holds no character
-  then: the product refuses the citation
+  then: the product refuses the [citation](statement_citation)
   when: the product reads the code
 assessed:
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   q7622j: P-UPnmaCVy8jz6Hq9v5Pc3bXZro6JrIpAsdFJMY9FFM
 priority: medium
 relations: {}
 status: approved
 text: If a comment carrying a [statement citation](statement_citation) names no [citation
-  identity](citation_identity) for the lines the citation covers, or names a [citation
-  identity](citation_identity) holding no character, then the product shall refuse
-  the citation.
+  identity](citation_identity) for the lines the [citation](statement_citation) covers,
+  or names a [citation identity](citation_identity) holding no character, then the
+  product shall refuse the [citation](statement_citation).
 type: functional
 verification: inspection

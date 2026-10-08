@@ -1,25 +1,29 @@
 acceptance_criteria:
-- given: an approved requirement cited by code carrying its stamp
-  then: trace reports nothing behind the corpus for the citation
+- given: an approved requirement cited by code carrying its [stamp](stamp)
+  then: trace reports nothing behind the corpus for the [citation](statement_citation)
   when: the requirement's verification, type or priority is revised
-- given: an approved requirement cited by code carrying its stamp
-  then: trace reports the citation as behind the corpus
+- given: an approved requirement cited by code carrying its [stamp](stamp)
+  then: trace reports the [citation](statement_citation) as behind the corpus
   when: the requirement's text or an acceptance criterion is revised
-- given: an item binding an approved requirement
-  then: the product leaves the binder pinned
+- given: an [item](item) binding an approved requirement
+  then: the product leaves the binder [pinned](pin)
   when: the requirement's verification, type, priority or rationale is revised
-- given: an item binding an approved requirement
+- given: an [item](item) binding an approved requirement
   then: the product makes the binder suspect
   when: an acceptance criterion of the requirement is revised
 assessed:
-  REQ-56581795: IfY71qSXm5yzdJhrIab5R58OCkQ67bgFgfywbhXqqPw
+  REQ-56581795: KcbOaSZB6LPVLqjMKgZofPweSqqZHWqw337PbGKvFd8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   4jhey4: R9WxNDLEm3O_J9lF4gFor6utn83QQzJtV1V0mIiXKJQ
 priority: medium
 relations:
   REQ-56581795: constrains
 status: approved
-text: The product shall derive a requirement's stamp from the requirement's text and
-  acceptance criteria and from no other field the requirement states.
+text: The product shall derive a requirement's [stamp](stamp) from the requirement's
+  text and acceptance criteria and from no other field the requirement states.
 type: functional
 verification: inspection

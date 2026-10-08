@@ -8,7 +8,7 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-90454282: M0OdZ2RxH5qSAggaNA3jqFbkTXkdvD7VSStQiH-FPdw
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   6po76w: b9mhEu0ZbQOb20JD5J4PME5JbIrh31tyHnCmELQI3Ic
 priority: medium

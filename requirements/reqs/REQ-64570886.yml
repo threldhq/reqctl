@@ -1,18 +1,21 @@
 acceptance_criteria:
-- given: a corpus in which two items each carry a problem
-  then: the product withholds the problem belonging to the item trace did not name
+- given: a corpus in which two [items](item) each carry a problem
+  then: the product withholds the problem belonging to the [item](item) trace did
+    not name
   when: trace names one of the two
-- given: a file the product cannot read while scanning citations
-  then: the product reports the unreadable file, which belongs to no item and so is
-    withheld from no report
-  when: trace names one item
-assessed: {}
+- given: a file the product cannot read while scanning [citations](statement_citation)
+  then: the product reports the unreadable file, which belongs to no [item](item)
+    and so is withheld from no report
+  when: trace names one [item](item)
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   jzenja: 9P7OdVt6WAWfQGzGQe08NfebS1cpZIJv86dgLcgX6c0
 priority: medium
 relations: {}
 status: approved
-text: When trace is asked for one item, the product shall withhold every problem belonging
-  to another item.
+text: When trace is asked for one [item](item), the product shall withhold every problem
+  belonging to another [item](item).
 type: functional
 verification: inspection

@@ -1,16 +1,21 @@
 acceptance_criteria:
-- given: an entry of a dictionary item stating a field as text
-  then: the product refuses and names the value the entry states
-  when: a statement addressing the item by that field is written
+- given: an [entry](entry) of a [dictionary item](dictionary_item) stating a field
+    as text
+  then: the product refuses and names the value the [entry](entry) states
+  when: a statement addressing the [item](item) by that field is written
 assessed:
-  REQ-79222815: kx_jWO6UU-11hZmah_-OsvFBMfE-nwER5ZIOflzXlBQ
+  REQ-79222815: smBL1zf2tP96ieg8mVjCeX_0ab2XSS5PpMzqf5Psxdk
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   p5hfxl: vSdd9Gr27wsCxMnv1wA9FJ2bx-wOsDkdJUFw3RB7UIg
 priority: medium
 relations:
   REQ-79222815: constrains
 status: approved
-text: If a statement addresses a dictionary item by a field an entry of the item states
-  as neither true nor false, then the product shall refuse the statement.
+text: If a statement addresses a [dictionary item](dictionary_item) by a field an
+  [entry](entry) of the [item](item) states as neither true nor false, then the product
+  shall refuse the statement.
 type: functional
 verification: inspection

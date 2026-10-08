@@ -12,7 +12,7 @@ acceptance_criteria:
   then: the product refuses the prose
   when: the corpus is validated
 assessed:
-  REQ-83702299: IgLtX0BfZTksPIEqT99UOB-9FZ_Zv9UHjv-slw_7VrQ
+  REQ-83702299: kBGzIwAyKDHLaQr2uEZDpQDAHRtNn5Lkk6r0WFUdTvA
 citations:
   2k7l5j: R1CvdIfUACod-akrud6wSVqZmS6LnB2dW2ieUaYOjoQ
   bapzey: 5NO-iEtCQmVs9xKxizHTeTaFla7sVSz7ppckptzvp4M

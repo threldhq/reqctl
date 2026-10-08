@@ -3,9 +3,10 @@ acceptance_criteria:
   then: the prompt states that the findings file is the agent only output
   when: the coverage prompt is built
 - given: a run
-  then: the prompt states that no note per item is written
+  then: the prompt states that no note per [item](item) is written
   when: the coverage prompt is built
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   a7rnsw: mYfxAoobKehVOAvaZ2ON20FkN2OmGT-TA-vjj6PrKDM
 priority: medium

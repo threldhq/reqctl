@@ -10,6 +10,7 @@ acceptance_criteria:
 assessed:
   REQ-20722175: BniiLBiwu3XL-OhaDgg_A3XrIhmW5BwHw2OyAx5lDWQ
   REQ-23706540: e-JqhR3Ui-keWIPxNZLUjlVjA3fPWTM1awZuzyA7rJk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   733yqr: LDH2C38mWwGlIvSRZyoY1TdAmr9A35iDf7_ir1MVx9Q
   cx4ygh: XYIUyrMrGfjH4lmlBqBm6VWlH9RPw2rkUXiXhXrMPd8
@@ -21,7 +22,7 @@ relations:
 status: approved
 text: When a run is scored, the product shall report for each probe what its verdict
   found and how many citations fell outside the key, and for each probe expecting
-  an item whether recall reached it and the judge prompt carried it, with totals across
-  the run.
+  an [item](item) whether recall reached it and the judge prompt carried it, with
+  totals across the run.
 type: functional
 verification: inspection

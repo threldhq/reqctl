@@ -1,8 +1,9 @@
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 entries:
   '20': {}
 kind: parameter
 name: judge_group
 status: deprecated
-text: The most items one judge group holds
+text: The most [items](item) one judge group holds
 value_type: count

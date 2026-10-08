@@ -1,11 +1,15 @@
 assessed:
-  corpus_root: 7CziDMdjMvRZz0Ca6kiRo5TWAjuy2HNRNmLXRny6eM0
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 entries:
   settings_file:
     definition: The YAML file settings.yml in a repository's [corpus root](corpus_root),
-      holding no item of the corpus, that states values in place of values the product
-      ships, each under the name of the parameter, or under the names of the data
-      item, the entry and the field, that holds the value it replaces.
+      holding no [item](item) of the corpus, that states values in place of values
+      the product ships, each under the name of the parameter, or under the names
+      of the [data item](data_item), the [entry](entry) and the field, that holds
+      the value it replaces.
     word: settings file
 kind: term
 status: approved

@@ -4,7 +4,7 @@ acceptance_criteria:
   then: the report states one accepted, one refused and one never returned
   when: the verdicts are read
 assessed:
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   u37uos: etK1HGDsd_dmml0fz8J2adLyLclsaRIoAVqYGDYFwdw
 priority: medium

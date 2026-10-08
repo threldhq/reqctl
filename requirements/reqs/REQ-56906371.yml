@@ -6,10 +6,10 @@ acceptance_criteria:
     default branch both carry
 - given: a [statement citation](statement_citation) the newest state the branch and
     the default branch both carry holds and the code does not
-  then: the product states that the citation was deleted
+  then: the product states that the [citation](statement_citation) was deleted
   when: the product compares the code against that state
 assessed:
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   bicxbc: cuGHDai7gmmi8ielub57E4Ty4PGAZNJhp0LOXErNCcM
   vvu3g7: JlT1_BxwHvSq7wHqYnM9NocEF_9-5yF_TaSJ8OYfdEY
@@ -18,8 +18,9 @@ relations: {}
 status: approved
 text: When the product compares the code against the newest state the branch and the
   default branch both carry, the product shall state of every [statement citation](statement_citation)
-  that the code or that state carries whether the citation was added, whether the
-  citation was deleted, and, where the code and that state both carry the citation,
-  whether the lines the citation covers moved and whether the covered lines changed.
+  that the code or that state carries whether the [citation](statement_citation) was
+  added, whether the [citation](statement_citation) was deleted, and, where the code
+  and that state both carry the [citation](statement_citation), whether the lines
+  the [citation](statement_citation) covers moved and whether the covered lines changed.
 type: functional
 verification: inspection

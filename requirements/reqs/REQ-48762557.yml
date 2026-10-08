@@ -1,26 +1,28 @@
 acceptance_criteria:
-- given: fifty-five items named for one [proposal](proposal) and a group bound of
-    twenty
-  then: three group prompts are built, none holding more than twenty items, and every
-    item appears in exactly one
+- given: fifty-five [items](item) named for one [proposal](proposal) and a group bound
+    of twenty
+  then: three group prompts are built, none holding more than twenty [items](item),
+    and every [item](item) appears in exactly one
   when: the judge prompts are built
-- given: thirty items named for one [proposal](proposal) and a judge bound of forty
+- given: thirty [items](item) named for one [proposal](proposal) and a judge bound
+    of forty
   then: one judge prompt holds all thirty
   when: the judge prompts are built
 assessed:
-  REQ-30631052: YipkKcwzRStRgjQYay9Wr1bz3AU80L23gLwgBpCP3Go
+  REQ-30631052: xqJkQgCU4pW_mDKnN6Qgjkkg6YYSS5et_YyN8rWVZU4
   challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
-  challenge_bounds.judge_bound: usfwiJrXsFZWaY5Mcwe1A50JHRWpFov-W2_yLFZ5OE4
-  challenge_bounds.judge_group: 2k6b0ufxpYmiC_GBiQTDa90gR-pSdMBIYkXikZQALTc
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  challenge_bounds.judge_bound: zytHLV1F3JcY1ZbItpK1d_O9pvzZ40A9shwEGWnwtU0
+  challenge_bounds.judge_group: aAc0gWj-2steQoD3EfLLWdXu39pomqpEZRlfqNfj9VU
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   5f3ye7: KLI12JslZACTjVYjbr0kMx9_prjdpRWcqm9Njk9FjXs
 priority: medium
 relations:
   REQ-30631052: constrains
 status: approved
-text: If the items named for a [proposal](proposal) exceed ${challenge_bounds.judge_bound.quantity},
-  then the product shall split the named items into judge prompts holding at most
-  ${challenge_bounds.judge_group.quantity} items each.
+text: If the [items](item) named for a [proposal](proposal) exceed ${challenge_bounds.judge_bound.quantity},
+  then the product shall split the named [items](item) into judge prompts holding
+  at most ${challenge_bounds.judge_group.quantity} [items](item) each.
 type: functional
 verification: inspection

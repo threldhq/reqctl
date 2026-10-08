@@ -11,7 +11,7 @@ acceptance_criteria:
   when: the batch is applied
 assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   dwzirn: uUF5ZSBAgBqyOKWpmznRqUnd7vkNn-fLl-yX1YPMQz4

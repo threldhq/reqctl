@@ -1,7 +1,7 @@
 acceptance_criteria:
 - given: an edit, multi-edit or write that adds, removes or changes a comment carrying
     a [statement citation](statement_citation), including by deleting cited code together
-    with its citation
+    with its [citation](statement_citation)
   then: the product refuses it and names reqctl tag, repin and untag as the route
   when: the [tool call](tool_call) is made
 - given: a shell command that names the text opening a [statement citation](statement_citation)
@@ -21,11 +21,11 @@ acceptance_criteria:
   then: the product does not refuse it
   when: the [tool call](tool_call) running reqctl is made
 assessed:
-  REQ-18833394: wnCdGzhY7m6ZyofSNq84fIBusl049TAQPLS3kjgdLhs
-  REQ-26984738: nD05toE71g-OgMP1wl9BoQJDDvKciwawAhmbwKxxtMM
+  REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
+  REQ-26984738: 2Cu-ngxaDd6zI2TwmFRCzBrxeAWxGDX1sZQrNQvfa74
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  REQ-60346603: eKFixVFgV9Xtb-4ld8uW8fZssITFd5ufYZWvOY48TwU
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   2x3zhi: NQlTa_n373CqXbFku5BuLamzHvqMAnwLiAqGkpgqQHQ

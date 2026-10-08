@@ -1,11 +1,13 @@
 acceptance_criteria:
-- given: a link naming an entry the item does not hold
+- given: a link naming an [entry](entry) the [item](item) does not hold
   then: the product shows the link as written
   when: the statement is exported
-- given: a link naming an entry of an item that holds no entries
+- given: a link naming an [entry](entry) of an [item](item) that holds no [entries](entry)
   then: the product shows the link as written
   when: the statement is exported
-assessed: {}
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 priority: medium
 relations: {}
 status: approved

@@ -1,18 +1,19 @@
 acceptance_criteria:
-- given: the [kind schema](kind_schema) gains a field for a kind of item
+- given: the [kind schema](kind_schema) gains a field for a kind of [item](item)
   then: reqctl accepts the flag, with no edit to reqctl's parser
-  when: reqctl revise runs with that field's flag on an item of that kind
-- given: the [kind schema](kind_schema) lets an item leave a field out
+  when: reqctl revise runs with that field's flag on an [item](item) of that kind
+- given: the [kind schema](kind_schema) lets an [item](item) leave a field out
   then: it takes a flag that clears the field
-  when: reqctl revise runs on an item of that kind
+  when: reqctl revise runs on an [item](item) of that kind
 - given: the [kind schema](kind_schema) marks a field as the address the corpus reaches
-    an item by
+    an [item](item) by
   then: reqctl refuses the flag and names reqctl rename
   when: reqctl revise runs with that field's flag
 assessed:
-  REQ-13148397: XXob_8TNNhHNxQ0WHfaFlfOb0AM_DHtJIkCKTBVfhm0
-  REQ-44451070: VVBRK8IWFyvqzw-ok_5Or3jztSvYdskoyt4JyBtImBk
-  kind_schema: FnootAtTpPvZaBGIt9FgnVM4xfM4J9guAHLh8cXj1AY
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
   ctnzp2: Iu6I4mW8NbMoVOSruZf1wPmVL71sCZrthtkaabqNFUA
   hc64tl: 4GajCaMEj1LDRMVS6oh1btu_KGRCb17_zsFrGHCXzkQ
@@ -22,6 +23,6 @@ relations:
   REQ-44451070: depends_on
 status: approved
 text: The product shall build the flags that reqctl revise takes to set or clear an
-  item's fields from the [kind schema](kind_schema).
+  [item](item)'s fields from the [kind schema](kind_schema).
 type: constraint
 verification: inspection

@@ -1,12 +1,16 @@
 acceptance_criteria:
 - given: lines of code
-  then: the product writes a [statement citation](statement_citation) naming the entry
-    and adds the citation to the data item's [citation list](citation_list)
-  when: the product is asked to cite one entry of a data item at them
+  then: the product writes a [statement citation](statement_citation) naming the [entry](entry)
+    and adds the [citation](statement_citation) to the [data item](data_item)'s [citation
+    list](citation_list)
+  when: the product is asked to cite one [entry](entry) of a [data item](data_item)
+    at them
 assessed:
-  REQ-88203622: QLXb8abUOMT3YsC0ar-u9bB0zZ48cfZs1vVd_EdHQk0
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   5upe6v: F8gpq2PF2tYojXA58ZfNjJocEp7EI0cgMKxyWQaa7TQ
   ez4hkv: cLhbRGU--zi2780kpLcqb5-zxIws1QRZdDqx5viqgpA
@@ -16,7 +20,7 @@ priority: medium
 relations:
   REQ-88203622: derives_from
 status: approved
-text: The product shall cite one entry of a data item at lines of code exactly as
-  the product cites the data item.
+text: The product shall cite one [entry](entry) of a [data item](data_item) at lines
+  of code exactly as the product cites the [data item](data_item).
 type: functional
 verification: inspection

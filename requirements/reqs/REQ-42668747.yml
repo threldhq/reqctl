@@ -1,16 +1,16 @@
 acceptance_criteria:
 - given: code carrying a one-comment [statement citation](statement_citation) above
     a [code statement](code_statement) that spans several lines
-  then: the citation covers every line of that [code statement](code_statement) and
-    no line after it
-  when: the product reads the citation
+  then: the [citation](statement_citation) covers every line of that [code statement](code_statement)
+    and no line after it
+  when: the product reads the [citation](statement_citation)
 - given: code carrying a one-comment [statement citation](statement_citation) above
     a [code statement](code_statement) that opens a block
-  then: the citation covers every line the block holds
-  when: the product reads the citation
+  then: the [citation](statement_citation) covers every line the block holds
+  when: the product reads the [citation](statement_citation)
 assessed:
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   cfabxh: CBY1AWS6BqGFAd0OwYrv3asp9nLX1WLDFP-q8Yec-F4
 priority: medium

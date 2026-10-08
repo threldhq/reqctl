@@ -2,15 +2,15 @@ acceptance_criteria:
 - given: a [citation list](citation_list) holding a [citation identity](citation_identity)
     whose [statement citation](statement_citation) names another requirement
   then: that list no longer holds the identity, and the [citation list](citation_list)
-    of the requirement the citation names is unchanged
+    of the requirement the [citation](statement_citation) names is unchanged
   when: the product is asked to remove the identity from that list
 assessed:
-  REQ-75539229: OyOJtrpdfVnQwE8GZcfprNdyZnZgpHKYIkS18z9eKww
-  citation_digest: P0B_wyGMXd0g87oxCpk-YqeQLW01MECv1WuzJa3yS6Q
+  REQ-75539229: 263gd_-RLfVLJTxPjnM8Lcc2AlTeCxUZZH9498fcB_w
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   s3g7ya: S8VDqrv-uVc1i13tvYy1h3yIiR_m6G3O6jFTOp1c4RQ
 priority: medium

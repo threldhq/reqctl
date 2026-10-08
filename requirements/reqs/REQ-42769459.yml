@@ -8,9 +8,10 @@ acceptance_criteria:
   when: a run is built there
 assessed:
   REQ-32331515: Nn3qX9jMrAU-mRofbCIQXy4KtAb8FPIKO37CrIthPRQ
-  REQ-40447106: qf0g3PvFcpT0zWuLbLIOBqVu5DqTHBt0d55yjdyAAIQ
-  REQ-87066486: KWWtPxhU0AiEiD76limS2yyI4E8l-RHOFh6p3MAFB2A
-  settings_file: m6ZBxmdn5RL4fhod1m_kshxXCuDtQYFIwSBYDkfQfA0
+  REQ-40447106: xVwoSkyU3_rGtMYh7i4MNvV3hkr4KYSu74ocuxLDCro
+  REQ-87066486: AtzPEAcAbJ1vtpLCqCZnXdrS-wd-THi3TvLIgx4VcF0
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   ipg3lp: FLVrksLLhrbwS7xy8AP06ssG2Hjy0WPUKj0LIzBGgpg
   mfrzc7: _O3EFdAZmqFGyCRwHFoDk_7T1VDq4dlWaUt_5PymEog
@@ -22,6 +23,6 @@ relations:
 status: approved
 text: If the product cannot read the default branch that a repository's origin remote
   names, then the product shall use in that repository the values it ships for its
-  own parameters and data items, reading no [settings file](settings_file).
+  own parameters and [data items](data_item), reading no [settings file](settings_file).
 type: functional
 verification: inspection

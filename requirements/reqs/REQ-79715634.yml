@@ -1,19 +1,21 @@
 acceptance_criteria:
 - given: the elucidate skill as shipped
   then: it [mints](mint) values that bound or describe the same behaviour or the same
-    thing of the governed software as entries of one data item
+    thing of the governed software as [entries](entry) of one [data item](data_item)
   when: its passages on [minting](mint) are read
 - given: the elucidate skill as shipped
   then: no passage [mints](mint) one parameter for each of several values that share
     a subject
   when: its passages on [minting](mint) are read
 - given: the elucidate skill as shipped
-  then: it [mints](mint) a value as an entry of the data item the corpus already holds
-    for the value's subject
+  then: it [mints](mint) a value as an [entry](entry) of the [data item](data_item)
+    the corpus already holds for the value's subject
   when: its passages on [minting](mint) are read
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   ktu5yd: C07WH00NPyhAjLhabEe9n0F-8D6DV11QVdoJKxmz5iw
 priority: medium
@@ -21,6 +23,6 @@ relations:
   REQ-38288492: derives_from
 status: approved
 text: The product shall ship an elucidate skill that [mints](mint) values that share
-  a subject as entries of one data item.
+  a subject as [entries](entry) of one [data item](data_item).
 type: functional
 verification: inspection

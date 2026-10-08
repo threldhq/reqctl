@@ -1,20 +1,21 @@
 acceptance_criteria:
-- given: a corpus holding one item the product cannot read and other items carrying
-    problems
-  then: the product reports every problem belonging to an item it could read
+- given: a corpus holding one [item](item) the product cannot read and other [items](item)
+    carrying problems
+  then: the product reports every problem belonging to an [item](item) it could read
   when: the corpus is validated
-- given: a check that cannot finish because one item cannot be read
-  then: the product reports what that check found for the items it could read
+- given: a check that cannot finish because one [item](item) cannot be read
+  then: the product reports what that check found for the [items](item) it could read
   when: the corpus is validated
 assessed:
-  REQ-39368456: fHW3SvGcMIr_v4Kf3BJrNebhowS0MNxZvXJyM0hMIOg
+  REQ-39368456: pX8wTz05ESJBknoiOHTXD3OYHCqNrASj4eAR4TjVlq0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   d3uvus: eC3GxadEp28QC8HgdHAbyYGAGzmTbvxuvhs_1TnHrQ0
 priority: medium
 relations:
   REQ-39368456: constrains
 status: approved
-text: When validation cannot read an item, the product shall report the problems found
-  in each item the product can read.
+text: When validation cannot read an [item](item), the product shall report the problems
+  found in each [item](item) the product can read.
 type: functional
 verification: inspection

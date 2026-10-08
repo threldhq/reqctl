@@ -1,18 +1,21 @@
 acceptance_criteria:
-- given: a link naming an entry the item does not hold
+- given: a link naming an [entry](entry) the [item](item) does not hold
   then: the product refuses and names the link
   when: the prose is written
-- given: a link naming an entry of an item that holds no entries
+- given: a link naming an [entry](entry) of an [item](item) that holds no [entries](entry)
   then: the product refuses and names the link
   when: the prose is written
-- given: a corpus holding a link naming an entry the link's target does not hold
+- given: a corpus holding a link naming an [entry](entry) the link's target does not
+    hold
   then: the product refuses and names the link
   when: the corpus is validated
-assessed: {}
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 priority: medium
 relations: {}
 status: approved
-text: If an item's prose carries a link whose address names an entry the link's target
-  does not hold, then the product shall refuse the prose.
+text: If an [item](item)'s prose carries a link whose address names an [entry](entry)
+  the link's target does not hold, then the product shall refuse the prose.
 type: functional
 verification: inspection

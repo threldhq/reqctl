@@ -1,6 +1,7 @@
 assessed:
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   j6wvnl: mGDq78YeU5hU-HH6QIk_ID7HL5c2qZNVbedFtU9XBFA
 entries:
@@ -14,12 +15,12 @@ entries:
     quantity: 10
     unit: obligations
   judge_bound:
-    definition: The most items one judge prompt holds before the items are split into
-      groups
+    definition: The most [items](item) one judge prompt holds before the [items](item)
+      are split into groups
     quantity: 45
     unit: items
   judge_group:
-    definition: The most items one judge group holds
+    definition: The most [items](item) one judge group holds
     quantity: 20
     unit: items
   recall_batch:

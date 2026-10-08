@@ -1,13 +1,14 @@
 acceptance_criteria:
 - given: a branch changing code that a [statement citation](statement_citation) covers
-  then: the body names the requirement, guard, parameter or data item the citation
-    names and the finding of reading the code citing the item against the item
+  then: the body names the requirement, guard, parameter or [data item](data_item)
+    the [citation](statement_citation) names and the finding of reading the code citing
+    the [item](item) against the [item](item)
   when: the pre-pr skill prepares the pull request
 - given: a branch changing code that a [statement citation](statement_citation) of
-    one entry of a data item covers
-  then: the body names the data item
+    one [entry](entry) of a [data item](data_item) covers
+  then: the body names the [data item](data_item)
   when: the pre-pr skill prepares the pull request
-- given: a branch that touches no requirement, guard, parameter or data item
+- given: a branch that touches no requirement, guard, parameter or [data item](data_item)
   then: the body states that none was touched
   when: the pre-pr skill prepares the pull request
 - given: the pre-pr skill as shipped
@@ -15,9 +16,12 @@ acceptance_criteria:
   when: the steps of the skill are read
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  REQ-56906371: rALaP5YBvHg7rld_RJyzT5l1PbgVp-KmltaXTAHGWKk
-  REQ-70581878: qWy6X2qJfi1hXBaTf2xVN41jlHMqxeSOePycrXlxlhI
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-56906371: wq3BL0IRTLVVKuOe3drLtf2CYn6JfDGY337Kk20tmfM
+  REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 citations:
   hbi4d7: sfVHJPKdx4Vpwx1dgSIJTPEJ6nYH9m5ahvH_ShVbgjE
@@ -28,8 +32,8 @@ relations:
   REQ-70581878: depends_on
 status: approved
 text: When the pre-pr skill prepares a pull request, the product shall list in the
-  pull request body every requirement, guard, parameter and data item the product
-  names as touched by the branch, each with the finding of reading the code citing
-  the item against the item.
+  pull request body every requirement, guard, parameter and [data item](data_item)
+  the product names as touched by the branch, each with the finding of reading the
+  code citing the [item](item) against the [item](item).
 type: functional
 verification: inspection

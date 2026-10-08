@@ -1,17 +1,18 @@
 acceptance_criteria:
-- given: an entry naming its model opus
-  then: the product refuses the run, naming the entry
+- given: an [entry](entry) naming its model opus
+  then: the product refuses the run, naming the [entry](entry)
   when: a run is built
-- given: an entry naming an empty model, or one that is not text
-  then: the product refuses the run, naming the entry
+- given: an [entry](entry) naming an empty model, or one that is not text
+  then: the product refuses the run, naming the [entry](entry)
   when: a run is built
-- given: an entry naming a [pinned model ID](pinned_model_id)
+- given: an [entry](entry) naming a [pinned model ID](pinned_model_id)
   then: it is spawned on that model ID rather than on the family the ID belongs to
   when: the agent is spawned
 assessed:
-  REQ-23060027: QKFI8tm_J5VF5FlpyYn7ENn8OIvvcTXbZ_-9Z0mJhIo
+  REQ-23060027: zeNeSryv-0-1-V7CNGTlk3RN2_KxE0P3zV9SCZD6ZSs
   elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
-  elucidate_agents.*: DPeFB7h1ftXCf3Nu3ubhj4Ki73YvBB6yq88VuOOJK8s
+  elucidate_agents.*: wpfamgxi_mt-7nuX3IW0mErlSS94rF11TjMeODKUmbc
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
 citations:
   yj46qn: Wz7Cj3X6p7E9rAXrzyeXLIEotXzcmf9ahUcZPNuM_BI
@@ -19,7 +20,7 @@ priority: medium
 relations:
   REQ-23060027: constrains
 status: approved
-text: If an entry of ${elucidate_agents} names its model by anything other than a
-  [pinned model ID](pinned_model_id), then the product shall refuse the run.
+text: If an [entry](entry) of ${elucidate_agents} names its model by anything other
+  than a [pinned model ID](pinned_model_id), then the product shall refuse the run.
 type: functional
 verification: inspection

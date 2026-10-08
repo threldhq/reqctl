@@ -1,13 +1,16 @@
 assessed:
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 entries:
   statement_citation:
     aliases:
     - statement citations
     definition: 'A comment, or a pair of comments, in code naming a requirement, a
-      guard, a parameter, a data item or one entry of a data item, and an identity:
-      a pair covers the lines between its comments, and a single comment covers the
-      [code statement](code_statement) that follows it.'
+      guard, a parameter, a [data item](data_item) or one [entry](entry) of a [data
+      item](data_item), and an identity: a pair covers the lines between its comments,
+      and a single comment covers the [code statement](code_statement) that follows
+      it.'
     word: statement citation
 kind: term
 status: approved

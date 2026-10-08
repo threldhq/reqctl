@@ -1,17 +1,27 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) of one entry of a data item
-  then: the stamp the product pins the citation to is unchanged
-  when: a field of another of the data item's entries is revised
-- given: a [statement citation](statement_citation) of one entry of a data item
-  then: the stamp the product pins the citation to changes
-  when: a field of that entry is revised
-- given: a [statement citation](statement_citation) of one entry of a data item
-  then: the stamp the product pins the citation to changes
-  when: the data item's text is revised
+- given: a [statement citation](statement_citation) of one [entry](entry) of a [data
+    item](data_item)
+  then: the [stamp](stamp) the product [pins](pin) the [citation](statement_citation)
+    to is unchanged
+  when: a field of another of the [data item](data_item)'s [entries](entry) is revised
+- given: a [statement citation](statement_citation) of one [entry](entry) of a [data
+    item](data_item)
+  then: the [stamp](stamp) the product [pins](pin) the [citation](statement_citation)
+    to changes
+  when: a field of that [entry](entry) is revised
+- given: a [statement citation](statement_citation) of one [entry](entry) of a [data
+    item](data_item)
+  then: the [stamp](stamp) the product [pins](pin) the [citation](statement_citation)
+    to changes
+  when: the [data item](data_item)'s text is revised
 assessed:
-  REQ-18176935: u-uprH5qBxMTk7RLhLVJ39PV5F5depbLxxBYrr2xkWY
-  REQ-22755763: jWQQtKhJ8JoO_gFCNaK6GDJCv93GcomxUpOHsgzRt7w
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  REQ-18176935: A6AhLhUZ7MdW9hwmBteIS6PgGLCXGQZTf7lwxGt04mo
+  REQ-22755763: lFaaseccSg81IX_v5DMXnn03ZufehG0M9UKFDpAdjnw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   nqvtul: pcTKh-lzPFNMoS099LkrCqccvHxaWQZwPluwdWamtqs
   ymaadg: tZDPE_rlhSw5AUukYm1OiGkjx6SQxqK93OYbwHWe_t8
@@ -20,8 +30,9 @@ relations:
   REQ-18176935: derives_from
   REQ-22755763: depends_on
 status: approved
-text: The product shall pin a [statement citation](statement_citation) of one entry
-  of a data item to a stamp taken over the data item's own stamp and over the stamp
-  that entry carries.
+text: The product shall [pin](pin) a [statement citation](statement_citation) of one
+  [entry](entry) of a [data item](data_item) to a [stamp](stamp) taken over the [data
+  item](data_item)'s own [stamp](stamp) and over the [stamp](stamp) that [entry](entry)
+  carries.
 type: functional
 verification: inspection

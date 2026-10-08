@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  item:
+    aliases:
+    - items
+    definition: A record the corpus holds under a uid of its own.
+    word: item
+kind: term
+status: approved

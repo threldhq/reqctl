@@ -4,7 +4,7 @@ acceptance_criteria:
   then: no folder the command created remains
   when: the product runs the command
 assessed:
-  REQ-24406170: M08jCONzg-4unbIjswcpNFFuynYzysf9JZj5KZch_QA
+  REQ-24406170: ffuKefeAdU7p5xPcOyYgqcQVsbzm9Mk1SpLxmkZVACI
 citations:
   3rsgq3: 26sWtY0csjp1RjR-HdB6FxMraTg6srstOMY-7qXdrC0
   cdcyzh: 9XYd_2DzjSFKBxiy0XHuFVToz2wGDwyrMOIXYjj14Lg

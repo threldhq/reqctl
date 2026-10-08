@@ -1,0 +1,25 @@
+assessed:
+  citation: nzUQ9NqGiGlPkqp-BbfYagJAalrV1MXdm3RnLuUIDow
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+entries:
+  pin:
+    aliases:
+    - pins
+    - pinned
+    definition: What a [citation](citation), a link or a reference records of the
+      [stamp](stamp) carried by the [item](item) or [entry](entry) it names, when
+      it was last read against it.
+    unclaimed:
+      action pinned: an action fixed to a commit SHA, a tag or a branch
+      default, pinned, text or name: a key reqctl reserves
+      dependency pins: dependencies fixed to versions
+      not pinned to a full commit SHA: not fixed to a full commit SHA
+      pinned to no tag: a plugin source fixed to no tag
+      pins the Claude Code plugin: fixing the Claude Code plugin to the tag of a release
+      plugin pinned: the Claude Code plugin fixed to the tag of a release
+      source pinned: a plugin source fixed to the tag of a release
+    word: pin
+kind: term
+status: approved

@@ -4,10 +4,10 @@ acceptance_criteria:
     whose value is the answer
   when: the run reaches its approve step
 assessed:
-  REQ-12222066: H7OEdnWlOPCRZTzpoerdwR5TbojNwRMs6NLeAbVIJdk
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
   REQ-90096667: PunOebgQZAD6zW0Mq815JLkSApJa6lOCsi4YhL7rHjw
   field_of_the_governed_software: jL-3rawb_a5mG9L4XUWQZxlBCv0zHsaJjJXBbj80Z-4
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
   6n6vna: zWC6p2t8ata55KQ5RiQ5Om2HF45cbK79DgTxVQDvRfg
 priority: medium

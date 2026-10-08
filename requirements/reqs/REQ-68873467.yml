@@ -6,16 +6,17 @@ acceptance_criteria:
   then: the prompt names that group as returning no finding
   when: the final judge prompt is built
 assessed:
-  REQ-48762557: awBU6cqFJEkKXAqTfW9LPJgd7WeTwb0_DFX12zHFaj8
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  REQ-48762557: jm9fn2mpwhmlR3rOqfNUCUB2pspY7Gy1WkktVhDxj1k
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   4eflcn: GyrxnLZo_Q3we8Xedb9Dvh9RsfZfAWpHlz6KlUa0oYQ
 priority: medium
 relations:
   REQ-48762557: depends_on
 status: approved
-text: When the items named for a [proposal](proposal) were split into groups, the
-  product shall state every group's findings, each with the clause the finding quotes,
-  to one final judge prompt for that [proposal](proposal).
+text: When the [items](item) named for a [proposal](proposal) were split into groups,
+  the product shall state every group's findings, each with the clause the finding
+  quotes, to one final judge prompt for that [proposal](proposal).
 type: functional
 verification: inspection

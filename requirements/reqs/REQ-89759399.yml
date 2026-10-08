@@ -1,27 +1,31 @@
 acceptance_criteria:
-- given: a pattern admitting the stamp an item carries that also admits a string one
-    character longer or shorter
+- given: a pattern admitting the [stamp](stamp) an [item](item) carries that also
+    admits a string one character longer or shorter
   then: the product reports a problem
   when: the ${corpus_gates.stamp_admission} gate runs
 - given: a pattern admitting a uid that also admits a kind the product does not [mint](mint)
     or a number of other than eight digits
   then: the product reports a problem
   when: the ${corpus_gates.stamp_admission} gate runs
-- given: an allowlist for stamps joining its paths and its pattern other than with
-    AND
+- given: an allowlist for [stamps](stamp) joining its paths and its pattern other
+    than with AND
   then: the product reports a problem
   when: the ${corpus_gates.stamp_admission} gate runs
 assessed:
-  REQ-57781505: 6gvPA-9MhwyokUIsth3vEA2ue9dP73BlB9pBRdiOEFg
+  REQ-57781505: 5YGB5n_NZmncxOWC7wpmTbruJnjSAWtazkiK6ZkcWC8
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.stamp_admission: E62zb0qgo3sf0OgKcFWjYdcAUcak-IBB9NM3c8BVqeA
-  mint: a-sl5nssCB-0x8EuzprYGHvW0Nv72kf4VcNI4MpTfxk
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
 priority: medium
 relations:
   REQ-57781505: depends_on
 status: approved
-text: If the repository's secret scan admits a uid, or the stamp an item or an entry
-  of one carries, by a pattern wider than the shape the product gives it, then the
-  product shall report a problem when the ${corpus_gates.stamp_admission} gate runs.
+text: If the repository's secret scan admits a uid, or the [stamp](stamp) an [item](item)
+  or an [entry](entry) of one carries, by a pattern wider than the shape the product
+  gives it, then the product shall report a problem when the ${corpus_gates.stamp_admission}
+  gate runs.
 type: functional
 verification: inspection

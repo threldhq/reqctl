@@ -5,7 +5,7 @@ acceptance_criteria:
   when: the edit is attempted
 - given: an edit made other than through reqctl that removes or changes a comment
     carrying a [statement citation](statement_citation), including by deleting or
-    moving the code the citation covers
+    moving the code the [citation](statement_citation) covers
   then: the build refuses it and the file is unchanged
   when: the edit is attempted
 - given: an edit made other than through reqctl that carries a comment carrying a
@@ -16,7 +16,7 @@ acceptance_criteria:
   then: the build does not refuse it
   when: reqctl runs
 assessed:
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 relations: {}
 status: deprecated
 text: If an edit made other than through reqctl would add, remove or change a comment

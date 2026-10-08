@@ -6,7 +6,7 @@ acceptance_criteria:
   when: the recall returns are read
 assessed:
   REQ-19832934: Mk7Pla2kkx3ikPU-DSIeGBqiPwOm-4cU-DkllvZhn_M
-  proposal: h53yQ8s-wVWNojJ-DL97HPT2q-7uDwA056ET-csCbGk
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   mrzj65: v46mMmjzqkvCq1GlQ_uN18ARXKqhPVYPKKnROpZGoPo
 priority: medium

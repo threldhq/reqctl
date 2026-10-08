@@ -2,14 +2,14 @@ acceptance_criteria:
 - given: a [statement citation](statement_citation) whose covered lines changed after
     the [citation list](citation_list) of the requirement it names took their digest
   then: the [citation list](citation_list) holds the digest it held before for the
-    first citation
-  when: the product writes another citation into the same file
+    first [citation](statement_citation)
+  when: the product writes another [citation](statement_citation) into the same file
 assessed:
-  REQ-64846889: pHOO0sEc7V1KxKn_4gUqxY-YXPz8xl1KNtUhzb6BCr8
-  citation_digest: P0B_wyGMXd0g87oxCpk-YqeQLW01MECv1WuzJa3yS6Q
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
-  citation_list: HCTZfdkbIUQW4M8y3gvgE_J39c8-HmHuA4KJ1RBIYx4
-  statement_citation: zmJAtUkbXCsdHhllazbpTiH3lzKWfdN2oagffyA2G0s
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   da5qxm: xfwOWiNIwswNRcf_mN74JY6_IS4TZ2iSP7W5y7kMjL0
 priority: medium

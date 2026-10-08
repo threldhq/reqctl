@@ -1,14 +1,15 @@
 acceptance_criteria:
-- given: an unapproved item a baseline still states
-  then: the product refuses and names the baseline stating the item
-  when: removal of the unapproved item is requested
-assessed: {}
+- given: an unapproved [item](item) a baseline still states
+  then: the product refuses and names the baseline stating the [item](item)
+  when: removal of the unapproved [item](item) is requested
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   d223dk: LjZOTBcgvXqIgArejBTVy3TB0cpLqrvpbq4mwuMOUVM
 priority: medium
 relations: {}
 status: approved
-text: If a request would remove an unapproved item that a baseline states, then the
-  product shall refuse the removal.
+text: If a request would remove an unapproved [item](item) that a baseline states,
+  then the product shall refuse the removal.
 type: functional
 verification: inspection

@@ -1,20 +1,21 @@
 acceptance_criteria:
-- given: a guard carrying a parameter reference to a nominated dimension's item, whole
-    or by member
+- given: a guard carrying a parameter reference to a nominated dimension's [item](item),
+    whole or by member
   then: the guard is named as binding to that dimension
   when: the corpus is validated
-- given: a guard carrying a concept link to a nominated dimension's item, whole or
-    by member
+- given: a guard carrying a concept link to a nominated dimension's [item](item),
+    whole or by member
   then: the guard is named as binding to that dimension
   when: the corpus is validated
 - given: a corpus nominating no dimension
   then: no guard is named, there being no dimension for one to bind to
   when: the corpus is validated
 - given: two guards each carrying a parameter reference or a concept link to a nominated
-    dimension's item
+    dimension's [item](item)
   then: each guard is named as binding to that dimension
   when: the corpus is validated
-assessed: {}
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   uv4bc5: jdJ3GjZIaUalB4PLlt7OTASdLfQEt6mbC-m9UZQG5vw
 priority: medium
