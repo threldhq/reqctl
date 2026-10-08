@@ -6,8 +6,6 @@ acceptance_criteria:
   then: the product refuses the item and names the field
   when: the item is read
 assessed: {}
-citations:
-  2zx2qh: 4itRw1M9mcMR9pdCwtvt6z8XE_d8fci1SvwCozJhKHM
 priority: medium
 relations: {}
 status: approved
