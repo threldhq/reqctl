@@ -190,6 +190,18 @@ def _nesting(uid, held, path=(), seen=()):
     return problems
 
 
+def _entries_within(held, path=(), seen=()):
+    if not isinstance(held, dict) or id(held) in seen or len(seen) >= NESTING:
+        return
+    seen = seen + (id(held),)
+    for key, fields in held.items():
+        if isinstance(fields, dict):
+            where = path + (str(key),)
+            yield where, fields
+            for name, value in fields.items():
+                yield from _entries_within(value, where + (str(name),), seen)
+
+
 def _written(value):
     if isinstance(value, bool):
         return str(value).lower()
@@ -506,9 +518,9 @@ def _bare_terms(uid, data, defined):
     # @req- tmczgb
 
 
-def exempted(records, root):
+def exempted(records, root, exempt):
     # @req> REQ-88221320@04q8T91NApFU 5gpgix
-    return sorted({
+    exempt += sorted({
         f"{uid}: \"{' '.join(found.group().split())}\" accepted unlinked, a phrase recorded on term {term_uid} -- {reason}"
         for term_uid, _, _, phrases in term_index(_approved(records))
         for uid, data in records.items() if uid != term_uid
@@ -516,6 +528,7 @@ def exempted(records, root):
         for found in phrase.finditer(
             corpus.unlinked_prose(own_words(root, uid, data)))
     })
+    return []
 
 
 def unlinked_terms(uid, data, records, root):
@@ -547,7 +560,7 @@ def unlinked_elsewhere(uid, data, records, root):
 
 QUANTITY = re.compile(
     r"(?<!\w)(?<!\d\.)(?<![^\W\d_]-)"
-    r"(\.?\d[\d,_]*(?:\.\d+)*(?:[eE][+-]?\d+)?)[\s-]*"
+    r"(\.?\d[\d,_]*(?:\.\d+)*(?:[eE][+-]?\d+)?)(?:(?!\n)[\s-])*"
     r"((?:[^\W\d_]|[%\u00b0])*)"
 )
 
@@ -611,6 +624,11 @@ def quantities(text):
 
 
 def _quantities(data):
+    data = dict(data, entries={
+        key: {**fields, "quantity": f"{fields['quantity']} {fields['unit']}"}
+        if isinstance(fields, dict) and "quantity" in fields and fields.get("unit")
+        else fields
+        for key, fields in (corpus.entries(data) or {}).items()})
     return quantities(
         corpus.PARAM_REF.sub(" ", corpus.CONCEPT_LINK.sub(r"\1", corpus.prose(data))))
 
@@ -856,8 +874,10 @@ def _cycle_problems(edges, noun, tail):
 
 def _circular_definitions(records):
     # @req+ REQ-49321694@sgj-Dt7t_niN ijccb5
-    edges = {uid: sorted({found for _, found in corpus.CONCEPT_LINK.findall(
-                 str(corpus.term_fields(data).get("definition")))})
+    canonical = corpus.reachable(records)
+    edges = {uid: sorted({canonical.get(found.partition(".")[0], found)
+                          for _, found in corpus.CONCEPT_LINK.findall(
+                              str(corpus.term_fields(data).get("definition")))})
              for uid, data in records.items()
              if corpus.kind_of(uid, data) == "term"}
     return _cycle_problems(edges, "definition",
@@ -1123,6 +1143,8 @@ def coherence(records, root):
             + _typed_entries(records))
 
 
+# @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
+# @req> REQ-57061306@grhOhf7rpAJV 23uhdj
 def _typed_entries(records):
     held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
     if corpus.kind_of(held, records.get(held)) != "data":
@@ -1130,11 +1152,10 @@ def _typed_entries(records):
     return [problem
             for uid, data in sorted(records.items())
             if corpus.kind_of(uid, data) == "data"
-            for key, fields in (corpus.entries(data) or {}).items()
-            if isinstance(fields, dict)
-            and str(fields.get("value_type")) in KEY_SHAPES
+            for where, fields in _entries_within(corpus.entries(data))
+            if str(fields.get("value_type")) in KEY_SHAPES
             for problem in _typed(
-                f"{uid}: entry {key}", fields["value_type"],
+                f"{uid}: entry {'.'.join(where)}", fields["value_type"],
                 [(f"quantity {fields['quantity']!r}",
                   _written(fields["quantity"]))] if "quantity" in fields else [],
                 fields.get("unit") or None)]
@@ -1285,7 +1306,7 @@ def run(root, exempt=None):
         try:
             needs = corpus.schema_name_at(root, corpus.kind_of(uid, data),
                                           corpus.name_of(uid, data))
-        except corpus.ReqctlError:
+        except (corpus.ReqctlError, TypeError):
             needs = None
         if needs not in broken_schemas:
             problems += _guarded(uid, schema_problems, root, uid, data)
@@ -1311,5 +1332,5 @@ def run(root, exempt=None):
     problems += _guarded("corpus", coherence, records, root)
     problems += _guarded("corpus", cycles, records)
     if exempt is not None:
-        exempt += exempted(records, root)
+        problems += _guarded("corpus", exempted, records, root, exempt)
     return problems
