@@ -7,6 +7,8 @@ acceptance_criteria:
   when: a run is built
 assessed:
   REQ-54045696: ksBhFVMWU0aT0W7kbF1ucaymFtCFm3UEA-ZmaFgHTP4
+citations:
+  6sk2ng: fM2j1E6ddrSnjNn_gLPNcyA7KYSG0nqy00L-sMixnj8
 priority: high
 rationale: A project that binds statements to nothing is the ordinary case, not a
   misconfiguration. Refusing it is what kept the tool from running in a repository

@@ -458,6 +458,7 @@ def settled(run, dims):
 
 def binding(run, held, root, records):
     dims = dimensions(root, records)
+    # @req> REQ-73044308@Omjhc43DbH_6 6sk2ng
     if not dims:
         return {}
     # @req+ REQ-92272837@JyGx2T7SRoWI owkvnp
@@ -523,6 +524,7 @@ def binding(run, held, root, records):
                     "the member, or reference nothing and record the proposal "
                     "as all.")
             # @req> REQ-50522674@hH-3OoBrOd0Y 2rsevi
+            # @req+ REQ-54045696@ksBhFVMWU0aT f57qfn
             if written - members:
                 raise SystemExit(
                     f"proposal {number} references "
@@ -536,6 +538,7 @@ def binding(run, held, root, records):
                     f"statement references {', '.join(sorted(written)) or 'none'}"
                     ". A statement bound to fewer than all the members names "
                     "each in its own text; reword it, or correct the record.")
+            # @req- f57qfn
             settled_on[name] = ", ".join(sorted(wanted)) or "all of them"
         chosen[number] = settled_on
     return chosen
