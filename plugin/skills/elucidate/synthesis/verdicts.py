@@ -13,7 +13,7 @@ from reqctl import corpus
 
 
 def cited(data, stated):
-    # @req+ REQ-62710822@tuR0HPyf8X-c adhfwh
+    # @req+ REQ-62710822@DZLgFus7Dgs- adhfwh
     found = []
     for field, key in shapes.CITING.items():
         for entry in data.get(field) or []:
@@ -38,7 +38,7 @@ def judged(run, state_held):
             (absent if why == "returned nothing" else failed).append(
                 (number, [why]))
             continue
-        # @req+ REQ-62710822@tuR0HPyf8X-c v3dukx
+        # @req+ REQ-62710822@DZLgFus7Dgs- v3dukx
         faults = ([f"answers proposal {data['proposal']}, not {number}"]
                   if str(data["proposal"]) != number else [])
         faults += cited(data, set(state_held["named"][number]))
@@ -53,7 +53,7 @@ def judged(run, state_held):
 
 
 def grouped(accepted):
-    # @req+ REQ-91823330@d5PQjefU78ES 7xe5ny
+    # @req+ REQ-91823330@kJXgwmIAAkIZ 7xe5ny
     held = {}
     for number, data in accepted:
         for field, key in shapes.CITING.items():
@@ -72,14 +72,14 @@ def report(accepted, failed, absent):
     # @req> REQ-55679883@pQMP7EUWR1Ti u37uos
     lines = [(f"{len(accepted)} accepted, {len(failed)} failed, "
               f"{len(absent)} never returned")]
-    # @req+ REQ-82676674@dpVWKsG65ILE hbpale
+    # @req+ REQ-82676674@r-c5TnDW5gbD hbpale
     for number, why in absent:
         lines.append(f"  no verdict: proposal {number}")
     for number, faults in failed:
         lines.append(f"  proposal {number}: spawn its judge again")
         lines += [f"    {fault}" for fault in faults]
     # @req- hbpale
-    # @req+ REQ-91823330@d5PQjefU78ES ih4cxu
+    # @req+ REQ-91823330@kJXgwmIAAkIZ ih4cxu
     held = grouped(accepted)
     if held:
         lines += ["", "findings, by what they name"]
@@ -102,7 +102,7 @@ def respawn(run, state_held, numbers):
     spawned = []
     for number in numbers:
         folder = "final" if state_held["judge"][number]["groups"] else "judge"
-        # @req> REQ-23060027@QKFI8tm_J5VF oem57l
+        # @req> REQ-23060027@zeNeSryv-0-1 oem57l
         spawned.append(plan.spawn(run, folder, number, f"{folder}:{number}",
                                   shapes.JUDGE, state_held["agents"]["judge"]))
         corpus.remove(run / "returns" / folder / f"{number}.json",
@@ -121,7 +121,7 @@ def main(argv=None):
         raise SystemExit("no judge prompt was built; run `plan.py judge` first")
     accepted, failed, absent = judged(run, state_held)
     print(report(accepted, failed, absent))
-    # @req> REQ-82676674@dpVWKsG65ILE zeg5gl
+    # @req> REQ-82676674@r-c5TnDW5gbD zeg5gl
     if failed or absent:
         print(f"{len(failed) + len(absent)} judge(s) to spawn again: "
               f"{respawn(run, state_held, [n for n, _ in failed + absent])}")
@@ -131,7 +131,7 @@ def main(argv=None):
 
 if __name__ == "__main__":
     try:
-        # @req> REQ-24406170@M08jCONzg-4u ei57as
+        # @req> REQ-24406170@ffuKefeAdU7p ei57as
         sys.exit(corpus.atomically(main))
     except (corpus.ReqctlError, OSError) as unreadable:
         sys.exit(f"{Path(__file__).name}: {unreadable}")

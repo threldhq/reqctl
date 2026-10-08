@@ -141,11 +141,11 @@ def build(run, answered):
     prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
         words=words, readme=text)
-    # @req> REQ-40447106@qf0g3PvFcpT0 evxzj5
+    # @req> REQ-40447106@xVwoSkyU3_rG evxzj5
     crew = settings.table(plan.configured(
         run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
     # @req> REQ-61616834@ocFeB1JGP518 dnioty
-    # @req> REQ-23060027@QKFI8tm_J5VF zq3w3z
+    # @req> REQ-23060027@zeNeSryv-0-1 zq3w3z
     spawning = plan.manifest(run, SPAWN, [plan.inline(
         "review", prompt, shapes.REVIEW, plan.registered("best-in-class"),
         plan.agent("best_in_class", crew))])
@@ -483,7 +483,7 @@ def check(run):
     if review is None:
         print(f"{path}: the review {why}; {again}")
         return 1
-    # @req> REQ-40447106@qf0g3PvFcpT0 xbu22f
+    # @req> REQ-40447106@xVwoSkyU3_rG xbu22f
     # @req> REQ-75041625@fdufkvO5WYz7 kehox2
     limits = settings.quantities(plan.configured(run, ("review_limits.",)),
                                  "review_limits")
@@ -524,7 +524,7 @@ def main(argv=None):
 
 if __name__ == "__main__":
     try:
-        # @req> REQ-24406170@M08jCONzg-4u w4b4wb
+        # @req> REQ-24406170@ffuKefeAdU7p w4b4wb
         sys.exit(corpus.atomically(main))
     except (corpus.ReqctlError, OSError) as unreadable:
         sys.exit(f"{Path(__file__).name}: {unreadable}")

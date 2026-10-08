@@ -12,7 +12,7 @@ function task(one) {
 }
 
 // @req+ REQ-29203000@rYU8NmxmlHLn o7zxou
-// @req+ REQ-23060027@QKFI8tm_J5VF xxpn4n
+// @req+ REQ-23060027@zeNeSryv-0-1 xxpn4n
 // @req+ REQ-36422345@O-3IKmoFSYSG kgth24
 const results = await parallel(args.prompts.map(one => () =>
   agent(one.prompt ?? task(one), { label: one.label, phase: 'Spawn', schema: args.shapes[one.schema], model: one.model, effort: one.effort, agentType: one.agent })))

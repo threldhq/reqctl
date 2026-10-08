@@ -12,7 +12,7 @@ from . import corpus
 from . import settings as _settings
 
 SCHEMAS = ("requirement", "guard", "dictionary", "baseline")
-# @req> REQ-20325022@Rk58k1F_hWcP m2dmcp
+# @req> REQ-20325022@eJ3lXlumh7tY m2dmcp
 ALIAS_SEPARATOR = ","
 
 
@@ -46,7 +46,7 @@ def _identity(root, path, data):
     elif not corpus.UID.match(uid) and uid != corpus.name_of(uid, data or {}):
         problems.append(
             f"{uid}: filename is not the name the item carries")
-    # @req> REQ-48186295@whKUIi0BRp9f yvekz4
+    # @req> REQ-48186295@E_K39S9hbhEz yvekz4
     if corpus.UID.match(uid) or kind is not None:
         expected = corpus.folder_for(root, corpus.kind_of(uid, data))
         if path.parent != expected:
@@ -78,7 +78,7 @@ def schema_problems(root, uid, data):
             said = ("does not apply to a data item" if kind == "data"
                     else f"does not apply to a {kind}")
         problems.append(f"{uid}: schema: {where}: {said}")
-    # @req> REQ-35443917@uIQcvcwLzfs4 znhrrb
+    # @req> REQ-35443917@I_xqd07AsRI5 znhrrb
     if data.get("verification") == "automated_test" and not any(
             problem.startswith(f"{uid}: schema: verification:")
             for problem in problems):
@@ -200,30 +200,30 @@ def dictionary_rules(uid, data):
     held = corpus.entries(data)
     if held is None or uid.startswith("REQ-"):
         return problems
-    # @req> REQ-67450031@IPDu6OnW2Fck 5qg2a5
+    # @req> REQ-67450031@tkoNXNLrUifr 5qg2a5
     for key in ("default", "pinned", "text", "name"):
         if key in held:
             problems.append(f"{uid}: an entry may not be keyed {key} -- it "
                             "would shadow an item field of that name; rename "
                             "the entry")
-    # @req> REQ-22887335@g4kwWO-CFxtK idfqw5
+    # @req> REQ-22887335@Tt3HpjzWuiU6 idfqw5
     if corpus.MEMBERS in held:
         problems.append(f"{uid}: an entry may not be keyed {corpus.MEMBERS} -- "
                         "that address pins the item's membership; rename the "
                         "entry")
     problems += _nesting(uid, held)
     if item_kind == "term":
-        # @req> REQ-79013939@bHJwWtA0cgeG wcl7vt
+        # @req> REQ-79013939@LHWesLk8a6d7 wcl7vt
         if len(held) != 1:
             problems.append(f"{uid}: a term holds exactly one entry -- its word")
-        # @req+ REQ-47317077@ROG7ulJ6WVMa iwiit6
+        # @req+ REQ-47317077@nmlbp2InoWXJ iwiit6
         stated = corpus.term_fields(data).get("word")
         if not (isinstance(stated, str) and stated.strip()):
             problems.append(f"{uid}: word is {stated!r} -- a term states the "
                             "word it is known by, as text; the entry key is a "
                             "handle and addresses it")
         # @req- iwiit6
-        # @req+ REQ-20325022@Rk58k1F_hWcP smwuev
+        # @req+ REQ-20325022@eJ3lXlumh7tY smwuev
         aliases = corpus.term_fields(data).get("aliases")
         for alias in aliases if isinstance(aliases, list) else []:
             if ALIAS_SEPARATOR in str(alias):
@@ -239,7 +239,7 @@ def dictionary_rules(uid, data):
                     f"{uid}: records \"{phrase}\" as not the term but gives no "
                     f"reason -- write --unclaimed \"{phrase}=the reason\"")
         return problems
-    # @req+ REQ-67914848@CoWJ0QyQOZsG fnsqos
+    # @req+ REQ-67914848@cRb9rHls6z6c fnsqos
     default = data.get("default")
     if default is not None and default not in held:
         problems.append(f"{uid}: default names {default!r}, which is not an "
@@ -257,7 +257,7 @@ def dictionary_rules(uid, data):
         problems.append(f"{uid}: value_type {value_type} is not a type reqctl "
                         "reads an entry key as")
     if shape is not None:
-        # @req> REQ-41697188@oclky4jsxJDW da5737
+        # @req> REQ-41697188@i8kIpXZ1C_H7 da5737
         for key in held:
             if not isinstance(key, str) or not shape.match(key):
                 problems.append(f"{uid}: entry key {key!r} does not parse as "
@@ -289,7 +289,7 @@ def text_values(uid, data):
     return problems
 
 
-# @req> REQ-98653444@vg2d8T6B3LIH gvf6gm
+# @req> REQ-98653444@_BYrN0hH1mzV gvf6gm
 def repeated_labels(uid, data):
     criteria = data.get("acceptance_criteria")
     if not isinstance(criteria, list):
@@ -340,7 +340,7 @@ def _strings(node, at=()):
         yield at, node
 
 
-# @req> REQ-79956352@eYUCCnssLbl5 5uqc7i
+# @req> REQ-79956352@NXkZ4OmQ3Qb4 5uqc7i
 def hidden_values(uid, data):
     problems = []
     for at, said in _strings(data):
@@ -364,7 +364,7 @@ def _relations(uid, data, records, canonical, known):
             held = canonical.get(target)
             kind = (corpus.kind_of(held, records[held]) if held in records
                     else corpus.kind_for_uid(target))
-            # @req> REQ-26911169@CRy8IY3aHxkB v3b5cc
+            # @req> REQ-26911169@Ty70WfMx9YfH v3b5cc
             if target == uid:
                 problems.append(f"{uid}: links to itself")
                 continue
@@ -381,7 +381,7 @@ def _relations(uid, data, records, canonical, known):
                     "the statement, written [the words](" + target + ")"
                 )
                 continue
-        # @req> REQ-35877465@UZWrwK_xKhBH cx6r6x
+        # @req> REQ-35877465@zMIttKgLLwy- cx6r6x
         if target not in known:
             problems.append(f"{uid}: links to {target}, which does not exist")
     return problems
@@ -389,7 +389,7 @@ def _relations(uid, data, records, canonical, known):
 
 def _references(uid, data, known, root):
     problems = []
-    # @req+ REQ-44791607@jSOQJ6WGpg_l e5vzf6
+    # @req+ REQ-44791607@x6AI0pz32jQK e5vzf6
     for address in corpus.references(data):
         target, _ = corpus.split_address(address)
         if target not in known:
@@ -413,7 +413,7 @@ def _references(uid, data, known, root):
             "link -- an item is addressed by the name it carries, the words "
             "and the address each sit on one line, a term is linked whole"
         )
-    # @req> REQ-48500355@L2q7dNX5i86u f7binw
+    # @req> REQ-48500355@rnstkLKM48vN f7binw
     for near in corpus.TERM_NEAR.finditer(
             corpus.unlinked_prose(own_words(root, uid, data))):
         problems.append(
@@ -472,7 +472,7 @@ def _outside(text, phrases):
 
 
 def _bare_terms(uid, data, defined):
-    # @req+ REQ-83702299@IgLtX0BfZTks tmczgb
+    # @req+ REQ-83702299@kBGzIwAyKDHL tmczgb
     bare = corpus.unlinked_prose(data)
     # @req> REQ-24481048@ZhiYUpKwnPlA bapzey
     return [
@@ -626,7 +626,7 @@ def shared_quantities(records, root):
         for quantity in _quantities(own_quantities(root, uid, data)):
             where.setdefault(quantity, []).append(uid)
     problems = []
-    # @req> REQ-31827606@1tyZUHjYl_sV 4h2aan
+    # @req> REQ-31827606@LqXaOXp6DLBG 4h2aan
     for (value, unit), uids in sorted(where.items(), key=lambda pair: str(pair[0])):
         if len(uids) > 1:
             problems.append(
@@ -641,7 +641,7 @@ def _assessed(uid, data, records, canonical, known):
     def held_data(address):
         return records.get(canonical.get(address, address))
 
-    # @req+ REQ-50160324@7XJSw7absDkA gxi4g4
+    # @req+ REQ-50160324@rCxgTJz0CeZX gxi4g4
     unreadable = set()
     for address in corpus.dependencies(data):
         found = corpus.ADDRESS.match(str(address))
@@ -654,7 +654,7 @@ def _assessed(uid, data, records, canonical, known):
     pins = corpus.mapping(data, "assessed")
     stated = data.get("assessed")
     held = set(stated) if isinstance(stated, dict) else set()
-    # @req> REQ-67539399@u2d_QLbO8m8G pcswfe
+    # @req> REQ-67539399@tuMwHXTE6ACx pcswfe
     for target in sorted(held - wanted, key=str):
         found = corpus.ADDRESS.match(str(target))
         if found and found.group(1) in unreadable:
@@ -686,7 +686,7 @@ def _approved(records):
 def conflicts(records):
     approved = _approved(records)
     declared = []
-    # @req+ REQ-77022154@Nc0Pd8y2fd1Q loruif
+    # @req+ REQ-77022154@-t-5C3fYQMS3 loruif
     for uid, data in approved.items():
         for target, relation in sorted(corpus.mapping(data, "relations").items()):
             if relation == "conflicts_with" and target in approved:
@@ -701,7 +701,7 @@ def conflicts(records):
 
 def supersedes(records):
     approved = _approved(records)
-    # @req> REQ-53480164@R-Vze1T10x-h qxi4hb
+    # @req> REQ-53480164@5yFhCLJmuTBt qxi4hb
     return [
         f"{uid} supersedes {target}, which is still approved -- "
         "revise it to superseded or deprecated in this same change"
@@ -867,7 +867,7 @@ def _entry_selection(records):
                         f"{uid}: selects ${{{target}.default}} but {target} "
                         "names no default"
                     )
-            # @req> REQ-93367131@fuSPMaKz6PeP vye4xb
+            # @req> REQ-93367131@liYuAavoXSA4 vye4xb
             elif rest == key and key in existing and any(
                     isinstance(fields, dict) and rest in fields
                     for fields in existing.values()):
@@ -879,13 +879,13 @@ def _entry_selection(records):
                 stated = [fields[rest] for fields in existing.values()
                           if isinstance(fields, dict) and rest in fields
                           and not isinstance(fields[rest], bool)]
-                # @req> REQ-28975717@KzAN9P4wu6R7 p5hfxl
+                # @req> REQ-28975717@sXPovM6T9HGc p5hfxl
                 if stated:
                     problems.append(
                         f"{uid}: selects {address} but {target} states {rest} "
                         f"{stated[0]!r} -- true or false"
                     )
-                # @req> REQ-10000795@SpPvQo8n4Djw bg3tyu
+                # @req> REQ-10000795@VNUKO0iJNjTj bg3tyu
                 elif not corpus.flagged(held, rest):
                     problems.append(
                         f"{uid}: selects {address} but no entry of {target} "
@@ -981,12 +981,12 @@ def prose_paths(root, uid, data):
 
 
 def observed_paths(root, uid, data):
-    # @req> REQ-48500355@L2q7dNX5i86u t3fuqq
+    # @req> REQ-48500355@rnstkLKM48vN t3fuqq
     return _marked_paths(root, uid, data, lambda node: node.get(OBSERVED) is True)
 
 
 def dated_paths(root, uid, data):
-    # @req> REQ-62072712@041OLjKleuri npwa4k
+    # @req> REQ-62072712@m81ZZqYdquaS npwa4k
     return _marked_paths(root, uid, data, lambda node: node.get("format") == DATE)
 
 
@@ -1014,12 +1014,12 @@ def _without(root, uid, data, *finders):
 
 
 def own_words(root, uid, data):
-    # @req> REQ-48500355@L2q7dNX5i86u rwffnk
+    # @req> REQ-48500355@rnstkLKM48vN rwffnk
     return _without(root, uid, data, observed_paths)
 
 
 def own_quantities(root, uid, data):
-    # @req> REQ-62072712@041OLjKleuri hlxm3m
+    # @req> REQ-62072712@m81ZZqYdquaS hlxm3m
     return _without(root, uid, data, observed_paths, dated_paths)
 
 
@@ -1057,7 +1057,7 @@ def _entry_term_fields(records, root):
                       if found in worded}
             spelled = str(field).replace("_", " ").casefold()
             named = claimed.get(spelled)
-            # @req> REQ-31592505@BljBbPHrGGbg vtxlpz
+            # @req> REQ-31592505@2C7Za06pRzA2 vtxlpz
             if named and not linked & _addresses(records, named[0]):
                 term_uid, word = named
                 held_by = corpus.name_of(term_uid, records[term_uid]) or term_uid
@@ -1069,7 +1069,7 @@ def _entry_term_fields(records, root):
                         f"{held_by} -- write the value with {link}, or "
                         "rename the field"
                     )
-            # @req> REQ-51326810@s0ZUNLc4g3Ek xx2sp7
+            # @req> REQ-51326810@tZsTSo6pwmwE xx2sp7
             if not _declares_prose(root, uid, data, where, field,
                                    refused):
                 for target in sorted(linked):
@@ -1100,7 +1100,7 @@ def coherence(records, root):
 
 
 def _duplicate_names(records):
-    # @req+ REQ-53177302@IIPp8ha5oKcr uay7dt
+    # @req+ REQ-53177302@oSukBFyA3jXq uay7dt
     named = {}
     for uid, data in records.items():
         name = corpus.name_of(uid, data)
@@ -1124,7 +1124,7 @@ ONE_WAY = (
 
 def cycles(records):
     problems = []
-    # @req> REQ-44520277@sKFaJ_af6JS6 2pebps
+    # @req> REQ-44520277@w92ngdeF87Mm 2pebps
     for relation, tail in ONE_WAY:
         edges = {
             uid: sorted(
@@ -1143,9 +1143,9 @@ def _strays(root, paths):
     claimed = set(paths)
     skipped = (corpus_dir / "schemas", corpus_dir / "baselines")
     problems = []
-    # @req> REQ-69003763@V8Kam1_6cnnC 4ljfwh
+    # @req> REQ-69003763@oacx0bF0kxdV 4ljfwh
     for held in sorted(corpus_dir.rglob("*.yml")) + sorted(corpus_dir.rglob("*.yaml")):
-        # @req> REQ-61926693@Ah7479L3kmsf snr2ig
+        # @req> REQ-61926693@GZyk9i4NErF6 snr2ig
         if held in claimed or held in (_baseline.path(root),
                                        _settings.path(root)):
             continue
@@ -1158,7 +1158,7 @@ def _strays(root, paths):
     return problems
 
 
-# @req> REQ-61926693@Ah7479L3kmsf cf76cn
+# @req> REQ-61926693@GZyk9i4NErF6 cf76cn
 def _stated(root):
     where = _settings.path(root)
     if not where.is_file():
@@ -1182,7 +1182,7 @@ def _guarded(where, check, *args):
 
 def _settled(path):
     text = corpus.read_text(path)
-    # @req> REQ-98359235@dyL4jJOUQB1r 5wu7pz
+    # @req> REQ-98359235@ZY1HJ0hcSyAZ 5wu7pz
     if corpus.CONFLICTED.search(text):
         raise corpus.ReqctlError(
             f"holds an unresolved merge -- `reqctl resolve {path.stem}` "
@@ -1191,7 +1191,7 @@ def _settled(path):
     return corpus.loads(text, path)
 
 
-# @req> REQ-21699310@XKeWkfefGruJ uv4bc5
+# @req> REQ-21699310@HJWvkB2QKjez uv4bc5
 def _bound_guards(records, root):
     nominated = corpus.binding_dimensions(root)
     return [
@@ -1206,7 +1206,7 @@ def _bound_guards(records, root):
 
 
 def _named_schemas(records, root):
-    # @req+ REQ-48136849@IqLDEuOZNuoa wljy47
+    # @req+ REQ-48136849@EXeydTy0CfsX wljy47
     held = {corpus.name_of(uid, data) for uid, data in records.items()}
     return [f"corpus: {name}.schema.yaml governs an item named {name}, and "
             "the corpus holds none -- mint it, or remove the schema"
@@ -1219,7 +1219,7 @@ def run(root, exempt=None):
     problems, broken_schemas = _schemas_are_schemas(root)
     records, unreadable = {}, {}
     for path in paths:
-        # @req+ REQ-69525887@UqIXxEzRxfHQ d3uvus
+        # @req+ REQ-69525887@WpuY4yv5NYDo d3uvus
         try:
             data = _settled(path)
         except corpus.ReqctlError as error:

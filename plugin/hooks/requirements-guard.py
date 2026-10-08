@@ -60,7 +60,7 @@ SINK = re.compile(
     r"^\s*(sort|uniq|awk|sed|tr|tac|rev|xxd|od|paste|fold|fmt)(?=\s|$)"
 )
 SINK_WRITES = re.compile(r"(?:^|\s)-(?:i|o|w)\b|--in-place|--output|>")
-# @req+ REQ-38099593@ZV7vXqWoh9NV 2x3zhi
+# @req+ REQ-38099593@_nWaC_p_1ziz 2x3zhi
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
 OPENS_PAGER = re.compile(r"-[0-9A-Za-z]*O")
@@ -188,7 +188,7 @@ UNTRACKED_ONLY = ("??",)
 
 def named_paths(value, keys=PATH_KEY, key=""):
     if isinstance(value, str):
-        # @req> REQ-38099593@ZV7vXqWoh9NV okrfi5
+        # @req> REQ-38099593@_nWaC_p_1ziz okrfi5
         if keys.search(key) and len(value) > INPUT_LIMIT:
             deny(LONG_INPUT.format(key=key, length=len(value)))
         return [value] if keys.search(key) else []
@@ -375,7 +375,7 @@ def git_subcommand(words):
     return None, []
 
 
-# @req> REQ-38099593@ZV7vXqWoh9NV bc4mmq
+# @req> REQ-38099593@_nWaC_p_1ziz bc4mmq
 def searched(part):
     words = tokens_of(part.split("\n", 1)[0])
     tool, rest = (("git grep", words[2:]) if words[:2] == ["git", "grep"]
@@ -389,7 +389,7 @@ def searched(part):
     return tool, None
 
 
-# @req> REQ-38099593@ZV7vXqWoh9NV dek4pk
+# @req> REQ-38099593@_nWaC_p_1ziz dek4pk
 def unreadable(part):
     quote = None
     for char in part:
@@ -400,7 +400,7 @@ def unreadable(part):
     return "a line break" if "\n" in part else None
 
 
-# @req> REQ-38099593@ZV7vXqWoh9NV j6ubo7
+# @req> REQ-38099593@_nWaC_p_1ziz j6ubo7
 def only_reads(words):
     tool, rest = (words[0], words[1:]) if words else ("", [])
     if tool == "sort":
@@ -411,7 +411,7 @@ def only_reads(words):
     return tool in WRITES_NOTHING
 
 
-# @req> REQ-38099593@ZV7vXqWoh9NV 4h5lnn
+# @req> REQ-38099593@_nWaC_p_1ziz 4h5lnn
 def names_citation(cmd):
     reach = [{"split"}] + [set() for _ in OPENER]
     for char in cmd.replace("\\\n", "").translate(UNQUOTED):
@@ -634,7 +634,7 @@ def names_corpus(part):
 
 
 def judge_shell(raw):
-    # @req+ REQ-22704490@-kCeQBvIuODs ak47k7
+    # @req+ REQ-22704490@0I1yKEFWt0tX ak47k7
     cmd = flatten(ESCAPE.sub("", raw))
     unquoted = QUOTED_REDIRECT.sub(r"\1\3", cmd)
     redirect = REDIRECT.search(masked(unquoted))
@@ -644,7 +644,7 @@ def judge_shell(raw):
         for part in pipeline:
             judge_command(tokens_of(part))
             invocation = part.split("\n", 1)[0]
-            # @req> REQ-54260750@trzUfC0yF7lT 37auve
+            # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation):
                 deny(DIRECT_READ.format(target=invocation.strip()))
         naming = [part for part in pipeline if names_corpus(part)]
@@ -693,7 +693,7 @@ def edited(tool, args):
     return before, after
 
 
-# @req> REQ-38099593@ZV7vXqWoh9NV 3yvytz
+# @req> REQ-38099593@_nWaC_p_1ziz 3yvytz
 def judge_citation_edit(tool, args):
     if tool not in ("Edit", "MultiEdit", "Write"):
         return
@@ -704,7 +704,7 @@ def judge_citation_edit(tool, args):
         deny(f"{HAND_CITATION}\nIn {args.get('file_path')}.")
 
 
-# @req> REQ-38099593@ZV7vXqWoh9NV cebvfg
+# @req> REQ-38099593@_nWaC_p_1ziz cebvfg
 def judge_citation_shell(raw):
     cmd = ESCAPE.sub("", raw)
     if not names_citation(cmd):
@@ -740,7 +740,7 @@ def decide(data: dict) -> None:
             deny(UNREADABLE)
     # @req- hyuozw
 
-    # @req> REQ-22704490@-kCeQBvIuODs qfasw3
+    # @req> REQ-22704490@0I1yKEFWt0tX qfasw3
     if tool not in ("Bash", "Read", "Grep", "Glob"):
         for value in named_paths(args):
             named = flatten(value.replace("\\", "/"))
@@ -756,7 +756,7 @@ def decide(data: dict) -> None:
                 deny(f"Direct write into the requirements corpus blocked: {value}\n"
                      f"{USE_REQCTL}")
 
-    # @req> REQ-54260750@trzUfC0yF7lT xkcay3
+    # @req> REQ-54260750@MTrWbA9_HZWY xkcay3
     if tool in ("Read", "Grep", "Glob"):
         values = named_paths(args)
         values = values + named_paths(args, GLOB_KEY if tool == "Glob" else GREP_GLOB_KEY)

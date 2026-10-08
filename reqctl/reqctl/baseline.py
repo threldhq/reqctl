@@ -175,7 +175,7 @@ def _previous(root):
 
 def generate(tree, root):
     approved = derive(tree)
-    # @req> REQ-35349268@w6VRV3NDc1pr xfjprt
+    # @req> REQ-35349268@UFojthZ7FMKX xfjprt
     if not approved:
         raise ReqctlError("nothing approved; a baseline of nothing states nothing")
     # @req+ REQ-63399155@6l4OsixGYKDz ygxzq3
@@ -187,7 +187,7 @@ def generate(tree, root):
         )
     # @req- ygxzq3
 
-    # @req+ REQ-85375321@yRXlpC7hB1lb yvehmw
+    # @req+ REQ-85375321@NWiQynsqgVPX yvehmw
     shared = sorted(name for name, wore in carriers(tree).items()
                     if len(wore) > 1)
     if shared:
@@ -200,7 +200,7 @@ def generate(tree, root):
 
     # @req+ REQ-28086776@tkXHKMQwei2Z thbrwa
     previous, claimed = _previous(root)
-    # @req+ REQ-73312524@KSSGrwMjCS4F mgwroy
+    # @req+ REQ-73312524@Ae7JomIJiHDc mgwroy
     dirty = uncommitted(root)
     if dirty:
         raise ReqctlError(
@@ -209,7 +209,7 @@ def generate(tree, root):
         )
     # @req- mgwroy
 
-    # @req+ REQ-87283234@NazXGi81RwTf cc4ozn
+    # @req+ REQ-87283234@HOs3YEHAJSD_ cc4ozn
     manifest = {
         "baseline": (previous or 0) + 1,
         "commit": head_commit(root),
@@ -287,9 +287,9 @@ def check(tree, root):
     if not isinstance(recorded, dict):
         return number, problems + [f"{head}: items is not a mapping"]
 
-    # @req+ REQ-44642786@TqRUT-VDn-ps rfw24o
+    # @req+ REQ-44642786@f_tuj97sj5Zn rfw24o
     current = derive(tree)
-    # @req> REQ-13861816@banV6DgxKI1S db6w7v
+    # @req> REQ-13861816@OGhn1Q-Xs0__ db6w7v
     recorded = _restated(recorded, tree)
     for uid in sorted(set(recorded) - set(current)):
         problems.append(f"{uid}: in baseline {number} but no longer approved")

@@ -217,8 +217,8 @@ function matches(item) {
   return !query || hay.toLowerCase().includes(query.toLowerCase());
 }
 
-<!-- @req+ REQ-28090849@VwFKlP8Df7Dp 7luynt -->
-<!-- @req+ REQ-42771008@YigdTUSV_OGU suyt4d -->
+<!-- @req+ REQ-28090849@CJNtdzigrsx0 7luynt -->
+<!-- @req+ REQ-42771008@O9ZIKWRPqITt suyt4d -->
 function drawFacets() {
   return `<div class="facets">${Object.keys(FIELDS).map((k) => {
     const n = corpus.filter((i) => i.kind === k).length;
@@ -386,10 +386,10 @@ function pairsHtml(held) {
     </div>`).join("");
 }
 
-<!-- @req+ REQ-87847146@zR5tHnA8xAWx hmmycl -->
+<!-- @req+ REQ-87847146@3MkrB9EtSIEF hmmycl -->
 const FIELDS = JSON.parse(document.getElementById("kind-fields").textContent);
 
-<!-- @req+ REQ-21522236@FSo8K6fhdHTu fuavre -->
+<!-- @req+ REQ-21522236@jupFEITq3Nms fuavre -->
 function shapeOf(act, kind) {
   return FORMS[act].fields ?? FIELDS[kind][act];
 }
@@ -468,10 +468,10 @@ function rewordHtml(uid, item) {
         </div>`).join("")}</div>`;
 }
 
-<!-- @req+ REQ-87847146@zR5tHnA8xAWx z2svqa -->
+<!-- @req+ REQ-87847146@3MkrB9EtSIEF z2svqa -->
 function fieldsHtml(act, kind, item) {
   return shapeOf(act, kind).map((field) => {
-    <!-- @req+ REQ-69283350@XSe9n-OwepOP dmpy2p -->
+    <!-- @req+ REQ-69283350@vYYldulaXQvc dmpy2p -->
     const needed = act === "new" && field.required;
     const label = `<label for="f-field-${field.flag}">${esc(field.flag)}${
       needed ? ` <span style="color:var(--warn)">required</span>` : ""}</label>`;
@@ -619,7 +619,7 @@ function payloadFor(act, uid, read, held) {
   const item = act === "new" ? undefined : byUid[uid];
   const options = {};
   const stuck = [];
-  <!-- @req+ REQ-87847146@zR5tHnA8xAWx lsvu3b -->
+  <!-- @req+ REQ-87847146@3MkrB9EtSIEF lsvu3b -->
   for (const field of shapeOf(act, kind)) {
     const typed = read(`field-${field.flag}`).trim();
     if (item && typed === heldBy(item, field).trim()) continue;
@@ -1034,13 +1034,13 @@ function forgetToken() {
   setupScreen("The token was forgotten.");
 }
 
-<!-- @req> REQ-84459416@zkSEOhONwdzg uzvzat -->
+<!-- @req> REQ-84459416@ZlrZpYNBUh8Q uzvzat -->
 const PERMISSIONS = JSON.parse(document.getElementById("token-permissions").textContent);
 
 function setupScreen(problem) {
   const place = repo();
   <!-- @req+ REQ-80115998@5Q31K4gVM_b7 rhi3cu -->
-  <!-- @req+ REQ-84459416@zkSEOhONwdzg uiu4t5 -->
+  <!-- @req+ REQ-84459416@ZlrZpYNBUh8Q uiu4t5 -->
   document.getElementById("app").innerHTML = `
     <div class="setup">
       <h1 style="font-size:18px">requirements</h1>
@@ -1077,7 +1077,7 @@ function setupScreen(problem) {
     if (!named || !held) {
       return setupScreen(`Enter ${named ? "the token" : "the repository as owner/repo"} to continue`);
     }
-    <!-- @req+ REQ-89638829@KyTuFztut6dw vcqk3a -->
+    <!-- @req+ REQ-89638829@K13aY_gVspho vcqk3a -->
     if (!REPO_FORM.test(named)) {
       return setupScreen(`${named} is not a repository: write it as owner/repo`);
     }
