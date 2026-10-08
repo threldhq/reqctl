@@ -20,7 +20,7 @@ assessed:
   project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  2vz6iw: yWK9bhSCgKy-QbbqB68xIJd9ZcWGCAmfRjCKkiHFXhM
+  2vz6iw: PxkUfy5-HGpQy8QKN7RM4mvdw5oJ9J20EdkBJe_6pHg
 priority: medium
 relations:
   REQ-38288492: depends_on

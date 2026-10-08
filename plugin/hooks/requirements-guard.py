@@ -2,6 +2,7 @@
 
 import fnmatch
 import json
+import math
 import os
 import re
 import subprocess
@@ -39,9 +40,10 @@ GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf")
+JUDGED = ("git", "rm", "patch")
 LONG_FLAGS = ("--force", "--hard", "--discard-changes", "--dry-run", "--staged",
               "--worktree")
-NO_COMMIT = {"merge": ("--ff-only", "--abort", "--quit"),
+NO_COMMIT = {"merge": ("--ff-only", "--no-commit", "--squash", "--abort", "--quit"),
              "cherry-pick": ("-n", "--no-commit", "--abort", "--quit", "--skip"),
              "revert": ("-n", "--no-commit", "--abort", "--quit", "--skip")}
 READ_VERBS = ("cat", "head", "tail", "less", "more", "nl", "wc", "ls", "stat",
@@ -349,6 +351,8 @@ def invoked(words):
     while i < len(words) and (os.path.basename(words[i]) in WRAPPERS or "=" in words[i]
                               or (i and (words[i].startswith("-") or words[i][:1].isdigit()))):
         i += 1
+    if i and i < len(words) and os.path.basename(words[i]) not in JUDGED:
+        i = next((j for j in range(i, len(words)) if os.path.basename(words[j]) in JUDGED), i)
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
 
 
@@ -462,10 +466,13 @@ def discarded(words):
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
     before = rest[:rest.index("--")] if separated else rest
+    valued = [word.startswith("-") and (word.endswith("e") and not word.startswith("--")
+                                        or len(word) > 3 and "--exclude".startswith(word))
+              for word in before]
     flags = [next((full for full in LONG_FLAGS if len(word) > 3
                   and full.startswith(word.split("=", 1)[0])), word)
              for i, word in enumerate(before) if word.startswith("-")
-             and not (i and before[i - 1] in ("-e", "--exclude"))]
+             and not (i and valued[i - 1])]
     operands = [word for word in rest if not word.startswith("-")]
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if subcommand == "reset":
@@ -560,7 +567,9 @@ def judge_command(words):
         above = [project, *map(str, Path(project).parents)] if project else []
         swept = next(
             (w for w in operands if os.path.normpath(w) in BARE_SWEEP
-             or "$" in w or "`" in w or w.count("{") > 8
+             or "$" in w or "`" in w or w.startswith(("~+", "~-"))
+             or ("{" in w and (w.count("{") != len(BRACE.findall(w)) or math.prod(
+                 group.count(",") + 1 for group in BRACE.findall(w)) > 256))
              or any(expands_to(os.path.normpath(os.path.join(project, alt)), path)
                     for alt in braced(os.path.expanduser(w)) for path in above)),
             None)
@@ -584,7 +593,7 @@ def braced(word):
 
 def expands_to(pattern, path):
     wanted, held = pattern.split("/"), path.split("/")
-    return len(wanted) == len(held) and all(
+    return pattern == path or len(wanted) == len(held) and all(
         fnmatch.fnmatchcase(name, glob.replace("[^", "[!")) for glob, name in zip(wanted, held))
 
 
