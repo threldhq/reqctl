@@ -48,6 +48,7 @@ ITEM_STAMPED = ("text", "value_type", "unit", "default")
 DATA_KEY = re.compile(r"^[a-z][a-z0-9_]*$")
 STATED_SKIP = ("aliases",)
 POLICED_SKIP = ("aliases", "word", "name", "carried")
+# @req> REQ-68407569@9WdKt66SbMuQ bzk766
 POLICED_ITEM_SKIP = POLICED_SKIP + ("default", "unit")
 CITATION_LIST = "citations"
 # @req> REQ-88203622@QLXb8abUOMT3 otmh6w
@@ -647,10 +648,12 @@ def concept_references(data):
 
 
 def unlinked_prose(data):
+    # @req> REQ-96763217@Dg9sKJOE-5NX gzq547
+    skip = POLICED_SKIP + (("unit",) if data.get("kind") == "data" else ())
     # @req> REQ-83702299@IgLtX0BfZTks et7k4t
     return PARAM_REF.sub(
         " ", CONCEPT_LINK.sub(" ", "\n".join(
-            [prose(data, POLICED_SKIP, item=False)]
+            [prose(data, skip, item=False)]
             + _stated(data, ITEM_SKIP + POLICED_ITEM_SKIP))))
 
 

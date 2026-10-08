@@ -13,6 +13,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-83702299: IgLtX0BfZTksPIEqT99UOB-9FZ_Zv9UHjv-slw_7VrQ
+citations:
+  gzq547: VpcYra92YRllc9ipTcXIRKbUwITdWnhKv_Rb-c4go1s
 priority: medium
 relations:
   REQ-83702299: constrains

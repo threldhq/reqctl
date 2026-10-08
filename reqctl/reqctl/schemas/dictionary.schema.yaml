@@ -202,7 +202,8 @@ $defs:
           Other wordings of a term's word, including plurals. Terms only.
       unclaimed:
         type: object
-        additionalProperties: {type: string}
+        # @req> REQ-24370000@L3oFZSuyf_lZ xdlrrr
+        additionalProperties: {type: string, x-prose: true}
         description: >-
           Phrases holding the term's word or an alias that do not state the
           term, each to its reason. Prose may state them unlinked. Terms only.
