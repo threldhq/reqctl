@@ -191,7 +191,7 @@ def clipped(passage):
 
 def earlier(run):
     path = run / REFUSED
-    return json.loads(path.read_text()) if path.is_file() else []
+    return plan.read_json(path)["sources"] if path.is_file() else []
 
 
 # @req> REQ-55217837@PsKdezweHHNp dtlb52
@@ -520,13 +520,14 @@ def decline(run):
 # @req> REQ-55217837@PsKdezweHHNp rqqfbr
 def bar(run, refused):
     before = earlier(run)
-    after = before + [one for one in refused if one not in before]
+    after = before + [one for at, one in enumerate(refused)
+                      if one not in before + refused[:at]]
     spawning = plan.manifested(run, SPAWN)
     held = plan.read_json(spawning)
     one = held["prompts"][0]
     one["prompt"] = (one["prompt"].removesuffix(refusals(before))
                      + refusals(after))
-    corpus.atomic_write(run / REFUSED, json.dumps(after))
+    corpus.atomic_write(run / REFUSED, json.dumps({"sources": after}))
     corpus.atomic_write(spawning, json.dumps(held, indent=1) + "\n")
 
 
