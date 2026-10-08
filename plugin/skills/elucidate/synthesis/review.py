@@ -111,8 +111,8 @@ class PageText(HTMLParser):
     def handle_data(self, data):
         if not self.hidden:
             self.held.append(data)
-            self.shown = self.shown or (not self.titled
-                                        and re.search(r"\w", data) is not None)
+            if not self.titled and re.search(r"\w", data):
+                self.shown = True
 
 
 def stated_field(records):
@@ -186,7 +186,7 @@ def words(text):
 
 # @req> REQ-50807701@e_fFW6ql7kJY 5yws4o
 def clipped(passage):
-    return re.sub(r"[\s.!?]+$", "", words(passage))
+    return words(passage).rstrip(" .!?")
 
 
 def earlier(run):
@@ -402,19 +402,17 @@ def faults(review, bound, redirects, seconds, attempts):
             text, why = pages[url]
             if text is None:
                 # @req+ REQ-16875926@rLub1dpB7yu_ zrdwyr
-                fault = f"cannot be read: {why}"
-                if isinstance(why, Transient):
-                    fault = Transient(f"{fault} (a transient failure)")
+                line = f"practice {number}: {url} cannot be read: {why}"
+                found.append(Transient(f"{line} (a transient failure)")
+                             if isinstance(why, Transient) else line)
                 # @req- zrdwyr
                 named = "cannot be read"
             elif not holds(text, clipped(source["passage"])):
                 # @req> REQ-81751575@u9IqdcfRFLSM ot73lz
-                fault = named = why or f"does not hold {source['passage']!r}"
+                named = why or f"does not hold {source['passage']!r}"
+                found.append(f"practice {number}: {url} {named}")
             else:
                 continue
-            line = f"practice {number}: {url} {fault}"
-            found.append(Transient(line) if isinstance(fault, Transient)
-                         else line)
             # @req> REQ-55217837@PsKdezweHHNp 3soeou
             refused.append({**source, "fault": named})
     return found, pages, refused
@@ -524,10 +522,10 @@ def bar(run, refused):
     before = earlier(run)
     after = before + [one for one in refused if one not in before]
     spawning = plan.manifested(run, SPAWN)
-    held = json.loads(spawning.read_text())
-    prompt = held["prompts"][0]["prompt"]
-    held["prompts"][0]["prompt"] = (prompt.removesuffix(refusals(before))
-                                    + refusals(after))
+    held = plan.read_json(spawning)
+    one = held["prompts"][0]
+    one["prompt"] = (one["prompt"].removesuffix(refusals(before))
+                     + refusals(after))
     corpus.atomic_write(run / REFUSED, json.dumps(after))
     corpus.atomic_write(spawning, json.dumps(held, indent=1) + "\n")
 
