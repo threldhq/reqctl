@@ -32,6 +32,8 @@ assessed:
   REQ-62905646: _RkSNpGGoJXvqerZ8har6jnbpCKdaaRT_Em2zoOCshg
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  44gp2u: Z49CDBP4_Qe_t1RaCmmUsB1uvOwGP5YHGMdRJVgz_-g
 priority: medium
 relations:
   REQ-62905646: depends_on

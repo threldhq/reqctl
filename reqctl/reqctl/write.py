@@ -751,6 +751,104 @@ def refile(store, uid):
                   if held_uid != item.uid and data != before.get(held_uid))
 
 
+def typed(store):
+    try:
+        held = corpus.find(store, _validate.VALUE_TYPES)
+    except ReqctlError:
+        return False
+    return corpus.kind_of(held.uid, held.data) == "data"
+
+
+def _filed(value, olds, address, values):
+    if isinstance(value, str):
+        def reference(match):
+            head, _, tail = (match.group(2) or ".")[1:].partition(".")
+            if match.group(1) not in olds or head not in ("", "default", *map(str, values)):
+                return match.group(0)
+            return "${" + address + ("." + tail if tail else "") + "}"
+
+        return corpus.PARAM_REF.sub(reference, value)
+    if isinstance(value, list):
+        return [_filed(each, olds, address, values) for each in value]
+    if isinstance(value, dict):
+        return {key: _filed(each, olds, address, values) for key, each in value.items()}
+    return value
+
+
+def _filed_item(data, olds, address, values):
+    held = {key: value if key in ("assessed", "relations")
+            else _filed(value, olds, address, values)
+            for key, value in data.items()}
+    pins = data.get("assessed")
+    if isinstance(pins, dict):
+        held["assessed"] = {}
+        for pinned, pin in pins.items():
+            if str(pinned).partition(".")[0] not in olds:
+                held["assessed"][pinned] = pin
+                continue
+            held["assessed"][address] = pin
+            held["assessed"].setdefault(address.partition(".")[0], pin)
+    return held
+
+
+def refile_into(store, uid, into, key):
+    item = corpus.find(store, uid)
+    held = corpus.kind_of(item.uid, item.data)
+    if held != "parameter":
+        raise ReqctlError(
+            f"{item.uid} is a {held}; refile files a parameter as a data item")
+    # @req> REQ-47334951@68J7gRTY6uvK yw2ky4
+    if not typed(store):
+        raise ReqctlError(
+            f"the corpus holds no data item named {_validate.VALUE_TYPES}; "
+            f"{item.uid} was not changed")
+    # @req+ REQ-32527326@4rB9PLMN6_YV 44gp2u
+    target = corpus.find(store, into)
+    kind = corpus.kind_of(target.uid, target.data)
+    if kind != "data":
+        raise ReqctlError(
+            f"{target.uid} is a {kind}; a parameter is filed into a data item -- "
+            f"{item.uid} was not changed")
+    values = list(corpus.entries(item.data) or {})
+    if len(values) > 1:
+        raise ReqctlError(
+            f"{item.uid} holds {', '.join(map(str, values))}; only a parameter "
+            f"holding one value is filed as an entry -- {item.uid} was not changed")
+    entries = corpus.entries(target.data) or {}
+    if any(str(held_key) == key for held_key in entries):
+        raise ReqctlError(
+            f"{target.uid} already holds {key}; {item.uid} was not changed")
+
+    address = f"{target.uid}.{key}"
+    olds = {item.uid, corpus.name_of(item.uid, item.data)} - {None}
+    before = {found.uid: found.data for found in corpus.items(store)}
+    after = {held_uid: _filed_item(data, olds, address, values)
+             for held_uid, data in before.items()}
+    after[target.uid] = dict(after[target.uid], entries={**entries, key: {
+        "definition": item.data.get("text"),
+        "value_type": item.data.get("value_type"),
+        **({"quantity": values[0]} if values else {}),
+        **({"unit": item.data["unit"]} if item.data.get("unit") is not None else {})}})
+    after[item.uid] = dict(after[item.uid], status="deprecated")
+    after.update(_repin(after, {target.uid}))
+
+    found = _validate.coherence(after, store.root)
+    stood = _validate.coherence(before, store.root) if found else []
+    problems = [fault for fault in found if fault not in stood]
+    if problems:
+        raise ReqctlError("\n".join(problems) + f"\n{item.uid} was not changed")
+
+    changed = sorted(held_uid for held_uid, data in after.items()
+                     if data != before.get(held_uid))
+    for held_uid in changed:
+        corpus.save(store, corpus.Item(
+            held_uid, corpus.find(store, held_uid).path, after[held_uid]))
+    corpus.invalidate(store)
+    return address, [held_uid for held_uid in changed
+                     if held_uid not in (item.uid, target.uid)]
+    # @req- 44gp2u
+
+
 def _entered(value):
     if not isinstance(value, list):
         separator = _listing(entry_key(value))
