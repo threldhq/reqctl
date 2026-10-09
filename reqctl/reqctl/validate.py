@@ -1160,7 +1160,8 @@ def _typed_entries(records):
 
 def _marker_targets(node):
     if isinstance(node, dict):
-        return ({node[corpus.ENTRY_OF]} if corpus.ENTRY_OF in node else set()).union(
+        return ({node[corpus.ENTRY_OF]} if isinstance(node.get(corpus.ENTRY_OF), str)
+                else set()).union(
             *map(_marker_targets, node.values()))
     if isinstance(node, list):
         return set().union(*map(_marker_targets, node))
@@ -1219,6 +1220,7 @@ def _value_types(records, root):
                             "for parameters lists")
         # @req+ REQ-39867440@lNag_-a2yKhi jbq26t
         units = stated.get("units") if isinstance(stated, dict) else None
+        units = dict.fromkeys(units) if isinstance(units, list) else units
         for symbol, unit in (units.items() if isinstance(units, dict) else ()):
             bounds = set(unit) & {"factor", "least", "most"} if isinstance(unit, dict) else set()
             if bounds not in ({"factor"}, {"least", "most"}):
