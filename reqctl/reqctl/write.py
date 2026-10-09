@@ -817,7 +817,7 @@ def refile_into(store, uid, into, key):
         raise ReqctlError(
             f"{item.uid} states a default, which an entry cannot carry -- "
             f"{item.uid} was not changed")
-    entries = target.data.get("entries") or {}
+    entries = target.data.get("entries", {})
     if not isinstance(entries, dict):
         raise ReqctlError(
             f"{target.uid} does not hold its entries under keys; "
@@ -844,7 +844,7 @@ def refile_into(store, uid, into, key):
         entries={**(corpus.entries(after[target.uid]) or {}), key: {
             "definition": after[item.uid].get("text"),
             "value_type": item.data.get("value_type"),
-            **({"quantity": _validate._quantity(values[0])} if values else {}),
+            **({"quantity": values[0]} if values else {}),
             **({"unit": item.data["unit"]} if item.data.get("unit") is not None else {})}})
     after[item.uid] = dict(after[item.uid], status="deprecated")
     moved = {held_uid for held_uid, data in after.items() if data != before[held_uid]}
