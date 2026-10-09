@@ -671,7 +671,8 @@ def _spellings(held):
             for spelling in [symbol, *(unit.get("spellings")
                                        if isinstance(unit, dict)
                                        and isinstance(unit.get("spellings"), list)
-                                       else [])]]
+                                       else [])]
+            if str(spelling).strip()]
 
 
 def shared_quantities(records, root):
