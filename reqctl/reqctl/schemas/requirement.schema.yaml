@@ -142,3 +142,26 @@ properties:
     additionalProperties:
       type: string
       pattern: "^[A-Za-z0-9_-]{43}$"
+
+  # @req> REQ-30061042@b7B9U8dkoUHI uj54hx
+  whole_file_citations:
+    type: object
+    readOnly: true
+    description: >-
+      The whole-file citations this requirement holds: the path of each file of a
+      commentless format it is cited against, to the tag stamp it was read
+      against and a digest of the entire file. Excluded from the stamp.
+      Written by reqctl tag, never by hand.
+    propertyNames:
+      minLength: 1
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      required: [pinned, digest]
+      properties:
+        pinned:
+          type: string
+          pattern: "^[A-Za-z0-9_-]{12}$"
+        digest:
+          type: string
+          pattern: "^[A-Za-z0-9_-]{43}$"

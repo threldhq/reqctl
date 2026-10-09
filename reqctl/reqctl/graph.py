@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from . import cite, corpus
 
 
@@ -43,12 +45,47 @@ def listing(tree, citations, uid=None):
     return problems
 
 
+def whole(tree, tags, root=None, uid=None):
+    # @req+ REQ-30061042@b7B9U8dkoUHI cgpbde
+    problems = []
+    for item in corpus.items(tree):
+        owner = str(item.uid)
+        if not corpus.citable(item):
+            continue
+        for path, held in corpus.mapping(item.data, corpus.WHOLE_FILES).items():
+            held = held if isinstance(held, dict) else {}
+            tags.setdefault(owner, []).append((path, held.get("pinned") or "", None))
+            if root is None or (uid and owner != uid):
+                continue
+            target = (Path(root) / path).resolve()
+            if not target.is_relative_to(Path(root).resolve()):
+                problems.append(f"{owner}: it holds a whole-file citation of {path}, "
+                                "which is not a file of the code base")
+                continue
+            try:
+                text = target.read_bytes().decode()
+            except (OSError, UnicodeDecodeError):
+                problems.append(f"{owner}: it holds a whole-file citation of {path}, "
+                                "which does not read")
+                continue
+            if held.get("digest") != cite.whole(path, text):
+                problems.append(
+                    f"{path}: the whole-file citation {owner} holds covers a file "
+                    f"that changed since it took its digest -- read it against "
+                    f"{owner}, then reqctl tag {path} --req {owner}")
+    return problems
+    # @req- cgpbde
+
+
 def trace(tree, root, uid=None):
     citations, cited_problems = cite.read(root, digested=True)
     # @req+ REQ-19896380@2sOnckMwnWfx 6rtw6m
     shown = [c for c in citations if not corpus.is_test(c["path"])]
     tags = cite.cited(shown)
     # @req- 6rtw6m
+    # @req+ REQ-30061042@b7B9U8dkoUHI eizlko
+    cited_problems += whole(tree, tags, root, uid)
+    # @req- eizlko
     # @req> REQ-76962559@NU0P43-PPSGC dyday2
     if uid:
         corpus.find(tree, uid)

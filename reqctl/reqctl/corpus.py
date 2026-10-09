@@ -52,10 +52,12 @@ POLICED_SKIP = ("aliases", "word", "name", "carried")
 # @req> REQ-68407569@9WdKt66SbMuQ bzk766
 POLICED_ITEM_SKIP = POLICED_SKIP + ("default", "unit")
 CITATION_LIST = "citations"
+WHOLE_FILES = "whole_file_citations"
+COMMENTLESS = "commentless_formats"
 # @req> REQ-88203622@wlZ9orsr9c7q otmh6w
 CITABLE = ("requirement", "guard", "parameter", "data")
 ITEM_SKIP = ("entries", "acceptance_criteria", "text",
-             "assessed", "relations", "status", CITATION_LIST)
+             "assessed", "relations", "status", CITATION_LIST, WHOLE_FILES)
 MEMBERS = "*"
 ADDRESS = re.compile(rf"^((?:{KINDS})-\d{{8}}|{NAME})(?:\.(.+))?$")
 

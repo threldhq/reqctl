@@ -4,6 +4,7 @@ import os
 import sys
 import threading
 import webbrowser
+from pathlib import Path
 
 from . import baseline as _baseline
 from . import cite
@@ -624,6 +625,8 @@ def cmd_context(args):
     store, root = corpus.load()
     # @req> REQ-35805881@37XtC4gyD98k dktwfq
     tags = cite.cited(cite.readable(root))
+    # @req> REQ-30061042@b7B9U8dkoUHI aucabo
+    graph.whole(store, tags)
     dependents = {}
     for other in corpus.items(store):
         for target in {corpus.split_address(a)[0]
@@ -800,10 +803,45 @@ def _listed(store, uid, entries):
     return [(item.path, corpus.dump(item.data))]
 
 
+def _whole(tree, root, args):
+    # @req+ REQ-30061042@b7B9U8dkoUHI cig5it
+    target = Path(args.path).resolve()
+    formats = corpus.entries(corpus.find(tree, corpus.COMMENTLESS).data) or {}
+    if target.suffix[1:] not in formats:
+        raise ReqctlError(f"{args.path}: a whole-file citation is held only of a file "
+                          f"in a commentless format ({', '.join(sorted(formats))}) "
+                          "-- cite lines of it with --from and --to")
+    try:
+        relative = target.relative_to(Path(root).resolve()).as_posix()
+    except ValueError as error:
+        raise ReqctlError(f"{args.path}: not in the code base at {root}") from error
+    digest = cite.whole(relative, target.read_bytes().decode())
+    asked = list(dict.fromkeys(args.req))
+    changes = {}
+    for req in asked:
+        item, entry = corpus.cited_item(tree, req)
+        if entry or not corpus.citable(item):
+            raise ReqctlError(f"{req}: a whole-file citation is held by a requirement, "
+                              "a guard, a parameter or a data item")
+        item.data[corpus.WHOLE_FILES] = {
+            **corpus.mapping(item.data, corpus.WHOLE_FILES),
+            relative: {"pinned": corpus.cited_stamp(item),
+                       "digest": digest}}
+        changes[item.path] = corpus.dump(item.data)
+    corpus.write_all(changes.items())
+    _emit(args, {"path": relative, "uids": asked},
+          f"{relative} cited whole for {', '.join(asked)}")
+    return EXIT_OK
+    # @req- cig5it
+
+
 def cmd_tag(args):
     tree, root = corpus.load()
+    # @req> REQ-30061042@b7B9U8dkoUHI 6mhx6x
+    if args.first is None and args.last is None:
+        return _whole(tree, root, args)
     # @req+ REQ-62782894@x4o_oB5H0-tY nmyxfc
-    if not len(args.first) == len(args.last) == len(args.req):
+    if not len(args.first or []) == len(args.last or []) == len(args.req):
         raise ReqctlError("name --from, --to and --req once for each citation")
     asked = []
     for first, last, req in zip(args.first, args.last, args.req):
@@ -1166,12 +1204,12 @@ def build_parser(root, fielded):
                  "entry of a data item at lines of a file, writing one comment "
                  "over a single code statement and a pair of comments over "
                  "more; repeat --from, --to and --req to cite several, each "
-                 "numbered as the file stands before the command")
+                 "numbered as the file stands before the command; name neither "
+                 "--from nor --to to cite a whole file of a commentless format")
     s.add_argument("path")
     # @req+ REQ-62782894@x4o_oB5H0-tY ou2zvt
-    s.add_argument("--from", dest="first", type=int, action="append",
-                   required=True)
-    s.add_argument("--to", dest="last", type=int, action="append", required=True)
+    s.add_argument("--from", dest="first", type=int, action="append")
+    s.add_argument("--to", dest="last", type=int, action="append")
     s.add_argument("--req", action="append", required=True)
     # @req- ou2zvt
     s.add_argument("--exclusive", action="store_true")
