@@ -1223,7 +1223,8 @@ def _value_types(records, root):
         units = (dict.fromkeys(map(str, units if isinstance(units, list) else [units]))
                  if units is not None and not isinstance(units, dict) else units)
         for symbol, unit in (units.items() if isinstance(units, dict) else ()):
-            bounds = set(unit) & {"factor", "least", "most"} if isinstance(unit, dict) else set()
+            bounds = ({key for key in ("factor", "least", "most") if unit.get(key) is not None}
+                      if isinstance(unit, dict) else set())
             if bounds not in ({"factor"}, {"least", "most"}):
                 problems.append(f"{held}: entry {key} unit {symbol} states "
                                 f"{', '.join(sorted(bounds)) or 'no bound'} -- state "
