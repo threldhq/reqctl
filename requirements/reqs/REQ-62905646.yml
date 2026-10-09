@@ -24,6 +24,8 @@ assessed:
   REQ-70783238: _ngMgAcYCcxFdyTmbVvaMrJNW7-BlNadK5fcakwnicg
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  cs3jo4: ZYtAjQj0_5vRdhUMEPen-BzvU08qq61VCsNFiggioDc
 priority: medium
 relations:
   REQ-70783238: derives_from
