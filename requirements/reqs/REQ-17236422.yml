@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run recording its criteria record as an empty list
+  then: the product refuses the run
+  when: the run is built
+- given: a run recording its criteria record as false
+  then: the product refuses the run
+  when: the run is built
+assessed:
+  REQ-80500447: cWHS2ihd6kMVhBjZ4E_Oa0rW2GXrdPtz7u0BDNQChMM
+priority: medium
+relations:
+  REQ-80500447: constrains
+status: approved
+text: If a run records its criteria record as a value that is present but is not a
+  mapping, then the product shall refuse the run.
+type: functional
+verification: inspection
