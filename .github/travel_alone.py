@@ -12,7 +12,6 @@ LISTED = (corpus.CITATION_LIST,)
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
-GITLINK = "160000"
 # @req> REQ-41600593@dauTiMee9rmb o3tsro
 STAMPED = re.compile(
     rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
@@ -51,31 +50,28 @@ def without_stamps(ref, path):
 
 
 def repins_only(base, path):
-    return without_stamps(base, path) == without_stamps("HEAD", path)
+    was = without_stamps(base, path)
+    return was is not ABSENT and was == without_stamps("HEAD", path)
 
 
 # @req+ REQ-43374441@7pCJVe7pf8Mg qya7yo
 def classify(base):
-    found = _git("merge-base", base, "HEAD")
-    if found.returncode != 0:
-        raise SystemExit(f"cannot diff against {base}: "
-                         f"{found.stderr.strip() or 'it shares no commit with HEAD'}")
-    fork = found.stdout.strip()
-    found = _git("diff", "--no-renames", "--raw", "-z", fork, "HEAD")
-    if found.returncode != 0:
+    found = _git("diff", "--no-renames", "--raw", "-z", f"{base}...HEAD")
+    fork = _git("merge-base", base, "HEAD")
+    if found.returncode or fork.returncode:
         raise SystemExit(f"cannot diff against {base}: {found.stderr.strip()}")
+    fork = fork.stdout.strip()
     fields = found.stdout.split("\0")
-    modes = {path: header.lstrip(":").split()[:2]
-             for header, path in zip(fields[::2], fields[1::2])}
-    changed = [path for path in modes if path != DERIVED]
+    textual = {path: header[1:7] == header[8:14]
+               for header, path in zip(fields[::2], fields[1::2])}
+    changed = [path for path in textual if path != DERIVED]
     governed = [path for path in changed if path.startswith(GOVERNED)]
     other = [path for path in changed if not path.startswith(GOVERNED)]
     if not governed or not other:
         return [], other, []
-    textual = {path for path, (was, now) in modes.items() if was == now != GITLINK}
     pinned = ([path for path in governed if only(fork, path, CARRIED)]
               + [path for path in other
-                 if path in textual and repins_only(fork, path)])
+                 if textual[path] and repins_only(fork, path)])
     return ([path for path in governed if path not in pinned],
             [path for path in other if path not in pinned], pinned)
 
