@@ -11,8 +11,8 @@ acceptance_criteria:
 assessed:
   REQ-30631052: xqJkQgCU4pW_mDKnN6Qgjkkg6YYSS5et_YyN8rWVZU4
   challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
-  challenge_bounds.judge_bound: zytHLV1F3JcY1ZbItpK1d_O9pvzZ40A9shwEGWnwtU0
-  challenge_bounds.judge_group: aAc0gWj-2steQoD3EfLLWdXu39pomqpEZRlfqNfj9VU
+  challenge_bounds.judge_bound: ni9-rsNTxX7VX-l0ppypNi6vJCMo-_gs7n-tOTGzt0E
+  challenge_bounds.judge_group: nD0EsAucDRzcpCa1a06FHhVi_KP3k6l_lwgjVM0hcOU
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:

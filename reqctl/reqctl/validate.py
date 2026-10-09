@@ -611,20 +611,21 @@ def _quantity(written):
     return int(number) if number.is_integer() else number
 
 
-def quantities(text):
+def quantities(text, units=ISO_UNITS):
     held = _ungrouped(corpus.UID_IN_PROSE.sub(" ", text))
-    return {(_quantity(found.group(1)), _unit(found.group(2)))
+    return {(_quantity(found.group(1)), _unit(found.group(2), units))
             for found in QUANTITY.finditer(held)}
 
 
-def _quantities(data):
+def _quantities(data, units=ISO_UNITS):
     data = dict(data, entries={
         key: {**fields, "quantity": f"{fields['quantity']} {fields['unit']}"}
         if isinstance(fields, dict) and "quantity" in fields and fields.get("unit")
         else fields
         for key, fields in (corpus.entries(data) or {}).items()})
     return quantities(
-        corpus.PARAM_REF.sub(" ", corpus.CONCEPT_LINK.sub(r"\1", corpus.prose(data))))
+        corpus.PARAM_REF.sub(" ", corpus.CONCEPT_LINK.sub(r"\1", corpus.prose(data))),
+        units)
 
 
 def _states(stated, value, unit):
@@ -648,15 +649,48 @@ def occurring_values(records, text):
     return found
 
 
-def _unit(written):
+def _unit(written, units=ISO_UNITS):
     spelling = written.lower()
-    return ISO_UNITS.get(spelling, spelling)
+    return units.get(spelling, spelling)
+
+
+def _units(records):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    # @req> REQ-36436662@AUcYocp2yrFS qrxqss
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return ISO_UNITS
+    # @req> REQ-57721566@kHs1aOC7uW84 udbc2z
+    return {spelling.lower(): symbol for _, symbol, spelling in _spellings(records[held])}
+
+
+def _spellings(held):
+    return [(str(key), str(symbol), str(spelling))
+            for key, stated in (corpus.entries(held) or {}).items()
+            if isinstance(stated, dict) and isinstance(stated.get("units"), dict)
+            for symbol, unit in stated["units"].items()
+            for spelling in [symbol, *(unit.get("spellings")
+                                       if isinstance(unit, dict)
+                                       and isinstance(unit.get("spellings"), list)
+                                       else [])]
+            if str(spelling).strip()]
 
 
 def shared_quantities(records, root):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    typed = corpus.kind_of(held, records.get(held)) == "data"
+    units = _units(records)
     where = {}
     for uid, data in records.items():
-        for quantity in _quantities(own_quantities(root, uid, data)):
+        # @req> REQ-71775839@o0Rw6sW3xCGB 2afre5
+        if typed and uid == held:
+            continue
+        own = own_quantities(root, uid, data)
+        # @req> REQ-30792942@jO6e3Cn6To-1 ozipy3
+        if typed:
+            own = _dropped(own, {("entries", *at, "quantity")
+                                 for at, fields in _entries_within(corpus.entries(own))
+                                 if fields is not None and "value_type" in fields})
+        for quantity in _quantities(own, units):
             where.setdefault(quantity, []).append(uid)
     problems = []
     # @req> REQ-31827606@LqXaOXp6DLBG 4h2aan
@@ -1135,7 +1169,8 @@ def coherence(records, root):
             + _circular_definitions(records) + _entry_selection(records)
             + _duplicate_names(records) + _entry_term_fields(records, root)
             + _typed_entries(records) + _entry_of_values(records, root)
-            + _value_types(records, root))
+            + _value_types(records, root) + _unit_quantities(records, root)
+            + _listed_units(records))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
@@ -1194,6 +1229,65 @@ def _entry_of_values(records, root):
                              f"of {target}"
                              for member in (value if isinstance(value, list) else [value])
                              if str(member) not in held[target]]
+    return problems
+
+
+# @req> REQ-28551871@5A5ZA4_Y3ePJ jnnngp
+def _listed_units(records):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    listed: dict[str, set[str]] = {
+        str(key): set() for key, stated in (corpus.entries(records[held]) or {}).items()
+        if isinstance(stated, dict) and isinstance(stated.get("units"), dict)}
+    for key, _, spelling in _spellings(records[held]):
+        listed.setdefault(key, set()).add(spelling)
+    stating = [(uid, "", data) for uid, data in sorted(records.items())
+               if corpus.kind_of(uid, data) == "parameter"]
+    stating += [(uid, f" entry {'.'.join(where)}", fields)
+                for uid, data in sorted(records.items())
+                if corpus.kind_of(uid, data) == "data"
+                for where, fields in _entries_within(corpus.entries(data))
+                if fields is not None]
+    return [f"{uid}:{where} unit {stated['unit']!r} is no unit of {stated['value_type']}"
+            for uid, where, stated in stating
+            if str(stated.get("value_type")) in listed and stated.get("unit") is not None
+            and str(stated["unit"]) not in listed[str(stated["value_type"])]]
+
+
+NUMBER_WORDS = ("zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
+                "thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|"
+                "twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|"
+                "hundred|thousand|million|billion")
+WORDED = re.compile(
+    rf"(?<![\w-])((?:{NUMBER_WORDS})(?:(?:[\s-]+|\s+and\s+)(?:{NUMBER_WORDS}))*)"
+    r"(?:(?!\n)[\s-])+((?:[^\W\d_]|[%\u00b0])+)", re.IGNORECASE)
+
+
+# @req> REQ-10839190@o1M0SkcZ_uZg sjs5bc
+def _unit_quantities(records, root):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    units = _units(records)
+    problems = []
+    for uid, data in sorted(records.items()):
+        if corpus.kind_of(uid, data) not in ("requirement", "guard"):
+            continue
+        own = own_quantities(root, uid, data)
+        criteria = own.get("acceptance_criteria")
+        text = "\n".join([str(own.get("text") or "")] + [
+            str(criterion.get(part) or "")
+            for criterion in (criteria if isinstance(criteria, list) else [])
+            if isinstance(criterion, dict) for part in ("given", "when", "then")])
+        text = corpus.UID_IN_PROSE.sub(" ", corpus.PARAM_REF.sub(
+            " ", corpus.CONCEPT_LINK.sub(r"\1", text)))
+        written = sorted({f"{found.group(1)} {found.group(2)}"
+                          for pattern, prose in ((QUANTITY, _ungrouped(text)), (WORDED, text))
+                          for found in pattern.finditer(prose)
+                          if found.group(2).lower() in units})
+        problems += [f"{uid}: writes {quantity} -- reference the parameter or "
+                     f"entry holding it, {corpus.NAME_FORM}" for quantity in written]
     return problems
 
 

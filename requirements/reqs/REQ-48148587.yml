@@ -6,7 +6,7 @@ acceptance_criteria:
 assessed:
   REQ-90454282: M0OdZ2RxH5qSAggaNA3jqFbkTXkdvD7VSStQiH-FPdw
   challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
-  challenge_bounds.agent_ceiling: rNdX3mBcBWsmANEdHa9CPivfspuHSvyL8VNJWmeG5yc
+  challenge_bounds.agent_ceiling: KIj2QRummwCq1CewyIX-E7z0MNo2xyI8ix0C3p-Zhls
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
   aky7xw: bkbLJObRyNK7DcO74_7tojCCPD9dnAyn3OIeqsdHjEk

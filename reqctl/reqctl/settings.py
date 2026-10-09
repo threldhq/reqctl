@@ -10,7 +10,7 @@ AGENTS = "elucidate_agents"
 NESTED = ("nest each value under its data item, entry and field, as "
           "review_limits: {page_bytes: {quantity: 10485760}}")
 # @req+ REQ-87066486@AtzPEAcAbJ1v 7yxrtp
-# @req> review_limits@S5WLKWwLWBaM ulaguu
+# @req> review_limits@m0AH5ohPl52k ulaguu
 REVIEW_LIMITS = {
     "fetch_attempts": {"quantity": 3},
     "fetch_seconds": {"quantity": 60},
@@ -18,7 +18,7 @@ REVIEW_LIMITS = {
     "redirects": {"quantity": 5},
     "summary_lines": {"quantity": 10},
 }
-# @req> challenge_bounds@AvWATCpAYqRO j6wvnl
+# @req> challenge_bounds@M9O-R5iFxL52 j6wvnl
 CHALLENGE_BOUNDS = {
     "agent_ceiling": {"quantity": 150},
     "floor_k": {"quantity": 10},

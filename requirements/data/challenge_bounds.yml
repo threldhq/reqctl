@@ -8,24 +8,25 @@ entries:
   agent_ceiling:
     definition: The most agents one run spawns before the build refuses the run
     quantity: 150
-    unit: agents
+    value_type: count
   floor_k:
     definition: The obligations the floor adds to a judge prompt beyond what recall
       named
     quantity: 10
-    unit: obligations
+    value_type: count
   judge_bound:
     definition: The most [items](item) one judge prompt holds before the [items](item)
       are split into groups
     quantity: 45
-    unit: items
+    value_type: count
   judge_group:
     definition: The most [items](item) one judge group holds
     quantity: 20
-    unit: items
+    value_type: count
   recall_batch:
     definition: The most [proposals](proposal) one recall prompt carries
     quantity: 40
+    value_type: count
 kind: data
 name: challenge_bounds
 status: approved
