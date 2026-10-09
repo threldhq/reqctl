@@ -660,14 +660,18 @@ def _units(records):
     if corpus.kind_of(held, records.get(held)) != "data":
         return ISO_UNITS
     # @req> REQ-57721566@kHs1aOC7uW84 udbc2z
-    return {str(spelling).lower(): str(symbol)
-            for stated in (corpus.entries(records[held]) or {}).values()
+    return {spelling.lower(): symbol for _, symbol, spelling in _spellings(records[held])}
+
+
+def _spellings(held):
+    return [(str(key), str(symbol), str(spelling))
+            for key, stated in (corpus.entries(held) or {}).items()
             if isinstance(stated, dict) and isinstance(stated.get("units"), dict)
             for symbol, unit in stated["units"].items()
             for spelling in [symbol, *(unit.get("spellings")
                                        if isinstance(unit, dict)
                                        and isinstance(unit.get("spellings"), list)
-                                       else [])]}
+                                       else [])]]
 
 
 def shared_quantities(records, root):
@@ -1232,14 +1236,11 @@ def _listed_units(records):
     held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
     if corpus.kind_of(held, records.get(held)) != "data":
         return []
-    listed = {str(key): {str(spelling)
-                         for symbol, unit in stated["units"].items()
-                         for spelling in [symbol, *(unit.get("spellings")
-                                                    if isinstance(unit, dict)
-                                                    and isinstance(unit.get("spellings"), list)
-                                                    else [])]}
-              for key, stated in (corpus.entries(records[held]) or {}).items()
-              if isinstance(stated, dict) and isinstance(stated.get("units"), dict)}
+    listed: dict[str, set[str]] = {
+        str(key): set() for key, stated in (corpus.entries(records[held]) or {}).items()
+        if isinstance(stated, dict) and isinstance(stated.get("units"), dict)}
+    for key, _, spelling in _spellings(records[held]):
+        listed.setdefault(key, set()).add(spelling)
     stating = [(uid, "", data) for uid, data in sorted(records.items())
                if corpus.kind_of(uid, data) == "parameter"]
     stating += [(uid, f" entry {'.'.join(where)}", fields)
