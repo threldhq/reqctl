@@ -279,6 +279,14 @@ def cmd_refile(args):
     return EXIT_OK
 
 
+def _typed(store):
+    try:
+        held = corpus.find(store, _validate.VALUE_TYPES)
+    except ReqctlError:
+        return False
+    return corpus.kind_of(held.uid, held.data) == "data"
+
+
 def _resolved(text, store):
     # @req+ REQ-70783238@_ngMgAcYCcxF lxx4c3
     # @req> REQ-68562495@YhDgLuskl6yq i2bing
@@ -312,7 +320,16 @@ def _resolved(text, store):
                     return match.group(0)
                 shown = field if isinstance(value, dict) else str(value)
             else:
-                shown = f"{entry} {unit}" if unit else entry
+                # @req+ REQ-62905646@_RkSNpGGoJXv cs3jo4
+                stated = held[entry]
+                if (corpus.kind_of(item.uid, fields) == "data" and isinstance(stated, dict)
+                        and "value_type" in stated and "quantity" in stated
+                        and _typed(store)):
+                    shown = (f"{stated['quantity']} {stated['unit']}" if stated.get("unit")
+                             else str(stated["quantity"]))
+                else:
+                    shown = f"{entry} {unit}" if unit else entry
+                # @req- cs3jo4
         return f"[**{shown}**](#{item.uid})"
     # @req- lxx4c3
 
