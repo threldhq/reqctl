@@ -744,10 +744,9 @@ def judge_command(words, here):
     # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
     # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
     if plain != "git" and any(
-            name in READ_ENV or name.startswith("GIT_CONFIG")
-            for word in (words if any(word in SETS_VARIABLES for word in words)
-                         else [word for word in words[:len(words) - len(called)] if "=" in word])
-            for name in (word.partition("=")[0].rstrip("+"), word.partition("=")[2])):
+            "GIT_CONFIG" in word or any(name in word for name in READ_ENV)
+            for word in (words if any(word in SETS_VARIABLES for word in words) else [
+                word.partition("=")[0] for word in words[:len(words) - len(called)] if "=" in word])):
         deny(UNREADABLE)
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
