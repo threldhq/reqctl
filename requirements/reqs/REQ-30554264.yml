@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run whose trace record holds a key naming no [proposal](proposal) file
+  then: the product refuses the run and names the key
+  when: the run is built
+assessed:
+  REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  bjxcpn: tr3lkg255euEXkgb3i3s9WQYeOhkZA4mdERL5LU-Zpo
+priority: medium
+relations:
+  REQ-21373303: constrains
+status: approved
+text: If a run's trace record holds a key naming no [proposal](proposal) the run holds,
+  then the product shall refuse the run, naming the key.
+type: functional
+verification: inspection
