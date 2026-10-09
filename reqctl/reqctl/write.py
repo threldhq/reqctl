@@ -807,12 +807,17 @@ def refile_into(store, uid, into, key):
         raise ReqctlError(
             f"{target.uid} is a {held}; a parameter is filed into a data item -- "
             f"{item.uid} was not changed")
-    values = list(corpus.entries(item.data) or {})
+    stated = item.data.get("entries")
+    values = list(stated) if isinstance(stated, (dict, list)) else [stated] * (stated is not None)
     if len(values) > 1:
         raise ReqctlError(
             f"{item.uid} holds {', '.join(map(str, values))}; only a parameter "
             f"holding one value is filed as an entry -- {item.uid} was not changed")
-    entries = corpus.entries(target.data) or {}
+    entries = target.data.get("entries") or {}
+    if not isinstance(entries, dict):
+        raise ReqctlError(
+            f"{target.uid} holds its entries as a list, not under keys; "
+            f"{item.uid} was not changed")
     if any(str(held_key) == key for held_key in entries):
         raise ReqctlError(
             f"{target.uid} already holds {key}; {item.uid} was not changed")
@@ -823,17 +828,21 @@ def refile_into(store, uid, into, key):
     before = {found.uid: found.data for found in corpus.items(store)}
     after = {held_uid: _filed_item(data, olds, address, values)
              for held_uid, data in before.items()}
-    after[target.uid] = dict(after[target.uid], entries={**entries, key: {
+    after[target.uid] = dict(after[target.uid], entries={
+        **(corpus.entries(after[target.uid]) or {}), key: {
         "definition": item.data.get("text"),
         "value_type": item.data.get("value_type"),
         **({"quantity": values[0]} if values else {}),
         **({"unit": item.data["unit"]} if item.data.get("unit") is not None else {})}})
     after[item.uid] = dict(after[item.uid], status="deprecated")
-    after.update(_repin(after, {target.uid}))
+    moved = {held_uid for held_uid, data in after.items() if data != before[held_uid]}
+    after.update({held_uid: data for held_uid, data in _repin(after, {target.uid}).items()
+                  if held_uid in moved})
 
+    problems = _validate.dictionary_rules(target.uid, after[target.uid])
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
-    problems = [fault for fault in found if fault not in stood]
+    problems += [fault for fault in found if fault not in stood]
     if problems:
         raise ReqctlError("\n".join(problems) + f"\n{item.uid} was not changed")
 
