@@ -50,22 +50,29 @@ def without_stamps(ref, path):
 
 
 def repins_only(base, path):
-    return without_stamps(base, path) == without_stamps("HEAD", path)
+    was = without_stamps(base, path)
+    return was is not ABSENT and was == without_stamps("HEAD", path)
 
 
 # @req+ REQ-43374441@7pCJVe7pf8Mg qya7yo
 def classify(base):
-    found = _git("diff", "--no-renames", "--name-only", "-z", f"{base}...HEAD")
-    if found.returncode != 0:
-        raise SystemExit(f"cannot diff against {base}: {found.stderr.strip()}")
-    changed = [path for path in found.stdout.split("\0")
-               if path and path != DERIVED]
+    found = _git("diff", "--no-renames", "--raw", "-z", f"{base}...HEAD")
+    fork = _git("merge-base", base, "HEAD")
+    if found.returncode or fork.returncode:
+        raise SystemExit(f"cannot diff against {base}: "
+                         f"{(found.stderr or fork.stderr).strip()}")
+    fork = fork.stdout.strip()
+    fields = found.stdout.split("\0")
+    textual = {path: header[1:7] == header[8:14]
+               for header, path in zip(fields[::2], fields[1::2])}
+    changed = [path for path in textual if path != DERIVED]
     governed = [path for path in changed if path.startswith(GOVERNED)]
     other = [path for path in changed if not path.startswith(GOVERNED)]
     if not governed or not other:
         return [], other, []
-    pinned = ([path for path in governed if only(base, path, CARRIED)]
-              + [path for path in other if repins_only(base, path)])
+    pinned = ([path for path in governed if only(fork, path, CARRIED)]
+              + [path for path in other
+                 if textual[path] and repins_only(fork, path)])
     return ([path for path in governed if path not in pinned],
             [path for path in other if path not in pinned], pinned)
 
