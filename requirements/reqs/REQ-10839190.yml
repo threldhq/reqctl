@@ -35,6 +35,8 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  sjs5bc: dO4_pfeFCOabTlaSE6qrOoh8er78U5YzCibPX7s6HXc
 priority: medium
 relations:
   REQ-57721566: depends_on
