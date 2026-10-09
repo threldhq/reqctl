@@ -776,9 +776,7 @@ def _filed(value, olds, address, values):
 
 
 def _filed_item(data, olds, address, values):
-    held = {key: value if key in ("assessed", "relations")
-            else _filed(value, olds, address, values)
-            for key, value in data.items()}
+    held = {key: _filed(value, olds, address, values) for key, value in data.items()}
     pins = data.get("assessed")
     if isinstance(pins, dict):
         held["assessed"] = {}
@@ -804,10 +802,10 @@ def refile_into(store, uid, into, key):
             f"{item.uid} was not changed")
     # @req+ REQ-32527326@4rB9PLMN6_YV 44gp2u
     target = corpus.find(store, into)
-    kind = corpus.kind_of(target.uid, target.data)
-    if kind != "data":
+    held = corpus.kind_of(target.uid, target.data)
+    if held != "data":
         raise ReqctlError(
-            f"{target.uid} is a {kind}; a parameter is filed into a data item -- "
+            f"{target.uid} is a {held}; a parameter is filed into a data item -- "
             f"{item.uid} was not changed")
     values = list(corpus.entries(item.data) or {})
     if len(values) > 1:
@@ -821,6 +819,7 @@ def refile_into(store, uid, into, key):
 
     address = f"{target.uid}.{key}"
     olds = {item.uid, corpus.name_of(item.uid, item.data)} - {None}
+    paths = {found.uid: found.path for found in corpus.items(store)}
     before = {found.uid: found.data for found in corpus.items(store)}
     after = {held_uid: _filed_item(data, olds, address, values)
              for held_uid, data in before.items()}
@@ -841,8 +840,7 @@ def refile_into(store, uid, into, key):
     changed = sorted(held_uid for held_uid, data in after.items()
                      if data != before.get(held_uid))
     for held_uid in changed:
-        corpus.save(store, corpus.Item(
-            held_uid, corpus.find(store, held_uid).path, after[held_uid]))
+        corpus.save(store, corpus.Item(held_uid, paths[held_uid], after[held_uid]))
     corpus.invalidate(store)
     return address, [held_uid for held_uid in changed
                      if held_uid not in (item.uid, target.uid)]
