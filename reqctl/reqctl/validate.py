@@ -1135,7 +1135,7 @@ def coherence(records, root):
             + _circular_definitions(records) + _entry_selection(records)
             + _duplicate_names(records) + _entry_term_fields(records, root)
             + _typed_entries(records) + _entry_of_values(records, root)
-            + _value_types(records, root))
+            + _value_types(records, root) + _single_value_types(records))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
@@ -1194,6 +1194,22 @@ def _entry_of_values(records, root):
                              for member in (value if isinstance(value, list) else [value])
                              if str(member) not in held[target]]
     return problems
+
+
+# @req> REQ-34134685@7WjKv7L7yONz q7lk5y
+def _single_value_types(records):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    return [f"{uid}: entry {'.'.join(where)}: value_type "
+            f"{fields['value_type']!r} is a "
+            f"{'list' if isinstance(fields['value_type'], list) else 'mapping'} "
+            "-- state one value type"
+            for uid, data in sorted(records.items())
+            if corpus.kind_of(uid, data) == "data"
+            for where, fields in _entries_within(corpus.entries(data))
+            if fields is not None
+            and isinstance(fields.get("value_type"), (list, dict))]
 
 
 def _value_types(records, root):
