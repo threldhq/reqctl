@@ -174,24 +174,17 @@ VALUE_TYPES = "value_types"
 NESTING = 100
 
 
-def _nesting(uid, held, path=(), seen=()):
-    if len(seen) >= NESTING:
-        return [f"{uid}: entry {'.'.join(path)} nests deeper than {NESTING} "
-                "levels -- flatten it"]
-    problems = []
-    seen = seen + (id(held),)
-    for key, fields in (held or {}).items():
-        if not isinstance(fields, dict):
-            continue
-        where = path + (str(key),)
-        for name, value in fields.items():
-            if isinstance(value, dict) and id(value) not in seen:
-                problems += _nesting(uid, value, where + (str(name),), seen)
-    return problems
+def _nesting(uid, held):
+    return [f"{uid}: entry {'.'.join(path)} nests deeper than {NESTING} "
+            "levels -- flatten it"
+            for path, fields in _entries_within(held) if fields is None]
 
 
 def _entries_within(held, path=(), seen=()):
-    if not isinstance(held, dict) or id(held) in seen or len(seen) >= NESTING:
+    if not isinstance(held, dict) or id(held) in seen:
+        return
+    if len(seen) >= NESTING:
+        yield path, None
         return
     seen = seen + (id(held),)
     for key, fields in held.items():
@@ -1153,7 +1146,8 @@ def _typed_entries(records):
             for uid, data in sorted(records.items())
             if corpus.kind_of(uid, data) == "data"
             for where, fields in _entries_within(corpus.entries(data))
-            if str(fields.get("value_type")) in KEY_SHAPES
+            if fields is not None
+            and str(fields.get("value_type")) in KEY_SHAPES
             for problem in _typed(
                 f"{uid}: entry {'.'.join(where)}", fields["value_type"],
                 [(f"quantity {fields['quantity']!r}",
