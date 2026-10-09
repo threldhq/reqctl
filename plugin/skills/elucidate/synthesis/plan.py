@@ -648,9 +648,7 @@ def keyed(path, name, record, held):
 def traced(run, words, held):
     path, read = recorded(run)
     # @req+ REQ-66894246@1OH-VnSwvnpy rc5ai4
-    traces = read.get(TRACE)
-    if traces is None:
-        traces = {}
+    traces = {} if read.get(TRACE) is None else read[TRACE]
     # @req> REQ-28473555@fDR67hlkVPAc do2uo3
     if not isinstance(traces, dict):
         raise SystemExit(

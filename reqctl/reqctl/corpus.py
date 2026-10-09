@@ -152,22 +152,21 @@ def _folded(loader, node):
     walked, stack = set(), [node]
     while stack:
         held = stack.pop()
-        if id(held) in walked:
+        if held in walked:
             continue
-        walked.add(id(held))
+        walked.add(held)
         if isinstance(held, yaml.SequenceNode):
             stack.extend(held.value)
         if isinstance(held, yaml.MappingNode):
-            loaded = {}
+            keys = {}
             for key, value in held.value:
                 stack.append(value)
-                if not isinstance(key, yaml.ScalarNode):
-                    continue
-                read = loader.construct_object(key)
-                if read in loaded:
-                    return loaded[read]
-                loaded[read] = read
-    return None
+                if isinstance(key, yaml.ScalarNode):
+                    read = loader.construct_object(key)
+                    if read in keys:
+                        return [keys[read]]
+                    keys[read] = read
+    return []
 
 
 def loads(text, where):
@@ -192,10 +191,10 @@ def loads(text, where):
         # @req- 3222m4
         # @req+ REQ-48650108@-jXFakmxSYbB i4wv7k
         # @req+ REQ-83085784@mB9K6Zw3dGnC lxmmuv
-        folded = _folded(loader, node) if node is not None else None
-        if folded is not None:
+        folded = _folded(loader, node)
+        if folded:
             raise ReqctlError(
-                f"{where} states the key {folded} twice in one mapping -- YAML "
+                f"{where} states the key {folded[0]} twice in one mapping -- YAML "
                 "keeps the last, so drop the one that does not govern"
             )
         # @req- lxmmuv
