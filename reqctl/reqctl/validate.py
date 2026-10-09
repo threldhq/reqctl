@@ -1185,9 +1185,9 @@ def _entry_of_values(records, root):
         schema = corpus.schema_for(root, corpus.kind_of(uid, data),
                                    corpus.name_of(uid, data))
         for target in sorted(_marker_targets(schema) & held.keys()):
-            for path in _marked_paths(
+            for path in sorted(_marked_paths(
                     root, uid, data,
-                    lambda node, target=target: node.get(corpus.ENTRY_OF) == target):
+                    lambda node, target=target: node.get(corpus.ENTRY_OF) == target)):
                 value = _at(data, path)
                 problems += [f"{uid}: {'.'.join(path)} {member!r} names no entry "
                              f"of {target}"
