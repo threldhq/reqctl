@@ -27,6 +27,8 @@ assessed:
   REQ-36099384: oqIHWa_e7CDN_xl_H8IK9TO2JmSwnGPNit0fk-_Ha4k
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  tpungp: OMml2aQ1oW7RqpPV5-AkEUBbH3AdeXJX1rAvEIQgUIw
 priority: medium
 relations:
   REQ-20469423: depends_on

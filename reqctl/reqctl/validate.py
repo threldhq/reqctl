@@ -1170,7 +1170,7 @@ def coherence(records, root):
             + _duplicate_names(records) + _entry_term_fields(records, root)
             + _typed_entries(records) + _entry_of_values(records, root)
             + _value_types(records, root) + _unit_quantities(records, root)
-            + _listed_units(records))
+            + _listed_units(records) + _bounds(records) + _ceilings(records))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
@@ -1253,6 +1253,109 @@ def _listed_units(records):
             for uid, where, stated in stating
             if str(stated.get("value_type")) in listed and stated.get("unit") is not None
             and str(stated["unit"]) not in listed[str(stated["value_type"])]]
+
+
+# @req+ REQ-20469423@IrHZJUp5R992 bplqvo
+def _span(value_types, fields):
+    quantity = _quantity(_written(fields.get("quantity")))
+    if isinstance(quantity, bool) or not isinstance(quantity, (int, float)):
+        return None
+    stated = value_types.get(str(fields.get("value_type")))
+    units = stated.get("units") if isinstance(stated, dict) else None
+    if fields.get("unit") is None or not isinstance(units, dict):
+        return ("", quantity, quantity, quantity)
+    for _, symbol, spelling in _spellings({"entries": {"held": {"units": units}}}):
+        if spelling == str(fields["unit"]):
+            unit = units[symbol] if isinstance(units[symbol], dict) else {}
+            low, high = (unit.get("factor"), unit.get("factor")) if "factor" in unit else (
+                unit.get("least"), unit.get("most"))
+            if all(isinstance(one, (int, float)) and not isinstance(one, bool)
+                   for one in (low, high)):
+                return (symbol, quantity, quantity * low, quantity * high)
+    return None
+
+
+def _more(one, other):
+    return one[1] > other[1] if one[0] == other[0] else one[3] > other[2]
+
+
+def _less(one, other):
+    return one[1] < other[1] if one[0] == other[0] else one[2] < other[3]
+# @req- bplqvo
+
+
+def _bounds(records):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    value_types = {str(key): stated
+                   for key, stated in (corpus.entries(records[held]) or {}).items()}
+    problems = []
+    for uid, data in sorted(records.items()):
+        if corpus.kind_of(uid, data) != "data":
+            continue
+        held_entries = corpus.entries(data)
+        for where, fields in _entries_within(held_entries):
+            if fields is None:
+                continue
+            siblings = _at(held_entries, where[:-1]) if len(where) > 1 else held_entries
+            for bound, refused, words in (("at_least", _less, "less"),
+                                          ("at_most", _more, "more")):
+                if bound not in fields:
+                    continue
+                at = f"{uid}: entry {'.'.join(where)} {bound} {fields[bound]!r}"
+                target = next((value for key, value in siblings.items()
+                               if str(key) == str(fields[bound])), None)
+                # @req+ REQ-75293842@Une663jQ8uUZ l7qntp
+                if not isinstance(target, dict) or "quantity" not in target:
+                    problems.append(f"{at} names no entry of {uid} stating a quantity")
+                    continue
+                if str(target.get("value_type")) != str(fields.get("value_type")):
+                    problems.append(f"{at} states {target.get('value_type')} -- "
+                                    f"{fields.get('value_type')} and "
+                                    f"{target.get('value_type')} cannot be compared")
+                    continue
+                # @req- l7qntp
+                # @req+ REQ-58100850@NgW3efYeVw1k p3q7no
+                spans = _span(value_types, fields), _span(value_types, target)
+                if None not in spans and refused(*spans):
+                    problems.append(f"{at}: quantity {fields.get('quantity')} "
+                                    f"{fields.get('unit') or ''}".rstrip()
+                                    + f" is {words} than {target['quantity']} "
+                                    f"{target.get('unit') or ''}".rstrip())
+                # @req- p3q7no
+    return problems
+
+
+def _ceilings(records):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    value_types = {str(key): stated
+                   for key, stated in (corpus.entries(records[held]) or {}).items()}
+    problems = []
+    for uid, data in sorted(records.items()):
+        if corpus.kind_of(uid, data) != "data" or "ceiling" not in data:
+            continue
+        held_entries = corpus.entries(data) or {}
+        ceiling = next((value for key, value in held_entries.items()
+                        if str(key) == str(data["ceiling"])), None)
+        # @req> REQ-36099384@oqIHWa_e7CDN vfmcft
+        if not isinstance(ceiling, dict) or "quantity" not in ceiling:
+            problems.append(f"{uid}: ceiling {data['ceiling']!r} names no entry of "
+                            f"{uid} stating a quantity")
+            continue
+        # @req+ REQ-27382610@9np_bpPH3xzx tpungp
+        top = _span(value_types, ceiling)
+        problems += [f"{uid}: ceiling {data['ceiling']!r} states {ceiling['quantity']}, "
+                     f"less than entry {'.'.join(where)} at {fields['quantity']}"
+                     for where, fields in _entries_within(held_entries)
+                     if fields is not None and fields is not ceiling
+                     and str(fields.get("value_type")) == str(ceiling.get("value_type"))
+                     and top is not None and (other := _span(value_types, fields)) is not None
+                     and _less(top, other)]
+        # @req- tpungp
+    return problems
 
 
 NUMBER_WORDS = ("zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
