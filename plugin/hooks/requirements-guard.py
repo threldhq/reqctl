@@ -42,7 +42,7 @@ PATH_SHAPE = re.compile(r"[^\s'\"`$();|<>]+")
 COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
-BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
+BRACE = re.compile(r"\{([^{},]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
 SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|getopts"
                     r"|let)$|\$\{\w+(\[[^]]*\])?:?=")
@@ -679,14 +679,15 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
-    literal = [word for word in rest if expands(word)]
+    written = rest
     rest = [alt for word in rest for alt in bounded(braced(word))]
     if any(map(expands, rest)):
         deny(UNREADABLE)
-    paths, sweeps_untracked, sweeps_ignored = discarded(subcommand, rest, place)
-    if paths is None:
+    readings = [reading for reading in (discarded(subcommand, said, place)
+                                        for said in ([rest, written] if written != rest else [rest]))
+                if reading[0] is not None]
+    if not readings:
         return
-    paths = [*paths, *literal] if paths else paths
     if any("{}" in word for word in rest):
         deny(UNREADABLE)
     source = recursion(subcommand, rest, place)
@@ -695,18 +696,19 @@ def refuse_discarding_work(words, here):
         staged = git_reads(["ls-files", "--stage", "--", top], place)
         if staged is None or any(line.startswith("160000 ") for line in staged.splitlines()):
             deny(INTO_SUBMODULES.format(source=source))
-    args = [*unfiltered(place), "status", "--porcelain", "--untracked-files=normal",
-            "--ignore-submodules=dirty"]
-    if sweeps_ignored:
-        args.append("--ignored")
-    if paths:
-        args += ["--", *paths]
-    said = git_sees(args, place)
-    swept = UNTRACKED if sweeps_ignored else UNTRACKED_ONLY
-    at_risk = [f"  {line}" for line in said.splitlines() if line.strip()
-               and (line[:2] in swept) == sweeps_untracked]
-    if at_risk:
-        deny(DISCARDS_WORK.format(listing="\n".join(at_risk)))
+    for paths, sweeps_untracked, sweeps_ignored in readings:
+        args = [*unfiltered(place), "status", "--porcelain", "--untracked-files=normal",
+                "--ignore-submodules=dirty"]
+        if sweeps_ignored:
+            args.append("--ignored")
+        if paths:
+            args += ["--", *paths]
+        said = git_sees(args, place)
+        swept = UNTRACKED if sweeps_ignored else UNTRACKED_ONLY
+        at_risk = [f"  {line}" for line in said.splitlines() if line.strip()
+                   and (line[:2] in swept) == sweeps_untracked]
+        if at_risk:
+            deny(DISCARDS_WORK.format(listing="\n".join(at_risk)))
     # @req- uivqls
 
 
@@ -944,8 +946,11 @@ def judge_shell(raw, cwd):
     for pipeline, heres in zip(pipelines, places):
         for part, here in itertools.product(pipeline, heres):
             invocation = heading(part)
-            judge_command(part if any(STDIN_ARGUMENTS.search(alt) for word in tokens_of(invocation)
-                                      for alt in bounded(braced(word))) else invocation, here)
+            judge_command(part if any(
+                len(alternatives) > 256 or any(map(STDIN_ARGUMENTS.search, alternatives))
+                for word in tokens_of(invocation)
+                for alternatives in [list(itertools.islice(braced(word), 257))]) else invocation,
+                here)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
