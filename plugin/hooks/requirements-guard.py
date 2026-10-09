@@ -46,7 +46,7 @@ BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
 SETS_VARIABLES = ("export", "declare", "typeset", "readonly", "local", "read", "printf",
                   "mapfile", "readarray", "getopts", "let")
-BRACED_NAME = re.compile(r"[\w.,]*\{[\w{}.,]*")
+PARAMETER = re.compile(r"\$\{[^{}]*\}")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf", "builtin")
 REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
@@ -745,14 +745,14 @@ def judge_command(words, here):
     # @req- dbuwzq
     # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
     # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
-    if any("{" in word.replace("{}", "") and "$" not in word and word not in ("{", "}")
+    if any("{" in PARAMETER.sub("", word).replace("{}", "") and word not in ("{", "}")
            for word in words[:len(words) - len(called) + 1]) or (
             (setter := any(word in SETS_VARIABLES or "${" in word for word in words))
             or plain != "git") and any(
-            "GIT_CONFIG" in word or any(name in word for name in READ_ENV)
-            or setter and BRACED_NAME.fullmatch(word.partition("=")[0])
+            "GIT_CONFIG" in alt or any(name in alt for name in READ_ENV)
+            or "{" in alt.replace("{}", "") and ("," in alt or ".." in alt)
             for word in (words if setter else words[:len(words) - len(called)])
-            if setter or "=" in word):
+            if setter or "=" in word for alt in bounded(braced(word))):
         deny(UNREADABLE)
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
@@ -927,7 +927,7 @@ def judge_shell(raw, cwd):
         running = running or heading(raw).strip()
     for pipeline, heres in zip(pipelines, places):
         for part, here in itertools.product(pipeline, heres):
-            judge_command(tokens_of(part), here)
+            judge_command(tokens_of(heading(part)), here)
             invocation = heading(part)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
