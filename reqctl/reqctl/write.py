@@ -776,7 +776,7 @@ def _filed(value, olds, address, values):
 
 
 def _filed_item(data, olds, address, values):
-    held = {key: _filed(value, olds, address, values) for key, value in data.items()}
+    held = _filed(data, olds, address, values)
     pins = data.get("assessed")
     if isinstance(pins, dict):
         held["assessed"] = {}
@@ -813,12 +813,16 @@ def refile_into(store, uid, into, key):
         raise ReqctlError(
             f"{item.uid} holds {', '.join(map(str, values))}; only a parameter "
             f"holding one value is filed as an entry -- {item.uid} was not changed")
+    if item.data.get("default") is not None:
+        raise ReqctlError(
+            f"{item.uid} states a default, which an entry cannot carry -- "
+            f"{item.uid} was not changed")
     entries = target.data.get("entries") or {}
     if not isinstance(entries, dict):
         raise ReqctlError(
-            f"{target.uid} holds its entries as a list, not under keys; "
+            f"{target.uid} does not hold its entries under keys; "
             f"{item.uid} was not changed")
-    if any(str(held_key) == key for held_key in entries):
+    if key in map(str, entries):
         raise ReqctlError(
             f"{target.uid} already holds {key}; {item.uid} was not changed")
 
@@ -832,30 +836,31 @@ def refile_into(store, uid, into, key):
     before = {found.uid: found.data for found in corpus.items(store)}
     after = {held_uid: _filed_item(data, olds, address, values)
              for held_uid, data in before.items()}
-    after[target.uid] = dict(after[target.uid], entries={
-        **(corpus.entries(after[target.uid]) or {}), key: {
-        "definition": after[item.uid].get("text"),
-        "value_type": item.data.get("value_type"),
-        **({"quantity": values[0]} if values else {}),
-        **({"unit": item.data["unit"]} if item.data.get("unit") is not None else {})}})
+    carried = corpus.mapping(after[item.uid], "assessed")
+    after[target.uid] = dict(
+        after[target.uid],
+        **({"assessed": {**corpus.mapping(after[target.uid], "assessed"), **carried}}
+           if carried else {}),
+        entries={**(corpus.entries(after[target.uid]) or {}), key: {
+            "definition": after[item.uid].get("text"),
+            "value_type": item.data.get("value_type"),
+            **({"quantity": _validate._quantity(values[0])} if values else {}),
+            **({"unit": item.data["unit"]} if item.data.get("unit") is not None else {})}})
     after[item.uid] = dict(after[item.uid], status="deprecated")
     moved = {held_uid for held_uid, data in after.items() if data != before[held_uid]}
+    after.update(_repin(after, moved - {target.uid, item.uid}))
     after.update({held_uid: data for held_uid, data in _repin(after, {target.uid}).items()
                   if held_uid in moved})
 
-    was = (_validate.schema_problems(store.root, target.uid, target.data)
-           + _validate.dictionary_rules(target.uid, target.data))
-    problems = [problem for problem
-                in _validate.schema_problems(store.root, target.uid, after[target.uid])
-                + _validate.dictionary_rules(target.uid, after[target.uid])
-                if problem not in was]
+    _refuse_new_schema_faults(store, target.uid, target.data, after[target.uid])
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
-    problems += [fault for fault in found if fault not in stood]
+    problems = [fault for fault in found if fault not in stood]
     if problems:
         raise ReqctlError("\n".join(problems) + f"\n{item.uid} was not changed")
 
-    for held_uid in moved:
+    for held_uid in sorted(held_uid for held_uid, data in after.items()
+                           if data != before[held_uid]):
         corpus.save(store, corpus.Item(held_uid, paths[held_uid], after[held_uid]))
     corpus.invalidate(store)
     return address, sorted(moved - {item.uid, target.uid})
