@@ -839,7 +839,7 @@ def refile_into(store, uid, into, key):
     carried = corpus.mapping(after[item.uid], "assessed")
     after[target.uid] = dict(
         after[target.uid],
-        **({"assessed": {**corpus.mapping(after[target.uid], "assessed"), **carried}}
+        **({"assessed": {**carried, **corpus.mapping(after[target.uid], "assessed")}}
            if carried else {}),
         entries={**(corpus.entries(after[target.uid]) or {}), key: {
             "definition": after[item.uid].get("text"),
