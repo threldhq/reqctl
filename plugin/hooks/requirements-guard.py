@@ -2,10 +2,12 @@
 
 import fnmatch
 import functools
+import glob
 import itertools
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 from collections import Counter
@@ -44,6 +46,13 @@ BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf")
+SHELLS = ("sh", "bash", "dash", "zsh", "ksh")
+FIND_RUNS = ("-exec", "-execdir", "-ok", "-okdir")
+GIT_VALUED = ("-c", "-C", "--work-tree", "--git-dir", "--namespace", "--config-env")
+REPO_OPTIONS = ("-C", "--git-dir", "--work-tree")
+REPO_ENV = ("GIT_DIR", "GIT_WORK_TREE")
+CORPUS_ENTRIES = (*ITEM_FOLDERS, "baselines", "baseline.yml", "baseline.yaml")
+GLOB_LIMIT = 4096
 JUDGED = ("git", "rm", "patch")
 LONG_FLAGS = ("--force", "--hard", "--discard-changes", "--dry-run", "--staged",
               "--worktree")
@@ -405,21 +414,34 @@ def invoked(words):
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
 
 
-def git_subcommand(words):
-    words = invoked(words)
-    if not words or words[0] != "git":
-        return None, []
+def git_split(words):
+    called = invoked(words)
+    if not called or called[0] != "git":
+        return None
     i = 1
-    while i < len(words):
-        word = words[i]
-        if word in ("-c", "-C", "--work-tree", "--git-dir", "--namespace", "--config-env"):
-            i += 2
-            continue
-        if word.startswith("-"):
-            i += 1
-            continue
-        return word, words[i + 1:]
-    return None, []
+    while i < len(called) and called[i].startswith("-"):
+        i += 2 if called[i] in GIT_VALUED else 1
+    if i >= len(called):
+        return None
+    return words[:len(words) - len(called)], called[1:i], called[i], called[i + 1:]
+
+
+def git_subcommand(words):
+    split = git_split(words)
+    return (split[2], split[3]) if split else (None, [])
+
+
+def located(words, here):
+    prefix, options = git_split(words)[:2]
+    settings = dict(word.split("=", 1) for word in prefix
+                    if word.partition("=")[0] in REPO_ENV)
+    where = [word for at, word in enumerate(options)
+             if word.partition("=")[0] in REPO_OPTIONS
+             or at and options[at - 1] in REPO_OPTIONS]
+    if not here or any("$" in word or "`" in word
+                       for word in [*where, *settings.values()]):
+        return None
+    return here, [os.path.expanduser(word) for word in where], settings
 
 
 # @req> REQ-38099593@_nWaC_p_1ziz bc4mmq
@@ -519,11 +541,15 @@ def refuse_destructive_push(words):
     # @req- 4aiv2n
 
 
-def git_reads(args):
-    root = os.environ.get("CLAUDE_PROJECT_DIR") or "."
+def git_reads(args, place):
+    if place is None:
+        return None
+    here, where, settings = place
     try:
-        done = subprocess.run(["git", "-C", root, *args],
-                              capture_output=True, text=True, timeout=15)
+        done = subprocess.run(
+            ["git", "-c", "core.fsmonitor=false", "-C", here, *where, *args],
+            capture_output=True, text=True, timeout=15,
+            env={**os.environ, **settings})
     except (OSError, subprocess.SubprocessError):
         return None
     return done.stdout if done.returncode == 0 else None
@@ -534,7 +560,7 @@ def short_flagged(flags, letter):
                and letter in word[1:] for word in flags)
 
 
-def discarded(words):
+def discarded(words, place):
     subcommand, rest = git_subcommand(words)
     if subcommand not in RESTORES:
         return None, False, False
@@ -568,17 +594,21 @@ def discarded(words):
     if forced or "." in operands:
         return WHOLE_TREE, False, False
     if subcommand == "checkout" and operands:
-        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"])
+        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"],
+                         place)
         return (operands[1:] if tree is not None else operands) or None, False, False
     return None, False, False
 
 
-def refuse_discarding_work(words):
+def refuse_discarding_work(words, here):
     # @req+ REQ-36282702@sK_P4PZZM9_w uivqls
     subcommand, _ = git_subcommand(words)
-    if subcommand in RESTORES and git_reads(["rev-parse", "--git-dir"]) is None:
+    if subcommand not in RESTORES:
+        return
+    place = located(words, here)
+    if git_reads(["rev-parse", "--git-dir"], place) is None:
         deny(BLIND_GIT)
-    paths, sweeps_untracked, sweeps_ignored = discarded(words)
+    paths, sweeps_untracked, sweeps_ignored = discarded(words, place)
     if paths is None:
         return
     args = ["status", "--porcelain"]
@@ -586,7 +616,7 @@ def refuse_discarding_work(words):
         args.append("--ignored")
     if paths:
         args += ["--", *paths]
-    said = git_reads(args)
+    said = git_reads(args, place)
     if said is None:
         deny(BLIND_GIT)
     swept = UNTRACKED if sweeps_ignored else UNTRACKED_ONLY
@@ -597,7 +627,7 @@ def refuse_discarding_work(words):
     # @req- uivqls
 
 
-def refuse_commit_on_default(words):
+def refuse_commit_on_default(words, here):
     # @req+ REQ-74982341@IIwAqzZV1bP3 zm6qoo
     subcommand, rest = git_subcommand(words)
     if subcommand != "commit" and (subcommand not in NO_COMMIT or next(
@@ -605,10 +635,11 @@ def refuse_commit_on_default(words):
              or w in ("--commit", "--no-squash", "--ff", "--no-ff")), None)
             in NO_COMMIT[subcommand]):
         return
-    branch = git_reads(["branch", "--show-current"])
+    place = located(words, here)
+    branch = git_reads(["branch", "--show-current"], place)
     if branch is None:
         deny(BLIND_GIT)
-    default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"])
+    default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], place)
     if default is None:
         deny(NO_DEFAULT)
     branch = branch.strip()
@@ -620,7 +651,7 @@ def refuse_commit_on_default(words):
 BARE_SWEEP = (".", "..", "/", "~", "*")
 
 
-def judge_command(words):
+def judge_command(words, here):
     refuse_destructive_push(words)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
@@ -637,6 +668,7 @@ def judge_command(words):
              "reqctl for the corpus.")
     # @req- dbuwzq
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
+    # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
     if plain == "rm" and any(
             (len(w) > 2 and "--recursive".startswith(w))
             or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
@@ -650,8 +682,9 @@ def judge_command(words):
              or "$" in w or "`" in w or w.startswith(("~+", "~-"))
              or len(alternatives[w]) > 256 or SEQUENCE.search(w)
              or any("{" in alt and "," in alt for alt in alternatives[w])
-             or any(expands_to(os.path.normpath(os.path.join(project, alt)), path)
-                    for alt in alternatives[w] for path in above)),
+             or any(expands_to(os.path.normpath(os.path.join(here, alt)), path)
+                    for alt in alternatives[w] for path in above)
+             or any(sweeps_root(here, alt) for alt in alternatives[w])),
             None)
         if swept:
             deny(f"rm -r of '{swept}' blocked: it sweeps the requirements "
@@ -659,8 +692,43 @@ def judge_command(words):
     for word in words:
         if "git" in word and "push" in word and word not in ("git", "push"):
             refuse_destructive_push(tokens_of(word))
-    refuse_commit_on_default(words)
-    refuse_discarding_work(words)
+    refuse_commit_on_default(words, here)
+    refuse_discarding_work(words, here)
+    for script in scripts_within(words):
+        judge_shell(script, here)
+
+
+def scripts_within(words):
+    called = invoked(words)
+    tool, rest = (called[0], called[1:]) if called else ("", [])
+    if tool in SHELLS:
+        at = next((i for i, word in enumerate(rest) if word.startswith("-")
+                   and not word.startswith("--") and "c" in word), None)
+        return [] if at is None else next(
+            ([word] for word in rest[at + 1:] if not word.startswith("-")), [])
+    if tool == "eval":
+        return [" ".join(rest)]
+    if tool == "find":
+        return [shlex.join(rest[at + 1:next((end for end in range(at + 1, len(rest))
+                                             if rest[end] in (";", "+")), len(rest))])
+                for at, word in enumerate(rest) if word in FIND_RUNS]
+    split = git_split(words)
+    if not split:
+        return []
+    prefix, options, subcommand, args = split
+    value = next((option.partition("=")[2] for at, option in enumerate(options)
+                  if at and options[at - 1] == "-c"
+                  and option.startswith(f"alias.{subcommand}=")), None)
+    if value is None:
+        return []
+    if value.startswith("!"):
+        return [" ".join([value[1:], *map(shlex.quote, args)])]
+    return [shlex.join([*prefix, "git", *options, *tokens_of(value), *args])]
+
+
+def sweeps_root(here, alt):
+    path = os.path.normpath(os.path.join(here, alt))
+    return bool(GLOB_CHAR.search(alt)) and os.path.isabs(path) and reached(path) == "root"
 
 
 def braced(word):
@@ -698,38 +766,38 @@ def is_corpus_root(word):
         for segment in trimmed.split("/"))
 
 
-@functools.lru_cache(maxsize=1)
-def corpus_folders(project):
-    root = os.path.join(project, CORPUS_ROOT_NAME)
-    folders = []
-    for folder in [*ITEM_FOLDERS, "baselines"]:
-        path = os.path.join(root, folder)
-        try:
-            folders.append((path, os.listdir(path)))
-        except OSError:
-            folders.append((path, []))
-    return folders, [os.path.join(root, name) for name in ("baseline.yml", "baseline.yaml")]
+def matches(pattern):
+    if not GLOB_CHAR.search(pattern):
+        return [pattern]
+    found = list(itertools.islice(glob.iglob(pattern.replace("[^", "[!")), GLOB_LIMIT + 1))
+    if len(found) > GLOB_LIMIT:
+        deny(UNREADABLE)
+    return found
+
+
+def reached(path):
+    parts = path.split("/")
+    for at, segment in enumerate(parts):
+        rest = parts[at + 1:]
+        if not fnmatch.fnmatchcase(CORPUS_ROOT_NAME, segment.replace("[^", "[!")):
+            continue
+        if rest and not any(fnmatch.fnmatchcase(entry, rest[0].replace("[^", "[!"))
+                            for entry in CORPUS_ENTRIES):
+            continue
+        if any(os.path.isdir(os.path.join(found, CORPUS_ROOT_NAME))
+               for found in matches("/".join(parts[:at]) or "/")):
+            return "inside" if rest else "root"
+    return None
 
 
 @functools.lru_cache(maxsize=4096)
 def reaches_corpus(word, cwd):
-    project = os.environ.get("CLAUDE_PROJECT_DIR")
     value = word.rpartition("=")[2]
-    if not project or not value or "$" in value or "`" in value:
+    if not value or "$" in value or "`" in value:
         return False
-    folders, files = corpus_folders(project)
-    paths = [os.path.normpath(os.path.join(cwd, alt))
-             for alt in itertools.islice(braced(os.path.expanduser(value)), 257)]
-    if any(path.startswith(top + "/") or expands_to(path, top)
-           for path in paths for top in [folder for folder, _ in folders] + files):
-        return True
-    for folder, names in folders:
-        last = {name for head, _, name in (path.rpartition("/") for path in paths)
-                if expands_to(head, folder)}
-        if last and names and any(map(re.compile("|".join(
-                fnmatch.translate(glob.replace("[^", "[!")) for glob in last)).match, names)):
-            return True
-    return False
+    paths = (os.path.normpath(os.path.join(cwd, alt))
+             for alt in itertools.islice(braced(os.path.expanduser(value)), 257))
+    return any(os.path.isabs(path) and reached(path) == "inside" for path in paths)
 
 
 def names_corpus(part, cwd):
@@ -757,14 +825,16 @@ def judge_shell(raw, cwd):
                     if lists_files(words) or sink_runs(words)), None)
     if list(map(len, written)) != list(map(len, pipelines)):
         running = running or heading(raw).strip()
+    here = cwd
     for pipeline in pipelines:
         for part in pipeline:
-            judge_command(tokens_of(part))
+            judge_command(tokens_of(part), here)
             invocation = heading(part)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
-            if CONTENT_READ.search(invocation) and names_corpus(invocation, cwd):
+            if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
-        naming = [part for part in pipeline if names_corpus(part, cwd)]
+        naming = [part for part in pipeline if names_corpus(part, here)]
+        here = moved(pipeline, here)
         if not naming:
             continue
         whole = " ".join(pipeline)
@@ -784,6 +854,17 @@ def judge_shell(raw, cwd):
     # @req- ak47k7
 
 
+def moved(pipeline, here):
+    called = invoked(tokens_of(heading(pipeline[0]))) if len(pipeline) == 1 else []
+    if called[:1] != ["cd"]:
+        return here
+    targets = [word for word in called[1:] if word == "-" or not word.startswith("-")]
+    target = os.path.expanduser(targets[0] if targets else "~")
+    if not here or target == "-" or "$" in target or "`" in target:
+        return ""
+    return os.path.normpath(os.path.join(here, target))
+
+
 def citations(text):
     if "\0" in text:
         return Counter()
@@ -791,8 +872,8 @@ def citations(text):
                    if CITATION_LINE.match(line))
 
 
-def edited(tool, args):
-    target = Path(os.environ.get("CLAUDE_PROJECT_DIR") or ".", args.get("file_path") or "")
+def edited(tool, args, cwd):
+    target = Path(cwd, args.get("file_path") or "")
     try:
         before = target.read_bytes().decode().replace("\r\n", "\n") if target.is_file() else ""
     except (OSError, UnicodeError):
@@ -813,8 +894,8 @@ def edited(tool, args):
     return before, after
 
 
-def notebook_edited(args):
-    target = Path(os.environ.get("CLAUDE_PROJECT_DIR") or ".", args.get("notebook_path") or "")
+def notebook_edited(args, cwd):
+    target = Path(cwd, args.get("notebook_path") or "")
     mode, new = args.get("edit_mode") or "replace", args.get("new_source", "")
     try:
         cells = json.loads(target.read_bytes()).get("cells") if target.is_file() else []
@@ -837,11 +918,11 @@ def notebook_edited(args):
 
 
 # @req> REQ-38099593@_nWaC_p_1ziz 3yvytz
-def judge_citation_edit(tool, args):
+def judge_citation_edit(tool, args, cwd):
     if tool == "NotebookEdit":
-        before, after = notebook_edited(args)
+        before, after = notebook_edited(args, cwd)
     elif tool in ("Edit", "MultiEdit", "Write"):
-        before, after = edited(tool, args)
+        before, after = edited(tool, args, cwd)
     else:
         return
     if not isinstance(after, str):
@@ -888,6 +969,7 @@ def decide(data: dict) -> None:
     cwd = data.get("cwd")
     if not isinstance(cwd, str) or not cwd:
         cwd = os.environ.get("CLAUDE_PROJECT_DIR") or "."
+    cwd = os.path.abspath(cwd)
 
     # @req> REQ-22704490@0I1yKEFWt0tX qfasw3
     if tool not in ("Bash", "Read", "Grep", "Glob"):
@@ -915,7 +997,7 @@ def decide(data: dict) -> None:
                     or value in paths and reaches_corpus(named, cwd)):
                 deny(DIRECT_READ.format(target=value))
 
-    judge_citation_edit(tool, args)
+    judge_citation_edit(tool, args, cwd)
     for value in named_paths(args, COMMAND_KEY):
         judge_shell(value, cwd)
         judge_citation_shell(value)
