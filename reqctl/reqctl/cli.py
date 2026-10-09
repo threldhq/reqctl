@@ -273,19 +273,17 @@ def cmd_rename(args):
 
 def cmd_refile(args):
     tree, _ = corpus.load()
+    if args.into:
+        address, moved = _write.refile_into(tree, args.uid, *args.into)
+        _emit(args, {"uid": args.uid, "address": address, "moved": moved},
+              f"{args.uid} is filed as {address} and deprecated. "
+              f"{len(moved)} item(s) now reference {address}.")
+        return EXIT_OK
     repinned = _write.refile(tree, args.uid)
     _emit(args, {"uid": args.uid, "kind": "data", "repinned": repinned},
           f"{args.uid} is filed as a data item. "
           f"{len(repinned)} item(s) had a pin to it refreshed.")
     return EXIT_OK
-
-
-def _typed(store):
-    try:
-        held = corpus.find(store, _validate.VALUE_TYPES)
-    except ReqctlError:
-        return False
-    return corpus.kind_of(held.uid, held.data) == "data"
 
 
 def _resolved(text, store):
@@ -324,7 +322,7 @@ def _resolved(text, store):
                 # @req+ REQ-62905646@_RkSNpGGoJXv cs3jo4
                 stated = corpus.cited_entries(item).get(entry)
                 if (isinstance(stated, dict) and "value_type" in stated
-                        and "quantity" in stated and _typed(store)):
+                        and "quantity" in stated and _write.typed(store)):
                     shown = _value([stated["quantity"]], stated.get("unit"))
                 else:
                     shown = f"{entry} {unit}" if unit else entry
@@ -1149,8 +1147,10 @@ def build_parser(root, fielded):
 
     s = _command(sub, "refile",
                  "file a parameter as the data item it is, moving its file "
-                 "and dropping the value_type a data item does not carry")
+                 "and dropping the value_type a data item does not carry; "
+                 "with --into DATA KEY, as an entry of DATA under KEY instead")
     s.add_argument("uid")
+    s.add_argument("--into", nargs=2, metavar=("DATA", "KEY"))
     s.set_defaults(func=cmd_refile)
 
     s = _command(sub, "delete",

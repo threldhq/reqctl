@@ -9,6 +9,8 @@ acceptance_criteria:
 assessed:
   REQ-32527326: 4rB9PLMN6_YV7RY-FvvXv4TyVv7ddphCzIGfw_zhK7g
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+citations:
+  yw2ky4: tM4DIh3bl8Qc39B62gw9TN12IEmrwhpZM3OApo1AcQ4
 priority: medium
 relations:
   REQ-32527326: constrains
