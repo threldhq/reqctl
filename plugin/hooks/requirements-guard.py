@@ -823,13 +823,14 @@ def scripts_within(words, here):
     return [shlex.join([*prefix, "git", *options, *tokens_of(value), *args])]
 
 
-def braced(word):
-    found = BRACE.search(word)
+def braced(word, breadth=1):
+    found = BRACE.search(word) if breadth <= 256 else None
     if not found:
         yield word
         return
-    for choice in found.group(1).split(","):
-        yield from braced(word[:found.start()] + choice + word[found.end():])
+    choices = found.group(1).split(",")
+    for choice in choices:
+        yield from braced(word[:found.start()] + choice + word[found.end():], breadth * len(choices))
 
 
 def expands_to(pattern, path):
