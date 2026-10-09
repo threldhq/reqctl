@@ -817,7 +817,14 @@ def schema_path(root, name):
 def _parsed_schema(path, stamped):
     # @req+ REQ-19913588@Pbi1CR5jtivz rnou7b
     try:
-        declared = yaml.load(path.read_text(), Loader=Loader)
+        loader = Loader(path.read_text())
+        try:
+            node = loader.get_single_node()
+            declared = loader.construct_document(node) if node is not None else None
+            # @req> REQ-81761490@4QFne8WaXttt 45ks43
+            folded = _folded(loader, node)
+        finally:
+            loader.dispose()
     except UnicodeDecodeError as error:
         raise ReqctlError(f"unreadable schema {path}: not valid UTF-8") from error
     except (OSError, yaml.YAMLError) as error:
@@ -826,6 +833,10 @@ def _parsed_schema(path, stamped):
         raise ReqctlError(f"unreadable schema {path}: a value YAML cannot build -- "
                           f"{type(error).__name__}: {error}") from error
     # @req- rnou7b
+    # @req> REQ-81761490@4QFne8WaXttt 35mtk4
+    if folded:
+        raise ReqctlError(f"{path.name} states the key {folded[0]} twice in one mapping "
+                          "-- YAML keeps the last, so drop the one that does not govern")
     # @req+ REQ-19913588@Pbi1CR5jtivz mszvfu
     try:
         Draft202012Validator.check_schema(declared)

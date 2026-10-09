@@ -7,6 +7,9 @@ acceptance_criteria:
   when: a command reads the schema
 assessed:
   REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+citations:
+  35mtk4: lSntm7kcxeBOhnYgyJbwcpvWTPmvWfncY9oPoxvEtq4
+  45ks43: il_-LFE8PvrWB9V_Erpbw6E1Nra9sGJSuv-SdHghODY
 priority: medium
 relations:
   REQ-13148397: constrains
