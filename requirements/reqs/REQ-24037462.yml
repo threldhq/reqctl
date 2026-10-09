@@ -22,3 +22,7 @@ text: The product shall list the Claude Code plugin, in the plugin marketplace o
   of the version the [reqctl wheel](reqctl_wheel) states.
 type: functional
 verification: inspection
+whole_file_citations:
+  .claude-plugin/marketplace.json:
+    digest: uXS5Zw_JR3yMMy2vopChkvIO_loK50XxLdvDYJ16olE
+    pinned: -TNlniD8O6DW

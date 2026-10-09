@@ -16,3 +16,7 @@ text: The product shall register the ${plugin_components.requirements_guard_hook
   in its Claude Code plugin's hooks.json to run before each [tool call](tool_call).
 type: functional
 verification: inspection
+whole_file_citations:
+  plugin/hooks/hooks.json:
+    digest: qS6qcvFrYb4RrcV2mB_XlokUMrePwjgFkcUnov8N-uQ
+    pinned: iX2i16E_7qvd
