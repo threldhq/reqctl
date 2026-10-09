@@ -4,9 +4,6 @@ acceptance_criteria:
   then: the product refuses and the verdicts, the coverage findings and the export
     are as they were before the product
   when: the run is built
-- given: a run holding verdicts, and an export the corpus has moved past
-  then: the verdicts are retired and the retirement is reported
-  when: the run is built and not refused
 assessed: {}
 citations:
   rwweso: AygxeiqRctKQyg5n5YgEnu7Xn9zOH0Bs6NbvuGSrRv4
