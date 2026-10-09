@@ -325,8 +325,7 @@ def _resolved(text, store):
                 if (corpus.kind_of(item.uid, fields) == "data" and isinstance(stated, dict)
                         and "value_type" in stated and "quantity" in stated
                         and _typed(store)):
-                    shown = (f"{stated['quantity']} {stated['unit']}" if stated.get("unit")
-                             else str(stated["quantity"]))
+                    shown = _value([stated["quantity"]], stated.get("unit"))
                 else:
                     shown = f"{entry} {unit}" if unit else entry
                 # @req- cs3jo4
