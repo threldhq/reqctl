@@ -47,6 +47,8 @@ SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
 SETS_VARIABLES = ("export", "declare", "typeset", "readonly", "local", "read", "printf",
                   "mapfile", "readarray", "getopts", "let")
 PARAMETER = re.compile(r"\$\{[^{}]*\}")
+ASSIGNING = re.compile(r"\$\{\w+(\[[^]]*\])?:?=")
+STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf", "builtin")
 REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
@@ -640,11 +642,11 @@ def discarded(subcommand, rest, place):
     flags, valued = [], False
     for word in before:
         if not valued and word.startswith("-"):
-            flags.append(next((full for full in LONG_FLAGS if len(word) > 3
+            flags.append(next((full for full in LONG_FLAGS if len(word) > 2
                                and full.startswith(word.split("=", 1)[0])), word))
         valued = not valued and word.startswith("-") and (
             not word.startswith("--") and word.find("e") == len(word) - 1
-            or len(word) > 3 and "--exclude".startswith(word))
+            or len(word) > 2 and "--exclude".startswith(word))
     operands = [word for word in rest if not word.startswith("-")]
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if subcommand == "reset":
@@ -677,6 +679,8 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
+    if any(map(expands, rest)):
+        deny(UNREADABLE)
     paths, sweeps_untracked, sweeps_ignored = discarded(subcommand, rest, place)
     if paths is None:
         return
@@ -727,7 +731,8 @@ def refuse_commit_on_default(words, here):
 BARE_SWEEP = (".", "..", "/", "~", "*")
 
 
-def judge_command(words, here):
+def judge_command(said, here):
+    words, unquoted = tokens_of(said), tokens_of(masked(said))
     refuse_destructive_push(words)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
@@ -745,14 +750,13 @@ def judge_command(words, here):
     # @req- dbuwzq
     # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
     # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
-    if any("{" in PARAMETER.sub("", word).replace("{}", "") and word not in ("{", "}")
-           for word in words[:len(words) - len(called) + 1]) or (
-            (setter := any(word in SETS_VARIABLES or "${" in word for word in words))
+    if any(map(expands, unquoted[:len(words) - len(called) + 1])) or (
+            (setter := any(word in SETS_VARIABLES or ASSIGNING.search(word) for word in words))
             or plain != "git") and any(
             "GIT_CONFIG" in alt or any(name in alt for name in READ_ENV)
-            or "{" in alt.replace("{}", "") and ("," in alt or ".." in alt)
             for word in (words if setter else words[:len(words) - len(called)])
-            if setter or "=" in word for alt in bounded(braced(word))):
+            if setter or "=" in word for alt in bounded(braced(word))) or setter and any(
+            expands(alt) for word in unquoted for alt in bounded(braced(word))):
         deny(UNREADABLE)
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
@@ -890,6 +894,11 @@ def reaches_corpus(word, cwd, root=False):
     return any(os.path.isabs(path) and reached(path, root) for path in paths)
 
 
+def expands(word):
+    left = PARAMETER.sub("", word).replace("{}", "")
+    return "{" in left and ("," in left or ".." in left)
+
+
 def bounded(alternatives):
     found = list(itertools.islice(alternatives, 257))
     if len(found) > 256:
@@ -927,8 +936,8 @@ def judge_shell(raw, cwd):
         running = running or heading(raw).strip()
     for pipeline, heres in zip(pipelines, places):
         for part, here in itertools.product(pipeline, heres):
-            judge_command(tokens_of(heading(part)), here)
             invocation = heading(part)
+            judge_command(part if STDIN_ARGUMENTS.search(invocation) else invocation, here)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
