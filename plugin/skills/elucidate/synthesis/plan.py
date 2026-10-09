@@ -647,12 +647,14 @@ def keyed(path, name, record, held):
 
 def traced(run, words, held):
     path, read = recorded(run)
-    traces = read.get(TRACE) or {}
+    # @req+ REQ-66894246@1OH-VnSwvnpy rc5ai4
+    traces = {} if read.get(TRACE) is None else read[TRACE]
     # @req> REQ-28473555@fDR67hlkVPAc do2uo3
     if not isinstance(traces, dict):
         raise SystemExit(
             f"{path}: `{TRACE}` maps a proposal number to the passages of the "
             "owner's words it traces to, as `2: [\"undo for bulk\"]`.")
+    # @req- rc5ai4
     traces = keyed(path, TRACE, traces, held)
     spoken = _coverage.plain(_coverage.spoken(words))
     stated = {}
@@ -682,6 +684,7 @@ def stated(run, held_proposals):
     if held is None:
         return {}
     # @req+ REQ-37767588@63pbAfEkzoHI viljjd
+    # @req> REQ-17236422@y4j5vrrt22rY pz52iy
     if not isinstance(held, dict):
         raise SystemExit(
             f"{path}: `{CRITERIA}` maps a proposal number to the criteria it "
