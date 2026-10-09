@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-54959279: L0m_T7xUklMMmQrrp0o9CV9FN080BncNT95FfOLF_Xc
+citations:
+  lxmmuv: her22sildV2dZeV5JMX5GgYgnCohjFSRNyJSChwj1c0
 priority: medium
 relations:
   REQ-54959279: constrains

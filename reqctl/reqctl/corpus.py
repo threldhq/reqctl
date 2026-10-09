@@ -148,6 +148,28 @@ def _repeated(node):
     return sorted(set(key for key in stated if stated.count(key) > 1))
 
 
+def _folded(loader, node):
+    walked, stack = set(), [node]
+    while stack:
+        held = stack.pop()
+        if id(held) in walked:
+            continue
+        walked.add(id(held))
+        if isinstance(held, yaml.SequenceNode):
+            stack.extend(held.value)
+        if isinstance(held, yaml.MappingNode):
+            loaded = {}
+            for key, value in held.value:
+                stack.append(value)
+                if not isinstance(key, yaml.ScalarNode):
+                    continue
+                read = loader.construct_object(key)
+                if read in loaded:
+                    return loaded[read]
+                loaded[read] = read
+    return None
+
+
 def loads(text, where):
     loader = Loader(text)
     try:
@@ -168,6 +190,16 @@ def loads(text, where):
             raise ReqctlError(f"{where} holds a value YAML cannot build -- "
                               f"{type(error).__name__}: {error}") from error
         # @req- 3222m4
+        # @req+ REQ-48650108@-jXFakmxSYbB i4wv7k
+        # @req+ REQ-83085784@mB9K6Zw3dGnC lxmmuv
+        folded = _folded(loader, node) if node is not None else None
+        if folded is not None:
+            raise ReqctlError(
+                f"{where} states the key {folded} twice in one mapping -- YAML "
+                "keeps the last, so drop the one that does not govern"
+            )
+        # @req- lxmmuv
+        # @req- i4wv7k
         # @req> REQ-39368456@pX8wTz05ESJB bpdfcl
         for field, value in (document.items() if isinstance(document, dict) else ()):
             fault = _unreadable(value)
