@@ -7,28 +7,30 @@ entries:
     definition: The most attempts the product makes at a source of the [best-in-class
       review](best_in_class_review), the first included
     quantity: 3
-    unit: attempts
+    value_type: count
   fetch_seconds:
     definition: The longest the product spends on one attempt at fetching a source
       of the [best-in-class review](best_in_class_review), from its first connection
       to the end of its page and across every redirect
     quantity: 60
     unit: seconds
+    value_type: duration
   page_bytes:
     definition: The most bytes of a page at a source of the [best-in-class review](best_in_class_review)
       that the product reads, as served or once decompressed
     quantity: 5242880
     unit: bytes
+    value_type: size
   redirects:
     definition: The most redirects the product follows when it fetches a source of
       the [best-in-class review](best_in_class_review)
     quantity: 5
-    unit: redirects
+    value_type: count
   summary_lines:
     definition: The most lines the summary of a [best-in-class review](best_in_class_review)
       holds
     quantity: 10
-    unit: lines
+    value_type: count
 kind: data
 name: review_limits
 status: approved
