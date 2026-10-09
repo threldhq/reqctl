@@ -1,16 +1,17 @@
 assessed:
-  citation: nzUQ9NqGiGlPkqp-BbfYagJAalrV1MXdm3RnLuUIDow
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 entries:
   pin:
     aliases:
     - pins
     - pinned
-    definition: What a [citation](citation), a link or a reference records of the
-      [stamp](stamp) carried by the [item](item) or [entry](entry) it names, when
-      it was last read against it.
+    definition: What a [statement citation](statement_citation), a [whole-file citation](whole_file_citation),
+      a link or a reference records of the [stamp](stamp) carried by the [item](item)
+      or [entry](entry) it names, when it was last read against it.
     unclaimed:
       action pinned: an action fixed to a commit SHA, a tag or a branch
       default, pinned, text or name: a key reqctl reserves

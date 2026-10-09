@@ -32,12 +32,12 @@ assessed:
   corpus_gates.travel_alone: xaRPsjgxbPYBMGiOCJLRgvNdNNM9Z_uxjF7sdEvA8XA
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
-  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   c6qh2i: fIcx0gXAAIubm8I4M5fj4fkAvjDJ9WV0Lo-_qRZweAQ
-  qya7yo: 6gqIuxlvm25E6LmyvkzX85xHMEOgFr8CQpFaVp0G0B8
+  qya7yo: EBCJXjrLkct01JkYj9vDxmqbbT4EMTOEem7PYbZtPic
 priority: medium
 relations:
   REQ-64846889: depends_on
