@@ -949,6 +949,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
     settled_on = binding(run, held, corpus.find_root(), records)
     traces = traced(run, words, held)
     carried = stated(run, held)
+    declined_numbers(run)
     linted(held, store)
     exported_text = exported()
     blocked = blocks(exported_text)
@@ -1467,14 +1468,21 @@ def removed(run):
     return held["practices"]
 
 
-def declined_practices(run):
-    # @req+ REQ-20454019@BJxxS0ixzdXK mkqci7
+def declined_numbers(run):
     path, read = recorded(run)
-    numbers = read.get(DECLINED) or []
+    # @req+ REQ-56866805@ub8Wdi_A6dm_ wnav5a
+    numbers = [] if read.get(DECLINED) is None else read[DECLINED]
     if not isinstance(numbers, list):
         raise SystemExit(f"{path}: `{DECLINED}` states {numbers!r}. The form "
                          "is a list of the review's practice numbers, as "
                          "`[1, 3]`.")
+    # @req- wnav5a
+    return path, numbers
+
+
+def declined_practices(run):
+    # @req+ REQ-20454019@BJxxS0ixzdXK mkqci7
+    path, numbers = declined_numbers(run)
     # @req> REQ-51975077@c_HnzFhrYbl_ px3ye3
     held = removed(run)
     review, why = read_return(run / REVIEWED, shapes.REVIEW)
