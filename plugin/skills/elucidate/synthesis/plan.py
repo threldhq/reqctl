@@ -694,7 +694,7 @@ def stated(run, held_proposals):
             raise SystemExit(
                 f"{path}: `{CRITERIA}` states {value!r} for proposal {number}. "
                 "The form is a list of `given | when | then` strings.")
-        carried[str(number)] = list(value)
+        carried[number] = list(value)
     # @req- viljjd
     return carried
 

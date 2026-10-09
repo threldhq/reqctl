@@ -540,26 +540,13 @@ def _reword_fields(value, addresses, words, seen):
 
 
 def _reword_data(data, addresses, words, seen):
-    held = dict(data)
-    for name in ("text", "rationale"):
-        if isinstance(held.get(name), str):
-            held[name] = _reworded(held[name], addresses, words, seen)
-    criteria = held.get("acceptance_criteria")
-    if isinstance(criteria, list):
-        held["acceptance_criteria"] = [
-            {key: _reworded(value, addresses, words, seen)
-             if isinstance(value, str) else value
-             for key, value in criterion.items()}
-            if isinstance(criterion, dict) else criterion
-            for criterion in criteria
-        ]
+    held = {name: _reword_fields(value, addresses, words, seen)
+            if name in ("text", "rationale", "acceptance_criteria") else value
+            for name, value in data.items()}
     entries = corpus.entries(held)
     if entries:
-        held["entries"] = {
-            key: _reword_fields(fields, addresses, words, seen)
-            if isinstance(fields, dict) else fields
-            for key, fields in entries.items()
-        }
+        held["entries"] = {key: _reword_fields(fields, addresses, words, seen)
+                           for key, fields in entries.items()}
     return held
 # @req- b3ts36
 
