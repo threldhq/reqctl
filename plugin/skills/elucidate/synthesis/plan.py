@@ -804,7 +804,7 @@ def lined(prompts, lines):
 def against(run, number):
     return "".join(path.read_text() for path in sorted(
         (run / "prompts" / "judge").glob(f"{number}*.md"))
-        if path.stem == number or path.stem.startswith(f"{number}-g"))
+        if path.stem.partition("-g")[0] == number)
 
 
 def owner(spawned):
@@ -1254,7 +1254,8 @@ def judge(run):
                                  judging))
     lined(prompts, state_held["lines"])
     for stale in list((run / "prompts" / "judge").glob("*.md")) + list(
-            (run / "returns" / "judge").glob("*.json")):
+            (run / "returns" / "judge").glob("*.json")) + list(
+            (run / "returns" / "final").glob("*.json")):
         corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "judge" / f"{name}.md", body)
@@ -1265,7 +1266,8 @@ def judge(run):
         if number not in plans:
             why = "the run no longer holds proposal " + number
         elif (judged_against.is_file()
-                and judged_against.read_text() == against(run, number)):
+                and judged_against.read_text() == against(run, number)
+                and read_return(verdict, shapes.JUDGE)[0] is not None):
             standing.add(number)
             state_held["judge"][number]["stands"] = True
             continue
