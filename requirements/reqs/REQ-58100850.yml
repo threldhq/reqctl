@@ -25,6 +25,8 @@ assessed:
   REQ-75293842: Une663jQ8uUZ5ISFJpdT7k85dKeLi83sV_GZg9etibI
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  p3q7no: K3b6bvzt5C1KA_CZY3Rqt4p_BcpUksHdEJnxGmRWHag
 priority: medium
 relations:
   REQ-20469423: depends_on

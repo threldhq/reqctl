@@ -94,6 +94,11 @@ properties:
       entry may be keyed default, so the flag cannot dangle. In the item
       stamp.
 
+  # @req> REQ-36099384@oqIHWa_e7CDN qukf5f
+  ceiling:
+    type: string
+    minLength: 1
+
   rationale:
     type: string
     x-prose: true
@@ -164,6 +169,7 @@ allOf:
         value_type: {not: {}}
         unit: {not: {}}
         default: {not: {}}
+        ceiling: {not: {}}
         rationale: {not: {}}
         entries:
           maxProperties: 1
@@ -173,6 +179,7 @@ allOf:
     then:
       required: [name, text, value_type]
       properties:
+        ceiling: {not: {}}
         entries: {x-flag: value, additionalProperties: {$ref: "#/$defs/entry"}}
 
   - if: {required: [kind], properties: {kind: {const: data}}}

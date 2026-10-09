@@ -1171,7 +1171,7 @@ def coherence(records, root):
             + _duplicate_names(records) + _entry_term_fields(records, root)
             + _typed_entries(records) + _entry_of_values(records, root)
             + _value_types(records, root) + _unit_quantities(records, root)
-            + _listed_units(records))
+            + _listed_units(records) + _bounds(records))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
@@ -1254,6 +1254,110 @@ def _listed_units(records):
             for uid, where, stated in stating
             if str(stated.get("value_type")) in listed and stated.get("unit") is not None
             and str(stated["unit"]) not in listed[str(stated["value_type"])]]
+
+
+# @req+ REQ-20469423@IrHZJUp5R992 bplqvo
+def _number(value):
+    value = value if isinstance(value, (int, float)) else _quantity(_written(value))
+    return (None if isinstance(value, bool) or not isinstance(value, (int, float))
+            or isinstance(value, float) and not math.isfinite(value) else value)
+
+
+def _span(value_types, spellings, fields):
+    quantity = _number(fields.get("quantity"))
+    if quantity is None:
+        return None
+    stated = value_types.get(str(fields.get("value_type")))
+    units = stated.get("units") if isinstance(stated, dict) else None
+    units = {str(symbol): unit for symbol, unit in units.items()} if isinstance(units, dict) else {}
+    if fields.get("unit") is None:
+        return None if units else ("", quantity, quantity, quantity)
+    for key, symbol, spelling in spellings:
+        if (key, spelling) == (str(fields.get("value_type")), str(fields["unit"])):
+            unit = units[symbol] if isinstance(units[symbol], dict) else {}
+            low, high = map(_number, (unit.get("factor"), unit.get("factor"))
+                            if unit.get("factor") is not None
+                            else (unit.get("least"), unit.get("most")))
+            if low is None or high is None:
+                return None
+            try:
+                sizes = sorted((quantity * low, quantity * high))
+            except OverflowError:
+                return None
+            if all(not isinstance(one, float) or math.isfinite(one) for one in sizes):
+                return (symbol, quantity, *sizes)
+    return None
+
+
+def _less(one, other):
+    return one[1] < other[1] if one[0] == other[0] else one[2] < other[3]
+# @req- bplqvo
+
+
+def _bounds(records):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    value_types = {str(key): stated
+                   for key, stated in (corpus.entries(records[held]) or {}).items()}
+    spellings = _spellings(records[held])
+    problems = []
+    for uid, data in sorted(records.items()):
+        if corpus.kind_of(uid, data) != "data":
+            continue
+        held_entries = corpus.entries(data) or {}
+        for where, fields in _entries_within(held_entries):
+            if fields is None:
+                continue
+            siblings = _at(held_entries, where[:-1])
+            for bound, words in (("at_least", "less"), ("at_most", "more")):
+                if bound not in fields:
+                    continue
+                at = f"{uid}: entry {'.'.join(where)} {bound} {fields[bound]!r}"
+                target = next((value for key, value in siblings.items()
+                               if str(key) == str(fields[bound])), None)
+                # @req+ REQ-75293842@Une663jQ8uUZ l7qntp
+                if not isinstance(target, dict) or "quantity" not in target:
+                    problems.append(f"{at} names no entry of {uid} stating a quantity")
+                    continue
+                mine, theirs = fields.get("value_type"), target.get("value_type")
+                if mine is None or str(theirs) != str(mine):
+                    problems.append(f"{at} states {theirs or 'no value type'}, entry "
+                                    f"{'.'.join(where)} states {mine or 'no value type'} "
+                                    f"-- they cannot be compared")
+                    continue
+                # @req- l7qntp
+                # @req+ REQ-58100850@NgW3efYeVw1k p3q7no
+                spans = _span(value_types, spellings, fields), _span(value_types, spellings, target)
+                if None not in spans and _less(*(spans if bound == "at_least" else spans[::-1])):
+                    problems.append(f"{at}: quantity {fields.get('quantity')} "
+                                    f"{fields.get('unit') or ''}".rstrip()
+                                    + f" is {words} than {target['quantity']} "
+                                    f"{target.get('unit') or ''}".rstrip())
+                # @req- p3q7no
+        if "ceiling" not in data:
+            continue
+        ceiling = next((value for key, value in held_entries.items()
+                        if str(key) == str(data["ceiling"])), None)
+        # @req> REQ-36099384@oqIHWa_e7CDN uhu3bz
+        if not isinstance(ceiling, dict) or "quantity" not in ceiling:
+            problems.append(f"{uid}: ceiling {data['ceiling']!r} names no entry of "
+                            f"{uid} stating a quantity")
+            continue
+        # @req+ REQ-27382610@9np_bpPH3xzx 4unc6n
+        top = _span(value_types, spellings, ceiling)
+        problems += [f"{uid}: ceiling {data['ceiling']!r} states "
+                     + f"{ceiling['quantity']} {ceiling.get('unit') or ''}".rstrip()
+                     + f", less than entry {'.'.join(where)} at "
+                     + f"{fields['quantity']} {fields.get('unit') or ''}".rstrip()
+                     for where, fields in _entries_within(held_entries)
+                     if fields is not None and ceiling.get("value_type") is not None
+                     and str(fields.get("value_type")) == str(ceiling.get("value_type"))
+                     and top is not None
+                     and (other := _span(value_types, spellings, fields)) is not None
+                     and _less(top, other)]
+        # @req- 4unc6n
+    return problems
 
 
 NUMBER_WORDS = ("zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
