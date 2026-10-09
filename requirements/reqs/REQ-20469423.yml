@@ -28,7 +28,7 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
-  bplqvo: Z8c7T2b10uuJjccROjun2U2uR2oFm2_dheRMCsnBtlo
+  bplqvo: pJjqrVdNwaxRSrPGNM8ejPpFDWaOxg7UOrxFBVnXKF8
 priority: medium
 relations:
   REQ-39867440: depends_on

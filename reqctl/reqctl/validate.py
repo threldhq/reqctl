@@ -1256,11 +1256,15 @@ def _listed_units(records):
 
 
 # @req+ REQ-20469423@IrHZJUp5R992 bplqvo
+def _number(value):
+    value = value if isinstance(value, (int, float)) else _quantity(_written(value))
+    return (None if isinstance(value, bool) or not isinstance(value, (int, float))
+            or isinstance(value, float) and not math.isfinite(value) else value)
+
+
 def _span(value_types, spellings, fields):
-    quantity = fields.get("quantity")
-    quantity = quantity if isinstance(quantity, (int, float)) else _quantity(_written(quantity))
-    if (isinstance(quantity, bool) or not isinstance(quantity, (int, float))
-            or isinstance(quantity, float) and not math.isfinite(quantity)):
+    quantity = _number(fields.get("quantity"))
+    if quantity is None:
         return None
     stated = value_types.get(str(fields.get("value_type")))
     units = stated.get("units") if isinstance(stated, dict) else None
@@ -1270,10 +1274,10 @@ def _span(value_types, spellings, fields):
     for key, symbol, spelling in spellings:
         if (key, spelling) == (str(fields.get("value_type")), str(fields["unit"])):
             unit = units[symbol] if isinstance(units[symbol], dict) else {}
-            low, high = (unit.get("factor"), unit.get("factor")) if unit.get("factor") is not None else (
-                unit.get("least"), unit.get("most"))
-            if not all(isinstance(one, (int, float)) and not isinstance(one, bool)
-                       for one in (low, high)):
+            low, high = map(_number, (unit.get("factor"), unit.get("factor"))
+                            if unit.get("factor") is not None
+                            else (unit.get("least"), unit.get("most")))
+            if low is None or high is None:
                 return None
             try:
                 sizes = sorted((quantity * low, quantity * high))
@@ -1341,8 +1345,10 @@ def _bounds(records):
             continue
         # @req+ REQ-27382610@9np_bpPH3xzx 4unc6n
         top = _span(value_types, spellings, ceiling)
-        problems += [f"{uid}: ceiling {data['ceiling']!r} states {ceiling['quantity']}, "
-                     f"less than entry {'.'.join(where)} at {fields['quantity']}"
+        problems += [f"{uid}: ceiling {data['ceiling']!r} states "
+                     + f"{ceiling['quantity']} {ceiling.get('unit') or ''}".rstrip()
+                     + f", less than entry {'.'.join(where)} at "
+                     + f"{fields['quantity']} {fields.get('unit') or ''}".rstrip()
                      for where, fields in _entries_within(held_entries)
                      if fields is not None and ceiling.get("value_type") is not None
                      and str(fields.get("value_type")) == str(ceiling.get("value_type"))
