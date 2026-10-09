@@ -30,6 +30,8 @@ assessed:
   REQ-57061306: grhOhf7rpAJVLA2Q7ikPqJZOOCy2_Yn9giP78507xls
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  jnnngp: I67HYwt9fftmAzRCp4E2AXdbFHdr_6QNO-9iFsfqxpg
 priority: medium
 relations:
   REQ-52544202: depends_on
