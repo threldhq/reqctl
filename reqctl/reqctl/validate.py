@@ -1310,11 +1310,11 @@ def _bounds(records):
                 if not isinstance(target, dict) or "quantity" not in target:
                     problems.append(f"{at} names no entry of {uid} stating a quantity")
                     continue
-                if (fields.get("value_type") is None
-                        or str(target.get("value_type")) != str(fields.get("value_type"))):
-                    problems.append(f"{at} states {target.get('value_type')} -- "
-                                    f"{fields.get('value_type') or 'no value type'} and "
-                                    f"{target.get('value_type')} cannot be compared")
+                mine, theirs = fields.get("value_type"), target.get("value_type")
+                if mine is None or str(theirs) != str(mine):
+                    problems.append(f"{at} states {theirs or 'no value type'}, entry "
+                                    f"{'.'.join(where)} states {mine or 'no value type'} "
+                                    f"-- they cannot be compared")
                     continue
                 # @req- l7qntp
                 # @req+ REQ-58100850@NgW3efYeVw1k p3q7no
