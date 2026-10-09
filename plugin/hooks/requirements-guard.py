@@ -45,13 +45,16 @@ GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
-            "exec", "xargs", "stdbuf")
+            "exec", "xargs", "stdbuf", "builtin", "export", "declare", "typeset", "readonly",
+            "local")
+REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
 SHELLS = ("sh", "bash", "dash", "zsh", "ksh")
 FIND_RUNS = ("-exec", "-execdir", "-ok", "-okdir")
-REPO_OPTIONS = ("-C", "--git-dir", "--work-tree")
-CONFIG_OPTIONS = ("-c", "--config-env")
-GIT_VALUED = (*CONFIG_OPTIONS, *REPO_OPTIONS, "--namespace")
-REPO_ENV = ("GIT_DIR", "GIT_WORK_TREE")
+READ_OPTIONS = ("-C", "--git-dir", "--work-tree", "-c")
+READ_FLAGS = ("--literal-pathspecs", "--glob-pathspecs", "--noglob-pathspecs", "--icase-pathspecs")
+GIT_VALUED = (*READ_OPTIONS, "--namespace", "--config-env")
+READ_ENV = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_LITERAL_PATHSPECS",
+            "GIT_GLOB_PATHSPECS", "GIT_NOGLOB_PATHSPECS", "GIT_ICASE_PATHSPECS")
 COMMAND_CONFIG = ("GIT_CONFIG_PARAMETERS", "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_", "GIT_CONFIG_VALUE_")
 CONFIG_HOMES = ("HOME", "XDG_CONFIG_HOME", "GIT_CONFIG", "GIT_CONFIG_GLOBAL", "GIT_CONFIG_SYSTEM")
 TRUSTED_SCOPES = ("system", "global")
@@ -177,6 +180,12 @@ INTO_SUBMODULES = (
     "Discard into submodules through {source} blocked: the guard does not read inside "
     "submodules.\n"
     "Add --no-recurse-submodules, then run the command in each submodule with git -C."
+)
+
+UNKNOWN_GIT = (
+    "git {subcommand} blocked: the guard finds no git command or alias of that name, so it "
+    "cannot judge what runs.\n"
+    "Spell the git command in full."
 )
 
 HAND_CITATION = (
@@ -420,10 +429,11 @@ def tokens_of(part):
 
 def invoked(words):
     i = 0
-    while i < len(words) and (os.path.basename(words[i]) in WRAPPERS or "=" in words[i] or (i and (
+    while i < len(words) and (os.path.basename(words[i]) in WRAPPERS or "=" in words[i]
+                              or REDIRECTION.match(words[i]) or (i and (
             words[i].startswith("-") or words[i][:1].isdigit()
             or words[i - 1].startswith("-") and os.path.basename(words[i]) not in JUDGED))):
-        i += 1
+        i += 2 if REDIRECTION.fullmatch(words[i]) else 1
     if i and i < len(words) and os.path.basename(words[i]) not in JUDGED:
         i = next((j for j in range(i, len(words)) if os.path.basename(words[j]) in ("git", "rm")), i)
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
@@ -449,16 +459,17 @@ def git_subcommand(words):
 def located(words, here):
     prefix, options = git_split(words)[:2]
     assigned = dict(word.split("=", 1) for word in prefix if "=" in word)
-    where, configs = ([word for at, word in enumerate(options)
-                       if word.partition("=")[0] in kinds or at and options[at - 1] in kinds]
-                      for kinds in (REPO_OPTIONS, CONFIG_OPTIONS))
-    if not here or assigned.keys() & set(CONFIG_HOMES) or any(
-            "$" in word or "`" in word
-            for word in [*where, *(assigned.get(name, "") for name in REPO_ENV)]):
-        return None
     settings = {name: value for name, value in assigned.items()
-                if name in REPO_ENV or name.startswith(COMMAND_CONFIG)}
-    return here, [os.path.expanduser(word) for word in [*where, *configs]], settings
+                if name in READ_ENV or name.startswith(COMMAND_CONFIG)}
+    where = [word for at, word in enumerate(options)
+             if word.partition("=")[0] in READ_OPTIONS or word in READ_FLAGS
+             or at and options[at - 1] in READ_OPTIONS]
+    if not here or assigned.keys() & set(CONFIG_HOMES) or any(
+            word.startswith("-") for word in prefix) or any(
+            word.startswith("--config-env") for word in options) or any(
+            "$" in word or "`" in word for word in [*where, *settings.values()]):
+        return None
+    return here, [os.path.expanduser(word) for word in where], settings
 
 
 # @req> REQ-38099593@_nWaC_p_1ziz bc4mmq
@@ -666,9 +677,12 @@ def refuse_discarding_work(words, here):
     paths, sweeps_untracked, sweeps_ignored = discarded(subcommand, rest, place)
     if paths is None:
         return
+    if any("{}" in word for word in rest):
+        deny(UNREADABLE)
     source = recursion(subcommand, rest, place)
     if source:
-        staged = git_reads(["ls-files", "--stage"], place)
+        top = git_sees(["rev-parse", "--show-cdup"], place).strip() or "."
+        staged = git_reads(["ls-files", "--stage", "--", top], place)
         if staged is None or any(line.startswith("160000 ") for line in staged.splitlines()):
             deny(INTO_SUBMODULES.format(source=source))
     args = [*unfiltered(place), "status", "--porcelain", "--untracked-files=normal",
@@ -726,6 +740,11 @@ def judge_command(words, here):
              "where this guard cannot see them. Use the editing tools, and "
              "reqctl for the corpus.")
     # @req- dbuwzq
+    # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
+    # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
+    if plain != "git" and any(word.partition("=")[0] in READ_ENV or word.startswith("GIT_CONFIG")
+                              for word in words[:len(words) - len(called)] if "=" in word):
+        deny(UNREADABLE)
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
     if plain == "rm" and any(
@@ -761,8 +780,7 @@ def scripts_within(words, here):
     tool, *rest = invoked(words) or [""]
     if tool in SHELLS:
         at = next((i for i, word in enumerate(rest) if short_flagged([word], "c")), None)
-        return [] if at is None else next(
-            ([word] for word in rest[at + 1:] if not word.startswith("-")), [])
+        return [] if at is None else [word for word in rest[at + 1:] if not word.startswith("-")]
     if tool == "eval":
         return [" ".join(rest)]
     if tool == "find":
@@ -774,11 +792,13 @@ def scripts_within(words, here):
     prefix, options, subcommand, args = split
     place = located(words, here)
     value = git_sees(["config", "--default", "", "--get", f"alias.{subcommand}"], place)
+    if not value.strip():
+        deny(UNKNOWN_GIT.format(subcommand=subcommand))
     if value.startswith("!"):
         top = git_sees(["rev-parse", "--show-toplevel"], place)
         return [f"cd {shlex.quote(top.strip())} && "
                 + " ".join([value[1:].strip(), *map(shlex.quote, args)])]
-    return [shlex.join([*prefix, "git", *options, *tokens_of(value), *args])] if value.strip() else []
+    return [shlex.join([*prefix, "git", *options, *tokens_of(value), *args])]
 
 
 def braced(word):
@@ -857,8 +877,15 @@ def reaches_corpus(word, cwd, root=False):
     paths = (os.path.normpath(os.path.join(cwd, alt))
              for value in {word, word.rpartition("=")[2]}
              if value and "$" not in value and "`" not in value
-             for alt in itertools.islice(braced(os.path.expanduser(value)), 257))
+             for alt in bounded(braced(os.path.expanduser(value))))
     return any(os.path.isabs(path) and reached(path, root) for path in paths)
+
+
+def bounded(alternatives):
+    found = list(itertools.islice(alternatives, 257))
+    if len(found) > 256:
+        deny(UNREADABLE)
+    return found
 
 
 def names_corpus(part, cwd):
@@ -930,6 +957,8 @@ def cwds(pipelines, joins, cwd):
 
 def moved(pipeline, heres, certain):
     called = invoked(tokens_of(heading(pipeline[0]))) if len(pipeline) == 1 else []
+    if called[:1] == ["eval"]:
+        called = invoked(tokens_of(" ".join(called[1:])))
     if called[:1] != ["cd"]:
         return heres
     target = os.path.expanduser(next(
