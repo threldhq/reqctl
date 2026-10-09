@@ -44,10 +44,10 @@ GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
-SETS_VARIABLES = ("export", "declare", "typeset", "readonly", "local", "read", "printf",
-                  "mapfile", "readarray", "getopts", "let")
+SETTER = re.compile(r"^(export|declare|typeset|readonly|local|read|mapfile|readarray|getopts"
+                    r"|let)$|\$\{\w+(\[[^]]*\])?:?=")
+UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
 PARAMETER = re.compile(r"\$\{[^{}]*\}")
-ASSIGNING = re.compile(r"\$\{\w+(\[[^]]*\])?:?=")
 STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf", "builtin")
@@ -679,6 +679,7 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
+    rest = [alt for word in rest for alt in bounded(braced(word))]
     if any(map(expands, rest)):
         deny(UNREADABLE)
     paths, sweeps_untracked, sweeps_ignored = discarded(subcommand, rest, place)
@@ -750,8 +751,10 @@ def judge_command(said, here):
     # @req- dbuwzq
     # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
     # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
-    if any(map(expands, unquoted[:len(words) - len(called) + 1])) or (
-            (setter := any(word in SETS_VARIABLES or ASSIGNING.search(word) for word in words))
+    if any(expands(word) for word in unquoted[:len(words) - len(called) + 1]
+           if not word.partition("=")[0].isidentifier()) or (
+            (setter := any(map(SETTER.search, words)) or "printf" in words
+             and any(word.startswith("-v") for word in words))
             or plain != "git") and any(
             "GIT_CONFIG" in alt or any(name in alt for name in READ_ENV)
             for word in (words if setter else words[:len(words) - len(called)])
@@ -797,7 +800,9 @@ def scripts_within(words, here):
     if tool == "eval":
         return [" ".join(rest)]
     if tool == "find":
-        return [shlex.join(itertools.takewhile(lambda word: word not in (";", "+"), rest[at + 1:]))
+        return [" ".join(word if UNQUOTED_WORD.fullmatch(word) else shlex.quote(word)
+                         for word in itertools.takewhile(lambda word: word not in (";", "+"),
+                                                         rest[at + 1:]))
                 for at, word in enumerate(rest) if word in FIND_RUNS]
     split = git_split(words)
     if not split or any(split[2] in git_commands(kinds) for kinds in ("builtins", "main,others")):
@@ -895,8 +900,8 @@ def reaches_corpus(word, cwd, root=False):
 
 
 def expands(word):
-    left = PARAMETER.sub("", word).replace("{}", "")
-    return "{" in left and ("," in left or ".." in left)
+    bare = PARAMETER.sub("", word)
+    return "{" in bare and ("," in bare or ".." in bare)
 
 
 def bounded(alternatives):
@@ -937,7 +942,8 @@ def judge_shell(raw, cwd):
     for pipeline, heres in zip(pipelines, places):
         for part, here in itertools.product(pipeline, heres):
             invocation = heading(part)
-            judge_command(part if STDIN_ARGUMENTS.search(invocation) else invocation, here)
+            judge_command(part if STDIN_ARGUMENTS.search(" ".join(tokens_of(invocation)))
+                          else invocation, here)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
