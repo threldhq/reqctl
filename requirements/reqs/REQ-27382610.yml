@@ -28,7 +28,7 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
-  4unc6n: BZd4_RvOKHOOe06a8FWIS3vLwqrY8QpMwGwrFktMzFQ
+  4unc6n: bXKmchSyDd_xqK9JMS0VkNUnUFRpMJ5nNkkG-4H4zF8
 priority: medium
 relations:
   REQ-20469423: depends_on

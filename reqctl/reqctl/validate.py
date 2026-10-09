@@ -1257,7 +1257,8 @@ def _listed_units(records):
 
 # @req+ REQ-20469423@IrHZJUp5R992 bplqvo
 def _span(value_types, spellings, fields):
-    quantity = _quantity(_written(fields.get("quantity")))
+    quantity = fields.get("quantity")
+    quantity = quantity if isinstance(quantity, (int, float)) else _quantity(_written(quantity))
     if (isinstance(quantity, bool) or not isinstance(quantity, (int, float))
             or isinstance(quantity, float) and not math.isfinite(quantity)):
         return None
@@ -1269,7 +1270,7 @@ def _span(value_types, spellings, fields):
     for key, symbol, spelling in spellings:
         if (key, spelling) == (str(fields.get("value_type")), str(fields["unit"])):
             unit = units[symbol] if isinstance(units[symbol], dict) else {}
-            low, high = (unit.get("factor"), unit.get("factor")) if "factor" in unit else (
+            low, high = (unit.get("factor"), unit.get("factor")) if unit.get("factor") is not None else (
                 unit.get("least"), unit.get("most"))
             if not all(isinstance(one, (int, float)) and not isinstance(one, bool)
                        for one in (low, high)):
@@ -1343,8 +1344,7 @@ def _bounds(records):
         problems += [f"{uid}: ceiling {data['ceiling']!r} states {ceiling['quantity']}, "
                      f"less than entry {'.'.join(where)} at {fields['quantity']}"
                      for where, fields in _entries_within(held_entries)
-                     if fields is not None and fields is not ceiling
-                     and ceiling.get("value_type") is not None
+                     if fields is not None and ceiling.get("value_type") is not None
                      and str(fields.get("value_type")) == str(ceiling.get("value_type"))
                      and top is not None
                      and (other := _span(value_types, spellings, fields)) is not None
