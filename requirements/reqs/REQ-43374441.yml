@@ -37,7 +37,7 @@ assessed:
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   c6qh2i: fIcx0gXAAIubm8I4M5fj4fkAvjDJ9WV0Lo-_qRZweAQ
-  qya7yo: 6gqIuxlvm25E6LmyvkzX85xHMEOgFr8CQpFaVp0G0B8
+  qya7yo: QOpFuTNcPTzPJ5ZysT8aUuADz1UtFpqVOhNnskPNxWY
 priority: medium
 relations:
   REQ-64846889: depends_on
