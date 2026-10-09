@@ -1220,7 +1220,7 @@ def _value_types(records, root):
                             "for parameters lists")
         # @req+ REQ-39867440@lNag_-a2yKhi jbq26t
         units = stated.get("units") if isinstance(stated, dict) else None
-        units = dict.fromkeys(units) if isinstance(units, list) else units
+        units = dict.fromkeys(map(str, units)) if isinstance(units, list) else units
         for symbol, unit in (units.items() if isinstance(units, dict) else ()):
             bounds = set(unit) & {"factor", "least", "most"} if isinstance(unit, dict) else set()
             if bounds not in ({"factor"}, {"least", "most"}):
