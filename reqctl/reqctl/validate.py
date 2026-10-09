@@ -9,6 +9,7 @@ from jsonschema.exceptions import best_match
 
 from . import baseline as _baseline
 from . import corpus
+from . import fields as _fields
 from . import settings as _settings
 
 SCHEMAS = ("requirement", "guard", "dictionary", "baseline")
@@ -1133,11 +1134,13 @@ def coherence(records, root):
     return (_approved_bindings(records) + _shared_words(records)
             + _circular_definitions(records) + _entry_selection(records)
             + _duplicate_names(records) + _entry_term_fields(records, root)
-            + _typed_entries(records))
+            + _typed_entries(records) + _entry_of_values(records, root)
+            + _value_types(records, root))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
 # @req> REQ-57061306@grhOhf7rpAJV 23uhdj
+# @req> REQ-77903352@LFt7c94PeLFp leh3qs
 def _typed_entries(records):
     held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
     if corpus.kind_of(held, records.get(held)) != "data":
@@ -1153,6 +1156,81 @@ def _typed_entries(records):
                 [(f"quantity {fields['quantity']!r}",
                   _written(fields["quantity"]))] if "quantity" in fields else [],
                 fields.get("unit") or None)]
+
+
+def _marker_targets(node):
+    if isinstance(node, dict):
+        return ({node[corpus.ENTRY_OF]} if isinstance(node.get(corpus.ENTRY_OF), str)
+                else set()).union(
+            *map(_marker_targets, node.values()))
+    if isinstance(node, list):
+        return set().union(*map(_marker_targets, node))
+    return set()
+
+
+def _at(node, path):
+    for step in path:
+        node = (node[int(step)] if isinstance(node, list)
+                else next(value for key, value in node.items() if str(key) == step))
+    return node
+
+
+# @req> REQ-93210750@EGkfkA3YBorC zrp6x7
+def _entry_of_values(records, root):
+    reachable = corpus.reachable(records)
+    held = {address: {str(key) for key in corpus.entries(records[uid]) or {}}
+            for address, uid in reachable.items()
+            if corpus.kind_of(uid, records[uid]) == "data"}
+    problems = []
+    for uid, data in sorted(records.items()):
+        schema = corpus.schema_for(root, corpus.kind_of(uid, data),
+                                   corpus.name_of(uid, data))
+        for target in sorted(_marker_targets(schema) & held.keys()):
+            for path in sorted(_marked_paths(
+                    root, uid, data,
+                    lambda node, target=target: node.get(corpus.ENTRY_OF) == target)):
+                value = _at(data, path)
+                problems += [f"{uid}: {'.'.join(path)} {member!r} names no entry "
+                             f"of {target}"
+                             for member in (value if isinstance(value, list) else [value])
+                             if str(member) not in held[target]]
+    return problems
+
+
+def _value_types(records, root):
+    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
+    if corpus.kind_of(held, records.get(held)) != "data":
+        return []
+    listed = next((field.choices for field in _fields.of(root, "parameter")
+                   if field.name == "value_type"), ())
+    # @req> REQ-34134685@7WjKv7L7yONz tr5vto
+    problems = [f"{uid}: entry {'.'.join(where)}: value_type "
+                f"{fields['value_type']!r} is a "
+                f"{'list' if isinstance(fields['value_type'], list) else 'mapping'} "
+                "-- state one value type"
+                for uid, data in sorted(records.items())
+                if corpus.kind_of(uid, data) == "data"
+                for where, fields in _entries_within(corpus.entries(data))
+                if fields is not None
+                and isinstance(fields.get("value_type"), (list, dict))]
+    for key, stated in (corpus.entries(records[held]) or {}).items():
+        # @req> REQ-50607767@HUHiB9K0Vm5f zfnoqs
+        if str(key) not in listed:
+            problems.append(f"{held}: entry {key} is no value type the kind schema "
+                            "for parameters lists")
+        # @req+ REQ-39867440@lNag_-a2yKhi jbq26t
+        units = stated.get("units") if isinstance(stated, dict) else None
+        units = (dict.fromkeys(map(str, units if isinstance(units, list) else [units]))
+                 if units is not None and not isinstance(units, dict) else units)
+        for symbol, unit in (units.items() if isinstance(units, dict) else ()):
+            bounds = ({key for key in ("factor", "least", "most") if unit.get(key) is not None}
+                      if isinstance(unit, dict) else set())
+            if bounds not in ({"factor"}, {"least", "most"}):
+                problems.append(f"{held}: entry {key} unit {symbol} states "
+                                f"{', '.join(sorted(bounds)) or 'no bound'} -- state "
+                                "a factor, or a least with a most")
+        # @req- jbq26t
+    return problems
 
 
 def _duplicate_names(records):

@@ -17,6 +17,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+citations:
+  jbq26t: CfichKvrDcjaIzCF5Lumvwgrl-YO8QMxZpjUHjVfdRE
 priority: medium
 relations: {}
 status: approved

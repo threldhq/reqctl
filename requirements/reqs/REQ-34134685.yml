@@ -22,6 +22,8 @@ assessed:
   REQ-93210750: EGkfkA3YBorCXXLrS35IxOz5AJOJocQr3xsZvvCJC1M
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  tr5vto: crR3dnpwbfN4AdoEfLE_CqmNeDMWaU-Aclz6LxeVBMs
 priority: medium
 relations:
   REQ-52544202: constrains

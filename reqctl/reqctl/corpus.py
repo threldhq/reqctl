@@ -870,7 +870,7 @@ def schema(root, name):
     stamped = (stat.st_mtime_ns, stat.st_size)
     # @req> REQ-14895892@JjrTwHoJqTRe yz3x2d
     if path == stated and name in SCHEMA_NAMES.values():
-        lacking = _unmarked(path, stamped, name)
+        lacking = _unmarked(path, stamped, name, _data_held(root))
         if lacking:
             raise RefusedCopy(f"{stated}: the shipped schema carries {lacking}, "
                               "which this copy lacks")
@@ -883,11 +883,13 @@ class RefusedCopy(ReqctlError):
 
 # @req+ REQ-14895892@JjrTwHoJqTRe a252bv
 @functools.lru_cache(maxsize=None)
-def _unmarked(path, stamped, name):
+def _unmarked(path, stamped, name, data_held):
     from . import fields
     shipped = packaged_schema_path(name)
     stat = shipped.stat()
-    held = _parsed_schema(shipped, (stat.st_mtime_ns, stat.st_size))
+    # @req> REQ-77886246@8iAQsnTLrT4C i2zwhw
+    held = _unheld_dropped(_parsed_schema(shipped, (stat.st_mtime_ns, stat.st_size)),
+                           data_held)
     stated = _parsed_schema(path, stamped)
     try:
         return fields.unmarked(
@@ -895,6 +897,24 @@ def _unmarked(path, stamped, name):
     except ReqctlError as fault:
         raise RefusedCopy(f"{path}: {fault}") from fault
 # @req- a252bv
+
+
+ENTRY_OF = "x-entry-of"
+
+
+def _data_held(root):
+    folder = folder_for(root, "data")
+    return frozenset(path.stem for pattern in ("*.yml", "*.yaml")
+                     for path in folder.glob(pattern))
+
+
+def _unheld_dropped(node, data_held):
+    if isinstance(node, dict):
+        return {key: _unheld_dropped(value, data_held) for key, value in node.items()
+                if not (key == ENTRY_OF and value not in data_held)}
+    if isinstance(node, list):
+        return [_unheld_dropped(one, data_held) for one in node]
+    return node
 
 
 SCHEMA_NAMES = {"requirement": "requirement", "guard": "guard",

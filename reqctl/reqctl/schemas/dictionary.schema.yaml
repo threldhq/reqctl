@@ -72,6 +72,8 @@ properties:
 
   value_type:
     enum: [duration, size, count, ratio, percentage, currency, boolean, text]
+    # @req> REQ-52544202@FdBPIIOU8f_v qyhuti
+    x-entry-of: value_types
     description: >-
       Parameters only: the kind every entry key parses as. In the item stamp.
 
@@ -187,6 +189,8 @@ $defs:
     type: object
     additionalProperties: {$ref: "#/$defs/field"}
     properties:
+      # @req> REQ-52544202@FdBPIIOU8f_v mfnskt
+      value_type: {$ref: "#/$defs/field", x-entry-of: value_types}
       definition:
         type: string
         minLength: 1

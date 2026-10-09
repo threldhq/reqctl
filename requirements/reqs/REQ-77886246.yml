@@ -15,6 +15,8 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
   schema_marker: aUPBsCbKNXsnZ9A1k4uL3ic-N6BgBilXd4Qx3mqWpLM
+citations:
+  i2zwhw: 5GIeRKSnFbVP8AMi6wArijOYhaLZG62uMgsoWox5cQc
 priority: medium
 relations:
   REQ-13148397: depends_on
