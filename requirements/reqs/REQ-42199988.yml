@@ -10,6 +10,11 @@ acceptance_criteria:
   when: the run is judged again
 assessed:
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  4q2lsd: oU8Ite9l6H2fxIo7pibFkdw_r2evYW7j3KMV85RwIh4
+  cu4vz2: 7dg8nHD6cfYHxgvJCfxwX4rvav144_rSuhwP8SAG_Rw
+  dpjcsa: nJP4Q90lcCdobb6j8Xlh0jBYgiWo3VFa3dUbfL2QvLY
+  nfg7dv: N8iSfn3mB7VdwJ4FV8kr7vliTMJlLhTxTJxp8Nq9SXg
 priority: medium
 relations: {}
 status: approved
