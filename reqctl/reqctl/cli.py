@@ -321,10 +321,9 @@ def _resolved(text, store):
                 shown = field if isinstance(value, dict) else str(value)
             else:
                 # @req+ REQ-62905646@_RkSNpGGoJXv cs3jo4
-                stated = held[entry]
-                if (corpus.kind_of(item.uid, fields) == "data" and isinstance(stated, dict)
-                        and "value_type" in stated and "quantity" in stated
-                        and _typed(store)):
+                stated = corpus.cited_entries(item).get(entry)
+                if (isinstance(stated, dict) and "value_type" in stated
+                        and "quantity" in stated and _typed(store)):
                     shown = _value([stated["quantity"]], stated.get("unit"))
                 else:
                     shown = f"{entry} {unit}" if unit else entry
