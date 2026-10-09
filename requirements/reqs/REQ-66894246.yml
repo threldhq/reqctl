@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run recording its trace record as an empty list
+  then: the product refuses the run
+  when: the run is built
+- given: a run recording its trace record as an empty string
+  then: the product refuses the run
+  when: the run is built
+assessed:
+  REQ-83939497: o4e6KsfHMIgpZNUMun5sxU_LTejAce5WMR5k_5XAUb4
+priority: medium
+relations:
+  REQ-83939497: constrains
+status: approved
+text: If a run records its trace record as a value that is present but is not a mapping,
+  then the product shall refuse the run.
+type: functional
+verification: inspection

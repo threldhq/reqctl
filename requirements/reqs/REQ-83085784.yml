@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run whose criteria record holds keys 11 and +11
+  then: the product refuses the run and names 11
+  when: the run is built
+- given: a run whose trace record holds keys 11 and 11.0
+  then: the product refuses the run and names 11
+  when: the run is built
+assessed:
+  REQ-54959279: L0m_T7xUklMMmQrrp0o9CV9FN080BncNT95FfOLF_Xc
+priority: medium
+relations:
+  REQ-54959279: constrains
+status: approved
+text: If a mapping at any depth of a run's run.yaml holds two keys that load as the
+  same key, then the product shall refuse the run, naming the key as it loads.
+type: functional
+verification: inspection

@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a [data item](data_item) whose [entry](entry) holds a field mapping stating
+    one key twice
+  then: the product refuses the file and names the key
+  when: the corpus is validated
+- given: a [data item](data_item) whose [entry](entry) holds a field mapping with
+    keys 6 and 06
+  then: the product refuses the file and names 6
+  when: the corpus is validated
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations: {}
+status: approved
+text: If a mapping below the top level of an [item](item) file holds two keys that
+  load as the same key, then the product shall refuse the file, naming the key as
+  it loads.
+type: functional
+verification: inspection
