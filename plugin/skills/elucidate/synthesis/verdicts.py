@@ -30,6 +30,7 @@ def judged(run, state_held):
     accepted, failed, absent = [], [], []
     for number, spec in sorted(state_held["judge"].items(),
                                key=lambda pair: int(pair[0])):
+        # @req> REQ-42199988@RmH4Z1Ifs4oQ dpjcsa
         if spec.get("stands"):
             path = run / "verdicts" / f"{number}.json"
             data, why = plan.read_return(path, shapes.JUDGE)
@@ -54,6 +55,7 @@ def judged(run, state_held):
         # @req- v3dukx
         corpus.atomic_write(run / "verdicts" / f"{number}.json",
                             json.dumps(data, indent=1) + "\n")
+        # @req> REQ-42199988@RmH4Z1Ifs4oQ 4q2lsd
         corpus.atomic_write(run / "verdicts" / f"{number}.prompt",
                             plan.against(run, number))
         accepted.append((number, data))

@@ -801,18 +801,6 @@ def lined(prompts, lines):
     # @req- ro36h4
 
 
-def retire(run, text):
-    where = run / "export.md"
-    changed = where.is_file() and where.read_text() != text
-    corpus.atomic_write(where, text)
-    if not changed:
-        return []
-    gone = sorted((run / "verdicts").glob("*.json"))
-    for stale in gone:
-        corpus.remove(stale, missing_ok=True)
-    return [stale.name for stale in gone]
-
-
 def against(run, number):
     return "".join(path.read_text() for path in sorted(
         (run / "prompts" / "judge").glob(f"{number}*.md"))
@@ -905,7 +893,7 @@ def recall_prompts(run, held, state_held, shards, only, words, declined,
 
 
 def build(run, chars, items, lines=PROMPT_LINES):
-    # @req+ REQ-54959279@JYltFTa20G1- rwweso
+    # @req+ REQ-54959279@L0m_T7xUklMM rwweso
     # @req> REQ-36523706@OK4q4pOlvZRH 7e7svw
     if chars < 1 or items < 1 or lines < 1:
         raise SystemExit(f"--chars {chars} --items {items} --lines {lines}: a "
@@ -988,9 +976,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
         "coverage", asked, shapes.COVERAGE, registered("coverage"),
         agents["coverage"])])
     cleared(run)
-    retired = retire(run, exported_text)
-    for name in retired:
-        print(f"retired {name}: the export it was judged against has moved")
+    corpus.atomic_write(run / "export.md", exported_text)
     # @req> REQ-16868696@xXhoCmAQTytn js66h5
     print(f"{len(held)} proposal(s) over {len(shards)} shard(s) in batches of "
           f"{bounds['recall_batch']}: {len(spawned)} recall agent(s), then one "
@@ -1272,6 +1258,7 @@ def judge(run):
         corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "judge" / f"{name}.md", body)
+    # @req+ REQ-42199988@RmH4Z1Ifs4oQ nfg7dv
     standing = set()
     for verdict in sorted((run / "verdicts").glob("*.json")):
         number, judged_against = verdict.stem, verdict.with_suffix(".prompt")
@@ -1288,6 +1275,7 @@ def judge(run):
         corpus.remove(judged_against, missing_ok=True)
         print(f"retired {verdict.name}: {why}")
     spawned = [one for one in spawned if owner(one) not in standing]
+    # @req- nfg7dv
     saved(run, state_held)
     where = manifest(run, "judge", spawned)
     # @req+ REQ-18337665@j18ypL2DSMhn 5zcmh2
@@ -1345,6 +1333,7 @@ def final(run):
     judging = state_held["agents"]["judge"]
     prompts, spawned, again, waiting = {}, [], [], 0
     for number, spec in state_held["judge"].items():
+        # @req> REQ-42199988@RmH4Z1Ifs4oQ cu4vz2
         if spec["groups"] is None or spec.get("stands"):
             continue
         lines, refused = group_returns(run, number, spec["groups"])
