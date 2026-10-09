@@ -44,9 +44,9 @@ GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
+EXPORTS = ("export", "declare", "typeset", "readonly", "local")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
-            "exec", "xargs", "stdbuf", "builtin", "export", "declare", "typeset", "readonly",
-            "local")
+            "exec", "xargs", "stdbuf", "builtin", *EXPORTS)
 REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
 SHELLS = ("sh", "bash", "dash", "zsh", "ksh")
 FIND_RUNS = ("-exec", "-execdir", "-ok", "-okdir")
@@ -464,7 +464,7 @@ def located(words, here):
     where = [word for at, word in enumerate(options)
              if word.partition("=")[0] in READ_OPTIONS or word in READ_FLAGS
              or at and options[at - 1] in READ_OPTIONS]
-    if not here or assigned.keys() & set(CONFIG_HOMES) or any(
+    if not here or any(name.endswith("+") or name in CONFIG_HOMES for name in assigned) or any(
             word.startswith("-") for word in prefix) or any(
             word.startswith("--config-env") for word in options) or any(
             "$" in word or "`" in word for word in [*where, *settings.values()]):
@@ -742,8 +742,10 @@ def judge_command(words, here):
     # @req- dbuwzq
     # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
     # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
-    if plain != "git" and any(word.partition("=")[0] in READ_ENV or word.startswith("GIT_CONFIG")
-                              for word in words[:len(words) - len(called)] if "=" in word):
+    if plain != "git" and any(
+            word.partition("=")[0].rstrip("+") in READ_ENV or word.startswith("GIT_CONFIG")
+            for word in (words if words[:1] and words[0] in EXPORTS
+                         else [word for word in words[:len(words) - len(called)] if "=" in word])):
         deny(UNREADABLE)
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
