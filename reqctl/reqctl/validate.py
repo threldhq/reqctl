@@ -1258,7 +1258,8 @@ def _listed_units(records):
 # @req+ REQ-20469423@IrHZJUp5R992 bplqvo
 def _span(value_types, spellings, fields):
     quantity = _quantity(_written(fields.get("quantity")))
-    if isinstance(quantity, bool) or not isinstance(quantity, (int, float)):
+    if (isinstance(quantity, bool) or not isinstance(quantity, (int, float))
+            or not math.isfinite(quantity)):
         return None
     stated = value_types.get(str(fields.get("value_type")))
     units = stated.get("units") if isinstance(stated, dict) else None
@@ -1266,13 +1267,13 @@ def _span(value_types, spellings, fields):
     if fields.get("unit") is None:
         return None if units else ("", quantity, quantity, quantity)
     for key, symbol, spelling in spellings:
-        if (key, spelling) == (str(fields["value_type"]), str(fields["unit"])):
+        if (key, spelling) == (str(fields.get("value_type")), str(fields["unit"])):
             unit = units[symbol] if isinstance(units[symbol], dict) else {}
             low, high = (unit.get("factor"), unit.get("factor")) if "factor" in unit else (
                 unit.get("least"), unit.get("most"))
             if all(isinstance(one, (int, float)) and not isinstance(one, bool)
-                   for one in (low, high)):
-                return (symbol, quantity, quantity * low, quantity * high)
+                   and math.isfinite(one) for one in (low, high)):
+                return (symbol, quantity, *sorted((quantity * low, quantity * high)))
     return None
 
 
