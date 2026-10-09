@@ -823,7 +823,11 @@ def refile_into(store, uid, into, key):
             f"{target.uid} already holds {key}; {item.uid} was not changed")
 
     address = f"{target.uid}.{key}"
-    olds = {item.uid, corpus.name_of(item.uid, item.data)} - {None}
+    if not corpus.PARAM_REF.fullmatch("${" + address + "}"):
+        raise ReqctlError(
+            f"{address} is not an address a reference can carry; "
+            f"{item.uid} was not changed")
+    olds = {item.uid, corpus.name_of(item.uid, item.data)}
     paths = {found.uid: found.path for found in corpus.items(store)}
     before = {found.uid: found.data for found in corpus.items(store)}
     after = {held_uid: _filed_item(data, olds, address, values)
@@ -839,7 +843,12 @@ def refile_into(store, uid, into, key):
     after.update({held_uid: data for held_uid, data in _repin(after, {target.uid}).items()
                   if held_uid in moved})
 
-    problems = _validate.dictionary_rules(target.uid, after[target.uid])
+    was = (_validate.schema_problems(store.root, target.uid, target.data)
+           + _validate.dictionary_rules(target.uid, target.data))
+    problems = [problem for problem
+                in _validate.schema_problems(store.root, target.uid, after[target.uid])
+                + _validate.dictionary_rules(target.uid, after[target.uid])
+                if problem not in was]
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
     problems += [fault for fault in found if fault not in stood]
