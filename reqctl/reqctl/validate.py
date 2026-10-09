@@ -1170,7 +1170,7 @@ def coherence(records, root):
             + _duplicate_names(records) + _entry_term_fields(records, root)
             + _typed_entries(records) + _entry_of_values(records, root)
             + _value_types(records, root) + _unit_quantities(records, root)
-            + _listed_units(records) + _bounds(records) + _ceilings(records))
+            + _listed_units(records) + _bounds(records))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
@@ -1256,19 +1256,17 @@ def _listed_units(records):
 
 
 # @req+ REQ-20469423@IrHZJUp5R992 bplqvo
-def _span(value_types, fields):
+def _span(value_types, spellings, fields):
     quantity = _quantity(_written(fields.get("quantity")))
     if isinstance(quantity, bool) or not isinstance(quantity, (int, float)):
         return None
     stated = value_types.get(str(fields.get("value_type")))
     units = stated.get("units") if isinstance(stated, dict) else None
+    units = {str(symbol): unit for symbol, unit in units.items()} if isinstance(units, dict) else {}
     if fields.get("unit") is None:
-        return None if isinstance(units, dict) and units else ("", quantity, quantity, quantity)
-    if not isinstance(units, dict):
-        return None
-    units = {str(symbol): unit for symbol, unit in units.items()}
-    for _, symbol, spelling in _spellings({"entries": {"held": {"units": units}}}):
-        if spelling == str(fields["unit"]):
+        return None if units else ("", quantity, quantity, quantity)
+    for key, symbol, spelling in spellings:
+        if (key, spelling) == (str(fields["value_type"]), str(fields["unit"])):
             unit = units[symbol] if isinstance(units[symbol], dict) else {}
             low, high = (unit.get("factor"), unit.get("factor")) if "factor" in unit else (
                 unit.get("least"), unit.get("most"))
@@ -1289,11 +1287,12 @@ def _bounds(records):
         return []
     value_types = {str(key): stated
                    for key, stated in (corpus.entries(records[held]) or {}).items()}
+    spellings = _spellings(records[held])
     problems = []
     for uid, data in sorted(records.items()):
         if corpus.kind_of(uid, data) != "data":
             continue
-        held_entries = corpus.entries(data)
+        held_entries = corpus.entries(data) or {}
         for where, fields in _entries_within(held_entries):
             if fields is None:
                 continue
@@ -1318,45 +1317,34 @@ def _bounds(records):
                     continue
                 # @req- l7qntp
                 # @req+ REQ-58100850@NgW3efYeVw1k p3q7no
-                spans = _span(value_types, fields), _span(value_types, target)
+                spans = _span(value_types, spellings, fields), _span(value_types, spellings, target)
                 if None not in spans and refused(*spans):
                     problems.append(f"{at}: quantity {fields.get('quantity')} "
                                     f"{fields.get('unit') or ''}".rstrip()
                                     + f" is {words} than {target['quantity']} "
                                     f"{target.get('unit') or ''}".rstrip())
                 # @req- p3q7no
-    return problems
-
-
-def _ceilings(records):
-    held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
-    if corpus.kind_of(held, records.get(held)) != "data":
-        return []
-    value_types = {str(key): stated
-                   for key, stated in (corpus.entries(records[held]) or {}).items()}
-    problems = []
-    for uid, data in sorted(records.items()):
-        if corpus.kind_of(uid, data) != "data" or "ceiling" not in data:
+        if "ceiling" not in data:
             continue
-        held_entries = corpus.entries(data) or {}
         ceiling = next((value for key, value in held_entries.items()
                         if str(key) == str(data["ceiling"])), None)
-        # @req> REQ-36099384@oqIHWa_e7CDN vfmcft
+        # @req> REQ-36099384@oqIHWa_e7CDN uhu3bz
         if not isinstance(ceiling, dict) or "quantity" not in ceiling:
             problems.append(f"{uid}: ceiling {data['ceiling']!r} names no entry of "
                             f"{uid} stating a quantity")
             continue
-        # @req+ REQ-27382610@9np_bpPH3xzx tpungp
-        top = _span(value_types, ceiling)
+        # @req+ REQ-27382610@9np_bpPH3xzx 4unc6n
+        top = _span(value_types, spellings, ceiling)
         problems += [f"{uid}: ceiling {data['ceiling']!r} states {ceiling['quantity']}, "
                      f"less than entry {'.'.join(where)} at {fields['quantity']}"
                      for where, fields in _entries_within(held_entries)
                      if fields is not None and fields is not ceiling
                      and ceiling.get("value_type") is not None
                      and str(fields.get("value_type")) == str(ceiling.get("value_type"))
-                     and top is not None and (other := _span(value_types, fields)) is not None
+                     and top is not None
+                     and (other := _span(value_types, spellings, fields)) is not None
                      and _less(top, other)]
-        # @req- tpungp
+        # @req- 4unc6n
     return problems
 
 
