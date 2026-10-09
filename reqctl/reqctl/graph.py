@@ -57,8 +57,13 @@ def whole(tree, tags, root=None, uid=None):
             tags.setdefault(owner, []).append((path, held.get("pinned") or "", None))
             if root is None or (uid and owner != uid):
                 continue
+            target = (Path(root) / path).resolve()
+            if not target.is_relative_to(Path(root).resolve()):
+                problems.append(f"{owner}: it holds a whole-file citation of {path}, "
+                                "which is not a file of the code base")
+                continue
             try:
-                text = (Path(root) / path).read_bytes().decode()
+                text = target.read_bytes().decode()
             except (OSError, UnicodeDecodeError):
                 problems.append(f"{owner}: it holds a whole-file citation of {path}, "
                                 "which does not read")
