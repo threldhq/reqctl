@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a term whose reason for a phrase it does not claim links the reworded term
+    showing the word
+  then: the link in the reason shows the replacement and still links the term
+  when: revise is run with the reword
+- given: a [data item](data_item) whose [entry](entry) field the schema declares as
+    prose links the reworded term showing the word
+  then: the link in the field shows the replacement and still links the term
+  when: revise is run with the reword
+- given: a draft [item](item) whose text links the reworded term showing the word
+  then: the link in the text shows the replacement
+  when: revise is run with the reword
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations: {}
+status: approved
+text: When a reword replaces a word a term's links show, the product shall make each
+  link to the term that shows the word show its replacement, in every field the schema
+  declares as prose, at any depth of any [item](item) the corpus holds.
+type: functional
+verification: inspection
