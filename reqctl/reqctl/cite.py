@@ -602,6 +602,25 @@ def digest(path, text, lines):
     return corpus.digest(held)
 
 
+# @req+ REQ-30061042@b7B9U8dkoUHI 2l4bmd
+JSON_TOKEN = re.compile(r'(?P<string>"(?:\\.|[^"\\\n])*")'
+                        r"|(?P<number>-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)"
+                        r"|(?P<name>true|false|null)|(?P<op>[{}\[\]:,])"
+                        r"|(?P<space>[ \t\r\n]+)|(?P<other>.)", re.S)
+
+
+def whole(path, text):
+    held = None
+    if Path(path).suffix == ".json":
+        held = [[found.lastgroup, found.group()] for found in JSON_TOKEN.finditer(text)
+                if found.lastgroup != "space"]
+        if any(kind == "other" for kind, _ in held):
+            held = None
+    return corpus.digest(held if held is not None
+                         else [line.rstrip("\r\n") for line in _feed_lines(text)])
+# @req- 2l4bmd
+
+
 def _rest(text, citation):
     kept, before = [], 0
     for number, line in enumerate(_feed_lines(text), start=1):
