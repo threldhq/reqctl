@@ -59,7 +59,8 @@ def classify(base):
     found = _git("diff", "--no-renames", "--raw", "-z", f"{base}...HEAD")
     fork = _git("merge-base", base, "HEAD")
     if found.returncode or fork.returncode:
-        raise SystemExit(f"cannot diff against {base}: {found.stderr.strip()}")
+        raise SystemExit(f"cannot diff against {base}: "
+                         f"{(found.stderr or fork.stderr).strip()}")
     fork = fork.stdout.strip()
     fields = found.stdout.split("\0")
     textual = {path: header[1:7] == header[8:14]
