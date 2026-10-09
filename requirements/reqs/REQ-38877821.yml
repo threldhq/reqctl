@@ -6,6 +6,8 @@ acceptance_criteria:
 assessed:
   REQ-83939497: o4e6KsfHMIgpZNUMun5sxU_LTejAce5WMR5k_5XAUb4
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  kn326i: XSh3p_aViojYYQoAh4INLIUWlXObKoFplAJZJ27Ap2Y
 priority: medium
 relations:
   REQ-83939497: constrains

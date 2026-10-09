@@ -625,6 +625,26 @@ def linted(held, store):
     # @req- kjkm4f
 
 
+def keyed(path, name, record, held):
+    numbers = {str(number) for number, _, _, _ in held}
+    keys = {}
+    for key, value in record.items():
+        # @req> REQ-52230032@ZV7FwJtFuqi3 hnvgee
+        # @req> REQ-38877821@Rf8VoUrZ9-27 kn326i
+        if str(key) in keys:
+            raise SystemExit(
+                f"{path}: `{name}` records proposal {key} twice, once written "
+                f"{key} and once \"{key}\". Keep one of them.")
+        # @req> REQ-71318073@StYqTfNyHE39 scbfuj
+        # @req> REQ-30554264@6JOa752EzDE9 bjxcpn
+        if str(key) not in numbers:
+            raise SystemExit(
+                f"{path}: `{name}` records {key!r}, which names no proposal the "
+                "run holds. Renumber the record, or write the proposal.")
+        keys[str(key)] = value
+    return keys
+
+
 def traced(run, words, held):
     path, read = recorded(run)
     traces = read.get(TRACE) or {}
@@ -633,11 +653,12 @@ def traced(run, words, held):
         raise SystemExit(
             f"{path}: `{TRACE}` maps a proposal number to the passages of the "
             "owner's words it traces to, as `2: [\"undo for bulk\"]`.")
+    traces = keyed(path, TRACE, traces, held)
     spoken = _coverage.plain(_coverage.spoken(words))
     stated = {}
     for number, _, _, _ in held:
         # @req+ REQ-28473555@fDR67hlkVPAc fw5ou4
-        passages = traces.get(number, traces.get(str(number), []))
+        passages = traces.get(str(number), [])
         if not isinstance(passages, list) or not all(
                 isinstance(one, str) and one.strip() for one in passages):
             raise SystemExit(
@@ -655,7 +676,7 @@ def traced(run, words, held):
     return stated
 
 
-def stated(run):
+def stated(run, held_proposals):
     path, read = recorded(run)
     held = read.get(CRITERIA)
     if held is None:
@@ -667,7 +688,7 @@ def stated(run):
             "carries, as `2: [\"given a run | when it runs | then it holds\"]`. "
             "A proposal carrying none is left out rather than written empty.")
     carried = {}
-    for number, value in held.items():
+    for number, value in keyed(path, CRITERIA, held, held_proposals).items():
         if not isinstance(value, list) or not all(
                 isinstance(one, str) for one in value):
             raise SystemExit(
@@ -924,7 +945,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
     agents = {name: agent(name, crew) for name in CHALLENGERS}
     settled_on = binding(run, held, corpus.find_root(), records)
     traces = traced(run, words, held)
-    carried = stated(run)
+    carried = stated(run, held)
     linted(held, store)
     exported_text = exported()
     blocked = blocks(exported_text)

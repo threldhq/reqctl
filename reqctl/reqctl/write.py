@@ -526,17 +526,17 @@ def _reworded(text, addresses, words, seen):
     return ARTICLED_LINK.sub(swap, str(text))
 
 
-def _reword_fields(fields, addresses, words, seen):
-    held = {}
-    for name, value in fields.items():
-        if name == "aliases" or not isinstance(value, (str, list)):
-            held[name] = value
-        elif isinstance(value, list):
-            held[name] = [_reworded(each, addresses, words, seen)
-                          if isinstance(each, str) else each for each in value]
-        else:
-            held[name] = _reworded(value, addresses, words, seen)
-    return held
+# @req+ REQ-67358511@6v5ZhXIOqAkD b3ts36
+def _reword_fields(value, addresses, words, seen):
+    if isinstance(value, str):
+        return _reworded(value, addresses, words, seen)
+    if isinstance(value, list):
+        return [_reword_fields(each, addresses, words, seen) for each in value]
+    if isinstance(value, dict):
+        return {name: each if name == "aliases"
+                else _reword_fields(each, addresses, words, seen)
+                for name, each in value.items()}
+    return value
 
 
 def _reword_data(data, addresses, words, seen):
@@ -561,6 +561,7 @@ def _reword_data(data, addresses, words, seen):
             for key, fields in entries.items()
         }
     return held
+# @req- b3ts36
 
 
 def _repin(after, touched):
