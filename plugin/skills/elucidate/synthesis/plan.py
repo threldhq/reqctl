@@ -813,6 +813,16 @@ def retire(run, text):
     return [stale.name for stale in gone]
 
 
+def against(run, number):
+    return "".join(path.read_text() for path in sorted(
+        (run / "prompts" / "judge").glob(f"{number}*.md"))
+        if path.stem == number or path.stem.startswith(f"{number}-g"))
+
+
+def owner(spawned):
+    return spawned["label"].partition(":")[2].partition("-g")[0]
+
+
 def cleared(run):
     # @req+ REQ-95375719@-TYbW5JhiwAf ey5733
     findings = run / FINDINGS
@@ -1262,12 +1272,29 @@ def judge(run):
         corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "judge" / f"{name}.md", body)
+    standing = set()
+    for verdict in sorted((run / "verdicts").glob("*.json")):
+        number, judged_against = verdict.stem, verdict.with_suffix(".prompt")
+        if number not in plans:
+            why = "the run no longer holds proposal " + number
+        elif (judged_against.is_file()
+                and judged_against.read_text() == against(run, number)):
+            standing.add(number)
+            state_held["judge"][number]["stands"] = True
+            continue
+        else:
+            why = "the prompt it was judged against has moved"
+        corpus.remove(verdict)
+        corpus.remove(judged_against, missing_ok=True)
+        print(f"retired {verdict.name}: {why}")
+    spawned = [one for one in spawned if owner(one) not in standing]
     saved(run, state_held)
     where = manifest(run, "judge", spawned)
     # @req+ REQ-18337665@j18ypL2DSMhn 5zcmh2
     split = sum(1 for _, groups in plans.values() if groups is not None)
     print(f"{len(plans)} proposal(s): {len(spawned)} judge agent(s), "
-          f"{split} split into groups with a final judge to follow")
+          f"{split} split into groups with a final judge to follow, "
+          f"{len(standing)} verdict(s) standing")
     for number, (names, groups) in sorted(plans.items(), key=lambda p: int(p[0])):
         print(f"  proposal {number}: {len(names)} item(s)"
               + (f" in {len(groups)} group(s)" if groups else ""))
@@ -1318,7 +1345,7 @@ def final(run):
     judging = state_held["agents"]["judge"]
     prompts, spawned, again, waiting = {}, [], [], 0
     for number, spec in state_held["judge"].items():
-        if spec["groups"] is None:
+        if spec["groups"] is None or spec.get("stands"):
             continue
         lines, refused = group_returns(run, number, spec["groups"])
         # @req> REQ-82676674@r-c5TnDW5gbD fnjvuz

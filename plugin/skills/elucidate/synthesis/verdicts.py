@@ -30,6 +30,12 @@ def judged(run, state_held):
     accepted, failed, absent = [], [], []
     for number, spec in sorted(state_held["judge"].items(),
                                key=lambda pair: int(pair[0])):
+        if spec.get("stands"):
+            path = run / "verdicts" / f"{number}.json"
+            data, why = plan.read_return(path, shapes.JUDGE)
+            if data is not None:
+                accepted.append((number, data))
+                continue
         folder = "final" if spec["groups"] else "judge"
         path = run / "returns" / folder / f"{number}.json"
         data, why = plan.read_return(path, shapes.JUDGE)
@@ -48,6 +54,8 @@ def judged(run, state_held):
         # @req- v3dukx
         corpus.atomic_write(run / "verdicts" / f"{number}.json",
                             json.dumps(data, indent=1) + "\n")
+        corpus.atomic_write(run / "verdicts" / f"{number}.prompt",
+                            plan.against(run, number))
         accepted.append((number, data))
     return accepted, failed, absent
 
