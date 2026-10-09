@@ -3,7 +3,7 @@ acceptance_criteria:
   then: the product keeps the link [pinned](pin)
   when: the text of the holding statement is rewritten
 assessed:
-  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
   i7ubge: RoWyB1D36itX2qQUpPtMtTuT_Fv1xFVLFeyTFJKHIqY
 priority: medium
