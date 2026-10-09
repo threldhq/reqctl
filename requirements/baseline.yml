@@ -1,5 +1,5 @@
-baseline: 75
-commit: afb5378a477e3b08752aca634e592d3eab0337d4
+baseline: 76
+commit: 096e19acda80b8131ce072480365163c11f11663
 items:
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-12128145: mFuOqNbkyV1oY-6soAHFUkqGN-yitkrFm5SThHXJEzo
@@ -291,6 +291,7 @@ items:
   REQ-56581795: KcbOaSZB6LPVLqjMKgZofPweSqqZHWqw337PbGKvFd8
   REQ-56725181: knOj5NP_RuL_pMc89YPqdeBQ1UB1hDZ23OLHyNWmXbw
   REQ-56797974: xJHqq1DXePrsyaD3Vat5farWvgxofpGiqqYphwY-zMI
+  REQ-56866805: ub8Wdi_A6dm_RhAx458KIrizCrd_RZqex4A-v2L2GUM
   REQ-56906371: wq3BL0IRTLVVKuOe3drLtf2CYn6JfDGY337Kk20tmfM
   REQ-57061306: grhOhf7rpAJVLA2Q7ikPqJZOOCy2_Yn9giP78507xls
   REQ-57259870: 9aNmMpV7yL550Hb8jzya1YPXhi_rHnUV7ywbjvvf30k
@@ -415,6 +416,7 @@ items:
   REQ-81417723: q6UfXsP6e-N7cbuvbA78--mRzvPDajHQJj6N03AyjMs
   REQ-81667762: 82D0B66GuW3u_auRLnUBOJleTdKVNEUz289s-BTS_2o
   REQ-81751575: u9IqdcfRFLSMrIBNDJCgQBvbiv3WxHiv6FoM_f9LaTI
+  REQ-81761490: 4QFne8WaXttt7VpfqqNCVKKSNgl-w0DLRv9cVf7kOWI
   REQ-81795630: 6p2bA0ZHqY-j5V32MmMeP8xGYTf4dD27R6uVWqRuoXc
   REQ-81857516: chYOQDPmuDuWlxUJscM_eIipqHOWLo1OV22axiAUSR0
   REQ-82335572: EEu579sUxCO26x_90EclRGlWb70UB10atm9kEl_NVNc
@@ -489,7 +491,6 @@ items:
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
   challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
-  citation: nzUQ9NqGiGlPkqp-BbfYagJAalrV1MXdm3RnLuUIDow
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
   citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
@@ -523,7 +524,7 @@ items:
   owned_paths: 5uBm_4PmH1-c0tHvRRkdcOHNjbipvaGXy4nBbbhG0iY
   page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
   path_suffixes: Xra8WAFW9yj6q5X3w79Fxzu-ZKQIgGPH3AukLp2J9rs
-  pin: G01xAgZW-DwuravOfQINGNG8g-gPSHlYtHtM9K2GOpA
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
@@ -550,4 +551,4 @@ items:
   value_types: hh7MDQ0qhRu3WoS-COSXRVmHrQ21RIpL5S7VNeSWxuI
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
-supersedes: 74
+supersedes: 75

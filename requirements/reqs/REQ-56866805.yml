@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a run recording its declined [practices](practice) as the number zero
+  then: the product refuses the run
+  when: the run is built
+- given: a run recording its declined [practices](practice) as an empty mapping
+  then: the product refuses the run
+  when: the run is built
+assessed:
+  REQ-20454019: BJxxS0ixzdXK5nv_iCklYLSY_QrsNfjMD75BKftd680
+  REQ-51975077: c_HnzFhrYbl_TUDK7fIls5HiHt-ftS5T33ReadbFP9o
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-20454019: constrains
+  REQ-51975077: constrains
+status: approved
+text: If a run records its declined [practices](practice) as a value that is present
+  but is not a list, then the product shall refuse the run.
+type: functional
+verification: inspection

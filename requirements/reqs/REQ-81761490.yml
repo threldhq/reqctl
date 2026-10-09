@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a schema file whose mapping states one field twice
+  then: the product refuses the schema file and names the field
+  when: a command reads the schema
+- given: a schema file whose mapping holds keys yes and true
+  then: the product refuses the schema file and names True
+  when: a command reads the schema
+assessed:
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+priority: medium
+relations:
+  REQ-13148397: constrains
+status: approved
+text: If a mapping in a schema file holds two keys that load as the same key, then
+  the product shall refuse the schema file, naming the key as it loads.
+type: functional
+verification: inspection
