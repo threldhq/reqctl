@@ -1109,7 +1109,8 @@ def build_parser(root, fielded):
 
     s = _command(sub, "refile",
                  "file a parameter as the data item it is, moving its file "
-                 "and dropping the value_type a data item does not carry")
+                 "and dropping the value_type a data item does not carry; "
+                 "with --into DATA KEY, as an entry of DATA under KEY instead")
     s.add_argument("uid")
     s.add_argument("--into", nargs=2, metavar=("DATA", "KEY"))
     s.set_defaults(func=cmd_refile)

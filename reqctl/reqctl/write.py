@@ -830,7 +830,7 @@ def refile_into(store, uid, into, key):
              for held_uid, data in before.items()}
     after[target.uid] = dict(after[target.uid], entries={
         **(corpus.entries(after[target.uid]) or {}), key: {
-        "definition": item.data.get("text"),
+        "definition": after[item.uid].get("text"),
         "value_type": item.data.get("value_type"),
         **({"quantity": values[0]} if values else {}),
         **({"unit": item.data["unit"]} if item.data.get("unit") is not None else {})}})
@@ -846,13 +846,10 @@ def refile_into(store, uid, into, key):
     if problems:
         raise ReqctlError("\n".join(problems) + f"\n{item.uid} was not changed")
 
-    changed = sorted(held_uid for held_uid, data in after.items()
-                     if data != before.get(held_uid))
-    for held_uid in changed:
+    for held_uid in moved:
         corpus.save(store, corpus.Item(held_uid, paths[held_uid], after[held_uid]))
     corpus.invalidate(store)
-    return address, [held_uid for held_uid in changed
-                     if held_uid not in (item.uid, target.uid)]
+    return address, sorted(moved - {item.uid, target.uid})
     # @req- 44gp2u
 
 
