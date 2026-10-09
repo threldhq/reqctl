@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run recording one [proposal](proposal)'s criteria under 9 and again under
+    "9"
+  then: the product refuses the run and names 9
+  when: the run is built
+assessed:
+  REQ-80500447: cWHS2ihd6kMVhBjZ4E_Oa0rW2GXrdPtz7u0BDNQChMM
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+priority: medium
+relations:
+  REQ-80500447: constrains
+status: approved
+text: If a run's criteria record states one [proposal](proposal) under a key written
+  as a number and again under that number written as a string, then the product shall
+  refuse the run, naming the number.
+type: functional
+verification: inspection

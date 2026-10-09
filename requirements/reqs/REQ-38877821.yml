@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a run recording one [proposal](proposal)'s trace under 8 and again under
+    "8"
+  then: the product refuses the run and names 8
+  when: the run is built
+assessed:
+  REQ-83939497: o4e6KsfHMIgpZNUMun5sxU_LTejAce5WMR5k_5XAUb4
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+priority: medium
+relations:
+  REQ-83939497: constrains
+status: approved
+text: If a run's trace record states one [proposal](proposal) under a key written
+  as a number and again under that number written as a string, then the product shall
+  refuse the run, naming the number.
+type: functional
+verification: inspection
