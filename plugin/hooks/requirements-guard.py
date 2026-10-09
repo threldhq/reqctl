@@ -45,6 +45,7 @@ GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
 EXPORTS = ("export", "declare", "typeset", "readonly", "local")
+SETS_VARIABLES = (*EXPORTS, "read", "printf", "mapfile", "readarray", "getopts")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf", "builtin", *EXPORTS)
 REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
@@ -743,9 +744,10 @@ def judge_command(words, here):
     # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
     # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
     if plain != "git" and any(
-            word.partition("=")[0].rstrip("+") in READ_ENV or word.startswith("GIT_CONFIG")
-            for word in (words if words[:1] and words[0] in EXPORTS
-                         else [word for word in words[:len(words) - len(called)] if "=" in word])):
+            name in READ_ENV or name.startswith("GIT_CONFIG")
+            for word in (words if any(word in SETS_VARIABLES for word in words)
+                         else [word for word in words[:len(words) - len(called)] if "=" in word])
+            for name in (word.partition("=")[0].rstrip("+"), word.partition("=")[2])):
         deny(UNREADABLE)
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
