@@ -1,0 +1,34 @@
+acceptance_criteria:
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating a list holding count as its value_type
+  then: the product refuses the [data item](data_item), naming its value_type as a
+    list
+  when: the corpus is validated
+- given: a corpus holding a [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating a mapping as its value_type
+  then: the product refuses the [data item](data_item), naming its value_type as a
+    mapping
+  when: the corpus is validated
+- given: a corpus holding a [data item](data_item) named value_types
+  then: the product refuses the [data item](data_item) and writes nothing
+  when: an [entry](entry) of a [data item](data_item) stating a list as its value_type
+    is written
+- given: a corpus holding no [data item](data_item) named value_types, and an [entry](entry)
+    of a [data item](data_item) stating a list holding count as its value_type
+  then: the product refuses nothing for that value_type
+  when: the corpus is validated
+assessed:
+  REQ-52544202: FdBPIIOU8f_vUkT30XYkCn77NWut8-qqjIRi3gWLPuo
+  REQ-93210750: EGkfkA3YBorCXXLrS35IxOz5AJOJocQr3xsZvvCJC1M
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-52544202: constrains
+  REQ-93210750: constrains
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, if an [entry](entry)
+  of a [data item](data_item) states a list or a mapping as its value_type, then the
+  product shall refuse the [data item](data_item).
+type: functional
+verification: inspection
