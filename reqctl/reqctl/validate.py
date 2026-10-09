@@ -1259,7 +1259,7 @@ def _listed_units(records):
 def _span(value_types, spellings, fields):
     quantity = _quantity(_written(fields.get("quantity")))
     if (isinstance(quantity, bool) or not isinstance(quantity, (int, float))
-            or not math.isfinite(quantity)):
+            or isinstance(quantity, float) and not math.isfinite(quantity)):
         return None
     stated = value_types.get(str(fields.get("value_type")))
     units = stated.get("units") if isinstance(stated, dict) else None
@@ -1271,9 +1271,15 @@ def _span(value_types, spellings, fields):
             unit = units[symbol] if isinstance(units[symbol], dict) else {}
             low, high = (unit.get("factor"), unit.get("factor")) if "factor" in unit else (
                 unit.get("least"), unit.get("most"))
-            if all(isinstance(one, (int, float)) and not isinstance(one, bool)
-                   and math.isfinite(one) for one in (low, high)):
-                return (symbol, quantity, *sorted((quantity * low, quantity * high)))
+            if not all(isinstance(one, (int, float)) and not isinstance(one, bool)
+                       for one in (low, high)):
+                return None
+            try:
+                sizes = sorted((quantity * low, quantity * high))
+            except OverflowError:
+                return None
+            if all(not isinstance(one, float) or math.isfinite(one) for one in sizes):
+                return (symbol, quantity, *sizes)
     return None
 
 
@@ -1298,9 +1304,7 @@ def _bounds(records):
             if fields is None:
                 continue
             siblings = _at(held_entries, where[:-1])
-            for bound, refused, words in (("at_least", _less, "less"),
-                                          ("at_most", lambda one, other: _less(other, one),
-                                           "more")):
+            for bound, words in (("at_least", "less"), ("at_most", "more")):
                 if bound not in fields:
                     continue
                 at = f"{uid}: entry {'.'.join(where)} {bound} {fields[bound]!r}"
@@ -1319,7 +1323,7 @@ def _bounds(records):
                 # @req- l7qntp
                 # @req+ REQ-58100850@NgW3efYeVw1k p3q7no
                 spans = _span(value_types, spellings, fields), _span(value_types, spellings, target)
-                if None not in spans and refused(*spans):
+                if None not in spans and _less(*(spans if bound == "at_least" else spans[::-1])):
                     problems.append(f"{at}: quantity {fields.get('quantity')} "
                                     f"{fields.get('unit') or ''}".rstrip()
                                     + f" is {words} than {target['quantity']} "
