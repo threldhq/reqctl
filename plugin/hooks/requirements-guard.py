@@ -44,7 +44,7 @@ GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
-SETTER = re.compile(r"^(export|declare|typeset|readonly|local|read|mapfile|readarray|getopts"
+SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|getopts"
                     r"|let)$|\$\{\w+(\[[^]]*\])?:?=")
 UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
 PARAMETER = re.compile(r"\$\{[^{}]*\}")
@@ -679,12 +679,14 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
+    literal = [word for word in rest if expands(word)]
     rest = [alt for word in rest for alt in bounded(braced(word))]
     if any(map(expands, rest)):
         deny(UNREADABLE)
     paths, sweeps_untracked, sweeps_ignored = discarded(subcommand, rest, place)
     if paths is None:
         return
+    paths = [*paths, *literal] if paths else paths
     if any("{}" in word for word in rest):
         deny(UNREADABLE)
     source = recursion(subcommand, rest, place)
@@ -754,9 +756,9 @@ def judge_command(said, here):
     if any(expands(word) for word in unquoted[:len(words) - len(called) + 1]
            if not word.partition("=")[0].isidentifier()) or (
             (setter := any(map(SETTER.search, words)) or "printf" in words
-             and any(word.startswith("-v") for word in words))
+             and any(alt.startswith("-v") for word in words for alt in bounded(braced(word))))
             or plain != "git") and any(
-            "GIT_CONFIG" in alt or any(name in alt for name in READ_ENV)
+            any(name in alt for name in (*READ_ENV, "GIT_CONFIG"))
             for word in (words if setter else words[:len(words) - len(called)])
             if setter or "=" in word for alt in bounded(braced(word))) or setter and any(
             expands(alt) for word in unquoted for alt in bounded(braced(word))):
@@ -942,8 +944,8 @@ def judge_shell(raw, cwd):
     for pipeline, heres in zip(pipelines, places):
         for part, here in itertools.product(pipeline, heres):
             invocation = heading(part)
-            judge_command(part if STDIN_ARGUMENTS.search(" ".join(tokens_of(invocation)))
-                          else invocation, here)
+            judge_command(part if any(STDIN_ARGUMENTS.search(alt) for word in tokens_of(invocation)
+                                      for alt in bounded(braced(word))) else invocation, here)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
