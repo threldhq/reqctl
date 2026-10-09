@@ -45,8 +45,8 @@ GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
 SETS_VARIABLES = ("export", "declare", "typeset", "readonly", "local", "read", "printf",
-                  "mapfile", "readarray", "getopts")
-ASSIGNS = re.compile(r"\$\{\w+:?=")
+                  "mapfile", "readarray", "getopts", "let")
+BRACED_NAME = re.compile(r"[\w.,]*\{[\w{}.,]*")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf", "builtin")
 REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
@@ -460,14 +460,14 @@ def git_subcommand(words):
 
 def located(words, here):
     prefix, options = git_split(words)[:2]
-    assigned = dict(alt.split("=", 1) for word in prefix for alt in bounded(braced(word))
-                    if "=" in alt)
+    assigned = dict(word.split("=", 1) for word in prefix if "=" in word)
     settings = {name: value for name, value in assigned.items()
                 if name in READ_ENV or name.startswith(COMMAND_CONFIG)}
     where = [word for at, word in enumerate(options)
              if word.partition("=")[0] in READ_OPTIONS or word in READ_FLAGS
              or at and options[at - 1] in READ_OPTIONS]
     if not here or any(not name.isidentifier() or name in CONFIG_HOMES for name in assigned) or any(
+            "{" in word.replace("{}", "") for word in [*prefix, *options]) or any(
             word.startswith("-") for word in prefix) or any(
             word.startswith("--config-env") for word in options) or any(
             "$" in word or "`" in word for word in [*where, *settings.values()]):
@@ -745,12 +745,14 @@ def judge_command(words, here):
     # @req- dbuwzq
     # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
     # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
-    if ((setter := any(word in SETS_VARIABLES or ASSIGNS.search(word) for word in words))
+    if any("{" in word.replace("{}", "") and "$" not in word and word not in ("{", "}")
+           for word in words[:len(words) - len(called) + 1]) or (
+            (setter := any(word in SETS_VARIABLES or "${" in word for word in words))
             or plain != "git") and any(
-            "GIT_CONFIG" in alt or any(name in alt for name in READ_ENV)
-            for word in (words if setter else [
-                word for word in words[:len(words) - len(called)] if "=" in word])
-            for alt in bounded(braced(word))):
+            "GIT_CONFIG" in word or any(name in word for name in READ_ENV)
+            or setter and BRACED_NAME.fullmatch(word.partition("=")[0])
+            for word in (words if setter else words[:len(words) - len(called)])
+            if setter or "=" in word):
         deny(UNREADABLE)
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
