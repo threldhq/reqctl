@@ -18,3 +18,7 @@ text: The product shall register the ${plugin_components.session_rules_hook} in 
   is compacted.
 type: functional
 verification: inspection
+whole_file_citations:
+  plugin/hooks/hooks.json:
+    digest: qS6qcvFrYb4RrcV2mB_XlokUMrePwjgFkcUnov8N-uQ
+    pinned: JSYnloFEMvf_
