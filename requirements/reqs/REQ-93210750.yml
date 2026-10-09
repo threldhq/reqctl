@@ -30,6 +30,8 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+citations:
+  zrp6x7: qQm7J95U6fsh8ALo_4m8UD2Fue3LnpDbY98UofWQVtU
 priority: medium
 relations:
   REQ-13148397: depends_on
