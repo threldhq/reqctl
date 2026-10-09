@@ -1262,8 +1262,11 @@ def _span(value_types, fields):
         return None
     stated = value_types.get(str(fields.get("value_type")))
     units = stated.get("units") if isinstance(stated, dict) else None
-    if fields.get("unit") is None or not isinstance(units, dict):
-        return ("", quantity, quantity, quantity)
+    if fields.get("unit") is None:
+        return None if isinstance(units, dict) and units else ("", quantity, quantity, quantity)
+    if not isinstance(units, dict):
+        return None
+    units = {str(symbol): unit for symbol, unit in units.items()}
     for _, symbol, spelling in _spellings({"entries": {"held": {"units": units}}}):
         if spelling == str(fields["unit"]):
             unit = units[symbol] if isinstance(units[symbol], dict) else {}
@@ -1273,10 +1276,6 @@ def _span(value_types, fields):
                    for one in (low, high)):
                 return (symbol, quantity, quantity * low, quantity * high)
     return None
-
-
-def _more(one, other):
-    return one[1] > other[1] if one[0] == other[0] else one[3] > other[2]
 
 
 def _less(one, other):
@@ -1298,9 +1297,10 @@ def _bounds(records):
         for where, fields in _entries_within(held_entries):
             if fields is None:
                 continue
-            siblings = _at(held_entries, where[:-1]) if len(where) > 1 else held_entries
+            siblings = _at(held_entries, where[:-1])
             for bound, refused, words in (("at_least", _less, "less"),
-                                          ("at_most", _more, "more")):
+                                          ("at_most", lambda one, other: _less(other, one),
+                                           "more")):
                 if bound not in fields:
                     continue
                 at = f"{uid}: entry {'.'.join(where)} {bound} {fields[bound]!r}"
@@ -1310,9 +1310,10 @@ def _bounds(records):
                 if not isinstance(target, dict) or "quantity" not in target:
                     problems.append(f"{at} names no entry of {uid} stating a quantity")
                     continue
-                if str(target.get("value_type")) != str(fields.get("value_type")):
+                if (fields.get("value_type") is None
+                        or str(target.get("value_type")) != str(fields.get("value_type"))):
                     problems.append(f"{at} states {target.get('value_type')} -- "
-                                    f"{fields.get('value_type')} and "
+                                    f"{fields.get('value_type') or 'no value type'} and "
                                     f"{target.get('value_type')} cannot be compared")
                     continue
                 # @req- l7qntp
@@ -1351,6 +1352,7 @@ def _ceilings(records):
                      f"less than entry {'.'.join(where)} at {fields['quantity']}"
                      for where, fields in _entries_within(held_entries)
                      if fields is not None and fields is not ceiling
+                     and ceiling.get("value_type") is not None
                      and str(fields.get("value_type")) == str(ceiling.get("value_type"))
                      and top is not None and (other := _span(value_types, fields)) is not None
                      and _less(top, other)]
