@@ -28,6 +28,21 @@ def allowlists(config):
     return []
 
 
+def everywhere(config):
+    held = list(config.get("allowlists") or [])
+    for owner in [config, *(config.get("rules") or [])]:
+        if isinstance(owner.get("allowlist"), dict):
+            held.append(owner["allowlist"])
+    return held + [one for rule in config.get("rules") or []
+                   for one in rule.get("allowlists") or []]
+
+
+def stamping(held):
+    regexes = held.get("regexes") or []
+    return (not regexes or (held.get("condition") != "AND" and bool(held.get("paths")))
+            or any(re.search(one, stamp) for one in regexes for stamp in stamps()))
+
+
 def admitting(config, sample):
     return [held for held in allowlists(config)
             if any(re.fullmatch(one, sample) for one in held.get("regexes") or [])]
@@ -60,7 +75,7 @@ def _spelled(items):
         elif op is sre.BRANCH:
             arms = [_spelled(arm) for arm in av[1]]
             parts = None if None in arms else [one for arm in arms for one in arm]
-        elif op in (sre.MAX_REPEAT, sre.MIN_REPEAT) and av[1] != sre.MAXREPEAT:
+        elif op in (sre.MAX_REPEAT, sre.MIN_REPEAT) and av[1] <= SPELLINGS:
             inner = _spelled(av[2])
             parts = None if inner is None else _repeated(inner, av[0], av[1])
         else:
@@ -211,20 +226,21 @@ def faults(config):
             "value gitleaks captured, not the line it sat on, and against a "
             "line it matches nothing at all -- so every real stamp fails the "
             "scan; state regexTarget = \"secret\"")
-    paths = held.get("paths") or []
-    scope = [re.compile(one) for one in paths]
-    # @req> REQ-14101215@QDD9quPR25YJ 7bctre
-    if not scope:
-        found.append(
-            f"{CONFIG}: the {RULE} allowlist states no paths, so the stamp "
-            "shape is admitted everywhere rather than where reqctl writes it; "
-            "state the paths the corpus occupies")
-    # @req> REQ-14101215@QDD9quPR25YJ szr7kb
-    for path in paths:
-        if not confined(path):
+    scope = [re.compile(one) for one in held.get("paths") or []]
+    # @req> REQ-14101215@QDD9quPR25YJ 22fcay
+    for one in filter(stamping, everywhere(config)):
+        named = one.get("description") or "an allowlist"
+        if not one.get("paths"):
             found.append(
-                f"{CONFIG}: the {RULE} allowlist path {path} can admit a file "
-                f"outside {ROOT}; begin it with ^{ROOT}")
+                f"{CONFIG}: {named!r} admits the stamp shape and states no "
+                "paths, so it admits it everywhere rather than where reqctl "
+                "writes it; state the paths the corpus occupies")
+        for path in one.get("paths") or []:
+            if not confined(path):
+                found.append(
+                    f"{CONFIG}: {named!r} admits the stamp shape on path "
+                    f"{path}, which can match a file outside {ROOT}; begin it "
+                    f"with ^{ROOT}")
     # @req> REQ-90593907@77_4Pvs9T0Oa ef2ben
     if scope and not any(one.search(INSIDE) for one in scope):
         found.append(
