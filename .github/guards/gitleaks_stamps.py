@@ -101,10 +101,7 @@ def _repeated(inner, low, high):
 
 
 def spellings(pattern):
-    try:
-        parsed = _parser.parse(pattern)
-    except re.error:
-        return None
+    parsed = _parser.parse(pattern)
     items = list(parsed)
     if (parsed.state.flags & (re.IGNORECASE | re.MULTILINE) or len(items) < 2
             or items[0] != (sre.AT, sre.AT_BEGINNING)
@@ -114,10 +111,7 @@ def spellings(pattern):
 
 
 def confined(pattern):
-    try:
-        parsed = _parser.parse(pattern)
-    except re.error:
-        return False
+    parsed = _parser.parse(pattern)
     if parsed.state.flags & (re.IGNORECASE | re.MULTILINE):
         return False
     return list(parsed)[:1 + len(ROOT)] == ([(sre.AT, sre.AT_BEGINNING)]
@@ -201,6 +195,12 @@ def named_faults(config):
 
 def lowered(node):
     if isinstance(node, dict):
+        keys = [str(key).lower() for key in node]
+        twice = sorted({key for key in keys if keys.count(key) > 1})
+        if twice:
+            raise SystemExit(f"::error::{CONFIG}: {', '.join(twice)} is stated "
+                             "under two spellings that differ only by case, and "
+                             "gitleaks reads one of them; keep one")
         return {str(key).lower(): lowered(value) for key, value in node.items()}
     if isinstance(node, list):
         return [lowered(one) for one in node]
