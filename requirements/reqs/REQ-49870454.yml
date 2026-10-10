@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: an [item](item) file whose field holds aliases that each name the one before
+    twice, so that the field expands exponentially
+  then: the product refuses the file and names each alias as written and the line
+    it stands on
+  when: any of the product's commands reads the file
+- given: an [item](item) file holding a single alias of a scalar
+  then: the product refuses the file and names the alias
+  when: the file is read
+- given: an [item](item) file holding a merge key whose value is an alias
+  then: the product refuses the file
+  when: the file is read
+- given: an [item](item) file holding an anchor that no alias names
+  then: the product does not refuse the file for the anchor
+  when: the file is read
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations: {}
+status: approved
+text: If an [item](item) file holds a YAML alias, then the product shall refuse the
+  file.
+type: functional
+verification: inspection

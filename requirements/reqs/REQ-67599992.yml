@@ -13,6 +13,7 @@ assessed:
   REQ-60587913: a-D0sKfFEs62Jac_QzVhIoT9TAK2dlfdzsXx3jUcnqM
   REQ-70178381: 2GE_TPwGTZKUXOdQLkRk_snwp88Ig8YbmO-_Fa1WkDw
   REQ-74982341: IIwAqzZV1bP38NHqXLXpGbdbA7tUIoqD6Upg6wk7gaE
+  REQ-91051324: ljHcdWSG-nys57fRKMJEzapdA6usPqPdbZy00tgXHpw
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   jzjikg: b8gWzHhbB6ytTvB_1HakuCtHz5lo41sJ4XmFxZX0TxA
@@ -27,6 +28,7 @@ relations:
   REQ-60587913: constrains
   REQ-70178381: constrains
   REQ-74982341: constrains
+  REQ-91051324: constrains
 status: approved
 text: When the product refuses a [tool call](tool_call), the product shall name the
   fault in the refusal.
