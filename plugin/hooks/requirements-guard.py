@@ -114,13 +114,13 @@ GIT_READ = re.compile(
     r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
 )
-HEREDOC = re.compile(r"(?<![<\\])(?:\\\\)*<<(?!<)-?\s*(['\"]?)(\w+)\1")
+HEREDOC = re.compile(r"(?<!<)<<(?!<)-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
 COMPOUND = re.compile(
-    r"\s*(?:(?:if|then|elif|else|while|until|do|time(?:\s+-p)?|coproc(?:\s+\w+(?=\s*[({]))?)"
-    r"(?=[\s(]|$)|[!{](?=\s|$)|(?:for|select)\s+\w+|case\s+\S+\s+in(?=\s|$)"
-    r"|(?:function\s+)?[^\s()]+\s*\(\s*\)|function\s+\S+|\(?[^\s()]*\))")
+    r"(?:\s*(?:(?:if|then|elif|else|while|until|do|time(?:\s+-p)?|coproc(?:\s+\w+(?=\s*[({]))?)"
+    r"(?![^\s(])|[!{](?!\S)|(?:for|select)\s+\w+|case\s.*?\sin(?!\S)"
+    r"|(?:function\s+)?[^\s()]+\s*\(\s*\)|function\s+\S+|\(?[^\s()]*\)))*")
 CASE = re.compile(r"(?<![^\s;&|(])(?:case(?=\s+\S+\s+in(?![^\s;&|)]))|esac(?![^\s;&|)]))")
 QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re.S)}
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
@@ -292,7 +292,7 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
     joins = [] if joins is None else joins
     quote = None
     lines = cmd.split("\n")
-    row = 0
+    row = last = 0
 
     def cut_segment():
         pipeline.append("".join(held + buf + bodies))
@@ -307,7 +307,7 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
         pipeline.clear()
 
     while row < len(lines):
-        line, i = lines[row], 0
+        line, i, last = lines[row], 0, max(last, row)
         while i < len(line):
             char = line[i]
             if quote:
@@ -330,11 +330,18 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 continue
             if char == "#" and (not buf or buf[-1] in " \t("):
                 break
+            if char == "<" and (heredoc := HEREDOC.match(line, i)):
+                end = next((at for at in range(last + 1, len(lines))
+                            if lines[at].strip() == heredoc[2]), len(lines))
+                bodies.append("\n" + "\n".join(lines[last + 1:end + 1]))
+                buf.append(heredoc[0])
+                i, last = heredoc.end(), end
+                continue
             if char == "`" and nest[-1:] == ["`"] or char == ")" and nest[-1:] == ["("]:
                 nest.pop()
             elif char in "(`":
                 nest.append(char)
-            if nest or char in "()`":
+            if nest:
                 buf.append(char)
                 i += 1
                 continue
@@ -357,23 +364,13 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             buf.pop()
             row += 1
             continue
-        joined = "".join(buf)
-        opened = next((found for found in HEREDOC.finditer(joined)
-                       if masked(joined)[joined.index("<", found.start())] == "<"), None)
-        if opened:
-            body, row = [], row + 1
-            while row < len(lines) and lines[row].strip() != opened.group(2):
-                body.append(lines[row])
-                row += 1
-            bodies.append("\n" + "\n".join(body))
         if nest:
-            held.append(joined + ";")
+            held.append("".join(buf) + ";")
             buf.clear()
         else:
             cut_command()
-        row += 1
-    if buf or pipeline or held:
-        cut_command()
+        row = last + 1
+    cut_command()
     return commands
 
 
@@ -413,14 +410,8 @@ def heading(part):
     return part if cut < 0 else part[:cut]
 
 
-def bare(said):
-    while found := COMPOUND.match(masked(said)):
-        said = said[found.end():]
-    return said
-
-
 def groups(text, opened=()):
-    found, stack, pending, start, depth, i = [], list(opened), [], 0, 0, 0
+    found, stack, pending, starts, i = [], list(opened), [], [], 0
     while i < len(text):
         char, top, step, size = text[i], (stack or [""])[-1], 1, len(stack)
         if char == "\\":
@@ -433,8 +424,8 @@ def groups(text, opened=()):
                 stack.append(text[i + step - 1])
         elif char == "\n" and pending:
             for delimiter, literal in pending:
-                end = re.compile(rf"\n[ \t]*{re.escape(delimiter)}[ \t]*$", re.M).search(text, i)
-                if not literal and not depth:
+                end = re.compile(rf"\n[ \t]*{delimiter}[ \t]*$", re.M).search(text, i)
+                if not literal and not starts:
                     found += groups(text[i + 1:end.start() if end else len(text)], ["<<"])
                 i = end.end() if end else len(text)
             pending.clear()
@@ -458,21 +449,20 @@ def groups(text, opened=()):
             pending.append((heredoc[2], bool(heredoc[1])))
             step = heredoc.end() - i
         if len(stack) > size and stack[-1] in "(`":
-            depth += 1
-            start = i + step if depth == 1 else start
+            starts.append(i + step)
         elif len(stack) < size and top in "(`":
-            depth -= 1
-            if not depth:
-                found.append(text[start:i])
+            body = text[starts.pop():i]
+            if not starts:
+                found.append(re.sub(r"\\([\\`$])", r"\1", body) if top == "`" else body)
         i += step
-    if depth:
-        found.append(text[start:])
+    if starts:
+        found.append(text[starts[0]:])
     return found
 
 
 def nested(part):
-    command = bare(part)
-    return [command, *groups(part[:len(part) - len(command)])] if command != part else groups(part)
+    at = COMPOUND.match(masked(part)).end()
+    return [part[at:], *groups(part[:at])] if at else groups(part)
 
 
 def tokens_of(part):
@@ -1076,9 +1066,9 @@ def cwds(pipelines, joins, cwd):
 
 def moved(pipeline, heres, certain):
     said = heading(pipeline[0])
-    command = bare(said)
-    certain = certain and command == said
-    called = invoked(tokens_of(command)) if len(pipeline) == 1 else []
+    at = COMPOUND.match(masked(said)).end()
+    certain = certain and not at
+    called = invoked(tokens_of(said[at:])) if len(pipeline) == 1 else []
     if called[:1] == ["eval"]:
         called = invoked(tokens_of(" ".join(called[1:])))
     if called[:1] != ["cd"]:
