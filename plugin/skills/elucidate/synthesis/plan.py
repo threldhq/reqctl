@@ -27,7 +27,7 @@ BINDS = "binds"
 CRITERIA = "criteria"
 TRACE = "trace"
 ANSWERS = "answers"
-STATING = ("text", "acceptance_criteria", "entries")
+STATING = (*corpus.STATEMENT_STAMPED, "entries")
 FINDINGS = "coverage.yml"
 STATE = "build.json"
 REVIEWED = "review.json"
@@ -1451,6 +1451,7 @@ def describe(run):
                 else "")
     lines = []
     ledger, answers = answered(run, proposals(run))
+    # @req> REQ-52114263@JmvDYpVGNRJQ dbzebu
     records = {uid: [record.get(field) for field in STATING]
                for uid, record in loaded()[1].items()
                if record.get("status") == "approved"}
