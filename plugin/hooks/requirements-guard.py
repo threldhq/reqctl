@@ -687,12 +687,12 @@ def refuse_discarding_work(words, here):
     rest = [alt for word in rest for alt in bounded(braced(word))]
     if any(map(expands, rest)):
         deny(UNREADABLE)
-    sayings = [rest, written] if written != rest else [rest]
+    sayings = [rest, written]
     if subcommand in ("clean", "restore"):
-        sayings += [[word for word in said[:said.index("--")] if word.startswith("-")]
+        sayings += [[word if word.startswith("-") else "-" for word in said[:said.index("--")]]
                     + said[said.index("--"):] for said in sayings if "--" in said[:-1]]
-    readings = [reading for reading in (discarded(subcommand, said, place) for said in sayings)
-                if reading[0] is not None]
+    readings = [reading for said in dict.fromkeys(map(tuple, sayings))
+                if (reading := discarded(subcommand, said, place))[0] is not None]
     if not readings:
         return
     if any("{}" in word for word in rest):
