@@ -26,6 +26,8 @@ PLUGIN = Path(".claude-plugin") / "plugin.json"
 BINDS = "binds"
 CRITERIA = "criteria"
 TRACE = "trace"
+ANSWERS = "answers"
+STATING = (*corpus.STATEMENT_STAMPED, "entries")
 FINDINGS = "coverage.yml"
 STATE = "build.json"
 REVIEWED = "review.json"
@@ -676,6 +678,55 @@ def traced(run, words, held):
                     "decline the proposal.")
         stated[str(number)] = [" ".join(one.split()) for one in passages]
     return stated
+
+
+def answered(run, held):
+    path, read = recorded(run)
+    found = {} if read.get(ANSWERS) is None else read[ANSWERS]
+    if not isinstance(found, dict):
+        raise SystemExit(
+            f"{path}: `{ANSWERS}` maps a proposal number to its verdict's "
+            "questions, each question to `owner: ANSWER` or to `corpus: "
+            "[{uid: UID, clause: QUOTE}]`.")
+    return path, keyed(path, ANSWERS, found, held)
+
+
+def settling(path, number, question, held, records):
+    # @req+ REQ-52114263@JmvDYpVGNRJQ huroi7
+    held = held if isinstance(held, dict) else {}
+    owner, evidence = held.get("owner"), held.get("corpus")
+    if isinstance(owner, str) and owner.strip():
+        return f"the owner answered: {_coverage.spoken(owner)}"
+    if owner is not None and not isinstance(owner, str):
+        raise SystemExit(
+            f"{path}: proposal {number}'s answer to {question!r} reads as "
+            f"{owner!r}, not as the owner's words; quote what they said")
+    if isinstance(evidence, list) and evidence and all(
+            isinstance(one, dict) and isinstance(one.get("clause"), str)
+            and one["clause"].strip() and str(one.get("uid")) in records
+            and _coverage.quoted(
+                _coverage.plain(_strings(records[str(one.get("uid"))])),
+                _coverage.spoken(one["clause"]))
+            for one in evidence):
+        return "settled by " + "; ".join(
+            f"{one['uid']}: “{_coverage.spoken(one['clause'])}”"
+            for one in evidence)
+    raise SystemExit(
+        f"{path}: proposal {number}'s verdict asks {question!r}, and `{ANSWERS}` "
+        "records neither the owner's answer nor a clause quoted from a corpus "
+        "item that settled it. Answer it against the corpus or put it to the "
+        "owner, then record the result.")
+    # @req- huroi7
+
+
+def _strings(record):
+    if isinstance(record, str):
+        return " ".join(record.split())
+    if isinstance(record, dict):
+        record = list(record.values())
+    if isinstance(record, list):
+        return "\n".join(map(_strings, record))
+    return ""
 
 
 def stated(run, held_proposals):
@@ -1404,6 +1455,11 @@ def describe(run):
     declined = (said(run, "declined.md", "") if (run / "declined.md").is_file()
                 else "")
     lines = []
+    ledger, answers = answered(run, proposals(run))
+    # @req> REQ-52114263@JmvDYpVGNRJQ dbzebu
+    records = {uid: [record.get(field) for field in STATING]
+               for uid, record in glossary().items()
+               if record.get("status") == "approved"}
     for number, spec in sorted(state_held["proposals"].items(),
                                key=lambda pair: int(pair[0])):
         path = run / "verdicts" / f"{number}.json"
@@ -1436,8 +1492,13 @@ def describe(run):
                          f"{entry['defined_by'] or 'no term'}, {entry['reason']}")
         for entry in verdict["faults"]:
             lines.append(f"- fault {entry['fault']}: {entry['reason']}")
+        # @req> REQ-52114263@JmvDYpVGNRJQ gedop6
         for question in verdict["questions"]:
-            lines.append(f"- question: {question}")
+            asked = answers.get(str(number))
+            answer = settling(ledger, number, question,
+                            asked.get(question) if isinstance(asked, dict)
+                            else None, records)
+            lines.append(f"- question: {question} -- {answer}")
         lines.append("")
     lines.append("### declined\n")
     # @req+ REQ-20454019@BJxxS0ixzdXK vxerce

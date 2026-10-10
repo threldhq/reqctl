@@ -10,6 +10,8 @@ assessed:
   REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   citation_marker: PIwiVw0PtA6YbmzdHivRCKCzPw-Rq-JX6IIehV5RfU0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  ap76fb: 0vUh9OX_L_QiMT4mD325bV7U26_aIlJvckjuFZ6nH30
 priority: medium
 relations:
   REQ-60346603: constrains
