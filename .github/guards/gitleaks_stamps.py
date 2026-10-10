@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
 import re
+import string
 import sys
 import tomllib
 from pathlib import Path
+from re import _constants as sre
+from re import _parser
 
 from reqctl import corpus
 
 CONFIG = Path(".gitleaks.toml")
 RULE = "generic-api-key"
 INSIDE = str(corpus.folder_for(".", "data") / "object_storage.yml")
-OUTSIDE = ".github/workflows/ci.yml"
+ROOT = Path(INSIDE).parts[0] + "/"
+DIGITS = frozenset(string.digits)
+DIGEST = frozenset(string.ascii_letters + string.digits + "_-")
+CATEGORIES = {sre.CATEGORY_DIGIT: DIGITS,
+              sre.CATEGORY_WORD: frozenset(string.ascii_letters + string.digits + "_"),
+              sre.CATEGORY_SPACE: frozenset(" \t\n\r\f\v")}
+SPELLINGS = 4096
 
 
 def allowlists(config):
@@ -22,6 +31,95 @@ def allowlists(config):
 def admitting(config, sample):
     return [held for held in allowlists(config)
             if any(re.fullmatch(one, sample) for one in held.get("regexes") or [])]
+
+
+def _class(items):
+    held = set()
+    for op, av in items:
+        if op is sre.LITERAL:
+            held.add(chr(av))
+        elif op is sre.RANGE:
+            held.update(map(chr, range(av[0], av[1] + 1)))
+        elif op is sre.CATEGORY and av in CATEGORIES:
+            held.update(CATEGORIES[av])
+        else:
+            return None
+    return frozenset(held)
+
+
+def _spelled(items):
+    found = [()]
+    for op, av in items:
+        if op is sre.LITERAL:
+            parts = [(frozenset(chr(av)),)]
+        elif op is sre.IN:
+            one = _class(av)
+            parts = None if one is None else [(one,)]
+        elif op is sre.SUBPATTERN:
+            parts = None if av[1] & re.IGNORECASE else _spelled(av[3])
+        elif op is sre.BRANCH:
+            arms = [_spelled(arm) for arm in av[1]]
+            parts = None if None in arms else [one for arm in arms for one in arm]
+        elif op in (sre.MAX_REPEAT, sre.MIN_REPEAT) and av[1] != sre.MAXREPEAT:
+            inner = _spelled(av[2])
+            parts = None if inner is None else _repeated(inner, av[0], av[1])
+        else:
+            parts = None
+        if parts is None:
+            return None
+        found = [left + right for left in found for right in parts]
+        if len(found) > SPELLINGS:
+            return None
+    return found
+
+
+def _repeated(inner, low, high):
+    found, run = [], [()]
+    for count in range(high + 1):
+        if count >= low:
+            found += run
+        run = [left + right for left in run for right in inner]
+        if len(found) + len(run) > SPELLINGS:
+            return None
+    return found
+
+
+def spellings(pattern):
+    try:
+        parsed = _parser.parse(pattern)
+    except re.error:
+        return None
+    items = list(parsed)
+    if (parsed.state.flags & re.IGNORECASE or len(items) < 2
+            or items[0] != (sre.AT, sre.AT_BEGINNING)
+            or items[-1] != (sre.AT, sre.AT_END)):
+        return None
+    return _spelled(items[1:-1])
+
+
+def confined(pattern):
+    # @req+ REQ-14101215@QDD9quPR25YJ xhpf7g
+    try:
+        items = list(_parser.parse(pattern))
+    except re.error:
+        return False
+    return items[:1 + len(ROOT)] == ([(sre.AT, sre.AT_BEGINNING)]
+                                     + [(sre.LITERAL, ord(one)) for one in ROOT])
+    # @req- xhpf7g
+
+
+def wider(pattern, shapes):
+    # @req+ REQ-89759399@H6dJHl49GRYn ncqjfp
+    found = spellings(pattern)
+    if found is None:
+        return "strings this check cannot bound"
+    for spelled in found:
+        if not any(len(spelled) == len(shape)
+                   and all(one <= held for one, held in zip(spelled, shape))
+                   for shape in shapes):
+            return repr("".join(min(one) for one in spelled))
+    return None
+    # @req- ncqjfp
 
 
 def uids():
@@ -75,13 +173,15 @@ def named_faults(config):
                 f"{CONFIG}: {written[0]} does not match the uid {uid!r} that "
                 "reqctl mints, so a citation of one still fails the scan")
     # @req- fllahn
-    for near in ("REQ-8492710", "REQ-849271034", "req-84927103", "REQX-84927103",
-                 "REQ-8492710a", "sk-live-84927103aBcDeFgHiJkLmNoP"):
-        if shape.fullmatch(near):
-            found.append(
-                f"{CONFIG}: {written[0]} also matches {near!r}, which is not a "
-                "uid. An allowlist wider than the uid admits a secret of that "
-                "shape")
+    # @req+ REQ-89759399@H6dJHl49GRYn l43smi
+    beyond = wider(written[0], [[frozenset(one) for one in prefix] + [DIGITS] * 8
+                                for prefix in corpus.PREFIXES])
+    if beyond:
+        found.append(
+            f"{CONFIG}: {written[0]} admits {beyond}, beyond the uids "
+            "reqctl mints; state the minted kinds and eight digits, anchored "
+            "with ^ and $")
+    # @req- l43smi
     return found
 
 
@@ -99,6 +199,7 @@ def faults(config):
             f"{CONFIG}: the {RULE} allowlist states {len(written)} regex(es); "
             "one states the stamp shape and this check holds it to what "
             "reqctl writes"]
+    # @req> REQ-89759399@H6dJHl49GRYn os2qmc
     if held.get("condition") != "AND":
         found.append(
             f"{CONFIG}: the {RULE} allowlist states condition "
@@ -115,17 +216,18 @@ def faults(config):
             "line it matches nothing at all -- so every real stamp fails the "
             "scan; state regexTarget = \"secret\"")
     scope = [re.compile(one) for one in held.get("paths") or []]
+    # @req> REQ-14101215@QDD9quPR25YJ 7bctre
     if not scope:
         found.append(
             f"{CONFIG}: the {RULE} allowlist states no paths, so the stamp "
             "shape is admitted everywhere rather than where reqctl writes it; "
             "state the paths the corpus occupies")
-    if any(one.search(OUTSIDE) for one in scope):
-        found.append(
-            f"{CONFIG}: the {RULE} allowlist admits {OUTSIDE}, which is not "
-            "the corpus. A stamp is only ever written by reqctl into the "
-            "corpus, so a scope reaching past it admits this shape from a "
-            "hand that is not reqctl's")
+    # @req> REQ-14101215@QDD9quPR25YJ szr7kb
+    for path in held.get("paths") or []:
+        if not confined(path):
+            found.append(
+                f"{CONFIG}: the {RULE} allowlist path {path} can admit a file "
+                f"outside {ROOT}; begin it with ^{ROOT}")
     # @req> REQ-90593907@77_4Pvs9T0Oa ef2ben
     if scope and not any(one.search(INSIDE) for one in scope):
         found.append(
@@ -141,12 +243,14 @@ def faults(config):
                 "produces, so a real stamp now fails the secret scan and the "
                 "shape it does admit means nothing")
     # @req- waiych
-    for near in ("A" * 42, "A" * 44, "A" * 42 + "+"):
-        if shape.fullmatch(near):
-            found.append(
-                f"{CONFIG}: {written[0]} also matches {near!r}, which is not a "
-                "stamp. An allowlist wider than the digest admits a secret of "
-                "that width")
+    # @req+ REQ-89759399@H6dJHl49GRYn gyyeey
+    beyond = wider(written[0], [[DIGEST] * len(stamps()[0])])
+    if beyond:
+        found.append(
+            f"{CONFIG}: {written[0]} admits {beyond}, beyond the stamps "
+            f"reqctl writes; state {len(stamps()[0])} characters of "
+            "[A-Za-z0-9_-], anchored with ^ and $")
+    # @req- gyyeey
     return found
 
 

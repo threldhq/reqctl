@@ -14,6 +14,9 @@ acceptance_criteria:
 assessed:
   REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  gedop6: iTfwvSHzHREAlvru2H-tz-horLVyfl2aTpSouJfRKRg
+  huroi7: v9Xlim8AldD9byhgxJRjAbPSsBAcQvsuIwFYohbDLkA
 priority: medium
 relations:
   REQ-21373303: derives_from

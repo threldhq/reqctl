@@ -54,6 +54,14 @@ requirement not yet satisfied.
 Cite it with `reqctl tag PATH --from N --to M --req UID`, over the whole
 statements that satisfy it. The tool writes the stamp; never compose one.
 
+<!-- @req+ REQ-22625894@pLUy8k7jMwKk g6q5fx -->
+Cover the code that decides a clause or acceptance criterion of the item
+cited, or, for a parameter, a data item or one of its entries, the code stating
+its value -- where a data item's entries are stated in one place and read in
+another, the place stating them. Leave uncited a helper the deciding code calls,
+and code incidental to every clause.
+<!-- @req- g6q5fx -->
+
 ## 4 -- Prove it
 
 `reqctl validate`, then `reqctl trace`.

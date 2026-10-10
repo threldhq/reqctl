@@ -19,6 +19,11 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  gyyeey: e9w0bMq1ivjjjh3rxguHnG6XTPGtDkyvmju_Dy08bt8
+  l43smi: r5hjcwWBA_ctpmztnwS7NTohOa8EqmsDj87LMO75u34
+  ncqjfp: Q0L7Si4QAw9i5nwn-mRuNz9FXoewTcel9A9b60KB6wM
+  os2qmc: s7bpnCeDPgpi3IjklMqqK3b2tXJz6uF1FK1ZPNym808
 priority: medium
 relations:
   REQ-57781505: depends_on

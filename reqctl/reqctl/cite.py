@@ -17,6 +17,7 @@ from .corpus import ReqctlError
 OPEN, CLOSE, SINGLE = "+", "-", ">"
 EVERY = object()
 SIGN = re.compile(r"@req([+>-])(?=\s|$)")
+TIGHT = re.compile(r"@req[+>-](?=\S)")
 # @req> REQ-88203622@wlZ9orsr9c7q y644wh
 # @req> REQ-22755763@lFaaseccSg81 5upe6v
 MARKER = re.compile(
@@ -213,6 +214,11 @@ def _parse(sources, nests=True):
             faults.append((EVERY, f"{relative}: unreadable while scanning for "
                                   "statement citations"))
             continue
+        # @req> REQ-25428163@jtztw34heeVp wduaa4
+        faults += [(None, f"{relative}:{number}: a citation marker has no space "
+                          "after its sign; put one between the sign and what follows")
+                   for number, line in enumerate(_feed_lines(text), start=1)
+                   if TIGHT.search(line)]
         found = list(markers(text, Path(relative).suffix))
         if not found:
             continue
@@ -667,8 +673,9 @@ def compare(root, ref):
     commit = _git(root, "merge-base", "HEAD", ref).strip()
     was_texts = dict(_carried(root, commit))
     # @req> REQ-35805881@37XtC4gyD98k wge7e5
+    # @req> REQ-25428163@jtztw34heeVp xg323m
     now_texts = {relative: text for relative, text in _sources(root)
-                 if text is None or SIGN.search(text)}
+                 if text is None or SIGN.search(text) or TIGHT.search(text)}
     was, _ = parse(was_texts.items())
     now, problems = parse(now_texts.items())
     if problems:

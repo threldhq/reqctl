@@ -51,8 +51,13 @@ all. A proposal's criteria are a list of `given | when |
 then` strings, and its trace a list of passages quoted from the owner's words;
 a proposal carrying no criteria is left out of that map rather than written
 empty. `run.yaml` also holds `declined_practices`, the numbers of the review's
-practices the owner declined. `synthesis/review.py` writes the review's
-manifest, prompt and all, into `workflow/`, and the review agent writes
+practices the owner declined, and `answers`, keyed by proposal number and
+then by each question its verdict raises, exactly as the verdict words it: the
+owner's answer as `owner: ANSWER`, or what settled it as `corpus: [{uid: UID,
+clause: QUOTE}]`, each clause quoted from the item it names. `plan.py
+describe` refuses a question recorded neither way. `synthesis/review.py`
+writes the review's manifest, prompt and all, into `workflow/`, and the
+review agent writes
 `review.json`. `synthesis/plan.py` writes the rest
 -- `export.md`, `shards/`, `dictionary.md`, `prompts/`, `build.json`,
 `workflow/` -- and the agents fill `returns/`, which the scripts read into

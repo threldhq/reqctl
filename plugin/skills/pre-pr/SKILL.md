@@ -44,6 +44,14 @@ owing a citation that no statement governs stops the pass; ask the owner to
 create one.
 <!-- @req- tzrban -->
 
+<!-- @req+ REQ-22625894@pLUy8k7jMwKk wpzdfm -->
+Cover the code that decides a clause or acceptance criterion of the item
+cited, or, for a parameter, a data item or one of its entries, the code stating
+its value -- where a data item's entries are stated in one place and read in
+another, the place stating them. Leave uncited a helper the deciding code calls,
+and code incidental to every clause.
+<!-- @req- wpzdfm -->
+
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->
 `python .github/verify.py`, where the repository carries it: it reads every
 step of the `check` job from `.github/workflows/ci.yml` and runs the ones CI
