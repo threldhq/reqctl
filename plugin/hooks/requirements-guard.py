@@ -565,6 +565,8 @@ def refuse_destructive_push(said):
     if subcommand != "push":
         return
     for word in [alt for spelled in rest for alt in bounded(braced(spelled))]:
+        if expands(word):
+            deny(UNREADABLE)
         name = word.split("=", 1)[0]
         if ((len(name) > 2 and name.startswith("--")
              and any(flag.startswith(name) for flag in PUSH_LONG_DESTRUCTIVE))
@@ -651,6 +653,7 @@ def discarded(subcommand, rest, place):
             not word.startswith("--") and word.find("e") == len(word) - 1
             or len(word) > 2 and "--exclude".startswith(word))
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
+    unread = any("$" in word or "`" in word or word.startswith("~") for word in operands)
     if subcommand == "reset":
         return (WHOLE_TREE, False, False) if "--hard" in flags else (None, False, False)
     if subcommand == "clean":
@@ -658,11 +661,11 @@ def discarded(subcommand, rest, place):
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (operands or WHOLE_TREE), True, ignored
+        return (WHOLE_TREE if unread else operands), True, ignored
     if subcommand == "restore":
         if "--staged" in flags and "--worktree" not in flags:
             return None, False, False
-        return (operands or WHOLE_TREE), False, False
+        return (WHOLE_TREE if unread else operands), False, False
     if separated and subcommand == "checkout":
         return after, False, False
     if forced or "." in operands:
