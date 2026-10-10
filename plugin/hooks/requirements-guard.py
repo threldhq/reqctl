@@ -117,6 +117,12 @@ GIT_READ = re.compile(
 HEREDOC = re.compile(r"(?<![<\\])(?:\\\\)*<<(?!<)-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
+COMPOUND = re.compile(
+    r"\s*(?:(?:if|then|elif|else|while|until|do|time(?:\s+-p)?|coproc(?:\s+\w+(?=\s*[({]))?)"
+    r"(?=[\s(]|$)|[!{](?=\s|$)|(?:for|select)\s+\w+|case\s+\S+\s+in(?=\s|$)"
+    r"|(?:function\s+)?[^\s()]+\s*\(\s*\)|function\s+\S+|\(?[^\s()]*\))")
+CASE = re.compile(r"(?<![^\s;&|(])(?:case(?=\s+\S+\s+in(?![^\s;&|)]))|esac(?![^\s;&|)]))")
+QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re.S)}
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
 PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
                          "--mirror", "--delete", "--prune")
@@ -282,15 +288,16 @@ def deny(reason: str) -> None:
 
 
 def scan(cmd: str, joins=None) -> list[list[str]]:
-    commands, pipeline, buf = [], [], []
+    commands, pipeline, buf, held, bodies, nest = [], [], [], [], [], []
     joins = [] if joins is None else joins
     quote = None
     lines = cmd.split("\n")
     row = 0
 
     def cut_segment():
-        pipeline.append("".join(buf))
-        buf.clear()
+        pipeline.append("".join(held + buf + bodies))
+        for chunks in (held, buf, bodies):
+            chunks.clear()
 
     def cut_command(join=";"):
         cut_segment()
@@ -323,6 +330,14 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 continue
             if char == "#" and (not buf or buf[-1] in " \t("):
                 break
+            if char == "`" and nest[-1:] == ["`"] or char == ")" and nest[-1:] == ["("]:
+                nest.pop()
+            elif char in "(`":
+                nest.append(char)
+            if nest or char in "()`":
+                buf.append(char)
+                i += 1
+                continue
             if char == "|" and line[i:i + 2] != "||":
                 cut_segment()
                 i += 1
@@ -350,10 +365,14 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             while row < len(lines) and lines[row].strip() != opened.group(2):
                 body.append(lines[row])
                 row += 1
-            buf.append("\n" + "\n".join(body))
-        cut_command()
+            bodies.append("\n" + "\n".join(body))
+        if nest:
+            held.append(joined + ";")
+            buf.clear()
+        else:
+            cut_command()
         row += 1
-    if buf or pipeline:
+    if buf or pipeline or held:
         cut_command()
     return commands
 
@@ -392,6 +411,68 @@ def masked(cmd):
 def heading(part):
     cut = masked(part).find("\n")
     return part if cut < 0 else part[:cut]
+
+
+def bare(said):
+    while found := COMPOUND.match(masked(said)):
+        said = said[found.end():]
+    return said
+
+
+def groups(text, opened=()):
+    found, stack, pending, start, depth, i = [], list(opened), [], 0, 0, 0
+    while i < len(text):
+        char, top, step, size = text[i], (stack or [""])[-1], 1, len(stack)
+        if char == "\\":
+            step = 2
+        elif top in ('"', "<<"):
+            if char == top:
+                stack.pop()
+            elif char == "`" or text.startswith("$(", i):
+                step = 1 + (char == "$")
+                stack.append(text[i + step - 1])
+        elif char == "\n" and pending:
+            for delimiter, literal in pending:
+                end = re.compile(rf"\n[ \t]*{re.escape(delimiter)}[ \t]*$", re.M).search(text, i)
+                if not literal and not depth:
+                    found += groups(text[i + 1:end.start() if end else len(text)], ["<<"])
+                i = end.end() if end else len(text)
+            pending.clear()
+            continue
+        elif char == "'":
+            closing = QUOTED_TO[opened_quote(char, text[:i])].match(text, i + 1)
+            step = (closing.end() if closing else len(text)) - i
+        elif char == '"':
+            stack.append(char)
+        elif char == "`" and top == "`" or char == ")" and top == "(":
+            stack.pop()
+        elif char in "(`":
+            stack.append(char)
+        elif keyword := CASE.match(text, i):
+            if keyword[0] == "case":
+                stack.append("case")
+            elif top == "case":
+                stack.pop()
+            step = 4
+        elif heredoc := HEREDOC.match(text, i):
+            pending.append((heredoc[2], bool(heredoc[1])))
+            step = heredoc.end() - i
+        if len(stack) > size and stack[-1] in "(`":
+            depth += 1
+            start = i + step if depth == 1 else start
+        elif len(stack) < size and top in "(`":
+            depth -= 1
+            if not depth:
+                found.append(text[start:i])
+        i += step
+    if depth:
+        found.append(text[start:])
+    return found
+
+
+def nested(part):
+    command = bare(part)
+    return [command, *groups(part[:len(part) - len(command)])] if command != part else groups(part)
 
 
 def tokens_of(part):
@@ -973,6 +1054,11 @@ def judge_shell(raw, cwd):
                     and not SINK_WRITES.search(part)):
                 continue
             deny(NOT_A_KNOWN_READ.format(target=heading(part).strip()))
+    for pipeline, heres in zip(pipelines, places):
+        for part, here in itertools.product(pipeline, heres):
+            for script in nested(part):
+                left()
+                judge_shell(script, here)
     # @req- ak47k7
 
 
@@ -989,7 +1075,10 @@ def cwds(pipelines, joins, cwd):
 
 
 def moved(pipeline, heres, certain):
-    called = invoked(tokens_of(heading(pipeline[0]))) if len(pipeline) == 1 else []
+    said = heading(pipeline[0])
+    command = bare(said)
+    certain = certain and command == said
+    called = invoked(tokens_of(command)) if len(pipeline) == 1 else []
     if called[:1] == ["eval"]:
         called = invoked(tokens_of(" ".join(called[1:])))
     if called[:1] != ["cd"]:
