@@ -47,8 +47,8 @@ def checked(path):
     found_faults = []
     for where, block in enumerate(paragraphs(text), 1):
         found = SET.search(block)
-        # @req> GUARD-56877438@R8tS_bbVly0h apchiy
         if not found:
+            # @req> GUARD-56877438@R8tS_bbVly0h sekx6w
             if LOOSE.search(block):
                 found_faults.append(
                     f"{path}: paragraph {where} shows a --value example this "
