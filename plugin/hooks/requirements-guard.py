@@ -653,7 +653,6 @@ def discarded(subcommand, rest, place):
             not word.startswith("--") and word.find("e") == len(word) - 1
             or len(word) > 2 and "--exclude".startswith(word))
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
-    unread = any("$" in word or "`" in word or word.startswith("~") for word in operands)
     if subcommand == "reset":
         return (WHOLE_TREE, False, False) if "--hard" in flags else (None, False, False)
     if subcommand == "clean":
@@ -661,11 +660,11 @@ def discarded(subcommand, rest, place):
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (WHOLE_TREE if unread else operands), True, ignored
+        return (operands if after else WHOLE_TREE), True, ignored
     if subcommand == "restore":
         if "--staged" in flags and "--worktree" not in flags:
             return None, False, False
-        return (WHOLE_TREE if unread else operands), False, False
+        return (operands or WHOLE_TREE), False, False
     if separated and subcommand == "checkout":
         return after, False, False
     if forced or "." in operands:
@@ -688,8 +687,11 @@ def refuse_discarding_work(words, here):
     rest = [alt for word in rest for alt in bounded(braced(word))]
     if any(map(expands, rest)):
         deny(UNREADABLE)
-    readings = [reading for reading in (discarded(subcommand, said, place)
-                                        for said in ([rest, written] if written != rest else [rest]))
+    sayings = [rest, written] if written != rest else [rest]
+    if subcommand in ("clean", "restore"):
+        sayings += [[word for word in said[:said.index("--")] if word.startswith("-")]
+                    + said[said.index("--"):] for said in sayings if "--" in said[:-1]]
+    readings = [reading for reading in (discarded(subcommand, said, place) for said in sayings)
                 if reading[0] is not None]
     if not readings:
         return
