@@ -1454,7 +1454,7 @@ def describe(run):
     ledger, answers = answered(run, proposals(run))
     # @req> REQ-52114263@JmvDYpVGNRJQ dbzebu
     records = {uid: [record.get(field) for field in STATING]
-               for uid, record in loaded()[1].items()
+               for uid, record in glossary().items()
                if record.get("status") == "approved"}
     for number, spec in sorted(state_held["proposals"].items(),
                                key=lambda pair: int(pair[0])):

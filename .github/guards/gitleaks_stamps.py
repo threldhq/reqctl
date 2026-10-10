@@ -40,7 +40,7 @@ def everywhere(config):
 
 def stamping(held):
     regexes = held.get("regexes") or []
-    return (not regexes or held.get("regexTarget", "secret") != "secret"
+    return (not regexes or held.get("regextarget", "secret") != "secret"
             or bool(held.get("stopwords") or held.get("commits"))
             or (held.get("condition") != "AND" and bool(held.get("paths")))
             or any(re.search(one, stamp) for one in regexes for stamp in stamps()))
@@ -167,7 +167,7 @@ def named_faults(config):
                 "what reqctl mints"]
     found = []
     # @req+ REQ-91184727@qgpF6mhsmj-W fllahn
-    if held.get("regexTarget") != "secret":
+    if held.get("regextarget") != "secret":
         found.append(
             f"{CONFIG}: the {RULE} uid allowlist states regexTarget "
             f"{held.get('regexTarget')!r}. The shape below describes the value "
@@ -199,6 +199,14 @@ def named_faults(config):
     return found
 
 
+def lowered(node):
+    if isinstance(node, dict):
+        return {str(key).lower(): lowered(value) for key, value in node.items()}
+    if isinstance(node, list):
+        return [lowered(one) for one in node]
+    return node
+
+
 def faults(config):
     admits = admitting(config, stamps()[0])
     if len(admits) != 1:
@@ -222,7 +230,7 @@ def faults(config):
             "admits every secret in the corpus whatever its shape; state "
             "condition = \"AND\"")
     # @req> REQ-90593907@77_4Pvs9T0Oa ugruo2
-    if held.get("regexTarget") != "secret":
+    if held.get("regextarget") != "secret":
         found.append(
             f"{CONFIG}: the {RULE} allowlist states regexTarget "
             f"{held.get('regexTarget')!r}. The shape below describes the "
@@ -231,11 +239,11 @@ def faults(config):
             "scan; state regexTarget = \"secret\"")
     scope = [re.compile(one) for one in held.get("paths") or []]
     # @req+ REQ-14101215@QDD9quPR25YJ pzazjf
-    if (config.get("extend") or {}).get("path"):
+    if {"path", "url"} & set(config.get("extend") or {}):
         found.append(
-            f"{CONFIG}: [extend] path names allowlists this check does not "
-            "read; state them here")
-    if RULE in ((config.get("extend") or {}).get("disabledRules") or []) or any(
+            f"{CONFIG}: [extend] path or url names allowlists this check does "
+            "not read; state them here")
+    if RULE in ((config.get("extend") or {}).get("disabledrules") or []) or any(
             rule.get("id") == RULE and set(rule) - {"id", "allowlist", "allowlists"}
             for rule in config.get("rules") or []):
         found.append(
@@ -301,7 +309,7 @@ def main():
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("error", FutureWarning)
-            found = faults(config)
+            found = faults(lowered(config))
     except (re.error, FutureWarning) as broken:
         print(f"::error::{CONFIG}: a regex does not read as gitleaks reads it: "
               f"{broken}; state it in syntax Go and Python read alike")
