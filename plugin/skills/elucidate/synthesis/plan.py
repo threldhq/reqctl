@@ -1197,7 +1197,7 @@ def floor(index, kind, statement, k):
     # @req- f4rqof
 
 
-def stated_items(state_held, text, names, named):
+def stated_items(state_held, text, names, named, records):
     lines = []
     for uid in names:
         reasons = "".join(f"  recall said {line}\n" for line in named.get(uid, []))
@@ -1206,7 +1206,8 @@ def stated_items(state_held, text, names, named):
             other = state_held["proposals"][found.group(1)]
             lines.append(f"{uid}: {other['statement']}\n{reasons}\n")
         else:
-            lines.append(text[uid] + reasons + "\n")
+            # @req> REQ-25760910@NuKZbKvPwbuM f35vgn
+            lines.append(trimmed(uid, text[uid], names, records) + reasons + "\n")
     return "".join(lines)
 
 
@@ -1221,14 +1222,14 @@ def binding_text(spec):
 
 
 def judge_prompt(run, number, spec, names, named, state_held, text,
-                 dictionary_text):
+                 dictionary_text, records):
     out = run / "returns" / "judge" / f"{number}.json"
-    # @req> REQ-30631052@xqJkQgCU4pW_ jyes6a
+    # @req> REQ-30631052@IFJ5WPh_dCD4 jyes6a
     return JUDGE.format(
         number=number, statement=spec["statement"], binding=binding_text(spec),
         decide=DECIDE, write=written(out, shapes.JUDGE),
         dictionary=DICTIONARY.format(dictionary=dictionary_text),
-        items=stated_items(state_held, text, names, named)
+        items=stated_items(state_held, text, names, named, records)
         or "(nothing was named for this proposal)\n")
 
 
@@ -1241,13 +1242,13 @@ def grouped(names, bound_at, group):
 
 
 def group_prompt(run, number, spec, at, names, named, state_held, text,
-                 dictionary_text):
+                 dictionary_text, records):
     out = run / "returns" / "judge" / f"{number}-g{at}.json"
     return GROUP.format(
         number=number, statement=spec["statement"], binding=binding_text(spec),
         group=at, write=written(out, shapes.GROUP),
         dictionary=DICTIONARY.format(dictionary=dictionary_text),
-        items=stated_items(state_held, text, names, named))
+        items=stated_items(state_held, text, names, named, records))
 
 
 def judge(run):
@@ -1315,7 +1316,7 @@ def judge(run):
         if groups is None:
             prompts[f"{number}"] = judge_prompt(
                 run, number, spec, names, named[number], state_held, text,
-                dictionary_text)
+                dictionary_text, records)
             state_held["judge"][number] = {"groups": None}
             spawned.append(spawn(run, "judge", number, f"judge:{number}",
                                  shapes.JUDGE, judging))
@@ -1324,7 +1325,7 @@ def judge(run):
         for at, group in enumerate(groups, 1):
             prompts[f"{number}-g{at}"] = group_prompt(
                 run, number, spec, at, group, named[number], state_held,
-                text, dictionary_text)
+                text, dictionary_text, records)
             spawned.append(spawn(run, "judge", f"{number}-g{at}",
                                  f"group:{number}-g{at}", shapes.GROUP,
                                  judging))
