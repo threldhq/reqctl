@@ -68,6 +68,7 @@ def schema_problems(root, uid, data):
         raise
     except corpus.ReqctlError as absent:
         return [f"{uid}: {absent}"]
+    # @req+ REQ-33359142@u8vbxFMjrV6Z p3hzqn
     validator = Draft202012Validator(declared)
     problems = []
     for error in sorted(validator.iter_errors(data), key=str):
@@ -79,6 +80,7 @@ def schema_problems(root, uid, data):
             said = ("does not apply to a data item" if kind == "data"
                     else f"does not apply to a {kind}")
         problems.append(f"{uid}: schema: {where}: {said}")
+    # @req- p3hzqn
     # @req> REQ-35443917@I_xqd07AsRI5 znhrrb
     if data.get("verification") == "automated_test" and not any(
             problem.startswith(f"{uid}: schema: verification:")
