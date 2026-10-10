@@ -697,6 +697,10 @@ def settling(path, number, question, held, records):
     owner, evidence = held.get("owner"), held.get("corpus")
     if isinstance(owner, str) and owner.strip():
         return f"the owner answered: {_coverage.spoken(owner)}"
+    if owner is not None and not isinstance(owner, str):
+        raise SystemExit(
+            f"{path}: proposal {number}'s answer to {question!r} reads as "
+            f"{owner!r}, not as the owner's words; quote what they said")
     if isinstance(evidence, list) and evidence and all(
             isinstance(one, dict) and isinstance(one.get("clause"), str)
             and one["clause"].strip() and str(one.get("uid")) in records
