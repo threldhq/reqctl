@@ -163,6 +163,9 @@ jobs:
       - name: A skill mints what the corpus accepts
         run: python .github/guards/skill_minting.py
 
+      - name: Every plugin file belongs to one component
+        run: python .github/guards/plugin_components.py
+
       - name: Citations this change touches
         if: github.event_name == 'pull_request'
         env:
