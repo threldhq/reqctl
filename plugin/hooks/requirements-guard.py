@@ -662,7 +662,7 @@ def discarded(subcommand, rest, place):
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
         return (operands if after else WHOLE_TREE), True, ignored
     if subcommand == "restore":
-        if "--staged" in flags and "--worktree" not in flags:
+        if "--staged" in flags and "--worktree" not in flags and not short_flagged(flags, "W"):
             return None, False, False
         return (operands or WHOLE_TREE), False, False
     if separated and subcommand == "checkout":
