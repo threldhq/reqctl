@@ -9,7 +9,7 @@ acceptance_criteria:
   then: one judge prompt holds all thirty
   when: the judge prompts are built
 assessed:
-  REQ-30631052: xqJkQgCU4pW_mDKnN6Qgjkkg6YYSS5et_YyN8rWVZU4
+  REQ-30631052: IFJ5WPh_dCD4cpqrKvq5nMGkFgQgp59riv09LHTz3eE
   challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
   challenge_bounds.judge_bound: ni9-rsNTxX7VX-l0ppypNi6vJCMo-_gs7n-tOTGzt0E
   challenge_bounds.judge_group: nD0EsAucDRzcpCa1a06FHhVi_KP3k6l_lwgjVM0hcOU

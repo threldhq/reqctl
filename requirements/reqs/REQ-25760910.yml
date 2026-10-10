@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a judge prompt stating a requirement that relates to a requirement the prompt
+    does not state
+  then: the block does not list that requirement
+  when: the judge prompt is built
+- given: a judge prompt stating a term that a requirement outside the prompt references
+  then: the block does not list that requirement
+  when: the judge prompt is built
+- given: a judge prompt stating two requirements, one relating to the other
+  then: the block of the one lists the other
+  when: the judge prompt is built
+assessed:
+  REQ-30631052: IFJ5WPh_dCD4cpqrKvq5nMGkFgQgp59riv09LHTz3eE
+  REQ-62710822: DZLgFus7Dgs-Q8gFosJyoTNjgFfwKtYltTX3_10J5eE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-30631052: constrains
+  REQ-62710822: derives_from
+status: approved
+text: When a judge prompt states an [item](item)'s block, the product shall list under
+  the [item](item) only the other [items](item) that prompt states.
+type: functional
+verification: inspection

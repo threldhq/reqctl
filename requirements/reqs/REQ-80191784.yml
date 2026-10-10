@@ -8,7 +8,7 @@ acceptance_criteria:
   then: the prompt states that obligation once
   when: the judge prompt is built
 assessed:
-  REQ-30631052: xqJkQgCU4pW_mDKnN6Qgjkkg6YYSS5et_YyN8rWVZU4
+  REQ-30631052: IFJ5WPh_dCD4cpqrKvq5nMGkFgQgp59riv09LHTz3eE
   challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
   challenge_bounds.floor_k: Ykob_B-HWSpiX7y09k71N3K-KwUDMOHj_hBiauYxPr4
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
