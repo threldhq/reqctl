@@ -6,7 +6,7 @@ acceptance_criteria:
   then: the report states the [items](item) named for it and no group
   when: the judge prompts are built
 assessed:
-  REQ-30631052: xqJkQgCU4pW_mDKnN6Qgjkkg6YYSS5et_YyN8rWVZU4
+  REQ-30631052: IFJ5WPh_dCD4cpqrKvq5nMGkFgQgp59riv09LHTz3eE
   REQ-48762557: jm9fn2mpwhmlR3rOqfNUCUB2pspY7Gy1WkktVhDxj1k
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
