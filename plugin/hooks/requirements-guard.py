@@ -1007,15 +1007,19 @@ def judge_command(said, here, stdin=()):
             refuse_destructive_push(word)
     refuse_commit_on_default(words, here)
     refuse_discarding_work(words, here)
-    for script in scripts_within(words, here, stdin):
-        judge_shell(script, here)
+    for script in scripts_within(words, here):
+        judge_shell(script, here, stdin)
+    if plain in SHELLS and not short_flagged(itertools.takewhile(
+            lambda word: word != "--" and word.startswith(("-", "+")), operands), "c"):
+        for script in stdin:
+            judge_shell(script, here)
 
 
-def scripts_within(words, here, stdin=()):
+def scripts_within(words, here):
     tool, *rest = invoked(words) or [""]
     if tool in SHELLS:
         at = next((i for i, word in enumerate(rest) if short_flagged([word], "c")), None)
-        return [*stdin] if at is None else [word for word in rest[at + 1:] if not word.startswith("-")]
+        return [] if at is None else [word for word in rest[at + 1:] if not word.startswith("-")]
     if tool == "eval":
         return [" ".join(rest)]
     if tool == "find":
@@ -1197,11 +1201,11 @@ def judge_shell(raw, cwd, stdin=()):
 
 
 def piped(stdin, pipeline, at):
-    return (*stdin, *(text for part in pipeline[:at + 1] for text in written(part)))
+    return (*stdin, *(text for part in pipeline[:at + 1] for text in feeds(part)))
 
 
 @functools.cache
-def written(part):
+def feeds(part):
     said = heading(part)
     words, bare = tokens_of(said), tokens_of(masked(said))
     echoed = invoked(argv(said[COMPOUND.match(masked(said)).end():])[0])
