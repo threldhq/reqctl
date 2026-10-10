@@ -47,6 +47,7 @@ def checked(path):
     found_faults = []
     for where, block in enumerate(paragraphs(text), 1):
         found = SET.search(block)
+        # @req> GUARD-56877438@R8tS_bbVly0h flsmtc
         if not found:
             if LOOSE.search(block):
                 found_faults.append(
@@ -56,6 +57,7 @@ def checked(path):
         members = [part.strip() for part in found.group(1).split(",")
                    if part.strip()]
         typed = TYPED.search(block)
+        # @req> GUARD-56877438@R8tS_bbVly0h rsjnff
         if not typed:
             found_faults.append(
                 f"{path}: paragraph {where} shows --value \"[{found.group(1)}]\" "
@@ -67,6 +69,7 @@ def checked(path):
             held = minted(root, f"{path.name} paragraph {where}",
                           "shown_set", typed.group(1), members)
             # @req+ GUARD-83168738@zhoOQpGgBd9R 7zat7y
+            # @req+ GUARD-56877438@R8tS_bbVly0h sj7jhs
             try:
                 mint_faults = taxonomy.faults(root)
             except SystemExit as broken:
@@ -74,6 +77,7 @@ def checked(path):
                     f"{path}: paragraph {where} shows values that do not "
                     f"mint readable YAML -- {broken}")
                 mint_faults = []
+            # @req- sj7jhs
             # @req- 7zat7y
             for fault in mint_faults:
                 found_faults.append(

@@ -27,6 +27,7 @@ def installs(text):
                 editable.append(rest[i + 1])
                 i += 2
             elif word.startswith("-"):
+                # @req> GUARD-93589588@yH4bykpGUeLb e3ju3h
                 if word.startswith("--") and word not in COSMETIC:
                     flags.append(word)
                 i += 1
@@ -49,6 +50,7 @@ def read(path):
 hook = installs(read(ROOT / ".claude" / "hooks" / "session-start.sh"))
 ci = installs(read(ROOT / ".github" / "workflows" / "ci.yml"))
 
+# @req+ GUARD-93589588@yH4bykpGUeLb zy5mbf
 if not hook or not ci:
     print(f"found {len(hook)} hook install(s) and {len(ci)} CI install(s); "
           "nothing left to compare means this check is broken, not passing")
@@ -58,4 +60,5 @@ if hook != ci:
     print(f"  hook: {hook}")
     print(f"  ci:   {ci}")
     sys.exit(1)
+# @req- zy5mbf
 sys.exit(0)

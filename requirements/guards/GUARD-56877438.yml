@@ -11,6 +11,10 @@ acceptance_criteria:
   then: the build refuses the change
   when: the build runs
 assessed: {}
+citations:
+  flsmtc: 9aXaQpF1mcBuRgUrXQWMtKqzLfuLZqWvEDLeE7GhHUg
+  rsjnff: AQL4LYyUuNgYqJdRJ_rJ4w4jdFOR_liNms5D1uTldIc
+  sj7jhs: Zg3dGpSKnSAociKhNaRiA9ahvcz1nzJpyzY7DvMhY0w
 relations: {}
 status: approved
 text: If a skill shows a --value example whose value type or members the build cannot
