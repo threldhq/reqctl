@@ -43,7 +43,15 @@ def stamping(held):
     return (not regexes or held.get("regextarget", "secret") != "secret"
             or bool(held.get("stopwords") or held.get("commits"))
             or (held.get("condition") != "AND" and bool(held.get("paths")))
-            or any(re.search(one, stamp) for one in regexes for stamp in stamps()))
+            or not all(apart(one) for one in regexes))
+
+
+def apart(pattern):
+    found = spellings(pattern)
+    width = len(stamps()[0])
+    return found is not None and not any(
+        len(spelled) == width and all(one & DIGEST for one in spelled)
+        for spelled in found)
 
 
 def admitting(config, sample):
