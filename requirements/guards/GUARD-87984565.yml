@@ -19,12 +19,17 @@ acceptance_criteria:
 - given: a plugin component path holding *, ? or [
   then: it reads those characters as written, never as a pattern
   when: the build reads which files it covers
+- given: a plugin component path
+  then: it reads the path relative to ${plugin_folders.root.path}
+  when: the build reads which files it covers
 assessed:
   GUARD-65225392: myxez9Yz6SOiTVlmcZCO291f_XgHcMR62MAguFsCQ68
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.*: YkgS8K09s2n0m6QYm0NGOh6sp8svTHdiU8dPugVun7Q
+  plugin_folders: 7ZGw3BF5dCnTaSKveldXgsywKdmz_V7rnnP6Vxf97OY
+  plugin_folders.root: eN5D4LXA4EmtVGaOyOOV7Bmt9EjUOJZ_skI4uWathwI
 relations:
   GUARD-65225392: depends_on
 status: approved
-text: If a file the Claude Code plugin holds belongs to none of the ${plugin_components},
+text: If a file tracked under ${plugin_folders.root.path} belongs to none of the ${plugin_components},
   or to more than one of them, then the build shall refuse the change.
