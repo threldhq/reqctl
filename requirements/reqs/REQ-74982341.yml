@@ -19,8 +19,8 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  cqinxo: VRMO1k6zadi81VqHrOFPE16nglB8-AEwenRQ2vtjU_0
-  zm6qoo: Kj6IFkTcZCcEZVCHOxyQFZxIsqmzu5NwW7sbJot1aLQ
+  cqinxo: 3E_a4DcwzTh_2SzrpU6lXdCNTI-lXoHhI3q3Hd-JmWk
+  zm6qoo: hgzEvKWunHUDlKJvj-8Grxcow7gn5BtFdcHsOwwyw3M
 priority: medium
 relations:
   REQ-38288492: depends_on

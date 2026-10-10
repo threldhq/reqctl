@@ -132,8 +132,8 @@ CITATION_LINE = re.compile(r"^\s*(?:(?:#+|<!--|//)\s*)?@req[+>-](?:\s|$)")
 # @req+ REQ-51296881@8h-e1bOYkZtT etn3fq
 # @req+ REQ-67599992@TMfnHY-C4hOv jzjikg
 UNREADABLE = (
-    "The requirements guard could not read this tool call, so it cannot judge "
-    "it.\n"
+    "The requirements guard could not read {what}, so it cannot judge this "
+    "tool call.\n"
     "Denying rather than allowing: an unreadable call is the one case where the "
     "guard knows it is blind, and a blind guard that waves the call through is "
     "no guard. Tell the owner if this repeats."
@@ -157,7 +157,8 @@ DIRECT_READ = (
 )
 
 BLIND_GIT = (
-    "The guard could not read the repository, so it cannot judge this call.\n"
+    "The guard could not read the repository at {where}, so it cannot judge "
+    "this call.\n"
     "Denying rather than allowing, as with any call it cannot read. Tell the "
     "owner if this repeats."
 )
@@ -245,8 +246,8 @@ def named_paths(value, keys=PATH_KEY, key=""):
     if isinstance(value, list):
         return [found for v in value for found in named_paths(v, keys, key)]
     # @req> REQ-18701923@7CvKXOjSI6Kb pbu5yx
-    if keys.search(key):
-        deny(UNREADABLE)
+    if keys.search(key) and not isinstance(value, bool):
+        deny(UNREADABLE.format(what=f"the {key} field"))
     return []
 
 
@@ -577,7 +578,7 @@ def refuse_destructive_push(words):
 def left():
     remaining = DEADLINE - time.monotonic()
     if remaining <= 0:
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what="the call before its time limit"))
     return remaining
 
 
@@ -599,7 +600,8 @@ def git_reads(args, place):
 def git_sees(args, place):
     said = git_reads(args, place)
     if said is None:
-        deny(BLIND_GIT)
+        deny(BLIND_GIT.format(where=" ".join([place[0], *place[1]]) if place
+                              else "the place its git options name"))
     return said
 
 
@@ -680,16 +682,16 @@ def refuse_discarding_work(words, here):
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
     written = rest
-    rest = [alt for word in rest for alt in bounded(braced(word))]
+    rest = [alt for word in rest for alt in bounded(word)]
     if any(map(expands, rest)):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what="the braces of " + next(filter(expands, rest))))
     readings = [reading for reading in (discarded(subcommand, said, place)
                                         for said in ([rest, written] if written != rest else [rest]))
                 if reading[0] is not None]
     if not readings:
         return
     if any("{}" in word for word in rest):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what="the {} in " + next(w for w in rest if "{}" in w)))
     source = recursion(subcommand, rest, place)
     if source:
         top = git_sees(["rev-parse", "--show-cdup"], place).strip() or "."
@@ -721,9 +723,7 @@ def refuse_commit_on_default(words, here):
             in NO_COMMIT[subcommand]):
         return
     place = located(words, here)
-    branch = git_reads(["branch", "--show-current"], place)
-    if branch is None:
-        deny(BLIND_GIT)
+    branch = git_sees(["branch", "--show-current"], place)
     default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], place)
     if default is None:
         deny(NO_DEFAULT)
@@ -758,13 +758,13 @@ def judge_command(said, here):
     if any(expands(word) for word in unquoted[:len(words) - len(called) + 1]
            if not word.partition("=")[0].isidentifier()) or (
             (setter := any(map(SETTER.search, words)) or "printf" in words
-             and any(alt.startswith("-v") for word in words for alt in bounded(braced(word))))
+             and any(alt.startswith("-v") for word in words for alt in bounded(word)))
             or plain != "git") and any(
             any(name in alt for name in (*READ_ENV, "GIT_CONFIG"))
             for word in (words if setter else words[:len(words) - len(called)])
-            if setter or "=" in word for alt in bounded(braced(word))) or setter and any(
-            expands(alt) for word in unquoted for alt in bounded(braced(word))):
-        deny(UNREADABLE)
+            if setter or "=" in word for alt in bounded(word)) or setter and any(
+            expands(alt) for word in unquoted for alt in bounded(word)):
+        deny(UNREADABLE.format(what=f"which command or repository {said.strip()} reaches"))
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
     if plain == "rm" and any(
@@ -872,7 +872,7 @@ def matches(pattern):
 @functools.cache
 def listing(base):
     if listing.cache_info().currsize >= GLOB_LIMIT:
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what=f"a glob that lists more than {GLOB_LIMIT} folders"))
     try:
         return os.listdir(base)
     except OSError:
@@ -899,7 +899,7 @@ def reaches_corpus(word, cwd, root=False):
     paths = (os.path.normpath(os.path.join(cwd, alt))
              for value in {word, word.rpartition("=")[2]}
              if value and "$" not in value and "`" not in value
-             for alt in bounded(braced(os.path.expanduser(value))))
+             for alt in bounded(os.path.expanduser(value)))
     return any(os.path.isabs(path) and reached(path, root) for path in paths)
 
 
@@ -908,10 +908,10 @@ def expands(word):
     return "{" in bare and ("," in bare or ".." in bare)
 
 
-def bounded(alternatives):
-    found = list(itertools.islice(alternatives, 257))
+def bounded(word):
+    found = list(itertools.islice(braced(word), 257))
     if len(found) > 256:
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what=f"{word}, past 256 brace alternatives"))
     return found
 
 
@@ -982,7 +982,7 @@ def cwds(pipelines, joins, cwd):
         places.append(sorted(heres))
         heres = start if after == "&" else moved(pipeline, heres, certain)
         if len(heres) > CWD_LIMIT:
-            deny(UNREADABLE)
+            deny(UNREADABLE.format(what=f"where the command runs, past {CWD_LIMIT} folders"))
     return places
 
 
@@ -1012,14 +1012,15 @@ def edited(tool, args, cwd):
     try:
         before = target.read_bytes().decode().replace("\r\n", "\n") if target.is_file() else ""
     except (OSError, UnicodeError):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what=f"the file {target}"))
     if tool == "Write":
         return before, args.get("content", "")
     after = before
     for edit in args.get("edits") if tool == "MultiEdit" else [args]:
         old, new = edit.get("old_string", ""), edit.get("new_string", "")
         if not isinstance(old, str) or not isinstance(new, str):
-            deny(UNREADABLE)
+            deny(UNREADABLE.format(what="the new_string field" if isinstance(old, str)
+                                   else "the old_string field"))
         if old and old not in after and any(
                 CITATION_LINE.match(line) for text in (after, new) for line in text.split("\n")):
             deny(INEXACT)
@@ -1035,9 +1036,10 @@ def notebook_edited(args, cwd):
     try:
         cells = json.loads(target.read_bytes()).get("cells") if target.is_file() else []
     except (OSError, ValueError, AttributeError):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what=f"the notebook {target}"))
     if not isinstance(new, str) or not isinstance(cells, list):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what=f"the cells of {target}" if isinstance(new, str)
+                               else "the new_source field"))
     index = re.fullmatch(r"cell-(\d+)", str(args.get("cell_id")))
     held = next((cell for cell in cells if isinstance(cell, dict)
                  and cell.get("id") == args.get("cell_id")), None)
@@ -1046,7 +1048,7 @@ def notebook_edited(args, cwd):
     if mode == "insert":
         held = {}
     if not isinstance(held, dict):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what=f"cell {args.get('cell_id')} of {target}"))
     source = held.get("source", "")
     before = "".join(map(str, source)) if isinstance(source, list) else str(source)
     return before, "" if mode == "delete" else new
@@ -1061,7 +1063,7 @@ def judge_citation_edit(tool, args, cwd):
     else:
         return
     if not isinstance(after, str):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what="the content field"))
     if citations(before) != citations(after):
         deny(f"{HAND_CITATION}\nIn {args.get('file_path') or args.get('notebook_path')}.")
 
@@ -1096,10 +1098,10 @@ def decide(data: dict) -> None:
     if args is None:
         args = {}
     if not isinstance(args, dict):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what="the tool input, which is not an object"))
     for key in ("file_path", "notebook_path", "command"):
         if args.get(key) is not None and not isinstance(args[key], str):
-            deny(UNREADABLE)
+            deny(UNREADABLE.format(what=f"the {key} field"))
     # @req- hyuozw
     cwd = data.get("cwd")
     if not isinstance(cwd, str) or not cwd:
@@ -1143,15 +1145,15 @@ def main() -> None:
     try:
         data = json.load(sys.stdin)
     except Exception:
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what="the hook input, which is not JSON"))
     if not isinstance(data, dict):
-        deny(UNREADABLE)
+        deny(UNREADABLE.format(what="the hook input, which is not a JSON object"))
     # @req- mvehq6
     # @req+ REQ-51060455@DPy54WGr0ngb 4gmqti
     try:
         decide(data)
-    except Exception:
-        deny(UNREADABLE)
+    except Exception as error:
+        deny(UNREADABLE.format(what=f"the call: judging it raised {type(error).__name__}"))
     sys.exit(0)
     # @req- 4gmqti
 
