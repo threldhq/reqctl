@@ -43,7 +43,7 @@ COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{},]*,[^{}]*)\}")
-SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
+SEQUENCE = re.compile(r"\{(?=[^{}]*\})[^{}]*\.\.[^{}]*\}")
 SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|getopts"
                     r"|let)$|\$\{\w+(\[[^]]*\])?:?=")
 UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
@@ -563,7 +563,7 @@ def refuse_destructive_push(words):
     subcommand, rest = git_subcommand(words)
     if subcommand != "push":
         return
-    for word in rest:
+    for word in [alt for spelled in rest for alt in bounded(braced(spelled))]:
         name = word.split("=", 1)[0]
         if ((len(name) > 2 and name.startswith("--")
              and any(flag.startswith(name) for flag in PUSH_LONG_DESTRUCTIVE))
@@ -639,11 +639,13 @@ def discarded(subcommand, rest, place):
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
     before = rest[:rest.index("--")] if separated else rest
-    flags, valued = [], False
+    flags, named, valued = [], [], False
     for word in before:
         if not valued and word.startswith("-"):
             flags.append(next((full for full in LONG_FLAGS if len(word) > 2
                                and full.startswith(word.split("=", 1)[0])), word))
+        elif not valued:
+            named.append(word)
         valued = not valued and word.startswith("-") and (
             not word.startswith("--") and word.find("e") == len(word) - 1
             or len(word) > 2 and "--exclude".startswith(word))
@@ -656,12 +658,12 @@ def discarded(subcommand, rest, place):
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (after or WHOLE_TREE), True, ignored
+        return ([*named, *after] or WHOLE_TREE), True, ignored
     if subcommand == "restore":
         if "--staged" in flags and "--worktree" not in flags:
             return None, False, False
-        return (after or operands or WHOLE_TREE), False, False
-    if separated:
+        return ([*named, *after] or WHOLE_TREE), False, False
+    if separated and subcommand == "checkout":
         return after, False, False
     if forced or "." in operands:
         return WHOLE_TREE, False, False
