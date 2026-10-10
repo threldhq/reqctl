@@ -22,7 +22,7 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  4aiv2n: 1wq9jmk_2qVnx036Z6n0obkBKN_jLU-l457PYG3SDWs
+  4aiv2n: VtqIrqq7x5h_4EybaIsBcYsP2EaG7a7HJxhVZK7U8ds
 priority: medium
 relations:
   REQ-38288492: depends_on

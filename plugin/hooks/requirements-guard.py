@@ -43,7 +43,7 @@ COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{},]*,[^{}]*)\}")
-SEQUENCE = re.compile(r"\{(?=[^{}]*\})[^{}]*\.\.[^{}]*\}")
+SEQUENCE = re.compile(r"\{(?=[^{}]*\})[^{}]*\.\.")
 SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|getopts"
                     r"|let)$|\$\{\w+(\[[^]]*\])?:?=")
 UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
@@ -558,9 +558,10 @@ def names_citation(cmd):
     return False
 
 
-def refuse_destructive_push(words):
+@functools.cache
+def refuse_destructive_push(said):
     # @req+ REQ-60587913@a-D0sKfFEs62 4aiv2n
-    subcommand, rest = git_subcommand(words)
+    subcommand, rest = git_subcommand(tokens_of(said))
     if subcommand != "push":
         return
     for word in [alt for spelled in rest for alt in bounded(braced(spelled))]:
@@ -639,17 +640,16 @@ def discarded(subcommand, rest, place):
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
     before = rest[:rest.index("--")] if separated else rest
-    flags, named, valued = [], [], False
+    flags, operands, valued = [], [*after], False
     for word in before:
         if not valued and word.startswith("-"):
             flags.append(next((full for full in LONG_FLAGS if len(word) > 2
                                and full.startswith(word.split("=", 1)[0])), word))
         elif not valued:
-            named.append(word)
+            operands.append(word)
         valued = subcommand == "clean" and not valued and word.startswith("-") and (
             not word.startswith("--") and word.find("e") == len(word) - 1
             or len(word) > 2 and "--exclude".startswith(word))
-    operands = [word for word in rest if not word.startswith("-")]
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if subcommand == "reset":
         return (WHOLE_TREE, False, False) if "--hard" in flags else (None, False, False)
@@ -658,11 +658,11 @@ def discarded(subcommand, rest, place):
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
-        return ([*named, *after] or WHOLE_TREE), True, ignored
+        return (operands or WHOLE_TREE), True, ignored
     if subcommand == "restore":
         if "--staged" in flags and "--worktree" not in flags:
             return None, False, False
-        return ([*named, *after] or WHOLE_TREE), False, False
+        return (operands or WHOLE_TREE), False, False
     if separated and subcommand == "checkout":
         return after, False, False
     if forced or "." in operands:
@@ -740,7 +740,7 @@ BARE_SWEEP = (".", "..", "/", "~", "*")
 
 def judge_command(said, here):
     words, unquoted = tokens_of(said), tokens_of(masked(said))
-    refuse_destructive_push(words)
+    refuse_destructive_push(said)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
     if subcommand in ("apply", "am"):
@@ -791,7 +791,7 @@ def judge_command(said, here):
                  "corpus along with everything else. Name the paths to delete.")
     for word in words:
         if "git" in word and "push" in word and word not in ("git", "push"):
-            refuse_destructive_push(tokens_of(word))
+            refuse_destructive_push(word)
     refuse_commit_on_default(words, here)
     refuse_discarding_work(words, here)
     for script in scripts_within(words, here):
