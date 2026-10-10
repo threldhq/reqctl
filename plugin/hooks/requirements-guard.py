@@ -125,8 +125,8 @@ COMPOUND = re.compile(
     rf"|case\s+{_WORD}+\s+in(?!\S)|(?:function\s+)?[^\s()]+\s*\(\s*\)|function\s+\S+"
     rf"|\(?\s*{_WORD}*(?:\s*\|\s*{_WORD}*)*\s*\)))*")
 CASE = re.compile(rf"(?<![^\s;&|(])(?:case(?=\s+{_WORD}+[\s;]+in(?![^\s;&|)]))|esac(?![^\s;&|)]))")
-QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re.S)}
-DQUOTED = re.compile(r'(?:\\.|[^"\\])*"', re.S)
+QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re.S),
+             '"': re.compile(r'(?:\\.|[^"\\])*"', re.S)}
 TICKED = re.compile(r"(?:\\.|[^\\`])*`", re.S)
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
 PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
@@ -356,15 +356,14 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             if char == "#" and (not buf or buf[-1] in (" ", "\t", "(", ";", "&", "|", "$(")
                                 or closed == i - 1):
                 break
-            if (char == "<" and buf[-1:] != ["<"] and nest[-1:] not in (["(("], ["$["])
-                    and (heredoc := heredoc_at(line, i))):
+            if char == "<" and nest[-1:] not in (["(("], ["$["]) and (heredoc := heredoc_at(line, i)):
                 delimiter, _, dash, end = heredoc
                 bodies.append(slot := [])
                 pending.append((delimiter, dash, slot, sum(entry != "(" for entry in nest)))
                 buf.append(line[i:end])
                 i = end
                 continue
-            if char == ")" and nest[-1:] in (["("], ["(("], ["$("], ['"(']):
+            if char == ")" and nest[-1:] not in ([], ["$["]):
                 closed = i if nest[-1] == "(" else closed
                 quote = '"' if nest.pop() == '"(' else None
             elif char == "]" and nest[-1:] == ["$["]:
@@ -433,18 +432,18 @@ def heredoc_at(text, at):
         dollar = text[i] == "$" and text[i + 1:i + 2] in ("'", '"')
         char = text[i + dollar]
         if char == "\\":
-            word.append(text[i + 1:i + 2])
+            word.append(text[i + 1])
             quoted, i = True, i + 2
             continue
         if char not in "'\"":
             if char == "`" or text.startswith(("$(", "${"), i):
                 break
-            word.append(char)
-            i += 1
+            take = 1 + text.startswith("$$", i)
+            word.append(text[i:i + take])
+            i += take
             continue
-        shut = (DQUOTED if char == '"' else QUOTED_TO["$'" if dollar else "'"]).match(
-            text, i + dollar + 1)
-        held = shut[0][:-1] if shut else ""
+        shut = QUOTED_TO[opened_quote(char, "$" * dollar)].match(text, i + dollar + 1)
+        held = shut and shut[0][:-1]
         if not shut or char == "'" and dollar and "\\" in held or char == '"' and any(
                 mark in held for mark in ("$(", "${", "`")):
             break
@@ -452,7 +451,7 @@ def heredoc_at(text, at):
                     if char == '"' else held)
         quoted, i = True, shut.end()
     else:
-        return ("".join(word), quoted, found[1] == "-", i) if word or quoted else None
+        return ("".join(word), quoted, found[1] == "-", i) if word else None
     deny(UNREADABLE.format(what="the heredoc delimiter " + text[found.end():].partition("\n")[0]))
 
 
@@ -469,10 +468,7 @@ def end_of(text, at):
         elif char == "`" or text.startswith(("$(", "${"), i) or char == '"' != opener:
             i = end_of(text, i)
         elif char == "'" and opener != '"':
-            run = i
-            while run > at and text[run - 1] == "$":
-                run -= 1
-            found = QUOTED_TO["$'" if (i - run) % 2 else "'"].match(text, i + 1)
+            found = QUOTED_TO[opened_quote(char, text[at:i])].match(text, i + 1)
             i = found.end() if found else len(text)
         else:
             i += 1
@@ -563,7 +559,7 @@ def groups(text, opened=()):
             elif top == "case":
                 stack.pop()
             step = 4
-        elif char == "<" and last != "<" and (heredoc := heredoc_at(text, i)):
+        elif char == "<" and (heredoc := heredoc_at(text, i)):
             pending.append(heredoc[:3])
             step = heredoc[3] - i
         if len(stack) > size and stack[-1] == "(":
@@ -580,13 +576,10 @@ def groups(text, opened=()):
     return found
 
 
+@functools.cache
 def nested(part):
     at = COMPOUND.match(masked(part)).end()
-    if at:
-        return [part[at:], *groups(part[:at])]
-    said = heading(part)
-    return [script + part[len(said):] if script in said and HEREDOC.search(masked(script)) else script
-            for script in groups(part)]
+    return [part[at:], *groups(part[:at])] if at else groups(part)
 
 
 def tokens_of(part):
@@ -604,7 +597,7 @@ def tokens_of(part):
         if quote in (None, '"') and (char == "`" or part.startswith(("$(", "${"), i - 1)):
             end = end_of(part, i - 1)
             buf.append(part[i - 1:end])
-            i = end
+            i, dollars = end, 0
             continue
         if quote:
             if char == quote[-1]:
@@ -631,19 +624,18 @@ def tokens_of(part):
     return words + ["".join(buf)] if buf or seen else words
 
 
+@functools.cache
 def argv(said):
     words, bare = tokens_of(said), tokens_of(masked(said))
     if len(words) != len(bare):
         return words, bare
-    kept, target = [], False
-    for at, word in enumerate(bare):
-        if target:
-            target = False
-        elif REDIRECTION.match(word) and not word.startswith(("<(", ">(")):
-            target = REDIRECTION.fullmatch(word) is not None
-        else:
-            kept.append(at)
-    return [words[at] for at in kept], [bare[at] for at in kept]
+    kept, pairs = [], zip(words, bare)
+    for word, mask in pairs:
+        if not REDIRECTION.match(mask) or SUBSHELL.match(mask):
+            kept.append((word, mask))
+        elif REDIRECTION.fullmatch(mask):
+            next(pairs, None)
+    return [word for word, _ in kept], [mask for _, mask in kept]
 
 
 def invoked(words):
@@ -959,7 +951,7 @@ def refuse_commit_on_default(words, here):
 BARE_SWEEP = (".", "..", "/", "~", "*")
 
 
-def judge_command(said, here):
+def judge_command(said, here, stdin=()):
     words, unquoted = argv(said)
     refuse_destructive_push(said)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
@@ -1015,15 +1007,15 @@ def judge_command(said, here):
             refuse_destructive_push(word)
     refuse_commit_on_default(words, here)
     refuse_discarding_work(words, here)
-    for script in scripts_within(words, here):
+    for script in scripts_within(words, here, stdin):
         judge_shell(script, here)
 
 
-def scripts_within(words, here):
+def scripts_within(words, here, stdin=()):
     tool, *rest = invoked(words) or [""]
     if tool in SHELLS:
         at = next((i for i, word in enumerate(rest) if short_flagged([word], "c")), None)
-        return [] if at is None else [word for word in rest[at + 1:] if not word.startswith("-")]
+        return [*stdin] if at is None else [word for word in rest[at + 1:] if not word.startswith("-")]
     if tool == "eval":
         return [" ".join(rest)]
     if tool == "find":
@@ -1146,7 +1138,8 @@ def names_corpus(part, cwd):
                or reaches_corpus(word, cwd) for word in operands)
 
 
-def judge_shell(raw, cwd):
+@functools.cache
+def judge_shell(raw, cwd, stdin=()):
     # @req+ REQ-22704490@0I1yKEFWt0tX ak47k7
     cmd = flatten(ESCAPE.sub("", raw))
     joins = []
@@ -1167,14 +1160,14 @@ def judge_shell(raw, cwd):
     if list(map(len, written)) != list(map(len, pipelines)):
         running = running or heading(raw).strip()
     for pipeline, heres in zip(pipelines, places):
-        for part, here in itertools.product(pipeline, heres):
+        for (at, part), here in itertools.product(enumerate(pipeline), heres):
             left()
             invocation = heading(part)
             judge_command(part if any(
                 len(alternatives) > 256 or any(map(STDIN_ARGUMENTS.search, alternatives))
                 for word in tokens_of(invocation)
                 for alternatives in [list(itertools.islice(braced(word), 257))]) else invocation,
-                here)
+                here, piped(stdin, pipeline, at))
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
@@ -1196,84 +1189,58 @@ def judge_shell(raw, cwd):
                 continue
             deny(NOT_A_KNOWN_READ.format(target=heading(part).strip()))
     for pipeline, heres in zip(pipelines, places):
-        for part, here in itertools.product(pipeline, heres):
+        for (at, part), here in itertools.product(enumerate(pipeline), heres):
             for script in nested(part):
                 left()
-                judge_shell(script, here)
-    for pipeline, heres in zip(pipelines, places):
-        for here in heres:
-            for script, there in dict.fromkeys(fed(pipeline, here)):
-                left()
-                judge_shell(script, there)
+                judge_shell(script, here, piped(stdin, pipeline, at))
     # @req- ak47k7
 
 
-def reads_input(script):
-    return any((called := invoked(argv(part[COMPOUND.match(masked(part)).end():])[0]))[:1]
-               and called[0] in SHELLS
-               and not short_flagged(itertools.takewhile("--".__ne__, called[1:]), "c")
-               for pipeline in scan(script) for part in pipeline)
+def piped(stdin, pipeline, at):
+    return (*stdin, *(text for part in pipeline[:at + 1] for text in written(part)))
 
 
-def fed(pipeline, here):
-    for at, part in enumerate(pipeline):
-        said, bodies = heading(part), []
-        if reads_input(said):
-            bodies.append((part[len(said):], here))
-            words, bare = tokens_of(said), tokens_of(masked(said))
-            for word, mask, following in zip(words, bare, [*words[1:], ""]):
-                if (operator := mask.lstrip("0123456789")).startswith("<<<"):
-                    yield word[len(mask) - len(operator) + 3:] or following, here
-        inner = nested(said)
-        if at and any(map(reads_input, [said, *inner])):
-            folders = visited(inner, here)
-            for source in pipeline[:at]:
-                before = heading(source)
-                echoed = invoked(argv(before[COMPOUND.match(masked(before)).end():])[0])
-                for there in folders:
-                    bodies.append((source[len(before):], there))
-                    if echoed[:1] == ["echo"]:
-                        yield " ".join(itertools.dropwhile(ECHO_FLAGS.fullmatch, echoed[1:])), there
-        for body, there in bodies:
-            for script in dict.fromkeys((body, re.sub(r"\\([\\`$])", r"\1", body))):
-                yield script, there
-
-
-def visited(scripts, here):
-    found = {here}
-    for script in scripts:
-        joins = []
-        found.update(*cwds(scan(script, joins), joins, here))
-    return sorted(found)
+@functools.cache
+def written(part):
+    said = heading(part)
+    words, bare = tokens_of(said), tokens_of(masked(said))
+    echoed = invoked(argv(said[COMPOUND.match(masked(said)).end():])[0])
+    texts = [part[len(said):]]
+    if echoed[:1] == ["echo"]:
+        texts.append(" ".join(itertools.dropwhile(ECHO_FLAGS.fullmatch, echoed[1:])))
+    for word, mask, following in zip(words, bare, [*words[1:], ""]):
+        if (found := REDIRECTION.match(mask)) and found[0].endswith("<<<"):
+            texts.append(word[found.end():] or following)
+    return tuple(dict.fromkeys(alt for text in texts if text
+                               for alt in (text, re.sub(r"\\([\\`$])", r"\1", text))))
 
 
 def cwds(pipelines, joins, cwd):
-    places, heres, start, seen = [], {cwd}, {cwd}, {cwd}
+    places, heres, start = [], {cwd}, {cwd}
     for pipeline, before, after in zip(pipelines, [";", *joins], joins):
         certain = before not in ("&&", "||")
         start = heres if certain else start
         places.append(sorted(heres))
-        heres = start if after == "&" else moved(pipeline, heres, certain, seen)
-        seen |= heres
+        heres = start if after == "&" else moved(pipeline, heres, certain, places)
         if len(heres) > CWD_LIMIT:
             deny(UNREADABLE.format(what=f"where the command runs, past {CWD_LIMIT} folders"))
     return places
 
 
-def moved(pipeline, heres, certain, seen):
+def moved(pipeline, heres, certain, places):
     said = heading(pipeline[-1])
     at = COMPOUND.match(masked(said)).end()
     certain = certain and not at and len(pipeline) == 1
     called = invoked(argv(said[at:])[0])
     if called[:1] == ["eval"]:
-        called = invoked(tokens_of(" ".join(called[1:])))
+        called = invoked(argv(" ".join(called[1:]))[0])
     tool, *rest = called or [""]
+    if tool not in ("cd", "pushd", "popd"):
+        return heres
     folder = next((word for word in rest if word == "-" or not word.startswith(
         "-" if tool == "cd" else ("-", "+"))), "~" if tool == "cd" else None)
-    if tool == "popd" or tool == "pushd" and folder is None:
-        return heres | seen
-    if tool not in ("cd", "pushd"):
-        return heres
+    if tool == "popd" or folder is None:
+        return heres.union(*places)
     target = os.path.expanduser(folder)
     there = {os.path.normpath(joined) if os.path.isabs(joined) and target != "-"
              and "$" not in target and "`" not in target else ""
