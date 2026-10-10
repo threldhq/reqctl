@@ -164,7 +164,7 @@ def named_faults(config):
     if held.get("regextarget") != "secret":
         found.append(
             f"{CONFIG}: the {RULE} uid allowlist states regexTarget "
-            f"{held.get('regexTarget')!r}. The shape below describes the value "
+            f"{held.get('regextarget')!r}. The shape below describes the value "
             "gitleaks captured, not the line it sat on, and against a line it "
             "matches nothing at all; state regexTarget = \"secret\"")
     if held.get("paths"):
@@ -233,7 +233,7 @@ def faults(config):
     if held.get("regextarget") != "secret":
         found.append(
             f"{CONFIG}: the {RULE} allowlist states regexTarget "
-            f"{held.get('regexTarget')!r}. The shape below describes the "
+            f"{held.get('regextarget')!r}. The shape below describes the "
             "value gitleaks captured, not the line it sat on, and against a "
             "line it matches nothing at all -- so every real stamp fails the "
             "scan; state regexTarget = \"secret\"")
