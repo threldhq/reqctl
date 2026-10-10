@@ -15,6 +15,6 @@ assessed:
   plugin_manifest: OmwLAWC7-vkiBIx_2tAMdcr2LtgdTCtjDmYLpTcsJcM
 relations:
   GUARD-65225392: depends_on
-status: approved
+status: draft
 text: If the sources of the Claude Code plugin hold anything beyond the ${plugin_components}
   and the [plugin manifest](plugin_manifest), then the build shall refuse the change.
