@@ -79,6 +79,7 @@ def checked(path):
                 mint_faults = []
             # @req- ywumnj
             # @req- 7zat7y
+            # @req> GUARD-56877438@R8tS_bbVly0h 6g44ix
             for fault in mint_faults:
                 found_faults.append(
                     f"{path}: paragraph {where} mints what the corpus refuses "
