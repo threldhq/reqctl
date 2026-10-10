@@ -26,7 +26,7 @@ assessed:
   worktree_commands.*: EiAhLq9p9eimxUhOO9ezdNB_wt99GSc_rRj2fmIFYiY
 citations:
   pojxpe: viBzWNu-Dk0dqi8mf3SyCNk_RpCoJyRASeQaswVurEA
-  uivqls: vvPeIv6biuukkiAK2qBwy6pfvIbr5Ev8gTiRQdsNm7g
+  uivqls: 4D-CYHf5aRWBDrD9I1KApJsqC_ttz-R7Nrh5XSNYbNc
 priority: medium
 relations:
   REQ-38288492: depends_on

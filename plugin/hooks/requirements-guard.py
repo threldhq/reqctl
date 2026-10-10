@@ -43,7 +43,7 @@ COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{},]*,[^{}]*)\}")
-SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
+SEQUENCE = re.compile(r"\{(?=[^{}]*\})[^{}]*\.\.")
 SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|getopts"
                     r"|let)$|\$\{\w+(\[[^]]*\])?:?=")
 UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
@@ -555,12 +555,14 @@ def names_citation(cmd):
     return False
 
 
-def refuse_destructive_push(words):
+@functools.cache
+def refuse_destructive_push(said):
     # @req+ REQ-60587913@a-D0sKfFEs62 4aiv2n
-    subcommand, rest = git_subcommand(words)
+    subcommand, rest = git_subcommand(tokens_of(said))
     if subcommand != "push":
         return
-    for word in rest:
+    spelled_out, leftover = itertools.tee(alt for spelled in rest for alt in bounded(spelled))
+    for word in itertools.chain(rest, spelled_out):
         name = word.split("=", 1)[0]
         if ((len(name) > 2 and name.startswith("--")
              and any(flag.startswith(name) for flag in PUSH_LONG_DESTRUCTIVE))
@@ -568,6 +570,8 @@ def refuse_destructive_push(words):
                 or (len(word) > 1 and word[0] in "+:")):
             deny(f"Push with {word} blocked: it rewrites or deletes remote "
                  "history. Ask the owner if that is really wanted.")
+    if found := next(filter(expands, leftover), None):
+        deny(UNREADABLE.format(what="the braces of " + found))
     # @req- 4aiv2n
 
 
@@ -636,15 +640,16 @@ def discarded(subcommand, rest, place):
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
     before = rest[:rest.index("--")] if separated else rest
-    flags, valued = [], False
+    flags, operands, valued = [], [*after], False
     for word in before:
         if not valued and word.startswith("-"):
             flags.append(next((full for full in LONG_FLAGS if len(word) > 2
                                and full.startswith(word.split("=", 1)[0])), word))
-        valued = not valued and word.startswith("-") and (
+        elif not valued:
+            operands.append(word)
+        valued = subcommand == "clean" and not valued and word.startswith("-") and (
             not word.startswith("--") and word.find("e") == len(word) - 1
             or len(word) > 2 and "--exclude".startswith(word))
-    operands = [word for word in rest if not word.startswith("-")]
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if subcommand == "reset":
         return (WHOLE_TREE, False, False) if "--hard" in flags else (None, False, False)
@@ -653,12 +658,12 @@ def discarded(subcommand, rest, place):
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False
         ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (after or WHOLE_TREE), True, ignored
+        return (operands if after else WHOLE_TREE), True, ignored
     if subcommand == "restore":
-        if "--staged" in flags and "--worktree" not in flags:
+        if "--staged" in flags and "--worktree" not in flags and not short_flagged(flags, "W"):
             return None, False, False
-        return (after or operands or WHOLE_TREE), False, False
-    if separated:
+        return (operands or WHOLE_TREE), False, False
+    if separated and subcommand == "checkout":
         return after, False, False
     if forced or "." in operands:
         return WHOLE_TREE, False, False
@@ -680,9 +685,12 @@ def refuse_discarding_work(words, here):
     rest = [alt for word in rest for alt in bounded(word)]
     if found := next(filter(expands, rest), None):
         deny(UNREADABLE.format(what="the braces of " + found))
-    readings = [reading for reading in (discarded(subcommand, said, place)
-                                        for said in ([rest, written] if written != rest else [rest]))
-                if reading[0] is not None]
+    sayings = [rest, written]
+    if subcommand in ("clean", "restore"):
+        sayings += [[word if word.startswith("-") else "-" for word in said[:said.index("--")]]
+                    + said[said.index("--"):] for said in sayings if "--" in said[:-1]]
+    readings = [reading for said in dict.fromkeys(map(tuple, sayings))
+                if (reading := discarded(subcommand, said, place))[0] is not None]
     if not readings:
         return
     if found := next((word for word in rest if "{}" in word), None):
@@ -732,7 +740,7 @@ BARE_SWEEP = (".", "..", "/", "~", "*")
 
 def judge_command(said, here):
     words, unquoted = tokens_of(said), tokens_of(masked(said))
-    refuse_destructive_push(words)
+    refuse_destructive_push(said)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
     if subcommand in ("apply", "am"):
@@ -783,7 +791,7 @@ def judge_command(said, here):
                  "corpus along with everything else. Name the paths to delete.")
     for word in words:
         if "git" in word and "push" in word and word not in ("git", "push"):
-            refuse_destructive_push(tokens_of(word))
+            refuse_destructive_push(word)
     refuse_commit_on_default(words, here)
     refuse_discarding_work(words, here)
     for script in scripts_within(words, here):
