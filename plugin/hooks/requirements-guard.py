@@ -561,17 +561,17 @@ def refuse_destructive_push(said):
     subcommand, rest = git_subcommand(tokens_of(said))
     if subcommand != "push":
         return
-    for words in (rest, (alt for spelled in rest for alt in bounded(spelled))):
-        for word in words:
-            if words is not rest and expands(word):
-                deny(UNREADABLE.format(what="the braces of " + word))
-            name = word.split("=", 1)[0]
-            if ((len(name) > 2 and name.startswith("--")
-                 and any(flag.startswith(name) for flag in PUSH_LONG_DESTRUCTIVE))
-                    or short_flagged([word], "f") or short_flagged([word], "d")
-                    or (len(word) > 1 and word[0] in "+:")):
-                deny(f"Push with {word} blocked: it rewrites or deletes remote "
-                     "history. Ask the owner if that is really wanted.")
+    spelled_out, leftover = itertools.tee(alt for spelled in rest for alt in bounded(spelled))
+    for word in itertools.chain(rest, spelled_out):
+        name = word.split("=", 1)[0]
+        if ((len(name) > 2 and name.startswith("--")
+             and any(flag.startswith(name) for flag in PUSH_LONG_DESTRUCTIVE))
+                or short_flagged([word], "f") or short_flagged([word], "d")
+                or (len(word) > 1 and word[0] in "+:")):
+            deny(f"Push with {word} blocked: it rewrites or deletes remote "
+                 "history. Ask the owner if that is really wanted.")
+    if found := next(filter(expands, leftover), None):
+        deny(UNREADABLE.format(what="the braces of " + found))
     # @req- 4aiv2n
 
 
