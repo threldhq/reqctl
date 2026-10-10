@@ -18,7 +18,7 @@ from reqctl import corpus, settings, validate, write
 
 ANCHOR = re.compile(
     rf'^<a id="((?:{corpus.KINDS})-\d{{8}}|{corpus.NAME})"></a>$', re.MULTILINE)
-RELATION = re.compile(rf"^- (?:{'|'.join(write.RELATIONS)}) (REQ-\d{{8}})$")
+RELATION = re.compile(rf"^- (?:{'|'.join(write.RELATIONS)}) ((?:{corpus.KINDS})-\d{{8}})$")
 USED_BY = "- used by: "
 TOKEN = re.compile(r"\$\{[^}]*\}?")
 SIBLING = re.compile(r"^proposal (\d+)$")
@@ -256,6 +256,7 @@ def trimmed(uid, block, held, records):
     declared = {target for target
                 in corpus.mapping(records.get(uid) or {}, "relations")
                 if target.startswith("REQ-")}
+    printed = {target for target in printed if target.startswith("REQ-")}
     if printed != declared:
         raise SystemExit(
             f"{uid}: the export prints the relations {sorted(printed)} where "
