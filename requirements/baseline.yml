@@ -1,6 +1,7 @@
-baseline: 76
-commit: 096e19acda80b8131ce072480365163c11f11663
+baseline: 77
+commit: 832dbe2aada6b2938e38b446b31739a5a827804e
 items:
+  GUARD-10122166: MjjGEF8CKWH4KNoOb4wy6IvFfFg5Aws6B3uoKuR7kwo
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-12128145: mFuOqNbkyV1oY-6soAHFUkqGN-yitkrFm5SThHXJEzo
   GUARD-12397751: ZZpZOVKQVB3u8515qCOsND-187sMqV_SPBN85IW9_Qw
@@ -199,6 +200,7 @@ items:
   REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
   REQ-40454564: 7Yw4h6spRiXBi3dtvXnXBRPmLMl8TA9SFaloZcdP5H8
   REQ-41024637: JaitgDKH7S2SXpXO5pxdRuDdWqWYkqc7GsrBadlUpBQ
+  REQ-41148688: SFtnFhcEeNvSudKaygxZise-8AJ7nf3cpAoRTUUjRY8
   REQ-41361856: 4UOkrz1niMIldIYycl3PzD_PU50CrNu30vOu9VFbSWc
   REQ-41552912: 53pYi6X7YqhpC01kK6HBkdIxazffynfimm8ZdVR-p4c
   REQ-41600593: dauTiMee9rmblyns73TjE3axnDXM2u6rNxKvU2x9jRA
@@ -252,6 +254,7 @@ items:
   REQ-48998966: TUTQjlZtGDUPmOuzgttxUk2zU4NGhkKexRvQ2qPSnmQ
   REQ-49321694: sgj-Dt7t_niNh3bR3GvhQDqzwB5r2hfBnBoo9WJDYh4
   REQ-49576265: pFihs7WdIwGSo9e5kkPdFZLxtJJRQIRHfXC3rdxNwAs
+  REQ-49870454: KKNV-vdY6oM1Nh1rSlttJn6yscBYuiNyIhUSpUvOrbY
   REQ-50160324: rCxgTJz0CeZXF2lbxcB5TGC5JTEJhy8u-pGBnsuFObk
   REQ-50522674: MIzqcKrm_Ge8ApOaVXiQL_c05UCgqNlLZHCDv8YP0eU
   REQ-50607767: HUHiB9K0Vm5f4OEhAwYEG4eaW5hQQ65jvw92ETejp7U
@@ -458,6 +461,7 @@ items:
   REQ-90593907: 77_4Pvs9T0Oatf0-xk1iCQAp26WCm7jOAlVy9ZXHmCQ
   REQ-90700416: AGFmCuLqPUC4--GB_pwIhxKPL8sKBO5RXxLmkKRMC08
   REQ-90709998: v1VFnSWnrebXGsLrnG7nqtbS8tmOiErBdVCJkdrrJBo
+  REQ-91051324: ljHcdWSG-nys57fRKMJEzapdA6usPqPdbZy00tgXHpw
   REQ-91184727: qgpF6mhsmj-WXbqC3HZjtle6rWK1r0Bn0lUL6zMB-kk
   REQ-91205530: FiUaykViw6dQBHW7EnBC6n0Z561dMImVZMcXtg1FxdA
   REQ-91336482: TiPdPxI_xFImkFytNwBPQn48IQsLRfCEgs6l2FBGzsg
@@ -487,7 +491,8 @@ items:
   REQ-99188850: t4pvJTwe8prh9Ie_uJgxncKBItjdHtnluEFwI7OBwhk
   REQ-99251609: o1kDTOHxcWxWtLwzK4XjIng2_K0AuzyrmWJpCSBCweI
   REQ-99278123: vBQXVC8aZZp3mj2zVYWTd44R0G3mNepRpPyZ0Mg6w_w
-  REQ-99902470: d6R7fNmgTd6i6EaPhwN9DQ07kDg_2ueqVoXEsWlEups
+  REQ-99520421: K6T5THF20GU8fmUeI4UVEux8TKNfw83aQ1RhePuYSog
+  REQ-99902470: kT0lOVnn101Cj5Xa26fG82xUvuvwYdQSVIt8azwxWqk
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
   challenge_bounds: pzaycETzX61MoC8QeKTg-8dNt5R7B2rONHloEoRoB3c
@@ -527,6 +532,7 @@ items:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_manifest: OmwLAWC7-vkiBIx_2tAMdcr2LtgdTCtjDmYLpTcsJcM
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
   portal_commands: 6fKibshv2tZqcbD_ZGJf-31in0to-SDqLssZ8Cx60Ys
   portal_token_permissions: gx7wfxrBqtaSYiVl9RtKG_S57wCIbFYcaQc1uXNuoFg
@@ -551,4 +557,4 @@ items:
   value_types: hh7MDQ0qhRu3WoS-COSXRVmHrQ21RIpL5S7VNeSWxuI
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
-supersedes: 75
+supersedes: 76
