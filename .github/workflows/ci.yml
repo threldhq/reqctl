@@ -149,6 +149,11 @@ jobs:
       - name: Corpus is valid
         run: reqctl validate
 
+      # @req> GUARD-85510467@S-FtmL033UTY ez2foh
+      - name: Citations match the corpus, with no base branch
+        if: github.event_name != 'pull_request'
+        run: python .github/guards/citations.py
+
       - name: The repository holds no test
         run: python .github/guards/no_tests.py
 
