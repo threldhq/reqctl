@@ -114,9 +114,18 @@ GIT_READ = re.compile(
     r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
 )
-HEREDOC = re.compile(r"(?<![<\\])(?:\\\\)*<<(?!<)-?\s*(['\"]?)(\w+)\1")
+HEREDOC = re.compile(r"<<(?!<)-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
+_WORD = r"""(?:\\.|'[^']*'|"(?:\\.|[^"\\])*"|\$\((?:[^()]|\([^()]*\))*\)|`[^`]*`|[^\s()\\'"`;&<>])"""
+COMPOUND = re.compile(
+    r"(?:\s*(?:(?:if|then|elif|else|while|until|do|in|time(?:\s+-p)?|coproc(?:\s+\w+(?=\s*[({]))?)"
+    r"(?![^\s(])|[!{](?!\S)|(?:for|select)\s+\w+|(?:for\s*)?\(\((?:[^()]|\([^()]*\))*\)\)"
+    rf"|case\s+{_WORD}+\s+in(?!\S)|(?:function\s+)?[^\s()]+\s*\(\s*\)|function\s+\S+"
+    rf"|\(?\s*{_WORD}*(?:\s*\|\s*{_WORD}*)*\s*\)))*")
+CASE = re.compile(rf"(?<![^\s;&|(])(?:case(?=\s+{_WORD}+[\s;]+in(?![^\s;&|)]))|esac(?![^\s;&|)]))")
+QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re.S)}
+TICKED = re.compile(r"(?:\\.|[^\\`])*`", re.S)
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
 PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
                          "--mirror", "--delete", "--prune")
@@ -282,37 +291,50 @@ def deny(reason: str) -> None:
 
 
 def scan(cmd: str, joins=None) -> list[list[str]]:
-    commands, pipeline, buf = [], [], []
+    commands, pipeline, buf, held, bodies, nest, pending = [], [], [], [], [], [], []
     joins = [] if joins is None else joins
     quote = None
     lines = cmd.split("\n")
     row = 0
 
+    def joined(segment):
+        return "".join(chunk if isinstance(chunk, str) else "".join(chunk) for chunk in segment)
+
     def cut_segment():
-        pipeline.append("".join(buf))
-        buf.clear()
+        pipeline.append([*held, *buf, *bodies])
+        for chunks in (held, buf, bodies):
+            chunks.clear()
 
     def cut_command(join=";"):
         cut_segment()
-        if any(s.strip() for s in pipeline):
-            commands.append([s for s in pipeline if s.strip()])
+        if any(joined(s).strip() for s in pipeline):
+            commands.append([s for s in pipeline if joined(s).strip()])
             joins.append(join)
         pipeline.clear()
 
     while row < len(lines):
-        line, i = lines[row], 0
+        line, i, closed = lines[row], 0, -1
         while i < len(line):
             char = line[i]
             if quote:
-                if quote in ('"', "$'") and char == "\\" and i + 1 < len(line):
+                if quote != "'" and char == "\\" and i + 1 < len(line):
                     buf.append(line[i:i + 2])
                     i += 2
                     continue
+                if quote == '"' and line.startswith("$(", i):
+                    nest.append('"(')
+                    quote = None
+                    buf.append("$(")
+                    i += 2
+                    continue
                 buf.append(char)
-                quote = None if char == quote[-1] else quote
+                if char == quote[-1]:
+                    quote = '"' if quote == '"`' else None
+                elif quote == '"' and char == "`":
+                    quote = '"`'
                 i += 1
                 continue
-            if char in "'\"":
+            if char in "'\"`":
                 quote = opened_quote(char, buf)
                 buf.append(char)
                 i += 1
@@ -321,8 +343,27 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 buf.append(line[i:i + 2])
                 i += 2
                 continue
-            if char == "#" and (not buf or buf[-1] in " \t("):
+            if char == "#" and (not buf or buf[-1] in (" ", "\t", "(", ";", "&", "|", "$(")
+                                or closed == i - 1):
                 break
+            if char == "<" and buf[-1:] != ["<"] and (heredoc := HEREDOC.match(line, i)):
+                bodies.append(slot := [])
+                pending.append((heredoc[2], heredoc[0][2:3] == "-", slot,
+                                sum(entry != "(" for entry in nest)))
+                buf.append(heredoc[0])
+                i = heredoc.end()
+                continue
+            if char == ")" and nest:
+                closed = i if nest[-1] == "(" else closed
+                quote = '"' if nest.pop() == '"(' else None
+            elif char == "(":
+                nest.append("$(" if buf[-1:] in (["$"], ["<"], [">"]) else "(")
+            elif char == ")":
+                cut_command("&&")
+            if nest:
+                buf.append(char)
+                i += 1
+                continue
             if char == "|" and line[i:i + 2] != "||":
                 cut_segment()
                 i += 1
@@ -339,23 +380,27 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             row += 1
             continue
         if buf and buf[-1] == "\\":
+            if pending or buf[-2:-1] == ["<"]:
+                deny(UNREADABLE.format(what="a heredoc continued onto the next line"))
             buf.pop()
             row += 1
             continue
-        joined = "".join(buf)
-        opened = next((found for found in HEREDOC.finditer(joined)
-                       if masked(joined)[joined.index("<", found.start())] == "<"), None)
-        if opened:
-            body, row = [], row + 1
-            while row < len(lines) and lines[row].strip() != opened.group(2):
-                body.append(lines[row])
-                row += 1
-            buf.append("\n" + "\n".join(body))
-        cut_command()
+        if pending and sum(entry != "(" for entry in nest) <= min(depth for *_, depth in pending):
+            for delimiter, dash, slot, _ in pending:
+                end = next((at for at in range(row + 1, len(lines))
+                            if (lines[at].lstrip("\t") if dash else lines[at]) == delimiter),
+                           len(lines))
+                slot.append("\n" + "\n".join(lines[row + 1:end + 1]))
+                row = end
+            pending.clear()
+        if nest:
+            held.append("".join(buf) + ";")
+            buf.clear()
+        else:
+            cut_command()
         row += 1
-    if buf or pipeline:
-        cut_command()
-    return commands
+    cut_command()
+    return [[joined(s) for s in p] for p in commands]
 
 
 def opened_quote(char, before):
@@ -392,6 +437,73 @@ def masked(cmd):
 def heading(part):
     cut = masked(part).find("\n")
     return part if cut < 0 else part[:cut]
+
+
+def groups(text, opened=()):
+    found, stack, pending, starts, i, dollars, last = [], list(opened), [], [], 0, 0, ""
+    while i < len(text):
+        char, top, step, size = text[i], (stack or [""])[-1], 1, len(stack)
+        if char == "\\":
+            step = 2
+        elif char == "`":
+            closing = TICKED.match(text, i + 1)
+            step = (closing.end() if closing else len(text)) - i
+            if not starts:
+                found.append(re.sub(r"\\([\\`$])", r"\1", text[i + 1:i + step - bool(closing)]))
+        elif top in ('"', "<<"):
+            if char == top:
+                stack.pop()
+            elif text.startswith(("$(", "${"), i):
+                step = 2
+                stack.append(text[i + 1])
+        elif char == "\n" and pending:
+            for delimiter, literal, dash in pending:
+                end = re.compile("\n" + "\t*" * dash + delimiter + "$", re.M).search(text, i)
+                if not literal and not starts:
+                    found += groups(text[i + 1:end.start() if end else len(text)], ["<<"])
+                i = end.end() if end else len(text)
+            pending.clear()
+            continue
+        elif char == "'":
+            closing = QUOTED_TO["$'" if dollars % 2 else "'"].match(text, i + 1)
+            step = (closing.end() if closing else len(text)) - i
+        elif char == "#" and text[i - 1:i] in ("", " ", "\t", "\n", ";", "&", "|", "("):
+            end = text.find("\n", i)
+            step = (end if end >= 0 else len(text)) - i
+        elif char == '"':
+            stack.append(char)
+        elif char == ")" and top == "(" or char == "}" and top == "{":
+            stack.pop()
+        elif char == ")" and top == "case" and starts:
+            found.append(text[starts[-1]:i])
+        elif char == "(" or char == "{" and last == "$":
+            stack.append(char)
+        elif keyword := CASE.match(text, i):
+            if keyword[0] == "case":
+                stack.append("case")
+            elif top == "case":
+                stack.pop()
+            step = 4
+        elif char == "<" and last != "<" and (heredoc := HEREDOC.match(text, i)):
+            pending.append((heredoc[2], bool(heredoc[1]), heredoc[0][2:3] == "-"))
+            step = heredoc.end() - i
+        if len(stack) > size and stack[-1] == "(":
+            starts.append(i + step)
+        elif len(stack) < size and top == "(":
+            body = text[starts.pop():i]
+            if not starts:
+                found.append(body)
+        dollars = dollars + 1 if char == "$" and step == 1 else 0
+        last = text[i:i + step]
+        i += step
+    if starts:
+        found.append(text[starts[0]:])
+    return found
+
+
+def nested(part):
+    at = COMPOUND.match(masked(part)).end()
+    return [part[at:], *groups(part[:at])] if at else groups(part)
 
 
 def tokens_of(part):
@@ -947,6 +1059,7 @@ def judge_shell(raw, cwd):
         running = running or heading(raw).strip()
     for pipeline, heres in zip(pipelines, places):
         for part, here in itertools.product(pipeline, heres):
+            left()
             invocation = heading(part)
             judge_command(part if any(
                 len(alternatives) > 256 or any(map(STDIN_ARGUMENTS.search, alternatives))
@@ -973,6 +1086,11 @@ def judge_shell(raw, cwd):
                     and not SINK_WRITES.search(part)):
                 continue
             deny(NOT_A_KNOWN_READ.format(target=heading(part).strip()))
+    for pipeline, heres in zip(pipelines, places):
+        for part, here in itertools.product(pipeline, heres):
+            for script in nested(part):
+                left()
+                judge_shell(script, here)
     # @req- ak47k7
 
 
@@ -989,7 +1107,10 @@ def cwds(pipelines, joins, cwd):
 
 
 def moved(pipeline, heres, certain):
-    called = invoked(tokens_of(heading(pipeline[0]))) if len(pipeline) == 1 else []
+    said = heading(pipeline[0])
+    at = COMPOUND.match(masked(said)).end()
+    certain = certain and not at
+    called = invoked(tokens_of(said[at:])) if len(pipeline) == 1 else []
     if called[:1] == ["eval"]:
         called = invoked(tokens_of(" ".join(called[1:])))
     if called[:1] != ["cd"]:
