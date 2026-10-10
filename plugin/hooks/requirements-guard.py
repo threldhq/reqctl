@@ -117,11 +117,12 @@ GIT_READ = re.compile(
 HEREDOC = re.compile(r"(?<!<)<<(?!<)-?\s*(['\"]?)(\w+)\1")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
+_WORD = r"""(?:\\.|'[^']*'|"(?:\\.|[^"\\])*"|\$\(\([^()]*\)\)|\$\([^()]*\)|`[^`]*`|[^\s()\\'"`])"""
 COMPOUND = re.compile(
     r"(?:\s*(?:(?:if|then|elif|else|while|until|do|time(?:\s+-p)?|coproc(?:\s+\w+(?=\s*[({]))?)"
-    r"(?![^\s(])|[!{](?!\S)|(?:for|select)\s+\w+|case\s.*?\sin(?!\S)"
-    r"|(?:function\s+)?[^\s()]+\s*\(\s*\)|function\s+\S+|\(?[^\s()]*\)))*")
-CASE = re.compile(r"(?<![^\s;&|(])(?:case(?=\s+\S+\s+in(?![^\s;&|)]))|esac(?![^\s;&|)]))")
+    rf"(?![^\s(])|[!{{](?!\S)|(?:for|select)\s+\w+|case\s+{_WORD}+\s+in(?!\S)"
+    rf"|(?:function\s+)?[^\s()]+\s*\(\s*\)|function\s+\S+|\(?{_WORD}*\)))*")
+CASE = re.compile(rf"(?<![^\s;&|(])(?:case(?=\s+{_WORD}+\s+in(?![^\s;&|)]))|esac(?![^\s;&|)]))")
 QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re.S)}
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
 PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
@@ -288,32 +289,41 @@ def deny(reason: str) -> None:
 
 
 def scan(cmd: str, joins=None) -> list[list[str]]:
-    commands, pipeline, buf, held, bodies, nest = [], [], [], [], [], []
+    commands, pipeline, buf, held, bodies, nest, pending = [], [], [], [], [], [], []
     joins = [] if joins is None else joins
     quote = None
     lines = cmd.split("\n")
-    row = last = 0
+    row = 0
+
+    def joined(segment):
+        return "".join(chunk if isinstance(chunk, str) else "".join(chunk) for chunk in segment)
 
     def cut_segment():
-        pipeline.append("".join(held + buf + bodies))
+        pipeline.append([*held, *buf, *bodies])
         for chunks in (held, buf, bodies):
             chunks.clear()
 
     def cut_command(join=";"):
         cut_segment()
-        if any(s.strip() for s in pipeline):
-            commands.append([s for s in pipeline if s.strip()])
+        if any(joined(s).strip() for s in pipeline):
+            commands.append([s for s in pipeline if joined(s).strip()])
             joins.append(join)
         pipeline.clear()
 
     while row < len(lines):
-        line, i, last = lines[row], 0, max(last, row)
+        line, i = lines[row], 0
         while i < len(line):
             char = line[i]
             if quote:
                 if quote in ('"', "$'") and char == "\\" and i + 1 < len(line):
                     buf.append(line[i:i + 2])
                     i += 2
+                    continue
+                if quote == '"' and (char == "`" or line.startswith("$(", i)):
+                    nest.append(quote + line[i + (char == "$")])
+                    quote = None
+                    buf.append(line[i:i + 1 + (char == "$")])
+                    i += 1 + (char == "$")
                     continue
                 buf.append(char)
                 quote = None if char == quote[-1] else quote
@@ -331,14 +341,13 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             if char == "#" and (not buf or buf[-1] in " \t("):
                 break
             if char == "<" and (heredoc := HEREDOC.match(line, i)):
-                end = next((at for at in range(last + 1, len(lines))
-                            if lines[at].strip() == heredoc[2]), len(lines))
-                bodies.append("\n" + "\n".join(lines[last + 1:end + 1]))
+                bodies.append(slot := [])
+                pending.append((heredoc[2], slot, len(nest)))
                 buf.append(heredoc[0])
-                i, last = heredoc.end(), end
+                i = heredoc.end()
                 continue
-            if char == "`" and nest[-1:] == ["`"] or char == ")" and nest[-1:] == ["("]:
-                nest.pop()
+            if nest and (char, nest[-1][-1]) in ((")", "("), ("`", "`")):
+                quote = '"' if nest.pop()[0] == '"' else None
             elif char in "(`":
                 nest.append(char)
             if nest:
@@ -364,14 +373,21 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             buf.pop()
             row += 1
             continue
+        if pending and len(nest) <= min(depth for *_, depth in pending):
+            for delimiter, slot, _ in pending:
+                end = next((at for at in range(row + 1, len(lines))
+                            if lines[at].strip() == delimiter), len(lines))
+                slot.append("\n" + "\n".join(lines[row + 1:end + 1]))
+                row = end
+            pending.clear()
         if nest:
             held.append("".join(buf) + ";")
             buf.clear()
         else:
             cut_command()
-        row = last + 1
+        row += 1
     cut_command()
-    return commands
+    return [[joined(s) for s in p] for p in commands]
 
 
 def opened_quote(char, before):
@@ -411,7 +427,7 @@ def heading(part):
 
 
 def groups(text, opened=()):
-    found, stack, pending, starts, i = [], list(opened), [], [], 0
+    found, stack, pending, starts, i, dollars = [], list(opened), [], [], 0, 0
     while i < len(text):
         char, top, step, size = text[i], (stack or [""])[-1], 1, len(stack)
         if char == "\\":
@@ -431,12 +447,17 @@ def groups(text, opened=()):
             pending.clear()
             continue
         elif char == "'":
-            closing = QUOTED_TO[opened_quote(char, text[:i])].match(text, i + 1)
+            closing = QUOTED_TO["$'" if dollars % 2 else "'"].match(text, i + 1)
             step = (closing.end() if closing else len(text)) - i
+        elif char == "#" and text[i - 1:i] in ("", " ", "\t", "\n", ";", "&", "|", "(", ")"):
+            end = text.find("\n", i)
+            step = (end if end >= 0 else len(text)) - i
         elif char == '"':
             stack.append(char)
         elif char == "`" and top == "`" or char == ")" and top == "(":
             stack.pop()
+        elif char == ")" and top == "case" and starts:
+            found.append(text[starts[-1]:i])
         elif char in "(`":
             stack.append(char)
         elif keyword := CASE.match(text, i):
@@ -454,6 +475,7 @@ def groups(text, opened=()):
             body = text[starts.pop():i]
             if not starts:
                 found.append(re.sub(r"\\([\\`$])", r"\1", body) if top == "`" else body)
+        dollars = dollars + 1 if char == "$" and step == 1 else 0
         i += step
     if starts:
         found.append(text[starts[0]:])
