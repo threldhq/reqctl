@@ -27,6 +27,7 @@ BINDS = "binds"
 CRITERIA = "criteria"
 TRACE = "trace"
 ANSWERS = "answers"
+STATING = ("text", "acceptance_criteria", "entries")
 FINDINGS = "coverage.yml"
 STATE = "build.json"
 REVIEWED = "review.json"
@@ -687,19 +688,20 @@ def answered(run, held):
             f"{path}: `{ANSWERS}` maps a proposal number to its verdict's "
             "questions, each question to `owner: ANSWER` or to `corpus: "
             "[{uid: UID, clause: QUOTE}]`.")
-    return keyed(path, ANSWERS, found, held)
+    return path, keyed(path, ANSWERS, found, held)
 
 
 def settling(path, number, question, held, records):
     # @req+ REQ-52114263@JmvDYpVGNRJQ huroi7
-    owner = held.get("owner") if isinstance(held, dict) else None
-    evidence = held.get("corpus") if isinstance(held, dict) else None
+    held = held if isinstance(held, dict) else {}
+    owner, evidence = held.get("owner"), held.get("corpus")
     if isinstance(owner, str) and owner.strip():
         return f"the owner answered: {' '.join(owner.split())}"
     if isinstance(evidence, list) and evidence and all(
             isinstance(one, dict) and isinstance(one.get("clause"), str)
+            and one["clause"].strip() and str(one.get("uid")) in records
             and " ".join(one["clause"].split()) in _strings(
-                records.get(str(one.get("uid")), {}))
+                records[str(one.get("uid"))])
             for one in evidence):
         return "settled by " + "; ".join(
             f"{one['uid']}: “{' '.join(one['clause'].split())}”"
@@ -1448,8 +1450,10 @@ def describe(run):
     declined = (said(run, "declined.md", "") if (run / "declined.md").is_file()
                 else "")
     lines = []
-    ledger, _ = recorded(run)
-    answers, records = answered(run, proposals(run)), loaded()[1]
+    ledger, answers = answered(run, proposals(run))
+    records = {uid: [record.get(field) for field in STATING]
+               for uid, record in loaded()[1].items()
+               if record.get("status") == "approved"}
     for number, spec in sorted(state_held["proposals"].items(),
                                key=lambda pair: int(pair[0])):
         path = run / "verdicts" / f"{number}.json"

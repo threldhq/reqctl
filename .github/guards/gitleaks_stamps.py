@@ -16,8 +16,8 @@ ROOT = Path(INSIDE).parts[0] + "/"
 DIGITS = frozenset(string.digits)
 DIGEST = frozenset(string.ascii_letters + string.digits + "_-")
 CATEGORIES = {sre.CATEGORY_DIGIT: DIGITS,
-              sre.CATEGORY_WORD: frozenset(string.ascii_letters + string.digits + "_"),
-              sre.CATEGORY_SPACE: frozenset(" \t\n\r\f\v")}
+              sre.CATEGORY_WORD: DIGEST - {"-"},
+              sre.CATEGORY_SPACE: frozenset(string.whitespace)}
 SPELLINGS = 4096
 
 
@@ -65,11 +65,9 @@ def _spelled(items):
             parts = None if inner is None else _repeated(inner, av[0], av[1])
         else:
             parts = None
-        if parts is None:
+        if parts is None or len(found) * len(parts) > SPELLINGS:
             return None
         found = [left + right for left in found for right in parts]
-        if len(found) > SPELLINGS:
-            return None
     return found
 
 
@@ -78,9 +76,9 @@ def _repeated(inner, low, high):
     for count in range(high + 1):
         if count >= low:
             found += run
-        run = [left + right for left in run for right in inner]
-        if len(found) + len(run) > SPELLINGS:
+        if len(found) + len(run) * len(inner) > SPELLINGS:
             return None
+        run = [left + right for left in run for right in inner]
     return found
 
 
@@ -90,7 +88,7 @@ def spellings(pattern):
     except re.error:
         return None
     items = list(parsed)
-    if (parsed.state.flags & re.IGNORECASE or len(items) < 2
+    if (parsed.state.flags & (re.IGNORECASE | re.MULTILINE) or len(items) < 2
             or items[0] != (sre.AT, sre.AT_BEGINNING)
             or items[-1] != (sre.AT, sre.AT_END)):
         return None
@@ -98,18 +96,17 @@ def spellings(pattern):
 
 
 def confined(pattern):
-    # @req+ REQ-14101215@QDD9quPR25YJ xhpf7g
     try:
-        items = list(_parser.parse(pattern))
+        parsed = _parser.parse(pattern)
     except re.error:
         return False
-    return items[:1 + len(ROOT)] == ([(sre.AT, sre.AT_BEGINNING)]
+    if parsed.state.flags & (re.IGNORECASE | re.MULTILINE):
+        return False
+    return list(parsed)[:1 + len(ROOT)] == ([(sre.AT, sre.AT_BEGINNING)]
                                      + [(sre.LITERAL, ord(one)) for one in ROOT])
-    # @req- xhpf7g
 
 
 def wider(pattern, shapes):
-    # @req+ REQ-89759399@H6dJHl49GRYn ncqjfp
     found = spellings(pattern)
     if found is None:
         return "strings this check cannot bound"
@@ -119,7 +116,6 @@ def wider(pattern, shapes):
                    for shape in shapes):
             return repr("".join(min(one) for one in spelled))
     return None
-    # @req- ncqjfp
 
 
 def uids():
@@ -215,7 +211,8 @@ def faults(config):
             "value gitleaks captured, not the line it sat on, and against a "
             "line it matches nothing at all -- so every real stamp fails the "
             "scan; state regexTarget = \"secret\"")
-    scope = [re.compile(one) for one in held.get("paths") or []]
+    paths = held.get("paths") or []
+    scope = [re.compile(one) for one in paths]
     # @req> REQ-14101215@QDD9quPR25YJ 7bctre
     if not scope:
         found.append(
@@ -223,7 +220,7 @@ def faults(config):
             "shape is admitted everywhere rather than where reqctl writes it; "
             "state the paths the corpus occupies")
     # @req> REQ-14101215@QDD9quPR25YJ szr7kb
-    for path in held.get("paths") or []:
+    for path in paths:
         if not confined(path):
             found.append(
                 f"{CONFIG}: the {RULE} allowlist path {path} can admit a file "
@@ -244,11 +241,12 @@ def faults(config):
                 "shape it does admit means nothing")
     # @req- waiych
     # @req+ REQ-89759399@H6dJHl49GRYn gyyeey
-    beyond = wider(written[0], [[DIGEST] * len(stamps()[0])])
+    width = len(stamps()[0])
+    beyond = wider(written[0], [[DIGEST] * width])
     if beyond:
         found.append(
             f"{CONFIG}: {written[0]} admits {beyond}, beyond the stamps "
-            f"reqctl writes; state {len(stamps()[0])} characters of "
+            f"reqctl writes; state {width} characters of "
             "[A-Za-z0-9_-], anchored with ^ and $")
     # @req- gyyeey
     return found
