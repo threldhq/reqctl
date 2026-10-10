@@ -646,7 +646,7 @@ def discarded(subcommand, rest, place):
                                and full.startswith(word.split("=", 1)[0])), word))
         elif not valued:
             named.append(word)
-        valued = not valued and word.startswith("-") and (
+        valued = subcommand == "clean" and not valued and word.startswith("-") and (
             not word.startswith("--") and word.find("e") == len(word) - 1
             or len(word) > 2 and "--exclude".startswith(word))
     operands = [word for word in rest if not word.startswith("-")]
