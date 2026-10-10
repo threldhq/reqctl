@@ -42,11 +42,15 @@ PATH_SHAPE = re.compile(r"[^\s'\"`$();|<>]+")
 COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
-BRACE = re.compile(r"\{([^{}]*,[^{}]*)\}")
+BRACE = re.compile(r"\{([^{},]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{[^{}]*\.\.[^{}]*\}")
+SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|getopts"
+                    r"|let)$|\$\{\w+(\[[^]]*\])?:?=")
+UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
+PARAMETER = re.compile(r"\$\{[^{}]*\}")
+STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
-            "exec", "xargs", "stdbuf", "builtin", "export", "declare", "typeset", "readonly",
-            "local")
+            "exec", "xargs", "stdbuf", "builtin")
 REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
 SHELLS = ("sh", "bash", "dash", "zsh", "ksh")
 FIND_RUNS = ("-exec", "-execdir", "-ok", "-okdir")
@@ -464,7 +468,8 @@ def located(words, here):
     where = [word for at, word in enumerate(options)
              if word.partition("=")[0] in READ_OPTIONS or word in READ_FLAGS
              or at and options[at - 1] in READ_OPTIONS]
-    if not here or assigned.keys() & set(CONFIG_HOMES) or any(
+    if not here or any(not name.isidentifier() or name in CONFIG_HOMES for name in assigned) or any(
+            "{" in word.replace("{}", "") for word in [*prefix, *options]) or any(
             word.startswith("-") for word in prefix) or any(
             word.startswith("--config-env") for word in options) or any(
             "$" in word or "`" in word for word in [*where, *settings.values()]):
@@ -637,11 +642,11 @@ def discarded(subcommand, rest, place):
     flags, valued = [], False
     for word in before:
         if not valued and word.startswith("-"):
-            flags.append(next((full for full in LONG_FLAGS if len(word) > 3
+            flags.append(next((full for full in LONG_FLAGS if len(word) > 2
                                and full.startswith(word.split("=", 1)[0])), word))
         valued = not valued and word.startswith("-") and (
             not word.startswith("--") and word.find("e") == len(word) - 1
-            or len(word) > 3 and "--exclude".startswith(word))
+            or len(word) > 2 and "--exclude".startswith(word))
     operands = [word for word in rest if not word.startswith("-")]
     forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if subcommand == "reset":
@@ -674,8 +679,14 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
-    paths, sweeps_untracked, sweeps_ignored = discarded(subcommand, rest, place)
-    if paths is None:
+    written = rest
+    rest = [alt for word in rest for alt in bounded(braced(word))]
+    if any(map(expands, rest)):
+        deny(UNREADABLE)
+    readings = [reading for reading in (discarded(subcommand, said, place)
+                                        for said in ([rest, written] if written != rest else [rest]))
+                if reading[0] is not None]
+    if not readings:
         return
     if any("{}" in word for word in rest):
         deny(UNREADABLE)
@@ -685,18 +696,19 @@ def refuse_discarding_work(words, here):
         staged = git_reads(["ls-files", "--stage", "--", top], place)
         if staged is None or any(line.startswith("160000 ") for line in staged.splitlines()):
             deny(INTO_SUBMODULES.format(source=source))
-    args = [*unfiltered(place), "status", "--porcelain", "--untracked-files=normal",
-            "--ignore-submodules=dirty"]
-    if sweeps_ignored:
-        args.append("--ignored")
-    if paths:
-        args += ["--", *paths]
-    said = git_sees(args, place)
-    swept = UNTRACKED if sweeps_ignored else UNTRACKED_ONLY
-    at_risk = [f"  {line}" for line in said.splitlines() if line.strip()
-               and (line[:2] in swept) == sweeps_untracked]
-    if at_risk:
-        deny(DISCARDS_WORK.format(listing="\n".join(at_risk)))
+    for paths, sweeps_untracked, sweeps_ignored in readings:
+        args = [*unfiltered(place), "status", "--porcelain", "--untracked-files=normal",
+                "--ignore-submodules=dirty"]
+        if sweeps_ignored:
+            args.append("--ignored")
+        if paths:
+            args += ["--", *paths]
+        said = git_sees(args, place)
+        swept = UNTRACKED if sweeps_ignored else UNTRACKED_ONLY
+        at_risk = [f"  {line}" for line in said.splitlines() if line.strip()
+                   and (line[:2] in swept) == sweeps_untracked]
+        if at_risk:
+            deny(DISCARDS_WORK.format(listing="\n".join(at_risk)))
     # @req- uivqls
 
 
@@ -724,7 +736,8 @@ def refuse_commit_on_default(words, here):
 BARE_SWEEP = (".", "..", "/", "~", "*")
 
 
-def judge_command(words, here):
+def judge_command(said, here):
+    words, unquoted = tokens_of(said), tokens_of(masked(said))
     refuse_destructive_push(words)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
@@ -742,8 +755,15 @@ def judge_command(words, here):
     # @req- dbuwzq
     # @req> REQ-74982341@IIwAqzZV1bP3 cqinxo
     # @req> REQ-36282702@sK_P4PZZM9_w pojxpe
-    if plain != "git" and any(word.partition("=")[0] in READ_ENV or word.startswith("GIT_CONFIG")
-                              for word in words[:len(words) - len(called)] if "=" in word):
+    if any(expands(word) for word in unquoted[:len(words) - len(called) + 1]
+           if not word.partition("=")[0].isidentifier()) or (
+            (setter := any(map(SETTER.search, words)) or "printf" in words
+             and any(alt.startswith("-v") for word in words for alt in bounded(braced(word))))
+            or plain != "git") and any(
+            any(name in alt for name in (*READ_ENV, "GIT_CONFIG"))
+            for word in (words if setter else words[:len(words) - len(called)])
+            if setter or "=" in word for alt in bounded(braced(word))) or setter and any(
+            expands(alt) for word in unquoted for alt in bounded(braced(word))):
         deny(UNREADABLE)
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
@@ -784,7 +804,9 @@ def scripts_within(words, here):
     if tool == "eval":
         return [" ".join(rest)]
     if tool == "find":
-        return [shlex.join(itertools.takewhile(lambda word: word not in (";", "+"), rest[at + 1:]))
+        return [" ".join(word if UNQUOTED_WORD.fullmatch(word) else shlex.quote(word)
+                         for word in itertools.takewhile(lambda word: word not in (";", "+"),
+                                                         rest[at + 1:]))
                 for at, word in enumerate(rest) if word in FIND_RUNS]
     split = git_split(words)
     if not split or any(split[2] in git_commands(kinds) for kinds in ("builtins", "main,others")):
@@ -801,13 +823,13 @@ def scripts_within(words, here):
     return [shlex.join([*prefix, "git", *options, *tokens_of(value), *args])]
 
 
-def braced(word):
-    found = BRACE.search(word)
+def braced(word, room=256):
+    found = room and BRACE.search(word)
     if not found:
         yield word
         return
-    for choice in found.group(1).split(","):
-        yield from braced(word[:found.start()] + choice + word[found.end():])
+    for choice in (choices := found.group(1).split(",")):
+        yield from braced(word[:found.start()] + choice + word[found.end():], room // len(choices))
 
 
 def expands_to(pattern, path):
@@ -881,6 +903,11 @@ def reaches_corpus(word, cwd, root=False):
     return any(os.path.isabs(path) and reached(path, root) for path in paths)
 
 
+def expands(word):
+    bare = PARAMETER.sub("", word)
+    return "{" in bare and ("," in bare or ".." in bare)
+
+
 def bounded(alternatives):
     found = list(itertools.islice(alternatives, 257))
     if len(found) > 256:
@@ -918,8 +945,12 @@ def judge_shell(raw, cwd):
         running = running or heading(raw).strip()
     for pipeline, heres in zip(pipelines, places):
         for part, here in itertools.product(pipeline, heres):
-            judge_command(tokens_of(part), here)
             invocation = heading(part)
+            judge_command(part if any(
+                len(alternatives) > 256 or any(map(STDIN_ARGUMENTS.search, alternatives))
+                for word in tokens_of(invocation)
+                for alternatives in [list(itertools.islice(braced(word), 257))]) else invocation,
+                here)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
