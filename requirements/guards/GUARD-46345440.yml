@@ -12,6 +12,8 @@ assessed:
   plugin_components.*: YkgS8K09s2n0m6QYm0NGOh6sp8svTHdiU8dPugVun7Q
   plugin_folders: 7ZGw3BF5dCnTaSKveldXgsywKdmz_V7rnnP6Vxf97OY
   plugin_folders.root: eN5D4LXA4EmtVGaOyOOV7Bmt9EjUOJZ_skI4uWathwI
+citations:
+  o6fai7: XkMN016q04Nnu1x1TINM6ik610ZpqlZ8wX7UtJEWtqw
 relations:
   GUARD-65225392: depends_on
   GUARD-87984565: constrains
