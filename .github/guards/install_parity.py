@@ -46,6 +46,7 @@ def read(path):
     # @req- trthdg
 
 
+# @req+ GUARD-93589588@yH4bykpGUeLb umdv5h
 hook = installs(read(ROOT / ".claude" / "hooks" / "session-start.sh"))
 ci = installs(read(ROOT / ".github" / "workflows" / "ci.yml"))
 
@@ -59,3 +60,4 @@ if hook != ci:
     print(f"  ci:   {ci}")
     sys.exit(1)
 sys.exit(0)
+# @req- umdv5h
