@@ -11,8 +11,8 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-61616834: ocFeB1JGP518dTo37bhkp0LKfeG6BTBIFGYwBXIEHEU
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
-  plugin_components.best_in_class_agent: 8UrK8-pAzkRt-eKDXgXkrTXFeFyql1_OmwQJpYfDtzA
-  plugin_components.coverage_agent: nzKL9bKbaC3r9cidRzRa-dcvpmpqNQ6sJbr_tGfbZRk
+  plugin_components.best_in_class_agent: u1uaiUuYFzYo5iFrDTEntEfYwc19prv4BbSVmvAHnvM
+  plugin_components.coverage_agent: MLMykc8Gn2mN2POVQUqKUR2bIgNPgK0zPBZZ8AJGUhU
 priority: medium
 relations:
   REQ-38288492: depends_on

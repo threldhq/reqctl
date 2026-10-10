@@ -1,12 +1,31 @@
 assessed: {}
 entries:
-  best_in_class_agent: {}
-  coverage_agent: {}
-  elucidate_skill: {}
-  implement_skill: {}
-  pre_pr_skill: {}
-  requirements_guard_hook: {}
-  session_rules_hook: {}
+  best_in_class_agent:
+    paths:
+    - agents/best-in-class.md
+  coverage_agent:
+    paths:
+    - agents/coverage.md
+  elucidate_skill:
+    paths:
+    - skills/elucidate/
+  implement_skill:
+    paths:
+    - skills/implement/
+  plugin_manifest:
+    paths:
+    - .claude-plugin/plugin.json
+    - hooks/hooks.json
+  pre_pr_skill:
+    paths:
+    - skills/pre-pr/
+  requirements_guard_hook:
+    paths:
+    - hooks/requirements-guard.py
+  session_rules_hook:
+    paths:
+    - hooks/session-rules.py
+    - hooks/session-rules.md
 kind: data
 name: plugin_components
 status: approved
