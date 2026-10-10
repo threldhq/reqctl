@@ -26,6 +26,9 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  g6q5fx: UZxQ8f7iL542qTzlVdOw97vmITGCStnq6IsMJ5-36Xk
+  wpzdfm: UZxQ8f7iL542qTzlVdOw97vmITGCStnq6IsMJ5-36Xk
 priority: medium
 relations:
   REQ-38288492: derives_from
