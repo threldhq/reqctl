@@ -3,6 +3,7 @@ import re
 import string
 import sys
 import tomllib
+import warnings
 from pathlib import Path
 from re import _constants as sre
 from re import _parser
@@ -39,7 +40,9 @@ def everywhere(config):
 
 def stamping(held):
     regexes = held.get("regexes") or []
-    return (not regexes or (held.get("condition") != "AND" and bool(held.get("paths")))
+    return (not regexes or held.get("regexTarget", "secret") != "secret"
+            or bool(held.get("stopwords") or held.get("commits"))
+            or (held.get("condition") != "AND" and bool(held.get("paths")))
             or any(re.search(one, stamp) for one in regexes for stamp in stamps()))
 
 
@@ -227,20 +230,32 @@ def faults(config):
             "line it matches nothing at all -- so every real stamp fails the "
             "scan; state regexTarget = \"secret\"")
     scope = [re.compile(one) for one in held.get("paths") or []]
-    # @req> REQ-14101215@QDD9quPR25YJ 22fcay
+    # @req+ REQ-14101215@QDD9quPR25YJ pzazjf
+    if (config.get("extend") or {}).get("path"):
+        found.append(
+            f"{CONFIG}: [extend] path names allowlists this check does not "
+            "read; state them here")
+    # @req> REQ-89759399@H6dJHl49GRYn mx6gxo
     for one in filter(stamping, everywhere(config)):
-        named = one.get("description") or "an allowlist"
-        if not one.get("paths"):
+        if one is not held:
             found.append(
-                f"{CONFIG}: {named!r} admits the stamp shape and states no "
-                "paths, so it admits it everywhere rather than where reqctl "
-                "writes it; state the paths the corpus occupies")
-        for path in one.get("paths") or []:
-            if not confined(path):
-                found.append(
-                    f"{CONFIG}: {named!r} admits the stamp shape on path "
-                    f"{path}, which can match a file outside {ROOT}; begin it "
-                    f"with ^{ROOT}")
+                f"{CONFIG}: {one.get('description') or 'an allowlist'!r} also "
+                "admits the stamp shape; state it in the stamp allowlist alone")
+    if held.get("stopwords") or held.get("commits"):
+        found.append(
+            f"{CONFIG}: the {RULE} allowlist states stopwords or commits, "
+            "which admit a secret of any shape; drop them")
+    if not scope:
+        found.append(
+            f"{CONFIG}: the {RULE} allowlist states no paths, so the stamp "
+            "shape is admitted everywhere rather than where reqctl writes it; "
+            "state the paths the corpus occupies")
+    for path in held.get("paths") or []:
+        if not confined(path):
+            found.append(
+                f"{CONFIG}: the {RULE} allowlist path {path} can admit a file "
+                f"outside {ROOT}; begin it with ^{ROOT}")
+    # @req- pzazjf
     # @req> REQ-90593907@77_4Pvs9T0Oa ef2ben
     if scope and not any(one.search(INSIDE) for one in scope):
         found.append(
@@ -276,7 +291,16 @@ def main():
         print(f"::error::cannot read {CONFIG}: {broken}")
         return 1
     # @req- sfnyhq
-    found = faults(config)
+    # @req+ REQ-89759399@H6dJHl49GRYn lttpvk
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", FutureWarning)
+            found = faults(config)
+    except (re.error, FutureWarning) as broken:
+        print(f"::error::{CONFIG}: a regex does not read as gitleaks reads it: "
+              f"{broken}; state it in syntax Go and Python read alike")
+        return 1
+    # @req- lttpvk
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0
