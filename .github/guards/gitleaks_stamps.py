@@ -235,6 +235,12 @@ def faults(config):
         found.append(
             f"{CONFIG}: [extend] path names allowlists this check does not "
             "read; state them here")
+    if RULE in ((config.get("extend") or {}).get("disabledRules") or []) or any(
+            rule.get("id") == RULE and set(rule) - {"id", "allowlist", "allowlists"}
+            for rule in config.get("rules") or []):
+        found.append(
+            f"{CONFIG}: the {RULE} rule is disabled or redefined, so the scan "
+            "admits a stamp anywhere; state only its allowlists here")
     # @req> REQ-89759399@H6dJHl49GRYn mx6gxo
     for one in filter(stamping, everywhere(config)):
         if one is not held:

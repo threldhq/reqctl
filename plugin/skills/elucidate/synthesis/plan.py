@@ -696,15 +696,16 @@ def settling(path, number, question, held, records):
     held = held if isinstance(held, dict) else {}
     owner, evidence = held.get("owner"), held.get("corpus")
     if isinstance(owner, str) and owner.strip():
-        return f"the owner answered: {' '.join(owner.split())}"
+        return f"the owner answered: {_coverage.spoken(owner)}"
     if isinstance(evidence, list) and evidence and all(
             isinstance(one, dict) and isinstance(one.get("clause"), str)
             and one["clause"].strip() and str(one.get("uid")) in records
-            and " ".join(one["clause"].split()) in _strings(
-                records[str(one.get("uid"))])
+            and _coverage.quoted(
+                _coverage.plain(_strings(records[str(one.get("uid"))])),
+                _coverage.spoken(one["clause"]))
             for one in evidence):
         return "settled by " + "; ".join(
-            f"{one['uid']}: “{' '.join(one['clause'].split())}”"
+            f"{one['uid']}: “{_coverage.spoken(one['clause'])}”"
             for one in evidence)
     raise SystemExit(
         f"{path}: proposal {number}'s verdict asks {question!r}, and `{ANSWERS}` "
