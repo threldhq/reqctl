@@ -313,7 +313,7 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
         pipeline.clear()
 
     while row < len(lines):
-        line, i = lines[row], 0
+        line, i, closed = lines[row], 0, -1
         while i < len(line):
             char = line[i]
             if quote:
@@ -343,7 +343,8 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 buf.append(line[i:i + 2])
                 i += 2
                 continue
-            if char == "#" and (not buf or buf[-1] in (" ", "\t", "(", ")", ";", "&", "|", "$(")):
+            if char == "#" and (not buf or buf[-1] in (" ", "\t", "(", ";", "&", "|", "$(")
+                                or closed == i - 1):
                 break
             if char == "<" and buf[-1:] != ["<"] and (heredoc := HEREDOC.match(line, i)):
                 bodies.append(slot := [])
@@ -353,6 +354,7 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 i = heredoc.end()
                 continue
             if char == ")" and nest:
+                closed = i if nest[-1] == "(" else closed
                 quote = '"' if nest.pop() == '"(' else None
             elif char == "(":
                 nest.append("$(" if buf[-1:] in (["$"], ["<"], [">"]) else "(")
@@ -465,7 +467,7 @@ def groups(text, opened=()):
         elif char == "'":
             closing = QUOTED_TO["$'" if dollars % 2 else "'"].match(text, i + 1)
             step = (closing.end() if closing else len(text)) - i
-        elif char == "#" and text[i - 1:i] in ("", " ", "\t", "\n", ";", "&", "|", "(", ")"):
+        elif char == "#" and text[i - 1:i] in ("", " ", "\t", "\n", ";", "&", "|", "("):
             end = text.find("\n", i)
             step = (end if end >= 0 else len(text)) - i
         elif char == '"':
