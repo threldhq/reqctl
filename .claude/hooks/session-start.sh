@@ -22,6 +22,9 @@ fi
 .github/install-gitleaks.sh "$venv/bin" \
   || echo "session-start: gitleaks unavailable" >&2
 
+git remote set-head origin --auto \
+  || echo "session-start: cannot read origin's default branch" >&2
+
 "$venv/bin/reqctl" validate
 
 "$venv/bin/reqctl" baseline --check 2>&1 || true
