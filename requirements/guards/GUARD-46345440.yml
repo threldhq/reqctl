@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a path a plugin component states that covers no file tracked under the plugin
+  then: the build refuses the change, naming the path and its component
+  when: the build runs
+- given: a path a plugin component states that reaches outside the plugin
+  then: the build refuses the change, naming the path and its component
+  when: the build runs
+assessed:
+  GUARD-65225392: myxez9Yz6SOiTVlmcZCO291f_XgHcMR62MAguFsCQ68
+  GUARD-87984565: VEipgV2EseNWzxXTcWYTloHoRl7dBfU0tDt8R4JjxUc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.*: YkgS8K09s2n0m6QYm0NGOh6sp8svTHdiU8dPugVun7Q
+  plugin_folders: 7ZGw3BF5dCnTaSKveldXgsywKdmz_V7rnnP6Vxf97OY
+  plugin_folders.root: eN5D4LXA4EmtVGaOyOOV7Bmt9EjUOJZ_skI4uWathwI
+relations:
+  GUARD-65225392: depends_on
+  GUARD-87984565: constrains
+status: approved
+text: If a path one of the ${plugin_components} states covers no file tracked under
+  ${plugin_folders.root.path}, then the build shall refuse the change.
