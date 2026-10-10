@@ -7,7 +7,7 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-90700416: AGFmCuLqPUC4--GB_pwIhxKPL8sKBO5RXxLmkKRMC08
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
-  plugin_components.session_rules_hook: Aby-oraGtVIEvqLlMcW-v2zKxBaNntB6FsnV1w5Y9no
+  plugin_components.session_rules_hook: Tx3G6OYhH7nRFUOqsuRQHgaWPeNfTfpLxgkfH_ZuAXM
 priority: medium
 relations:
   REQ-38288492: derives_from

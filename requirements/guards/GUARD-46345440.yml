@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a path a plugin component states that covers no file tracked under the plugin
+  then: the build refuses the change, naming the path and its component
+  when: the build runs
+- given: a path a plugin component states that reaches outside the plugin
+  then: the build refuses the change, naming the path and its component
+  when: the build runs
+assessed:
+  GUARD-65225392: myxez9Yz6SOiTVlmcZCO291f_XgHcMR62MAguFsCQ68
+  GUARD-87984565: UdAD4eDkoxBrxET2l33klUcNNLRq6IsMYwg_wGycAfk
+relations:
+  GUARD-65225392: depends_on
+  GUARD-87984565: constrains
+status: approved
+text: If a path a plugin component states covers no file tracked under the Claude
+  Code plugin, then the build shall refuse the change.
