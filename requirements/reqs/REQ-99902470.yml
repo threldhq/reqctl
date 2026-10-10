@@ -1,15 +1,26 @@
 acceptance_criteria:
 - given: the Claude Code plugin as shipped
-  then: it holds nothing that is not one of the plugin components
+  then: each file in it is part of one of the plugin components or is the [plugin
+    manifest](plugin_manifest)
   when: its contents are read
+- given: a file in a skill's folder, such as the elucidate skill's synthesis scripts
+    or its harness/probe.py, an agent's own file, or the plugin's hooks.json or a
+    file of a hook it registers
+  then: the file is part of that skill, that agent or the hooks
+  when: the Claude Code plugin's contents are read
+- given: a README or a licence in the Claude Code plugin
+  then: it is beyond the plugin components and the [plugin manifest](plugin_manifest)
+  when: the Claude Code plugin's contents are read
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.*: zIgHolBY-Ua7Uah3mdgzg-64MX6pbgsm3My1HFjm82g
+  plugin_manifest: OmwLAWC7-vkiBIx_2tAMdcr2LtgdTCtjDmYLpTcsJcM
 priority: medium
 relations:
   REQ-38288492: constrains
 status: approved
-text: The product shall ship nothing in the Claude Code plugin beyond the ${plugin_components}.
+text: The product shall ship nothing in the Claude Code plugin beyond the ${plugin_components}
+  and the [plugin manifest](plugin_manifest).
 type: functional
 verification: inspection

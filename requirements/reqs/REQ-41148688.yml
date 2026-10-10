@@ -1,0 +1,13 @@
+acceptance_criteria:
+- given: an [item](item) whose fields share one object
+  then: the file holds no YAML alias
+  when: the product writes the [item](item) file
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations: {}
+status: approved
+text: When the product writes an [item](item) file, the product shall write no YAML
+  alias in it.
+type: functional
+verification: inspection

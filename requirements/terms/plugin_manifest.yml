@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  plugin_manifest:
+    aliases:
+    - plugin's manifest
+    definition: The .claude-plugin/plugin.json file at the root of the Claude Code
+      plugin.
+    word: plugin manifest
+kind: term
+status: approved
