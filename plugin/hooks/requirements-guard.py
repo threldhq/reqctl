@@ -49,6 +49,10 @@ SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|g
                     r"|let)$|\$\{\w+(\[[^]]*\])?:?=")
 UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
 PARAMETER = re.compile(r"\$\{[^{}]*\}")
+EXPANSION = re.compile(r"\$(?:\{[^{}]*\}|\((?:[^()]|\([^()]*\))*\)|\w+|[@*#?$!-])|`[^`]*`")
+ANSI_C = re.compile(r"\\.|(\$*)('_*')")
+ANSI_ESCAPE = re.compile(
+    r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
 STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
             "exec", "xargs", "stdbuf", "builtin")
@@ -239,6 +243,7 @@ WHOLE_TREE: list[str] = []
 FORCE = ("-f", "--force", "--discard-changes")
 # @req> worktree_commands@EtNKXLNk8TvY 3qwrc6
 RESTORES = ("checkout", "restore", "reset", "clean", "switch")
+JUDGED_GIT = ("push", "commit", "apply", "am", *NO_COMMIT, *RESTORES)
 UNTRACKED = ("??", "!!")
 UNTRACKED_ONLY = ("??",)
 
@@ -684,10 +689,19 @@ def invoked(words):
             words[i].startswith("-") or words[i][:1].isdigit()
             or words[i - 1].startswith("-") and os.path.basename(words[i]) not in JUDGED))):
         i += 2 if REDIRECTION.fullmatch(words[i]) else 1
-    if i and i < len(words) and os.path.basename(words[i]) not in (*JUDGED, *WRITES_NOTHING):
+    if i < len(words) and os.path.basename(words[i]) not in (*JUDGED, *WRITES_NOTHING):
         i = next((j for j in range(i, len(words))
-                  if os.path.basename(words[j]) in ("git", "rm", "find")), i)
+                  if os.path.basename(words[j]) in ("rm", "find") or posing(words[j:])
+                  or os.path.basename(words[j]) == "git" and j + 1 < len(words)
+                  and (words[j + 1].startswith("-") or words[j + 1] in JUDGED_GIT
+                       or EXPANSION.search(words[j + 1]))), i)
+    if posing(words[i:]):
+        return ["git", *words[i + 1:]]
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
+
+
+def posing(words):
+    return len(words) > 1 and EXPANSION.search(words[0]) is not None and words[1] in JUDGED_GIT
 
 
 def git_split(words):
@@ -889,7 +903,7 @@ def short_flagged(flags, letter):
                and letter in word[1:] for word in flags)
 
 
-def discarded(subcommand, rest, place):
+def discarded(subcommand, rest, place, unread):
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
     before = rest[:rest.index("--")] if separated else rest
@@ -903,15 +917,17 @@ def discarded(subcommand, rest, place):
         valued = subcommand == "clean" and not valued and word.startswith("-") and (
             not word.startswith("--") and word.find("e") == len(word) - 1
             or len(word) > 2 and "--exclude".startswith(word))
-    forced = any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
+    forced = unread or any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
+    if unread and subcommand != "clean":
+        return WHOLE_TREE, False, False
     if subcommand == "reset":
         return (WHOLE_TREE, False, False) if "--hard" in flags else (None, False, False)
     if subcommand == "clean":
         if not forced or any(not f.startswith("--") and "n" in f[1:].split("e", 1)[0]
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False
-        ignored = short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (operands if after else WHOLE_TREE), True, ignored
+        ignored = unread or short_flagged(flags, "x") or short_flagged(flags, "X")
+        return (operands if after and not unread else WHOLE_TREE), True, ignored
     if subcommand == "restore":
         if "--staged" in flags and "--worktree" not in flags and not short_flagged(flags, "W"):
             return None, False, False
@@ -942,8 +958,10 @@ def refuse_discarding_work(words, here):
     if subcommand in ("clean", "restore"):
         sayings += [[word if word.startswith("-") else "-" for word in said[:said.index("--")]]
                     + said[said.index("--"):] for said in sayings if "--" in said[:-1]]
+    unread = any(map(STDIN_ARGUMENTS.search, words)) or any(
+        "$" in word or "`" in word for word in rest)
     readings = [reading for said in dict.fromkeys(map(tuple, sayings))
-                if (reading := discarded(subcommand, said, place))[0] is not None]
+                if (reading := discarded(subcommand, said, place, unread))[0] is not None]
     if not readings:
         return
     if found := next((word for word in rest if "{}" in word), None):
@@ -1140,7 +1158,8 @@ def glob_alternatives(segment):
 # @req> REQ-54260750@MTrWbA9_HZWY pokpqc
 def is_corpus_root(word):
     for value in {word, word.rpartition("=")[2]}:
-        trimmed = os.path.normpath(value).rstrip("/") if value else ""
+        stripped = EXPANSION.sub("", value)
+        trimmed = os.path.normpath(stripped).rstrip("/") if stripped else ""
         if trimmed and (trimmed.rsplit("/", 1)[-1] == CORPUS_ROOT_NAME or any(
                 GLOB_CHAR.search(segment) and LITERAL_CHAR.search(segment)
                 and any(fnmatch.fnmatchcase(CORPUS_ROOT_NAME, alt)
@@ -1192,8 +1211,7 @@ def reached(path, root):
 def reaches_corpus(word, cwd, root=False):
     paths = (os.path.normpath(os.path.join(cwd, alt))
              for value in {word, word.rpartition("=")[2]}
-             if value and "$" not in value and "`" not in value
-             for alt in bounded(os.path.expanduser(value)))
+             if value for alt in bounded(os.path.expanduser(EXPANSION.sub("*", value))))
     return any(os.path.isabs(path) and reached(path, root) for path in paths)
 
 
@@ -1220,6 +1238,8 @@ def names_corpus(part, cwd):
 @functools.cache
 def judge_shell(raw, cwd, stdin=()):
     # @req+ REQ-22704490@0I1yKEFWt0tX ak47k7
+    if (spelled := ansi_c(raw)) != raw:
+        judge_shell(spelled, cwd, stdin)
     cmd = flatten(ESCAPE.sub("", raw))
     joins = []
     pipelines = scan(AMP_REDIRECT.sub(" ", cmd), joins)
@@ -1273,6 +1293,22 @@ def judge_shell(raw, cwd, stdin=()):
                 left()
                 judge_shell(script, here, piped(stdin, pipeline, at))
     # @req- ak47k7
+
+
+def ansi_c(raw):
+    pieces, at = [], 0
+    for found in ANSI_C.finditer(masked(raw)):
+        if found[1] is not None and len(found[1]) % 2:
+            text = raw[found.start(2) + 1:found.end() - 1]
+            pieces += [raw[at:found.start(2) - 1], shlex.quote(ANSI_ESCAPE.sub(escaped, text))]
+            at = found.end()
+    return "".join(pieces) + raw[at:]
+
+
+def escaped(found):
+    digits = next((group for group in found.groups() if group), None)
+    return found[0] if digits is None else chr(min(int(digits, 8 if found[1] else 16),
+                                                   sys.maxunicode))
 
 
 def piped(stdin, pipeline, at):

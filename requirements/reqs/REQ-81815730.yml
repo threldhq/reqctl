@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a [data item](data_item) named value_types holding an [entry](entry) keyed
+    text
+  then: the product refuses the rename, naming the key, and changes nothing
+  when: reqctl rename gives the [data item](data_item) another name
+- given: a term
+  then: the product refuses the rename, naming the key, and changes nothing
+  when: reqctl rename gives the term the name default, pinned, text or name
+assessed:
+  REQ-67450031: dHzdY0EyKyJ3aok0qiZAdUbz1N4bH8rnZZz6O9TM8C8
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-67450031: derives_from
+status: approved
+text: If reqctl rename would leave an [entry](entry) of a [dictionary item](dictionary_item)
+  other than the [data item](data_item) named value_types keyed for a name reqctl
+  reserves, then the product shall refuse the rename.
+type: functional
+verification: inspection

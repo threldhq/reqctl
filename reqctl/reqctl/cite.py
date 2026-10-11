@@ -456,6 +456,9 @@ def tagged(root, path, asked, exclusive=False):
     if target.suffix not in COMMENTS:
         raise ReqctlError(f"{path}: citations are written only in "
                           f"{', '.join(sorted(COMMENTS))} files")
+    # @req> REQ-89706423@fyVHTsenA51D thl334
+    if not target.resolve().is_relative_to(Path(root).resolve()):
+        raise ReqctlError(f"{path}: not in the code base at {root}")
     text = target.read_bytes().decode()
     lines = _feed_lines(text)
     # @req> REQ-65738797@3jHtqzLVQUal msfg5w
