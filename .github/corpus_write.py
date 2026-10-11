@@ -8,6 +8,7 @@ import unicodedata
 
 # @req> REQ-25363659@x2KAEtIScy4m 7h7cpr
 # @req> portal_commands@mVDhq70-Jnif 47luhf
+# @req> REQ-87066486@AtzPEAcAbJ1v nplk67
 COMMANDS = ("new", "revise", "relate", "unrelate", "delete")
 MINTED = re.compile(r"\$([0-9]+)")
 PAYLOAD = "CORPUS_CHANGE"

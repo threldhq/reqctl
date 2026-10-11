@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+# @req> GUARD-93589588@yH4bykpGUeLb yhxviy
 COSMETIC = ("-q", "--quiet", "--disable-pip-version-check")
 
 
@@ -18,6 +19,7 @@ def installs(text):
         rest = words[at + 1:]
         flags, files, editable, positional = [], [], [], []
         i = 0
+        # @req> GUARD-93589588@yH4bykpGUeLb hjzm3v
         while i < len(rest):
             word = rest[i]
             if word == "-r":

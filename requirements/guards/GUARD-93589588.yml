@@ -15,7 +15,9 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
+  hjzm3v: pxUj8rtEPfeYhv5v8_hhLjTBbu-vGTx3UQwPq6eCbWg
   umdv5h: C0rG8o2WAcRAxSSyWH0XjxJYSH0jdHALh9HAHlxe-88
+  yhxviy: hsOjoQ1CxX6mR3jG4h-68WqDlquNBn2lSG1mtJ5M2JI
 relations: {}
 status: approved
 text: The build shall install through the session-start hook exactly the Python requirement
