@@ -24,7 +24,16 @@ acceptance_criteria:
     code file
   then: the product reports no problem
   when: the change is checked against its base branch
+- given: a change to a file a [whole-file citation](whole_file_citation) covers, and
+    only to that citation's digest in the [item](item) holding it
+  then: the product reports no problem
+  when: the change is checked against its base branch
+- given: a change adding a [whole-file citation](whole_file_citation) to an [item](item),
+    and to the file it covers
+  then: the product reports a problem
+  when: the change is checked against its base branch
 assessed:
+  REQ-30061042: b7B9U8dkoUHISTdbzsklwBOuu4h10PhXjQTIUPotY20
   REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
   REQ-75539229: 263gd_-RLfVLJTxPjnM8Lcc2AlTeCxUZZH9498fcB_w
   citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
@@ -35,19 +44,21 @@ assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 citations:
   c6qh2i: fIcx0gXAAIubm8I4M5fj4fkAvjDJ9WV0Lo-_qRZweAQ
   qya7yo: EBCJXjrLkct01JkYj9vDxmqbbT4EMTOEem7PYbZtPic
 priority: medium
 relations:
+  REQ-30061042: depends_on
   REQ-64846889: depends_on
   REQ-75539229: depends_on
 status: approved
 text: If a change touches both a file under the [corpus root](corpus_root) other than
-  the baseline, in more than its [pins](pin) and its [citation list](citation_list),
-  and a file outside the [corpus root](corpus_root), in more than the [stamps](stamp)
-  its [statement citations](statement_citation) name, then the product shall report
-  a problem when the ${corpus_gates.travel_alone} gate checks the change against its
-  base branch.
+  the baseline, in more than its [pins](pin), its [citation list](citation_list) and
+  the digest of each of its [whole-file citations](whole_file_citation), and a file
+  outside the [corpus root](corpus_root), in more than the [stamps](stamp) its [statement
+  citations](statement_citation) name, then the product shall report a problem when
+  the ${corpus_gates.travel_alone} gate checks the change against its base branch.
 type: functional
 verification: inspection
