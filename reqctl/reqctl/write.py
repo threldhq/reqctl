@@ -676,6 +676,8 @@ def rename(store, uid, new_name):
         raise ReqctlError(
             f"{item.uid}: a {kind} carries no name; a term, a parameter or a "
             "data item is renamed")
+    # @req> REQ-79956352@NXkZ4OmQ3Qb4 75mdrs
+    _refuse_hidden("name", new_name)
     _refuse_unusable_name(store, new_name, item.uid)
     old_name = corpus.name_of(item.uid, item.data)
     olds = {item.uid} | ({old_name} if old_name is not None else set())
