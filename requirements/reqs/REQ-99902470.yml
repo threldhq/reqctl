@@ -9,7 +9,7 @@ assessed:
 priority: medium
 relations:
   REQ-38288492: constrains
-status: approved
+status: deprecated
 text: The product shall ship nothing in the Claude Code plugin beyond the ${plugin_components}.
 type: functional
 verification: inspection
