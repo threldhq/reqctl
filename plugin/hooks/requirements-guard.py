@@ -683,7 +683,8 @@ def invoked(words):
             or words[i - 1].startswith("-") and os.path.basename(words[i]) not in JUDGED))):
         i += 2 if REDIRECTION.fullmatch(words[i]) else 1
     if i and i < len(words) and os.path.basename(words[i]) not in JUDGED:
-        i = next((j for j in range(i, len(words)) if os.path.basename(words[j]) in ("git", "rm")), i)
+        i = next((j for j in range(i, len(words))
+                  if os.path.basename(words[j]) in ("git", "rm", "find")), i)
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
 
 
@@ -991,7 +992,8 @@ BARE_SWEEP = (*BARE_ROOTS, "*")
 
 def sweeping(targets, here, bare):
     project = os.environ.get("CLAUDE_PROJECT_DIR", "").rstrip("/")
-    above = [project, *map(str, Path(project).parents)] if project else []
+    root = Path(os.path.realpath(project)) if project else None
+    above = [str(root), *map(str, root.parents)] if root else []
     alternatives = {w: list(itertools.islice(braced(os.path.expanduser(w)), 257))
                     for w in targets}
     return next(
@@ -999,8 +1001,9 @@ def sweeping(targets, here, bare):
          or "$" in w or "`" in w or w.startswith(("~+", "~-"))
          or len(alternatives[w]) > 256 or SEQUENCE.search(w)
          or any("{" in alt and "," in alt for alt in alternatives[w])
-         or any(expands_to(os.path.normpath(os.path.join(here, alt)), path)
-                for alt in alternatives[w] for path in above)),
+         or any(expands_to(os.path.realpath(os.path.join(here, alt)), path)
+                for alt in alternatives[w] for path in above)
+         or GLOB_CHAR.search(w) and reaches_corpus(w, here, True)),
         None)
 
 
@@ -1039,24 +1042,25 @@ def judge_command(said, here, stdin=()):
             (len(w) > 2 and "--recursive".startswith(w))
             or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
             for w in operands):
-        swept = sweeping(operands, here, BARE_SWEEP) or next(
-            (w for w in operands if GLOB_CHAR.search(w) and reaches_corpus(w, here, True)), None)
+        swept = sweeping(operands, here, BARE_SWEEP)
         if swept:
             deny(f"rm -r of '{swept}' blocked: it sweeps the requirements "
                  "corpus along with everything else. Name the paths to delete.")
     # @req> REQ-91051324@ljHcdWSG-nys vdn4ok
-    if plain == "find" and "-delete" in operands:
+    # @req> REQ-22704490@0I1yKEFWt0tX mrkvmj
+    if plain == "find" and any("-delete" in bounded(w) for w in operands):
         at = 0
         while at < len(operands) and (operands[at] in ("-H", "-L", "-P", "-D")
                                       or operands[at].startswith("-O")):
             at += 2 if operands[at] == "-D" else 1
+        at += operands[at:at + 1] == ["--"]
         points = list(itertools.takewhile(
             lambda word: not word.startswith("-") and word not in ("(", "!"),
             operands[at:])) or ["."]
         if swept := sweeping(points, here, BARE_ROOTS):
             deny(f"find -delete from '{swept}' blocked: it could reach the project "
-                 "root or a folder above it. Start find from the folder that holds "
-                 "what it should delete.")
+                 "root, a folder above it, or the requirements corpus. Start find "
+                 "from the folder that holds what it should delete.")
     for word in words:
         if "git" in word and "push" in word and word not in ("git", "push"):
             refuse_destructive_push(word)
