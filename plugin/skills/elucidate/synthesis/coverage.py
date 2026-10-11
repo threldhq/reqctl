@@ -27,6 +27,14 @@ def quoted(said, needle):
 # @req- n2lx2b
 
 
+def keys_in(node):
+    if isinstance(node, dict):
+        return {str(name) for name in node}.union(*map(keys_in, node.values()))
+    if isinstance(node, list):
+        return set().union(*map(keys_in, node))
+    return set()
+
+
 def faults(found, words):
     # @req+ REQ-59870599@2h71qdAwEzkC uffga6
     if not isinstance(found, dict):
@@ -38,11 +46,7 @@ def faults(found, words):
 
     said = plain(spoken(words))
     # @req+ REQ-86066994@ZdOflpXK5eCb a4gokv
-    stated = {str(name) for name in found}
-    for one in LISTS:
-        for entry in found[one]:
-            if isinstance(entry, dict):
-                stated |= {str(name) for name in entry}
+    stated = keys_in(found)
     held = [f"states {name!r}, which is not one of {', '.join(NAMES)}"
             for name in sorted(stated - set(NAMES))]
     # @req- a4gokv

@@ -12,7 +12,7 @@ import shapes
 from reqctl import corpus
 
 
-def cited(data, stated):
+def cited(data, stated, dictionary):
     # @req+ REQ-62710822@DZLgFus7Dgs- adhfwh
     found = []
     for field, key in shapes.CITING.items():
@@ -22,6 +22,10 @@ def cited(data, stated):
                 if name not in stated:
                     found.append(f"{field} cites {name}, which the prompt did "
                                  "not state")
+    found += [f"{field} cites {entry[key]}, which the prompt did not state"
+              for field, key in shapes.DICTIONARY_CITING.items()
+              for entry in data.get(field) or []
+              if entry[key] is not None and entry[key] not in dictionary]
     return found
     # @req- adhfwh
 
@@ -48,7 +52,9 @@ def judged(run, state_held):
         # @req+ REQ-62710822@DZLgFus7Dgs- v3dukx
         faults = ([f"answers proposal {data['proposal']}, not {number}"]
                   if str(data["proposal"]) != number else [])
-        faults += cited(data, set(state_held["named"][number]))
+        faults += cited(data, set(spec.get("stated") or ()) if spec["groups"]
+                        else set(state_held["named"][number]),
+                        set(state_held["dictionary"]))
         if faults:
             failed.append((number, faults))
             continue
@@ -129,6 +135,14 @@ def main(argv=None):
     # @req> REQ-32019340@Ce9zMv1R_f5m 7v53qm
     if not state_held["judge"]:
         raise SystemExit("no judge prompt was built; run `plan.py judge` first")
+    # @req+ REQ-32019340@Ce9zMv1R_f5m qgaloo
+    unbuilt = [number for number, spec in sorted(state_held["judge"].items())
+               if spec["groups"] and not spec.get("stands")
+               and not (run / "prompts" / "final" / f"{number}.md").is_file()]
+    if unbuilt:
+        raise SystemExit(f"proposal {', '.join(unbuilt)} was split into groups and "
+                         "no final prompt was built; run `plan.py final` first")
+    # @req- qgaloo
     accepted, failed, absent = judged(run, state_held)
     print(report(accepted, failed, absent))
     # @req> REQ-82676674@r-c5TnDW5gbD zeg5gl

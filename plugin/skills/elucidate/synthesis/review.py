@@ -248,12 +248,19 @@ class Deadline:
 # @req> REQ-37635213@hDGHrxRYQZ75 elw5bl
 class Redirects(urllib.request.HTTPRedirectHandler):
     def __init__(self, bound):
-        self.max_repeats = self.max_redirections = bound
+        self.bound = self.max_repeats = self.max_redirections = bound
         self.inf_msg = f"takes more than {bound} redirects; the last answered "
 
-    def redirect_request(self, req, *args):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        hops = getattr(req, "hops", 0) + 1
+        if hops > self.bound:
+            raise urllib.request.HTTPError(req.full_url, code, self.inf_msg + msg,
+                                           headers, fp)
         req.redirect_dict = getattr(req, "redirect_dict", {})
-        return super().redirect_request(req, *args)
+        new = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if new is not None:
+            new.hops = hops
+        return new
 
 
 # @req+ REQ-91666323@k8sa2vnqWm_q goa2fj

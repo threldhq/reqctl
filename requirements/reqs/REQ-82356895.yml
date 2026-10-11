@@ -15,7 +15,8 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
 citations:
-  yj46qn: Wz7Cj3X6p7E9rAXrzyeXLIEotXzcmf9ahUcZPNuM_BI
+  buvhr7: 7i1eWDh4_vK2btmlZT7xBmULuZLQ-vHfXFK6cDQ6w54
+  rtqqce: a0w0BqgeqkjeouObjDIePXtfJ2mRnnvp_U4srGenNaQ
 priority: medium
 relations:
   REQ-23060027: constrains

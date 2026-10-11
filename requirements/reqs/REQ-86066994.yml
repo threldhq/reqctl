@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the findings are checked
 assessed: {}
 citations:
-  a4gokv: vIJsbtyxg-zS09BYE1czlIugqqskSP4AmDpVae0exQg
+  a4gokv: ttNtTPprlGelKIu3sdc5Y8QIhtkbcDHE_Id7pwD6bT0
 priority: medium
 relations: {}
 status: approved
