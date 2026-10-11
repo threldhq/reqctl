@@ -294,6 +294,7 @@ def inline(label, prompt, shape, kind, held):
             **held}
 
 
+# @req> REQ-99520421@K6T5THF20GU8 cucduq
 def registered(name):
     plugin = Path(sys.argv[0]).absolute().parents[3] / PLUGIN
     if not plugin.is_file():
@@ -1049,6 +1050,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
     where = manifest(run, "recall", spawned)
     asked = coverage(run, words, declined, held, carried)
     # @req> REQ-23060027@zeNeSryv-0-1 ukljdu
+    # @req> REQ-99520421@K6T5THF20GU8 d5vvxj
     reading = manifest(run, "coverage", [inline(
         "coverage", asked, shapes.COVERAGE, registered("coverage"),
         agents["coverage"])])

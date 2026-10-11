@@ -13,6 +13,10 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.best_in_class_agent: u1uaiUuYFzYo5iFrDTEntEfYwc19prv4BbSVmvAHnvM
   plugin_components.coverage_agent: MLMykc8Gn2mN2POVQUqKUR2bIgNPgK0zPBZZ8AJGUhU
+citations:
+  bumf3d: _kkB2rVlkOEUmrT_Ukl9Tn4JMISIedVMRSTH0LnGH-o
+  cucduq: N2Wf8gaMMcfDjPswCYEBPo89xTUrS90SCoq6ITeYYPM
+  d5vvxj: xbi4kIvvp6r_48IrFu13YQ5iowoFugGw5ff9cIJKDtg
 priority: medium
 relations:
   REQ-38288492: depends_on
