@@ -8,7 +8,7 @@ import yaml
 from reqctl import corpus
 
 LISTED = (corpus.CITATION_LIST,)
-# @req> REQ-43374441@7pCJVe7pf8Mg c6qh2i
+# @req> REQ-43374441@UTw4zjM6nnr9 c6qh2i
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
@@ -25,7 +25,7 @@ def _git(*args):
     return done
 
 
-def without(ref, path, keys):
+def without(ref, path, keys, digests=False):
     found = _git("show", f"{ref}:{path}")
     if found.returncode != 0:
         return ABSENT
@@ -35,11 +35,21 @@ def without(ref, path, keys):
         return found.stdout
     if not isinstance(held, dict):
         return found.stdout
-    return {key: value for key, value in held.items() if key not in keys}
+    kept = {key: value for key, value in held.items() if key not in keys}
+    # @req+ REQ-43374441@UTw4zjM6nnr9 burjli
+    whole = kept.get(corpus.WHOLE_FILES)
+    if digests and isinstance(whole, dict):
+        kept[corpus.WHOLE_FILES] = {
+            cited: ({field: value for field, value in fields.items()
+                     if field != "digest"} if isinstance(fields, dict) else fields)
+            for cited, fields in whole.items()}
+    # @req- burjli
+    return kept
 
 
-def only(base, path, keys):
-    return without(base, path, keys) == without("HEAD", path, keys)
+def only(base, path, keys, digests=False):
+    return (without(base, path, keys, digests)
+            == without("HEAD", path, keys, digests))
 
 
 def without_stamps(ref, path):
@@ -54,7 +64,7 @@ def repins_only(base, path):
     return was is not ABSENT and was == without_stamps("HEAD", path)
 
 
-# @req+ REQ-43374441@7pCJVe7pf8Mg qya7yo
+# @req+ REQ-43374441@UTw4zjM6nnr9 qya7yo
 def classify(base):
     found = _git("diff", "--no-renames", "--raw", "-z", f"{base}...HEAD")
     fork = _git("merge-base", base, "HEAD")
@@ -70,7 +80,8 @@ def classify(base):
     other = [path for path in changed if not path.startswith(GOVERNED)]
     if not governed or not other:
         return [], other, []
-    pinned = ([path for path in governed if only(fork, path, CARRIED)]
+    pinned = ([path for path in governed
+               if only(fork, path, CARRIED, digests=True)]
               + [path for path in other
                  if textual[path] and repins_only(fork, path)])
     return ([path for path in governed if path not in pinned],
