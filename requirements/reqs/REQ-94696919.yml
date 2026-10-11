@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: an [item](item) recording a link toward an [item](item) the corpus no longer
+    holds
+  then: the [item](item) records no link toward the absent [item](item)
+  when: the product is asked to unrelate the link
+- given: a corpus in which validation finds other problems
+  then: the product removes the link
+  when: the product is asked to unrelate a link toward an [item](item) the corpus
+    does not hold
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations: {}
+status: approved
+text: If the product is asked to unrelate a link an [item](item) records toward an
+  [item](item) the corpus does not hold, then the product shall remove the link.
+type: functional
+verification: inspection

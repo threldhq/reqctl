@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: lines of a file in ${skipped_folders.build}
+  then: the product refuses the [citation](statement_citation)
+  when: the product is asked to cite an [item](item) at them
+assessed:
+  REQ-10966072: RC1_0V_R-34UHxOpvgnMzjMqgTefxbfnAoJHekdYS1U
+  REQ-35805881: 37XtC4gyD98koNTC66Yk1EMBPtYcsMN1f16LDKb0d08
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  skipped_folders: hSe5USIMyJfeCB-oq9HU1A-A2FtMHnkbGiEQn4RwH5U
+  skipped_folders.*: cAfbiW8e7xgoKzeDvQmPgZCJ26Vn5KpqYB3NBbjtzTk
+  skipped_folders.build: qXHxAvPpIAIsKJav_fRWI9y4jM1EhwBw1SJW6bGUA7s
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-10966072: depends_on
+  REQ-35805881: depends_on
+  REQ-60346603: constrains
+  REQ-88203622: constrains
+status: approved
+text: If the product is asked to cite an [item](item) at lines of a file in one of
+  the ${skipped_folders}, then the product shall refuse the [citation](statement_citation).
+type: functional
+verification: inspection
