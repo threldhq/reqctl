@@ -173,7 +173,7 @@ def read(root, digested=False, uid=None):
     citations, faults = _parse(sources)
     # @req+ REQ-64570886@Zckz3LzHUzXn g2iusc
     owners = {parsed["id"]: parsed["uid"].partition(".")[0]
-              for relative, text in sources if text is not None
+              for relative, text in sources if uid and text is not None
               for _, _, parsed in markers(text, Path(relative).suffix)
               if parsed and parsed["id"] and parsed["uid"]}
 

@@ -75,12 +75,9 @@ def paths_named(text, holder, known):
         text = text.replace(SKILL_DIR, str(Path(holder).parent))
     # @req> GUARD-22794969@9zSROQYCCtPU rubhxs
     for number, line in enumerate(text.splitlines(), 1):
-        urls = [url.span() for url in URL.finditer(line)]
-        for found in PATHISH.finditer(line):
+        for found in PATHISH.finditer(URL.sub(" ", line)):
             named = found.group(0)
             if PLACEHOLDER.search(named) or "/" not in named:
-                continue
-            if any(start <= found.start() < end for start, end in urls):
                 continue
             if any(os.path.normpath(where) in known
                    for where in (named, Path(holder).parent / named)):

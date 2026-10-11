@@ -8,8 +8,7 @@ import yaml
 WORKFLOWS = Path(".github/workflows")
 GUARDS = Path(".github/guards")
 PINNED = re.compile(r"@[0-9a-f]{40}$")
-PIP = re.compile(r"\bpip3?\s+install\b")
-COMMANDS = re.compile(r"&&|\|\||[;|\n]")
+PIP = re.compile(r"\bpip3?\s+install\b(?:&(?!&)|[^;&|\n])*")
 EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
 READ_ONLY = {"contents": "read"}
@@ -137,11 +136,8 @@ def faults(text, where, gates=None):
 
 def installs(text, where):
     found = []
-    for command in COMMANDS.split(CONTINUED.sub(" ", text)):
-        pip = PIP.search(command)
-        if pip is None:
-            continue
-        held = " ".join(command[pip.start():].split())
+    for line in PIP.findall(CONTINUED.sub(" ", text)):
+        held = " ".join(line.split())
         spaced = f" {held} "
         # @req> GUARD-26421773@Fprcs5aDvwE8 kt5es3
         if " -r " in spaced and "--require-hashes" not in spaced:
@@ -149,7 +145,7 @@ def installs(text, where):
                          "--require-hashes")
         # @req> GUARD-72877772@JfdZ18LPQLEi bbo2z6
         if (any(EDITABLE.fullmatch(word) for word in held.split())
-                and "--no-build-isolation" not in held.split()):
+                and " --no-build-isolation " not in spaced):
             found.append(f"{where}: `{held}` builds an editable install without "
                          "--no-build-isolation")
     return found

@@ -15,17 +15,14 @@ from reqctl import corpus
 def cited(data, stated, dictionary):
     # @req+ REQ-62710822@DZLgFus7Dgs- adhfwh
     found = []
-    for field, key in shapes.CITING.items():
-        for entry in data.get(field) or []:
-            names = entry[key] if isinstance(entry[key], list) else [entry[key]]
-            for name in names:
-                if name not in stated:
-                    found.append(f"{field} cites {name}, which the prompt did "
-                                 "not state")
-    found += [f"{field} cites {entry[key]}, which the prompt did not state"
-              for field, key in shapes.DICTIONARY_CITING.items()
-              for entry in data.get(field) or []
-              if entry[key] is not None and entry[key] not in dictionary]
+    for citing, known in ((shapes.CITING, stated),
+                          (shapes.DICTIONARY_CITING, dictionary)):
+        for field, key in citing.items():
+            for entry in data.get(field) or []:
+                names = entry[key] if isinstance(entry[key], list) else [entry[key]]
+                found += [f"{field} cites {name}, which the prompt did not state"
+                          for name in names
+                          if name is not None and name.split(".")[0] not in known]
     return found
     # @req- adhfwh
 
@@ -52,9 +49,8 @@ def judged(run, state_held):
         # @req+ REQ-62710822@DZLgFus7Dgs- v3dukx
         faults = ([f"answers proposal {data['proposal']}, not {number}"]
                   if str(data["proposal"]) != number else [])
-        faults += cited(data, set(spec.get("stated") or ()) if spec["groups"]
-                        else set(state_held["named"][number]),
-                        set(state_held["dictionary"]))
+        faults += cited(data, (spec.get("stated") or ()) if spec["groups"]
+                        else state_held["named"][number], state_held["dictionary"])
         if faults:
             failed.append((number, faults))
             continue
@@ -137,8 +133,7 @@ def main(argv=None):
         raise SystemExit("no judge prompt was built; run `plan.py judge` first")
     # @req+ REQ-32019340@Ce9zMv1R_f5m qgaloo
     unbuilt = [number for number, spec in sorted(state_held["judge"].items())
-               if spec["groups"] and not spec.get("stands")
-               and not (run / "prompts" / "final" / f"{number}.md").is_file()]
+               if spec["groups"] and not spec.get("stands") and "stated" not in spec]
     if unbuilt:
         raise SystemExit(f"proposal {', '.join(unbuilt)} was split into groups and "
                          "no final prompt was built; run `plan.py final` first")

@@ -150,9 +150,7 @@ def _plain(value):
     if isinstance(value, list):
         return ", ".join(f"({_plain(member)})" if isinstance(member, dict)
                          else _plain(member) for member in value)
-    if isinstance(value, bool):
-        return str(value).lower()
-    return "null" if value is None else str(value)
+    return "null" if value is None else _write.entry_key(value)
 
 
 def _entry_fields(fields):

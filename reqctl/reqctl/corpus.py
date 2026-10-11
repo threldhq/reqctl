@@ -969,11 +969,18 @@ def _data_held(root):
         for path in folder_for(root, "data").glob(pattern):
             held.add(path.stem)
             if path.stem.startswith("DATA-"):
-                with contextlib.suppress(ReqctlError):
-                    data = read(path)
-                    held.add(name_of(path.stem, data if isinstance(data, dict) else {}))
+                stat = path.stat()
+                held.add(_data_name(path, (stat.st_mtime_ns, stat.st_size)))
     held.discard(None)
     return frozenset(held)
+
+
+@functools.lru_cache(maxsize=None)
+def _data_name(path, stamped):
+    with contextlib.suppress(ReqctlError):
+        data = read(path)
+        return name_of(path.stem, data if isinstance(data, dict) else {})
+    return None
 
 
 def _unheld_dropped(node, data_held):

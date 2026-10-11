@@ -1042,8 +1042,8 @@ DATED = FormatChecker(formats=())
 @DATED.checks(DATE, raises=ValueError)
 def _dated(value):
     return isinstance(value, datetime.date) or (
-        isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", value) is not None
-        and bool(datetime.date.fromisoformat(value)))
+        isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", value)
+        and datetime.date.fromisoformat(value))
 # @req- 5ii662
 
 

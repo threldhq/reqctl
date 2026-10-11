@@ -1158,8 +1158,7 @@ def glob_alternatives(segment):
 # @req> REQ-54260750@MTrWbA9_HZWY pokpqc
 def is_corpus_root(word):
     for value in {word, word.rpartition("=")[2]}:
-        stripped = EXPANSION.sub("", value)
-        trimmed = os.path.normpath(stripped).rstrip("/") if stripped else ""
+        trimmed = os.path.normpath(EXPANSION.sub("", value)).rstrip("/")
         if trimmed and (trimmed.rsplit("/", 1)[-1] == CORPUS_ROOT_NAME or any(
                 GLOB_CHAR.search(segment) and LITERAL_CHAR.search(segment)
                 and any(fnmatch.fnmatchcase(CORPUS_ROOT_NAME, alt)

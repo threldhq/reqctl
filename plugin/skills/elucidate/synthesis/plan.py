@@ -807,7 +807,7 @@ def judged_by(held, scope):
 
 
 def dictionary(records):
-    lines = []
+    lines, names = [], []
     # @req> REQ-48772986@_O1niNys_-pl 4xoc6j
     for uid, data in sorted(records.items()):
         kind = corpus.kind_of(uid, data)
@@ -817,13 +817,15 @@ def dictionary(records):
             lines.append(f"- term {uid}: {corpus.term_word(data)}"
                          + (f" (also {aliases})" if aliases else "")
                          + f" -- {' '.join(str(fields.get('definition') or '').split())}")
+            names.append(uid)
         elif kind in ("parameter", "data"):
             keys = ", ".join(str(key) for key in corpus.entries(data) or {})
             unit = f" {data['unit']}" if data.get("unit") else ""
             lines.append(f"- {kind} {data.get('name')}: "
                          f"{' '.join(str(data.get('text') or '').split())}"
                          + (f" [{keys}]{unit}" if keys else ""))
-    return "\n".join(lines) + "\n"
+            names.append(str(data.get("name")))
+    return "\n".join(lines) + "\n", names
 
 
 def assembled(scope, block, records):
@@ -1029,11 +1031,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
         "recall": {}, "judge": {}, "named": {},
     }
     # @req> REQ-62710822@DZLgFus7Dgs- 46kjic
-    state_held["dictionary"] = sorted(
-        uid if corpus.kind_of(uid, data) == "term" else str(data.get("name"))
-        for uid, data in records.items()
-        if corpus.kind_of(uid, data) in ("term", "parameter", "data"))
-    dictionary_text = dictionary(records)
+    dictionary_text, state_held["dictionary"] = dictionary(records)
     prompts, spawned, texts = recall_prompts(
         run, held, state_held, shards, None, words, declined, dictionary_text,
         records, len(blocked))
@@ -1291,7 +1289,7 @@ def judge(run):
             print(f"{label}:")
             for fault in faults:
                 print(f"  {fault}")
-            if label not in state_held["recall"]:
+            if state_held["recall"][label]["shard"] in stopped:
                 continue
             corpus.remove(run / "returns" / "recall" / f"{label}.json",
                           missing_ok=True)

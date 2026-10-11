@@ -134,7 +134,7 @@ def _blank_or_hidden(fields, own, kind):
         for member in value if field.repeated else [value]:
             # @req> REQ-18950462@TJVbxYWG6Dcw 6ed4w7
             if field.textual and not str(member).strip() and not (
-                    field.name == "text" and kind in ("requirement", "guard")):
+                    field.name == "text" and kind in STATEMENTS):
                 raise ReqctlError(f"{field.flag} must not be blank")
             # @req+ REQ-79956352@NXkZ4OmQ3Qb4 i24q67
             found = _validate.hidden(str(member))
@@ -261,20 +261,19 @@ ANY_LINK = re.compile(r"\[([^\]\n]+)\]\(([^()\n]+)\)")
 
 
 def _name_index(store):
-    words, params, claimed = {}, {}, {}
+    claimants, params, claimed = {}, {}, {}
     for item in corpus.items(store):
         held = corpus.name_of(item.uid, item.data)
         if held is None:
             continue
         if corpus.kind_of(item.uid, item.data) == "term":
             for word in _validate._term_words(item.data):
-                words.setdefault(word.casefold(), {})[held] = None
+                claimants.setdefault(word.casefold(), {})[held] = None
             continue
-        first = claimed.setdefault(("name", held), item.uid)
+        first = claimed.setdefault(held, item.uid)
         params[held] = held if first == item.uid else None
     # @req+ REQ-57369684@hCyj1HdrHTr5 tbhiwa
-    claimants = {word: list(held) for word, held in words.items()}
-    terms = {word: held[0] if len(held) == 1 else None
+    terms = {word: next(iter(held)) if len(held) == 1 else None
              for word, held in claimants.items()}
     # @req- tbhiwa
     return terms, params, claimants
@@ -573,6 +572,8 @@ def _propagate(store, uid, prospective, words):
     touched = set()
     for held_uid, data in before.items():
         was = prospective if held_uid == uid else data
+        if not any(f"]({address})" in str(was) for address in addresses):
+            continue
         held = _reword_data(store.root, held_uid, was, addresses, words, seen)
         if held != was:
             after[held_uid] = held
