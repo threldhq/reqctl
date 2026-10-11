@@ -999,7 +999,7 @@ def sweeping(targets, here, bare):
     project = os.environ.get("CLAUDE_PROJECT_DIR", "")
     above = {str(path) for root in {Path(project), Path(project).resolve()} if project
              for path in (root, *root.parents)}
-    for w in targets:
+    for w in filter(None, targets):
         alts = list(itertools.islice((form for alt in braced(w) for form in braced(re.sub(
             r"(?<![^/])\.[^/]*[*?[][^/]*", dotted, os.path.expanduser(alt)))), 257))
         if (os.path.normpath(w) in bare
@@ -1010,6 +1010,9 @@ def sweeping(targets, here, bare):
                        for form in {f(os.path.join(here, alt))
                                     for f in (os.path.normpath, os.path.realpath)}
                        for path in above)
+                or not here and any(not os.path.isabs(alt) and fnmatch.fnmatchcase(
+                    path, "*" + os.path.normpath("/" + alt).rstrip("/").replace("[^", "[!"))
+                    for alt in alts for path in above)
                 or GLOB_CHAR.search(w) and any(reaches_corpus(alt, here, True) for alt in alts)):
             return w
 
