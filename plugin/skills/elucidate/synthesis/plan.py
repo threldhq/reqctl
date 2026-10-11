@@ -23,6 +23,7 @@ USED_BY = "- used by: "
 TOKEN = re.compile(r"\$\{[^}]*\}?")
 SIBLING = re.compile(r"^proposal (\d+)$")
 PLUGIN = Path(".claude-plugin") / "plugin.json"
+WORKFLOW = HERE.parent / "workflow.js"
 BINDS = "binds"
 CRITERIA = "criteria"
 TRACE = "trace"
@@ -929,6 +930,9 @@ def manifest(run, name, prompts):
             held[shape] = one["schema"]
         listed.append({**one, "schema": shape})
     where = manifested(run, name)
+    # @req> REQ-61212158@EISsRx_ntdvz 6kpbss
+    corpus.atomic_write(where.with_name(WORKFLOW.name),
+                        corpus.read_text(WORKFLOW))
     corpus.atomic_write(where, json.dumps({"shapes": held, "prompts": listed},
                                           indent=1) + "\n")
     return where
