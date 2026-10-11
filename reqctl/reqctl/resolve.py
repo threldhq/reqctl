@@ -5,7 +5,8 @@ PINS = "assessed"
 
 
 def _side(text, where):
-    held = loads(text, where)
+    # @req> REQ-49870454@KKNV-vdY6oM1 ilmqvb
+    held = loads(text, where, aliases=False)
     if not isinstance(held, dict):
         raise ReqctlError(
             f"{where.stem} holds an unresolved merge, and a side of it does "

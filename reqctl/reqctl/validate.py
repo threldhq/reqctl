@@ -1523,7 +1523,8 @@ def _settled(path):
             f"holds an unresolved merge -- `reqctl resolve {path.stem}` "
             "settles one that falls within its pins"
         )
-    return corpus.loads(text, path)
+    # @req> REQ-49870454@KKNV-vdY6oM1 ogeofb
+    return corpus.loads(text, path, aliases=False)
 
 
 # @req> REQ-21699310@HJWvkB2QKjez uv4bc5

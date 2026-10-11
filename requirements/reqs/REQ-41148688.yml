@@ -4,6 +4,8 @@ acceptance_criteria:
   when: the product writes the [item](item) file
 assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  xm3u4i: so7F4OLQbjR0lUQffbI0SMl8ZeWZNXmqtnx-iFoEPsg
 priority: medium
 relations: {}
 status: approved
