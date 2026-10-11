@@ -16,7 +16,6 @@ DERIVED = GOVERNED + "baseline.yml"
 STAMPED = re.compile(
     rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
 ABSENT = object()
-DIGEST = "digest"
 
 
 def _git(*args):
@@ -42,7 +41,7 @@ def without(ref, path, keys, digests=False):
     if digests and isinstance(whole, dict):
         kept[corpus.WHOLE_FILES] = {
             cited: ({field: value for field, value in fields.items()
-                     if field != DIGEST} if isinstance(fields, dict) else fields)
+                     if field != "digest"} if isinstance(fields, dict) else fields)
             for cited, fields in whole.items()}
     # @req- burjli
     return kept
