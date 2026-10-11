@@ -231,9 +231,11 @@ python3 ${CLAUDE_SKILL_DIR}/synthesis/review.py build --run .elucidate/<run>
 It states the owner's words, the field of the governed software -- the
 `governed_field` parameter where the corpus states one -- and the repository's
 README where there is one, and names the manifest that spawns the review's
-agent. Spawn it with one call of the Workflow tool, `scriptPath` at
-`${CLAUDE_SKILL_DIR}/workflow.js` and `args` holding the contents of that
+<!-- @req+ REQ-61212158@EISsRx_ntdvz cehbym -->
+agent. Spawn it with one call of the Workflow tool, `scriptPath` at the
+`workflow.js` beside that manifest and `args` holding the contents of that
 manifest, then check what the agent wrote:
+<!-- @req- cehbym -->
 <!-- @req- oit5jj -->
 
 ```bash
@@ -324,9 +326,11 @@ It reads what you wrote -- the owner's words, the declined list, the numbered
 proposals, and `run.yaml` with its `binds`, `criteria` and `trace` maps --
 and writes the prompts the agents read.
 
-Spawning is one call of the Workflow tool with `scriptPath` at
-`${CLAUDE_SKILL_DIR}/workflow.js` and `args` holding the contents of the
-manifest named. Each agent reads its prompt, writes its return, and nothing
+<!-- @req+ REQ-61212158@EISsRx_ntdvz xmrmw6 -->
+Spawning is one call of the Workflow tool with `scriptPath` at the
+`workflow.js` beside the manifest named and `args` holding the contents of
+that manifest. Each agent reads its prompt, writes its return, and nothing
+<!-- @req- xmrmw6 -->
 else. Each step that names a manifest is followed by a spawn and the next step
 waits on it: run `judge` only once the spawn has returned.
 
