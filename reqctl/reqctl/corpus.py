@@ -260,8 +260,8 @@ def read_text(path):
         raise ReqctlError(f"cannot read {path}: {error}") from error
 
 
-def read(path, aliases=True):
-    return loads(read_text(path), path, aliases)
+def read(path):
+    return loads(read_text(path), path)
 
 
 def sides(text):
@@ -309,7 +309,7 @@ def items(store):
         loaded = []
         for path in item_files(store.root):
             # @req> REQ-49870454@KKNV-vdY6oM1 4sqskc
-            data = read(path, aliases=False)
+            data = loads(read_text(path), path, aliases=False)
             if not isinstance(data, dict):
                 raise ReqctlError(f"{path.stem}: item file is not a mapping")
             loaded.append(Item(path.stem, path, data))
