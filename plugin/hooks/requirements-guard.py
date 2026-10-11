@@ -294,6 +294,7 @@ def deny(reason: str) -> None:
 
 def scan(cmd: str, joins=None) -> list[list[str]]:
     commands, pipeline, buf, held, bodies, nest, pending = [], [], [], [], [], [], []
+    subscripts = []
     joins = [] if joins is None else joins
     quote = None
     lines = cmd.split("\n")
@@ -306,6 +307,11 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
         pipeline.append([*held, *buf, *bodies])
         for chunks in (held, buf, bodies):
             chunks.clear()
+
+    def shifting():
+        enclosing = next((at for at in range(len(nest) - 1, -1, -1) if nest[at] != "("), -1)
+        return bool(subscripts and subscripts[-1] > enclosing) or (
+            enclosing >= 0 and nest[enclosing] in ("((", "$[", "${", '"{'))
 
     def cut_command(join=";"):
         cut_segment()
@@ -356,7 +362,12 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             if char == "#" and (not buf or buf[-1] in (" ", "\t", "(", ";", "&", "|", "$(")
                                 or closed == i - 1):
                 break
-            if char == "<" and nest[-1:] not in (["(("], ["$["]) and (heredoc := heredoc_at(line, i)):
+            if char == "{" and buf[-1:] == ["$"]:
+                nest.append("${")
+                buf.append(char)
+                i += 1
+                continue
+            if char == "<" and not shifting() and (heredoc := heredoc_at(line, i)):
                 delimiter, _, dash, end = heredoc
                 bodies.append(slot := [])
                 pending.append((delimiter, dash, slot, sum(entry != "(" for entry in nest)))
@@ -366,6 +377,8 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             if char == ")" and nest[-1:] not in ([], ["$["]):
                 closed = i if nest[-1] == "(" else closed
                 quote = '"' if nest.pop() == '"(' else None
+            elif char == "]" and subscripts and subscripts[-1] == len(nest):
+                subscripts.pop()
             elif char == "]" and nest[-1:] == ["$["]:
                 nest.pop()
             elif char == "(":
@@ -373,6 +386,8 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                             else "((" if buf[-1:] in (["("], ["$("]) else "(")
             elif char == "[" and buf[-1:] == ["$"]:
                 nest.append("$[")
+            elif char == "[" and buf[-1:] and (buf[-1].isalnum() or buf[-1] in ("_", "]")):
+                subscripts.append(len(nest))
             elif char == ")" and not nest:
                 cut_command("&&")
             if nest:
@@ -408,6 +423,7 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 slot.append("\n" + "\n".join(lines[row + 1:end + 1]))
                 row = end
             pending.clear()
+        subscripts[:] = [at for at in subscripts if len(nest) > at]
         if nest:
             held.append("".join(buf) + ";")
             buf.clear()
