@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-COSMETIC = ("--quiet", "--disable-pip-version-check")
+COSMETIC = ("-q", "--quiet", "--disable-pip-version-check")
 
 
 def installs(text):
@@ -27,7 +27,7 @@ def installs(text):
                 editable.append(rest[i + 1])
                 i += 2
             elif word.startswith("-"):
-                if word.startswith("--") and word not in COSMETIC:
+                if word not in COSMETIC:
                     flags.append(word)
                 i += 1
             else:

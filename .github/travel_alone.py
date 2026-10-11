@@ -41,7 +41,8 @@ def without(ref, path, keys, digests=False):
     if digests and isinstance(whole, dict):
         kept[corpus.WHOLE_FILES] = {
             cited: ({field: value for field, value in fields.items()
-                     if field != "digest"} if isinstance(fields, dict) else fields)
+                     if field not in ("digest", "pinned")}
+                    if isinstance(fields, dict) else fields)
             for cited, fields in whole.items()}
     # @req- burjli
     return kept

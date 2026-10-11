@@ -54,7 +54,7 @@ def cites(body):
 
 # @req+ GUARD-27671623@3zDwoF3LwQkw ixyyek
 QUOTED = re.compile(r"\"[^\"]*\"|'[^']*'")
-TRAILING = re.compile(r"\S\s+(#(?:\s.*|$))")
+TRAILING = re.compile(r"\S\s+(#.*)")
 MARKED = re.compile(r"<!--.*?-->", re.S)
 EMBEDDED = re.compile(rf"{MARKED.pattern}|<(script|style)[^>]*>(.*?)</\1>",
                       re.S | re.I)

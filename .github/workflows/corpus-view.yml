@@ -3,6 +3,7 @@ name: Corpus view
 on:
   push:
     branches: [main]
+  # @req> REQ-71344419@No0izFxAdVKW ctqcb6
   workflow_call:
     inputs:
       reqctl:

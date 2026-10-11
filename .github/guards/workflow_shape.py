@@ -8,7 +8,9 @@ import yaml
 WORKFLOWS = Path(".github/workflows")
 GUARDS = Path(".github/guards")
 PINNED = re.compile(r"@[0-9a-f]{40}$")
-PIP = re.compile(r"(?m)^.*?(pip install\b.*)$")
+PIP = re.compile(r"\bpip3?\s+install\b")
+COMMANDS = re.compile(r"&&|\|\||[;|\n]")
+EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
 READ_ONLY = {"contents": "read"}
 TAGS = "release-tag.yml"
@@ -21,7 +23,7 @@ IMPORTS = re.compile(r"(?m)^\s*(?:from reqctl import|import reqctl)\b"
                      r"|[\"']reqctl[\"']")
 ACCEPTS = re.compile(r"(?m)^\s*reqctl\s+validate\b")
 VALIDATES = "reqctl validate"
-UNTRUSTED = {"pull_request", "pull_request_target"}
+UNTRUSTED = "pull_request"
 JOBS = 1
 
 
@@ -88,7 +90,8 @@ def faults(text, where, gates=None):
         found.append(f"{where}: reaches the secrets context")
     # @req> REQ-81795630@6p2bA0ZHqY-j 6nwnpn
     if who in WIELDS:
-        for fired in sorted(UNTRUSTED & triggers(held)):
+        for fired in sorted(name for name in triggers(held)
+                            if str(name).startswith(UNTRUSTED)):
             found.append(f"{where}: wields a secret and fires on {fired}")
     # @req+ GUARD-20209566@zkKPlDbnzFuA wqoe4t
     events = held.get(True, held.get("on"))
@@ -134,15 +137,19 @@ def faults(text, where, gates=None):
 
 def installs(text, where):
     found = []
-    for line in PIP.findall(CONTINUED.sub(" ", text)):
-        held = " ".join(line.split())
+    for command in COMMANDS.split(CONTINUED.sub(" ", text)):
+        pip = PIP.search(command)
+        if pip is None:
+            continue
+        held = " ".join(command[pip.start():].split())
         spaced = f" {held} "
         # @req> GUARD-26421773@Fprcs5aDvwE8 kt5es3
         if " -r " in spaced and "--require-hashes" not in spaced:
             found.append(f"{where}: `{held}` installs from a lockfile without "
                          "--require-hashes")
         # @req> GUARD-72877772@JfdZ18LPQLEi bbo2z6
-        if " -e " in spaced and "--no-build-isolation" not in spaced:
+        if (any(EDITABLE.fullmatch(word) for word in held.split())
+                and "--no-build-isolation" not in held.split()):
             found.append(f"{where}: `{held}` builds an editable install without "
                          "--no-build-isolation")
     return found

@@ -7,6 +7,7 @@ import sys
 import unicodedata
 
 # @req> REQ-25363659@x2KAEtIScy4m 7h7cpr
+# @req> portal_commands@mVDhq70-Jnif 47luhf
 COMMANDS = ("new", "revise", "relate", "unrelate", "delete")
 MINTED = re.compile(r"\$([0-9]+)")
 PAYLOAD = "CORPUS_CHANGE"
@@ -127,7 +128,9 @@ def apply(payload):
     minted = []
     for step in shaped(payload):
         held = run(argv(step, minted))
-        minted.append(held.get("uid", "") if isinstance(held, dict) else "")
+        # @req> REQ-21669490@QsSQGmKKX39j 6eoq4h
+        minted.append(held.get("uid", "") if step.get("command") == "new"
+                      and isinstance(held, dict) else "")
     return minted
 
 
