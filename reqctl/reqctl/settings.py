@@ -86,15 +86,17 @@ def faults(document):
             # @req> REQ-78887253@ZroFZuS_zv0q yaohat
             found.append(f"{key}: {value!r} is not of the YAML type of the "
                          f"{shipped!r} the product ships")
+        # @req> REQ-21585959@QkioE_Ciddeh q7jgw2
         elif at[-1] == "quantity" and value < 1:
-            # @req> REQ-21585959@QkioE_Ciddeh qjsy3y
             found.append(f"{key}: {value!r} is not a whole number of at least "
                          "one")
+        # @req> REQ-15362279@YwMnA4sMLpfF 5pi6tp
+        # @req> REQ-82356895@juJepJj5Wt1K rtqqce
         elif at[-1] == "model" and not PINNED.fullmatch(value):
-            # @req> REQ-15362279@YwMnA4sMLpfF 3pjtrt
             found.append(f"{key}: {value!r} is not a pinned model ID, such as "
                          "claude-opus-5-5")
     # @req+ REQ-59792666@dkbVbhN0Y4FS sspl2m
+    # @req> REQ-96661837@HbvreaRTySWH 4iahip
     for entry, fields in mapping(document, AGENTS).items():
         if (isinstance(fields, dict) and {"model", "effort"} & fields.keys()
                 and not (fields.get("model") and fields.get("effort"))):

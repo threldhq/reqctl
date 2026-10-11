@@ -125,6 +125,7 @@ def _carried(root, ref):
             f"cannot read the tree {ref} names, so whether it states a "
             f"baseline cannot be told: {listed.stderr.strip()}"
         )
+    # @req> REQ-51424927@vQb-YtKja6pq zi26im
     if not listed.stdout.strip():
         return None
     found = _git(root, "show", f"{ref}:{where}")
@@ -170,7 +171,6 @@ def _previous(root):
             "branch says which baseline it follows -- fetch origin, then "
             "generate"
         )
-    # @req> REQ-51424927@vQb-YtKja6pq 4nzywx
     return stated, None
 
 
@@ -211,6 +211,7 @@ def generate(tree, root):
     # @req- mgwroy
 
     # @req+ REQ-87283234@HOs3YEHAJSD_ cc4ozn
+    # @req> REQ-51424927@vQb-YtKja6pq n2tclj
     manifest = {
         "baseline": (previous or 0) + 1,
         "commit": head_commit(root),

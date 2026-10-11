@@ -123,16 +123,25 @@ def _refuse_hidden(label, value):
         raise ReqctlError(f"{label} {_validate.hidden_fault(hidden)}")
 
 
-def _refuse_blank_text(fields, own):
+def _blank_or_hidden(fields, own, kind):
     entries = next((field for field in own if field.name == "entries"), None)
+    hidden = []
     for field in own:
         value = fields.get(field.dest)
-        if value is None or _keyed(field, entries) or not field.textual:
+        if value is None or _keyed(field, entries) or not (
+                field.textual or field.parts or field.name == "unclaimed"):
             continue
         for member in value if field.repeated else [value]:
-            if not str(member).strip():
+            # @req> REQ-18950462@TJVbxYWG6Dcw 6ed4w7
+            if field.textual and not str(member).strip() and not (
+                    field.name == "text" and kind in ("requirement", "guard")):
                 raise ReqctlError(f"{field.flag} must not be blank")
-            _refuse_hidden(field.flag, member)
+            # @req+ REQ-79956352@NXkZ4OmQ3Qb4 i24q67
+            found = _validate.hidden(str(member))
+            if found is not None:
+                hidden.append(f"{field.flag} {_validate.hidden_fault(found)}")
+            # @req- i24q67
+    return hidden
 
 
 def _stray(root, own, fields, operations=()):
@@ -185,8 +194,6 @@ def criteria(given, field):
                 f"{field.flag} {raw!r}: expected '{' | '.join(field.parts)}' -- "
                 f"{len(field.parts)} non-empty parts separated by |"
             )
-        for part in parts:
-            _refuse_hidden(field.flag, part)
         parsed.append(dict(zip(field.parts, parts)))
     return parsed
 
@@ -216,14 +223,15 @@ def _prune_assessed(store, uid, data):
     return wanted
 
 
-def _refuse_unknown_references(store, data):
+def _unknown_references(store, uid, data):
+    faults = []
     # @req+ REQ-44791607@x6AI0pz32jQK mtmaxs
     known = corpus.addressable(
         {item.uid: item.data for item in corpus.items(store)})
     unknown = sorted({corpus.split_address(address)[0]
                       for address in corpus.references(data)} - known)
     if unknown:
-        raise ReqctlError(
+        faults.append(
             f"text references {', '.join(unknown)}, which does not exist -- "
             "the parameter or data item must exist before the statement can "
             "reference it"
@@ -231,22 +239,21 @@ def _refuse_unknown_references(store, data):
     absent = sorted({corpus.split_address(address)[0]
                      for address in corpus.concept_references(data)} - known)
     if absent:
-        raise ReqctlError(
+        faults.append(
             f"text links {', '.join(absent)}, which does not exist -- "
             "it must exist before the statement can link it"
         )
     # @req- mtmaxs
-    for near in corpus.PARAM_NEAR.finditer(corpus.prose(data)):
-        if not corpus.PARAM_REF.fullmatch(near.group()):
-            raise ReqctlError(
-                f"text contains {near.group()}, which is not a parameter "
-                f"reference -- the form is {corpus.NAME_FORM}"
-            )
-    for near in corpus.TERM_NEAR.finditer(corpus.unlinked_prose(data)):
-        raise ReqctlError(
-            f"text contains {near.group()} outside a link -- a term is "
-            f"written {corpus.LINK_FORM}"
-        )
+    faults += [f"text contains {near.group()}, which is not a parameter "
+               f"reference -- the form is {corpus.NAME_FORM}"
+               for near in corpus.PARAM_NEAR.finditer(corpus.prose(data))
+               if not corpus.PARAM_REF.fullmatch(near.group())]
+    # @req> REQ-48500355@rnstkLKM48vN pctgzd
+    faults += [f"text contains {near.group()} outside a link -- a term is "
+               f"written {corpus.LINK_FORM}"
+               for near in corpus.TERM_NEAR.finditer(corpus.unlinked_prose(
+                   _validate.own_words(store.root, uid, data)))]
+    return faults
 
 
 WIKI_LINK = re.compile(r"\[\[([^\[\]\n]+)\]\]")
@@ -254,20 +261,23 @@ ANY_LINK = re.compile(r"\[([^\]\n]+)\]\(([^()\n]+)\)")
 
 
 def _name_index(store):
-    terms, params, claimed = {}, {}, {}
+    words, params, claimed = {}, {}, {}
     for item in corpus.items(store):
         held = corpus.name_of(item.uid, item.data)
         if held is None:
             continue
         if corpus.kind_of(item.uid, item.data) == "term":
             for word in _validate._term_words(item.data):
-                key = word.casefold()
-                first = claimed.setdefault(("word", key), item.uid)
-                terms[key] = held if first == item.uid else None
+                words.setdefault(word.casefold(), {})[held] = None
             continue
         first = claimed.setdefault(("name", held), item.uid)
         params[held] = held if first == item.uid else None
-    return terms, params
+    # @req+ REQ-57369684@hCyj1HdrHTr5 tbhiwa
+    claimants = {word: list(held) for word, held in words.items()}
+    terms = {word: held[0] if len(held) == 1 else None
+             for word, held in claimants.items()}
+    # @req- tbhiwa
+    return terms, params, claimants
 
 
 def _addresses_match(store, address, ack):
@@ -289,16 +299,17 @@ def _addresses_match(store, address, ack):
 
 
 def resolve_names(store, text, index=None):
-    terms, params = index or _name_index(store)
+    terms, params, claimants = index or _name_index(store)
     identities = {held for held in (*terms.values(), *params.values()) if held}
 
     def wiki(match):
         word = match.group(1).strip().casefold()
         uid = terms.get(word)
+        # @req> REQ-57369684@hCyj1HdrHTr5 oiqyws
         if word in terms and uid is None:
             raise ReqctlError(
-                f"[[{match.group(1)}]]: more than one term claims it -- "
-                "`reqctl validate` names them; resolve that first"
+                f"[[{match.group(1)}]]: the terms {' and '.join(claimants[word])} "
+                "each claim it -- resolve that first"
             )
         if uid is None:
             raise ReqctlError(
@@ -329,8 +340,9 @@ def resolve_names(store, text, index=None):
         # @req> REQ-57369684@hCyj1HdrHTr5 kijh3h
         if word in terms and uid is None:
             raise ReqctlError(
-                f"[{match.group(1)}]({target}): more than one term claims "
-                f"{target!r} -- `reqctl validate` names them; resolve that first"
+                f"[{match.group(1)}]({target}): the terms "
+                f"{' and '.join(claimants[word])} each claim {target!r} -- "
+                "resolve that first"
             )
         if uid is None:
             raise ReqctlError(
@@ -382,7 +394,6 @@ def entry_key(member):
     return str(member)
 
 
-# @req> REQ-76604940@SEVyiDrbH-Ez cd7owj
 def _set_fields(entry, pairs):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
@@ -425,7 +436,6 @@ def _appended(where, steps):
     return where, list(held or [])
 
 
-# @req> REQ-76604940@SEVyiDrbH-Ez zijwjm
 def _append_fields(entry, pairs):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
@@ -484,6 +494,8 @@ def _rename_map(before, fields, now):
         old, new = old.strip(), new.strip()
         if not old or not new:
             raise ReqctlError(f"--reword {pair!r}: the form is old=new")
+        # @req> REQ-79956352@NXkZ4OmQ3Qb4 uafjgl
+        _refuse_hidden("--reword", pair)
         words[old] = new
     for new in words.values():
         stray = next((c for c in new if c in "]\n"), None)
@@ -527,27 +539,9 @@ def _reworded(text, addresses, words, seen):
 
 
 # @req+ REQ-67358511@6v5ZhXIOqAkD b3ts36
-def _reword_fields(value, addresses, words, seen):
-    if isinstance(value, str):
-        return _reworded(value, addresses, words, seen)
-    if isinstance(value, list):
-        return [_reword_fields(each, addresses, words, seen) for each in value]
-    if isinstance(value, dict):
-        return {name: each if name == "aliases"
-                else _reword_fields(each, addresses, words, seen)
-                for name, each in value.items()}
-    return value
-
-
-def _reword_data(data, addresses, words, seen):
-    held = {name: _reword_fields(value, addresses, words, seen)
-            if name in ("text", "rationale", "acceptance_criteria") else value
-            for name, value in data.items()}
-    entries = corpus.entries(held)
-    if entries:
-        held["entries"] = {key: _reword_fields(fields, addresses, words, seen)
-                           for key, fields in entries.items()}
-    return held
+def _reword_data(root, uid, data, addresses, words, seen):
+    return corpus.prosed(data, set(_validate.prose_paths(root, uid, data)),
+                         lambda text: _reworded(text, addresses, words, seen))
 # @req- b3ts36
 
 
@@ -579,7 +573,7 @@ def _propagate(store, uid, prospective, words):
     touched = set()
     for held_uid, data in before.items():
         was = prospective if held_uid == uid else data
-        held = _reword_data(was, addresses, words, seen)
+        held = _reword_data(store.root, held_uid, was, addresses, words, seen)
         if held != was:
             after[held_uid] = held
             touched.add(held_uid)
@@ -933,13 +927,15 @@ def prepare(store, kind, fields, placeholder=None):
             f"a {kind} needs {', '.join(missing)} to be valid the moment it exists"
         )
     # @req- 4zgzmu
+    # @req+ REQ-25589226@gN1zcZG8pbON nk637k
     stray = _stray(store.root, own, fields)
     if stray:
         raise ReqctlError(f"{', '.join(stray)} does not apply to a {kind}")
+    # @req- nk637k
     if fields.get("uid") is not None and kind not in ("requirement", "guard"):
         raise ReqctlError(f"--uid does not apply to a {kind}; it is minted "
                           "under the name it carries")
-    _refuse_blank_text(fields, own)
+    hidden = _blank_or_hidden(fields, own, kind)
 
     data = _fields.defaults(store.root, kind)
     entries = next((field for field in own if field.name == "entries"), None)
@@ -966,19 +962,23 @@ def prepare(store, kind, fields, placeholder=None):
         data["entries"] = _entered(_one(fields[entries.dest], entries.flag))
         if default is not None:
             chosen = entry_key(scalar(str(default)))
+            # @req> REQ-67914848@cRb9rHls6z6c b4izbx
             if chosen not in data["entries"]:
                 raise ReqctlError(f"--default {default}: not a member of the set")
             data["default"] = chosen
     elif kind == "data" and entries and fields.get(entries.dest) is not None:
+        # @req+ REQ-42544082@VRPSEgM9tJWs 3nahao
         keys = [str(key).strip() for key in fields[entries.dest]]
         repeated = sorted({key for key in keys if keys.count(key) > 1})
         if repeated:
             raise ReqctlError(
                 f"{entries.flag} {', '.join(repeated)}: given more than once"
             )
+        # @req- 3nahao
         data["entries"] = {key: {} for key in keys}
         if default is not None:
             chosen = str(default).strip()
+            # @req> REQ-67914848@cRb9rHls6z6c wzvf5m
             if chosen not in data["entries"]:
                 raise ReqctlError(f"--default {default}: not an entry")
             data["default"] = chosen
@@ -989,8 +989,9 @@ def prepare(store, kind, fields, placeholder=None):
     uid, path = mint(store, kind, named, placeholder)
     # @req- yorgmf
     data = _resolved_prose(store, uid, data)
-    _refuse_unknown_references(store, data)
-    problems = _validate.schema_problems(store.root, uid, data)
+    # @req> REQ-85308584@uUWJjK4FALNI 2vgmd6
+    problems = hidden + _unknown_references(store, uid, data)
+    problems += _validate.schema_problems(store.root, uid, data)
     problems += _validate.ears(uid, data)
     problems += _validate.text_values(uid, data)
     problems += _validate.repeated_labels(uid, data)
@@ -1000,15 +1001,9 @@ def prepare(store, kind, fields, placeholder=None):
 
 
 def create(store, kind, fields):
-    # @req+ REQ-25589226@gN1zcZG8pbON fqpvnt
-    # @req+ REQ-67914848@cRb9rHls6z6c ytoyxl
-    # @req+ REQ-42544082@VRPSEgM9tJWs 4cg2e4
     uid, path, data, problems = prepare(store, kind, fields)
     if problems:
         raise ReqctlError("\n".join(problems))
-    # @req- 4cg2e4
-    # @req- ytoyxl
-    # @req- fqpvnt
     item = corpus.Item(uid, path, data)
     corpus.save(store, item)
     return item
@@ -1017,11 +1012,13 @@ def create(store, kind, fields):
 def _new_corpus_faults(store, uid, prospective):
     records = {item.uid: item.data for item in corpus.items(store)}
     joined = {**records, uid: prospective}
+    # @req> REQ-85308584@uUWJjK4FALNI migtu6
     found = (_validate.coherence(joined, store.root)
              + _validate.shared_quantities(joined, store.root)
              + _validate.approved_relations(joined)
              + _validate.conflicts(joined)
              + _validate.supersedes(joined)
+             + _validate._bound_guards(joined, store.root)
              + _validate.unlinked_terms(uid, prospective, records, store.root))
     if not found:
         return []
@@ -1031,6 +1028,7 @@ def _new_corpus_faults(store, uid, prospective):
              + _validate.approved_relations(records)
              + _validate.conflicts(records)
              + _validate.supersedes(records)
+             + _validate._bound_guards(records, store.root)
              + _validate.unlinked_terms(uid, held, records, store.root))
     return [problem for problem in found if problem not in stood]
 
@@ -1107,7 +1105,9 @@ def _revision(store, uid, fields):
 
     if kind in ("term", "parameter") and corpus.entries(item.data) is None:
         raise ReqctlError(f"{uid}: has no entries -- `reqctl validate` names the fault")
-    _refuse_blank_text(fields, own)
+    hidden = _blank_or_hidden(fields, own, kind)
+    if hidden:
+        raise ReqctlError("\n".join(hidden))
     if fields.get("entry") is not None and kind not in ("data", "parameter"):
         raise ReqctlError(f"--entry does not apply to a {kind}")
     if fields.get("new_entry") is not None and kind != "data":
@@ -1196,6 +1196,7 @@ def _revision(store, uid, fields):
                 prospective["default"] = held
         if default is not None:
             chosen = entry_key(scalar(str(default)))
+            # @req> REQ-67914848@cRb9rHls6z6c 6xxjkf
             if chosen not in corpus.entries(prospective):
                 raise ReqctlError(f"--default {default}: not a member of the set")
             prospective["default"] = chosen
@@ -1244,6 +1245,7 @@ def _revision(store, uid, fields):
             prospective["entries"] = held
         if default is not None:
             chosen = str(default).strip()
+            # @req> REQ-67914848@cRb9rHls6z6c znrmhw
             if chosen not in (corpus.entries(prospective) or {}):
                 raise ReqctlError(f"--default {default}: not an entry")
             prospective["default"] = chosen
@@ -1256,7 +1258,9 @@ def _revision(store, uid, fields):
             raise ReqctlError("\n".join(faults))
     if (any(field.prose and fields.get(field.dest) is not None for field in own)
             or fields.get("set") or fields.get("append")):
-        _refuse_unknown_references(store, prospective)
+        faults = _unknown_references(store, uid, prospective)
+        if faults:
+            raise ReqctlError("\n".join(faults))
     _refuse_new_schema_faults(store, uid, before, prospective)
     # @req+ REQ-53480164@5yFhCLJmuTBt xpj5go
     # @req+ REQ-62819035@SRb6tL8xEERF qgjwmq
@@ -1420,10 +1424,13 @@ def relate(store, source_uid, relation, target_uid):
 def _stated(root):
     where = _baseline.path(root)
     if not where.is_file():
-        return set()
+        return set(), None
     held = corpus.read(where)
-    recorded = held.get("items") if isinstance(held, dict) else None
-    return set(recorded) if isinstance(recorded, dict) else set()
+    held = held if isinstance(held, dict) else {}
+    recorded = held.get("items")
+    # @req> REQ-80226740@xxeoTjMyDC-h wpcl2k
+    return (set(recorded) if isinstance(recorded, dict) else set(),
+            f"baseline {held.get('baseline')} in {where.relative_to(root)}")
 
 
 def delete(tree, uid):
@@ -1440,9 +1447,10 @@ def delete(tree, uid):
     name = corpus.name_of(item.uid, item.data)
     identity = {item.uid} | ({name} if name is not None else set())
     wore = set(corpus.carried_of(item.uid, item.data))
-    if (identity | wore) & _stated(tree.root):
+    stated, cut = _stated(tree.root)
+    if (identity | wore) & stated:
         raise ReqctlError(
-            f"{uid} is {status}, but the baseline still states it -- it was "
+            f"{uid} is {status}, but {cut} still states it -- it was "
             "approved when that cut was taken. Generate a baseline that no "
             "longer names it, then delete"
         )

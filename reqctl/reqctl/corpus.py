@@ -53,7 +53,6 @@ POLICED_SKIP = ("aliases", "word", "name", "carried")
 POLICED_ITEM_SKIP = POLICED_SKIP + ("default", "unit")
 CITATION_LIST = "citations"
 WHOLE_FILES = "whole_file_citations"
-COMMENTLESS = "commentless_formats"
 # @req> REQ-88203622@wlZ9orsr9c7q otmh6w
 CITABLE = ("requirement", "guard", "parameter", "data")
 ITEM_SKIP = ("entries", "acceptance_criteria", "text",
@@ -963,10 +962,18 @@ def _unmarked(path, stamped, name, data_held):
 ENTRY_OF = "x-entry-of"
 
 
+# @req> REQ-77886246@8iAQsnTLrT4C hghw3m
 def _data_held(root):
-    folder = folder_for(root, "data")
-    return frozenset(path.stem for pattern in ("*.yml", "*.yaml")
-                     for path in folder.glob(pattern))
+    held = set()
+    for pattern in ("*.yml", "*.yaml"):
+        for path in folder_for(root, "data").glob(pattern):
+            held.add(path.stem)
+            if path.stem.startswith("DATA-"):
+                with contextlib.suppress(ReqctlError):
+                    data = read(path)
+                    held.add(name_of(path.stem, data if isinstance(data, dict) else {}))
+    held.discard(None)
+    return frozenset(held)
 
 
 def _unheld_dropped(node, data_held):

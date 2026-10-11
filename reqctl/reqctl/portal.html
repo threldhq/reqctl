@@ -1010,10 +1010,12 @@ function changeRepo(onRefusal) {
 }
 
 function handed() {
+  <!-- @req+ REQ-58466257@Mw_PWSEOU-gb 4bpkbk -->
   const given = new URLSearchParams(location.search).get("repo");
   if (given === null) return "";
   history.replaceState(null, "", location.pathname);
   if (!REPO_FORM.test(given) || given === repo()) return "";
+  <!-- @req- 4bpkbk -->
   <!-- @req+ REQ-83258052@QganBESCAGJe xyjt53 -->
   const waiting = queued();
   if (waiting) {
@@ -1074,14 +1076,19 @@ function setupScreen(problem) {
   const save = () => {
     const named = entry ? entry.value.trim() : place;
     const held = tok ? tok.value.trim() : token();
-    if (!named || !held) {
-      return setupScreen(`Enter ${named ? "the token" : "the repository as owner/repo"} to continue`);
+    <!-- @req+ REQ-89638829@K13aY_gVspho teqgec -->
+    if (!named) {
+      return setupScreen("Enter the repository as owner/repo to continue");
     }
+    <!-- @req- teqgec -->
     <!-- @req+ REQ-89638829@K13aY_gVspho vcqk3a -->
     if (!REPO_FORM.test(named)) {
       return setupScreen(`${named} is not a repository: write it as owner/repo`);
     }
     <!-- @req- vcqk3a -->
+    if (!held) {
+      return setupScreen("Enter the token to continue");
+    }
     <!-- @req+ REQ-38789214@OMx9lVswwRCe xqb2qr -->
     localStorage.setItem(PLACE, named);
     localStorage.setItem(KEY, held);

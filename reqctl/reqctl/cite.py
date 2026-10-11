@@ -34,6 +34,8 @@ ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
 # @req> REQ-60346603@FI4Rjvk1iDNp ulk4ve
 COMMENTS = {**dict.fromkeys((".py", ".yml", ".yaml"), ("# ", "")),
             ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
+# @req> commentless_formats@nLgr55U75GyS n5tk7r
+COMMENTLESS = ("json",)
 
 
 # @req> REQ-52925332@8dtaEN9KH9jO cczml5
@@ -166,9 +168,19 @@ def _alone(path, text):
 # @req- njbuvc
 
 
-def read(root, digested=False):
+def read(root, digested=False, uid=None):
     sources = list(_sources(root))
-    citations, problems = parse(sources)
+    citations, faults = _parse(sources)
+    # @req+ REQ-64570886@Zckz3LzHUzXn g2iusc
+    owners = {parsed["id"]: parsed["uid"].partition(".")[0]
+              for relative, text in sources if text is not None
+              for _, _, parsed in markers(text, Path(relative).suffix)
+              if parsed and parsed["id"] and parsed["uid"]}
+
+    def mine(owner):
+        return not uid or owner is None or owner == uid
+    problems = [fault for about, fault in faults if mine(owners.get(about))]
+    # @req- g2iusc
     # @req> REQ-32191310@aZkvQ6hvIwPv yjp5s6
     if digested:
         texts = dict(sources)
@@ -178,10 +190,11 @@ def read(root, digested=False):
     # @req+ REQ-79989567@oaSFUA9o3D48 bz6frh
     texts = dict(sources)
     problems += [f"{c['path']}: citation {c['id']} covers no code statement"
-                 for c in citations if len(c["marks"]) == 2
+                 for c in citations if len(c["marks"]) == 2 and mine(c["uid"])
                  and hollow(c["path"], texts[c["path"]], c["first"], c["last"])]
     # @req- bz6frh
-    return citations, problems + list(former(sources))
+    return citations, problems + [fault for owner, fault in former(sources)
+                                  if mine(owner)]
 
 
 def former(sources):
@@ -189,8 +202,8 @@ def former(sources):
     for relative, text in sources:
         for number, line in enumerate(_feed_lines(text or ""), start=1):
             for uid in FORMER.findall(line):
-                yield (f"{relative}:{number}: names {uid} in a single-line "
-                       "tag -- cite it with reqctl tag")
+                yield uid, (f"{relative}:{number}: names {uid} in a single-line "
+                            "tag -- cite it with reqctl tag")
 
 
 def cited(citations):
@@ -266,10 +279,12 @@ def _parse(sources, nests=True):
                 faults.append((identity, f"{relative}:{number}: closes citation "
                                          f"{identity}, which is not open here"))
             else:
+                # @req+ REQ-52925332@8dtaEN9KH9jO wbbbtu
                 start, held = live.pop(identity)
                 spans.append((identity, start + 1, number - 1))
                 opened.append(_citation(held, relative, start, number,
                                         start + 1, number - 1, [start, number]))
+                # @req- wbbbtu
         for identity, (number, _) in live.items():
             faults.append((identity, f"{relative}:{number}: opens citation "
                                      f"{identity} and never closes it"))
@@ -567,6 +582,7 @@ def _statement(path, text, first, last):
     return following(path, text, first - 1) == (first, code[-1])
 
 
+# @req> REQ-31471659@hKmNhTkU9xOA k3upi2
 UNREAD = (tokenize.NL, tokenize.ENDMARKER, tokenize.INDENT, tokenize.DEDENT)
 
 
@@ -582,6 +598,7 @@ def _stream(text):
     return held
 
 
+# @req> REQ-31471659@hKmNhTkU9xOA 4hf3xj
 def _tokens(text, wanted):
     held, first = [], None
     for line, kind, depth, string in _stream(text):
@@ -661,8 +678,9 @@ def _git(root, *args):
 
 
 def _carried(root, commit):
+    # @req> REQ-56906371@wq3BL0IRTLVV q45z6w
     listed = subprocess.run(
-        ["git", "grep", "-l", "-z", "-E", "@req[+>-]( |$)", commit, "--"],
+        ["git", "grep", "-l", "-z", "-E", "@req[+>-]([[:space:]]|$)", commit, "--"],
         cwd=root, capture_output=True, text=True, check=False)
     if listed.returncode not in (0, 1):
         raise ReqctlError(f"cannot read {commit}: {listed.stderr.strip()}")
