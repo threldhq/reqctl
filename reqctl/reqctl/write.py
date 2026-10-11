@@ -694,9 +694,12 @@ def rename(store, uid, new_name):
     after[new_name] = after.pop(item.uid)
     after.update(_repin(after, {new_name}))
 
+    # @req> REQ-81815730@fForAOZqtxKN k27etl
+    faults = [fault for fault in _validate.dictionary_rules(new_name, after[new_name])
+              if fault not in _validate.dictionary_rules(new_name, item.data)]
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
-    faults = [fault for fault in found if fault not in stood]
+    faults += [fault for fault in found if fault not in stood]
     if faults:
         raise ReqctlError("\n".join(faults) + f"\n{item.uid} was not changed")
 
