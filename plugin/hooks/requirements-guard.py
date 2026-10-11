@@ -116,7 +116,7 @@ GIT_READ = re.compile(
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
 )
 ASSIGNED_NAME = re.compile(
-    r"\s*(?:\w+(?:\[[^\]]*\])?\+?=\S*\s+)*(?:(?:declare|local|typeset|export|readonly)\s+(?:-\S+\s+)*)?\w+")
+    r"\s*(?:\w+(?:\[[^\]]*\])?\+?=[^\s<>&|;()]*\s+)*(?:(?:declare|local|typeset|export|readonly)\s+(?:-\S+\s+)*)?\w+")
 HEREDOC = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
@@ -449,6 +449,8 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             cut_command()
         row += 1
     left_open()
+    if any(saw for _, saw in subscripts):
+        deny(UNREADABLE.format(what="a << in a subscript left open"))
     cut_command()
     return [[joined(s) for s in p] for p in commands]
 
