@@ -691,7 +691,8 @@ def invoked(words):
         i = next((j for j in range(i, len(words))
                   if os.path.basename(words[j]) in ("rm", "find") or posing(words[j:])
                   or os.path.basename(words[j]) == "git" and j + 1 < len(words)
-                  and (words[j + 1].startswith("-") or words[j + 1] in JUDGED_GIT)), i)
+                  and (words[j + 1].startswith("-") or words[j + 1] in JUDGED_GIT
+                       or EXPANSION.search(words[j + 1]))), i)
     if posing(words[i:]):
         return ["git", *words[i + 1:]]
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
