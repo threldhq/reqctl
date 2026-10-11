@@ -115,7 +115,8 @@ GIT_READ = re.compile(
     r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
 )
-ASSIGNED_NAME = re.compile(r"\s*(?:(?:declare|local|typeset|export|readonly)\s+(?:-\S+\s+)*)?\w+")
+ASSIGNED_NAME = re.compile(
+    r"\s*(?:\w+(?:\[[^\]]*\])?\+?=\S*\s+)*(?:(?:declare|local|typeset|export|readonly)\s+(?:-\S+\s+)*)?\w+")
 HEREDOC = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
@@ -295,7 +296,7 @@ def deny(reason: str) -> None:
 
 def scan(cmd: str, joins=None) -> list[list[str]]:
     commands, pipeline, buf, held, bodies, nest, pending = [], [], [], [], [], [], []
-    subscripts = []
+    subscripts, loose = [], []
     joins = [] if joins is None else joins
     quote = None
     lines = cmd.split("\n")
@@ -311,8 +312,14 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
 
     def shifting():
         enclosing = next((at for at in range(len(nest) - 1, -1, -1) if nest[at] != "("), -1)
-        return bool(subscripts and subscripts[-1] > enclosing) or (
+        return bool(subscripts and subscripts[-1][0] > enclosing) or (
             enclosing >= 0 and nest[enclosing] in ("((", "$[", "${", '"{'))
+
+    def left_open():
+        if any(saw for at, saw in subscripts if at >= len(nest)):
+            deny(UNREADABLE.format(what="a << in a subscript left open"))
+        subscripts[:] = [entry for entry in subscripts if len(nest) > entry[0]]
+        loose[:] = [at for at in loose if len(nest) > at]
 
     def cut_command(join=";"):
         cut_segment()
@@ -368,6 +375,12 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 buf.append(char)
                 i += 1
                 continue
+            if char == "<" and line.startswith("<<", i) and subscripts and subscripts[-1][0] > max(
+                    (at for at in range(len(nest)) if nest[at] != "("), default=-1):
+                subscripts[-1][1] = True
+            if char == "<" and not shifting() and loose and loose[-1] == len(nest) and (
+                    heredoc_at(line, i)):
+                deny(UNREADABLE.format(what="a << after a [ the guard cannot place"))
             if char == "<" and not shifting() and (heredoc := heredoc_at(line, i)):
                 delimiter, _, dash, end = heredoc
                 bodies.append(slot := [])
@@ -378,8 +391,10 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             if char == ")" and nest[-1:] not in ([], ["$["]):
                 closed = i if nest[-1] == "(" else closed
                 quote = '"' if nest.pop() == '"(' else None
-            elif char == "]" and subscripts and subscripts[-1] == len(nest):
+            elif char == "]" and subscripts and subscripts[-1][0] == len(nest):
                 subscripts.pop()
+            elif char == "]" and loose and loose[-1] == len(nest):
+                loose.pop()
             elif char == "]" and nest[-1:] == ["$["]:
                 nest.pop()
             elif char == "(":
@@ -388,7 +403,9 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
             elif char == "[" and buf[-1:] == ["$"]:
                 nest.append("$[")
             elif char == "[" and ASSIGNED_NAME.fullmatch("".join(buf)):
-                subscripts.append(len(nest))
+                subscripts.append([len(nest), False])
+            elif char == "[" and buf[-1:] and (buf[-1].isalnum() or buf[-1] in ("_", "]")):
+                loose.append(len(nest))
             elif char == ")" and not nest:
                 cut_command("&&")
             if nest:
@@ -424,15 +441,14 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 slot.append("\n" + "\n".join(lines[row + 1:end + 1]))
                 row = end
             pending.clear()
-        if any(at >= len(nest) for at in subscripts) and "<<" in line:
-            deny(UNREADABLE.format(what="a << in a subscript left open"))
-        subscripts[:] = [at for at in subscripts if len(nest) > at]
+        left_open()
         if nest:
             held.append("".join(buf) + ";")
             buf.clear()
         else:
             cut_command()
         row += 1
+    left_open()
     cut_command()
     return [[joined(s) for s in p] for p in commands]
 
