@@ -1,0 +1,34 @@
+acceptance_criteria:
+- given: a [data item](data_item) named value_types listing for duration the unit
+    d with the spelling days, and a deprecated requirement whose criterion writes
+    a number in figures before days
+  then: the product accepts the requirement
+  when: the corpus is validated
+- given: a [data item](data_item) named value_types listing for duration the unit
+    d with the spelling days, and a superseded guard whose statement writes a number
+    in words before days
+  then: the product accepts the guard
+  when: the corpus is validated
+- given: a deprecated [item](item) and an approved [item](item) each stating the same
+    quantity in the same unit
+  then: the product accepts both [items](item)
+  when: the corpus is validated
+- given: a [data item](data_item) named value_types listing for duration the unit
+    d with the spelling days, and a draft requirement whose criterion writes a number
+    in figures before days
+  then: the product refuses the requirement, naming the quantity
+  when: the corpus is validated
+assessed:
+  REQ-10839190: o1M0SkcZ_uZgZfRMbopkf_K77sy_Tm7RFYxpvMQxIA8
+  REQ-31827606: LqXaOXp6DLBG4aOCyP0U-zpI-zSfqD_lGFJ72CQ1Pqw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-10839190: constrains
+  REQ-31827606: constrains
+status: approved
+text: The product shall skip a superseded or deprecated [item](item) in each check
+  of the quantities that an [item](item)'s prose states.
+type: functional
+verification: inspection
