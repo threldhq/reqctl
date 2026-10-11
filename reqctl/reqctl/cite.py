@@ -189,10 +189,12 @@ def read(root, digested=False, uid=None):
                                         citation["lines"])
     # @req+ REQ-79989567@oaSFUA9o3D48 bz6frh
     texts = dict(sources)
+    # @req> REQ-64570886@Zckz3LzHUzXn o4sv56
     problems += [f"{c['path']}: citation {c['id']} covers no code statement"
                  for c in citations if len(c["marks"]) == 2 and mine(c["uid"])
                  and hollow(c["path"], texts[c["path"]], c["first"], c["last"])]
     # @req- bz6frh
+    # @req> REQ-64570886@Zckz3LzHUzXn zeqhfc
     return citations, problems + [fault for owner, fault in former(sources)
                                   if mine(owner)]
 

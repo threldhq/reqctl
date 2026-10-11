@@ -187,6 +187,7 @@ def _render(fields, order=None):
     keys = order or list(fields)
     width = max((len(k) for k in keys if fields.get(k) is not None), default=0)
     lines = []
+    # @req> REQ-73719888@SQkvdemRTgC1 li6wlm
     for key in keys:
         value = fields.get(key)
         if value in (None, [], "", {}):
