@@ -5,7 +5,7 @@ acceptance_criteria:
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
-  plugin_components.*: zIgHolBY-Ua7Uah3mdgzg-64MX6pbgsm3My1HFjm82g
+  plugin_components.*: YkgS8K09s2n0m6QYm0NGOh6sp8svTHdiU8dPugVun7Q
 priority: medium
 relations:
   REQ-38288492: constrains

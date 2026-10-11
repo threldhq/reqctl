@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  root:
+    definition: The folder holding the sources of the Claude Code plugin; every path
+      a plugin component states is read relative to it.
+    path: plugin/
+kind: data
+name: plugin_folders
+status: approved
+text: the folders of the repository that hold the Claude Code plugin

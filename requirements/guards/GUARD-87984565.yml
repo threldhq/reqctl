@@ -1,0 +1,39 @@
+acceptance_criteria:
+- given: a file tracked under the plugin that the paths of no plugin component cover
+  then: the build refuses the change, naming the file
+  when: the build runs
+- given: a file tracked under the plugin that the paths of two plugin components both
+    cover
+  then: the build refuses the change, naming the file and both components
+  when: the build runs
+- given: every file tracked under the plugin covered by the paths of exactly one plugin
+    component
+  then: the build does not refuse the change on that ground
+  when: the build runs
+- given: a plugin component path that ends in a slash
+  then: it covers every file tracked under that directory of the plugin and no other
+  when: the build reads which files it covers
+- given: a plugin component path that does not end in a slash
+  then: it covers the one file at exactly that path of the plugin and no other
+  when: the build reads which files it covers
+- given: a plugin component path holding *, ? or [
+  then: it reads those characters as written, never as a pattern
+  when: the build reads which files it covers
+- given: a plugin component path
+  then: it reads the path relative to ${plugin_folders.root.path}
+  when: the build reads which files it covers
+assessed:
+  GUARD-65225392: myxez9Yz6SOiTVlmcZCO291f_XgHcMR62MAguFsCQ68
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.*: YkgS8K09s2n0m6QYm0NGOh6sp8svTHdiU8dPugVun7Q
+  plugin_folders: 7ZGw3BF5dCnTaSKveldXgsywKdmz_V7rnnP6Vxf97OY
+  plugin_folders.root: eN5D4LXA4EmtVGaOyOOV7Bmt9EjUOJZ_skI4uWathwI
+citations:
+  7jy76s: S4lc9oDmBHQVvwNXb52HNJQhqjV5Gd-HMt8GeAQqZBM
+  jp53yq: Sp2UVrn08N9lEsmUIiyHfGpWRmNyST2Lj0aTU95mRLk
+  m7ltuf: P6-hDJa7VvBRvWwjZh4Z8f6tn8Hvm5Hcn2-Re55Gz-U
+relations:
+  GUARD-65225392: depends_on
+status: approved
+text: If a file tracked under ${plugin_folders.root.path} belongs to none of the ${plugin_components},
+  or to more than one of them, then the build shall refuse the change.

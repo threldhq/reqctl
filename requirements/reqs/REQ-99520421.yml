@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a session that registers the coverage agent under its bare name, as a project's
+    own agent
+  then: it names the agent coverage
+  when: the product spawns the coverage agent
+- given: a session in which the Claude Code plugin is installed, registering its agents
+    under the plugin's name
+  then: it names the agent reqctl:coverage
+  when: the product spawns the coverage agent
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-61616834: ocFeB1JGP518dTo37bhkp0LKfeG6BTBIFGYwBXIEHEU
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.best_in_class_agent: u1uaiUuYFzYo5iFrDTEntEfYwc19prv4BbSVmvAHnvM
+  plugin_components.coverage_agent: MLMykc8Gn2mN2POVQUqKUR2bIgNPgK0zPBZZ8AJGUhU
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-61616834: constrains
+status: approved
+text: When the product spawns the ${plugin_components.best_in_class_agent} or the
+  ${plugin_components.coverage_agent}, the product shall name the agent the way the
+  session registers it.
+type: functional
+verification: inspection
