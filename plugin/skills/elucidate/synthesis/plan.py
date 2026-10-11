@@ -1042,7 +1042,8 @@ def build(run, chars, items, lines=PROMPT_LINES):
                    "verdicts", "workflow"):
         corpus.make_folder(run / folder)
     for stale in list((run / "prompts" / "recall").glob("*.md")) + list(
-            (run / "returns" / "recall").glob("*.json")):
+            (run / "returns" / "recall").glob("*.json")) + list(
+            (run / "verdicts").glob("*.json")):
         corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "recall" / f"{name}.md", body)
@@ -1131,7 +1132,11 @@ def halved(run, state_held, stopped, held, words, declined, dictionary_text,
            records, shards, total):
     # @req+ REQ-19832934@Mk7Pla2kkx3i moar22
     for name, why in sorted(stopped.items()):
-        batch = state_held["shards"][name]["batch"]
+        # @req> REQ-33633053@mo4XdZGYpUJ5 7upokg
+        batch = min(state_held["shards"][name]["batch"],
+                    max(len(spec["proposals"])
+                        for spec in state_held["recall"].values()
+                        if spec["shard"] == name))
         # @req> REQ-33633053@mo4XdZGYpUJ5 mrzj65
         if batch < 2:
             raise SystemExit(
@@ -1338,7 +1343,8 @@ def judge(run):
     lined(prompts, state_held["lines"])
     for stale in list((run / "prompts" / "judge").glob("*.md")) + list(
             (run / "returns" / "judge").glob("*.json")) + list(
-            (run / "returns" / "final").glob("*.json")):
+            (run / "returns" / "final").glob("*.json")) + list(
+            (run / "verdicts").glob("*.json")):
         corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "judge" / f"{name}.md", body)
@@ -1462,7 +1468,12 @@ def describe(run):
     declined = (said(run, "declined.md", "") if (run / "declined.md").is_file()
                 else "")
     lines = []
-    ledger, answers = answered(run, proposals(run))
+    # @req> REQ-32019340@Ce9zMv1R_f5m il77pj
+    if not state_held["judge"]:
+        raise SystemExit("no judge prompt was built; run `plan.py judge` first")
+    held = proposals(run)
+    ledger, answers = answered(run, held)
+    traces = traced(run, said(run, "words.md", ""), held)
     # @req> REQ-52114263@JmvDYpVGNRJQ dbzebu
     records = {uid: [record.get(field) for field in STATING]
                for uid, record in glossary().items()
@@ -1477,11 +1488,11 @@ def describe(run):
                              "`verdicts.py` once the judges return")
         lines.append(f"### proposal {number}\n\n{spec['statement']}\n")
         # @req> REQ-36901100@Mr5MaJ4j9RRr 4flmpq
-        if not spec["trace"]:
+        if not traces.get(number):
             raise SystemExit(f"proposal {number} traces to no passage of the "
                              "owner's words; record its `trace` in run.yaml")
         lines.append("Traces to: " + "; ".join(f"“{one}”"
-                                               for one in spec["trace"]) + "\n")
+                                               for one in traces[number]) + "\n")
         for entry in verdict["covered_by"]:
             lines.append(f"- covered {entry['covers']} by "
                          f"{', '.join(entry['uids'])}: {entry['reason']}")
