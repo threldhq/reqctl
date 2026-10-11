@@ -975,13 +975,15 @@ def _entry_selection(records):
                     f"{key!r}"
                 )
             elif "." in rest:
-                field = rest.split(".", 1)[1]
-                fields = existing[key] if isinstance(existing[key], dict) else {}
-                if field not in fields:
-                    problems.append(
-                        f"{uid}: selects {address} but entry {key!r} of "
-                        f"{target} has no field {field!r}"
-                    )
+                fields = existing[key]
+                for field in rest.split(".")[1:]:
+                    if not isinstance(fields, dict) or field not in fields:
+                        problems.append(
+                            f"{uid}: selects {address} but entry {key!r} of "
+                            f"{target} has no field {field!r}"
+                        )
+                        break
+                    fields = fields[field]
             # @req- rc5mmy
     return problems
 
