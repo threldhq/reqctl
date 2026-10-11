@@ -115,6 +115,7 @@ GIT_READ = re.compile(
     r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
 )
+ASSIGNED_NAME = re.compile(r"\s*(?:(?:declare|local|typeset|export|readonly)\s+(?:-\S+\s+)*)?\w+")
 HEREDOC = re.compile(r"(?<!<)<<(?!<)(-?)[ \t]*")
 AMP_REDIRECT = re.compile(r"[0-9]?>&[ \t]*[0-9]*|&>>?")
 SUBSHELL = re.compile(r"\$\(|`|<\(|>\(")
@@ -386,7 +387,7 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                             else "((" if buf[-1:] in (["("], ["$("]) else "(")
             elif char == "[" and buf[-1:] == ["$"]:
                 nest.append("$[")
-            elif char == "[" and buf[-1:] and (buf[-1].isalnum() or buf[-1] in ("_", "]")):
+            elif char == "[" and ASSIGNED_NAME.fullmatch("".join(buf)):
                 subscripts.append(len(nest))
             elif char == ")" and not nest:
                 cut_command("&&")
@@ -423,6 +424,8 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 slot.append("\n" + "\n".join(lines[row + 1:end + 1]))
                 row = end
             pending.clear()
+        if any(at >= len(nest) for at in subscripts) and "<<" in line:
+            deny(UNREADABLE.format(what="a << in a subscript left open"))
         subscripts[:] = [at for at in subscripts if len(nest) > at]
         if nest:
             held.append("".join(buf) + ";")
