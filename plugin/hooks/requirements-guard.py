@@ -682,8 +682,9 @@ def invoked(words):
             words[i].startswith("-") or words[i][:1].isdigit()
             or words[i - 1].startswith("-") and os.path.basename(words[i]) not in JUDGED))):
         i += 2 if REDIRECTION.fullmatch(words[i]) else 1
-    if i and i < len(words) and os.path.basename(words[i]) not in JUDGED:
-        i = next((j for j in range(i, len(words)) if os.path.basename(words[j]) in ("git", "rm")), i)
+    if i and i < len(words) and os.path.basename(words[i]) not in (*JUDGED, *WRITES_NOTHING):
+        i = next((j for j in range(i, len(words))
+                  if os.path.basename(words[j]) in ("git", "rm", "find")), i)
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
 
 
@@ -985,7 +986,35 @@ def refuse_commit_on_default(words, here):
     # @req- zm6qoo
 
 
-BARE_SWEEP = (".", "..", "/", "~", "*")
+BARE_ROOTS = (".", "..", "/", "~")
+BARE_SWEEP = (*BARE_ROOTS, "*")
+
+
+def dotted(found):
+    dots = [dot for dot in (".", "..") if expands_to(found[0], dot)]
+    return "{%s}" % ",".join([found[0], *dots]) if dots else found[0]
+
+
+def sweeping(targets, here, bare):
+    project = os.environ.get("CLAUDE_PROJECT_DIR", "")
+    above = {str(path) for root in {Path(project), Path(project).resolve()} if project
+             for path in (root, *root.parents)}
+    for w in filter(None, targets):
+        alts = list(itertools.islice((form for alt in braced(w) for form in braced(re.sub(
+            r"(?<![^/])\.[^/]*[*?[][^/]*", dotted, os.path.expanduser(alt)))), 257))
+        if (os.path.normpath(w) in bare
+                or "$" in w or "`" in w or w.startswith(("~+", "~-"))
+                or len(alts) > 256 or SEQUENCE.search(w)
+                or any("{" in alt and "," in alt for alt in alts)
+                or any(expands_to(form, path) for alt in alts
+                       for form in {f(os.path.join(here, alt))
+                                    for f in (os.path.normpath, os.path.realpath)}
+                       for path in above)
+                or not here and any(not os.path.isabs(alt) and fnmatch.fnmatchcase(
+                    path, "*" + os.path.normpath("/" + alt).rstrip("/").replace("[^", "[!"))
+                    for alt in alts for path in above)
+                or GLOB_CHAR.search(w) and any(reaches_corpus(alt, here, True) for alt in alts)):
+            return w
 
 
 def judge_command(said, here, stdin=()):
@@ -1023,22 +1052,23 @@ def judge_command(said, here, stdin=()):
             (len(w) > 2 and "--recursive".startswith(w))
             or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
             for w in operands):
-        project = os.environ.get("CLAUDE_PROJECT_DIR", "").rstrip("/")
-        above = [project, *map(str, Path(project).parents)] if project else []
-        alternatives = {w: list(itertools.islice(braced(os.path.expanduser(w)), 257))
-                        for w in operands}
-        swept = next(
-            (w for w in operands if os.path.normpath(w) in BARE_SWEEP
-             or "$" in w or "`" in w or w.startswith(("~+", "~-"))
-             or len(alternatives[w]) > 256 or SEQUENCE.search(w)
-             or any("{" in alt and "," in alt for alt in alternatives[w])
-             or any(expands_to(os.path.normpath(os.path.join(here, alt)), path)
-                    for alt in alternatives[w] for path in above)
-             or GLOB_CHAR.search(w) and reaches_corpus(w, here, True)),
-            None)
-        if swept:
+        if swept := sweeping(operands, here, BARE_SWEEP):
             deny(f"rm -r of '{swept}' blocked: it sweeps the requirements "
                  "corpus along with everything else. Name the paths to delete.")
+    # @req> REQ-91051324@ljHcdWSG-nys vdn4ok
+    # @req> REQ-22704490@0I1yKEFWt0tX mrkvmj
+    if plain == "find" and any("-delete" in bounded(w) for w in operands):
+        at = 0
+        while at < len(operands) and (operands[at] in ("-H", "-L", "-P", "-D", "--")
+                                      or operands[at].startswith("-O")):
+            at += 2 if operands[at] == "-D" else 1
+        points = list(itertools.takewhile(
+            lambda word: not word.startswith("-") and word not in ("(", "!"),
+            operands[at:])) or ["."]
+        if swept := sweeping(points, here, BARE_ROOTS):
+            deny(f"find -delete from '{swept}' blocked: it could reach the project "
+                 "root, a folder above it, or the requirements corpus. Start find "
+                 "from the folder that holds what it should delete.")
     for word in words:
         if "git" in word and "push" in word and word not in ("git", "push"):
             refuse_destructive_push(word)
