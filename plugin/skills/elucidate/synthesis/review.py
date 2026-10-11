@@ -170,6 +170,7 @@ def build(run, answered):
         run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
     # @req> REQ-61616834@ocFeB1JGP518 dnioty
     # @req> REQ-23060027@zeNeSryv-0-1 zq3w3z
+    # @req> REQ-99520421@K6T5THF20GU8 bumf3d
     spawning = plan.manifest(run, SPAWN, [plan.inline(
         "review", prompt, shapes.REVIEW, plan.registered("best-in-class"),
         plan.agent("best_in_class", crew))])
