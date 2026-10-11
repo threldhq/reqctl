@@ -23,6 +23,10 @@ assessed:
   REQ-31827606: LqXaOXp6DLBG4aOCyP0U-zpI-zSfqD_lGFJ72CQ1Pqw
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  bzkfod: XB7ckSXP4O93F9ET8UcAFL7s_34DS8DyXJvPZAYH3B8
+  dzwaj3: XB7ckSXP4O93F9ET8UcAFL7s_34DS8DyXJvPZAYH3B8
+  iiu22k: 5GQVS2tl_AIYbSGKSDzI8PX5xiJLRX1kPfuCl6tuecQ
 priority: medium
 relations:
   REQ-10839190: constrains
