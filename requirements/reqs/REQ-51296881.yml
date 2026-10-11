@@ -18,7 +18,11 @@ assessed:
   REQ-91051324: ljHcdWSG-nys57fRKMJEzapdA6usPqPdbZy00tgXHpw
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  etn3fq: b8gWzHhbB6ytTvB_1HakuCtHz5lo41sJ4XmFxZX0TxA
+  4k6mvu: v5gF7_1sF86BkTaL4gzUac8MGxLxBuqET-rFdixYUpY
+  4tzkdu: HZJU9hLHqaYTFgdfbRTyWRtHUBZboJ2FN3PVeVLXB6Q
+  7sfcit: sBzqDEAIPPtWnBow-Fi9bGHjs9rLVeZXf9icWoeGNMQ
+  etn3fq: eWsexnYOSy-E_VpNDwwGcjB1KdeCuGCPLpbpXWjYGhg
+  jcpru4: DusXDdqgncn4U8N4IB2oVR54DLyjeVNWgzJ8yLvIGZw
 priority: medium
 relations:
   REQ-18701923: constrains
