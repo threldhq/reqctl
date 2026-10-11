@@ -894,8 +894,42 @@ def cmd_repin(args):
     return EXIT_OK
 
 
+def _unwhole(tree, root, args):
+    try:
+        relative = Path(args.id).resolve().relative_to(
+            Path(root).resolve()).as_posix()
+    except ValueError as error:
+        raise ReqctlError(f"{args.id}: not in the code base at {root}") from error
+    asked = list(dict.fromkeys(args.req))
+    changes = {}
+    for req in asked:
+        item = corpus.find(tree, req)
+        held = corpus.mapping(item.data, corpus.WHOLE_FILES)
+        # @req> REQ-21009265@yuxuTugeVMu5 p3htis
+        if relative not in held:
+            raise ReqctlError(f"{req} holds no whole-file citation of "
+                              f"{relative}; nothing was changed")
+        # @req+ REQ-98709103@JryTDKzxpwrF ckhfaq
+        # @req+ REQ-49367452@tPjE-de7pYv_ m6zfum
+        rest = {path: cited for path, cited in held.items() if path != relative}
+        data = {key: value for key, value in item.data.items()
+                if key != corpus.WHOLE_FILES}
+        if rest:
+            data[corpus.WHOLE_FILES] = rest
+        changes[item.path] = corpus.dump(data)
+        # @req- m6zfum
+        # @req- ckhfaq
+    corpus.write_all(changes.items())
+    _emit(args, {"path": relative, "uids": asked},
+          f"{relative} no longer cited whole by {', '.join(asked)}")
+    return EXIT_OK
+
+
 def cmd_untag(args):
     tree, root = corpus.load()
+    # @req> REQ-98709103@JryTDKzxpwrF fzxhli
+    if args.req:
+        return _unwhole(tree, root, args)
     # @req> REQ-51709712@D0x4hZmSHgiW j65lln
     citation = cite.named(root, args.id, nests=False)
     changes = [cite.untagged(root, citation)]
@@ -1221,8 +1255,11 @@ def build_parser(root, fielded):
     s.add_argument("id")
     s.set_defaults(func=cmd_repin)
 
-    s = _command(sub, "untag", "remove a citation")
-    s.add_argument("id")
+    s = _command(sub, "untag",
+                 "remove a citation; name a path and --req to remove that "
+                 "item's whole-file citation of the path")
+    s.add_argument("id", metavar="ID|PATH")
+    s.add_argument("--req", action="append")
     s.set_defaults(func=cmd_untag)
 
     s = _command(sub, "unlist",
