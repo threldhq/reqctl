@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: an [item](item) whose text references one [entry](entry) of a [data item](data_item)
+    beside another [entry](entry) of the same [data item](data_item)
+  then: the [item](item) holds no [pin](pin) naming the first [entry](entry)
+  when: the text is revised to drop the reference to the first [entry](entry)
+- given: an [item](item) whose acceptance criterion alone links a term
+  then: the [item](item) holds no [pin](pin) naming the term
+  when: the criterion is revised to drop the link
+- given: an [item](item) linking a term
+  then: the [item](item) holds no [pin](pin) naming the term's former name
+  when: the term is renamed
+assessed:
+  REQ-67539399: tuMwHXTE6ACxh7FqgXxhVf7Ao0pujDvjiX5SBSo2AgQ
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations:
+  REQ-67539399: derives_from
+status: approved
+text: When an [item](item)'s prose is revised, the product shall drop each [pin](pin)
+  naming an address the revised [item](item) neither links nor references.
+type: functional
+verification: inspection

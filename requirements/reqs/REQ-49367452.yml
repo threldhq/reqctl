@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: an [item](item) holding a [whole-file citation](whole_file_citation) of a
+    file
+  then: the covered file and the [item](item)'s other fields are unchanged
+  when: the product removes the [citation](whole_file_citation)
+assessed:
+  REQ-98709103: JryTDKzxpwrFNZGJ1MRHPZe2w4UewoCr5M12QS9PkiU
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+priority: medium
+relations:
+  REQ-98709103: derives_from
+status: approved
+text: When the product removes a [whole-file citation](whole_file_citation), the product
+  shall leave unchanged every line the [code base](code_base) holds other than the
+  lines holding that [citation](whole_file_citation) in the [item](item) holding it.
+type: functional
+verification: inspection

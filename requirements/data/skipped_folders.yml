@@ -1,0 +1,37 @@
+assessed:
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+entries:
+  build:
+    folder: build
+  corpus_root:
+    folder: requirements
+  dist:
+    folder: dist
+  dot_venv:
+    folder: .venv
+  egg_info:
+    folder: any folder whose name ends .egg-info
+  elucidate:
+    folder: .elucidate
+  git:
+    folder: .git
+  mypy_cache:
+    folder: .mypy_cache
+  node_modules:
+    folder: node_modules
+  pycache:
+    folder: __pycache__
+  pytest_cache:
+    folder: .pytest_cache
+  reqctl_state:
+    folder: .reqctl
+  ruff_cache:
+    folder: .ruff_cache
+  venv:
+    folder: venv
+kind: data
+name: skipped_folders
+status: approved
+text: The folders the product skips when it scans the [code base](code_base) for [statement
+  citations](statement_citation).

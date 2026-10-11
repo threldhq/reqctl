@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: an [item](item) holding no [whole-file citation](whole_file_citation) of
+    a path
+  then: the product refuses the removal
+  when: the product is asked to remove one of that path from the [item](item)
+assessed:
+  REQ-98709103: JryTDKzxpwrFNZGJ1MRHPZe2w4UewoCr5M12QS9PkiU
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+priority: medium
+relations:
+  REQ-98709103: derives_from
+status: approved
+text: If the product is asked to remove a [whole-file citation](whole_file_citation)
+  of a path that the named [item](item) does not hold, then the product shall refuse
+  the removal.
+type: functional
+verification: inspection
