@@ -172,6 +172,8 @@ KEY_SHAPES = {
 }
 UNITLESS = ("count", "ratio", "boolean", "text")
 VALUE_TYPES = "value_types"
+# @req> REQ-74163593@shkbFgp8gpvT iiu22k
+RETIRED = ("superseded", "deprecated")
 
 
 NESTING = 100
@@ -239,9 +241,9 @@ def dictionary_rules(uid, data):
     held = corpus.entries(data)
     if held is None or uid.startswith("REQ-"):
         return problems
-    # @req> REQ-67450031@tkoNXNLrUifr 5qg2a5
+    # @req> REQ-67450031@dHzdY0EyKyJ3 5qg2a5
     for key in ("default", "pinned", "text", "name"):
-        if key in held:
+        if key in held and (item_kind, corpus.name_of(uid, data)) != ("data", VALUE_TYPES):
             problems.append(f"{uid}: an entry may not be keyed {key} -- it "
                             "would shadow an item field of that name; rename "
                             "the entry")
@@ -686,6 +688,9 @@ def shared_quantities(records, root):
     for uid, data in records.items():
         # @req> REQ-71775839@o0Rw6sW3xCGB 2afre5
         if typed and uid == held:
+            continue
+        # @req> REQ-74163593@shkbFgp8gpvT bzkfod
+        if data.get("status") in RETIRED:
             continue
         own = own_quantities(root, uid, data)
         # @req> REQ-30792942@jO6e3Cn6To-1 ozipy3
@@ -1380,6 +1385,9 @@ def _unit_quantities(records, root):
     problems = []
     for uid, data in sorted(records.items()):
         if corpus.kind_of(uid, data) not in ("requirement", "guard"):
+            continue
+        # @req> REQ-74163593@shkbFgp8gpvT dzwaj3
+        if data.get("status") in RETIRED:
             continue
         own = own_quantities(root, uid, data)
         criteria = own.get("acceptance_criteria")
