@@ -988,11 +988,10 @@ def refuse_commit_on_default(words, here):
 
 BARE_ROOTS = (".", "..", "/", "~")
 BARE_SWEEP = (*BARE_ROOTS, "*")
-DOT_GLOB = re.compile(r"(?<![^/])\.[^/]*[*?[][^/]*")
 
 
 def dotted(found):
-    dots = [dot for dot in (".", "..") if fnmatch.fnmatchcase(dot, found[0].replace("[^", "[!"))]
+    dots = [dot for dot in (".", "..") if expands_to(found[0], dot)]
     return "{%s}" % ",".join([found[0], *dots]) if dots else found[0]
 
 
@@ -1000,20 +999,19 @@ def sweeping(targets, here, bare):
     project = os.environ.get("CLAUDE_PROJECT_DIR", "")
     above = {str(path) for root in {Path(project), Path(project).resolve()} if project
              for path in (root, *root.parents)}
-    return next(
-        (w for w in targets
-         for alts in [[form for alt in itertools.islice(braced(os.path.expanduser(w)), 257)
-                       for form in braced(DOT_GLOB.sub(dotted, alt))]]
-         if os.path.normpath(w) in bare
-         or "$" in w or "`" in w or w.startswith(("~+", "~-"))
-         or len(alts) > 256 or SEQUENCE.search(w)
-         or any("{" in alt and "," in alt for alt in alts)
-         or any(expands_to(form, path) for alt in alts
-                for joined in [os.path.join(here, alt)]
-                for form in {os.path.normpath(joined), os.path.realpath(joined)}
-                for path in above)
-         or GLOB_CHAR.search(w) and reaches_corpus(w, here, True)),
-        None)
+    for w in targets:
+        alts = list(itertools.islice((form for alt in braced(w) for form in braced(re.sub(
+            r"(?<![^/])\.[^/]*[*?[][^/]*", dotted, os.path.expanduser(alt)))), 257))
+        if (os.path.normpath(w) in bare
+                or "$" in w or "`" in w or w.startswith(("~+", "~-"))
+                or len(alts) > 256 or SEQUENCE.search(w)
+                or any("{" in alt and "," in alt for alt in alts)
+                or any(expands_to(form, path) for alt in alts
+                       for form in {f(os.path.join(here, alt))
+                                    for f in (os.path.normpath, os.path.realpath)}
+                       for path in above)
+                or GLOB_CHAR.search(w) and any(reaches_corpus(alt, here, True) for alt in alts)):
+            return w
 
 
 def judge_command(said, here, stdin=()):
