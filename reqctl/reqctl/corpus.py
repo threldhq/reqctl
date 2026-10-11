@@ -171,9 +171,18 @@ def _folded(loader, node):
     return []
 
 
-def loads(text, where):
+def loads(text, where, aliases=True):
     loader = Loader(text)
     try:
+        # @req+ REQ-49870454@KKNV-vdY6oM1 ts6cfc
+        named = [] if aliases else [
+            f"*{event.anchor} on line {event.start_mark.line + 1}"
+            for event in yaml.parse(text, Loader=Loader)
+            if isinstance(event, yaml.AliasEvent)]
+        if named:
+            raise ReqctlError(f"{where} holds the YAML alias {', '.join(named)} "
+                              "-- write each value out in full in place of its alias")
+        # @req- ts6cfc
         node = loader.get_single_node()
         twice = _repeated(node)
         # @req> REQ-84465433@iXBRKIfkf18a pkvikc
@@ -299,7 +308,8 @@ def items(store):
     if store._items is None:
         loaded = []
         for path in item_files(store.root):
-            data = read(path)
+            # @req> REQ-49870454@KKNV-vdY6oM1 4sqskc
+            data = loads(read_text(path), path, aliases=False)
             if not isinstance(data, dict):
                 raise ReqctlError(f"{path.stem}: item file is not a mapping")
             loaded.append(Item(path.stem, path, data))
@@ -452,9 +462,16 @@ def _stands(folder):
         return True
 
 
+# @req+ REQ-41148688@SFtnFhcEeNvS xm3u4i
+class _Unaliased(yaml.SafeDumper):
+    def ignore_aliases(self, data):
+        return True
+
+
 def dump(data):
-    return yaml.safe_dump(data, default_flow_style=False, sort_keys=True,
-                          allow_unicode=True)
+    return yaml.dump(data, Dumper=_Unaliased, default_flow_style=False,
+                     sort_keys=True, allow_unicode=True)
+# @req- xm3u4i
 
 
 def save(store, item):
