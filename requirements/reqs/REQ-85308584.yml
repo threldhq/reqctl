@@ -17,9 +17,14 @@ acceptance_criteria:
 - given: a check validate runs that fails unexpectedly
   then: the product reports the failure as a corpus problem naming the check
   when: a draft statement is linted
+- given: a draft statement linking an approved term
+  then: the product reports nothing for the link, which [awaits assessment](awaiting_assessment)
+  when: the statement is linted
 assessed:
   REQ-23691260: 3s5Nt8Pn1BXAVd_feq3s3Qkt2l-yDafVRXKdh1_jxOA
+  REQ-48622606: TQRC6NoGNrgiLAVTnBxXPbVM-seQgirLC6NHE5G851o
   REQ-55939360: qvRmeRuBl0T95bqLSci1RvjlgF7DrPyDgNVmpo55Nzo
+  awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
 citations:
   lmav5l: aSv8_RsQJoVWXkZmQULYmEEHgExI9l_0VYiHXl821dI
   sri72v: QaNYpwHajdo4t8Zc-fG4eCa0zce2tKiRbziktlxySZI
@@ -27,11 +32,12 @@ citations:
 priority: medium
 relations:
   REQ-23691260: depends_on
+  REQ-48622606: constrains
   REQ-55939360: depends_on
 status: approved
 text: When a draft statement is linted, the product shall report, without writing
-  to the corpus, every fault that a check validate runs would find were the statement
-  to join the corpus as a draft under a fresh uid, and that the corpus does not already
-  hold.
+  to the corpus, every fault, other than a link or reference that [awaits assessment](awaiting_assessment),
+  that a check validate runs would find were the statement to join the corpus as a
+  draft under a fresh uid, and that the corpus does not already hold.
 type: functional
 verification: inspection
