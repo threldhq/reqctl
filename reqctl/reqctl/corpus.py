@@ -563,7 +563,7 @@ def stamp_of(uid, data):
     # @req> REQ-54851939@n6YOz94UUTn7 4jhey4
     if uid.startswith(("REQ-", "GUARD-")):
         return digest([uid, {k: data.get(k) for k in STATEMENT_STAMPED}])
-    # @req+ REQ-56581795@KcbOaSZB6LPV s7alzx
+    # @req+ REQ-56581795@ZHEasHzzTZLC s7alzx
     if kind_of(uid, data) == "term":
         return _term_digest(uid, term_fields(data))
     return digest([uid, {k: data.get(k) for k in ITEM_STAMPED}])

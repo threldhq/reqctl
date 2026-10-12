@@ -1443,6 +1443,7 @@ def relate(store, source_uid, relation, target_uid):
 
 
 def _stated(root):
+    # @req+ REQ-80226740@xdXflfkWkveF m6jqza
     where = _baseline.path(root)
     ref = _baseline._default_ref(root)
     if ref is None:
@@ -1468,9 +1469,9 @@ def _stated(root):
         where = f"{named} on {ref.removeprefix('refs/remotes/')}"
     held = held if isinstance(held, dict) else {}
     recorded = held.get("items")
-    # @req> REQ-80226740@xxeoTjMyDC-h wpcl2k
     return (set(recorded) if isinstance(recorded, dict) else set(),
             f"baseline {held.get('baseline')} in {where}")
+    # @req- m6jqza
 
 
 def delete(tree, uid):
@@ -1482,7 +1483,7 @@ def delete(tree, uid):
             f"{uid} is approved -- what the corpus promises is deprecated, "
             f"not removed: `reqctl revise {uid} --status deprecated`"
         )
-    # @req+ REQ-80226740@xxeoTjMyDC-h d223dk
+    # @req+ REQ-80226740@xdXflfkWkveF d223dk
     # @req+ REQ-13861816@OGhn1Q-Xs0__ nmlqee
     name = corpus.name_of(item.uid, item.data)
     identity = {item.uid} | ({name} if name is not None else set())
@@ -1496,7 +1497,7 @@ def delete(tree, uid):
         )
     # @req- nmlqee
     # @req- d223dk
-    # @req+ REQ-60430571@Moalg6_VN3cT ebwpu6
+    # @req+ REQ-60430571@0mnzagTfFcBw ebwpu6
     holders = sorted(
         other.uid
         for other in corpus.items(tree)
@@ -1512,7 +1513,7 @@ def delete(tree, uid):
             "would leave them pointing at nothing; unlink first"
         )
     # @req- ebwpu6
-    # @req+ REQ-42065260@-CAtOHQmOIfh s7iyuc
+    # @req+ REQ-42065260@GlmgQoAFl-Dj s7iyuc
     corpus.remove(item.path)
     corpus.invalidate(tree)
     return item.path
