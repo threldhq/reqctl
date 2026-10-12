@@ -1,5 +1,11 @@
 acceptance_criteria:
-- given: an unapproved [item](item) stated by no baseline but reached by other [items](item)
+- given: an unapproved [item](item) that the baseline the default branch carries does
+    not state and other [items](item) reach
+  then: the product refuses and names every [item](item) that reaches the unapproved
+    [item](item)
+  when: removal of the unapproved [item](item) is requested
+- given: an unapproved [item](item) that the working tree's baseline does not state
+    and other [items](item) reach, in a repository with no remote named origin
   then: the product refuses and names every [item](item) that reaches the unapproved
     [item](item)
   when: removal of the unapproved [item](item) is requested
@@ -10,7 +16,8 @@ citations:
 priority: medium
 relations: {}
 status: approved
-text: If a request would remove an unapproved [item](item) that no baseline states
-  and another [item](item) reaches, then the product shall refuse the removal.
+text: If a request would remove an unapproved [item](item) that the baseline the default
+  branch carries does not state and another [item](item) reaches, then the product
+  shall refuse the removal.
 type: functional
 verification: inspection

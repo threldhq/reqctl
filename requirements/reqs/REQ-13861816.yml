@@ -5,13 +5,13 @@ acceptance_criteria:
   when: a baseline is generated
 assessed:
   REQ-44642786: f_tuj97sj5Zn01LbYR3BF1VbXP6to7k0yPyEqjcLa80
-  REQ-60430571: Moalg6_VN3cTwlBuWj71M6bXUNdTouPjCIxXJFE3HHY
-  REQ-80226740: xxeoTjMyDC-hQXxzQHFqJDH2V7FXD9FCrT-IiggoTDE
+  REQ-60430571: 0mnzagTfFcBw42yDYpqDtI8jOHEhcbOQYMfRC0fvUVM
+  REQ-80226740: xdXflfkWkveFqVTZAc4-kPXXepcm8xD9Dn2hIKGqNOo
   REQ-94917590: 2yP1VjEjzn4-QYnaf6_2LW-F1vjIzDSpE-vV8yPzr7A
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   db6w7v: T6MJQgynrOEfjmWhzEbGiIY9Iibf7mg9b7AOn47-BIc
-  nmlqee: BZe9_jhRdwrMqgrY6a2PilflXbTN1GmE5BydgvmtFwE
+  nmlqee: WCRxYCCOtljGfRfBhqLn4RixdwHFDr2bUTaEFNW5HFg
 priority: medium
 relations:
   REQ-44642786: constrains

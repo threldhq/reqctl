@@ -7,7 +7,7 @@ acceptance_criteria:
   when: removal of an unapproved [item](item) no baseline states and no other [item](item)
     reaches is requested
 assessed:
-  REQ-42065260: -CAtOHQmOIfhp_ANF_1cE9siN4ZCZts79jHPUyMnlGw
+  REQ-42065260: GlmgQoAFl-DjAmYIcL3NXD0KEk1j18_rK-iA7rGYx1Y
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   nghnwd: 08EpaWpDuYniZJFhc0LhqVPhMa7djQO4naIz3PNwSm8

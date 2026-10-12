@@ -219,6 +219,11 @@ def loads(text, where, aliases=True):
         # @req> REQ-39368456@LvbuCW5-SvUW bpdfcl
         for field, value in (document.items() if isinstance(document, dict) else ()):
             fault = _unreadable(value)
+            looped = _looped(text) if fault else None
+            if looped:
+                raise ReqctlError(
+                    f"{where}: the YAML alias {looped} forms a cycle, so it "
+                    "cannot be read as text -- state it without an alias to itself")
             if fault:
                 raise ReqctlError(f"{where}: {field} {fault}")
         return document
@@ -228,6 +233,18 @@ def loads(text, where, aliases=True):
         raise ReqctlError(f"{where} nests too deeply to read") from error
     finally:
         loader.dispose()
+
+
+def _looped(text):
+    open_ = []
+    for event in yaml.parse(text, Loader=Loader):
+        if isinstance(event, yaml.CollectionStartEvent):
+            open_.append(event.anchor)
+        elif isinstance(event, yaml.CollectionEndEvent):
+            open_.pop()
+        elif isinstance(event, yaml.AliasEvent) and event.anchor in open_:
+            return f"*{event.anchor} on line {event.start_mark.line + 1}"
+    return None
 
 
 def _unreadable(value):
@@ -563,7 +580,7 @@ def stamp_of(uid, data):
     # @req> REQ-54851939@n6YOz94UUTn7 4jhey4
     if uid.startswith(("REQ-", "GUARD-")):
         return digest([uid, {k: data.get(k) for k in STATEMENT_STAMPED}])
-    # @req+ REQ-56581795@qvXeIYv9p28E s7alzx
+    # @req+ REQ-56581795@ZHEasHzzTZLC s7alzx
     if kind_of(uid, data) == "term":
         return _term_digest(uid, term_fields(data))
     return digest([uid, {k: data.get(k) for k in ITEM_STAMPED}])

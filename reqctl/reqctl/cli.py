@@ -217,9 +217,6 @@ def cmd_revise(args):
     if spread:
         note += (f"\n  reworded {spread['links']} link(s) across "
                  f"{len(spread['items'])} item(s)")
-        if spread["repinned"]:
-            note += (f"\n  re-pinned {spread['repinned']} item(s) whose target "
-                     "only changed a word")
         for held in spread["articles"]:
             note += f"\n    article: {held}"
         if spread["left"]:
@@ -266,8 +263,8 @@ def cmd_delete(args):
     _refuse_invalid(root, "remove")
     where = _write.delete(tree, args.uid)
     _emit(args, {"uid": args.uid, "path": str(where)},
-          f"{args.uid} removed. No baseline stated it, so nothing it said is "
-          "taken back.")
+          f"{args.uid} removed. The baseline the default branch carries did "
+          "not state it, so nothing it said is taken back.")
     return EXIT_OK
 
 

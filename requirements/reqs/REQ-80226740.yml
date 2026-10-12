@@ -1,16 +1,25 @@
 acceptance_criteria:
-- given: an unapproved [item](item) a baseline still states
-  then: the product refuses and names the baseline stating the [item](item)
+- given: an unapproved [item](item) that the baseline the default branch carries states
+    and the working tree's baseline does not
+  then: the product refuses and names the default branch's baseline
+  when: removal of the unapproved [item](item) is requested
+- given: an unapproved [item](item) that the working tree's baseline states, in a
+    repository with no remote named origin
+  then: the product refuses and names the working tree's baseline
+  when: removal of the unapproved [item](item) is requested
+- given: an unapproved [item](item), in a repository whose remote named origin names
+    no default branch
+  then: the product refuses and says which branch is the default cannot be told
   when: removal of the unapproved [item](item) is requested
 assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  d223dk: BZe9_jhRdwrMqgrY6a2PilflXbTN1GmE5BydgvmtFwE
-  wpcl2k: LWMT7u22eJH_grPzuxQ98neD0wyxhblQBR82Txvhwjw
+  d223dk: WCRxYCCOtljGfRfBhqLn4RixdwHFDr2bUTaEFNW5HFg
+  m6jqza: Y0CPLZZk3a9xOwWven6pL1SglXa-Fb-9UL4HRkiZZCA
 priority: medium
 relations: {}
 status: approved
-text: If a request would remove an unapproved [item](item) that a baseline states,
-  then the product shall refuse the removal.
+text: If a request would remove an unapproved [item](item) that the baseline the default
+  branch carries states, then the product shall refuse the removal.
 type: functional
 verification: inspection
