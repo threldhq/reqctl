@@ -350,7 +350,7 @@ def survey(paths, allowed=ALLOWED):
         if text is None:
             continue
         kind = syntax_of(path)
-        # @req> GUARD-21085755@Bvdj7QwEiK0X whxw2b
+        # @req> GUARD-21085755@-uspUi1-r2Pe whxw2b
         if kind is None:
             refused.append((path, 1, "no comment rule for this file type",
                             Path(path).suffix or Path(path).name))
