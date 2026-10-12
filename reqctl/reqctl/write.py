@@ -1300,10 +1300,6 @@ def _revision(store, uid, fields):
 
     prospective = _resolved_prose(store, uid, prospective)
 
-    if "text" in stated:
-        faults = _validate.ears(uid, prospective)
-        if faults:
-            raise ReqctlError("\n".join(faults))
     if (any(field.prose and fields.get(field.dest) is not None for field in own)
             or fields.get("set") or fields.get("append")):
         faults = _unknown_references(store, uid, prospective)
