@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a [per-item check](per_item_check) added to validate and no other change
+    to the product
+  then: the product refuses the command and writes nothing
+  when: reqctl new, revise or refile --into would write an [item](item) in which that
+    check finds a fault the [item](item) did not carry before
+- given: an [item](item) carrying a fault a [per-item check](per_item_check) validate
+    runs finds
+  then: the product refuses nothing for that fault
+  when: reqctl revise would write the [item](item) carrying that fault and no fault
+    the [item](item) did not carry before
+- given: an [item](item) carrying a fault a [per-item check](per_item_check) finds
+  then: the product refuses the command and writes nothing
+  when: reqctl revise would write the [item](item) carrying a second fault from that
+    check, naming something the first does not
+- given: a [per-item check](per_item_check) that fails unexpectedly on an [item](item)
+    it did not fail on that way before
+  then: the product refuses the command, naming the check, and writes nothing
+  when: reqctl new, revise or refile --into would write that [item](item)
+assessed:
+  REQ-32527326: JhrCBejivbr9OvE8AZnkw9UWb4dx3PpGaWjkVbgaRl4
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  per_item_check: L8I25OZJNU3F27YFjUYLQ2KOi_HawZhox0_ayr4PUC4
+priority: medium
+relations:
+  REQ-32527326: constrains
+status: approved
+text: If reqctl new, revise or refile --into would write an [item](item) in which
+  a [per-item check](per_item_check) validate runs finds a fault that the [item](item)
+  did not carry before, then the product shall refuse the command.
+type: functional
+verification: inspection
