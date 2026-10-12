@@ -17,8 +17,16 @@ acceptance_criteria:
     it did not fail on that way before
   then: the product refuses the command, naming the check, and writes nothing
   when: reqctl new, revise or refile --into would write that [item](item)
+- given: a draft statement linking an approved term
+  then: the product refuses nothing for the link
+  when: reqctl new would write the statement, its link [awaiting assessment](awaiting_assessment)
+- given: an [item](item) holding no reference to a parameter the corpus holds
+  then: the product refuses nothing for the reference
+  when: reqctl revise would write the [item](item) referencing that parameter, the
+    reference [awaiting assessment](awaiting_assessment)
 assessed:
   REQ-32527326: JhrCBejivbr9OvE8AZnkw9UWb4dx3PpGaWjkVbgaRl4
+  awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   per_item_check: L8I25OZJNU3F27YFjUYLQ2KOi_HawZhox0_ayr4PUC4
 priority: medium
@@ -26,7 +34,8 @@ relations:
   REQ-32527326: constrains
 status: approved
 text: If reqctl new, revise or refile --into would write an [item](item) in which
-  a [per-item check](per_item_check) validate runs finds a fault that the [item](item)
+  a [per-item check](per_item_check) validate runs finds a fault, other than a link
+  or reference that [awaits assessment](awaiting_assessment), that the [item](item)
   did not carry before, then the product shall refuse the command.
 type: functional
 verification: inspection
