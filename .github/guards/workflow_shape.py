@@ -10,6 +10,7 @@ GUARDS = Path(".github/guards")
 PINNED = re.compile(r"@[0-9a-f]{40}$")
 PIP = re.compile(r"\bpip3?\s+install\b(?:&(?!&)|[^;&|\n])*")
 EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
+REQUIREMENT = re.compile(r"--requirement(=.*)?|-[qvUI]*r.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
 READ_ONLY = {"contents": "read"}
 TAGS = "release-tag.yml"
@@ -139,8 +140,9 @@ def installs(text, where):
     for line in PIP.findall(CONTINUED.sub(" ", text)):
         held = " ".join(line.split())
         spaced = f" {held} "
-        # @req> GUARD-26421773@Fprcs5aDvwE8 kt5es3
-        if " -r " in spaced and "--require-hashes" not in spaced:
+        # @req> GUARD-26421773@SDQf4TqpYtSB kt5es3
+        if (any(REQUIREMENT.fullmatch(word) for word in held.split())
+                and "--require-hashes" not in spaced):
             found.append(f"{where}: `{held}` installs from a lockfile without "
                          "--require-hashes")
         # @req> GUARD-72877772@JfdZ18LPQLEi bbo2z6

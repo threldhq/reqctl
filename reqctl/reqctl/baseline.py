@@ -94,25 +94,21 @@ def _default_ref(root):
     if listed.returncode:
         raise ReqctlError(
             "cannot read the remotes, so whether a default branch states a "
-            "baseline cannot be told apart from there being none -- "
-            "numbering from this branch would skip the one it owes"
+            "baseline cannot be told apart from there being none"
         )
     if REMOTE not in listed.stdout.split():
         return None
     named = _git(root, "symbolic-ref", "-q", DEFAULT_HEAD)
     if named.returncode:
         raise ReqctlError(
-            "git does not say which branch of origin is the default one, so "
-            "numbering from a guess could bury the baseline the real one "
-            "states -- name it with `git remote set-head origin BRANCH`, "
-            "then generate"
+            "git does not say which branch of origin is the default one -- "
+            "name it with `git remote set-head origin BRANCH`"
         )
     ref = named.stdout.strip()
     if _git(root, "rev-parse", "-q", "--verify", f"{ref}^{{commit}}").returncode:
         raise ReqctlError(
             f"{ref} names no commit here, so the baseline the default branch "
-            "states cannot be read, and numbering from this branch would skip "
-            "the one it owes -- fetch it, then generate"
+            "states cannot be read -- fetch it"
         )
     return ref
 
@@ -199,9 +195,9 @@ def generate(tree, root):
         )
     # @req- yvehmw
 
-    # @req+ REQ-28086776@tkXHKMQwei2Z thbrwa
+    # @req+ REQ-28086776@7S0DPOiDLvSm thbrwa
     previous, claimed = _previous(root)
-    # @req+ REQ-73312524@Ae7JomIJiHDc mgwroy
+    # @req+ REQ-73312524@Eij54nBVNhs0 mgwroy
     dirty = uncommitted(root)
     if dirty:
         raise ReqctlError(

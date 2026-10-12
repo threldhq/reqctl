@@ -120,7 +120,7 @@ def cut(path, text, spans):
             continue
         level = depths[code[0]]
         after = [n for n in depths if n > last]
-        # @req> REQ-41552912@53pYi6X7Yqhp fu7y6n
+        # @req> REQ-41552912@G_9UzXwu1WUL fu7y6n
         if (code[0] not in starts or code[-1] not in ends
                 or any(depths[n] < level for n in code)
                 or (after and depths[min(after)] > level)):

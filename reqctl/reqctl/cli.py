@@ -43,7 +43,7 @@ def cmd_new(args):
 
 def cmd_lint(args):
     store, _ = corpus.load()
-    # @req> REQ-85308584@uUWJjK4FALNI sri72v
+    # @req> REQ-85308584@wEdh_1cW2eGE sri72v
     uid, _, _, problems = _write.prepare(store, args.kind, vars(args),
                                          placeholder="draft")
     faults = [problem.removeprefix(f"{uid}: ") for problem in problems]
@@ -169,7 +169,7 @@ def _entry_lines(key, fields, depth=0, anchor=None):
     if depth == 0 and not _nests(fields):
         shown = _entry_fields(fields)
         return [f"- {label}" + (f" — {shown}" if shown else "")]
-    # @req+ REQ-18993149@_rRKZ1ZI21lt s5nw3l
+    # @req+ REQ-18993149@6FrsyHRkHj2O s5nw3l
     held = [f"{'  ' * depth}- {label}"]
     for name, value in (fields or {}).items():
         if isinstance(value, dict):
@@ -217,9 +217,6 @@ def cmd_revise(args):
     if spread:
         note += (f"\n  reworded {spread['links']} link(s) across "
                  f"{len(spread['items'])} item(s)")
-        if spread["repinned"]:
-            note += (f"\n  re-pinned {spread['repinned']} item(s) whose target "
-                     "only changed a word")
         for held in spread["articles"]:
             note += f"\n    article: {held}"
         if spread["left"]:
@@ -266,8 +263,8 @@ def cmd_delete(args):
     _refuse_invalid(root, "remove")
     where = _write.delete(tree, args.uid)
     _emit(args, {"uid": args.uid, "path": str(where)},
-          f"{args.uid} removed. No baseline stated it, so nothing it said is "
-          "taken back.")
+          f"{args.uid} removed. The baseline the default branch carries did "
+          "not state it, so nothing it said is taken back.")
     return EXIT_OK
 
 
@@ -415,7 +412,7 @@ def cmd_export(args):
             aliases = fields.get("aliases") or []
             if aliases:
                 lines.append(f"- also: {', '.join(str(a) for a in aliases)}")
-            # @req+ REQ-18993149@_rRKZ1ZI21lt yxze4j
+            # @req+ REQ-18993149@6FrsyHRkHj2O yxze4j
             unclaimed = corpus.unclaimed(data)
             if unclaimed:
                 lines.append("- unclaimed")
@@ -547,7 +544,7 @@ def _context(store, item, dependents, tags):
                          suspect=corpus.is_suspect(store, item, address))
         concepts.append(entry)
 
-    # @req> REQ-19896380@2sOnckMwnWfx 7iy6c4
+    # @req> REQ-19896380@lvCPXiVYZ6ud 7iy6c4
     cited = [(path, pinned) for path, pinned, _ in tags.get(uid, [])
              if not corpus.is_test(path)]
     references = list(dict.fromkeys(path for path, _ in cited))
@@ -778,7 +775,7 @@ def cmd_trace(args):
             print(f"{row['uid']}  {row['status']}")
             for path in row["implementation"]:
                 print(f"    impl  {path}")
-        # @req> REQ-73027720@SebUlS2i_noq iy3utt
+        # @req> REQ-73027720@2Z15jgYQYfsS iy3utt
         if data["unimplemented"]:
             print("\nawaiting implementation: " + ", ".join(data["unimplemented"]))
         # @req> REQ-35979865@pd7CVJ7isMys wht4dr
@@ -1322,7 +1319,7 @@ def _drop_output():
 
 
 # @req> REQ-61484030@LpHoz6FzkKeT s75lcl
-# @req> REQ-19913588@Pbi1CR5jtivz irna4n
+# @req> REQ-19913588@hBNJrpn4vtZe irna4n
 def _fault(as_json, error):
     try:
         if sys.stdout is not None:
@@ -1338,7 +1335,7 @@ def _fault(as_json, error):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
-    # @req+ REQ-19913588@Pbi1CR5jtivz zh6xly
+    # @req+ REQ-19913588@hBNJrpn4vtZe zh6xly
     try:
         parser = build_parser(_fields.root(), _fielded(argv))
     except (ReqctlError, OSError, UnicodeError) as error:
@@ -1356,7 +1353,7 @@ def main(argv=None):
             except OSError:
                 _drop_output()
         raise
-    # @req+ REQ-19913588@Pbi1CR5jtivz dw57fs
+    # @req+ REQ-19913588@hBNJrpn4vtZe dw57fs
     try:
         # @req> REQ-51372579@dWaIOhXJzQnK 7fex4d
         if sys.stdout is None:
