@@ -1015,7 +1015,8 @@ def prepare(store, kind, fields, placeholder=None):
     # @req- yorgmf
     data = _resolved_prose(store, uid, data)
     # @req> REQ-85308584@wEdh_1cW2eGE 2vgmd6
-    problems = hidden + _unknown_references(store, uid, data)
+    problems = hidden + _validate._references(uid, data, corpus.addressable(
+        {item.uid: item.data for item in corpus.items(store)}), store.root)
     problems += _validate.schema_problems(store.root, uid, data)
     problems += _validate.ears(uid, data)
     problems += _validate.text_values(uid, data)
