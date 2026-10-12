@@ -712,7 +712,7 @@ def shared_quantities(records, root):
     return problems
 
 
-def _assessed(uid, data, records, canonical, known):
+def _assessed(uid, data, records, canonical, known, suspect=True):
     def held_data(address):
         return records.get(canonical.get(address, address))
 
@@ -744,7 +744,8 @@ def _assessed(uid, data, records, canonical, known):
             continue
         held = corpus.address_stamp_of(stamped, records[stamped], rest)
         pinned = pins.get(target)
-        if not isinstance(pinned, str) or pinned != held:
+        # @req> REQ-42390302@QOC4GhS7SkFg w3y4p3
+        if suspect and (not isinstance(pinned, str) or pinned != held):
             problems.append(
                 f"{uid}: suspect link: {target} -- reread both, then "
                 "`reqctl relate` a requirement or `reqctl revise "
@@ -1610,31 +1611,36 @@ def run(root, exempt=None):
 
     for path in paths:
         uid = path.stem
-        problems += _guarded(uid, _identity, root, path, records.get(path.stem))
-        if uid in unreadable:
-            problems.append(f"{uid}: {unreadable[uid]}")
-            continue
         if uid not in records:
-            problems.append(f"{uid}: item file is not a mapping")
+            problems += _guarded(uid, _identity, root, path, None)
+            problems.append(f"{uid}: {unreadable.get(uid, 'item file is not a mapping')}")
             continue
-        data = records[uid]
-        try:
-            needs = corpus.schema_name_at(root, corpus.kind_of(uid, data),
-                                          corpus.name_of(uid, data))
-        except (corpus.ReqctlError, TypeError):
-            needs = None
-        if needs not in broken_schemas:
-            problems += _guarded(uid, schema_problems, root, uid, data)
-        problems += _guarded(uid, ears, uid, data)
-        problems += _guarded(uid, text_values, uid, data)
-        problems += _guarded(uid, repeated_labels, uid, data)
-        problems += _guarded(uid, hidden_values, uid, data)
-        problems += _guarded(uid, dictionary_rules, uid, data)
-        problems += _guarded(uid, _relations, uid, data, records,
-                             reachable, known)
-        problems += _guarded(uid, _references, uid, data, known, root)
-        problems += _guarded(uid, _assessed, uid, data, records, reachable, known)
+        problems += item_problems(root, uid, path, records[uid], records,
+                                  reachable, known, broken_schemas)
     return problems + corpus_checks(records, root, paths, exempt)
+
+
+def item_problems(root, uid, path, data, records, reachable, known, broken=(),
+                  suspect=True):
+    # @req+ REQ-42390302@QOC4GhS7SkFg igyueu
+    problems = _guarded(uid, _identity, root, path, data)
+    try:
+        needs = corpus.schema_name_at(root, corpus.kind_of(uid, data),
+                                      corpus.name_of(uid, data))
+    except (corpus.ReqctlError, TypeError):
+        needs = None
+    if needs not in broken:
+        problems += _guarded(uid, schema_problems, root, uid, data)
+    problems += _guarded(uid, ears, uid, data)
+    problems += _guarded(uid, text_values, uid, data)
+    problems += _guarded(uid, repeated_labels, uid, data)
+    problems += _guarded(uid, hidden_values, uid, data)
+    problems += _guarded(uid, dictionary_rules, uid, data)
+    problems += _guarded(uid, _relations, uid, data, records, reachable, known)
+    problems += _guarded(uid, _references, uid, data, known, root)
+    problems += _guarded(uid, _assessed, uid, data, records, reachable, known, suspect)
+    return problems
+    # @req- igyueu
 
 
 def corpus_checks(records, root, paths, exempt=None):
