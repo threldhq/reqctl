@@ -1,5 +1,5 @@
-baseline: 86
-commit: 1564a7789dcbbfbd88965413c45be87ec70e39af
+baseline: 87
+commit: c524458e529368c3bbb8fadd21bca7186a4c3f94
 items:
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-12128145: mFuOqNbkyV1oY-6soAHFUkqGN-yitkrFm5SThHXJEzo
@@ -219,6 +219,7 @@ items:
   REQ-42065260: GlmgQoAFl-DjAmYIcL3NXD0KEk1j18_rK-iA7rGYx1Y
   REQ-42068162: TlRyGA-UJLlqIgKcMAE--oU8SsXrd7tZsGjsnxwCJ5k
   REQ-42199988: RmH4Z1Ifs4oQ_P7He7eYqQEOHMHxDa6SbzCyaJuBNlY
+  REQ-42390302: Ox6LVAD712IBX0lzWh7m3x3jem4W9oOR3V6PjGOOMhE
   REQ-42411532: ub-n0TKm3ymHhnrF2-_2KfM5Vhw7_U-2cLeUqjoq2xw
   REQ-42544082: VRPSEgM9tJWshRA2qNXY5cwa0__YHH75wlvlLdfHPRI
   REQ-42658093: fcEx9NJMNikSZhFSJSk-HYqJttphhWjsUc8W4fdu9Y0
@@ -560,6 +561,7 @@ items:
   owned_paths: 5uBm_4PmH1-c0tHvRRkdcOHNjbipvaGXy4nBbbhG0iY
   page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
   path_suffixes: Xra8WAFW9yj6q5X3w79Fxzu-ZKQIgGPH3AukLp2J9rs
+  per_item_check: L8I25OZJNU3F27YFjUYLQ2KOi_HawZhox0_ayr4PUC4
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
@@ -589,4 +591,4 @@ items:
   value_types: hh7MDQ0qhRu3WoS-COSXRVmHrQ21RIpL5S7VNeSWxuI
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
-supersedes: 85
+supersedes: 86
