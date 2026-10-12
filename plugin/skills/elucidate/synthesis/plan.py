@@ -1346,8 +1346,7 @@ def judge(run):
     lined(prompts, state_held["lines"])
     for stale in list((run / "prompts" / "judge").glob("*.md")) + list(
             (run / "returns" / "judge").glob("*.json")) + list(
-            (run / "returns" / "final").glob("*.json")) + list(
-            (run / "verdicts").glob("*.json")):
+            (run / "returns" / "final").glob("*.json")):
         corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "judge" / f"{name}.md", body)
