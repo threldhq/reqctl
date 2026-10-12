@@ -5,8 +5,6 @@ import os
 import subprocess
 import sys
 
-BASE = "BASE_REF"
-
 
 def read(*argv):
     # @req+ GUARD-87780053@FAmfCmKiJnLk t2bzx7
@@ -56,7 +54,7 @@ def faults(data, base):
     found = list(data["problems"])
     rows = stale(data)
     # @req> REQ-88079673@EiXeHoq_wF_z mle2ez
-    if not base:
+    if not base or not rows:
         return found + [text for _, text in rows], []
     # @req+ REQ-57367860@Ru8k-xWkVYxO afmuwn
     changed = touched(base)
@@ -69,7 +67,7 @@ def faults(data, base):
 
 def main():
     # @req+ GUARD-12397751@ZZpZOVKQVB3u 7skmd6
-    found, behind = faults(read("trace"), os.environ.get(BASE, ""))
+    found, behind = faults(read("trace"), os.environ.get("BASE_REF", ""))
     # @req> REQ-53246456@QyWuIwzUUElO howxzn
     for row in behind:
         print(f"::notice::behind the corpus: {row}, here or in the pull "

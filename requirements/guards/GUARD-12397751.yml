@@ -6,7 +6,7 @@ acceptance_criteria:
 assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
 citations:
-  7skmd6: zUcwDB3rSnaSz4mZggTo5AvymBgS71uO_4rHPgW8p2M
+  7skmd6: CU5nQxqLedlyZyKlX9PwcDygNStGUkLGqcs_9Xq6Twg
 relations: {}
 status: approved
 text: If reqctl trace reports a problem, then the build shall refuse the change.
