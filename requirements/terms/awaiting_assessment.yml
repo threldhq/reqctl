@@ -1,0 +1,15 @@
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+entries:
+  awaiting_assessment:
+    aliases:
+    - awaits assessment
+    definition: The state of a link or a reference whose [pin](pin) is missing or
+      names a [stamp](stamp) that the [item](item) or [entry](entry) it names no longer
+      carries, until reqctl revise --ack or reqctl relate [pins](pin) it.
+    word: awaiting assessment
+kind: term
+status: approved
