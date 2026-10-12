@@ -1030,8 +1030,8 @@ def _joined_faults(store, uid, prospective):
     paths = corpus.item_files(store.root)
     # @req+ REQ-85308584@wEdh_1cW2eGE td4i2r
     found = _validate.corpus_checks({**records, uid: prospective}, store.root, paths)
-    if not found:
-        return []
+    if all(problem.startswith(f"{uid}: ") for problem in found):
+        return found
     stood = set(_validate.corpus_checks(records, store.root, paths))
     return [problem for problem in found
             if problem not in stood or _validate.UNFINISHED in problem]
