@@ -406,6 +406,8 @@ def _set_fields(entry, pairs):
         name, split, value = str(pair).partition("=")
         if not name.strip() or not split:
             raise ReqctlError(f"--set {pair!r}: the form is field=value")
+        # @req> REQ-79956352@NXkZ4OmQ3Qb4 bdxaxh
+        _refuse_hidden(f"--set {name.strip()!r}:", name)
         steps = [step.strip() for step in name.strip().split(".")]
         if not all(steps):
             raise ReqctlError(
@@ -448,6 +450,8 @@ def _append_fields(entry, pairs):
         name, split, value = str(pair).partition("=")
         if not name.strip() or not split:
             raise ReqctlError(f"--append {pair!r}: the form is field=value")
+        # @req> REQ-79956352@NXkZ4OmQ3Qb4 5ve4qd
+        _refuse_hidden(f"--append {name.strip()!r}:", name)
         steps = [step.strip() for step in name.strip().split(".")]
         if not all(steps):
             raise ReqctlError(
