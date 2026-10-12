@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: an [item](item) holding a [whole-file citation](whole_file_citation) of a
+    [test](test)
+  then: the product reports the [whole-file citation](whole_file_citation) as a problem
+    and names the [test](test)
+  when: trace is run
+- given: an [item](item) asked to hold a [whole-file citation](whole_file_citation)
+    of a [test](test)
+  then: the product does not refuse it on that ground
+  when: the [whole-file citation](whole_file_citation) is written
+assessed:
+  REQ-30061042: b7B9U8dkoUHISTdbzsklwBOuu4h10PhXjQTIUPotY20
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+priority: medium
+relations:
+  REQ-30061042: depends_on
+status: approved
+text: When trace is run, the product shall report as a problem each [whole-file citation](whole_file_citation)
+  of a [test](test).
+type: functional
+verification: inspection

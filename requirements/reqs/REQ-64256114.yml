@@ -1,6 +1,9 @@
 acceptance_criteria:
-- given: a parameter value written in brackets and holding no comma
+- given: a parameter value written in brackets holding one member and no comma
   then: the product refuses and states that a set separates members with a comma
+  when: the value is stated
+- given: a parameter value written as empty brackets
+  then: the product does not refuse it on that ground
   when: the value is stated
 assessed: {}
 citations:
@@ -8,6 +11,7 @@ citations:
 priority: medium
 relations: {}
 status: approved
-text: If a bracketed set holds no comma, then the product shall refuse the set.
+text: If a bracketed set holds one member and no comma, then the product shall refuse
+  the set.
 type: functional
 verification: inspection

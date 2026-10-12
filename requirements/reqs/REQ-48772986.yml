@@ -11,7 +11,6 @@ acceptance_criteria:
   when: the run is built
 assessed:
   REQ-90454282: M0OdZ2RxH5qSAggaNA3jqFbkTXkdvD7VSStQiH-FPdw
-  challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
@@ -21,8 +20,8 @@ priority: medium
 relations:
   REQ-90454282: constrains
 status: approved
-text: When a [challenge](challenge) prompt is built, the product shall state each
-  term, parameter and [data item](data_item) by name and definition, with a [data
+text: When a recall, judge, group or final prompt is built, the product shall state
+  each term, parameter and [data item](data_item) by name and definition, with a [data
   item](data_item)'s [entry](entry) names and a parameter's values and unit, and no
   [entry](entry) field.
 type: functional

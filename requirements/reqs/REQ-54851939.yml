@@ -12,7 +12,7 @@ acceptance_criteria:
   then: the product makes the binder suspect
   when: an acceptance criterion of the requirement is revised
 assessed:
-  REQ-56581795: KcbOaSZB6LPVLqjMKgZofPweSqqZHWqw337PbGKvFd8
+  REQ-56581795: qvXeIYv9p28EgaPjO0HQSt52ApOyh7_TMgWEaBAhPxE
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8

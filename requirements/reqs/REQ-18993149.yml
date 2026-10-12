@@ -8,14 +8,19 @@ acceptance_criteria:
 - given: an [entry](entry) whose fields hold no mapping
   then: the export writes the [entry](entry) on one line
   when: the corpus is exported
+- given: a term recording two unclaimed phrases, each with its reason
+  then: each phrase and its reason stand on a line of their own under the term
+  when: the corpus is exported
 assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   s5nw3l: RTcQl1K8vdbZFGuGbeR8AEQuIMtWNfsyCHtp3SxSZn8
   yxze4j: IHeDXVYQNikKosQ0L-keVFWjBoo1r38gO5ANR5p5QwY
 priority: medium
-relations: {}
+relations:
+  REQ-24481048: depends_on
 status: approved
 text: When a field at any depth within an [item](item)'s [entry](entry) holds a mapping,
   the product shall export each field of that mapping on a separate line.

@@ -7,7 +7,7 @@ acceptance_criteria:
   then: the stored rationale carries the resolved address
   when: the [item](item) is written
 assessed:
-  REQ-97543346: PsO_rDObX2nfPUKa_GS6rAVEiltdOQaV8LEj5qfyTOM
+  REQ-97543346: Yc-UcdtSPtB3Bhswv3bjDx670xn1QKa3tvcwtUQePNQ
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 priority: medium
 relations:

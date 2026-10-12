@@ -7,7 +7,7 @@ acceptance_criteria:
   then: the product reports what that check found for the [items](item) it could read
   when: the corpus is validated
 assessed:
-  REQ-39368456: pX8wTz05ESJBknoiOHTXD3OYHCqNrASj4eAR4TjVlq0
+  REQ-39368456: LvbuCW5-SvUWUDjl2uXszZxDmxeBqpivS2Xln3kNcas
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   d3uvus: eC3GxadEp28QC8HgdHAbyYGAGzmTbvxuvhs_1TnHrQ0

@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a repository holding no third-party notices file
+  then: it creates THIRD_PARTY_NOTICES.md at the repository's root and records the
+    copy there
+  when: the session copies an example's code
+- given: a repository already holding a third-party notices file
+  then: it records the copy in that file
+  when: the session copies an example's code
+- given: a copy recorded in the notices file
+  then: no comment in it names the source
+  when: the copied code is read
+assessed:
+  REQ-10550356: 00YjqSp62ZTRPNww7aNlFnqdVmxNGrvdVF_iBMXDvDA
+  REQ-26967281: _UMD2dn--MVzSdcUN3uf-ha_Zg_fhdZYEo_AN9VYKWw
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-10550356: depends_on
+  REQ-26967281: depends_on
+status: approved
+text: When the ${plugin_components.implement_skill} copies an example's code, unchanged
+  or adapted, the product shall have the session record the source repository, the
+  commit, the file, the full text of the licence and the path the copy takes in a
+  third-party notices file of the receiving repository rather than in a comment of
+  the code.
+type: functional
+verification: inspection

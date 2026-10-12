@@ -1,0 +1,38 @@
+acceptance_criteria:
+- given: a change touching no [statement citation](statement_citation) that names
+    a [stamp](stamp) its requirement no longer carries, while another file holds one
+  then: the product reports that [statement citation](statement_citation) as behind
+    the corpus and reports no problem for it
+  when: trace is given the change's base branch
+- given: a pull request touching no file under the [corpus root](corpus_root) whose
+    base branch carries a [statement citation](statement_citation) naming a [stamp](stamp)
+    its requirement no longer carries, which the pull request leaves untouched
+  then: the product does not refuse the pull request on that ground
+  when: the ${corpus_gates.traceability} gate runs trace against the pull request's
+    base branch
+assessed:
+  REQ-37671861: FYhkOL5YKzhGd_URbF6YvbaJWFY2yPX6asNbQIFxmsQ
+  REQ-54851939: n6YOz94UUTn7qlBLIhltdfT7UD6BNEW5cnz7S6_AkiA
+  REQ-56906371: wq3BL0IRTLVVKuOe3drLtf2CYn6JfDGY337Kk20tmfM
+  REQ-57367860: Ru8k-xWkVYxOm_vpuW8ZCzMid813EjVKH-zXhOkkfkA
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.traceability: t2g-SZWxzs7WMpla0grhVUnoKO8CIuhvL89nPt4vwQQ
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-37671861: supersedes
+  REQ-54851939: depends_on
+  REQ-56906371: depends_on
+  REQ-57367860: depends_on
+  REQ-64846889: depends_on
+status: approved
+text: When trace is given a base branch, the product shall report as behind the corpus,
+  naming no problem for it, each [statement citation](statement_citation) naming a
+  [stamp](stamp) that the approved requirement it names no longer carries that the
+  change neither adds, moves nor changes, and whose covered lines the change does
+  not change.
+type: functional
+verification: inspection

@@ -28,6 +28,11 @@ acceptance_criteria:
     item](data_item) already holding the key given
   then: the product refuses, naming the key, and writes nothing
   when: reqctl refile is asked to file a parameter under that key
+- given: a corpus holding a [data item](data_item) named value_types, and a parameter
+    holding one value and stating a default
+  then: the product refuses, stating that an [entry](entry) cannot carry a default,
+    and writes nothing
+  when: reqctl refile is asked to file the parameter into a [data item](data_item)
 assessed:
   REQ-62905646: _RkSNpGGoJXvqerZ8har6jnbpCKdaaRT_Em2zoOCshg
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
