@@ -1011,18 +1011,34 @@ def prepare(store, kind, fields, placeholder=None):
     uid, path = mint(store, kind, named, placeholder)
     # @req- yorgmf
     data = _resolved_prose(store, uid, data)
+    known = corpus.addressable({item.uid: item.data for item in corpus.items(store)})
     # @req> REQ-85308584@wEdh_1cW2eGE 2vgmd6
-    problems = hidden + _unknown_references(store, uid, data)
-    problems += _checked(_validate.schema_problems, store.root, uid, data)
-    problems += _checked(_validate.ears, uid, data)
-    problems += _checked(_validate.text_values, uid, data)
-    problems += _checked(_validate.repeated_labels, uid, data)
+    problems = hidden + [problem for check, *args in (
+        (_validate._references, uid, data, known, store.root),
+        (_validate.schema_problems, store.root, uid, data),
+        (_validate.ears, uid, data),
+        (_validate.text_values, uid, data),
+        (_validate.repeated_labels, uid, data),
+        (_validate.dictionary_rules, uid, data))
+        for problem in _validate._guarded(uid, check, *args)]
     # @req> REQ-85308584@wEdh_1cW2eGE 6qk2w6
     # @req> REQ-79956352@NXkZ4OmQ3Qb4 wjxd42
-    problems += _checked(_validate.hidden_values, uid, data)
-    problems += _checked(_validate.dictionary_rules, uid, data)
-    problems += _new_corpus_faults(store, uid, data)
+    problems += _validate._guarded(uid, _validate.hidden_values, uid, data)
+    problems += _joined_faults(store, uid, data)
     return uid, path, data, problems
+
+
+def _joined_faults(store, uid, prospective):
+    records = {item.uid: item.data for item in corpus.items(store)}
+    paths = corpus.item_files(store.root)
+    # @req+ REQ-85308584@wEdh_1cW2eGE td4i2r
+    found = _validate.corpus_checks({**records, uid: prospective}, store.root, paths)
+    if all(problem.startswith(f"{uid}: ") for problem in found):
+        return found
+    stood = set(_validate.corpus_checks(records, store.root, paths))
+    return [problem for problem in found
+            if problem not in stood or _validate.UNFINISHED in problem]
+    # @req- td4i2r
 
 
 def create(store, kind, fields):
@@ -1047,7 +1063,6 @@ def _checked(check, *args):
 def _new_corpus_faults(store, uid, prospective):
     records = {item.uid: item.data for item in corpus.items(store)}
     joined = {**records, uid: prospective}
-    # @req> REQ-85308584@wEdh_1cW2eGE migtu6
     found = (_validate.coherence(joined, store.root, _checked)
              + _checked(_validate.shared_quantities, joined, store.root)
              + _checked(_validate.approved_relations, joined)

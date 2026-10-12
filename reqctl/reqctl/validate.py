@@ -1524,6 +1524,9 @@ def _stated(root):
     return [f"{_settings.SETTINGS}: {fault}" for fault in _settings.faults(held)]
 
 
+UNFINISHED = "reqctl could not finish"
+
+
 def _guarded(where, check, *args):
     # @req+ REQ-23691260@3s5Nt8Pn1BXA kgrg4l
     try:
@@ -1532,7 +1535,7 @@ def _guarded(where, check, *args):
         return [f"{where}: {fault}"]
     # @req> REQ-55939360@qvRmeRuBl0T9 yi53ne
     except Exception as fault:
-        return [f"{where}: reqctl could not finish {check.__name__} -- "
+        return [f"{where}: {UNFINISHED} {check.__name__} -- "
                 f"{type(fault).__name__}: {fault}"]
     # @req- kgrg4l
 
@@ -1615,8 +1618,11 @@ def run(root, exempt=None):
                              reachable, known)
         problems += _guarded(uid, _references, uid, data, known, root)
         problems += _guarded(uid, _assessed, uid, data, records, reachable, known)
+    return problems + corpus_checks(records, root, paths, exempt)
 
-    problems += _guarded("corpus", _strays, root, paths)
+
+def corpus_checks(records, root, paths, exempt=None):
+    problems = _guarded("corpus", _strays, root, paths)
     problems += _guarded("corpus", _stated, root)
     problems += _guarded("corpus", _named_schemas, records, root)
     problems += _guarded("corpus", _bound_guards, records, root)

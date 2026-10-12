@@ -5,51 +5,81 @@ import os
 import subprocess
 import sys
 
-SETTLING = "SETTLING"
 
-
-def traced():
+def read(*argv):
     # @req+ GUARD-87780053@FAmfCmKiJnLk t2bzx7
     try:
-        found = subprocess.run(["reqctl", "--json", "trace"],
+        found = subprocess.run(["reqctl", "--json", *argv],
                                capture_output=True, text=True, check=False)
     except FileNotFoundError as missing:
         raise SystemExit(f"cannot run reqctl: {missing}")
     try:
         return json.loads(found.stdout)
     except json.JSONDecodeError:
-        raise SystemExit("cannot read trace: "
-                         f"{found.stderr.strip() or found.stdout.strip()}")
+        said = (found.stderr.strip() or found.stdout.strip()
+                or f"reqctl exited {found.returncode} printing nothing")
+        raise SystemExit(f"cannot read {argv[0]}: {said}")
     # @req- t2bzx7
 
 
-def _stale(data):
-    return [f"{row['uid']}: {row['path']} pinned @{row['pinned']}, "
-            f"now @{row['held']}" for row in data["stale"]]
+def carried(commit, path):
+    return subprocess.run(["git", "show", f"{commit}:{path}"],
+                          capture_output=True, text=True, check=False).stdout
 
 
-# @req+ REQ-37671861@FYhkOL5YKzhG thjjmg
-def faults(data, settling):
+def touched(base, rows):
+    held = read("compare", "--base", f"origin/{base}")
+    if "citations" not in held or "base" not in held:
+        raise SystemExit(f"cannot compare against origin/{base}: "
+                         f"{held.get('error', 'malformed compare output')}")
+    # @req> REQ-57367860@Ru8k-xWkVYxO qenuaa
+    return {row["id"] for row in held["citations"] if row["state"] != ["deleted"]} | {
+        identity for identity, path, marker, _ in rows
+        if identity and marker not in carried(held["base"], path)}
+
+
+def stale(data):
+    named = {}
+    for citation in data["citations"]:
+        named.setdefault((citation["address"], citation["path"],
+                          citation["pinned"]), []).append(citation["id"])
+    rows = []
+    for row in data["stale"]:
+        ids = named.get((row["uid"], row["path"], row["pinned"]))
+        identity = ids.pop() if ids else None
+        remedy = (f"reqctl repin {identity}" if identity
+                  else f"reqctl tag {row['path']} --req {row['uid']}")
+        rows.append((identity, row["path"], f"{row['uid']}@{row['pinned']} {identity}",
+                     (f"{row['uid']}: {row['path']} pinned @{row['pinned']}, now "
+                      f"@{row['held']} -- read it against {row['uid']}, then {remedy}")))
+    return rows
+
+
+def faults(data, base):
     if "problems" not in data or "stale" not in data:
         raise SystemExit(
             f"cannot read trace: {data.get('error', 'malformed trace output')}")
     found = list(data["problems"])
-    return found if settling else found + _stale(data)
-
-
-def deferred(data, settling):
-    return _stale(data) if settling else []
-# @req- thjjmg
+    rows = stale(data)
+    # @req> REQ-88079673@EiXeHoq_wF_z mle2ez
+    if not base or not rows:
+        return found + [text for *_, text in rows], []
+    # @req+ REQ-57367860@Ru8k-xWkVYxO afmuwn
+    changed = touched(base, rows)
+    problems = [text for identity, *_, text in rows if identity in changed]
+    # @req- afmuwn
+    # @req> REQ-53246456@QyWuIwzUUElO r65zaf
+    behind = [text for identity, *_, text in rows if identity not in changed]
+    return found + problems, behind
 
 
 def main():
     # @req+ GUARD-12397751@ZZpZOVKQVB3u 7skmd6
-    data = traced()
-    settling = os.environ.get(SETTLING) == "true"
-    found = faults(data, settling)
-    for row in deferred(data, settling):
-        print(f"::notice::{row} -- re-pin it here, or in the pull request "
-              "that carries the code")
+    found, behind = faults(read("trace"), os.environ.get("BASE_REF", ""))
+    # @req> REQ-53246456@QyWuIwzUUElO howxzn
+    for row in behind:
+        print(f"::notice::behind the corpus: {row}, here or in the pull "
+              "request that carries the code")
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0

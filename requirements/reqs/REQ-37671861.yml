@@ -34,9 +34,6 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
-citations:
-  jaw6mg: u5adlHbTmS_JmvTxLbUBtjdgw8pIEXep8P5jR4rrI7Y
-  thjjmg: 9tHiu-ATfIxUAeZgD1Hb_IqBCtFLpI42mhF1p64qbbg
 priority: medium
 relations:
   REQ-54851939: depends_on

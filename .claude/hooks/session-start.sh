@@ -29,8 +29,7 @@ git remote set-head origin --auto \
 
 "$venv/bin/reqctl" baseline --check 2>&1 || true
 
-PATH="$venv/bin:$PATH" SETTLING=false \
-  "$venv/bin/python" .github/guards/citations.py 2>&1 || true
+PATH="$venv/bin:$PATH" "$venv/bin/python" .github/guards/citations.py 2>&1 || true
 
 "$venv/bin/reqctl" list term
 "$venv/bin/reqctl" list parameter
