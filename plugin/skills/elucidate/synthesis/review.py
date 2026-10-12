@@ -251,9 +251,11 @@ class Redirects(urllib.request.HTTPRedirectHandler):
         self.max_repeats = self.max_redirections = bound
         self.inf_msg = f"takes more than {bound} redirects; the last answered "
 
-    def redirect_request(self, req, *args):
-        req.redirect_dict = getattr(req, "redirect_dict", {})
-        return super().redirect_request(req, *args)
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if sum(getattr(req, "redirect_dict", {}).values()) >= self.max_redirections:
+            raise urllib.request.HTTPError(req.full_url, code, self.inf_msg + msg,
+                                           headers, fp)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
 # @req+ REQ-91666323@k8sa2vnqWm_q goa2fj

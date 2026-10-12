@@ -141,8 +141,16 @@ def _value(value, unit):
     return ", ".join(f"{member}{suffix}" for member in value)
 
 
+# @req> REQ-73719888@SQkvdemRTgC1 jqij5p
 def _plain(value):
-    return _value(value, None) if isinstance(value, list) else str(value)
+    if isinstance(value, dict):
+        return ", ".join(f"{name} ({_plain(held)})" if isinstance(held, dict)
+                         else f"{name}: {_plain(held)}"
+                         for name, held in value.items())
+    if isinstance(value, list):
+        return ", ".join(f"({_plain(member)})" if isinstance(member, dict)
+                         else _plain(member) for member in value)
+    return "null" if value is None else _write.entry_key(value)
 
 
 def _entry_fields(fields):
@@ -177,20 +185,21 @@ def _render(fields, order=None):
     keys = order or list(fields)
     width = max((len(k) for k in keys if fields.get(k) is not None), default=0)
     lines = []
+    # @req> REQ-73719888@SQkvdemRTgC1 li6wlm
     for key in keys:
         value = fields.get(key)
         if value in (None, [], "", {}):
             continue
         if isinstance(value, dict):
             value = "; ".join(
-                f"{name} -- {held if isinstance(held, str) else _entry_fields(held)}"
+                f"{name} -- {_entry_fields(held) if isinstance(held, dict) else _plain(held)}"
                 if held else str(name)
                 for name, held in value.items()
             )
         if isinstance(value, list):
-            value = ", ".join(_criterion(v) if isinstance(v, dict) else str(v)
+            value = ", ".join(_criterion(v) if isinstance(v, dict) else _plain(v)
                               for v in value)
-        lines.append(f"{key.replace('_', ' '):<{width}}  {value}")
+        lines.append(f"{key.replace('_', ' '):<{width}}  {_plain(value)}")
     return "\n".join(lines)
 
 
@@ -406,6 +415,13 @@ def cmd_export(args):
             aliases = fields.get("aliases") or []
             if aliases:
                 lines.append(f"- also: {', '.join(str(a) for a in aliases)}")
+            # @req+ REQ-18993149@_rRKZ1ZI21lt yxze4j
+            unclaimed = corpus.unclaimed(data)
+            if unclaimed:
+                lines.append("- unclaimed")
+                lines += [f"  - {phrase}: {reason}"
+                          for phrase, reason in unclaimed.items()]
+            # @req- yxze4j
             lines.append(f"- status: {data.get('status')}")
             users = sorted(used_by.get(uid, ()))
             if users:
@@ -806,10 +822,9 @@ def _listed(store, uid, entries):
 def _whole(tree, root, args):
     # @req+ REQ-30061042@b7B9U8dkoUHI cig5it
     target = Path(args.path).resolve()
-    formats = corpus.entries(corpus.find(tree, corpus.COMMENTLESS).data) or {}
-    if target.suffix[1:] not in formats:
+    if target.suffix[1:] not in cite.COMMENTLESS:
         raise ReqctlError(f"{args.path}: a whole-file citation is held only of a file "
-                          f"in a commentless format ({', '.join(sorted(formats))}) "
+                          f"in a commentless format ({', '.join(cite.COMMENTLESS)}) "
                           "-- cite lines of it with --from and --to")
     try:
         relative = target.relative_to(Path(root).resolve()).as_posix()

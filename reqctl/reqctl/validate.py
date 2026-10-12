@@ -1,10 +1,11 @@
 import copy
+import datetime
 import math
 import re
 import unicodedata
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 from jsonschema.exceptions import best_match
 
 from . import baseline as _baseline
@@ -69,7 +70,8 @@ def schema_problems(root, uid, data):
     except corpus.ReqctlError as absent:
         return [f"{uid}: {absent}"]
     # @req+ REQ-33359142@u8vbxFMjrV6Z p3hzqn
-    validator = Draft202012Validator(declared)
+    # @req> REQ-62072712@m81ZZqYdquaS qvzmoq
+    validator = Draft202012Validator(declared, format_checker=DATED)
     problems = []
     for error in sorted(validator.iter_errors(data), key=str):
         error = best_match([error])
@@ -118,8 +120,6 @@ def ears(uid, data):
         return []
     noun, because = stated
     text = " ".join(str(data.get("text") or "").split())
-    if not text:
-        return []
 
     faults = []
     # @req+ REQ-18950462@TJVbxYWG6Dcw ey43wr
@@ -307,7 +307,7 @@ def text_values(uid, data):
     for member in corpus.entries(data) or {}:
         if not isinstance(member, str):
             continue
-        found = QUANTITY.fullmatch(member.strip())
+        found = QUANTITY.fullmatch(re.sub(r"\A[+-](?=\.?\d)", "", member.strip()))
         if found and not isinstance(_quantity(found.group(1)), str):
             problems.append(
                 f"{uid}: text value {member!r} is shaped like a quantity -- "
@@ -391,14 +391,14 @@ def _relations(uid, data, records, canonical, known):
     ]
     requirement = uid.startswith("REQ-")
     for target in sorted(corpus.mapping(data, "relations")):
+        # @req> REQ-26911169@Ty70WfMx9YfH p2wcdn
+        if target == uid:
+            problems.append(f"{uid}: links to itself")
+            continue
         if requirement:
             held = canonical.get(target)
             kind = (corpus.kind_of(held, records[held]) if held in records
                     else corpus.kind_for_uid(target))
-            # @req> REQ-26911169@Ty70WfMx9YfH v3b5cc
-            if target == uid:
-                problems.append(f"{uid}: links to itself")
-                continue
             if kind in ("parameter", "data"):
                 noun = "a parameter" if kind == "parameter" else "a data item"
                 problems.append(
@@ -1035,6 +1035,18 @@ def _admits_link(root, uid, data, where, field, link, judged):
 PROSE = "x-prose"
 OBSERVED = "x-observed"
 DATE = "date"
+# @req+ REQ-62072712@m81ZZqYdquaS 5ii662
+DATED = FormatChecker(formats=())
+
+
+@DATED.checks(DATE, raises=ValueError)
+def _dated(value):
+    return isinstance(value, datetime.date) or (
+        isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", value)
+        and datetime.date.fromisoformat(value))
+# @req- 5ii662
+
+
 UNMARKED = "\0not marked\0"
 
 
@@ -1174,13 +1186,13 @@ def _entry_term_fields(records, root):
     return problems
 
 
-def coherence(records, root):
-    return (_approved_bindings(records) + _shared_words(records)
-            + _circular_definitions(records) + _entry_selection(records)
-            + _duplicate_names(records) + _entry_term_fields(records, root)
-            + _typed_entries(records) + _entry_of_values(records, root)
-            + _value_types(records, root) + _unit_quantities(records, root)
-            + _listed_units(records) + _bounds(records))
+def coherence(records, root, run=lambda check, *args: check(*args)):
+    return (run(_approved_bindings, records) + run(_shared_words, records)
+            + run(_circular_definitions, records) + run(_entry_selection, records)
+            + run(_duplicate_names, records) + run(_entry_term_fields, records, root)
+            + run(_typed_entries, records) + run(_entry_of_values, records, root)
+            + run(_value_types, records, root) + run(_unit_quantities, records, root)
+            + run(_listed_units, records) + run(_bounds, records))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
@@ -1248,8 +1260,8 @@ def _listed_units(records):
     if corpus.kind_of(held, records.get(held)) != "data":
         return []
     listed: dict[str, set[str]] = {
-        str(key): set() for key, stated in (corpus.entries(records[held]) or {}).items()
-        if isinstance(stated, dict) and isinstance(stated.get("units"), dict)}
+        str(key): set() for key in corpus.entries(records[held]) or {}
+        if str(key) not in UNITLESS}
     for key, _, spelling in _spellings(records[held]):
         listed.setdefault(key, set()).add(spelling)
     stating = [(uid, "", data) for uid, data in sorted(records.items())
@@ -1613,7 +1625,9 @@ def run(root, exempt=None):
     problems += _guarded("corpus", approved_relations, records)
     problems += _guarded("corpus", conflicts, records)
     problems += _guarded("corpus", supersedes, records)
-    problems += _guarded("corpus", coherence, records, root)
+    # @req> REQ-23691260@3s5Nt8Pn1BXA oan2d2
+    problems += coherence(records, root,
+                          lambda check, *args: _guarded("corpus", check, *args))
     problems += _guarded("corpus", cycles, records)
     if exempt is not None:
         problems += _guarded("corpus", exempted, records, root, exempt)

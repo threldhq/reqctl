@@ -217,7 +217,7 @@ def reach(run, state_held):
             "whether a probe's source was reached is read from what recall "
             "returned. Build the run again.")
     hit, stopped, refused = plan.recalled(run, state_held)
-    unread = sorted(list(stopped.values())
+    unread = sorted([why for whys in stopped.values() for why in whys]
                     + [f"{label} {'; '.join(why)}" for label, why in refused])
     return ({int(number): set(uids) for number, uids in hit.items()},
             {int(number): set(items)

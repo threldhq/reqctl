@@ -8,12 +8,13 @@ from pathlib import Path
 from re import _constants as sre
 from re import _parser
 
-from reqctl import corpus
+from reqctl import baseline, corpus
 
 CONFIG = Path(".gitleaks.toml")
 RULE = "generic-api-key"
-INSIDE = str(corpus.folder_for(".", "data") / "object_storage.yml")
-ROOT = Path(INSIDE).parts[0] + "/"
+INSIDE = tuple(str(corpus.folder_for(".", kind) / "object_storage.yml")
+               for kind in corpus.FOLDERS) + (str(baseline.path(".")),)
+ROOT = Path(INSIDE[0]).parts[0] + "/"
 DIGITS = frozenset(string.digits)
 DIGEST = frozenset(string.ascii_letters + string.digits + "_-")
 CATEGORIES = {sre.CATEGORY_DIGIT: DIGITS,
@@ -279,10 +280,11 @@ def faults(config):
                 f"outside {ROOT}; begin it with ^{ROOT}")
     # @req- pzazjf
     # @req> REQ-90593907@77_4Pvs9T0Oa ef2ben
-    if scope and not any(one.search(INSIDE) for one in scope):
-        found.append(
-            f"{CONFIG}: the {RULE} allowlist does not admit {INSIDE}, where "
-            "reqctl writes stamps, so every real stamp fails the scan")
+    for path in INSIDE:
+        if scope and not any(one.search(path) for one in scope):
+            found.append(
+                f"{CONFIG}: the {RULE} allowlist does not admit {path}, where "
+                "reqctl writes stamps, so every real stamp there fails the scan")
     # @req+ REQ-90593907@77_4Pvs9T0Oa waiych
     shape = re.compile(written[0])
     for stamp in stamps():

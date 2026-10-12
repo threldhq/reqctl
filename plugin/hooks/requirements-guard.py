@@ -23,10 +23,11 @@ _BASELINE_FILE = rf"{_ROOT}/baseline\.ya?ml"
 
 ITEM = re.compile(rf"{_ROOT}/({_ITEMS})/({_UIDS})-\d{{8}}\.ya?ml$")
 BASELINE = re.compile(rf"{_ROOT}/baselines/|{_BASELINE_FILE}")
+# @req> REQ-22704490@0I1yKEFWt0tX yn3jbh
 CORPUS_DIR = re.compile(
     rf"{_ROOT}/({_CORPUS})(?![\w.-])"
     rf"|{_BASELINE_FILE}"
-    rf"|{_ROOT}" r"/[^/\s]*[*?{\[]"
+    rf"|{_ROOT}" r"/[^/\s]*[*?{\[$`]"
     r"|\bcd\s+requirements(?![\w.-])"
 )
 CORPUS_ROOT_NAME = "requirements"
@@ -231,7 +232,7 @@ UNREAD_COMMAND = (
 )
 
 INEXACT = (
-    "old_string is not in the file exactly as written, and the file or new_string holds "
+    "old_string is not in {target} exactly as written, and the file or new_string holds "
     "a statement citation.\n"
     "Give old_string exactly as the file holds it, quotes and escapes included."
 )
@@ -240,6 +241,7 @@ INEXACT = (
 
 WHOLE_TREE: list[str] = []
 FORCE = ("-f", "--force", "--discard-changes")
+# @req> worktree_commands@EtNKXLNk8TvY 3qwrc6
 RESTORES = ("checkout", "restore", "reset", "clean", "switch")
 JUDGED_GIT = ("push", "commit", "apply", "am", *NO_COMMIT, *RESTORES)
 UNTRACKED = ("??", "!!")
@@ -1040,6 +1042,7 @@ def judge_command(said, here, stdin=()):
     refuse_destructive_push(said)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
+    # @req> REQ-51296881@8h-e1bOYkZtT 4tzkdu
     if subcommand in ("apply", "am"):
         deny(f"git {subcommand} blocked: the paths it writes live inside the "
              "patch, where this guard cannot see them. Use the editing tools, "
@@ -1047,6 +1050,7 @@ def judge_command(said, here, stdin=()):
     called = invoked(words)
     operands = called[1:]
     plain = called[0] if called else None
+    # @req> REQ-51296881@8h-e1bOYkZtT jcpru4
     if plain == "patch":
         deny("patch(1) blocked: the paths it writes live inside the diff, "
              "where this guard cannot see them. Use the editing tools, and "
@@ -1070,6 +1074,7 @@ def judge_command(said, here, stdin=()):
             (len(w) > 2 and "--recursive".startswith(w))
             or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
             for w in operands):
+        # @req> REQ-51296881@8h-e1bOYkZtT 7sfcit
         if swept := sweeping(operands, here, BARE_SWEEP):
             deny(f"rm -r of '{swept}' blocked: it sweeps the requirements "
                  "corpus along with everything else. Name the paths to delete.")
@@ -1083,6 +1088,7 @@ def judge_command(said, here, stdin=()):
         points = list(itertools.takewhile(
             lambda word: not word.startswith("-") and word not in ("(", "!"),
             operands[at:])) or ["."]
+        # @req> REQ-51296881@8h-e1bOYkZtT 4k6mvu
         if swept := sweeping(points, here, BARE_ROOTS):
             deny(f"find -delete from '{swept}' blocked: it could reach the project "
                  "root, a folder above it, or the requirements corpus. Start find "
@@ -1148,9 +1154,11 @@ def glob_alternatives(segment):
     return [segment]
 
 
+# @req> REQ-22704490@0I1yKEFWt0tX 3r7rae
+# @req> REQ-54260750@MTrWbA9_HZWY pokpqc
 def is_corpus_root(word):
     for value in {word, word.rpartition("=")[2]}:
-        trimmed = EXPANSION.sub("", value).rstrip("/")
+        trimmed = os.path.normpath(EXPANSION.sub("", value)).rstrip("/")
         if trimmed and (trimmed.rsplit("/", 1)[-1] == CORPUS_ROOT_NAME or any(
                 GLOB_CHAR.search(segment) and LITERAL_CHAR.search(segment)
                 and any(fnmatch.fnmatchcase(CORPUS_ROOT_NAME, alt)
@@ -1235,7 +1243,7 @@ def judge_shell(raw, cwd, stdin=()):
     joins = []
     pipelines = scan(AMP_REDIRECT.sub(" ", cmd), joins)
     places = cwds(pipelines, joins, cwd)
-    unquoted = QUOTED_REDIRECT.sub(r"\1\3", cmd)
+    unquoted = QUOTED_REDIRECT.sub(r"\1\3", cmd.replace("\\\n", ""))
     redirect = REDIRECT.search(masked(unquoted)) or next(
         (found for found in REDIRECT_TARGET.finditer(masked(unquoted))
          if any(CORPUS_DIR.search(word) or reaches_corpus(word, here)
@@ -1375,9 +1383,10 @@ def edited(tool, args, cwd):
         if not isinstance(old, str) or not isinstance(new, str):
             deny(UNREADABLE.format(what="the new_string field" if isinstance(old, str)
                                    else "the old_string field"))
+        # @req> REQ-67599992@TMfnHY-C4hOv lh5igq
         if old and old not in after and any(
                 CITATION_LINE.match(line) for text in (after, new) for line in text.split("\n")):
-            deny(INEXACT)
+            deny(INEXACT.format(target=target))
         if not new and not old.endswith("\n") and old + "\n" in after:
             old += "\n"
         after = after.replace(old, new, -1 if edit.get("replace_all") else 1)
@@ -1449,8 +1458,6 @@ def decide(data: dict) -> None:
     tool = str(data.get("tool_name") or "")
     args = data.get("tool_input")
     # @req+ REQ-18701923@7CvKXOjSI6Kb hyuozw
-    if args is None:
-        args = {}
     if not isinstance(args, dict):
         deny(UNREADABLE.format(what="the tool input, which is not an object"))
     for key in ("file_path", "notebook_path", "command"):

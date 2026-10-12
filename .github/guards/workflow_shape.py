@@ -8,7 +8,8 @@ import yaml
 WORKFLOWS = Path(".github/workflows")
 GUARDS = Path(".github/guards")
 PINNED = re.compile(r"@[0-9a-f]{40}$")
-PIP = re.compile(r"(?m)^.*?(pip install\b.*)$")
+PIP = re.compile(r"\bpip3?\s+install\b(?:&(?!&)|[^;&|\n])*")
+EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
 READ_ONLY = {"contents": "read"}
 TAGS = "release-tag.yml"
@@ -21,7 +22,7 @@ IMPORTS = re.compile(r"(?m)^\s*(?:from reqctl import|import reqctl)\b"
                      r"|[\"']reqctl[\"']")
 ACCEPTS = re.compile(r"(?m)^\s*reqctl\s+validate\b")
 VALIDATES = "reqctl validate"
-UNTRUSTED = {"pull_request", "pull_request_target"}
+UNTRUSTED = "pull_request"
 JOBS = 1
 
 
@@ -88,7 +89,8 @@ def faults(text, where, gates=None):
         found.append(f"{where}: reaches the secrets context")
     # @req> REQ-81795630@6p2bA0ZHqY-j 6nwnpn
     if who in WIELDS:
-        for fired in sorted(UNTRUSTED & triggers(held)):
+        for fired in sorted(name for name in triggers(held)
+                            if str(name).startswith(UNTRUSTED)):
             found.append(f"{where}: wields a secret and fires on {fired}")
     # @req+ GUARD-20209566@zkKPlDbnzFuA wqoe4t
     events = held.get(True, held.get("on"))
@@ -142,7 +144,8 @@ def installs(text, where):
             found.append(f"{where}: `{held}` installs from a lockfile without "
                          "--require-hashes")
         # @req> GUARD-72877772@JfdZ18LPQLEi bbo2z6
-        if " -e " in spaced and "--no-build-isolation" not in spaced:
+        if (any(EDITABLE.fullmatch(word) for word in held.split())
+                and " --no-build-isolation " not in spaced):
             found.append(f"{where}: `{held}` builds an editable install without "
                          "--no-build-isolation")
     return found

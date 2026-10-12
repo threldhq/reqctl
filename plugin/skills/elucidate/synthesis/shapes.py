@@ -88,6 +88,7 @@ JUDGE = _object(["proposal", "covered_by", "conflicts", "relations", "nearest",
 
 CITING = {"covered_by": "uids", "conflicts": "uid", "relations": "target",
           "nearest": "uid"}
+DICTIONARY_CITING = {"values": "belongs_with", "words": "defined_by"}
 
 LABEL = {"type": "string", "minLength": 1, "maxLength": 120}
 

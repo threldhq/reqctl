@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import ast
+import os
 import re
 import subprocess
 import sys
@@ -15,6 +16,7 @@ PLACEHOLDER = re.compile(r"NN|FILE|DIR|MEMBER|PATH|<[^>]*>")
 QUOTED_FLAG = re.compile(r"`(--[a-z][\w-]*)`")
 SKILL_DIR = "${CLAUDE_SKILL_DIR}"
 BARE_FLAG = re.compile(r"--[a-z][\w-]*")
+URL = re.compile(r"[A-Za-z][\w+.-]*://\S*")
 
 
 def tracked(*globs):
@@ -73,14 +75,12 @@ def paths_named(text, holder, known):
         text = text.replace(SKILL_DIR, str(Path(holder).parent))
     # @req> GUARD-22794969@9zSROQYCCtPU rubhxs
     for number, line in enumerate(text.splitlines(), 1):
-        for found in PATHISH.finditer(line):
+        for found in PATHISH.finditer(URL.sub(" ", line)):
             named = found.group(0)
             if PLACEHOLDER.search(named) or "/" not in named:
                 continue
-            if named.startswith("//") and line[:found.start()].endswith(":"):
-                continue
-            bare = named[2:] if named.startswith("./") else named
-            if bare in known or str(Path(holder).parent / bare) in known:
+            if any(os.path.normpath(where) in known
+                   for where in (named, Path(holder).parent / named)):
                 continue
             faults.append((holder, number,
                            f"{named} names no file this repository tracks"))

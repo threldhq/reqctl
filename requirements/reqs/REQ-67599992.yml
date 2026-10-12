@@ -16,7 +16,8 @@ assessed:
   REQ-91051324: ljHcdWSG-nys57fRKMJEzapdA6usPqPdbZy00tgXHpw
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  jzjikg: b8gWzHhbB6ytTvB_1HakuCtHz5lo41sJ4XmFxZX0TxA
+  jzjikg: eWsexnYOSy-E_VpNDwwGcjB1KdeCuGCPLpbpXWjYGhg
+  lh5igq: jaVEtKR7L7FVmTGM0iJyeBUmpJDqgxRCaPFzd5xTMBM
 priority: medium
 relations:
   REQ-18701923: constrains

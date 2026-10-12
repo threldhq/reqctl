@@ -54,7 +54,9 @@ def whole(tree, tags, root=None, uid=None):
             continue
         for path, held in corpus.mapping(item.data, corpus.WHOLE_FILES).items():
             held = held if isinstance(held, dict) else {}
-            tags.setdefault(owner, []).append((path, held.get("pinned") or "", None))
+            # @req> REQ-19896380@2sOnckMwnWfx lbb72g
+            if not corpus.is_test(path):
+                tags.setdefault(owner, []).append((path, held.get("pinned") or "", None))
             if root is None or (uid and owner != uid):
                 continue
             target = (Path(root) / path).resolve()
@@ -78,7 +80,7 @@ def whole(tree, tags, root=None, uid=None):
 
 
 def trace(tree, root, uid=None):
-    citations, cited_problems = cite.read(root, digested=True)
+    citations, cited_problems = cite.read(root, digested=True, uid=uid)
     # @req+ REQ-19896380@2sOnckMwnWfx 6rtw6m
     shown = [c for c in citations if not corpus.is_test(c["path"])]
     tags = cite.cited(shown)

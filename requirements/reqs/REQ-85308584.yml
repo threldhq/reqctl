@@ -10,6 +10,8 @@ acceptance_criteria:
   when: the statement is linted
 assessed: {}
 citations:
+  2vgmd6: NDI5p6CTnTW0fV-Js2Hz7iryUgAV2tzkFu1bSNjYFhw
+  migtu6: bycZUlC5Q2Lmb3E3WKDGtbZ1bxnnrm5fSVI9MoSGoLE
   sri72v: QaNYpwHajdo4t8Zc-fG4eCa0zce2tKiRbziktlxySZI
 priority: medium
 relations: {}
