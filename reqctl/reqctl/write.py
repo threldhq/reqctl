@@ -1074,20 +1074,24 @@ def _new_cycles(store, uid, prospective):
 
 
 def _refuse_new_schema_faults(store, uid, before, prospective):
+    # @req+ REQ-79956352@NXkZ4OmQ3Qb4 cg4b5m
     existing = (_validate.schema_problems(store.root, uid, before)
                 + _validate.text_values(uid, before)
                 + _validate.repeated_labels(uid, before)
+                + _validate.hidden_values(uid, before)
                 + _validate.dictionary_rules(uid, before))
     introduced = [
         problem
         for problem in _validate.schema_problems(store.root, uid, prospective)
         + _validate.text_values(uid, prospective)
         + _validate.repeated_labels(uid, prospective)
+        + _validate.hidden_values(uid, prospective)
         + _validate.dictionary_rules(uid, prospective)
         if problem not in existing
     ]
     if introduced:
         raise ReqctlError("\n".join(introduced))
+    # @req- cg4b5m
 
 
 def revisable_fields(own, kind):
