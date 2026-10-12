@@ -1014,14 +1014,16 @@ def prepare(store, kind, fields, placeholder=None):
     uid, path = mint(store, kind, named, placeholder)
     # @req- yorgmf
     data = _resolved_prose(store, uid, data)
+    known = corpus.addressable({item.uid: item.data for item in corpus.items(store)})
     # @req> REQ-85308584@wEdh_1cW2eGE 2vgmd6
-    problems = hidden + _validate._references(uid, data, corpus.addressable(
-        {item.uid: item.data for item in corpus.items(store)}), store.root)
-    problems += _validate.schema_problems(store.root, uid, data)
-    problems += _validate.ears(uid, data)
-    problems += _validate.text_values(uid, data)
-    problems += _validate.repeated_labels(uid, data)
-    problems += _validate.dictionary_rules(uid, data)
+    problems = hidden + [problem for check, *args in (
+        (_validate._references, uid, data, known, store.root),
+        (_validate.schema_problems, store.root, uid, data),
+        (_validate.ears, uid, data),
+        (_validate.text_values, uid, data),
+        (_validate.repeated_labels, uid, data),
+        (_validate.dictionary_rules, uid, data))
+        for problem in _validate._guarded(uid, check, *args)]
     problems += _joined_faults(store, uid, data)
     return uid, path, data, problems
 
