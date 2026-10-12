@@ -412,6 +412,9 @@ def _set_fields(entry, pairs):
                 f"--set {name.strip()!r}: a dotted field names the entries a "
                 "field holds, as properties.date.name"
             )
+        # @req> REQ-79956352@NXkZ4OmQ3Qb4 qldnjy
+        for said in (name, *steps):
+            _refuse_hidden(f"--set {name.strip()!r}:", said)
         where = entry
         for step in steps[:-1]:
             nested = where.get(step, {})
@@ -454,6 +457,9 @@ def _append_fields(entry, pairs):
                 f"--append {name.strip()!r}: a dotted field names the entries a "
                 "field holds, as properties.date.name"
             )
+        # @req> REQ-79956352@NXkZ4OmQ3Qb4 gey5jb
+        for said in (name, *steps):
+            _refuse_hidden(f"--append {name.strip()!r}:", said)
         member = scalar(value)
         if isinstance(member, list):
             raise ReqctlError(
