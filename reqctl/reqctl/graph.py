@@ -54,7 +54,7 @@ def whole(tree, tags, root=None, uid=None):
             continue
         for path, held in corpus.mapping(item.data, corpus.WHOLE_FILES).items():
             held = held if isinstance(held, dict) else {}
-            # @req> REQ-19896380@2sOnckMwnWfx lbb72g
+            # @req> REQ-19896380@lvCPXiVYZ6ud lbb72g
             if not corpus.is_test(path):
                 tags.setdefault(owner, []).append((path, held.get("pinned") or "", None))
             if root is None or (uid and owner != uid):
@@ -81,7 +81,7 @@ def whole(tree, tags, root=None, uid=None):
 
 def trace(tree, root, uid=None):
     citations, cited_problems = cite.read(root, digested=True, uid=uid)
-    # @req+ REQ-19896380@2sOnckMwnWfx 6rtw6m
+    # @req+ REQ-19896380@lvCPXiVYZ6ud 6rtw6m
     shown = [c for c in citations if not corpus.is_test(c["path"])]
     tags = cite.cited(shown)
     # @req- 6rtw6m
@@ -94,7 +94,7 @@ def trace(tree, root, uid=None):
     known = {str(item.uid) for item in corpus.items(tree)}
 
     rows, problems, unimplemented, stale, deprecated = [], list(cited_problems), [], [], []
-    # @req> REQ-19896380@2sOnckMwnWfx aes6o5
+    # @req> REQ-19896380@lvCPXiVYZ6ud aes6o5
     # @req> REQ-52825760@f9HMlzmiwhyn 5aendb
     for citation in citations:
         if corpus.is_test(citation["path"]) and (not uid or citation["uid"] == uid):
@@ -154,7 +154,7 @@ def trace(tree, root, uid=None):
                 elif pinned != held:
                     stale.append({"uid": address, "path": path,
                                   "pinned": pinned, "held": held})
-        # @req> REQ-73027720@SebUlS2i_noq 3aqkc5
+        # @req> REQ-73027720@2Z15jgYQYfsS 3aqkc5
         if current.startswith(("REQ-", "GUARD-")) and not files:
             unimplemented.append(current)
 

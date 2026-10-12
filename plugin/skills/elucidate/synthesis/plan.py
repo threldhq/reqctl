@@ -808,7 +808,7 @@ def judged_by(held, scope):
 
 def dictionary(records):
     lines, names = [], []
-    # @req> REQ-48772986@_O1niNys_-pl 4xoc6j
+    # @req> REQ-48772986@cB0IdrcBwgHW 4xoc6j
     for uid, data in sorted(records.items()):
         kind = corpus.kind_of(uid, data)
         if kind == "term":
@@ -858,7 +858,7 @@ def recall_prompt(run, name, batch, scope, count, total, numbers, held, words,
 
 
 def ceilinged(count, ceiling):
-    # @req> REQ-48148587@wA7bmyxqWF2Z aky7xw
+    # @req> REQ-48148587@_v4YEm2VJk_L aky7xw
     if count > ceiling:
         raise SystemExit(
             f"the run would spawn {count} agents, past the ceiling of "

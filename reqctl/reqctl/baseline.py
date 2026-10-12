@@ -195,9 +195,9 @@ def generate(tree, root):
         )
     # @req- yvehmw
 
-    # @req+ REQ-28086776@tkXHKMQwei2Z thbrwa
+    # @req+ REQ-28086776@7S0DPOiDLvSm thbrwa
     previous, claimed = _previous(root)
-    # @req+ REQ-73312524@Ae7JomIJiHDc mgwroy
+    # @req+ REQ-73312524@Eij54nBVNhs0 mgwroy
     dirty = uncommitted(root)
     if dirty:
         raise ReqctlError(
