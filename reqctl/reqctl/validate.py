@@ -712,7 +712,7 @@ def shared_quantities(records, root):
     return problems
 
 
-def _assessed(uid, data, records, canonical, known):
+def _assessed(uid, data, records, canonical, known, suspect=True):
     def held_data(address):
         return records.get(canonical.get(address, address))
 
@@ -737,28 +737,21 @@ def _assessed(uid, data, records, canonical, known):
         problems.append(
             f"{uid}: pins {target}, which is neither related nor referenced"
         )
-    for target, carried in sorted(pins_now(data, records, canonical).items()):
+    for target in sorted(wanted):
+        item_uid, rest = corpus.split_address(target)
+        stamped = canonical.get(item_uid, item_uid)
+        if stamped not in records:
+            continue
+        held = corpus.address_stamp_of(stamped, records[stamped], rest)
         pinned = pins.get(target)
-        if not isinstance(pinned, str) or pinned != carried:
+        # @req> REQ-42390302@QOC4GhS7SkFg w3y4p3
+        if suspect and (not isinstance(pinned, str) or pinned != held):
             problems.append(
                 f"{uid}: suspect link: {target} -- reread both, then "
                 "`reqctl relate` a requirement or `reqctl revise "
                 f"{uid} --ack` the rest to pin it"
             )
     return problems
-
-
-def pins_now(data, records, canonical):
-    def held_data(address):
-        return records.get(canonical.get(address, address))
-
-    carried = {}
-    for target in corpus.pin_addresses(held_data, data):
-        item_uid, rest = corpus.split_address(target)
-        stamped = canonical.get(item_uid, item_uid)
-        if stamped in records:
-            carried[target] = corpus.address_stamp_of(stamped, records[stamped], rest)
-    return carried
 
 
 def _approved(records):
@@ -1618,17 +1611,17 @@ def run(root, exempt=None):
 
     for path in paths:
         uid = path.stem
-        if uid in unreadable or uid not in records:
-            problems += _guarded(uid, _identity, root, path, records.get(uid))
-            problems.append(f"{uid}: {unreadable[uid]}" if uid in unreadable
-                            else f"{uid}: item file is not a mapping")
+        if uid not in records:
+            problems += _guarded(uid, _identity, root, path, None)
+            problems.append(f"{uid}: {unreadable.get(uid, 'item file is not a mapping')}")
             continue
         problems += item_problems(root, uid, path, records[uid], records,
                                   reachable, known, broken_schemas)
     return problems + corpus_checks(records, root, paths, exempt)
 
 
-def item_problems(root, uid, path, data, records, reachable, known, broken):
+def item_problems(root, uid, path, data, records, reachable, known, broken=(),
+                  suspect=True):
     # @req+ REQ-42390302@QOC4GhS7SkFg igyueu
     problems = _guarded(uid, _identity, root, path, data)
     try:
@@ -1645,7 +1638,7 @@ def item_problems(root, uid, path, data, records, reachable, known, broken):
     problems += _guarded(uid, dictionary_rules, uid, data)
     problems += _guarded(uid, _relations, uid, data, records, reachable, known)
     problems += _guarded(uid, _references, uid, data, known, root)
-    problems += _guarded(uid, _assessed, uid, data, records, reachable, known)
+    problems += _guarded(uid, _assessed, uid, data, records, reachable, known, suspect)
     return problems
     # @req- igyueu
 

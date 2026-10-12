@@ -869,9 +869,8 @@ def refile_into(store, uid, into, key):
                   if held_uid in moved})
 
     # @req+ REQ-42390302@QOC4GhS7SkFg aev5ks
-    written = [corpus.Item(held_uid, paths[held_uid], after[held_uid])
-               for held_uid in sorted(held_uid for held_uid, data in after.items()
-                                      if data != before[held_uid])]
+    written = [corpus.Item(held_uid, paths[held_uid], data)
+               for held_uid, data in sorted(after.items()) if data != before[held_uid]]
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
     problems = _new_item_faults(store, written) + [
@@ -880,8 +879,8 @@ def refile_into(store, uid, into, key):
         raise ReqctlError("\n".join(problems) + f"\n{item.uid} was not changed")
     # @req- aev5ks
 
-    for held in written:
-        corpus.save(store, held)
+    for filed in written:
+        corpus.save(store, filed)
     corpus.invalidate(store)
     return address, sorted(moved - {item.uid, target.uid})
     # @req- 44gp2u
@@ -1090,34 +1089,20 @@ def _new_cycles(store, uid, prospective):
 def _new_item_faults(store, written):
     # @req+ REQ-42390302@QOC4GhS7SkFg vbwcqp
     # @req+ REQ-79956352@NXkZ4OmQ3Qb4 m2sskk
-    held = {item.uid: item for item in corpus.items(store)}
-    records = {uid: item.data for uid, item in held.items()}
+    records = {item.uid: item.data for item in corpus.items(store)}
     joined = {**records, **{item.uid: item.data for item in written}}
-    stems = {path.stem for path in corpus.item_files(store.root)}
-    broken = _validate._schemas_are_schemas(store.root)[1]
     standing, reach = corpus.reachable(records), corpus.reachable(joined)
     faults = []
     for item in written:
-        stood = [] if item.uid not in held else _validate.item_problems(
-            store.root, item.uid, held[item.uid].path, records[item.uid], records,
-            standing, stems | set(standing), broken)
-        found = _validate.item_problems(
-            store.root, item.uid, item.path, _assessed_now(item.data, joined, reach),
-            joined, reach, stems | set(reach), broken)
+        found = _validate.item_problems(store.root, item.uid, item.path, item.data,
+                                        joined, reach, reach, suspect=False)
+        stood = [] if not found or item.uid not in records else _validate.item_problems(
+            store.root, item.uid, item.path, records[item.uid], records, standing,
+            standing, suspect=False)
         faults += [fault for fault in found if fault not in stood]
     return faults
     # @req- m2sskk
     # @req- vbwcqp
-
-
-def _assessed_now(data, records, reachable):
-    # @req+ REQ-42390302@QOC4GhS7SkFg yikph4
-    pins = _validate.pins_now(data, records, reachable)
-    stated = data.get("assessed")
-    if not pins or stated is not None and not isinstance(stated, dict):
-        return data
-    return {**data, "assessed": {**(stated or {}), **pins}}
-    # @req- yikph4
 
 
 def revisable_fields(own, kind):
@@ -1397,13 +1382,13 @@ def _revision(store, uid, fields):
             "left": sorted(spread["left"]),
         }
     # @req+ REQ-42390302@QOC4GhS7SkFg vge6ux
-    written = [corpus.Item(uid, item.path, prospective),
+    writing = [corpus.Item(item.uid, item.path, prospective),
                *(spread["moved"] if spread else [])]
-    faults = _new_item_faults(store, written)
+    faults = _new_item_faults(store, writing)
     if faults:
         raise ReqctlError("\n".join(faults))
     # @req- vge6ux
-    return changed, written
+    return changed, writing
 
 
 def revise(store, uid, fields):
