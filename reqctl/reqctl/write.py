@@ -1298,9 +1298,9 @@ def _revision(store, uid, fields):
                 if key not in prospective and key != "assessed"]:
         changed[key] = None
     wanted = set()
-    if changed or acks:
-        wanted = _prune_assessed(corpus.data_lookup(store), uid, prospective)
     lookup = corpus.data_lookup(store)
+    if changed or acks:
+        wanted = _prune_assessed(lookup, uid, prospective)
     for ack in acks:
         expanded = set()
         for written in ack_written[ack]:
