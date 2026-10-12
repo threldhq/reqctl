@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) naming a [stamp](stamp) that the
+    approved requirement it names no longer carries
+  then: the product reports the [statement citation](statement_citation) as a problem
+  when: trace is given no base branch
+assessed:
+  REQ-37671861: FYhkOL5YKzhGd_URbF6YvbaJWFY2yPX6asNbQIFxmsQ
+  REQ-54851939: n6YOz94UUTn7qlBLIhltdfT7UD6BNEW5cnz7S6_AkiA
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-37671861: supersedes
+  REQ-54851939: depends_on
+  REQ-64846889: depends_on
+status: approved
+text: When trace is given no base branch, the product shall report as a problem each
+  [statement citation](statement_citation) naming a [stamp](stamp) that the approved
+  requirement it names no longer carries.
+type: functional
+verification: inspection

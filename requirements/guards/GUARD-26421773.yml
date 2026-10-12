@@ -5,6 +5,15 @@ acceptance_criteria:
 - given: a workflow running pip install -r with --require-hashes on a continued line
   then: the build does not refuse the change
   when: the build runs
+- given: a workflow running pip install --requirement with any file and without --require-hashes
+  then: the build refuses the change
+  when: the build runs
+- given: a workflow running pip install with -r joined to its file and without --require-hashes
+  then: the build refuses the change
+  when: the build runs
+- given: a workflow running pip install -qr with a file and without --require-hashes
+  then: the build refuses the change
+  when: the build runs
 assessed: {}
 citations:
   kt5es3: lJDMkjrTe0YvSRrGFnwjs92I9nj50bWDLGEIeLj9KeE

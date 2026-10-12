@@ -1,0 +1,47 @@
+acceptance_criteria:
+- given: a change that edits a line covered by a [statement citation](statement_citation)
+    naming a [stamp](stamp) its requirement no longer carries
+  then: the product reports the [statement citation](statement_citation) as a problem
+  when: trace is given the change's base branch
+- given: a change that adds a [statement citation](statement_citation) naming a [stamp](stamp)
+    its requirement no longer carries
+  then: the product reports the [statement citation](statement_citation) as a problem
+  when: trace is given the change's base branch
+- given: a pull request touching a file under the [corpus root](corpus_root) in more
+    than its [citation list](citation_list) and moving a [statement citation](statement_citation)
+    naming a [stamp](stamp) its requirement no longer carries
+  then: the product refuses the pull request
+  when: the ${corpus_gates.traceability} gate runs trace against the pull request's
+    base branch
+- given: a [statement citation](statement_citation) the base branch added after the
+    change branched from it
+  then: the product does not count the [statement citation](statement_citation) as
+    one the change added
+  when: trace is given that base branch
+assessed:
+  REQ-26876750: p5bO3gEKEYCbI2dpCZq5kyu2VQfTeMUGNu-MO-Pkodg
+  REQ-37671861: FYhkOL5YKzhGd_URbF6YvbaJWFY2yPX6asNbQIFxmsQ
+  REQ-54851939: n6YOz94UUTn7qlBLIhltdfT7UD6BNEW5cnz7S6_AkiA
+  REQ-56906371: wq3BL0IRTLVVKuOe3drLtf2CYn6JfDGY337Kk20tmfM
+  REQ-64846889: TSG5uy3nM0nkGns0yr1YsgePdnizM4XnfC5PfqHCdxU
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.traceability: t2g-SZWxzs7WMpla0grhVUnoKO8CIuhvL89nPt4vwQQ
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-26876750: constrains
+  REQ-37671861: supersedes
+  REQ-54851939: depends_on
+  REQ-56906371: depends_on
+  REQ-64846889: depends_on
+status: approved
+text: If trace is given a base branch from which the change adds, moves or changes
+  a [statement citation](statement_citation) naming a [stamp](stamp) that the approved
+  requirement it names no longer carries, or changes a line such a [statement citation](statement_citation)
+  covers, then the product shall report the [statement citation](statement_citation)
+  as a problem.
+type: functional
+verification: inspection

@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a .py file whose classes A and B each define a method m
+  then: the product refuses, names the def line of each m, and writes nothing
+  when: reqctl tag is given m in place of lines
+- given: a .py file whose class defines a property getter and setter both named p
+  then: the product refuses and names both def lines
+  when: reqctl tag is given p
+assessed:
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-74702510: gU2X5OnlUbY3yQzwCDneBQYjtHoHNIE4uLSJFYf-EC8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-60346603: constrains
+  REQ-74702510: constrains
+status: approved
+text: If reqctl tag is given in place of lines a name that more than one function,
+  class or method of the file carries, at any depth, then the product shall refuse
+  the [statement citation](statement_citation) and name, for each, the line holding
+  its def or class statement.
+type: functional
+verification: inspection

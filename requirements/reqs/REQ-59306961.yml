@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a shallow clone lacking the commit that changed the [stamp](stamp) an [item](item)
+    carries
+  then: the date of its last update reads unknown
+  when: reqctl context, export or list shows the [item](item)
+- given: an [item](item) revised since the last commit
+  then: the date of its last update reads unknown
+  when: the [item](item) is shown
+- given: an [item](item) whose date of last update is unknown
+  then: the date is null
+  when: reqctl --json context shows it
+assessed:
+  REQ-82027237: R-XinrGfTNzLE1-PxO9SeWnxAkNShomWm9kGaZ8zE-Y
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations:
+  REQ-82027237: derives_from
+status: approved
+text: If the history reachable from HEAD holds no commit that changed the [stamp](stamp)
+  an [item](item) or an [entry](entry) it holds carries now, then the product shall
+  show the date of the [item](item)'s last update as unknown.
+type: functional
+verification: inspection

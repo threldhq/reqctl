@@ -1,12 +1,16 @@
 acceptance_criteria:
-- given: a [statement citation](statement_citation) covering a line at a [nest level](nest_level)
-    shallower than the first line it covers
-  then: the product refuses the [citation](statement_citation)
-  when: the product reads the [citation](statement_citation)
-- given: a [statement citation](statement_citation) covering a line that opens a nest
-    and not every line that nest holds
-  then: the product refuses the [citation](statement_citation)
-  when: the product reads the [citation](statement_citation)
+- given: a [statement citation](statement_citation) in a Python file covering a line
+    at a [nest level](nest_level) shallower than the first line it covers
+  then: the product refuses the [statement citation](statement_citation)
+  when: the product reads the [statement citation](statement_citation)
+- given: a [statement citation](statement_citation) in a YAML file covering a line
+    that opens a nest and not every line that nest holds
+  then: the product refuses the [statement citation](statement_citation)
+  when: the product reads the [statement citation](statement_citation)
+- given: a [statement citation](statement_citation) in a JavaScript file covering
+    a line that opens a block and not every line the block holds
+  then: the product does not refuse it on that ground
+  when: the product reads the [statement citation](statement_citation)
 assessed:
   nest_level: ZBG5hueA94O71Lx_L6dhMkqhJ-nCJXsbS_pjI3Hm6CI
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
@@ -15,9 +19,9 @@ citations:
 priority: medium
 relations: {}
 status: approved
-text: If a [statement citation](statement_citation) covers a line at a [nest level](nest_level)
-  shallower than the first line the [citation](statement_citation) covers, or covers
-  a line opening a nest without covering every line that nest holds, then the product
-  shall refuse the [citation](statement_citation).
+text: Where a [statement citation](statement_citation) is written in a Python or a
+  YAML file, if it covers a line at a [nest level](nest_level) shallower than the
+  first line it covers, or covers a line opening a nest without covering every line
+  that nest holds, then the product shall refuse the [statement citation](statement_citation).
 type: functional
 verification: inspection

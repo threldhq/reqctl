@@ -41,7 +41,7 @@ priority: medium
 relations:
   REQ-54851939: depends_on
   REQ-64846889: depends_on
-status: approved
+status: deprecated
 text: When trace is run, the product shall report as a problem each [statement citation](statement_citation)
   naming a [stamp](stamp) that the approved requirement it names no longer carries,
   unless trace is given a base branch from which the change touches a file under the
