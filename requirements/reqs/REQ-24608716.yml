@@ -17,7 +17,7 @@ acceptance_criteria:
   when: trace reports the [statement citation](statement_citation)
 assessed:
   REQ-53246456: QyWuIwzUUElOOFmRJAzYcuHwkEJPq6DYtFEg25rMlBw
-  REQ-56581795: qvXeIYv9p28EgaPjO0HQSt52ApOyh7_TMgWEaBAhPxE
+  REQ-56581795: ZHEasHzzTZLCW7EpcU2t9HLmUUSwKOGE6Q3rfqhT_9M
   REQ-57367860: Ru8k-xWkVYxOm_vpuW8ZCzMid813EjVKH-zXhOkkfkA
   REQ-88079673: EiXeHoq_wF_zIVobtgjt-ETHDFzKdiAqUjAdPXMD5DE
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
