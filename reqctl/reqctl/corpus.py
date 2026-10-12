@@ -61,10 +61,17 @@ MEMBERS = "*"
 ADDRESS = re.compile(rf"^((?:{KINDS})-\d{{8}}|{NAME})(?:\.(.+))?$")
 
 # @req> REQ-10966072@RC1_0V_R-34U zikuq2
+# @req+ skipped_folders@EwHTRPcwGsLx p2lhya
 SCAN_SKIP = {
     ".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__",
     ".mypy_cache", ".ruff_cache", ".pytest_cache", ".elucidate", ".reqctl",
 }
+
+
+def skipped(root, folder):
+    return (folder.name in SCAN_SKIP or folder.name.endswith(".egg-info")
+            or folder == Path(root) / "requirements")
+# @req- p2lhya
 
 
 class ReqctlError(Exception):

@@ -7,6 +7,8 @@ assessed:
   REQ-98709103: JryTDKzxpwrFNZGJ1MRHPZe2w4UewoCr5M12QS9PkiU
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  p3htis: mUqnvlYChQmAGLyVyNHmMTo30JfivTx3LyWw5lQtAKg
 priority: medium
 relations:
   REQ-98709103: derives_from
