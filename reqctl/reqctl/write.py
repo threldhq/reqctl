@@ -716,6 +716,7 @@ def rename(store, uid, new_name):
     if faults:
         raise ReqctlError("\n".join(faults) + f"\n{item.uid} was not changed")
 
+    paths = {held.uid: held.path for held in corpus.items(store)}
     moved = corpus.folder_for(store.root, kind) / f"{new_name}.yml"
     corpus.save(store, corpus.Item(new_name, moved, after[new_name]))
     if item.path != moved:
@@ -723,8 +724,7 @@ def rename(store, uid, new_name):
     for held_uid, data in after.items():
         if held_uid == new_name or data == before.get(held_uid):
             continue
-        corpus.save(store, corpus.Item(
-            held_uid, corpus.find(store, held_uid).path, data))
+        corpus.save(store, corpus.Item(held_uid, paths[held_uid], data))
     corpus.invalidate(store)
     return sorted(held_uid for held_uid, data in after.items()
                   if held_uid != new_name and data != before.get(held_uid))
