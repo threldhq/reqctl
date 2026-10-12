@@ -21,6 +21,9 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  howxzn: 3nlwogL1PYxdQ8whuRqEX_uySutDHz53s55CcNtvjMY
+  r65zaf: 7zUh0ePD3w8kzSlyHDr6ugMVLP0CIvDiqcDIeo6t5y4
 priority: medium
 relations:
   REQ-37671861: supersedes

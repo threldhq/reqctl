@@ -80,7 +80,7 @@ def scalar(text):
                     f"{member!r}: holds U+{ord(separator):04X}, a comma the set "
                     "is not split on -- separate members with an ordinary comma"
                 )
-        # @req> REQ-64256114@LGtxztCW6SK0 wfslro
+        # @req> REQ-64256114@T4kJ-fI_AXrq wfslro
         if inner and len(members) == 1:
             raise ReqctlError(
                 f"{stripped!r}: a set separates members with a comma, as in "
@@ -695,7 +695,7 @@ def rename(store, uid, new_name):
     if old_name == new_name and item.path.stem == new_name:
         raise ReqctlError(f"{item.uid} already answers to {new_name}")
 
-    # @req+ REQ-97543346@PsO_rDObX2nf jjk7ud
+    # @req+ REQ-97543346@Yc-UcdtSPtB3 jjk7ud
     before = {held.uid: held.data for held in corpus.items(store)}
     after = {held_uid: _readdressed_item(data, olds, new_name)
              for held_uid, data in before.items()}
@@ -819,7 +819,7 @@ def refile_into(store, uid, into, key):
         raise ReqctlError(
             f"the corpus holds no data item named {_validate.VALUE_TYPES}; "
             f"{item.uid} was not changed")
-    # @req+ REQ-32527326@4rB9PLMN6_YV 44gp2u
+    # @req+ REQ-32527326@JhrCBejivbr9 44gp2u
     target = corpus.find(store, into)
     held = corpus.kind_of(target.uid, target.data)
     if held != "data":
@@ -1014,15 +1014,28 @@ def prepare(store, kind, fields, placeholder=None):
     uid, path = mint(store, kind, named, placeholder)
     # @req- yorgmf
     data = _resolved_prose(store, uid, data)
-    # @req> REQ-85308584@uUWJjK4FALNI 2vgmd6
+    # @req> REQ-85308584@wEdh_1cW2eGE 2vgmd6
     problems = hidden + _unknown_references(store, uid, data)
     problems += _validate.schema_problems(store.root, uid, data)
     problems += _validate.ears(uid, data)
     problems += _validate.text_values(uid, data)
     problems += _validate.repeated_labels(uid, data)
     problems += _validate.dictionary_rules(uid, data)
-    problems += _new_corpus_faults(store, uid, data)
+    problems += _joined_faults(store, uid, data)
     return uid, path, data, problems
+
+
+def _joined_faults(store, uid, prospective):
+    records = {item.uid: item.data for item in corpus.items(store)}
+    paths = corpus.item_files(store.root)
+    # @req+ REQ-85308584@wEdh_1cW2eGE td4i2r
+    found = _validate.corpus_checks({**records, uid: prospective}, store.root, paths)
+    if not found:
+        return []
+    stood = set(_validate.corpus_checks(records, store.root, paths))
+    return [problem for problem in found
+            if problem not in stood or _validate.UNFINISHED in problem]
+    # @req- td4i2r
 
 
 def create(store, kind, fields):
@@ -1037,7 +1050,6 @@ def create(store, kind, fields):
 def _new_corpus_faults(store, uid, prospective):
     records = {item.uid: item.data for item in corpus.items(store)}
     joined = {**records, uid: prospective}
-    # @req> REQ-85308584@uUWJjK4FALNI migtu6
     found = (_validate.coherence(joined, store.root)
              + _validate.shared_quantities(joined, store.root)
              + _validate.approved_relations(joined)

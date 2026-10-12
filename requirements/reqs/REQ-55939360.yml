@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  yi53ne: FLWmRLbZhqvaDAgTMtkFpo58jOn_vVovKnf4FNAQweY
+  yi53ne: WopjYe3xVaPyaMAINoBi51mT2yOCnOdbOtE-rF3Z0-Y
 priority: medium
 relations: {}
 status: approved

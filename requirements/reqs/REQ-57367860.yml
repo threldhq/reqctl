@@ -30,6 +30,9 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  afmuwn: 1lAFkQZrQa-Em--bQ6SEr_bPzSeRi9Ur4Y4a1YNx0Bk
+  qenuaa: EncU64sIiFK6yejdOv3W1e6lUfJfu9QXMb3jDjPV-1I
 priority: medium
 relations:
   REQ-26876750: constrains
