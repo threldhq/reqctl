@@ -727,6 +727,9 @@ def compare(root, ref):
                          "path": held["path"],
                          "state": ["added"] if old is None else ["deleted"]})
             continue
+        if (old["path"] == new["path"]
+                and was_texts[old["path"]] == now_texts[new["path"]]):
+            continue
         state = []
         if crossed(old, was_texts[old["path"]], new, now_texts[new["path"]]):
             state.append("moved")
