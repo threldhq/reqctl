@@ -868,16 +868,20 @@ def refile_into(store, uid, into, key):
     after.update({held_uid: data for held_uid, data in _repin(after, {target.uid}).items()
                   if held_uid in moved})
 
-    _refuse_new_schema_faults(store, target.uid, target.data, after[target.uid])
+    # @req+ REQ-42390302@QOC4GhS7SkFg aev5ks
+    written = [corpus.Item(held_uid, paths[held_uid], after[held_uid])
+               for held_uid in sorted(held_uid for held_uid, data in after.items()
+                                      if data != before[held_uid])]
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
-    problems = [fault for fault in found if fault not in stood]
+    problems = _new_item_faults(store, written) + [
+        fault for fault in found if fault not in stood]
     if problems:
         raise ReqctlError("\n".join(problems) + f"\n{item.uid} was not changed")
+    # @req- aev5ks
 
-    for held_uid in sorted(held_uid for held_uid, data in after.items()
-                           if data != before[held_uid]):
-        corpus.save(store, corpus.Item(held_uid, paths[held_uid], after[held_uid]))
+    for held in written:
+        corpus.save(store, held)
     corpus.invalidate(store)
     return address, sorted(moved - {item.uid, target.uid})
     # @req- 44gp2u
@@ -1011,19 +1015,11 @@ def prepare(store, kind, fields, placeholder=None):
     uid, path = mint(store, kind, named, placeholder)
     # @req- yorgmf
     data = _resolved_prose(store, uid, data)
-    known = corpus.addressable({item.uid: item.data for item in corpus.items(store)})
-    # @req> REQ-85308584@wEdh_1cW2eGE 2vgmd6
-    problems = hidden + [problem for check, *args in (
-        (_validate._references, uid, data, known, store.root),
-        (_validate.schema_problems, store.root, uid, data),
-        (_validate.ears, uid, data),
-        (_validate.text_values, uid, data),
-        (_validate.repeated_labels, uid, data),
-        (_validate.dictionary_rules, uid, data))
-        for problem in _validate._guarded(uid, check, *args)]
-    # @req> REQ-85308584@wEdh_1cW2eGE 6qk2w6
-    # @req> REQ-79956352@NXkZ4OmQ3Qb4 wjxd42
-    problems += _validate._guarded(uid, _validate.hidden_values, uid, data)
+    # @req+ REQ-85308584@wEdh_1cW2eGE lmav5l
+    site = path if corpus.UID.match(uid) or named is not None else mint(store, kind)[1]
+    # @req> REQ-42390302@QOC4GhS7SkFg r5sgzy
+    problems = hidden + _new_item_faults(store, [corpus.Item(uid, site, data)])
+    # @req- lmav5l
     problems += _joined_faults(store, uid, data)
     return uid, path, data, problems
 
@@ -1091,25 +1087,37 @@ def _new_cycles(store, uid, prospective):
             if problem not in existing]
 
 
-def _refuse_new_schema_faults(store, uid, before, prospective):
-    # @req+ REQ-79956352@NXkZ4OmQ3Qb4 cg4b5m
-    existing = (_validate.schema_problems(store.root, uid, before)
-                + _validate.text_values(uid, before)
-                + _validate.repeated_labels(uid, before)
-                + _validate.hidden_values(uid, before)
-                + _validate.dictionary_rules(uid, before))
-    introduced = [
-        problem
-        for problem in _validate.schema_problems(store.root, uid, prospective)
-        + _validate.text_values(uid, prospective)
-        + _validate.repeated_labels(uid, prospective)
-        + _validate.hidden_values(uid, prospective)
-        + _validate.dictionary_rules(uid, prospective)
-        if problem not in existing
-    ]
-    if introduced:
-        raise ReqctlError("\n".join(introduced))
-    # @req- cg4b5m
+def _new_item_faults(store, written):
+    # @req+ REQ-42390302@QOC4GhS7SkFg vbwcqp
+    # @req+ REQ-79956352@NXkZ4OmQ3Qb4 m2sskk
+    held = {item.uid: item for item in corpus.items(store)}
+    records = {uid: item.data for uid, item in held.items()}
+    joined = {**records, **{item.uid: item.data for item in written}}
+    stems = {path.stem for path in corpus.item_files(store.root)}
+    broken = _validate._schemas_are_schemas(store.root)[1]
+    standing, reach = corpus.reachable(records), corpus.reachable(joined)
+    faults = []
+    for item in written:
+        stood = [] if item.uid not in held else _validate.item_problems(
+            store.root, item.uid, held[item.uid].path, records[item.uid], records,
+            standing, stems | set(standing), broken)
+        found = _validate.item_problems(
+            store.root, item.uid, item.path, _assessed_now(item.data, joined, reach),
+            joined, reach, stems | set(reach), broken)
+        faults += [fault for fault in found if fault not in stood]
+    return faults
+    # @req- m2sskk
+    # @req- vbwcqp
+
+
+def _assessed_now(data, records, reachable):
+    # @req+ REQ-42390302@QOC4GhS7SkFg yikph4
+    pins = _validate.pins_now(data, records, reachable)
+    stated = data.get("assessed")
+    if not pins or stated is not None and not isinstance(stated, dict):
+        return data
+    return {**data, "assessed": {**(stated or {}), **pins}}
+    # @req- yikph4
 
 
 def revisable_fields(own, kind):
@@ -1315,7 +1323,6 @@ def _revision(store, uid, fields):
         faults = _unknown_references(store, uid, prospective)
         if faults:
             raise ReqctlError("\n".join(faults))
-    _refuse_new_schema_faults(store, uid, before, prospective)
     # @req+ REQ-53480164@5yFhCLJmuTBt xpj5go
     # @req+ REQ-62819035@SRb6tL8xEERF qgjwmq
     stranded = _new_corpus_faults(store, uid, prospective)
@@ -1362,7 +1369,6 @@ def _revision(store, uid, fields):
             del prospective["assessed"][address]
             changed.setdefault("assessed", []).append(address)
 
-    _refuse_new_schema_faults(store, uid, before, prospective)
     spread = None
     if words:
         prospective, spread = _propagate(store, uid, prospective, words)
@@ -1390,8 +1396,14 @@ def _revision(store, uid, fields):
             "articles": spread["articles"],
             "left": sorted(spread["left"]),
         }
-    return changed, [corpus.Item(uid, item.path, prospective),
-                     *(spread["moved"] if spread else [])]
+    # @req+ REQ-42390302@QOC4GhS7SkFg vge6ux
+    written = [corpus.Item(uid, item.path, prospective),
+               *(spread["moved"] if spread else [])]
+    faults = _new_item_faults(store, written)
+    if faults:
+        raise ReqctlError("\n".join(faults))
+    # @req- vge6ux
+    return changed, written
 
 
 def revise(store, uid, fields):

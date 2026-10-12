@@ -737,20 +737,28 @@ def _assessed(uid, data, records, canonical, known):
         problems.append(
             f"{uid}: pins {target}, which is neither related nor referenced"
         )
-    for target in sorted(wanted):
-        item_uid, rest = corpus.split_address(target)
-        stamped = canonical.get(item_uid, item_uid)
-        if stamped not in records:
-            continue
-        held = corpus.address_stamp_of(stamped, records[stamped], rest)
+    for target, carried in sorted(pins_now(data, records, canonical).items()):
         pinned = pins.get(target)
-        if not isinstance(pinned, str) or pinned != held:
+        if not isinstance(pinned, str) or pinned != carried:
             problems.append(
                 f"{uid}: suspect link: {target} -- reread both, then "
                 "`reqctl relate` a requirement or `reqctl revise "
                 f"{uid} --ack` the rest to pin it"
             )
     return problems
+
+
+def pins_now(data, records, canonical):
+    def held_data(address):
+        return records.get(canonical.get(address, address))
+
+    carried = {}
+    for target in corpus.pin_addresses(held_data, data):
+        item_uid, rest = corpus.split_address(target)
+        stamped = canonical.get(item_uid, item_uid)
+        if stamped in records:
+            carried[target] = corpus.address_stamp_of(stamped, records[stamped], rest)
+    return carried
 
 
 def _approved(records):
@@ -1610,31 +1618,36 @@ def run(root, exempt=None):
 
     for path in paths:
         uid = path.stem
-        problems += _guarded(uid, _identity, root, path, records.get(path.stem))
-        if uid in unreadable:
-            problems.append(f"{uid}: {unreadable[uid]}")
+        if uid in unreadable or uid not in records:
+            problems += _guarded(uid, _identity, root, path, records.get(uid))
+            problems.append(f"{uid}: {unreadable[uid]}" if uid in unreadable
+                            else f"{uid}: item file is not a mapping")
             continue
-        if uid not in records:
-            problems.append(f"{uid}: item file is not a mapping")
-            continue
-        data = records[uid]
-        try:
-            needs = corpus.schema_name_at(root, corpus.kind_of(uid, data),
-                                          corpus.name_of(uid, data))
-        except (corpus.ReqctlError, TypeError):
-            needs = None
-        if needs not in broken_schemas:
-            problems += _guarded(uid, schema_problems, root, uid, data)
-        problems += _guarded(uid, ears, uid, data)
-        problems += _guarded(uid, text_values, uid, data)
-        problems += _guarded(uid, repeated_labels, uid, data)
-        problems += _guarded(uid, hidden_values, uid, data)
-        problems += _guarded(uid, dictionary_rules, uid, data)
-        problems += _guarded(uid, _relations, uid, data, records,
-                             reachable, known)
-        problems += _guarded(uid, _references, uid, data, known, root)
-        problems += _guarded(uid, _assessed, uid, data, records, reachable, known)
+        problems += item_problems(root, uid, path, records[uid], records,
+                                  reachable, known, broken_schemas)
     return problems + corpus_checks(records, root, paths, exempt)
+
+
+def item_problems(root, uid, path, data, records, reachable, known, broken):
+    # @req+ REQ-42390302@QOC4GhS7SkFg igyueu
+    problems = _guarded(uid, _identity, root, path, data)
+    try:
+        needs = corpus.schema_name_at(root, corpus.kind_of(uid, data),
+                                      corpus.name_of(uid, data))
+    except (corpus.ReqctlError, TypeError):
+        needs = None
+    if needs not in broken:
+        problems += _guarded(uid, schema_problems, root, uid, data)
+    problems += _guarded(uid, ears, uid, data)
+    problems += _guarded(uid, text_values, uid, data)
+    problems += _guarded(uid, repeated_labels, uid, data)
+    problems += _guarded(uid, hidden_values, uid, data)
+    problems += _guarded(uid, dictionary_rules, uid, data)
+    problems += _guarded(uid, _relations, uid, data, records, reachable, known)
+    problems += _guarded(uid, _references, uid, data, known, root)
+    problems += _guarded(uid, _assessed, uid, data, records, reachable, known)
+    return problems
+    # @req- igyueu
 
 
 def corpus_checks(records, root, paths, exempt=None):

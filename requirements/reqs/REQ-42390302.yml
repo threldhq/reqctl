@@ -29,6 +29,13 @@ assessed:
   awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   per_item_check: L8I25OZJNU3F27YFjUYLQ2KOi_HawZhox0_ayr4PUC4
+citations:
+  aev5ks: IAlTBzwIf7IR7Bwnzd99qvUH6I-qBnofinFwKXOqMLM
+  igyueu: ZQJow5DKLbfrNElCCp7F0O5z95etPF2ih-DA-o5SsHc
+  r5sgzy: gbEElXJ8MZ-b5jSS3YYyk2vegD_W7eqT4iYVxtwpUpM
+  vbwcqp: dWE7NumhbZ-Zsr2fNeRTCWy1temxdSynZJgQ5UklR_g
+  vge6ux: 7kxjsU_XGmP2-kwQvB-jfoQXP5RRt4MEc7USazK3HHw
+  yikph4: tYiKiZcwP4H79K6aM_teHS27DDICfqwNhYbg6CCrB5w
 priority: medium
 relations:
   REQ-32527326: constrains
