@@ -1017,6 +1017,9 @@ def prepare(store, kind, fields, placeholder=None):
     problems += _checked(_validate.ears, uid, data)
     problems += _checked(_validate.text_values, uid, data)
     problems += _checked(_validate.repeated_labels, uid, data)
+    # @req> REQ-85308584@wEdh_1cW2eGE 6qk2w6
+    # @req> REQ-79956352@NXkZ4OmQ3Qb4 wjxd42
+    problems += _checked(_validate.hidden_values, uid, data)
     problems += _checked(_validate.dictionary_rules, uid, data)
     problems += _new_corpus_faults(store, uid, data)
     return uid, path, data, problems
