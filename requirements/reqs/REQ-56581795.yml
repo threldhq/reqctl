@@ -6,6 +6,12 @@ acceptance_criteria:
 - given: an [item](item) another [item](item) binds
   then: the product leaves the binder [pinned](pin)
   when: a field the [stamp](stamp) does not cover is changed on the bound [item](item)
+- given: an [item](item) binding an [item](item) whose links a rename rewrites
+  then: the product makes the binder suspect
+  when: the rename is made
+- given: an [item](item) binding an [item](item) whose links a reword rewrites
+  then: the product makes the binder suspect
+  when: the reword is made
 assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
