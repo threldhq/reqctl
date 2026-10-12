@@ -15,6 +15,9 @@ assessed:
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  ckhfaq: 2VjqMJMxpsopA66yqVmCqm9I60UkpfxW09le2q5yjUE
+  fzxhli: Rl6nY-gBc5FDSv159hZrfS9ZHbe_gr3kJ58SDuWzjl4
 priority: medium
 relations:
   REQ-30061042: depends_on

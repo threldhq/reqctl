@@ -204,16 +204,24 @@ def _assessed_map(uid, data):
     return dict(pins)
 
 
-def _prune_assessed(store, uid, data):
-    wanted = set(corpus.pin_addresses(corpus.data_lookup(store), data))
-    parents = {corpus.split_address(address)[0]
-               for address in corpus.dependencies(data)}
-    pins = _assessed_map(uid, data)
-    data["assessed"] = {
-        address: pin for address, pin in pins.items()
-        if address in wanted or corpus.split_address(address)[0] in parents
-    }
+def _prune_assessed(lookup, uid, data):
+    # @req+ REQ-54697016@Ch9-SdvPj8vq ncotff
+    wanted = set(corpus.pin_addresses(lookup, data))
+    data["assessed"] = {address: pin
+                        for address, pin in _assessed_map(uid, data).items()
+                        if address in wanted}
+    # @req- ncotff
     return wanted
+
+
+def _pruned(after, uids):
+    canonical = corpus.reachable(after)
+    for uid in uids:
+        held = dict(after[uid])
+        if isinstance(held.get("assessed"), dict):
+            _prune_assessed(lambda name: after.get(canonical.get(name, name)),
+                            uid, held)
+            after[uid] = held
 
 
 def _refuse_unknown_references(store, data):
@@ -584,6 +592,8 @@ def _propagate(store, uid, prospective, words):
             after[held_uid] = held
             touched.add(held_uid)
     after[uid] = prospective if uid not in touched else after[uid]
+    # @req> REQ-54697016@Ch9-SdvPj8vq mzmppv
+    _pruned(after, touched)
     repinned = _repin(after, touched)
     after.update(repinned)
     seen["repinned"] = len(repinned)
@@ -694,6 +704,9 @@ def rename(store, uid, new_name):
         _carrying(item.uid, after[item.uid], old_name, new_name),
         kind, new_name)
     after[new_name] = after.pop(item.uid)
+    # @req> REQ-54697016@Ch9-SdvPj8vq rvmjri
+    _pruned(after, [held_uid for held_uid, data in after.items()
+                    if data != before.get(held_uid)])
     after.update(_repin(after, {new_name}))
 
     # @req> REQ-81815730@fForAOZqtxKN k27etl
@@ -1287,9 +1300,9 @@ def _revision(store, uid, fields):
                 if key not in prospective and key != "assessed"]:
         changed[key] = None
     wanted = set()
-    if changed or acks:
-        wanted = _prune_assessed(store, uid, prospective)
     lookup = corpus.data_lookup(store)
+    if changed or acks:
+        wanted = _prune_assessed(lookup, uid, prospective)
     for ack in acks:
         expanded = set()
         for written in ack_written[ack]:
@@ -1402,7 +1415,7 @@ def relate(store, source_uid, relation, target_uid):
     prospective = dict(source.data)
     prospective["assessed"] = _assessed_map(source_uid, source.data)
     prospective["relations"] = kinds
-    _prune_assessed(store, source_uid, prospective)
+    _prune_assessed(corpus.data_lookup(store), source_uid, prospective)
     # @req+ REQ-44520277@w92ngdeF87Mm 6sepga
     closed = _new_cycles(store, source_uid, prospective)
     if closed:
@@ -1478,15 +1491,17 @@ def delete(tree, uid):
 
 def unrelate(store, source_uid, target_uid):
     source = corpus.find(store, source_uid)
-    corpus.find(store, target_uid)
+    # @req+ REQ-94696919@Nf39VeBeXq9K fvstef
     kinds = _relations_map(source)
     if target_uid not in kinds:
+        corpus.find(store, target_uid)
         return False
     kinds.pop(target_uid)
+    # @req- fvstef
     prospective = dict(source.data)
     prospective["assessed"] = _assessed_map(source_uid, source.data)
     prospective["relations"] = kinds
-    _prune_assessed(store, source_uid, prospective)
+    _prune_assessed(corpus.data_lookup(store), source_uid, prospective)
     corpus.save(store, corpus.Item(source_uid, source.path, prospective))
     source.data = prospective
     return True

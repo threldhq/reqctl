@@ -15,6 +15,10 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+citations:
+  mzmppv: 4FY7wSs6d7Bn4Czof2DmeSleYk6bcJWyVuxeiuOrd7c
+  ncotff: QbVxNyz0hwy2uS_u3iupaF2fctkeRRurQKlJi9cDD3I
+  rvmjri: pXqz4oU2FByUGHb1ZeAdgF_RfoQQz8lbJoYL6-lCEEM
 priority: medium
 relations:
   REQ-67539399: derives_from

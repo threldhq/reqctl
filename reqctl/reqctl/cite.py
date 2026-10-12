@@ -349,15 +349,12 @@ def covered(citations):
 
 def _sources(root):
     root = Path(root)
-    corpus_dir = root / "requirements"
     # @req+ REQ-35805881@37XtC4gyD98k ofycdw
     unread = []
     # @req> REQ-81857516@chYOQDPmuDuW ldlf2u
     for folder, subdirs, files in os.walk(root, onerror=unread.append):
         subdirs[:] = [name for name in subdirs
-                      if name not in corpus.SCAN_SKIP
-                      and not name.endswith(".egg-info")
-                      and Path(folder) / name != corpus_dir]
+                      if not corpus.skipped(root, Path(folder) / name)]
         for name in files:
             path = Path(folder) / name
             try:
@@ -444,6 +441,16 @@ def tagged(root, path, asked, exclusive=False):
     # @req> REQ-89706423@fyVHTsenA51D thl334
     if not target.resolve().is_relative_to(Path(root).resolve()):
         raise ReqctlError(f"{path}: not in the code base at {root}")
+    # @req+ REQ-71794830@YqhGXWh66eq_ tbkz5r
+    base = Path(root).resolve()
+    folder = next((up for up in target.resolve().parents
+                   if up != base and up.is_relative_to(base)
+                   and corpus.skipped(base, up)), None)
+    if folder is not None:
+        raise ReqctlError(f"{path}: {folder.relative_to(base)} is a folder the "
+                          "citation scan skips, so a citation there is never "
+                          "read -- cite code outside it")
+    # @req- tbkz5r
     text = target.read_bytes().decode()
     lines = _feed_lines(text)
     # @req> REQ-65738797@3jHtqzLVQUal msfg5w
