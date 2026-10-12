@@ -16,18 +16,26 @@ def read(*argv):
     try:
         return json.loads(found.stdout)
     except json.JSONDecodeError:
-        raise SystemExit(f"cannot read {argv[0]}: "
-                         f"{found.stderr.strip() or found.stdout.strip()}")
+        said = (found.stderr.strip() or found.stdout.strip()
+                or f"reqctl exited {found.returncode} printing nothing")
+        raise SystemExit(f"cannot read {argv[0]}: {said}")
     # @req- t2bzx7
 
 
-def touched(base):
+def carried(commit, path):
+    return subprocess.run(["git", "show", f"{commit}:{path}"],
+                          capture_output=True, text=True, check=False).stdout
+
+
+def touched(base, rows):
     held = read("compare", "--base", f"origin/{base}")
-    if "citations" not in held:
+    if "citations" not in held or "base" not in held:
         raise SystemExit(f"cannot compare against origin/{base}: "
                          f"{held.get('error', 'malformed compare output')}")
     # @req> REQ-57367860@Ru8k-xWkVYxO qenuaa
-    return {row["id"] for row in held["citations"] if row["state"] != ["deleted"]}
+    return {row["id"] for row in held["citations"] if row["state"] != ["deleted"]} | {
+        identity for identity, path, marker, _ in rows
+        if identity and marker not in carried(held["base"], path)}
 
 
 def stale(data):
@@ -41,9 +49,9 @@ def stale(data):
         identity = ids.pop() if ids else None
         remedy = (f"reqctl repin {identity}" if identity
                   else f"reqctl tag {row['path']} --req {row['uid']}")
-        rows.append((identity, (f"{row['uid']}: {row['path']} pinned "
-                                f"@{row['pinned']}, now @{row['held']} -- read "
-                                f"it against {row['uid']}, then {remedy}")))
+        rows.append((identity, row["path"], f"{row['uid']}@{row['pinned']} {identity}",
+                     (f"{row['uid']}: {row['path']} pinned @{row['pinned']}, now "
+                      f"@{row['held']} -- read it against {row['uid']}, then {remedy}")))
     return rows
 
 
@@ -55,13 +63,13 @@ def faults(data, base):
     rows = stale(data)
     # @req> REQ-88079673@EiXeHoq_wF_z mle2ez
     if not base or not rows:
-        return found + [text for _, text in rows], []
+        return found + [text for *_, text in rows], []
     # @req+ REQ-57367860@Ru8k-xWkVYxO afmuwn
-    changed = touched(base)
-    problems = [text for identity, text in rows if identity in changed]
+    changed = touched(base, rows)
+    problems = [text for identity, *_, text in rows if identity in changed]
     # @req- afmuwn
     # @req> REQ-53246456@QyWuIwzUUElO r65zaf
-    behind = [text for identity, text in rows if identity not in changed]
+    behind = [text for identity, *_, text in rows if identity not in changed]
     return found + problems, behind
 
 
