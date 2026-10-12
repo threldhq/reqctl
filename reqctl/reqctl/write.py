@@ -1094,6 +1094,7 @@ def _new_item_faults(store, written):
     standing, reach = corpus.reachable(records), corpus.reachable(joined)
     faults = []
     for item in written:
+        # @req> REQ-85308584@4lLbQIsexIid sz4ty3
         found = _validate.item_problems(store.root, item.uid, item.path, item.data,
                                         joined, reach, reach, suspect=False)
         stood = [] if not found or item.uid not in records else _validate.item_problems(
