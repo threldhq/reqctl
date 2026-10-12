@@ -217,9 +217,6 @@ def cmd_revise(args):
     if spread:
         note += (f"\n  reworded {spread['links']} link(s) across "
                  f"{len(spread['items'])} item(s)")
-        if spread["repinned"]:
-            note += (f"\n  re-pinned {spread['repinned']} item(s) whose target "
-                     "only changed a word")
         for held in spread["articles"]:
             note += f"\n    article: {held}"
         if spread["left"]:

@@ -581,7 +581,7 @@ def _propagate(store, uid, prospective, words):
     before = {item.uid: item.data for item in corpus.items(store)}
     addresses = {uid, corpus.name_of(uid, prospective)} - {None}
     seen = {"done": 0, "left": set(), "placed": set(), "articles": [],
-            "moved": [], "repinned": 0}
+            "moved": []}
     after = dict(before)
     touched = set()
     for held_uid, data in before.items():
@@ -595,9 +595,6 @@ def _propagate(store, uid, prospective, words):
     after[uid] = prospective if uid not in touched else after[uid]
     # @req> REQ-54697016@Ch9-SdvPj8vq mzmppv
     _pruned(after, touched)
-    repinned = _repin(after, touched)
-    after.update(repinned)
-    seen["repinned"] = len(repinned)
     found = (_validate.coherence(after, store.root)
              + _validate._unlinked_terms(after, store.root))
     stood = (_validate.coherence(before, store.root)
@@ -609,7 +606,7 @@ def _propagate(store, uid, prospective, words):
     seen["left"] -= {corpus.term_word(after[uid]), *(fields.get("aliases") or [])}
     seen["moved"] = [
         corpus.Item(held_uid, corpus.find(store, held_uid).path, after[held_uid])
-        for held_uid in sorted(touched | set(repinned)) if held_uid != uid
+        for held_uid in sorted(touched) if held_uid != uid
     ]
     return after[uid], seen
 
@@ -1360,7 +1357,6 @@ def _revision(store, uid, fields):
             "items": sorted(held.uid for held in spread["moved"]),
             "articles": spread["articles"],
             "left": sorted(spread["left"]),
-            "repinned": spread["repinned"],
         }
     return changed, [corpus.Item(uid, item.path, prospective),
                      *(spread["moved"] if spread else [])]
@@ -1448,14 +1444,33 @@ def relate(store, source_uid, relation, target_uid):
 
 def _stated(root):
     where = _baseline.path(root)
-    if not where.is_file():
-        return set(), None
-    held = corpus.read(where)
+    ref = _baseline._default_ref(root)
+    if ref is None:
+        if not where.is_file():
+            return set(), None
+        held = corpus.read(where)
+        where = where.relative_to(root)
+    else:
+        named = where.relative_to(root).as_posix()
+        listed = _baseline._git(root, "ls-tree", ref, "--", named)
+        if listed.returncode:
+            raise ReqctlError(
+                f"cannot read the tree {ref} names, so whether it states a "
+                f"baseline cannot be told: {listed.stderr.strip()}")
+        if not listed.stdout.strip():
+            return set(), None
+        found = _baseline._git(root, "show", f"{ref}:{named}")
+        if found.returncode:
+            raise ReqctlError(
+                f"{ref} states a baseline that cannot be read: "
+                f"{found.stderr.strip()}")
+        held = corpus.loads(found.stdout, ref)
+        where = f"{named} on {ref.removeprefix('refs/remotes/')}"
     held = held if isinstance(held, dict) else {}
     recorded = held.get("items")
     # @req> REQ-80226740@xxeoTjMyDC-h wpcl2k
     return (set(recorded) if isinstance(recorded, dict) else set(),
-            f"baseline {held.get('baseline')} in {where.relative_to(root)}")
+            f"baseline {held.get('baseline')} in {where}")
 
 
 def delete(tree, uid):
@@ -1476,8 +1491,8 @@ def delete(tree, uid):
     if (identity | wore) & stated:
         raise ReqctlError(
             f"{uid} is {status}, but {cut} still states it -- it was "
-            "approved when that cut was taken. Generate a baseline that no "
-            "longer names it, then delete"
+            "approved when that cut was taken. Delete it once a baseline that "
+            "no longer names it stands there"
         )
     # @req- nmlqee
     # @req- d223dk
