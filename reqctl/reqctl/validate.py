@@ -1106,14 +1106,30 @@ def _without(root, uid, data, *finders):
     return _dropped(data, paths) if paths else data
 
 
+_OWN: dict[tuple, object] = {}
+
+
+def _own(root, uid, data, *finders):
+    try:
+        schema = corpus.schema_for(root, corpus.kind_of(uid, data),
+                                   corpus.name_of(uid, data))
+    except corpus.ReqctlError:
+        return _without(root, uid, data, *finders)
+    key = (finders, str(root), uid, id(schema), repr(data))
+    if key not in _OWN:
+        held = _without(root, uid, data, *finders)
+        _OWN[key] = None if held is data else held
+    return data if _OWN[key] is None else _OWN[key]
+
+
 def own_words(root, uid, data):
     # @req> REQ-48500355@rnstkLKM48vN rwffnk
-    return _without(root, uid, data, observed_paths)
+    return _own(root, uid, data, observed_paths)
 
 
 def own_quantities(root, uid, data):
     # @req> REQ-62072712@m81ZZqYdquaS hlxm3m
-    return _without(root, uid, data, observed_paths, dated_paths)
+    return _own(root, uid, data, observed_paths, dated_paths)
 
 
 def _declares_prose(root, uid, data, where, field, refused):
