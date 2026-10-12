@@ -1014,7 +1014,7 @@ def prepare(store, kind, fields, placeholder=None):
     uid, path = mint(store, kind, named, placeholder)
     # @req- yorgmf
     data = _resolved_prose(store, uid, data)
-    # @req+ REQ-85308584@wEdh_1cW2eGE lmav5l
+    # @req+ REQ-85308584@4lLbQIsexIid lmav5l
     site = path if corpus.UID.match(uid) or named is not None else mint(store, kind)[1]
     # @req> REQ-42390302@QOC4GhS7SkFg r5sgzy
     problems = hidden + _new_item_faults(store, [corpus.Item(uid, site, data)])
@@ -1026,7 +1026,7 @@ def prepare(store, kind, fields, placeholder=None):
 def _joined_faults(store, uid, prospective):
     records = {item.uid: item.data for item in corpus.items(store)}
     paths = corpus.item_files(store.root)
-    # @req+ REQ-85308584@wEdh_1cW2eGE td4i2r
+    # @req+ REQ-85308584@4lLbQIsexIid td4i2r
     found = _validate.corpus_checks({**records, uid: prospective}, store.root, paths)
     if all(problem.startswith(f"{uid}: ") for problem in found):
         return found
