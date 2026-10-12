@@ -1,0 +1,11 @@
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+entries:
+  per_item_check:
+    aliases:
+    - per-item checks
+    definition: A check that reqctl validate runs on each [item](item) in turn, rather
+      than once over the whole corpus.
+    word: per-item check
+kind: term
+status: approved
