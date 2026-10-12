@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a .py file defining no function, class or method named g
+  then: the product refuses, names g, and writes nothing
+  when: reqctl tag is given g in place of lines
+- given: a .py file whose class C defines no method m while class D does
+  then: the product refuses, names C.m, and writes nothing
+  when: reqctl tag is given C.m
+- given: a JavaScript file
+  then: the product refuses, names the name, and writes nothing
+  when: reqctl tag is given a name in place of lines
+assessed:
+  REQ-74702510: gU2X5OnlUbY3yQzwCDneBQYjtHoHNIE4uLSJFYf-EC8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-74702510: constrains
+status: approved
+text: If reqctl tag is given in place of lines a name that no function, class or method
+  of the file carries, or a name for a file that does not end in .py, then the product
+  shall refuse the [statement citation](statement_citation) and name the name.
+type: functional
+verification: inspection

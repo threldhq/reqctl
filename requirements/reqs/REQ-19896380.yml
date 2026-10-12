@@ -7,12 +7,14 @@ acceptance_criteria:
   when: the [portal](portal) shows the requirement
 - given: a requirement cited by a [test](test)
   then: the product names the [test](test) only in reporting as a problem the [statement
-    citation](statement_citation) the [test](test) carries
+    citation](statement_citation) the [test](test) carries or a [whole-file citation](whole_file_citation)
+    of the [test](test)
   when: trace is run
 assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 citations:
   6rtw6m: LB35N9Iu5aM_FQOPe7GgeKvJBrR7MJ3DW7pUnvgNw38
   7iy6c4: dz_bnryUPUS0Mw3iCIdOsgRO2jOd5oSxc-lvY3OzjRI

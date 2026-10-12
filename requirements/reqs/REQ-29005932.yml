@@ -1,0 +1,29 @@
+acceptance_criteria:
+- given: a default branch holding a [settings file](settings_file) that is not valid
+    YAML
+  then: the product refuses the run and names the file
+  when: a run is built
+- given: a default branch whose tree git cannot list
+  then: the product refuses and names the file
+  when: the [best-in-class review](best_in_class_review) is checked
+- given: a default branch carrying no [settings file](settings_file)
+  then: the product refuses nothing on that ground
+  when: a run is built
+assessed:
+  REQ-32331515: Nn3qX9jMrAU-mRofbCIQXy4KtAb8FPIKO37CrIthPRQ
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
+  REQ-42769459: j_YdEMFBAA1JFAFmeQxp0WGVmOU5LyIEZpxSmulMoYM
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+priority: medium
+relations:
+  REQ-32331515: depends_on
+  REQ-40447106: constrains
+  REQ-42769459: constrains
+status: approved
+text: If the product resolves the default branch but cannot tell whether that branch
+  holds a [settings file](settings_file), or cannot read or parse the one it holds,
+  then the product shall refuse each command that reads the [settings file](settings_file)
+  and name the file.
+type: functional
+verification: inspection

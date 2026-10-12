@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: an implement run about to write code
+  then: it reads the code of products solving the same kind of problem before writing
+    any
+  when: the session begins the work
+- given: an implement run that researched and wrote code
+  then: its body names the sources the session read and the example it chose, or states
+    that none could be read
+  when: the pull request carrying the code is prepared
+- given: an implement run that writes no code
+  then: no research is required of it
+  when: the run proceeds
+assessed:
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations: {}
+status: approved
+text: When the ${plugin_components.implement_skill} would write code, the product
+  shall have the session first research the code of products solving the same kind
+  of problem, in any field, for a best-in-class example of that code.
+type: functional
+verification: inspection

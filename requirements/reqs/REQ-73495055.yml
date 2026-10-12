@@ -1,0 +1,33 @@
+acceptance_criteria:
+- given: a [citation marker](citation_marker) falling within the lines of another
+    [statement citation](statement_citation)
+  then: the line holding the marker is in no [citation digest](citation_digest)
+  when: the product takes the [citation digest](citation_digest) of the other
+- given: a [citation marker](citation_marker) falling within the lines of a [statement
+    citation](statement_citation) written as [exclusive](exclusive)
+  then: the line holding the marker is in no [citation digest](citation_digest)
+  when: the product takes the [citation digest](citation_digest) of each
+- given: a line inside a [multiline comment](multiline_comment) that holds a [citation
+    marker](citation_marker) and falls within the lines of a [statement citation](statement_citation)
+  then: the line is in it
+  when: the product takes that [citation digest](citation_digest)
+assessed:
+  REQ-17608335: ejFjhGoCg5c7xx31BmDLrVdrs9rLBqVkDgiXkKKHH7c
+  REQ-33202540: Y-kVcYdmW6zTcfyPW0gQbqERQlV0ZOk6KlJTbpszSrM
+  REQ-97852648: 9PG_RRu-Iv2ogJfO-eT86f0thMw2yK1HhrjtMqqOU0M
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  citation_marker: PIwiVw0PtA6YbmzdHivRCKCzPw-Rq-JX6IIehV5RfU0
+  exclusive: 3JKd7AntKjXMn7QIJ76uUWL2l24QYnfM3o0sstKLCsY
+  multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-17608335: constrains
+  REQ-33202540: constrains
+  REQ-97852648: constrains
+status: approved
+text: The product shall take a line holding a [citation marker](citation_marker) from
+  which the product reads a [statement citation](statement_citation) as covered by
+  no [statement citation](statement_citation).
+type: functional
+verification: inspection

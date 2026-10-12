@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: an [item](item) revised through reqctl
+  then: the [item](item) holds no field stating the date of its last update
+  when: the revision is written
+- given: a repository whose own schema for a kind states a date field, and an [item](item)
+    of that kind holding a date in it
+  then: the date of its last update is the one the commit history shows, and the [item](item)
+    is not refused for the field
+  when: reqctl context shows the [item](item)
+assessed:
+  REQ-82027237: R-XinrGfTNzLE1-PxO9SeWnxAkNShomWm9kGaZ8zE-Y
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-82027237: constrains
+status: approved
+text: The product shall hold the date of an [item](item)'s last update in no field
+  of the [item](item).
+type: functional
+verification: inspection

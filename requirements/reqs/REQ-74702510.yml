@@ -1,0 +1,29 @@
+acceptance_criteria:
+- given: a .py file defining a function named f
+  then: the product cites the lines f spans
+  when: reqctl tag is given f in place of lines
+- given: a .py file whose class C defines a method m
+  then: the product cites the lines m spans
+  when: reqctl tag is given C.m in place of lines
+- given: a .py file whose class Outer holds a class Inner defining a method m
+  then: the product cites the lines m spans
+  when: reqctl tag is given Outer.Inner.m
+- given: a .py file whose function f carries a decorator
+  then: the cited lines open at the decorator
+  when: reqctl tag is given f
+- given: a command giving both a name and lines for one [statement citation](statement_citation)
+  then: the product refuses and writes nothing
+  when: reqctl tag is run
+assessed:
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-60346603: derives_from
+status: approved
+text: Where the file reqctl tag cites ends in .py, when tag is given in place of lines
+  the name of a function, class or method, alone or joined by dots to the names of
+  the definitions enclosing it, the product shall cite the lines that function, class
+  or method spans, from its first decorator, if any, to the last line of its body.
+type: functional
+verification: inspection

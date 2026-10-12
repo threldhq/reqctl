@@ -6,7 +6,7 @@ acceptance_criteria:
   then: the product states the fault it found
   when: the corpus is validated
 assessed:
-  REQ-19913588: Pbi1CR5jtivz8qi3AlI320-7pRuKcedppG7UpnOk2TU
+  REQ-19913588: hBNJrpn4vtZeTo84vHq_GZB_97UAzQuiQwg_WqEXgqU
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   5wu7pz: Q7uuQumiThaPaQUuTi12nKSlUE02rvlRd66XALnDANM

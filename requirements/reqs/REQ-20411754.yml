@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a baseline file holding an unresolved merge between two baselines, in a repository
+    with no origin remote
+  then: the product refuses, names adding and fetching origin, and writes no baseline
+  when: baseline --generate is run
+assessed:
+  REQ-28086776: 7S0DPOiDLvSmYxEyEecsONPUw08rTnlwXdq3SpNsXIA
+  REQ-43924642: SDx_e7a7A1XMQPML3XbBx3zHEK_udtWgckeshRvI3qU
+priority: medium
+relations:
+  REQ-28086776: constrains
+  REQ-43924642: constrains
+status: approved
+text: If a baseline would be generated over a baseline file holding an unresolved
+  merge between two baselines in a repository with no origin remote, then the product
+  shall refuse the generation and name adding and fetching origin as the remedy.
+type: functional
+verification: inspection

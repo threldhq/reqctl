@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a shallow clone holding no commit at which an [item](item) carried the [stamp](stamp)
+    a [statement citation](statement_citation) of it is [pinned](pin) to
+  then: it still reports the [statement citation](statement_citation), showing unknown
+    for the old fields beside the [item](item)'s fields as they read now
+  when: trace reports the [statement citation](statement_citation)
+assessed:
+  REQ-24608716: rrTjNN2Ay0D0CrymlNucaR43_TuM4q7msaUqrgUE9s8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-24608716: derives_from
+status: approved
+text: If the history reachable from HEAD holds no state of an [item](item) at the
+  [stamp](stamp) a [statement citation](statement_citation) or a suspect [item](item)
+  is [pinned](pin) to, then the product shall show as unknown each field that [stamp](stamp)
+  covers as it read then, beside the field as it reads now.
+type: functional
+verification: inspection

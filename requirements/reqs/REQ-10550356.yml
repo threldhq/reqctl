@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: an example under a licence that permits copies on condition of attribution
+  then: the session copies it and meets the condition in the third-party notices file
+  when: the session would copy its code
+- given: an example in a repository that states no licence
+  then: the session copies none of it and writes its own code from the idea
+  when: the session would copy its code
+- given: an example under a copyleft licence
+  then: the session copies none of it and writes its own code from the idea
+  when: the session would copy its code
+assessed:
+  REQ-26967281: _UMD2dn--MVzSdcUN3uf-ha_Zg_fhdZYEo_AN9VYKWw
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-26967281: depends_on
+status: approved
+text: When the ${plugin_components.implement_skill} finds a best-in-class example,
+  the product shall have the session copy the example's code, unchanged or adapted,
+  only where the licence of the repository holding the example permits the copy on
+  conditions the repository receiving it can meet.
+type: functional
+verification: inspection

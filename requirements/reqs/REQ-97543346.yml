@@ -1,14 +1,16 @@
 acceptance_criteria:
 - given: a statement linking a term
-  then: the product moves the link to the new name and shows the new word
+  then: the link names the term by its new name and shows the words it showed before
   when: the term is renamed
-assessed: {}
+assessed:
+  REQ-54697016: Ch9-SdvPj8vqydA9frkVdb3NoHWwxOqPv41xyFQ3wBA
 citations:
   jjk7ud: 0QRWbIJ-8qEfrv37mo2UFR6dOBC_5AOUhHm1q9B17GU
 priority: medium
-relations: {}
+relations:
+  REQ-54697016: constrains
 status: approved
-text: When a term is renamed, the product shall move every resolved link that showed
-  the word the term carried.
+text: When a term is renamed, the product shall point every resolved link to the term
+  at its new name and leave the words each link shows unchanged.
 type: functional
 verification: inspection

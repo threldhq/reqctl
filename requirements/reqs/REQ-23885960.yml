@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a term recording an unclaimed phrase that holds neither its word nor any
+    of its aliases
+  then: the product refuses the term and names the phrase
+  when: the corpus is validated
+- given: a term recording an unclaimed phrase that holds one of its aliases in capitals
+  then: the product refuses nothing on that ground
+  when: the corpus is validated
+- given: a term recording an unclaimed phrase that holds its word only inside a longer
+    word
+  then: the product refuses the term and names the phrase
+  when: the corpus is validated
+assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+priority: medium
+relations:
+  REQ-24481048: constrains
+status: approved
+text: If a phrase a term records as unclaimed holds neither the term's word nor any
+  of its aliases as a whole word, matched without regard to case, then the product
+  shall refuse the term and name the phrase.
+type: functional
+verification: inspection
