@@ -215,10 +215,12 @@ def _prune_assessed(lookup, uid, data):
 
 
 def _pruned(after, uids):
+    canonical = corpus.reachable(after)
     for uid in uids:
         held = dict(after[uid])
         if isinstance(held.get("assessed"), dict):
-            _prune_assessed(after.get, uid, held)
+            _prune_assessed(lambda name: after.get(canonical.get(name, name)),
+                            uid, held)
             after[uid] = held
 
 
