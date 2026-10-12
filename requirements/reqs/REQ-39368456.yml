@@ -1,6 +1,7 @@
 acceptance_criteria:
-- given: an [item](item) field that forms a cycle
-  then: the product refuses the [item](item) and names the field
+- given: an [item](item) field forming a cycle through a YAML alias
+  then: the product refuses the [item](item) and names the alias and the line it stands
+    on
   when: the [item](item) is read
 - given: an [item](item) field nesting past the reader limit
   then: the product refuses the [item](item) and names the field

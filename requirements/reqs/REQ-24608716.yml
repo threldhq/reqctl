@@ -1,0 +1,43 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) of a requirement whose acceptance
+    criterion was revised after the [statement citation](statement_citation) was [pinned](pin)
+  then: it shows the requirement's text and acceptance criteria as they read at the
+    [stamp](stamp) the [statement citation](statement_citation) is [pinned](pin) to,
+    beside them as they read now
+  when: trace reports the [statement citation](statement_citation)
+- given: an [item](item) binding a parameter whose value was revised
+  then: it shows the parameter's value as it read at the [stamp](stamp) the binder
+    is [pinned](pin) to, beside the value now
+  when: reqctl validate or reqctl context reports the binder as suspect
+- given: a [statement citation](statement_citation) of one [entry](entry) of a [data
+    item](data_item), the [entry](entry) since revised
+  then: it shows that [entry](entry) and the [data item](data_item)'s own fields as
+    they read at the [stamp](stamp) the [statement citation](statement_citation) is
+    [pinned](pin) to, beside them as they read now
+  when: trace reports the [statement citation](statement_citation)
+assessed:
+  REQ-53246456: QyWuIwzUUElOOFmRJAzYcuHwkEJPq6DYtFEg25rMlBw
+  REQ-56581795: ZHEasHzzTZLCW7EpcU2t9HLmUUSwKOGE6Q3rfqhT_9M
+  REQ-57367860: Ru8k-xWkVYxOm_vpuW8ZCzMid813EjVKH-zXhOkkfkA
+  REQ-88079673: EiXeHoq_wF_zIVobtgjt-ETHDFzKdiAqUjAdPXMD5DE
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-53246456: depends_on
+  REQ-56581795: depends_on
+  REQ-57367860: depends_on
+  REQ-88079673: depends_on
+status: approved
+text: When the product reports a [statement citation](statement_citation) naming a
+  [stamp](stamp) that the [item](item) it names no longer carries, or reports an [item](item)
+  it has made suspect, the product shall show each field the [stamp](stamp) of the
+  named or bound [item](item) covers as it reads now, beside that field as the history
+  reachable from HEAD holds it at the [stamp](stamp) the [statement citation](statement_citation)
+  or the suspect [item](item) is [pinned](pin) to.
+type: functional
+verification: inspection

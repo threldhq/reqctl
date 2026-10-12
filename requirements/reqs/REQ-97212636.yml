@@ -1,0 +1,43 @@
+acceptance_criteria:
+- given: an edit changing a line that two [statement citations](statement_citation)
+    cover, each naming a requirement
+  then: the session is shown the text and acceptance criteria of both requirements,
+    and the product does not refuse the call on that ground
+  when: the [tool call](tool_call) is made
+- given: an edit deleting a line a [statement citation](statement_citation) of a parameter
+    covers
+  then: the session is shown the parameter's text, value and unit
+  when: the [tool call](tool_call) is made
+- given: a write inserting a line within the lines a [statement citation](statement_citation)
+    of one [entry](entry) of a [data item](data_item) covers
+  then: the session is shown the [data item](data_item)'s text and that [entry](entry)
+  when: the [tool call](tool_call) is made
+- given: an edit changing no line a [statement citation](statement_citation) covers
+  then: the session is shown no [item](item)
+  when: the [tool call](tool_call) is made
+- given: a shell command that writes a file holding [statement citations](statement_citation)
+  then: the session is shown no [item](item) on that ground
+  when: the [tool call](tool_call) is made
+assessed:
+  REQ-37846580: oqAWJFdNHvDobEcUhvTRISucr4tOzSV0Tzd9ObmLFb4
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  REQ-73495055: cPNC8izAHGTlO-pV3PMxG7rA_QlzF3Mw2rayt2wDKVs
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-37846580: depends_on
+  REQ-42668747: depends_on
+  REQ-52925332: depends_on
+  REQ-73495055: depends_on
+status: approved
+text: When an edit, a write or a notebook edit would change, delete or insert a line
+  within the lines a [statement citation](statement_citation) covers, the product
+  shall show the session the statement of each [item](item) that a [statement citation](statement_citation)
+  covering the line names.
+type: functional
+verification: inspection

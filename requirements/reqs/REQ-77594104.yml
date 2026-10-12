@@ -15,10 +15,12 @@ acceptance_criteria:
 assessed:
   REQ-13384695: P9NXsZKZp683hy0Csa1HeSwHpU5MeNs-vEcM2BbccvM
   REQ-18176935: A6AhLhUZ7MdW9hwmBteIS6PgGLCXGQZTf7lwxGt04mo
-  REQ-19896380: 2sOnckMwnWfx54LPxaP0CI5eHt16m804M_5H5fFPhcQ
+  REQ-19896380: lvCPXiVYZ6udLRFup3SuPCSWOlYS2Y374WLihiiy438
   REQ-32191310: aZkvQ6hvIwPv7dwtDhJL8Ueb_kDpcyzi1J_lbXQYl0g
-  REQ-37671861: CzVcGrE9kUuNFIhjmSOnnfMp3FT-vG5I1ncpYZF0Y3E
+  REQ-53246456: QyWuIwzUUElOOFmRJAzYcuHwkEJPq6DYtFEg25rMlBw
+  REQ-57367860: Ru8k-xWkVYxOm_vpuW8ZCzMid813EjVKH-zXhOkkfkA
   REQ-67655319: ezp6TxUzJ72EeXlq0cOSWQ13pMcIBZgw_tCI2-n2jDI
+  REQ-88079673: EiXeHoq_wF_zIVobtgjt-ETHDFzKdiAqUjAdPXMD5DE
   REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
@@ -36,8 +38,10 @@ relations:
   REQ-18176935: depends_on
   REQ-19896380: depends_on
   REQ-32191310: depends_on
-  REQ-37671861: depends_on
+  REQ-53246456: depends_on
+  REQ-57367860: depends_on
   REQ-67655319: depends_on
+  REQ-88079673: depends_on
   REQ-88203622: depends_on
 status: approved
 text: When trace is run, the product shall report each [statement citation](statement_citation)

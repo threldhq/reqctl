@@ -1,5 +1,6 @@
 acceptance_criteria:
-- given: a baseline file holding an unresolved merge between two baselines
+- given: a baseline file holding an unresolved merge between two baselines, and a
+    default branch the product can read
   then: the product writes the baseline rather than refusing, and says it was regenerated
     rather than merged
   when: baseline --generate is run

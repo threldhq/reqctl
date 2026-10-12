@@ -10,16 +10,36 @@ acceptance_criteria:
     names
   then: the product gives no warning of it
   when: trace is run
+- given: an approved requirement holding a [whole-file citation](whole_file_citation)
+    that no [statement citation](statement_citation) names
+  then: the product gives no warning of it
+  when: trace is run
+- given: an approved requirement holding a [whole-file citation](whole_file_citation)
+    [pinned](pin) to a [stamp](stamp) it no longer carries, that no [statement citation](statement_citation)
+    names
+  then: the product gives no warning of it
+  when: trace is run
+- given: an approved requirement whose only [whole-file citation](whole_file_citation)
+    is of a [test](test) and that no [statement citation](statement_citation) names
+  then: the product warns of it
+  when: trace is run
 assessed:
+  REQ-30061042: b7B9U8dkoUHISTdbzsklwBOuu4h10PhXjQTIUPotY20
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 citations:
   3aqkc5: Q7FedDR4Mtd8sC_yxrHZIcQF7FK3H6sg9jz5OhK1-cQ
   iy3utt: nxPQrp1WBWEUdJeF1Zjbph8SUr0_G1M1351oGHvW_CY
 priority: medium
-relations: {}
+relations:
+  REQ-30061042: depends_on
 status: approved
 text: When trace is run, the product shall warn of each approved requirement and each
-  approved guard that no [statement citation](statement_citation) names.
+  approved guard that no [statement citation](statement_citation) names and that holds
+  no [whole-file citation](whole_file_citation) of a file other than a [test](test).
 type: functional
 verification: inspection

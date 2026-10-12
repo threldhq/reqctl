@@ -1,0 +1,10 @@
+assessed:
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+entries:
+  '20000': {}
+kind: parameter
+name: guard_input_limit
+status: approved
+text: The most characters a field of a [tool call](tool_call) naming a path, a command
+  or a pattern may hold before the product refuses the call
+value_type: count

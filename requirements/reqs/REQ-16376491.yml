@@ -1,0 +1,38 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) [pinned](pin) to the [stamp](stamp)
+    its requirement carries, over code that does not satisfy the requirement
+  then: it asks the owner whether to change the code or revise the requirement
+  when: the ${plugin_components.implement_skill} reads the code
+- given: the ${plugin_components.pre_pr_skill} finding cited code that does not satisfy
+    the requirement its [statement citation](statement_citation) names
+  then: it asks the owner whether to change the code or revise the requirement, and
+    writes no pull request body before the owner answers
+  when: the pass reaches that finding
+- given: a [statement citation](statement_citation) of a requirement the corpus has
+    deprecated
+  then: no [question for the owner](question_for_the_owner) is raised for it, and
+    the [statement citation](statement_citation) is removed
+  when: either skill reads it
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-51001407: CLFQHU6-XTzdaf6D58L1bXwp6PCYgfrsInvCbsS96OI
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-12222066: derives_from
+  REQ-51001407: constrains
+status: approved
+text: When the ${plugin_components.implement_skill} or the ${plugin_components.pre_pr_skill}
+  reads code a [statement citation](statement_citation) covers and finds that the
+  code does not satisfy the [item](item) the [statement citation](statement_citation)
+  names, the product shall raise as a [question for the owner](question_for_the_owner)
+  whether to change the code or to revise the [item](item).
+type: functional
+verification: inspection

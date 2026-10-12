@@ -8,15 +8,30 @@ acceptance_criteria:
 - given: any draft statement
   then: the corpus is unchanged
   when: the statement is linted
-assessed: {}
+- given: a draft term claiming a word another term claims
+  then: the product reports the fault, naming both terms
+  when: the term is linted
+- given: a corpus already holding a fault, and a draft statement that adds none
+  then: the product reports no fault
+  when: the statement is linted
+- given: a check validate runs that fails unexpectedly
+  then: the product reports the failure as a corpus problem naming the check
+  when: a draft statement is linted
+assessed:
+  REQ-23691260: 3s5Nt8Pn1BXAVd_feq3s3Qkt2l-yDafVRXKdh1_jxOA
+  REQ-55939360: qvRmeRuBl0T95bqLSci1RvjlgF7DrPyDgNVmpo55Nzo
 citations:
   2vgmd6: NDI5p6CTnTW0fV-Js2Hz7iryUgAV2tzkFu1bSNjYFhw
   migtu6: bycZUlC5Q2Lmb3E3WKDGtbZ1bxnnrm5fSVI9MoSGoLE
   sri72v: QaNYpwHajdo4t8Zc-fG4eCa0zce2tKiRbziktlxySZI
 priority: medium
-relations: {}
+relations:
+  REQ-23691260: depends_on
+  REQ-55939360: depends_on
 status: approved
 text: When a draft statement is linted, the product shall report, without writing
-  to the corpus, every fault for which validate would refuse the statement.
+  to the corpus, every fault that a check validate runs would find were the statement
+  to join the corpus as a draft under a fresh uid, and that the corpus does not already
+  hold.
 type: functional
 verification: inspection

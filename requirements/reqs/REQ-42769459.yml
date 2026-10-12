@@ -6,6 +6,10 @@ acceptance_criteria:
 - given: a repository with no origin remote, holding a [settings file](settings_file)
   then: the product uses the values it ships
   when: a run is built there
+- given: a repository whose origin remote names a default branch that names no commit
+    here, holding a [settings file](settings_file)
+  then: the product uses the values it ships
+  when: a run is built there
 assessed:
   REQ-32331515: Nn3qX9jMrAU-mRofbCIQXy4KtAb8FPIKO37CrIthPRQ
   REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
@@ -21,8 +25,8 @@ relations:
   REQ-40447106: constrains
   REQ-87066486: depends_on
 status: approved
-text: If the product cannot read the default branch that a repository's origin remote
-  names, then the product shall use in that repository the values it ships for its
-  own parameters and [data items](data_item), reading no [settings file](settings_file).
+text: If the product cannot resolve to a commit the default branch that a repository's
+  origin remote names, then the product shall use in that repository the values it
+  ships for its own parameters and [data items](data_item), reading no [settings file](settings_file).
 type: functional
 verification: inspection

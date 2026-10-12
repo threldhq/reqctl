@@ -1,8 +1,8 @@
 acceptance_criteria:
 - given: an [item](item) another [item](item) binds
   then: the product makes the binder suspect
-  when: the text, the value type, the unit, the default or the handles-content field
-    of the bound [item](item) is changed
+  when: the text, the value type, the unit or the default of the bound [item](item)
+    is changed
 - given: an [item](item) another [item](item) binds
   then: the product leaves the binder [pinned](pin)
   when: a field the [stamp](stamp) does not cover is changed on the bound [item](item)

@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a [tool call](tool_call) whose command field holds more than ${guard_input_limit}
+    characters
+  then: the product refuses it, naming the field and its length
+  when: the [tool call](tool_call) is made
+- given: a connector call whose path field holds more than ${guard_input_limit} characters
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: an edit whose new text holds more than ${guard_input_limit} characters and
+    whose path is short
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+assessed:
+  REQ-18701923: 7CvKXOjSI6KbwyAtwC8InqBDV8Mr9hZebo4uSiEe2s0
+  guard_input_limit: -exvER4qUHPOHpBCfhPlMNE9PCT6Hx3d1U1Y-mc2i0Y
+  guard_input_limit.*: ajjIKQo0Fby7T2H-jm2Yh6YW-FymNi9JyNPoZIqoxvc
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-18701923: derives_from
+status: approved
+text: If a field of a [tool call](tool_call) that names a path, a command or a pattern
+  holds more than ${guard_input_limit} characters, then the product shall refuse the
+  [tool call](tool_call) and name the field and its length.
+type: functional
+verification: inspection
