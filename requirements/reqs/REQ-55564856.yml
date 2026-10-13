@@ -1,0 +1,29 @@
+acceptance_criteria:
+- given: an [item](item) whose value ends with a hidden space
+  then: the [item](item) stores the value without the hidden space, in place of the
+    value it carried
+  when: reqctl revise writes the [item](item), restating that value
+- given: a term recording an unclaimed phrase that holds a hidden space between two
+    words
+  then: the term records the phrase with a plain space in place of the hidden one,
+    with that reason, and no longer records the phrase it carried
+  when: reqctl revise restates that phrase with a reason
+- given: a term recording an unclaimed phrase that holds a hidden space between two
+    words
+  then: the term records that phrase with that reason, and no longer records the phrase
+    it carried
+  when: reqctl revise writes the phrase with a plain space in its place, with a reason
+assessed:
+  REQ-79956352: OsoTGRd6D5CZlIcd8a3jU-7BQ9KkuXnPr0zR6w6e-nQ
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  write_time_normalisation: oBdIBBNiZAVaalngsKaqiXl0qS4YIZ2G4Wo8drbe4o0
+priority: medium
+relations:
+  REQ-79956352: constrains
+status: approved
+text: When reqctl revise writes a value that equals a value an [item](item) already
+  carries once [write-time normalisation](write_time_normalisation) is applied to
+  each, the product shall store the value after [write-time normalisation](write_time_normalisation),
+  in place of the value the [item](item) carried.
+type: functional
+verification: inspection

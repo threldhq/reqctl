@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a statement carrying an [EARS fault](ears_fault)
+  then: the product refuses nothing for the fault
+  when: reqctl revise would write a changed text failing in the same ways, wherever
+    in the text the change falls
+- given: a statement whose text fails in one way
+  then: the product refuses the command and writes nothing
+  when: reqctl revise would write a text that fails in a way the statement's text
+    did not
+assessed:
+  REQ-18950462: TJVbxYWG6DcwMQMbqV3Ols5O77brKJ62GZxbDMvlUFE
+  REQ-42390302: QOC4GhS7SkFgNUySBJec_QcZkx_27rINTsnxqVsDklQ
+  ears_fault: ja1v58VOu-inQ0lFP9QVBdK20B6iyhNSSmeNBMW12TE
+priority: medium
+relations:
+  REQ-18950462: constrains
+  REQ-42390302: derives_from
+status: approved
+text: If reqctl revise would write a statement whose text carries an [EARS fault](ears_fault)
+  naming the same ways the text fails as the [EARS fault](ears_fault) the statement
+  carried, then the product shall refuse nothing for that fault, whatever text either
+  fault quotes.
+type: functional
+verification: inspection

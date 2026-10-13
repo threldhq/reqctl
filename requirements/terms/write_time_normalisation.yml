@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  write_time_normalisation:
+    definition: 'The change the product makes to a value as it writes it: whitespace
+      stripped from both ends, and each run of whitespace inside an unclaimed phrase
+      collapsed to one space.'
+    word: write-time normalisation
+kind: term
+status: approved
