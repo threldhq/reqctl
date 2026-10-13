@@ -237,8 +237,7 @@ def _pruned(after, uids):
 
 
 def _targets(data):
-    return ({corpus.split_address(address)[0] for address in corpus.concept_references(data)},
-            {corpus.split_address(address)[0] for address in corpus.references(data)})
+    return set(corpus.concept_references(data)), set(corpus.references(data))
 
 
 def _unknown_references(store, uid, data, carried):
@@ -248,14 +247,16 @@ def _unknown_references(store, uid, data, carried):
         {item.uid: item.data for item in corpus.items(store)})
     linked, referenced = _targets(data)
     held_links, held_references = carried
-    unknown = sorted(referenced - known - held_references)
+    unknown = sorted({corpus.split_address(address)[0]
+                      for address in referenced - held_references} - known)
     if unknown:
         faults.append(
             f"text references {', '.join(unknown)}, which does not exist -- "
             "the parameter or data item must exist before the statement can "
             "reference it"
         )
-    absent = sorted(linked - known - held_links)
+    absent = sorted({corpus.split_address(address)[0]
+                     for address in linked - held_links} - known)
     if absent:
         faults.append(
             f"text links {', '.join(absent)}, which does not exist -- "
@@ -363,7 +364,7 @@ def resolve_names(store, text, index=None, carried=(frozenset(), frozenset())):
                 "resolve that first"
             )
         # @req> REQ-44791607@6FX5SSp9MG3B h2zt3s
-        if uid is None and held in linked:
+        if uid is None and target in linked:
             return match.group(0)
         if uid is None:
             raise ReqctlError(
@@ -380,7 +381,7 @@ def resolve_names(store, text, index=None, carried=(frozenset(), frozenset())):
                 "`reqctl validate` names them; resolve that first"
             )
         # @req> REQ-44791607@6FX5SSp9MG3B nadc6z
-        if uid is None and name in referenced:
+        if uid is None and name + (match.group(2) or "") in referenced:
             return match.group(0)
         if uid is None:
             raise ReqctlError(
