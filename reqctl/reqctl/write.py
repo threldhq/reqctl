@@ -485,7 +485,8 @@ def _append_fields(entry, pairs, carried):
                 "time; repeat --append"
             )
         where, held = _appended(entry, steps)
-        where[steps[-1]] = held + [member]
+        # @req> REQ-55564856@yOTVGvtwjD3l b2asyr
+        where[steps[-1]] = [kept for kept in held if str(kept).strip() != str(member)] + [member]
     return entry
 
 
@@ -1247,8 +1248,15 @@ def _revision(store, uid, fields):
                 target[field.name] = kept
         if field.name in stated:
             said = stated[field.name]
-            target[field.name] = ({**(target.get(field.name) or {}), **said}
-                                  if isinstance(said, dict) else said)
+            # @req+ REQ-55564856@yOTVGvtwjD3l gl6li3
+            was = target.get(field.name)
+            if isinstance(said, dict):
+                said = {**{key: value for key, value in (was or {}).items()
+                           if " ".join(str(key).split()) not in said}, **said}
+            elif isinstance(said, str) and isinstance(was, str) and said.strip() == was.strip():
+                said = said.strip()
+            target[field.name] = said
+            # @req- gl6li3
         elif field.clears and fields.get(field.cleared):
             if field.empty is None:
                 target.pop(field.name, None)
@@ -1404,6 +1412,11 @@ def _revision(store, uid, fields):
     writing = [corpus.Item(item.uid, item.path, prospective),
                *(spread["moved"] if spread else [])]
     faults = _new_item_faults(store, writing)
+    # @req+ REQ-53864992@bIpK1ribjvtb 7a2e6t
+    carried_ways = {fault.partition("\n")[0] for one in writing
+                    for fault in _validate.ears(one.uid, corpus.find(store, one.uid).data)}
+    faults = [fault for fault in faults if fault.partition("\n")[0] not in carried_ways]
+    # @req- 7a2e6t
     if faults:
         raise ReqctlError("\n".join(faults))
     # @req- vge6ux
