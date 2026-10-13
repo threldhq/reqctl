@@ -17,6 +17,9 @@ assessed:
   REQ-79956352: OsoTGRd6D5CZlIcd8a3jU-7BQ9KkuXnPr0zR6w6e-nQ
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   write_time_normalisation: oBdIBBNiZAVaalngsKaqiXl0qS4YIZ2G4Wo8drbe4o0
+citations:
+  ej4esr: F9OWw2IJ_q5L5n_lh-0y6O9oAs5ThC4PrAL5aBiDyJY
+  gl6li3: 7844dvLCwSRx7ZtfAJgiQFI5tEbL9QFNZ7BtVVlM4G8
 priority: medium
 relations:
   REQ-79956352: constrains
