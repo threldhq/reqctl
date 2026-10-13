@@ -487,7 +487,7 @@ def _append_fields(entry, pairs, carried):
         where, held = _appended(entry, steps)
         # @req+ REQ-55564856@yOTVGvtwjD3l ej4esr
         held = [member if str(kept).strip() == str(member) else kept for kept in held]
-        where[steps[-1]] = held if member in held else held + [member]
+        where[steps[-1]] = held if any(corpus.same(kept, member) for kept in held) else held + [member]
         # @req- ej4esr
     return entry
 
