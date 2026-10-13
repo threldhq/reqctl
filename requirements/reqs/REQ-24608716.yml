@@ -26,6 +26,21 @@ assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  2texd5: kB_Lc_3--xDUOXXZXiBOo3kjxC-6wb81yAA_R9cosMs
+  3c5yr2: yCl9_FjRqx2uFPfDCuODpkvzpVLok8Zh1q8c8fLyf9o
+  4lmsbv: HhL0CubTkbM10OM1rfKYYxaew6PByHHGL0zME_QmNRk
+  ayt44q: oKdi7HB6Q_XmnA0Zg9AZbL60iBOD0oZw0vIdGIZuSQI
+  bzyf37: fPeH4F5BRkm4KIktDigNfiVFdBmdxOKNo3Uh1oJ6_BU
+  dzvsq3: JfgxIwHBSq94Yq1LyJqUzkF0GN2-0ezKlGlpDnIXl5U
+  kzig7g: NpPHRGc1qmlW4Txizv3xrXdIkjc0ll19E_TLxRJwNgk
+  o2outx: 24-sHG9K7t6qK7XJZ-vABLnFqdp51aMlM4c3x9NUXuE
+  ofe7e3: DcyOk3OMrgun-31DHIZYYd1YPOzzqxSI3voB27AV6Tk
+  otzu27: 87SXCtbRZ-5c-4RB7yFAHxBKQMLS7GWhMpMMayStzaM
+  vjkk2b: R3y0ZHjb_qJYFpi7aD8etl8D0uTZXDcOY_WkSxLNyyY
+  w7fcu5: VJmpWUxMROd_746f8DYuhtUyLvbVVhAwd-fcXFMVwBs
+  xyk6zv: SeHV6xHOZXviRjTC3Gj5yb51z2h2eWW9ny58R6CTRjs
+  zfc5eh: zmVQVG1dEHOehuY3wUXCN-UXV4bettuNIaXPj8AHu20
 priority: medium
 relations:
   REQ-53246456: depends_on

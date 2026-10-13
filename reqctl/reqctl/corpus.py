@@ -656,6 +656,25 @@ def stamp_at(item, entry_key=None):
     return address_stamp_of(item.uid, item.data, entry_key)
 
 
+# @req> REQ-24608716@rrTjNN2Ay0D0 kzig7g
+def covered(uid, data, entry_key=None):
+    if entry_key is None:
+        if uid.startswith(("REQ-", "GUARD-")):
+            return {key: data.get(key) for key in STATEMENT_STAMPED}
+        if kind_of(uid, data) == "term":
+            return {"definition": term_fields(data).get("definition")}
+        return {key: data.get(key) for key in ITEM_STAMPED}
+    if entry_key == MEMBERS:
+        return {"entries": entries(data) or {}}
+    held = flagged(data, entry_key)
+    if held is not None:
+        return {"entries": held}
+    fields = entry_at(data, entry_key)
+    if kind_of(uid, data) == "term":
+        return {"definition": (fields or {}).get("definition")}
+    return {"entries": {entry_key: fields}}
+
+
 def stamp(item):
     return stamp_of(item.uid, item.data)
 
@@ -672,6 +691,14 @@ def cited_stamp(item, entry=None):
     if entry or kind_of(item.uid, item.data) in ("parameter", "data"):
         held = digest([held, stamp_at(item, entry or MEMBERS)])
     return tag_stamp(held)
+
+
+# @req> REQ-24608716@rrTjNN2Ay0D0 ayt44q
+def cited_fields(uid, data, entry=None):
+    held = covered(uid, data)
+    if entry or kind_of(uid, data) in ("parameter", "data"):
+        held |= covered(uid, data, entry or MEMBERS)
+    return held
 
 
 def cited_entries(item):
@@ -701,6 +728,20 @@ def mapping(data, key):
         return {}
     return {name: held for name, held in value.items()
             if isinstance(name, str)}
+
+
+# @req> REQ-73719888@SQkvdemRTgC1 ww7kzv
+def plain(value):
+    if isinstance(value, dict):
+        return ", ".join(f"{name} ({plain(held)})" if isinstance(held, dict)
+                         else f"{name}: {plain(held)}"
+                         for name, held in value.items())
+    if isinstance(value, list):
+        return ", ".join(f"({plain(member)})" if isinstance(member, dict)
+                         else plain(member) for member in value)
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    return "null" if value is None else str(value)
 
 
 def _stated(fields, skip):

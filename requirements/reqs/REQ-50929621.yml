@@ -10,6 +10,9 @@ assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  dvvyvi: VJmpWUxMROd_746f8DYuhtUyLvbVVhAwd-fcXFMVwBs
+  qgp2gz: SeHV6xHOZXviRjTC3Gj5yb51z2h2eWW9ny58R6CTRjs
 priority: medium
 relations:
   REQ-24608716: derives_from

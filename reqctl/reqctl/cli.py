@@ -11,6 +11,7 @@ from . import cite
 from . import corpus
 from . import fields as _fields
 from . import graph
+from . import history
 from . import portal as _portal
 from . import resolve as _resolve
 from . import write as _write
@@ -141,21 +142,9 @@ def _value(value, unit):
     return ", ".join(f"{member}{suffix}" for member in value)
 
 
-# @req> REQ-73719888@SQkvdemRTgC1 jqij5p
-def _plain(value):
-    if isinstance(value, dict):
-        return ", ".join(f"{name} ({_plain(held)})" if isinstance(held, dict)
-                         else f"{name}: {_plain(held)}"
-                         for name, held in value.items())
-    if isinstance(value, list):
-        return ", ".join(f"({_plain(member)})" if isinstance(member, dict)
-                         else _plain(member) for member in value)
-    return "null" if value is None else _write.entry_key(value)
-
-
 def _entry_fields(fields):
     # @req> REQ-73719888@SQkvdemRTgC1 3wgrmj
-    return ", ".join(f"{name}: {_plain(value)}"
+    return ", ".join(f"{name}: {corpus.plain(value)}"
                      for name, value in (fields or {}).items())
 
 
@@ -176,7 +165,7 @@ def _entry_lines(key, fields, depth=0, anchor=None):
             held += _entry_lines(name, value, depth + 1)
         else:
             # @req> REQ-73719888@SQkvdemRTgC1 g5txax
-            held.append(f"{'  ' * (depth + 1)}- {name}: {_plain(value)}")
+            held.append(f"{'  ' * (depth + 1)}- {name}: {corpus.plain(value)}")
     return held
     # @req- s5nw3l
 
@@ -192,14 +181,14 @@ def _render(fields, order=None):
             continue
         if isinstance(value, dict):
             value = "; ".join(
-                f"{name} -- {_entry_fields(held) if isinstance(held, dict) else _plain(held)}"
+                f"{name} -- {_entry_fields(held) if isinstance(held, dict) else corpus.plain(held)}"
                 if held else str(name)
                 for name, held in value.items()
             )
         if isinstance(value, list):
-            value = ", ".join(_criterion(v) if isinstance(v, dict) else _plain(v)
+            value = ", ".join(_criterion(v) if isinstance(v, dict) else corpus.plain(v)
                               for v in value)
-        lines.append(f"{key.replace('_', ' '):<{width}}  {_plain(value)}")
+        lines.append(f"{key.replace('_', ' '):<{width}}  {corpus.plain(value)}")
     return "\n".join(lines)
 
 
@@ -360,10 +349,13 @@ def _resolved(text, store):
 def cmd_export(args):
     tree, root = corpus.load()
     wanted = None if args.all else "approved"
+    past = history.History(root)
     if args.json:
         held = {str(item.uid): dict(corpus.raw(item))
                 for item in corpus.items(tree)}
-        print(json.dumps({uid: data for uid, data in sorted(held.items())
+        # @req> REQ-82027237@R-XinrGfTNzL ntmmgk
+        print(json.dumps({uid: {**data, "last_updated": past.updated(uid, data)}
+                          for uid, data in sorted(held.items())
                           if not wanted or data.get("status") == wanted},
                          indent=2, default=str))
         return EXIT_OK
@@ -400,6 +392,9 @@ def cmd_export(args):
         # @req- 6drjr2
         lines.append(f'<a id="{uid}"></a>')
         lines.append(f"## {uid}")
+        # @req> REQ-59306961@EGz7Ll3e9FKA dtr4za
+        # @req> REQ-82027237@R-XinrGfTNzL 3adxsp
+        lines.append(f"- last updated: {past.updated(uid, stored) or 'unknown'}")
         # @req> REQ-22770949@2z1l08YISr1R okkskg
         marks = "".join(f'<a id="{uid}.{key}"></a>'
                         for key in corpus.entries(data) or {}
@@ -468,12 +463,30 @@ def cmd_export(args):
 def _behind(row, data):
     if row is None:
         return ""
+    # @req> REQ-24608716@rrTjNN2Ay0D0 4lmsbv
     if row["pinned"]:
-        return f"   SUSPECT -- pinned @{row['pinned']}, now @{row['held']}"
+        return "\n    ".join([f"   SUSPECT -- pinned @{row['pinned']}, now @{row['held']}",
+                              *history.lines(row["then"], row["now"])])
     return "   SUSPECT -- no stamp; cite it again with reqctl tag"
 
 
-def _context(store, item, dependents, tags):
+# @req> REQ-24608716@rrTjNN2Ay0D0 o2outx
+def _pins(store, past, binder, addresses):
+    pins = corpus.mapping(binder.data, "assessed")
+    return [{"address": address, "pinned": pins.get(address),
+             **past.pinned(bound.uid, bound.data, rest, pins.get(address))}
+            for address in addresses if corpus.is_suspect(store, binder, address)
+            for target, rest in [corpus.split_address(address)]
+            for bound in [corpus.find(store, target)]]
+
+
+# @req> REQ-24608716@rrTjNN2Ay0D0 3c5yr2
+def _shown_pins(row):
+    return "".join(f"\n    {line}" for pin in row.get("pins", ())
+                   for line in history.lines(pin["then"], pin["now"]))
+
+
+def _context(store, item, dependents, tags, past):
     uid = item.uid
     kinds = corpus.mapping(item.data, "relations")
     pins = corpus.mapping(item.data, "assessed")
@@ -491,7 +504,7 @@ def _context(store, item, dependents, tags):
             entry.update(suspect=True, missing=True)
         else:
             entry.update(suspect=corpus.is_suspect(store, item, target),
-                         missing=False)
+                         missing=False, pins=_pins(store, past, item, [target]))
         outgoing.append(entry)
 
     incoming = [
@@ -500,6 +513,7 @@ def _context(store, item, dependents, tags):
             "relation": corpus.mapping(other.data, "relations").get(uid)
             or "references",
             "suspect": corpus.is_suspect(store, other, uid),
+            "pins": _pins(store, past, other, [uid]),
         }
         for other in dependents.get(uid, ()) if other.uid != uid
     ]
@@ -523,7 +537,9 @@ def _context(store, item, dependents, tags):
                          missing=False,
                          suspect=any(corpus.is_suspect(store, item, pin)
                                      for pin in corpus.expand_address(
-                                         lookup, address)))
+                                         lookup, address)),
+                         pins=_pins(store, past, item, sorted(
+                             corpus.expand_address(lookup, address))))
         parameters.append(entry)
 
     concepts = []
@@ -541,7 +557,8 @@ def _context(store, item, dependents, tags):
         else:
             entry.update(word=held[0], definition=held[1],
                          status=fields.get("status"), missing=False,
-                         suspect=corpus.is_suspect(store, item, address))
+                         suspect=corpus.is_suspect(store, item, address),
+                         pins=_pins(store, past, item, [address]))
         concepts.append(entry)
 
     # @req> REQ-19896380@lvCPXiVYZ6ud 7iy6c4
@@ -549,15 +566,21 @@ def _context(store, item, dependents, tags):
              if not corpus.is_test(path)]
     references = list(dict.fromkeys(path for path, _ in cited))
     described = _describe(store, item)
+    # @req> REQ-24608716@rrTjNN2Ay0D0 2texd5
     behind = {
         path: {"path": path, "pinned": pinned or None,
-               "held": corpus.tag_stamp(described["stamp"])}
+               "held": corpus.tag_stamp(described["stamp"]),
+               **past.cited(uid, item.data, None, pinned or None)}
         for path, pinned in cited
         if uid.startswith(("REQ-", "GUARD-"))
         and pinned != corpus.tag_stamp(described["stamp"])
     }
+    # @req> REQ-73390844@n9jY7LpISW2S s7yx36
+    # @req> REQ-82027237@R-XinrGfTNzL d3gygm
+    updated = past.updated(uid, item.data)
     data = {
         **described,
+        "last_updated": updated,
         "outgoing": outgoing,
         "incoming": incoming,
         "parameters": parameters,
@@ -576,7 +599,9 @@ def _context(store, item, dependents, tags):
             store.root,
         )
 
-    blocks = [_render(described)]
+    # @req> REQ-59306961@EGz7Ll3e9FKA yoxktl
+    # @req> REQ-82027237@R-XinrGfTNzL wmao62
+    blocks = [_render({**described, "last_updated": updated or "unknown"})]
     linked = (
         ("parameters", "parameter", parameters,
          lambda r: f"{r['name']} = {_value(r['value'], r['unit'])}"),
@@ -594,6 +619,7 @@ def _context(store, item, dependents, tags):
                        if r["status"] != "approved" else "")
                     + ("   SUSPECT -- reread, then revise "
                        f"{uid} --ack {r['uid']}" if r["suspect"] else "")
+                    + _shown_pins(r)
                     for r in rows
                 )
             )
@@ -605,6 +631,7 @@ def _context(store, item, dependents, tags):
                 + ("   MISSING -- no such item" if r["missing"]
                    else "   SUSPECT -- reassess before implementing" if r["suspect"]
                    else "")
+                + _shown_pins(r)
                 for r in outgoing
             )
         )
@@ -614,6 +641,7 @@ def _context(store, item, dependents, tags):
             + "\n".join(
                 f"  {r['source']} {r['relation']}"
                 f"{'   SUSPECT' if r['suspect'] else ''}"
+                + _shown_pins(r)
                 for r in incoming
             )
         )
@@ -646,11 +674,12 @@ def cmd_context(args):
                        for a in corpus.dependencies(other.data)}:
             dependents.setdefault(target, []).append(other)
 
+    past = history.History(root)
     rows = []
     for uid in dict.fromkeys(args.uid):
         try:
             rows.append(_context(store, corpus.find(store, uid),
-                                 dependents, tags))
+                                 dependents, tags, past))
         except ReqctlError as fault:
             rows.append(({"uid": uid, "error": str(fault)},
                          _render({"uid": uid, "unreadable": str(fault)})))
@@ -712,8 +741,9 @@ def cmd_list(args):
         raise ReqctlError("--in reads prose for what an item fixes -- the "
                           "words a term defines, the value a parameter holds; "
                           "it applies to `list term` and `list parameter` alone")
-    store, _ = corpus.load()
+    store, root = corpus.load()
     occurring = _occurring(store, args.within, args.kind) if args.within else None
+    past = history.History(root)
     rows = []
     for item in corpus.items(store):
         uid = str(item.uid)
@@ -721,7 +751,9 @@ def cmd_list(args):
         kind = corpus.kind_of(uid, data)
         if args.kind and kind != args.kind:
             continue
+        # @req> REQ-82027237@R-XinrGfTNzL fudp2r
         rows.append({"uid": uid, "kind": kind, "status": data.get("status"),
+                     "last_updated": past.updated(uid, data),
                      "handle": _handle(uid, data)})
     if occurring is not None:
         rows = [{**row, "matched": occurring[row["uid"]]}
@@ -736,12 +768,16 @@ def cmd_list(args):
               + (f" occurring in {args.within}" if args.within else ""))
         return EXIT_OK
     width = max(len(r["status"] or "") for r in rows)
+    dated = max(len(r["last_updated"] or "unknown") for r in rows)
     for row in rows:
         handle = row["handle"]
         if row["kind"] != "term" and len(handle) > 72:
             handle = handle[:71] + "…"
         suffix = "  -- " + ", ".join(row["matched"]) if occurring is not None else ""
-        print(f"{row['uid']}  {(row['status'] or ''):<{width}}  {handle}{suffix}")
+        # @req> REQ-59306961@EGz7Ll3e9FKA 6zyhtu
+        # @req> REQ-82027237@R-XinrGfTNzL e6npos
+        print(f"{row['uid']}  {(row['status'] or ''):<{width}}  "
+              f"{row['last_updated'] or 'unknown':<{dated}}  {handle}{suffix}")
     return EXIT_OK
 
 
@@ -786,9 +822,11 @@ def cmd_trace(args):
         if data["stale"]:
             print("\nbehind the corpus", file=sys.stderr)
             for row in data["stale"]:
+                # @req> REQ-24608716@rrTjNN2Ay0D0 zfc5eh
                 print(f"  {row['uid']}  {row['path']}  "
                       f"pinned @{row['pinned']}, now @{row['held']}",
-                      file=sys.stderr)
+                      *history.lines(row["then"], row["now"]),
+                      sep="\n    ", file=sys.stderr)
         if data["problems"]:
             print("\n".join(data["problems"]), file=sys.stderr)
     return EXIT_INVALID if data["problems"] or data["stale"] else EXIT_OK

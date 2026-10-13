@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from . import cite, corpus
+from . import cite, corpus, history
 
 
 def unstamped(uid, path):
@@ -92,6 +92,7 @@ def trace(tree, root, uid=None):
     if uid:
         corpus.find(tree, uid)
     known = {str(item.uid) for item in corpus.items(tree)}
+    past = history.History(root)
 
     rows, problems, unimplemented, stale, deprecated = [], list(cited_problems), [], [], []
     # @req> REQ-19896380@lvCPXiVYZ6ud aes6o5
@@ -152,8 +153,10 @@ def trace(tree, root, uid=None):
                 if not pinned:
                     problems.append(unstamped(address, path))
                 elif pinned != held:
+                    # @req> REQ-24608716@rrTjNN2Ay0D0 ofe7e3
                     stale.append({"uid": address, "path": path,
-                                  "pinned": pinned, "held": held})
+                                  "pinned": pinned, "held": held,
+                                  **past.cited(current, data, entry, pinned)})
         # @req> REQ-73027720@2Z15jgYQYfsS 3aqkc5
         if current.startswith(("REQ-", "GUARD-")) and not files:
             unimplemented.append(current)
