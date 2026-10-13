@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  ears_fault:
+    definition: The fault validate states for a statement whose text does not take
+      one of the five forms, naming each way the text fails.
+    word: EARS fault
+kind: term
+status: approved
