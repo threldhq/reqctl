@@ -43,7 +43,7 @@ def cmd_new(args):
 
 def cmd_lint(args):
     store, _ = corpus.load()
-    # @req> REQ-85308584@wEdh_1cW2eGE sri72v
+    # @req> REQ-85308584@4lLbQIsexIid sri72v
     uid, _, _, problems = _write.prepare(store, args.kind, vars(args),
                                          placeholder="draft")
     faults = [problem.removeprefix(f"{uid}: ") for problem in problems]

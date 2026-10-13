@@ -371,7 +371,7 @@ def _strings(node, at=()):
         yield at, node
 
 
-# @req> REQ-79956352@NXkZ4OmQ3Qb4 5uqc7i
+# @req> REQ-79956352@OsoTGRd6D5CZ 5uqc7i
 def hidden_values(uid, data):
     problems = []
     for at, said in _strings(data):
@@ -420,7 +420,7 @@ def _relations(uid, data, records, canonical, known):
 
 def _references(uid, data, known, root):
     problems = []
-    # @req+ REQ-44791607@x6AI0pz32jQK e5vzf6
+    # @req+ REQ-44791607@6FX5SSp9MG3B e5vzf6
     for address in corpus.references(data):
         target, _ = corpus.split_address(address)
         if target not in known:
