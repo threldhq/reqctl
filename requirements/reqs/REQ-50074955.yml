@@ -1,0 +1,41 @@
+acceptance_criteria:
+- given: a run holding the [proposal](proposal) file numbered 23 and a criteria record
+    keyed 023
+  then: the product reads the key as [proposal](proposal) 23
+  when: the run is built
+- given: a run holding the [proposal](proposal) file numbered 29 and a trace record
+    keyed 029
+  then: the product reads the key as [proposal](proposal) 29
+  when: the run is built
+- given: a run holding the [proposal](proposal) file numbered 31 and a criteria record
+    keyed "031"
+  then: the product reads the key as [proposal](proposal) 31
+  when: the run is built
+- given: a run whose binds record names [proposal](proposal) 037 under a dimension
+  then: the product reads it as [proposal](proposal) 37
+  when: the run is built
+- given: a run whose criteria record holds keys 041 and 41
+  then: the product refuses the run, naming [proposal](proposal) 41 as recorded twice
+  when: the run is built
+- given: a run whose criteria record holds a key written as zeros alone
+  then: the product refuses the run, the key naming no [proposal](proposal) the run
+    holds
+  when: the run is built
+assessed:
+  REQ-30554264: 6JOa752EzDE98GVpXBBm7XwnkzVgAEdjtMiYA9JGY28
+  REQ-71318073: StYqTfNyHE39xNB_o32oSRu9hfvgSyDm3_zf_qYNzWk
+  REQ-83085784: mB9K6Zw3dGnCXK5mxm-UR8Il9iIXx-NWzPNAVBstG30
+  REQ-92272837: JyGx2T7SRoWI8u23WkwmJhfiqhzEKABhxytHnuwiNJo
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+priority: medium
+relations:
+  REQ-30554264: constrains
+  REQ-71318073: constrains
+  REQ-83085784: constrains
+  REQ-92272837: constrains
+status: approved
+text: When a run's run.yaml names a [proposal](proposal) by a number written with
+  leading zeros, quoted or bare, the product shall read the number as the [proposal](proposal)
+  whose number it states in decimal.
+type: functional
+verification: inspection

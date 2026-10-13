@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a Python file beginning with a UTF-8 byte order mark
+  then: the file begins with the byte order mark and the comment follows it
+  when: reqctl tag cites its first line
+- given: a file beginning with a UTF-8 byte order mark whose first line is a comment
+    carrying a [statement citation](statement_citation)
+  then: the file begins with the byte order mark
+  when: reqctl untag removes that comment
+- given: a file beginning with a UTF-8 byte order mark and carrying a [statement citation](statement_citation)
+  then: the file begins with the byte order mark
+  when: reqctl repin rewrites it
+assessed:
+  REQ-17757558: XeiCnIpn4RLV2GwR8uJ2KMrHN9PP5mIqDMmTRKxZS8s
+  REQ-81275367: 2q0tIHQCM4br59gvDPycGTyQnW3E_1HGUty3T2rg1bU
+  REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-17757558: derives_from
+  REQ-81275367: constrains
+  REQ-89706423: constrains
+status: approved
+text: When reqctl tag, repin or untag writes a file of the [code base](code_base)
+  that begins with a UTF-8 byte order mark, the product shall keep the byte order
+  mark as the first bytes of the file.
+type: functional
+verification: inspection

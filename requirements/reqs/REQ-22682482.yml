@@ -1,0 +1,37 @@
+acceptance_criteria:
+- given: a [data item](data_item) whose fields list names quantity
+  then: the product refuses, naming quantty and the fields the [data item](data_item)
+    lists
+  when: reqctl revise gives an [entry](entry) a field named quantty
+- given: a [data item](data_item) whose [entries](entry) hold only fields the [kind
+    schema](kind_schema) declares by name, and which states no fields list
+  then: the product accepts the [data item](data_item)
+  when: the corpus is validated
+- given: a [data item](data_item) whose [entry](entry) holds a field model that its
+    fields list does not name
+  then: the product refuses the [data item](data_item), naming model
+  when: the corpus is validated
+- given: a [data item](data_item) whose fields list names a field the [kind schema](kind_schema)
+    forbids
+  then: the product refuses the field as the [kind schema](kind_schema) does not admit
+    it
+  when: the corpus is validated
+assessed:
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-33359142: u8vbxFMjrV6ZEjaoq9bwThPUP1_QAfMn21fCFwgd1Lc
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-13148397: depends_on
+  REQ-33359142: derives_from
+  REQ-44451070: depends_on
+status: approved
+text: If an [entry](entry) of a [data item](data_item) holds a field that the [kind
+  schema](kind_schema) does not declare by name and that the [data item](data_item)
+  does not name in its own list of the fields its [entries](entry) hold, then the
+  product shall refuse the [data item](data_item), naming the field.
+type: functional
+verification: inspection

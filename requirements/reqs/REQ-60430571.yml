@@ -1,23 +1,36 @@
 acceptance_criteria:
 - given: an unapproved [item](item) that the baseline the default branch carries does
-    not state and other [items](item) reach
-  then: the product refuses and names every [item](item) that reaches the unapproved
-    [item](item)
+    not state and toward which other [items](item) record a link, a reference or a
+    [pin](pin)
+  then: the product refuses and names every [item](item) recording a link, a reference
+    or a [pin](pin) toward it
   when: removal of the unapproved [item](item) is requested
 - given: an unapproved [item](item) that the working tree's baseline does not state
-    and other [items](item) reach, in a repository with no remote named origin
-  then: the product refuses and names every [item](item) that reaches the unapproved
-    [item](item)
+    and toward which other [items](item) record a link, a reference or a [pin](pin),
+    in a repository with no remote named origin
+  then: the product refuses and names every [item](item) recording a link, a reference
+    or a [pin](pin) toward it
+  when: removal of the unapproved [item](item) is requested
+- given: an unapproved [item](item) that the baseline the default branch carries does
+    not state, and a requirement holding a [pin](pin) toward it with no link or reference
+    beside it
+  then: the product refuses and names the requirement
+  when: removal of the unapproved [item](item) is requested
+- given: an unapproved [item](item) that the baseline the default branch carries does
+    not state, linked by a term link in another [item](item)'s prose and by nothing
+    else
+  then: the product refuses and names the linking [item](item)
   when: removal of the unapproved [item](item) is requested
 assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
   ebwpu6: kR_SMkevH20GGPUXXiamNop4DzqfnxNthuo51KZPaLg
 priority: medium
 relations: {}
 status: approved
 text: If a request would remove an unapproved [item](item) that the baseline the default
-  branch carries does not state and another [item](item) reaches, then the product
-  shall refuse the removal.
+  branch carries does not state and toward which another [item](item) records a link,
+  a reference or a [pin](pin), then the product shall refuse the removal.
 type: functional
 verification: inspection

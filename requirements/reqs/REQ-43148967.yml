@@ -4,11 +4,12 @@ acceptance_criteria:
   when: removal of an [item](item) is requested
 - given: a corpus in which validation finds no problem
   then: the product removes the [item](item)
-  when: removal of an unapproved [item](item) no baseline states and no other [item](item)
-    reaches is requested
+  when: removal of an unapproved [item](item) no baseline states, and toward which
+    no other [item](item) records a link, a reference or a [pin](pin), is requested
 assessed:
-  REQ-42065260: GlmgQoAFl-DjAmYIcL3NXD0KEk1j18_rK-iA7rGYx1Y
+  REQ-42065260: tSlWvFBjE0qfpzFgfr2u3uWle8JUvjQjsYQUlqE__gs
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
   nghnwd: 08EpaWpDuYniZJFhc0LhqVPhMa7djQO4naIz3PNwSm8
 priority: medium
