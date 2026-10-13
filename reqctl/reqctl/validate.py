@@ -748,11 +748,11 @@ def _assessed(uid, data, records, canonical, known, past):
         # @req> REQ-42390302@QOC4GhS7SkFg w3y4p3
         if past and (not isinstance(pinned, str) or pinned != held):
             # @req> REQ-24608716@rrTjNN2Ay0D0 bzyf37
-            problems.append("\n  ".join([
-                (f"{uid}: suspect link: {target} -- reread both, then "
-                 "`reqctl relate` a requirement or `reqctl revise "
-                 f"{uid} --ack` the rest to pin it"),
-                *history.lines(**past.pinned(stamped, records[stamped], rest, pinned))]))
+            problems.append(
+                f"{uid}: suspect link: {target} -- reread both, then "
+                "`reqctl relate` a requirement or `reqctl revise "
+                f"{uid} --ack` the rest to pin it"
+                + history.lines(past.pinned(stamped, records[stamped], rest, pinned)))
     return problems
 
 
@@ -1623,8 +1623,8 @@ def run(root, exempt=None):
     return problems + corpus_checks(records, root, paths, exempt)
 
 
-def item_problems(root, uid, path, data, records, reachable, known, broken=(),
-                  suspect=None):
+def item_problems(root, uid, path, data, records, reachable, known, broken=(), *,
+                  suspect):
     # @req+ REQ-42390302@QOC4GhS7SkFg igyueu
     problems = _guarded(uid, _identity, root, path, data)
     try:

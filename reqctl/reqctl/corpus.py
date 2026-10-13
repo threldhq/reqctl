@@ -577,14 +577,7 @@ def addressable(records):
 
 
 def stamp_of(uid, data):
-    # @req> REQ-54851939@n6YOz94UUTn7 4jhey4
-    if uid.startswith(("REQ-", "GUARD-")):
-        return digest([uid, {k: data.get(k) for k in STATEMENT_STAMPED}])
-    # @req+ REQ-56581795@ZHEasHzzTZLC s7alzx
-    if kind_of(uid, data) == "term":
-        return _term_digest(uid, term_fields(data))
-    return digest([uid, {k: data.get(k) for k in ITEM_STAMPED}])
-    # @req- s7alzx
+    return digest([uid, covered(uid, data)])
 
 
 def _term_digest(uid, fields):
@@ -659,11 +652,14 @@ def stamp_at(item, entry_key=None):
 # @req> REQ-24608716@rrTjNN2Ay0D0 kzig7g
 def covered(uid, data, entry_key=None):
     if entry_key is None:
+        # @req> REQ-54851939@n6YOz94UUTn7 njypn2
         if uid.startswith(("REQ-", "GUARD-")):
             return {key: data.get(key) for key in STATEMENT_STAMPED}
+        # @req+ REQ-56581795@ZHEasHzzTZLC ixanwu
         if kind_of(uid, data) == "term":
             return {"definition": term_fields(data).get("definition")}
         return {key: data.get(key) for key in ITEM_STAMPED}
+        # @req- ixanwu
     if entry_key == MEMBERS:
         return {"entries": entries(data) or {}}
     held = flagged(data, entry_key)
@@ -694,7 +690,7 @@ def cited_stamp(item, entry=None):
 
 
 # @req> REQ-24608716@rrTjNN2Ay0D0 ayt44q
-def cited_fields(uid, data, entry=None):
+def cited_fields(uid, data, entry):
     held = covered(uid, data)
     if entry or kind_of(uid, data) in ("parameter", "data"):
         held |= covered(uid, data, entry or MEMBERS)

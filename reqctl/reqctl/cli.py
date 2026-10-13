@@ -465,25 +465,25 @@ def _behind(row, data):
         return ""
     # @req> REQ-24608716@rrTjNN2Ay0D0 4lmsbv
     if row["pinned"]:
-        return "\n    ".join([f"   SUSPECT -- pinned @{row['pinned']}, now @{row['held']}",
-                              *history.lines(row["then"], row["now"])])
+        return (f"   SUSPECT -- pinned @{row['pinned']}, now @{row['held']}"
+                + history.lines(row))
     return "   SUSPECT -- no stamp; cite it again with reqctl tag"
 
 
 # @req> REQ-24608716@rrTjNN2Ay0D0 o2outx
 def _pins(store, past, binder, addresses):
     pins = corpus.mapping(binder.data, "assessed")
-    return [{"address": address, "pinned": pins.get(address),
+    held = [{"address": address, "pinned": pins.get(address),
              **past.pinned(bound.uid, bound.data, rest, pins.get(address))}
             for address in addresses if corpus.is_suspect(store, binder, address)
             for target, rest in [corpus.split_address(address)]
             for bound in [corpus.find(store, target)]]
+    return {"suspect": bool(held), "pins": held}
 
 
 # @req> REQ-24608716@rrTjNN2Ay0D0 3c5yr2
 def _shown_pins(row):
-    return "".join(f"\n    {line}" for pin in row.get("pins", ())
-                   for line in history.lines(pin["then"], pin["now"]))
+    return "".join(history.lines(pin) for pin in row.get("pins", ()))
 
 
 def _context(store, item, dependents, tags, past):
@@ -503,8 +503,7 @@ def _context(store, item, dependents, tags, past):
         except ReqctlError:
             entry.update(suspect=True, missing=True)
         else:
-            entry.update(suspect=corpus.is_suspect(store, item, target),
-                         missing=False, pins=_pins(store, past, item, [target]))
+            entry.update(missing=False, **_pins(store, past, item, [target]))
         outgoing.append(entry)
 
     incoming = [
@@ -512,8 +511,7 @@ def _context(store, item, dependents, tags, past):
             "source": other.uid,
             "relation": corpus.mapping(other.data, "relations").get(uid)
             or "references",
-            "suspect": corpus.is_suspect(store, other, uid),
-            "pins": _pins(store, past, other, [uid]),
+            **_pins(store, past, other, [uid]),
         }
         for other in dependents.get(uid, ()) if other.uid != uid
     ]
@@ -534,11 +532,7 @@ def _context(store, item, dependents, tags, past):
                          value=sorted(held) if held is not None
                          else _dict_value(fields),
                          unit=fields.get("unit"), status=fields.get("status"),
-                         missing=False,
-                         suspect=any(corpus.is_suspect(store, item, pin)
-                                     for pin in corpus.expand_address(
-                                         lookup, address)),
-                         pins=_pins(store, past, item, sorted(
+                         missing=False, **_pins(store, past, item, sorted(
                              corpus.expand_address(lookup, address))))
         parameters.append(entry)
 
@@ -557,8 +551,7 @@ def _context(store, item, dependents, tags, past):
         else:
             entry.update(word=held[0], definition=held[1],
                          status=fields.get("status"), missing=False,
-                         suspect=corpus.is_suspect(store, item, address),
-                         pins=_pins(store, past, item, [address]))
+                         **_pins(store, past, item, [address]))
         concepts.append(entry)
 
     # @req> REQ-19896380@lvCPXiVYZ6ud 7iy6c4
@@ -743,7 +736,7 @@ def cmd_list(args):
                           "it applies to `list term` and `list parameter` alone")
     store, root = corpus.load()
     occurring = _occurring(store, args.within, args.kind) if args.within else None
-    past = history.History(root)
+    past = history.History(root, [args.kind] if args.kind else corpus.FOLDERS)
     rows = []
     for item in corpus.items(store):
         uid = str(item.uid)
@@ -824,9 +817,8 @@ def cmd_trace(args):
             for row in data["stale"]:
                 # @req> REQ-24608716@rrTjNN2Ay0D0 zfc5eh
                 print(f"  {row['uid']}  {row['path']}  "
-                      f"pinned @{row['pinned']}, now @{row['held']}",
-                      *history.lines(row["then"], row["now"]),
-                      sep="\n    ", file=sys.stderr)
+                      f"pinned @{row['pinned']}, now @{row['held']}"
+                      + history.lines(row), file=sys.stderr)
         if data["problems"]:
             print("\n".join(data["problems"]), file=sys.stderr)
     return EXIT_INVALID if data["problems"] or data["stale"] else EXIT_OK

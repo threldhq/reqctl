@@ -53,10 +53,9 @@ def stale(data):
                   else f"reqctl tag {row['path']} --req {row['uid']}")
         # @req> REQ-24608716@rrTjNN2Ay0D0 otzu27
         rows.append((identity, row["path"], f"{row['uid']}@{row['pinned']} {identity}",
-                     "\n    ".join([
-                         (f"{row['uid']}: {row['path']} pinned @{row['pinned']}, now "
-                          f"@{row['held']} -- read it against {row['uid']}, then {remedy}"),
-                         *history.lines(row["then"], row["now"])])))
+                     f"{row['uid']}: {row['path']} pinned @{row['pinned']}, now "
+                     f"@{row['held']} -- read it against {row['uid']}, then {remedy}"
+                     + history.lines(row)))
     return rows
 
 
