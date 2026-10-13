@@ -13,15 +13,27 @@ acceptance_criteria:
     to no [item](item)
   then: the product refuses and names the reference or the link
   when: the corpus is validated
+- given: an [item](item) whose prose carries a reference or a link that resolves to
+    no [item](item) the corpus holds
+  then: the product refuses nothing for the reference or the link
+  when: reqctl revise writes the [item](item), restating that reference or link
+- given: an [item](item) whose prose carries a reference or a link that resolves to
+    no [item](item) the corpus holds
+  then: the product refuses nothing for the reference or the link
+  when: reqctl refile --into writes the [item](item), that reference or link unchanged
 assessed:
+  REQ-42390302: QOC4GhS7SkFgNUySBJec_QcZkx_27rINTsnxqVsDklQ
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   e5vzf6: IrcQjQ1IKPch-6BgeHdEmPM18tw1b67dRqLcMIurIUs
   mtmaxs: zNKzg36njUg1YO9-6DAybhPqmt1E7AvnJj_6bO71Hdw
 priority: medium
-relations: {}
+relations:
+  REQ-42390302: constrains
 status: approved
 text: If an [item](item)'s prose carries a reference or a link that resolves to no
-  [item](item) the corpus holds, then the product shall refuse the prose.
+  [item](item) the corpus holds, other than a reference or a link that reqctl new,
+  revise or refile --into writes into an [item](item) already carrying that same reference
+  or link, then the product shall refuse the prose.
 type: functional
 verification: inspection
