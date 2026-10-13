@@ -14,7 +14,18 @@ acceptance_criteria:
 - given: a corpus holding an [item](item) whose value carries a hidden character
   then: the product refuses the corpus, naming the [item](item) and the field
   when: the corpus is validated
+- given: an [item](item) whose value carries a hidden character
+  then: the product refuses nothing for the hidden character
+  when: reqctl revise writes the [item](item), restating that value
+- given: an [item](item) whose value carries a hidden character
+  then: the product refuses nothing for the hidden character
+  when: reqctl refile --into writes the [item](item), that value unchanged
+- given: an [item](item) whose value carries a hidden character
+  then: the product refuses the value
+  when: reqctl revise writes a different value carrying a hidden character into the
+    same field
 assessed:
+  REQ-42390302: QOC4GhS7SkFgNUySBJec_QcZkx_27rINTsnxqVsDklQ
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   5uqc7i: uilDK5klmLG6MMqTPvSDk_j0aFuf-iFPFm9UcqeDu7k
@@ -26,8 +37,11 @@ citations:
   qldnjy: FJBtPTT-fQ2Oc_AvdU72GTA-AFyw7zHhpUM98L93Ajc
   uafjgl: axv-7qu9xVUwXCQZNUxyqxwjhB4JBMJ67Run4pirmso
 priority: medium
-relations: {}
+relations:
+  REQ-42390302: constrains
 status: approved
-text: If a value carries a hidden character, then the product shall refuse the value.
+text: If a value carries a hidden character, other than a value that reqctl new, revise
+  or refile --into writes into an [item](item) already carrying that same value, then
+  the product shall refuse the value.
 type: functional
 verification: inspection
