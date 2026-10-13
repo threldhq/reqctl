@@ -5,20 +5,16 @@ from . import corpus
 from .corpus import FOLDERS, ReqctlError
 
 
-def _git(root, *args, given=b""):
+def _git(root, *args, given=b"", absent=None):
     try:
-        return subprocess.run(["git", *args], cwd=root, input=given,
-                              capture_output=True, check=False)
+        found = subprocess.run(["git", *args], cwd=root, input=given,
+                               capture_output=True, check=False)
     except OSError as error:
         raise ReqctlError(f"cannot run git: {error.strerror}") from error
-
-
-def _read(root, *args, given=b""):
-    found = _git(root, *args, given=given)
-    if found.returncode:
+    if found.returncode not in (0, absent):
         raise ReqctlError(f"cannot read the history: git {args[0]} -- "
                           f"{found.stderr.decode(errors='replace').strip()}")
-    return found.stdout
+    return None if found.returncode else found.stdout
 
 
 def _uid(path):
@@ -35,14 +31,18 @@ def carried(uid, data):
         key: corpus.entry_stamp_of(uid, data, key) for key in corpus.entries(data) or {}}
 
 
+def _flat(value):
+    return " ".join(corpus.plain(value).splitlines())
+
+
 # @req> REQ-50929621@tSdGG-tCMu8G dvvyvi
 # @req> REQ-24608716@rrTjNN2Ay0D0 w7fcu5
 def lines(then, now):
     width = max(len(key) for key in now)
     return [line for key, held in now.items() for line in (
         f"{key.replace('_', ' '):<{width}}  pinned  "
-        + ("unknown" if then is None else corpus.plain(then.get(key))),
-        f"{'':<{width}}  now     {corpus.plain(held)}")]
+        + ("unknown" if then is None else _flat(then.get(key))),
+        f"{'':<{width}}  now     {_flat(held)}")]
 
 
 class History:
@@ -57,20 +57,20 @@ class History:
     def _load(self):
         if self._rows is not None:
             return
-        if _git(self.root, "rev-parse", "-q", "--verify", "HEAD").returncode:
+        if _git(self.root, "rev-parse", "-q", "--verify", "HEAD", absent=1) is None:
             self._rows = {}
             return
         folders = [f"requirements/{folder}" for folder in FOLDERS.values()]
         # @req+ REQ-59306961@EGz7Ll3e9FKA dm7ihn
-        shallow = Path(self.root) / _read(self.root, "rev-parse", "--git-path",
-                                          "shallow").decode().strip()
+        shallow = Path(self.root) / _git(self.root, "rev-parse", "--git-path",
+                                         "shallow").decode().strip()
         grafted = set(shallow.read_text().split()) if shallow.is_file() else set()
         # @req- dm7ihn
         rows, commit = {}, None
         # @req+ REQ-82027237@R-XinrGfTNzL efmrhh
-        for line in _read(self.root, "log", "-c", "--raw", "--root", "--no-renames",
-                          "--no-abbrev", "--format=%H %ct %cI", "HEAD", "--",
-                          *folders).decode(errors="replace").splitlines():
+        for line in _git(self.root, "log", "-c", "--raw", "--root", "--no-renames",
+                         "--no-abbrev", "--format=%H %ct %cI", "HEAD", "--",
+                         *folders).decode(errors="replace").splitlines():
             if not line.startswith(":"):
                 if line:
                     sha, when, iso = line.split()
@@ -91,16 +91,16 @@ class History:
                    for uid, held in rows.items()}
         # @req- efmrhh
         head = {}
-        for line in _read(self.root, "ls-tree", "-r", "HEAD", "--",
-                          *folders).decode(errors="replace").splitlines():
+        for line in _git(self.root, "ls-tree", "-r", "HEAD", "--",
+                         *folders).decode(errors="replace").splitlines():
             meta, _, path = line.partition("\t")
             uid = _uid(path)
             if uid is not None:
                 head[uid] = meta.split()[2]
         wanted = sorted({sha for held in ordered.values() for row in held
                          for sha in (row[3], *row[4]) if sha} | set(head.values()))
-        out = _read(self.root, "cat-file", "--batch",
-                    given="".join(f"{sha}\n" for sha in wanted).encode())
+        out = _git(self.root, "cat-file", "--batch",
+                   given="".join(f"{sha}\n" for sha in wanted).encode())
         at = 0
         for sha in wanted:
             end = out.index(b"\n", at)
