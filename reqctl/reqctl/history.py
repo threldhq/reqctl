@@ -49,7 +49,7 @@ class History:
     def __init__(self, root, kinds=FOLDERS):
         self.root = root
         self.folders = [f"requirements/{FOLDERS[kind]}" for kind in kinds]
-        self._rows, self._head, self._dirty = None, {}, set()
+        self._rows, self._head = None, {}
         self._blobs, self._parsed, self._states = {}, {}, {}
 
     def _load(self):
@@ -65,8 +65,9 @@ class History:
         # @req- dm7ihn
         rows, commit = {}, None
         # @req+ REQ-82027237@R-XinrGfTNzL efmrhh
-        for line in _git(self.root, "log", "-c", "--raw", "--root", "--no-renames",
-                         "--no-abbrev", "--format=%H %ct %cI", "HEAD", "--",
+        for line in _git(self.root, "log", "--full-history", "--no-show-signature", "-c",
+                         "--raw", "--root", "--no-renames", "--no-abbrev",
+                         "--format=%H %ct %cI", "HEAD", "--",
                          *self.folders).decode(errors="replace").splitlines():
             if not line.startswith(":"):
                 if line:
@@ -91,9 +92,6 @@ class History:
             line.partition("\t") for line in _git(
                 self.root, "ls-tree", "-r", "HEAD", "--",
                 *self.folders).decode(errors="replace").splitlines())}
-        dirty = {_uid(path) for path in _git(
-            self.root, "diff-index", "--name-only", "HEAD", "--",
-            *self.folders).decode(errors="replace").splitlines()}
         wanted = {sha for held in ordered.values() for row in held
                   for sha in (row[2], *row[3]) if sha} | set(head.values())
         out = _git(self.root, "cat-file", "--batch",
@@ -101,12 +99,13 @@ class History:
         at = 0
         for sha in wanted:
             end = out.index(b"\n", at)
-            header = out[at:end].split()
-            at = end + 1
-            if header[1:2] == [b"blob"]:
-                self._blobs[sha] = out[at:at + int(header[2])]
-                at += int(header[2]) + 1
-        self._head, self._rows, self._dirty = head, ordered, dirty
+            _, kind, *size = out[at:end].decode().split()
+            if not size:
+                raise ReqctlError(f"cannot read the history: git cat-file -- {sha} {kind}")
+            at = end + 2 + int(size[0])
+            if kind == "blob":
+                self._blobs[sha] = out[end + 1:at - 1]
+        self._head, self._rows = head, ordered
 
     def _held(self, uid, sha):
         if sha not in self._parsed:
@@ -129,10 +128,7 @@ class History:
     def updated(self, uid, data):
         self._load()
         now = carried(uid, data)
-        head = self._head.get(uid)
-        if head and uid not in self._dirty:
-            self._states[uid, head] = now
-        if self._carried(uid, head) != now:
+        if self._carried(uid, self._head.get(uid)) != now:
             return None
         return next((iso for _, iso, new, parents in self._rows.get(uid, ())
                      if self._carried(uid, new) == now
