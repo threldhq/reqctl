@@ -53,10 +53,8 @@ def scalar(text, carried=frozenset()):
         inner = stripped[1:-1]
         members = []
         for part in inner.split(",") if inner.strip() else []:
-            hidden = _validate.hidden(part.strip(" "))
             # @req> REQ-79956352@OsoTGRd6D5CZ gdh2ib
-            if hidden is not None and part.strip(" ") not in carried:
-                raise ReqctlError(f"{part.strip()!r}: {_validate.hidden_fault(hidden)}")
+            _refuse_hidden(f"{part.strip()!r}:", part.strip(" "), carried)
             members.append(part.strip())
         for member in members:
             if not member:
@@ -98,10 +96,8 @@ def scalar(text, carried=frozenset()):
             "separator, and which digits it groups is ambiguous -- write the "
             "number whole (10000)"
         )
-    hidden = _validate.hidden(text)
     # @req> REQ-79956352@OsoTGRd6D5CZ 6dcbid
-    if hidden is not None and text.strip(" ") not in carried:
-        raise ReqctlError(f"{stripped!r}: {_validate.hidden_fault(hidden)}")
+    _refuse_hidden(f"{stripped!r}:", text, carried)
     if stripped.lower() in ("true", "false"):
         return stripped.lower() == "true"
     digits = stripped.lstrip("+-")
@@ -119,9 +115,9 @@ def scalar(text, carried=frozenset()):
 
 
 # @req> REQ-79956352@OsoTGRd6D5CZ 7g4u3w
-def _refuse_hidden(label, value):
+def _refuse_hidden(label, value, carried=frozenset()):
     hidden = _validate.hidden(str(value))
-    if hidden is not None:
+    if hidden is not None and str(value).strip(" ") not in carried:
         raise ReqctlError(f"{label} {_validate.hidden_fault(hidden)}")
 
 
@@ -240,27 +236,26 @@ def _pruned(after, uids):
             after[uid] = held
 
 
-def _carried_targets(data):
+def _targets(data):
     return ({corpus.split_address(address)[0] for address in corpus.concept_references(data)},
             {corpus.split_address(address)[0] for address in corpus.references(data)})
 
 
-def _unknown_references(store, uid, data, before):
+def _unknown_references(store, uid, data, carried):
     faults = []
     # @req+ REQ-44791607@6FX5SSp9MG3B mtmaxs
     known = corpus.addressable(
         {item.uid: item.data for item in corpus.items(store)})
-    linked, referenced = _carried_targets(before)
-    unknown = sorted({corpus.split_address(address)[0]
-                      for address in corpus.references(data)} - known - referenced)
+    linked, referenced = _targets(data)
+    held_links, held_references = carried
+    unknown = sorted(referenced - known - held_references)
     if unknown:
         faults.append(
             f"text references {', '.join(unknown)}, which does not exist -- "
             "the parameter or data item must exist before the statement can "
             "reference it"
         )
-    absent = sorted({corpus.split_address(address)[0]
-                     for address in corpus.concept_references(data)} - known - linked)
+    absent = sorted(linked - known - held_links)
     if absent:
         faults.append(
             f"text links {', '.join(absent)}, which does not exist -- "
@@ -410,10 +405,9 @@ def resolve_names(store, text, index=None, carried=(frozenset(), frozenset())):
 
 
 # @req> REQ-76604940@SEVyiDrbH-Ez 25cppk
-def _resolved_prose(store, uid, data, before=None):
+def _resolved_prose(store, uid, data, carried=(frozenset(), frozenset())):
     paths = set(_validate.prose_paths(store.root, uid, data))
     index = _name_index(store)
-    carried = _carried_targets(before or {})
     return corpus.prosed(data, paths,
                          lambda text: resolve_names(store, text, index, carried))
 
@@ -424,7 +418,7 @@ def entry_key(member):
     return str(member)
 
 
-def _set_fields(entry, pairs, carried=frozenset()):
+def _set_fields(entry, pairs, carried):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
         if not name.strip() or not split:
@@ -437,8 +431,7 @@ def _set_fields(entry, pairs, carried=frozenset()):
             )
         # @req> REQ-79956352@OsoTGRd6D5CZ qldnjy
         for said in name.split("."):
-            if said.strip(" ") not in carried:
-                _refuse_hidden(f"--set {name.strip()!r}:", said.strip(" "))
+            _refuse_hidden(f"--set {name.strip()!r}:", said.strip(" "), carried)
         where = entry
         for step in steps[:-1]:
             nested = where.get(step, {})
@@ -470,7 +463,7 @@ def _appended(where, steps):
     return where, list(held or [])
 
 
-def _append_fields(entry, pairs, carried=frozenset()):
+def _append_fields(entry, pairs, carried):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
         if not name.strip() or not split:
@@ -483,8 +476,7 @@ def _append_fields(entry, pairs, carried=frozenset()):
             )
         # @req> REQ-79956352@OsoTGRd6D5CZ gey5jb
         for said in name.split("."):
-            if said.strip(" ") not in carried:
-                _refuse_hidden(f"--append {name.strip()!r}:", said.strip(" "))
+            _refuse_hidden(f"--append {name.strip()!r}:", said.strip(" "), carried)
         member = scalar(value, carried)
         if isinstance(member, list):
             raise ReqctlError(
@@ -1271,7 +1263,7 @@ def _revision(store, uid, fields):
             if held in prospective["entries"]:
                 prospective["default"] = held
         if default is not None:
-            chosen = entry_key(scalar(str(default)))
+            chosen = entry_key(scalar(str(default), carried))
             # @req> REQ-67914848@cRb9rHls6z6c 6xxjkf
             if chosen not in corpus.entries(prospective):
                 raise ReqctlError(f"--default {default}: not a member of the set")
@@ -1326,11 +1318,12 @@ def _revision(store, uid, fields):
                 raise ReqctlError(f"--default {default}: not an entry")
             prospective["default"] = chosen
 
-    prospective = _resolved_prose(store, uid, prospective, before)
+    targets = _targets(before)
+    prospective = _resolved_prose(store, uid, prospective, targets)
 
     if (any(field.prose and fields.get(field.dest) is not None for field in own)
             or fields.get("set") or fields.get("append")):
-        faults = _unknown_references(store, uid, prospective, before)
+        faults = _unknown_references(store, uid, prospective, targets)
         if faults:
             raise ReqctlError("\n".join(faults))
     # @req+ REQ-53480164@5yFhCLJmuTBt xpj5go
