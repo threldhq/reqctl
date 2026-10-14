@@ -41,7 +41,8 @@ PATH_KEY = re.compile(
     r"|destination|dir|directory|folder|folders|target|output|src|dst|source"
     r"|to|uri)$", re.I)
 PATH_SHAPE = re.compile(r"[^\s'\"`$();|<>]+")
-FILE_URL = re.compile(r"file:/+[^\s'\"`()<>]*", re.I)
+FILE_URL = re.compile(r"file:[/\\]+\S*", re.I)
+READS_NO_URL = ("Read", "Grep", "Glob", "Write", "Edit", "MultiEdit", "NotebookEdit")
 COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
 GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
 GREP_GLOB_KEY = re.compile(r"^glob$")
@@ -57,7 +58,7 @@ ANSI_ESCAPE = re.compile(
     r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
 STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
 WRAPPERS = ("env", "command", "nohup", "sudo", "doas", "timeout", "nice", "time",
-            "exec", "xargs", "stdbuf", "builtin")
+            "exec", "xargs", "stdbuf", "builtin", "setsid", "ionice")
 REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
 SHELLS = ("sh", "bash", "dash", "zsh", "ksh")
 ECHO_FLAGS = re.compile(r"-[neE]+")
@@ -191,6 +192,8 @@ ON_DEFAULT = (
     "  git checkout -b claude/<name>\n"
     "{branch} is what the owner merges into, never what an agent commits to."
 )
+
+LEVEL_WITH_DEFAULT = "\n  git merge --ff-only origin/{branch} brings it level without a commit."
 
 NO_DEFAULT = (
     "Commit blocked: origin names no default branch, so the guard cannot tell "
@@ -341,7 +344,8 @@ EXCLUDED_BY = ("--exclude", "--exclude-dir")
 GLOBBED_BY = ("-g", "--glob", "--iglob")
 SETTERS = ("export", "declare", "typeset", "local", "readonly")
 ASSIGNMENT = re.compile(r"[A-Za-z_]\w*=")
-REBASE_VALUED = ("--onto", "-s", "--strategy", "-X", "--strategy-option", "-x", "--exec")
+REBASE_VALUED = ("--onto", "-s", "--strategy", "-X", "--strategy-option", "-x", "--exec",
+                 "--whitespace", "-C", "--empty", "--trailer")
 ROOT_QUOTED = re.compile(rf"""(['"`])(?:\./)?{CORPUS_ROOT_NAME}/?\1""")
 LAUNCHERS = ("uv", "pipx", "poetry", "pdm", "hatch", "rye", "pipenv")
 GH_CONFIG_HOMES = ("GH_CONFIG_DIR", "XDG_CONFIG_HOME", "HOME")
@@ -365,12 +369,31 @@ def named_paths(value, keys=PATH_KEY, key=""):
     return []
 
 
+def decoded(text):
+    for _ in range(3):
+        text = unquote(text)
+    return text
+
+
+def url_paths(found):
+    spelled = decoded(found.replace("\\", "/"))
+    paths = ["/" + spelled[5:].lstrip("/")]
+    try:
+        paths.append(urlsplit(spelled).path)
+    except ValueError:
+        pass
+    return paths
+
+
 def file_urls(value):
-    if isinstance(value, str):
-        return [path for found in FILE_URL.findall(value)
-                for path in {unquote(urlsplit(found).path), "/" + unquote(found)[5:].lstrip("/")}]
-    items = value.values() if isinstance(value, dict) else value if isinstance(value, list) else []
-    return [path for v in items for path in file_urls(v)]
+    if isinstance(value, dict):
+        value = list(value.values())
+    if isinstance(value, list):
+        return [path for v in value for path in file_urls(v)]
+    if not isinstance(value, str):
+        return []
+    return [path for text in (value, re.sub(r"[\t\r\n]", "", value))
+            for found in FILE_URL.findall(text) for path in url_paths(found)]
 
 
 def bare_paths(value):
@@ -800,7 +823,7 @@ def invoked(words):
         i += 2 if REDIRECTION.fullmatch(words[i]) else 1
     if i < len(words) and os.path.basename(words[i]) not in (*JUDGED, *WRITES_NOTHING):
         i = next((j for j in range(i, len(words))
-                  if os.path.basename(words[j]) in ("rm", "find", "patch") or posing(words[j:])
+                  if os.path.basename(words[j]) in ("rm", "find") or posing(words[j:])
                   or os.path.basename(words[j]) == "git" and j + 1 < len(words)
                   and (words[j + 1].startswith("-") or words[j + 1] in JUDGED_GIT
                        or EXPANSION.search(words[j + 1]))), i)
@@ -1106,18 +1129,20 @@ def refuse_commit_on_default(words, here):
             in NO_COMMIT[subcommand]):
         return
     place = located(words, here)
-    branches = [git_sees(["branch", "--show-current"], place).strip()]
+    named = []
     if subcommand == "rebase":
         operands = options(rest, REBASE_VALUED)[1]
-        branches += operands[:1] if "--root" in rest else operands[1:2]
+        named = operands[:1] if "--root" in rest else operands[1:2]
+        if any("$" in word or "`" in word for word in named):
+            deny(UNREADABLE.format(what=f"which branch git rebase {named[0]} rewrites"))
+    branch = named[0] if named else git_sees(["branch", "--show-current"], place).strip()
     default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], place)
     if default is None:
         deny(NO_DEFAULT)
-    for branch in branches:
-        if default.strip() == f"origin/{branch}":
-            deny(ON_DEFAULT.format(branch=branch) + (
-                "" if subcommand not in ("pull", "rebase", "merge") else
-                f"\n  git merge --ff-only origin/{branch} brings it level without a commit."))
+    if default.strip() == f"origin/{branch}":
+        deny(ON_DEFAULT.format(branch=branch) + (
+            LEVEL_WITH_DEFAULT.format(branch=branch) if subcommand in ("pull", "rebase", "merge")
+            else ""))
     # @req- zm6qoo
 
 
@@ -1621,8 +1646,9 @@ def judge_command(said, here, stdin=()):
     plain = called[0] if called else None
     posed = plain is not None and EXPANSION.search(plain) is not None
     # @req> REQ-60587913@64oissmU4Xo2 4qdiqf
-    if subcommand == "push" and "xargs" in map(os.path.basename, words[:len(words) - len(called)]):
-        deny(UNREADABLE.format(what="the arguments xargs hands git push from standard input"))
+    if "xargs" in map(os.path.basename, words[:len(words) - len(called)]) and (
+            plain in SHELLS or plain == "git" and subcommand in (None, *JUDGED_GIT)):
+        deny(UNREADABLE.format(what=f"the arguments xargs hands {plain} from standard input"))
     # @req> REQ-51296881@8h-e1bOYkZtT jcpru4
     if plain == "patch":
         deny("patch(1) blocked: the paths it writes live inside the diff, "
@@ -1649,8 +1675,9 @@ def judge_command(said, here, stdin=()):
             for w in operands):
         # @req> REQ-51296881@8h-e1bOYkZtT 7sfcit
         if swept := sweeping(operands, here, BARE_SWEEP):
-            deny(f"rm -r of '{swept}' blocked: it sweeps the requirements "
-                 "corpus along with everything else. Name the paths to delete.")
+            deny(f"{posing_as(plain, 'rm')} -r of '{swept}' blocked: it sweeps the requirements "
+                 "corpus along with everything else. Name the paths to delete"
+                 f"{'' if plain == 'rm' else ', and the command outright'}.")
     # @req> REQ-91051324@ljHcdWSG-nys vdn4ok
     # @req> REQ-22704490@0I1yKEFWt0tX mrkvmj
     if (plain == "find" or posed) and any("-delete" in bounded(w) for w in operands):
@@ -1663,9 +1690,10 @@ def judge_command(said, here, stdin=()):
             operands[at:])) or ["."]
         # @req> REQ-51296881@8h-e1bOYkZtT 4k6mvu
         if swept := sweeping(points, here, BARE_ROOTS):
-            deny(f"find -delete from '{swept}' blocked: it could reach the project "
-                 "root, a folder above it, or the requirements corpus. Start find "
-                 "from the folder that holds what it should delete.")
+            deny(f"{posing_as(plain, 'find')} -delete from '{swept}' blocked: it could reach the "
+                 "project root, a folder above it, or the requirements corpus. Start find "
+                 "from the folder that holds what it should delete"
+                 f"{'' if plain == 'find' else ', and name the command outright'}.")
     for word in words:
         if "git" in word and "push" in word and word not in ("git", "push"):
             refuse_destructive_push(word)
@@ -1685,6 +1713,10 @@ def judge_command(said, here, stdin=()):
             lambda word: word != "--" and word.startswith(("-", "+")), operands), "c"):
         for script in stdin:
             judge_shell(script, here)
+
+
+def posing_as(plain, tool):
+    return tool if plain == tool else f"{plain}, which the guard cannot tell from {tool},"
 
 
 def scripts_within(words, here):
@@ -1749,77 +1781,67 @@ def is_corpus_root(word):
     return False
 
 
-def glob_body(glob):
-    out, at = [], 0
-    while at < len(glob):
-        if glob.startswith("**/", at):
-            out.append("(?:.*/)?")
-            at += 3
-        elif glob.startswith("/**", at) and at + 3 == len(glob):
-            out.append("/.*")
-            at += 3
-        elif glob.startswith("**", at):
-            out.append(".*")
-            at += 2
-        elif glob[at] in "*?":
-            out.append("[^/]*" if glob[at] == "*" else "[^/]")
-            at += 1
-        elif glob[at] == "[" and (end := glob.find("]", at + 2)) > 0:
-            inner = glob[at + 1:end].replace("\\", "\\\\")
-            out.append("[" + ("^" + inner[1:] if inner[0] in "!^" else inner) + "]")
-            at = end + 1
-        elif glob[at] == "{" and (end := glob.find("}", at)) > 0:
-            out.append("(?:" + "|".join(map(glob_body, glob[at + 1:end].split(","))) + ")")
-            at = end + 1
-        else:
-            escaped = glob[at] == "\\" and at + 1 < len(glob)
-            out.append(re.escape(glob[at + escaped]))
-            at += 1 + escaped
-    return "".join(out)
+def segments_hit(globs, names):
+    @functools.cache
+    def hit(i, j):
+        if i == len(globs):
+            return j == len(names)
+        if globs[i] == "**":
+            return hit(i + 1, j) or j < len(names) and hit(i, j + 1)
+        return j < len(names) and fnmatch.fnmatchcase(names[j], globs[i]) and hit(i + 1, j + 1)
+    return hit(0, 0)
 
 
 def glob_hits(glob, path, unread):
     anchored = "/" in glob.rstrip("/")
     try:
-        pattern = re.compile(("" if anchored else "(?:.*/)?")
-                             + glob_body(glob.removeprefix("/").rstrip("/")))
+        return any(segments_hit(
+            ([] if anchored else ["**"]) + alt.replace("[^", "[!").strip("/").split("/"),
+            path.split("/")) for alt in bounded(glob))
     except re.error:
         return unread
-    return pattern.fullmatch(path) is not None
+
+
+def last_glob(path, globs):
+    verdict = None
+    for glob in globs:
+        negated = glob.startswith("!")
+        if glob_hits(glob[negated:], path, not negated):
+            verdict = not negated
+    return verdict
 
 
 def admits(rel, globs, kind):
-    if kind and kind not in YAML_TYPES:
+    folders = list(itertools.accumulate(rel.split("/")[:-1], lambda above, name: f"{above}/{name}"))
+    if any(last_glob(folder, globs) is False for folder in folders):
         return False
-    ancestors = list(itertools.accumulate(rel.split("/"), lambda above, name: f"{above}/{name}"))
-    shown = [glob for glob in globs if not glob.startswith("!")]
-    if any(glob_hits(glob[1:], above, False) for glob in globs if glob.startswith("!")
-           for above in ancestors):
-        return False
-    return not shown or any(glob_hits(glob, rel, True) for glob in shown)
+    verdict = last_glob(rel, globs)
+    if verdict is not None:
+        return verdict
+    return all(glob.startswith("!") for glob in globs) and (not kind or kind in YAML_TYPES)
 
 
 def searched_corpus(args, cwd):
     kind, glob = args.get("type"), args.get("glob") or ""
     if not isinstance(kind, (str, type(None))) or not isinstance(glob, str):
         deny(UNREADABLE.format(what="the type or glob field"))
-    base = os.path.normpath(os.path.join(cwd, os.path.expanduser(args.get("path") or cwd)))
+    base = os.path.realpath(os.path.join(cwd, os.path.expanduser(args.get("path") or cwd)))
     if not os.path.isdir(base):
         return None
     project = os.environ.get("CLAUDE_PROJECT_DIR") or cwd
-    readings = [[glob], [piece for word in glob.split()
-                         for piece in ([word] if "{" in word else word.split(","))]] if glob else [[]]
-    for top in {base, *(str(above) for place in (cwd, project)
-                        for above in (Path(place), *Path(place).parents))}:
-        root = os.path.join(top, CORPUS_ROOT_NAME)
-        if os.path.commonpath([root, base]) != base:
+    globs = [piece for word in glob.split()
+             for piece in ([word] if "{" in word else word.split(",")) if piece]
+    for top in dict.fromkeys((base, *(str(above) for place in (cwd, project)
+                                      for above in (Path(place), *Path(place).parents)))):
+        root = os.path.realpath(os.path.join(top, CORPUS_ROOT_NAME))
+        if os.path.commonpath([root, base]) not in (root, base):
             continue
         for entry in CORPUS_ENTRIES:
             held = os.path.join(root, entry)
             files = [held] if os.path.isfile(held) else [
                 os.path.join(folder, name) for folder, _, names in os.walk(held) for name in names]
-            if any(admits(os.path.relpath(file, base), globs, kind)
-                   for file in files for globs in readings):
+            if any(admits(os.path.relpath(file, base), globs, kind) for file in files
+                   if os.path.commonpath([file, base]) == base):
                 return root
     return None
 
@@ -1885,13 +1907,14 @@ def bounded(word):
 def search_operands(words):
     called = invoked(words)
     tool = called[0] if called else ""
-    if tool not in SEARCHES:
+    if tool not in ("grep", "egrep", "fgrep", "rg"):
         return words
     valued = SEARCH_VALUED["rg" if tool == "rg" else "grep"]
     head = list(itertools.takewhile(lambda word: word != "--", called[1:]))
     flags, positional = options(head, valued)
     positional += called[len(head) + 2:]
-    explicit = any(name in ("-e", "-f", "--regexp", "--file") for name, _ in flags) or any(
+    explicit = any(name in ("-e", "-f", "--regexp", "--file", "--files", "--type-list")
+                   for name, _ in flags) or any(
         not word.startswith("--") and len(word) > 2 and set("ef") & set(word[1:])
         for word in called[1:] if word.startswith("-"))
     kept = [word for name, value in flags if not (
@@ -1936,16 +1959,16 @@ def judge_shell(raw, cwd, stdin=()):
         for (at, part), here in itertools.product(enumerate(pipeline), heres):
             left()
             invocation = heading(part)
-            judge_command(part if any(
-                len(alternatives) > 256 or any(map(STDIN_ARGUMENTS.search, alternatives))
-                for word in tokens_of(invocation)
-                for alternatives in [list(itertools.islice(braced(word), 257))]) else invocation,
-                here, piped(stdin, pipeline, at))
             # @req> REQ-21901290@fc_rdI5ms5IC 5zrapb
             # @req> REQ-91051324@ljHcdWSG-nys 343uga
             # @req> REQ-70178381@2GE_TPwGTZKU vzfqst
             for spelled in resolved(invocation, assigned):
                 judge_command(spelled, here, piped(stdin, pipeline, at))
+            judge_command(part if any(
+                len(alternatives) > 256 or any(map(STDIN_ARGUMENTS.search, alternatives))
+                for word in tokens_of(invocation)
+                for alternatives in [list(itertools.islice(braced(word), 257))]) else invocation,
+                here, piped(stdin, pipeline, at))
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
@@ -1991,7 +2014,8 @@ def resolved(invocation, assigned):
         named = re.compile(rf"\$(?:\{{{name}\}}|{name}(?!\w))")
         if named.search(invocation):
             for value in values:
-                yield named.sub(shlex.quote(value).replace("\\", "\\\\"), invocation)
+                for spelled in (shlex.quote(value), value):
+                    yield named.sub(spelled.replace("\\", "\\\\"), invocation)
 
 
 def ansi_c(raw):
@@ -2170,7 +2194,7 @@ def decide(data: dict) -> None:
     cwd = os.path.abspath(cwd)
 
     # @req> REQ-54260750@MTrWbA9_HZWY haai6c
-    if tool not in ("Bash", "Read", "Grep", "Glob"):
+    if tool not in READS_NO_URL:
         for path in file_urls(args):
             named = flatten(path)
             if CORPUS_DIR.search(named) or is_corpus_root(named) or reaches_corpus(named, cwd):
@@ -2178,8 +2202,8 @@ def decide(data: dict) -> None:
 
     # @req> REQ-22704490@0I1yKEFWt0tX qfasw3
     if tool not in ("Bash", "Read", "Grep", "Glob"):
-        for value in {spelled for found in named_paths(args) + bare_paths(args)
-                      for spelled in (found, unquote(found))}:
+        for value in dict.fromkeys(spelled for found in named_paths(args) + bare_paths(args)
+                                   for spelled in (found, unquote(found))):
             named = flatten(value.replace("\\", "/"))
             if ITEM.search(named):
                 deny(f"Direct write of a requirement item blocked: {value}\n{USE_REQCTL}")

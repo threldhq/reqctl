@@ -23,7 +23,7 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   4aiv2n: 1rk8aHbfMCxCNqwGapYIvaeTgQX4TIOcdBoDoq1w52E
-  4qdiqf: 0Ej04aVgge69Z8mXh0Vh3qTkB1WR0qheWjBoOYOgvX4
+  4qdiqf: AXOc6JYK1wjDcUoTfKefsJSBgXYqJ0odzrfXwnxY5QQ
 priority: medium
 relations:
   REQ-38288492: depends_on
