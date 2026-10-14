@@ -81,9 +81,9 @@ def faults(root):
         return [f"{README}: cannot read it: {broken}"]
     # @req- et6toq
     # @req+ GUARD-30872791@76ZvH9aeC5ry eukn2k
-    named = [(found.group(), found.groups()) for found in re.finditer(
-        re.escape(f"{RELEASES}{manifest.get('name')}--v") + r"([^/\s]+)/"
-        + re.escape(f"{name}-") + r"([^-/\s]+)-[^/\s]*\.whl", text)]
+    named = re.findall(
+        "(" + re.escape(f"{RELEASES}{manifest.get('name')}--v") + r"([^/\s]+)/"
+        + re.escape(f"{name}-") + r"([^-/\s]+)-[^/\s]*\.whl)", text)
     if not named:
         return [f"{README}: names no wheel URL -- name the reqctl wheel of "
                 f"{version} under {RELEASES}{tag}/"]
@@ -91,7 +91,7 @@ def faults(root):
     # @req> GUARD-70682435@wxuZzo-y7Z-b vf7ipi
     return [f"{README}: {url} states {at_tag} in its release tag and {at_file} "
             f"in its file, the reqctl wheel {version} -- state {version} in both"
-            for url, (at_tag, at_file) in named if {at_tag, at_file} != {version}]
+            for url, at_tag, at_file in named if {at_tag, at_file} != {version}]
 
 
 def main():
