@@ -1,0 +1,35 @@
+acceptance_criteria:
+- given: origin's default branch is main and the local origin/HEAD ref names feature
+  then: the product refuses the [tool call](tool_call)
+  when: git push writes to main on origin
+- given: origin's default branch is main and the local origin/HEAD ref names feature
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: git push writes to feature on origin
+- given: origin's default branch is main and the local origin/HEAD ref names feature
+  then: the product refuses the [tool call](tool_call)
+  when: gh api, an HTTP request to api.github.com or a connector call writes a file
+    to main
+- given: origin cannot be reached when the [tool call](tool_call) is judged
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) writes through git push, a gh command, a request
+    to GitHub's API or a GitHub connector
+- given: origin has not reported its default branch within ${origin_query_seconds}
+    of the product asking
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) writes through git push, a gh command, a request
+    to GitHub's API or a GitHub connector
+assessed:
+  REQ-30013664: ijHTWP75cTcKnNtgvuGdvZqsEpAhSBtgk8BqIn-hHXM
+  origin_query_seconds: cAwdFP4G6MLM-TKYEr5LQyAfz3DG9Z3qA5iBEZT3PiQ
+  origin_query_seconds.*: 6SmMhfL6f4iDThF0dJ4oM-iybfVP1cvIPM6GSKBF47I
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-30013664: constrains
+status: approved
+text: When the product judges whether a [tool call](tool_call) would write to the
+  default branch of origin's repository, the product shall take that branch from what
+  origin reports as its default branch when the [tool call](tool_call) is judged,
+  not from the local origin/HEAD ref.
+type: functional
+verification: inspection
