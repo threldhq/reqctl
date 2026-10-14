@@ -35,6 +35,9 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  g3ql3s: 2Ul--7VCYfk3cqXx1-8N_DPXduCizbwX2JIViyklT1I
+  rvzbno: TvYJn6csnl-dii02RYmU-7Ldlpeo9P0jint-McLO5P4
 priority: medium
 relations:
   REQ-22704490: derives_from
