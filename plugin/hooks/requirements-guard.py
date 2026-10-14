@@ -1221,7 +1221,7 @@ def refuse_api_write(words, here, said):
     flags, operands = options(called[1:], () if httpie else HTTP_VALUED)
     sent = [] if httpie else [(name, value) for name, value in flags if name in HTTP_SENDS]
     pairs = [word.partition("=") for word in operands
-             if "=" in word and "==" not in word and not GITHUB_API.search(word)]
+             if "=" in word and word.find("=") != word.find("==") and not GITHUB_API.search(word)]
     data = next((value for name, value in sent if name in HTTP_BODY), None)
     body = (read_body(data) if data is not None and data[:1] != "@"
             else None if sent else {key.rstrip(":"): None if key.endswith(":") or value[:1] == "@"
