@@ -279,7 +279,8 @@ HTTP_SENDS = (*HTTP_BODY, "--data-urlencode", "-F", "--form", "-T", "--upload-fi
 HTTP_VALUED = ("-X", "--request", "--method", *HTTP_SENDS, "-H", "--header", "-o",
                "--output", "-u", "--user")
 METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE")
-GITHUB_API = re.compile(r"https?:/+api\.github\.com(/[^\s'\"]*)?")
+GITHUB_API = re.compile(r"https?:/+(?:[^/\s@'\"]*@)?api\.github\.com(?::\d+)?(/[^\s'\"]*)?",
+                        re.I)
 BRANCH_MUTATION = re.compile(r"\b(?:createCommitOnBranch|updateRefs?|deleteRef|mergeBranch)\b")
 CONNECTOR_WRITE = re.compile(
     r"github.*__(?:create_or_update_file|create_file|update_file|push_files|delete_file)$", re.I)
@@ -1056,8 +1057,9 @@ def guard_default(what, place, targets, slug=None):
     if not targets:
         return
     url = git_reads(["remote", "get-url", "origin"], place)
-    named = slug and "/".join(slug.lower().split("/")[-2:])
-    if url and named and named not in (repo_slug(url), repo_slug(url).split("/")[-1]):
+    named = slug and "$" not in slug and "`" not in slug and repo_slug(slug)
+    held = url and repo_slug(url)
+    if held and named and named not in (held, held.split("/")[-1]):
         return
     default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], place)
     if url is None or default is None or None in targets:
@@ -1086,7 +1088,7 @@ def options(words, valued):
 
 # @req+ REQ-30013664@ijHTWP75cTcK nl3elr
 def destination(spec, place):
-    src, colon, dst = spec.lstrip("+").partition(":")
+    src, colon, dst = spec.partition(":")
     name = dst if colon else src
     if "$" in name or "`" in name:
         return None
@@ -1106,15 +1108,15 @@ def refuse_push_to_default(words, here):
         return
     flags, operands = options(rest, PUSH_VALUED)
     named = [name for name, _ in flags]
-    if short_flagged(named, "n") or any(len(name) > 4 and "--dry-run".startswith(name)
+    if short_flagged(named, "n") or any(len(name) > 2 and "--dry-run".startswith(name)
                                         for name in named):
         return
     place = located(words, here)
     remote = operands[0] if operands else next(
         (value for name, value in flags if name == "--repo"), "origin")
-    if remote != "origin" and "$" not in remote and "`" not in remote and (
-            git_reads(["remote", "get-url", remote], place) or remote).strip() != (
-            git_reads(["remote", "get-url", "origin"], place) or "").strip():
+    origin = git_reads(["remote", "get-url", "--push", "origin"], place)
+    if origin and remote != "origin" and "$" not in remote and "`" not in remote and repo_slug(
+            git_reads(["remote", "get-url", "--push", remote], place) or remote) != repo_slug(origin):
         return
     if operands[1:]:
         targets = [destination(spec, place) for spec in operands[1:]]
@@ -1123,9 +1125,8 @@ def refuse_push_to_default(words, here):
     elif "--tags" in named:
         targets = []
     else:
-        current = git_reads(["symbolic-ref", "--short", "-q", "HEAD"], place)
         upstream = git_reads(["rev-parse", "--abbrev-ref", "@{upstream}"], place)
-        targets = [current.strip() if current else None,
+        targets = [destination("HEAD", place),
                    *([upstream.strip().partition("/")[2]] if upstream else [])]
     guard_default(shlex.join(["git", "push", *rest]), place,
                   [target for target in targets if target is not False])
@@ -1135,10 +1136,10 @@ def refuse_push_to_default(words, here):
 # @req> REQ-30013664@ijHTWP75cTcK p56sug
 def api_targets(url, method, body, said):
     hosted = GITHUB_API.match(url)
-    path = urlsplit((hosted.group(1) or "") if hosted else url).path
-    parts = [unquote(part) for part in path.strip("/").split("/")]
+    parts = unquote(urlsplit((hosted.group(1) or "") if hosted else url).path).strip("/").split("/")
     if parts == ["graphql"]:
-        return None, [None] if BRANCH_MUTATION.search(said) else []
+        return None, [None] if body is None or None in body.values() or BRANCH_MUTATION.search(
+            said) else []
     if parts[:1] != ["repos"] or len(parts) < 4:
         return None, []
     slug, rest = "/".join(parts[1:3]), parts[3:]
@@ -1171,13 +1172,13 @@ def refuse_api_write(words, here, said):
     place = (here, [], {})
     if called[:2] == ["gh", "api"]:
         flags, operands = options(called[2:], GH_VALUED)
-        body: dict | None = {}
+        body = {}
         for name, value in flags:
             key, _, held = value.partition("=")
             if name in ("-f", "--raw-field", "-F", "--field") and body is not None:
                 body[key] = None if name in ("-F", "--field") and held[:1] == "@" else held
             if name == "--input":
-                body = None if value == "-" or not here else read_body(value, here)
+                body = read_body(value, here) if here else None
         method = next((value.upper() for name, value in flags if name in ("-X", "--method")),
                       "POST" if body != {} else "GET")
         endpoint = operands[0] if operands else ""
@@ -1216,13 +1217,13 @@ def refuse_unheld_script(words, here):
     raw = words[len(words) - len(called)]
     key = "python" if re.fullmatch(r"python[\d.]*", called[0]) else called[0]
     file = raw if key not in RUNNERS and "/" in raw else None
-    for at, word in enumerate(called[1:] if key in RUNNERS else []):
+    for previous, word in itertools.pairwise(called) if key in RUNNERS else ():
         inline = RUNNERS[key]
         if inline and (word == "-" or word.startswith(("--eval", "--print"))
                        or any(short_flagged([word], letter) for letter in inline)):
             return
         if (not word.startswith("-") or not inline) and not (
-                key == "python" and at and called[at] in ("-W", "-X")):
+                key == "python" and previous in ("-W", "-X")):
             file = word
             break
     if not file:
@@ -1233,16 +1234,16 @@ def refuse_unheld_script(words, here):
     if not os.path.isfile(path):
         return
     try:
-        text = Path(path).read_bytes().decode(errors="replace")
+        data = Path(path).read_bytes()
     except OSError:
         deny(UNREADABLE.format(what=file))
+    text = flatten(data.decode(errors="replace")) if CORPUS_ROOT_NAME.encode() in data else ""
     found = CORPUS_DIR.search(text) or ROOT_QUOTED.search(text)
     if not found:
         return
     place = (os.path.dirname(path), [], {})
-    top = git_reads(["rev-parse", "--show-toplevel"], place)
-    held = top and git_reads(["rev-parse", "--verify", "-q", "refs/remotes/origin/HEAD:"
-                              + os.path.relpath(path, os.path.realpath(top.strip()))], place)
+    held = git_reads(["rev-parse", "--verify", "-q",
+                      "refs/remotes/origin/HEAD:./" + os.path.basename(path)], place)
     if not held or held != git_reads(["hash-object", "--no-filters", "--", path], place):
         deny(UNHELD_SCRIPT.format(file=file, found=found.group()))
 
