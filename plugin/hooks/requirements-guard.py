@@ -314,7 +314,9 @@ RUN_VALUED = {"python": ("-W", "-X", "-m", "--check-hash-based-pycs"),
               "node": ("-r", "--require", "--import", "--loader"),
               **dict.fromkeys((*SHELLS, "fish"), ("-o", "-O", "--rcfile", "--init-file"))}
 ROOT_QUOTED = re.compile(rf"""(['"`])(?:\./)?{CORPUS_ROOT_NAME}/?\1""")
-LAUNCHERS = (("uv", "run"), ("pipx", "run"), ("poetry", "run"))
+LAUNCHERS = ("uv", "pipx", "poetry", "pdm", "hatch", "rye", "pipenv")
+GH_CONFIG_HOMES = ("GH_CONFIG_DIR", "XDG_CONFIG_HOME", "HOME")
+CURL_HOMES = ("CURL_HOME", "XDG_CONFIG_HOME", "HOME")
 CURL_CONFIG_LINE = re.compile(r"(-{0,2}[A-Za-z0-9][\w-]*)(?:\s*[=:]\s*|\s+|$)(.*)")
 
 
@@ -1295,10 +1297,18 @@ def gh_aliases(assigned):
         done = subprocess.run(["gh", "alias", "list"], capture_output=True, text=True,
                               timeout=min(15, left()), check=False,
                               env={**os.environ, **dict(word.split("=", 1) for word in assigned)})
+    except subprocess.TimeoutExpired:
+        deny(UNREADABLE.format(what="the gh aliases before its time limit"))
     except (OSError, subprocess.SubprocessError):
         return {}
-    return {name.strip(): unquoted(value.strip()) for name, _, value in
-            (line.partition(":") for line in done.stdout.splitlines()) if value}
+    aliases, name = {}, ""
+    for line in done.stdout.splitlines():
+        if line[:1] in (" ", "\t") and name:
+            aliases[name] += ("\n" if aliases[name] else "") + line.strip()
+            continue
+        name, _, value = (part.strip() for part in line.partition(":"))
+        aliases[name] = "" if value[:1] in ("|", ">") else unquoted(value)
+    return aliases
 
 
 def unquoted(value):
@@ -1309,26 +1319,35 @@ def unquoted(value):
     return value
 
 
-def curl_configured(called, here):
+def curl_configured(called, here, prefix):
     flags, _ = options(called[1:], HTTP_VALUED)
+    homes = {**os.environ, **dict(word.split("=", 1) for word in prefix
+                                  if word.partition("=")[0] in CURL_HOMES)}
+    if found := next((homes[name] for name in CURL_HOMES
+                      if "$" in homes.get(name, "") or "`" in homes.get(name, "")), None):
+        deny(UNREADABLE.format(what=f"which curl config {found} names"))
+    default = [] if called[1:2] in (["-q"], ["--disable"]) else [next(
+        (path for name in CURL_HOMES if homes.get(name)
+         for path in [os.path.join(homes[name], ".curlrc")] if os.path.isfile(path)), None)]
     added = []
-    for file in (value for name, value in flags if name in ("-K", "--config")):
-        if file == "-" or "$" in file or "`" in file:
+    for file in [*filter(None, default), *(value for name, value in flags
+                                            if name in ("-K", "--config"))]:
+        path = os.path.join(here, os.path.expanduser(file))
+        if "$" in file or "`" in file or not os.path.isfile(path):
             deny(UNREADABLE.format(what=f"the curl config {file}"))
         try:
-            text = Path(os.path.join(here, os.path.expanduser(file))).read_text()
+            text = Path(path).read_text()
         except (OSError, UnicodeError):
             deny(UNREADABLE.format(what=f"the curl config {file}"))
         for line in filter(None, map(str.strip, text.splitlines())):
             found = CURL_CONFIG_LINE.match(line)
-            if line.startswith("#") or not found:
+            if not found:
                 continue
             name, value = found.groups()
             name = name if name.startswith("-") else ("-" if len(name) == 1 else "--") + name
             if name in ("-K", "--config"):
                 deny(UNREADABLE.format(what=f"the curl config {file}, which reads another"))
-            value = value.strip()
-            added += [name, *(shlex.split(value)[:1] if value else [])]
+            added += [name, *shlex.split(value)[:1]]
     return [called[0], *added, *called[1:]]
 
 
@@ -1346,21 +1365,40 @@ def refuse_api_write(words, here, said, expanded=False):
     place = (here, [], {})
     if called[:1] == ["gh"] and len(called) > 1 and not expanded:
         prefix = words[:len(words) - len(called)]
-        expansion = gh_aliases(tuple(word for word in prefix if "=" in word)).get(called[1])
+        assigned = tuple(word for word in prefix if word.partition("=")[0] in GH_CONFIG_HOMES)
+        if found := next((word for word in assigned if "$" in word or "`" in word), None):
+            deny(UNREADABLE.format(what=f"which gh config {found} names"))
+        expansion = gh_aliases(assigned).get(called[1])
+        if called[1:3] == ["alias", "import"]:
+            deny(UNREADABLE.format(what="the aliases gh alias import sets"))
+        if called[1:3] == ["alias", "set"]:
+            flags, operands = options(called[3:], ())
+            if len(operands) < 2 or operands[1] == "-":
+                deny(UNREADABLE.format(what="the alias gh alias set defines"))
+            shell = any(name in ("-s", "--shell") for name, _ in flags)
+            expansion = ("!" if shell and not operands[1].startswith("!") else "") + operands[1]
+            called = ["gh", operands[0]]
         if expansion is not None and expansion.startswith("!"):
-            judge_shell(expansion[1:], here)
-        elif expansion is not None:
             args = called[2:]
+            judge_shell(re.sub(r"\"?\$([@*]|\d+)\"?", lambda found: shlex.join(args)
+                               if found.group(1) in "@*" else shlex.quote(
+                args[int(found.group(1)) - 1] if 0 < int(found.group(1)) <= len(args) else ""),
+                               expansion[1:]), here)
+        elif expansion is not None:
+            args, parts = called[2:], shlex.split(expansion, comments=True)
             spelled = [re.sub(r"\$(\d+)", lambda found: args[int(found.group(1)) - 1]
                               if 0 < int(found.group(1)) <= len(args) else "", word)
-                       for word in shlex.split(expansion)]
-            used = {int(n) for word in shlex.split(expansion) for n in re.findall(r"\$(\d+)", word)}
+                       for word in parts]
+            used = {int(n) for word in parts for n in re.findall(r"\$(\d+)", word)}
             words = [*prefix, "gh", *spelled, *(arg for at, arg in enumerate(args, 1)
                                                 if at not in used)]
             refuse_api_write(words, here, shlex.join(words), True)
             return
     if called[:1] == ["curl"]:
-        called = curl_configured(called, here)
+        called = curl_configured(called, here, words[:len(words) - len(called)])
+        if found := next((word for word in called if word in ("--next", "-:")
+                          or word.startswith(("--expand-", "--variable"))), None):
+            deny(UNREADABLE.format(what=f"which request curl sends past {found}"))
     if called[:2] == ["gh", "api"]:
         flags, operands = options(called[2:], GH_VALUED)
         body = {}
@@ -1394,7 +1432,7 @@ def refuse_api_write(words, here, said, expanded=False):
     body = (read_body(data) if data is not None and data[:1] != "@"
             else None if sent else {key.rstrip(":"): None if key.endswith(":") or value[:1] == "@"
                                     else value for key, _, value in pairs})
-    method = next((value.upper() for name, value in flags
+    method = next((value.upper() for name, value in reversed(flags)
                    if name in ("-X", "--request", "--method")), None) or next(
         (word for word in operands if word in METHODS), None) or (
         "PUT" if any(name in ("-T", "--upload-file") for name, _ in sent)
@@ -1409,17 +1447,30 @@ def refuse_unheld_script(words, here):
     if start and runner(words[start - 1]) in RUNNERS:
         start -= 1
     called = words[start:]
-    if tuple(called[:2]) in LAUNCHERS:
-        rest = called[2:]
-        if found := next((word for word in rest if "$" in word or "`" in word), None):
-            deny(UNREADABLE.format(what=f"which file {' '.join(called[:2])} runs past {found}"))
+    if called[:1] == ["uvx"] or called[:1] and called[0] in LAUNCHERS and "run" in called[1:]:
+        rest = called[1:] if called[0] == "uvx" else called[called.index("run") + 1:]
+        if found := next((word for word in called if "$" in word or "`" in word), None):
+            deny(UNREADABLE.format(what=f"which file {called[0]} run runs past {found}"))
+        moved = [value for flag, value in itertools.pairwise(called) if flag in ("--directory", "-C")]
+        moved += [word.partition("=")[2] for word in called if word.startswith("--directory=")]
+        cwd = os.path.join(here, os.path.expanduser(moved[-1])) if moved else here
         for word in rest:
-            if not word.startswith("-") and os.path.isfile(
-                    os.path.join(here, os.path.expanduser(word))):
-                judge_run(word, word, False, here)
+            bases = [base for base in (cwd, here)
+                     if os.path.isfile(os.path.join(base, os.path.expanduser(word)))]
+            if not word.startswith("-") and bases:
+                judge_run(word, os.path.join(bases[0], os.path.expanduser(word)), False, here)
+            elif word.endswith(".py"):
+                deny(UNREADABLE.format(what=f"{word}, which does not exist yet"))
+        for flag, value in itertools.pairwise([*rest, ""]):
+            module = value if flag in ("-m", "--module") else flag.partition("=")[2] \
+                if flag.startswith("--module=") else None
+            if module:
+                refuse_unheld_script(["python", "-m", module], cwd)
         at = next((at for at, word in enumerate(rest) if runner(word) in RUNNERS), None)
         if at is not None:
-            refuse_unheld_script(rest[at:], here)
+            refuse_unheld_script(rest[at:], cwd)
+            for script in scripts_within(rest[at:], cwd):
+                judge_shell(script, cwd)
         return
     if not called:
         return
