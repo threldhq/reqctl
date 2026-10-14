@@ -703,39 +703,8 @@ def _handle(uid, data):
     return str(data.get("name") or "")
 
 
-def _occurring(store, path, kind):
-    records = {str(item.uid): corpus.raw(item) for item in corpus.items(store)}
-    text = corpus.read_text(path)
-    if kind == "parameter":
-        return _validate.occurring_values(records, text)
-    return _validate.occurring(records, text)
-
-
-def cmd_smell(args):
-    text = corpus.read_text(args.path)
-    found = _validate.pronouns(text)
-    if args.json:
-        _emit(args, {"path": args.path,
-                     "pronouns": [{"word": word, "at": at}
-                                  for at, word in found]}, "")
-        return EXIT_OK
-    if not found:
-        print("no pronouns")
-        return EXIT_OK
-    for at, word in found:
-        around = " ".join(text[max(0, at - 30):at + 30].split())
-        line = text.count("\n", 0, at) + 1
-        print(f"{line}: {word} -- {around}")
-    return EXIT_OK
-
-
 def cmd_list(args):
-    if args.within and args.kind not in ("term", "parameter"):
-        raise ReqctlError("--in reads prose for what an item fixes -- the "
-                          "words a term defines, the value a parameter holds; "
-                          "it applies to `list term` and `list parameter` alone")
     store, root = corpus.load()
-    occurring = _occurring(store, args.within, args.kind) if args.within else None
     past = history.History(root, [args.kind] if args.kind else corpus.FOLDERS)
     rows = []
     for item in corpus.items(store):
@@ -748,17 +717,13 @@ def cmd_list(args):
         rows.append({"uid": uid, "kind": kind, "status": data.get("status"),
                      "last_updated": past.updated(uid, data),
                      "handle": _handle(uid, data)})
-    if occurring is not None:
-        rows = [{**row, "matched": occurring[row["uid"]]}
-                for row in rows if row["uid"] in occurring]
     rows.sort(key=lambda r: (r["kind"] or "", r["handle"].lower(), r["uid"]))
 
     if args.json:
         _emit(args, {"items": rows}, "")
         return EXIT_OK
     if not rows:
-        print("no items" + (f" of kind {args.kind}" if args.kind else "")
-              + (f" occurring in {args.within}" if args.within else ""))
+        print("no items" + (f" of kind {args.kind}" if args.kind else ""))
         return EXIT_OK
     width = max(len(r["status"] or "") for r in rows)
     dated = max(len(r["last_updated"] or "unknown") for r in rows)
@@ -766,11 +731,10 @@ def cmd_list(args):
         handle = row["handle"]
         if row["kind"] != "term" and len(handle) > 72:
             handle = handle[:71] + "…"
-        suffix = "  -- " + ", ".join(row["matched"]) if occurring is not None else ""
         # @req> REQ-59306961@EGz7Ll3e9FKA 6zyhtu
         # @req> REQ-82027237@R-XinrGfTNzL e6npos
         print(f"{row['uid']}  {(row['status'] or ''):<{width}}  "
-              f"{row['last_updated'] or 'unknown':<{dated}}  {handle}{suffix}")
+              f"{row['last_updated'] or 'unknown':<{dated}}  {handle}")
     return EXIT_OK
 
 
@@ -1254,17 +1218,7 @@ def build_parser(root, fielded):
     s.add_argument("kind", nargs="?",
                    choices=list(_write.KINDS),
                    help="limit to one kind; omit for everything")
-    s.add_argument("--in", dest="within", metavar="PATH",
-                   help="terms and parameters only: keep those whose word, "
-                        "alias or value occurs in the prose at PATH, and name "
-                        "which matched")
     s.set_defaults(func=cmd_list)
-
-    s = _command(sub, "smell",
-                 "name the pronouns in prose a statement is drafted from; "
-                 "what it finds is advice, not a refusal")
-    s.add_argument("path", metavar="PATH", help="the prose to read")
-    s.set_defaults(func=cmd_smell)
 
     s = _command(sub, "validate",
                  "check every item and every cross-link; exit 1 on problems")

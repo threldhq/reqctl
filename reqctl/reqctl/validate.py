@@ -473,20 +473,6 @@ def _references(uid, data, known, root):
     return problems
 
 
-PRONOUNS = (
-    "it its itself they them their theirs themselves this these those "
-    "he him his she her hers someone something anyone anything everyone "
-    "everything somebody anybody everybody nobody nothing none"
-).split()
-
-PRONOUN = re.compile(r"(?<![A-Za-z0-9-])(" + "|".join(PRONOUNS)
-                     + r")(?![A-Za-z0-9-])", re.IGNORECASE)
-
-
-def pronouns(text):
-    return [(found.start(), found.group()) for found in PRONOUN.finditer(text)]
-
-
 def _term_words(data):
     fields = corpus.term_fields(data)
     aliases = fields.get("aliases")
@@ -561,15 +547,6 @@ def _unlinked_terms(records, root):
             for problem in _bare_terms(uid, own_words(root, uid, data), defined)]
 
 
-def occurring(records, text):
-    folded = " ".join(re.sub(r"-\n[ \t]*", "-", text).split())
-    found = {}
-    for uid, word, pattern, _ in term_index(records):
-        if pattern.search(folded):
-            found.setdefault(uid, []).append(word)
-    return found
-
-
 def unlinked_elsewhere(uid, data, records, root):
     index = term_index({uid: data})
     return sorted(other for other, held in records.items()
@@ -603,7 +580,6 @@ ISO_UNITS = {
     "gib": "GiB", "gibibyte": "GiB", "gibibytes": "GiB",
     "%": "%", "percent": "%", "pct": "%",
 }
-UNITS = frozenset(ISO_UNITS.values())
 
 RADIX = "."
 GROUPED_DIGITS = {"Zs", "Pc", "Pi", "Pf", "Po"}
@@ -650,27 +626,6 @@ def _quantities(data, units=ISO_UNITS):
     return quantities(
         corpus.PARAM_REF.sub(" ", corpus.CONCEPT_LINK.sub(r"\1", corpus.prose(data))),
         units)
-
-
-def _states(stated, value, unit):
-    if unit:
-        return (value, unit) in stated
-    return any(value == held and spelling not in UNITS
-               for held, spelling in stated)
-
-
-def occurring_values(records, text):
-    stated = quantities(text)
-    found = {}
-    for uid, data in sorted(records.items()):
-        if corpus.kind_of(uid, data) != "parameter":
-            continue
-        unit = data.get("unit")
-        for key in corpus.entries(data) or {}:
-            if _states(stated, _quantity(key), _unit(str(unit or ""))):
-                found.setdefault(uid, []).append(
-                    f"{key} {unit}" if unit else str(key))
-    return found
 
 
 def _unit(written, units=ISO_UNITS):
