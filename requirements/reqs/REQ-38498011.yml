@@ -1,0 +1,34 @@
+acceptance_criteria:
+- given: an [item](item) file holding an unresolved merge within its [pins](pin)
+  then: the product refuses, naming the file, the merge and reqctl resolve, and shows
+    no parse fault
+  when: reqctl list, context, trace, export, revise or baseline --check is run
+- given: an [item](item) file holding an unresolved merge in a field other than its
+    [pins](pin) and its [citation list](citation_list)
+  then: the product refuses, naming the file and the merge, and names no command as
+    settling it
+  when: a reqctl command other than validate and resolve reads it
+- given: a corpus in which one [item](item) file holds an unresolved merge
+  then: the product refuses rather than list the other [items](item)
+  when: reqctl list or export is run
+- given: an [item](item) file holding an unresolved merge and a YAML alias or a repeated
+    top-level key
+  then: the product names the merge
+  when: a reqctl command other than validate and resolve reads it
+- given: an [item](item) file unreadable for a reason other than an unresolved merge
+  then: the product states the fault it found
+  when: a reqctl command reads it
+assessed:
+  REQ-19913588: hBNJrpn4vtZeTo84vHq_GZB_97UAzQuiQwg_WqEXgqU
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations:
+  REQ-19913588: constrains
+status: approved
+text: If a reqctl command other than validate and resolve would read an [item](item)
+  file holding an unresolved merge, then the product shall refuse the command, naming
+  the merge rather than the fault that reading the file raises.
+type: functional
+verification: inspection

@@ -1,0 +1,49 @@
+acceptance_criteria:
+- given: a Python file origin's default branch does not hold, naming a corpus [item](item)'s
+    file
+  then: the product refuses the [tool call](tool_call) and names running reqctl as
+    the route
+  when: a [tool call](tool_call) runs python, bash, sh, source or ./ on it
+- given: a script origin's default branch holds unchanged at its path, naming a corpus
+    [item](item)'s file
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs it
+- given: a script naming only the corpus schemas
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs it
+- given: a branch changing reqctl's own sources
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs reqctl
+- given: a script naming requirements.txt and no corpus path
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs it
+- given: a script importing a module that names a corpus [item](item)'s file, and
+    naming none itself
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs the script
+- given: origin names no default branch, or the repository cannot be read
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs a file naming a corpus [item](item)'s file
+- given: a file the local origin/HEAD ref holds unchanged, although origin has moved
+    on since the last fetch
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs it
+assessed:
+  REQ-22704490: 0I1yKEFWt0tXaDvD_wUxALeCSn1230TMwxdefrmcyvM
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-22704490: derives_from
+  REQ-36925311: depends_on
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) would run a file whose text names the path of a
+  corpus [item](item)'s file, a folder of corpus [items](item), the baseline or the
+  [corpus root](corpus_root), and origin's default branch does not hold that file
+  unchanged at its path, then the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a requirement recording derives_from toward another requirement
+  then: the product refuses, names derives_from and reqctl unrelate, and changes nothing
+  when: reqctl relate names depends_on toward the same requirement
+- given: a requirement recording derives_from toward another requirement
+  then: the product [pins](pin) the link
+  when: reqctl relate names derives_from toward the same requirement
+- given: a requirement toward which another records conflicts_with, recording no link
+    of its own toward it
+  then: the product does not refuse on the ground that the second records a kind
+  when: reqctl relate names depends_on from the first toward the second
+assessed:
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations: {}
+status: approved
+text: If reqctl relate names a kind other than the kind of the link the source already
+  records toward the target, then the product shall refuse the link, naming the kind
+  the source records and unrelate as the route to change it.
+type: functional
+verification: inspection

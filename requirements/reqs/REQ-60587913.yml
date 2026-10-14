@@ -16,7 +16,7 @@ acceptance_criteria:
   when: the [tool call](tool_call) is made
 - given: a git push carrying -u, -n or --follow-tags, or naming a refspec with a colon
     inside it
-  then: the product does not refuse it
+  then: the product does not refuse it as a force push
   when: the [tool call](tool_call) is made
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
