@@ -31,6 +31,9 @@ entries:
       holds
     quantity: 10
     value_type: count
+fields:
+- quantity
+- unit
 kind: data
 name: review_limits
 status: approved
