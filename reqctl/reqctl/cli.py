@@ -584,13 +584,6 @@ def _context(store, item, dependents, tags, past):
             1 for r in outgoing + parameters + concepts if r["suspect"]
         ),
     }
-    if (uid.startswith("TERM-") and item.data.get("status") != "approved"
-            and corpus.term_word(item.data)):
-        data["unlinked_elsewhere"] = _validate.unlinked_elsewhere(
-            uid, item.data,
-            {other.uid: other.data for other in corpus.items(store)},
-            store.root,
-        )
 
     # @req> REQ-59306961@EGz7Ll3e9FKA yoxktl
     # @req> REQ-82027237@R-XinrGfTNzL wmao62
@@ -637,15 +630,6 @@ def _context(store, item, dependents, tags, past):
                 + _shown_pins(r)
                 for r in incoming
             )
-        )
-    carrying = data.get("unlinked_elsewhere")
-    if carrying is not None:
-        blocks.append(
-            "\napproving it\n"
-            + (f"  {len(carrying)} item(s) then fail until each links this term\n"
-               + "\n".join(f"  {other}" for other in carrying)
-               if carrying else
-               "  nothing else carries its words unlinked")
         )
     blocks.append(
         "\nimplementation\n"

@@ -51,6 +51,8 @@ STATED_SKIP = ("aliases",)
 POLICED_SKIP = ("aliases", "word", "name", "carried")
 # @req> REQ-68407569@9WdKt66SbMuQ bzk766
 POLICED_ITEM_SKIP = POLICED_SKIP + ("default", "unit")
+# @req> REQ-83702299@kBGzIwAyKDHL zgqncd
+ENUMERATED = ("kind", "type", "verification", "priority", "value_type")
 CITATION_LIST = "citations"
 WHOLE_FILES = "whole_file_citations"
 # @req> REQ-88203622@wlZ9orsr9c7q otmh6w
@@ -341,9 +343,32 @@ def items(store):
             data = loads(text, path, aliases=False)
             if not isinstance(data, dict):
                 raise ReqctlError(f"{path.stem}: item file is not a mapping")
+            refuse_misshapen(path.relative_to(store.root), data)
             loaded.append(Item(path.stem, path, data))
         store._items = loaded
     return store._items
+
+
+# @req> REQ-19913588@hBNJrpn4vtZe 5es3j4
+def refuse_misshapen(where, data):
+    if not isinstance(data.get("kind", ""), str):
+        raise ReqctlError(f"{where}: kind is a {type(data['kind']).__name__}, not one "
+                          "name -- state one kind")
+    if found := _untexted(data):
+        raise ReqctlError(f"{where}: the key {found[-1]!r} under "
+                          f"{'.'.join(map(str, found[:-1])) or 'the item'} is not text -- "
+                          "quote it or rename it")
+
+
+def _untexted(value, at=()):
+    pairs = (value.items() if isinstance(value, dict)
+             else enumerate(value) if isinstance(value, list) else ())
+    for key, held in pairs:
+        if isinstance(value, dict) and not isinstance(key, str):
+            return (*at, key)
+        if found := _untexted(held, (*at, key)):
+            return found
+    return None
 
 
 def invalidate(store):
@@ -807,8 +832,8 @@ def unlinked_prose(data):
     # @req> REQ-83702299@kBGzIwAyKDHL et7k4t
     return PARAM_REF.sub(
         " ", CONCEPT_LINK.sub(" ", "\n".join(
-            [prose(data, POLICED_SKIP, item=False)]
-            + _stated(data, ITEM_SKIP + POLICED_ITEM_SKIP))))
+            [prose(data, POLICED_SKIP + ("value_type",), item=False)]
+            + _stated(data, ITEM_SKIP + POLICED_ITEM_SKIP + ENUMERATED))))
 
 
 def dependencies(data):
