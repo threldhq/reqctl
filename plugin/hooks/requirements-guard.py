@@ -281,7 +281,7 @@ HTTP_VALUED = ("-X", "--request", "--method", *HTTP_SENDS, "-H", "--header", "-o
 METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE")
 HTTPIE = ("http", "https", "xh", "xhs")
 GITHUB_API = re.compile(
-    r"(?<![\w.-])(?:https?:/+)?(?:[^/\s@'\"]*@)?api\.github\.com\.?(?::\d+)?(/[^\s'\"]*)?$",
+    r"(?<![\w.-])(?:https?:/+)?(?:[^/\s@'\"]*@)?api\.github\.com\.?(?::\d+)?(/\S*)?$",
     re.I)
 BRANCH_MUTATION = re.compile(r"\b(?:createCommitOnBranch|updateRefs?|deleteRef|mergeBranch)\b")
 CONNECTOR_WRITE = re.compile(
@@ -1096,7 +1096,7 @@ def options(words, valued):
 
 # @req+ REQ-30013664@ijHTWP75cTcK nl3elr
 def destination(spec, place):
-    src, colon, dst = spec.partition(":")
+    src, colon, dst = spec.removeprefix("+").partition(":")
     name = dst if colon else src
     if "$" in name or "`" in name:
         return None
@@ -1128,12 +1128,13 @@ def refuse_push_to_default(words, here):
             git_reads(["remote", "get-url", "--push", remote], place) or remote) != repo_slug(origin):
         return
     configured = git_reads(["config", "--get-all", f"remote.{remote}.push"], place)
-    if operands[1:] or configured:
-        targets = [destination(alt, place) for spec in operands[1:] or configured.split()
-                   for alt in bounded(spec)]
+    if operands[1:]:
+        targets = [destination(alt, place) for spec in operands[1:] for alt in bounded(spec)]
     elif {"--all", "--branches"} & set(named) or (
             git_reads(["config", "push.default"], place) or "").strip() == "matching":
         targets = ["*"]
+    elif configured:
+        targets = [destination(spec, place) for spec in configured.split()]
     elif "--tags" in named:
         targets = []
     else:
@@ -1219,11 +1220,12 @@ def refuse_api_write(words, here, said):
     httpie = called[0] in HTTPIE
     flags, operands = options(called[1:], () if httpie else HTTP_VALUED)
     sent = [] if httpie else [(name, value) for name, value in flags if name in HTTP_SENDS]
-    pairs = [word.partition("=") for word in operands if "=" in word and not GITHUB_API.search(word)]
+    pairs = [word.partition("=") for word in operands
+             if "=" in word and "==" not in word and not GITHUB_API.search(word)]
     data = next((value for name, value in sent if name in HTTP_BODY), None)
     body = (read_body(data) if data is not None and data[:1] != "@"
-            else None if sent else {key.rstrip(":"): None if key.endswith(":") else value
-                                    for key, _, value in pairs})
+            else None if sent else {key.rstrip(":"): None if key.endswith(":") or value[:1] == "@"
+                                    else value for key, _, value in pairs})
     method = next((value.upper() for name, value in flags
                    if name in ("-X", "--request", "--method")), None) or next(
         (word for word in operands if word in METHODS), None) or (
@@ -1251,15 +1253,18 @@ def refuse_unheld_script(words, here):
         module = key == "python" and previous == "-m"
         if module or (not word.startswith("-") or not inline) and previous not in RUN_VALUED.get(
                 key, ()):
-            file = word.replace(".", "/") + ".py" if module else word
+            file = word.replace(".", "/") if module else word
             break
     if not file:
         return
     if "$" in file or "`" in file or not here and not os.path.isabs(file):
         deny(UNREADABLE.format(what=f"which file {raw} runs"))
     path = os.path.realpath(os.path.join(here, os.path.expanduser(file)))
+    package = module or os.path.isdir(path)
+    path = (path + ".py" if module and os.path.isfile(path + ".py")
+            else os.path.join(path, "__main__.py") if package else path)
     if not os.path.isfile(path):
-        if module or os.path.isdir(path):
+        if package:
             return
         deny(UNREADABLE.format(what=f"{file}, which does not exist yet"))
     try:
