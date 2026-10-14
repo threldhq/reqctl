@@ -27,6 +27,8 @@ entries:
     definition: The most [proposals](proposal) one recall prompt carries
     quantity: 40
     value_type: count
+fields:
+- quantity
 kind: data
 name: challenge_bounds
 status: approved

@@ -108,6 +108,8 @@ entries:
         spellings:
         - kilobyte
         - kilobytes
+fields:
+- units
 kind: data
 name: value_types
 status: approved

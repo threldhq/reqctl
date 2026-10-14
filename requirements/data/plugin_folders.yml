@@ -4,6 +4,8 @@ entries:
     definition: The folder holding the sources of the Claude Code plugin; every path
       a plugin component states is read relative to it.
     path: plugin/
+fields:
+- path
 kind: data
 name: plugin_folders
 status: approved

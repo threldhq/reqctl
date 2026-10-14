@@ -26,6 +26,8 @@ entries:
     paths:
     - hooks/session-rules.py
     - hooks/session-rules.md
+fields:
+- paths
 kind: data
 name: plugin_components
 status: approved

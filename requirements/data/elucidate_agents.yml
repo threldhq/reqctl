@@ -24,6 +24,9 @@ entries:
       bearing on a run's [proposals](proposal)
     effort: medium
     model: claude-sonnet-5-5
+fields:
+- effort
+- model
 kind: data
 name: elucidate_agents
 status: approved

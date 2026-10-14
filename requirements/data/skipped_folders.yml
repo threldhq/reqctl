@@ -32,6 +32,8 @@ entries:
     folder: .ruff_cache
   venv:
     folder: venv
+fields:
+- folder
 kind: data
 name: skipped_folders
 status: approved

@@ -9,6 +9,8 @@ entries:
     access: read
   pull_requests:
     access: read
+fields:
+- access
 kind: data
 name: portal_token_permissions
 status: approved
