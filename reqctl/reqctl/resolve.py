@@ -23,7 +23,7 @@ def _reached(path, text):
     spoken = {key: value for key, value in ours.items() if key not in skipped}
     answered = {key: value for key, value in theirs.items() if key not in skipped}
     return ours, theirs, skipped, spoken, sorted(
-        key for key in set(spoken) | set(answered)
+        str(key) for key in set(spoken) | set(answered)
         if not same(spoken.get(key, GONE), answered.get(key, GONE)))
 
 

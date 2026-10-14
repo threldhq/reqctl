@@ -902,7 +902,8 @@ def refile_into(store, uid, into, key):
     awaiting = {holder for holder, _ in _awaiting(before, item.uid, olds, address)}
     after.update({held_uid: data for held_uid, data in _repin(after, {target.uid}, {
         (holder, pinned) for holder in awaiting for pinned in (address, target.uid)
-        if pinned not in corpus.mapping(before[holder], "assessed")}).items()
+        if pinned not in corpus.mapping(before[holder], "assessed")}
+        | _awaiting(before, target.uid, {target.uid}, target.uid)).items()
                   if held_uid in moved})
     # @req- yrfrdz
 
