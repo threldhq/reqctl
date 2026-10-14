@@ -37,6 +37,7 @@ COMMENTS = {**dict.fromkeys((".py", ".yml", ".yaml"), ("# ", "")),
 # @req> commentless_formats@nLgr55U75GyS n5tk7r
 # @req> REQ-87066486@AtzPEAcAbJ1v uvpfar
 COMMENTLESS = ("json",)
+BOM = "\ufeff"
 
 
 # @req> REQ-52925332@8dtaEN9KH9jO cczml5
@@ -386,7 +387,8 @@ def _sources(root):
                 continue
             if b"\0" in raw:
                 continue
-            yield str(path.relative_to(root)), raw.decode(errors="ignore")
+            # @req> REQ-36103991@1sBO1pub0_IK xx3hop
+            yield str(path.relative_to(root)), raw.decode(errors="ignore").removeprefix(BOM)
     for failure in unread:
         yield str(Path(failure.filename).relative_to(root)), None
     # @req- ofycdw
@@ -469,7 +471,10 @@ def tagged(root, path, asked, exclusive=False):
                           "citation scan skips, so a citation there is never "
                           "read -- cite code outside it")
     # @req- tbkz5r
-    text = target.read_bytes().decode()
+    # @req+ REQ-36103991@1sBO1pub0_IK 6pharc
+    raw = target.read_bytes().decode()
+    text = raw.removeprefix(BOM)
+    # @req- 6pharc
     lines = _feed_lines(text)
     # @req> REQ-65738797@3jHtqzLVQUal msfg5w
     for first, last, _, _ in asked:
@@ -532,13 +537,14 @@ def tagged(root, path, asked, exclusive=False):
     if problems:
         raise ReqctlError("\n".join(problems))
     # @req- zkxsxx
-    return ((target, written.encode()),
+    # @req> REQ-36103991@1sBO1pub0_IK wcjo5z
+    return ((target, (raw[:len(raw) - len(text)] + written).encode()),
             [(c["id"], c["uid"], digest(path, written, c["lines"])) for c in new])
 
 
 # @req> REQ-64846889@TSG5uy3nM0nk 6vgx2i
 def standing(root, citation):
-    text = (Path(root) / citation["path"]).read_bytes().decode()
+    text = (Path(root) / citation["path"]).read_bytes().decode().removeprefix(BOM)
     return digest(citation["path"], text, citation["lines"])
 
 
@@ -564,27 +570,33 @@ def named(root, identity, nests=True):
 
 def _lines(root, citation):
     target = Path(root) / citation["path"]
-    return target, _feed_lines(target.read_bytes().decode())
+    # @req+ REQ-36103991@1sBO1pub0_IK zibglc
+    text = target.read_bytes().decode()
+    held = text.removeprefix(BOM)
+    return target, text[:len(text) - len(held)], _feed_lines(held)
+    # @req- zibglc
 
 
 def repinned(root, citation, stamp):
     # @req+ REQ-17757558@XeiCnIpn4RLV lqd5pz
-    target, lines = _lines(root, citation)
+    target, mark, lines = _lines(root, citation)
     at = citation["open"] - 1
     pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['address'])})(?:@\S*)?")
     # @req> REQ-18833394@iNDqEsjKcVn- 62bkhg
     lines[at] = pinned.sub(lambda found: f"{found.group(1)}@{stamp}", lines[at], count=1)
-    return target, "".join(lines).encode()
+    # @req> REQ-36103991@1sBO1pub0_IK y7m44o
+    return target, (mark + "".join(lines)).encode()
     # @req- lqd5pz
 
 
 def untagged(root, citation):
-    target, lines = _lines(root, citation)
+    target, mark, lines = _lines(root, citation)
     marks = set(citation["marks"])
     # @req> REQ-81275367@2q0tIHQCM4br 5gkn5k
     # @req> REQ-26984738@2Cu-ngxaDd6z a4ywox
-    return target, "".join(line for number, line in enumerate(lines, start=1)
-                           if number not in marks).encode()
+    # @req> REQ-36103991@1sBO1pub0_IK vlp2ka
+    return target, (mark + "".join(line for number, line in enumerate(lines, start=1)
+                                   if number not in marks)).encode()
 
 
 def _statement(path, text, first, last):
@@ -699,7 +711,7 @@ def _carried(root, commit):
         raise ReqctlError(f"cannot read {commit}: {listed.stderr.strip()}")
     for named in filter(None, listed.stdout.split("\0")):
         relative = named.split(":", 1)[1]
-        yield relative, _git(root, "show", f"{commit}:{relative}")
+        yield relative, _git(root, "show", f"{commit}:{relative}").removeprefix(BOM)
 
 
 def compare(root, ref):

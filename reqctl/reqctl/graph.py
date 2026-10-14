@@ -59,6 +59,11 @@ def whole(tree, tags, root=None, uid=None):
                 tags.setdefault(owner, []).append((path, held.get("pinned") or "", None))
             if root is None or (uid and owner != uid):
                 continue
+            # @req> REQ-80254000@aV5K4B7jbtHD sb54ru
+            if corpus.is_test(path):
+                problems.append(f"{path}: the whole-file citation {owner} holds is of "
+                                f"a test -- reqctl untag {path} --req {owner}")
+                continue
             target = (Path(root) / path).resolve()
             if not target.is_relative_to(Path(root).resolve()):
                 problems.append(f"{owner}: it holds a whole-file citation of {path}, "

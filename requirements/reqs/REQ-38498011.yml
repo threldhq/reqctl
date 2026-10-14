@@ -23,6 +23,9 @@ assessed:
   citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+citations:
+  3sjv5b: Z8rI08aUe8AXXKRVgmhgBnej25fZalF6IyI6BGcqEqw
+  q7wu74: LH5WeJLpxsujXvl5JBh8ouYYbm1-vI8ke5fwppowEI0
 priority: medium
 relations:
   REQ-19913588: constrains

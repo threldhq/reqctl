@@ -579,7 +579,7 @@ def _reword_data(root, uid, data, addresses, words, seen):
 # @req- b3ts36
 
 
-def _repin(after, touched):
+def _repin(after, touched, keep=frozenset()):
     moved = {}
     for uid, data in after.items():
         pins = data.get("assessed")
@@ -588,7 +588,7 @@ def _repin(after, touched):
         held = dict(pins)
         for address, pin in pins.items():
             target, rest = corpus.split_address(address)
-            if target not in touched or target not in after:
+            if target not in touched or target not in after or (uid, address) in keep:
                 continue
             fresh = corpus.address_stamp_of(target, after[target], rest)
             if fresh is not None and fresh != pin:
@@ -596,6 +596,15 @@ def _repin(after, touched):
         if held != pins:
             moved[uid] = dict(data, assessed=held)
     return moved
+
+
+def _awaiting(before, uid, olds, new):
+    return {(holder, f"{new}.{rest}" if rest else new)
+            for holder, data in before.items()
+            for address, pin in corpus.mapping(data, "assessed").items()
+            for target, rest in [corpus.split_address(address)]
+            if target in olds
+            and pin != corpus.address_stamp_of(uid, before[uid], rest)}
 
 
 def _propagate(store, uid, prospective, words):
@@ -726,7 +735,8 @@ def rename(store, uid, new_name):
     # @req> REQ-54697016@Ch9-SdvPj8vq rvmjri
     _pruned(after, [held_uid for held_uid, data in after.items()
                     if data != before.get(held_uid)])
-    after.update(_repin(after, {new_name}))
+    # @req> REQ-14368186@0pLRg6eJoadP mgzb3c
+    after.update(_repin(after, {new_name}, _awaiting(before, item.uid, olds, new_name)))
 
     # @req> REQ-81815730@fForAOZqtxKN k27etl
     faults = [fault for fault in _validate.dictionary_rules(new_name, after[new_name])
@@ -765,7 +775,9 @@ def refile(store, uid):
     after[item.uid] = dict(
         {key: value for key, value in item.data.items()
          if key not in dropped}, kind="data")
-    after.update(_repin(after, {item.uid}))
+    # @req> REQ-14368186@0pLRg6eJoadP p2igyc
+    after.update(_repin(after, {item.uid},
+                        _awaiting(before, item.uid, {item.uid}, item.uid)))
 
     problems = _validate.dictionary_rules(item.uid, after[item.uid])
     found = _validate.coherence(after, store.root)
@@ -886,8 +898,13 @@ def refile_into(store, uid, into, key):
     after[item.uid] = dict(after[item.uid], status="deprecated")
     moved = {held_uid for held_uid, data in after.items() if data != before[held_uid]}
     after.update(_repin(after, moved - {target.uid, item.uid}))
-    after.update({held_uid: data for held_uid, data in _repin(after, {target.uid}).items()
+    # @req+ REQ-14368186@0pLRg6eJoadP yrfrdz
+    awaiting = {holder for holder, _ in _awaiting(before, item.uid, olds, address)}
+    after.update({held_uid: data for held_uid, data in _repin(after, {target.uid}, {
+        (holder, pinned) for holder in awaiting for pinned in (address, target.uid)
+        if pinned not in corpus.mapping(before[holder], "assessed")}).items()
                   if held_uid in moved})
+    # @req- yrfrdz
 
     # @req+ REQ-42390302@QOC4GhS7SkFg aev5ks
     written = [corpus.Item(held_uid, paths[held_uid], data)
@@ -1481,6 +1498,13 @@ def relate(store, source_uid, relation, target_uid):
 
     kinds = _relations_map(source)
     repinned = target_uid in kinds
+    # @req> REQ-77808874@o0P_SIB1tzP6 l7oe6k
+    if repinned and kinds[target_uid] != relation:
+        raise ReqctlError(
+            f"{source_uid} already records {kinds[target_uid]} toward "
+            f"{target_uid} -- to record {relation} instead, run "
+            f"`reqctl unrelate {source_uid} {target_uid}`, then relate it again"
+            f"\n{source_uid} was not changed")
     kinds[target_uid] = relation
     prospective = dict(source.data)
     prospective["assessed"] = _assessed_map(source_uid, source.data)
