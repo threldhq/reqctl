@@ -298,7 +298,7 @@ HTTP_BODY = ("-d", "--data", "--data-raw", "--data-binary", "--data-ascii", "--j
 HTTP_SENDS = (*HTTP_BODY, "--data-urlencode", "-F", "--form", "-T", "--upload-file",
               "--post-file", "--body-file")
 HTTP_VALUED = ("-X", "--request", "--method", *HTTP_SENDS, "-H", "--header", "-o",
-               "--output", "-u", "--user")
+               "--output", "-u", "--user", "--url", "-K", "--config")
 METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE")
 HTTPIE = ("http", "https", "xh", "xhs")
 GITHUB_API = re.compile(
@@ -314,6 +314,8 @@ RUN_VALUED = {"python": ("-W", "-X", "-m", "--check-hash-based-pycs"),
               "node": ("-r", "--require", "--import", "--loader"),
               **dict.fromkeys((*SHELLS, "fish"), ("-o", "-O", "--rcfile", "--init-file"))}
 ROOT_QUOTED = re.compile(rf"""(['"`])(?:\./)?{CORPUS_ROOT_NAME}/?\1""")
+LAUNCHERS = (("uv", "run"), ("pipx", "run"), ("poetry", "run"))
+CURL_CONFIG_LINE = re.compile(r"(-{0,2}[A-Za-z0-9][\w-]*)(?:\s*[=:]\s*|\s+|$)(.*)")
 
 
 def named_paths(value, keys=PATH_KEY, key=""):
@@ -1287,6 +1289,49 @@ def runner(word):
     return "python" if re.fullmatch(r"(?:python|pypy)[\d.]*", name) else name
 
 
+@functools.cache
+def gh_aliases(assigned):
+    try:
+        done = subprocess.run(["gh", "alias", "list"], capture_output=True, text=True,
+                              timeout=min(15, left()), check=False,
+                              env={**os.environ, **dict(word.split("=", 1) for word in assigned)})
+    except (OSError, subprocess.SubprocessError):
+        return {}
+    return {name.strip(): unquoted(value.strip()) for name, _, value in
+            (line.partition(":") for line in done.stdout.splitlines()) if value}
+
+
+def unquoted(value):
+    if len(value) > 1 and value[0] == value[-1] == "'":
+        return value[1:-1].replace("''", "'")
+    if len(value) > 1 and value[0] == value[-1] == '"':
+        return json.loads(value)
+    return value
+
+
+def curl_configured(called, here):
+    flags, _ = options(called[1:], HTTP_VALUED)
+    added = []
+    for file in (value for name, value in flags if name in ("-K", "--config")):
+        if file == "-" or "$" in file or "`" in file:
+            deny(UNREADABLE.format(what=f"the curl config {file}"))
+        try:
+            text = Path(os.path.join(here, os.path.expanduser(file))).read_text()
+        except (OSError, UnicodeError):
+            deny(UNREADABLE.format(what=f"the curl config {file}"))
+        for line in filter(None, map(str.strip, text.splitlines())):
+            found = CURL_CONFIG_LINE.match(line)
+            if line.startswith("#") or not found:
+                continue
+            name, value = found.groups()
+            name = name if name.startswith("-") else ("-" if len(name) == 1 else "--") + name
+            if name in ("-K", "--config"):
+                deny(UNREADABLE.format(what=f"the curl config {file}, which reads another"))
+            value = value.strip()
+            added += [name, *(shlex.split(value)[:1] if value else [])]
+    return [called[0], *added, *called[1:]]
+
+
 def read_body(text, here=""):
     try:
         held = json.loads(Path(os.path.join(here, text)).read_text() if here else text)
@@ -1296,9 +1341,26 @@ def read_body(text, here=""):
 
 
 # @req> REQ-30013664@ijHTWP75cTcK rbhjoy
-def refuse_api_write(words, here, said):
+def refuse_api_write(words, here, said, expanded=False):
     called = invoked(words)
     place = (here, [], {})
+    if called[:1] == ["gh"] and len(called) > 1 and not expanded:
+        prefix = words[:len(words) - len(called)]
+        expansion = gh_aliases(tuple(word for word in prefix if "=" in word)).get(called[1])
+        if expansion is not None and expansion.startswith("!"):
+            judge_shell(expansion[1:], here)
+        elif expansion is not None:
+            args = called[2:]
+            spelled = [re.sub(r"\$(\d+)", lambda found: args[int(found.group(1)) - 1]
+                              if 0 < int(found.group(1)) <= len(args) else "", word)
+                       for word in shlex.split(expansion)]
+            used = {int(n) for word in shlex.split(expansion) for n in re.findall(r"\$(\d+)", word)}
+            words = [*prefix, "gh", *spelled, *(arg for at, arg in enumerate(args, 1)
+                                                if at not in used)]
+            refuse_api_write(words, here, shlex.join(words), True)
+            return
+    if called[:1] == ["curl"]:
+        called = curl_configured(called, here)
     if called[:2] == ["gh", "api"]:
         flags, operands = options(called[2:], GH_VALUED)
         body = {}
@@ -1347,6 +1409,18 @@ def refuse_unheld_script(words, here):
     if start and runner(words[start - 1]) in RUNNERS:
         start -= 1
     called = words[start:]
+    if tuple(called[:2]) in LAUNCHERS:
+        rest = called[2:]
+        if found := next((word for word in rest if "$" in word or "`" in word), None):
+            deny(UNREADABLE.format(what=f"which file {' '.join(called[:2])} runs past {found}"))
+        for word in rest:
+            if not word.startswith("-") and os.path.isfile(
+                    os.path.join(here, os.path.expanduser(word))):
+                judge_run(word, word, False, here)
+        at = next((at for at, word in enumerate(rest) if runner(word) in RUNNERS), None)
+        if at is not None:
+            refuse_unheld_script(rest[at:], here)
+        return
     if not called:
         return
     raw, key = called[0], runner(called[0])
@@ -1361,8 +1435,12 @@ def refuse_unheld_script(words, here):
                 key, ()):
             file = word.replace(".", "/") if module else word
             break
-    if not file:
-        return
+    if file:
+        judge_run(raw, file, module, here)
+
+
+# @req> REQ-75038049@7JHx4bR_CkbA yu277l
+def judge_run(raw, file, module, here):
     if "$" in file or "`" in file or not here and not os.path.isabs(file):
         deny(UNREADABLE.format(what=f"which file {raw} runs"))
     path = os.path.realpath(os.path.join(here, os.path.expanduser(file)))

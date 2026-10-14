@@ -37,7 +37,8 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   g3ql3s: 2Ul--7VCYfk3cqXx1-8N_DPXduCizbwX2JIViyklT1I
-  rvzbno: wxlCcr3FZ-x2pWbhgA9qKiftkYGXhwX-fh2BfwvHOgU
+  rvzbno: biyZP2YNGHCbvZgT9sKtqlepRQcOW1vzk2BdgWj4jok
+  yu277l: GasKlPhQ2uQw96zQJisRsEW8RUEj0iJe7ZF8JJ3rS6w
 priority: medium
 relations:
   REQ-22704490: derives_from
