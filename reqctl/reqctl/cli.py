@@ -248,7 +248,7 @@ def cmd_unrelate(args):
 
 def cmd_delete(args):
     tree, root = corpus.load()
-    # @req> REQ-43148967@m7D9pWqoVs3j nghnwd
+    # @req> REQ-43148967@9kz9xDxvdKH5 nghnwd
     _refuse_invalid(root, "remove")
     where = _write.delete(tree, args.uid)
     _emit(args, {"uid": args.uid, "path": str(where)},
