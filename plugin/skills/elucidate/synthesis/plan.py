@@ -401,9 +401,24 @@ def unresolved(records, statement):
     return stray, defaultless
 
 
+# @req> REQ-50074955@8bnOAeMNBdF2 yo7kod
+class Spelled(corpus.Loader):
+    def construct_mapping(self, node, deep=False):
+        self.flatten_mapping(node)
+        for key, _ in node.value:
+            if key.tag.endswith(":int") and re.fullmatch("[-+]?0[0-7_]+", key.value):
+                key.value = str(int(key.value.replace("_", "")))
+        return super().construct_mapping(node, deep)
+
+
+def numeral(key):
+    spelled = str(key)
+    return str(int(spelled)) if re.fullmatch(r"[0-9]+", spelled) else spelled
+
+
 def recorded(run):
     path = run / "run.yaml"
-    read = corpus.read(path) if path.is_file() else None
+    read = corpus.read(path, Spelled) if path.is_file() else None
     return path, (read if isinstance(read, dict) else {})
 
 
@@ -430,13 +445,15 @@ def rows(path, name, said, members):
                 f", which the {name} data item does not define. The members "
                 f"are {', '.join(sorted(members))}, or `all`.")
         # @req- 6ahzuj
+        # @req> REQ-50074955@8bnOAeMNBdF2 m5fzoz
+        number = numeral(number)
         # @req> REQ-83454000@CAS-4S3kCWy5 reughj
-        if str(number) in held:
+        if number in held:
             raise SystemExit(
                 f"{path}: {name} records proposal {number} twice -- YAML keeps "
                 "both where one key is written `3` and the other `\"3\"`, and "
                 "which of them governs is not this file's to decide.")
-        held[str(number)] = chosen
+        held[number] = chosen
     return held
 
 
@@ -630,19 +647,22 @@ def keyed(path, name, record, held):
     numbers = {str(number) for number, _, _, _ in held}
     keys = {}
     for key, value in record.items():
+        # @req> REQ-50074955@8bnOAeMNBdF2 4s3qfv
+        number = numeral(key)
         # @req> REQ-52230032@ZV7FwJtFuqi3 hnvgee
         # @req> REQ-38877821@Rf8VoUrZ9-27 kn326i
-        if str(key) in keys:
+        if number in keys:
             raise SystemExit(
-                f"{path}: `{name}` records proposal {key} twice, once written "
-                f"{key} and once \"{key}\". Keep one of them.")
+                f"{path}: `{name}` records proposal {number} twice, once written "
+                f"{next(k for k in record if numeral(k) == number)!r} and once "
+                f"{key!r}. Keep one of them.")
         # @req> REQ-71318073@StYqTfNyHE39 scbfuj
         # @req> REQ-30554264@6JOa752EzDE9 bjxcpn
-        if str(key) not in numbers:
+        if number not in numbers:
             raise SystemExit(
                 f"{path}: `{name}` records {key!r}, which names no proposal the "
                 "run holds. Renumber the record, or write the proposal.")
-        keys[str(key)] = value
+        keys[number] = value
     return keys
 
 

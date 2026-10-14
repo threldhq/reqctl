@@ -177,8 +177,8 @@ def _folded(loader, node):
     return []
 
 
-def loads(text, where, aliases=True):
-    loader = Loader(text)
+def loads(text, where, aliases=True, reading=Loader):
+    loader = reading(text)
     try:
         # @req+ REQ-49870454@KKNV-vdY6oM1 ts6cfc
         named = [] if aliases else [
@@ -283,8 +283,8 @@ def read_text(path):
         raise ReqctlError(f"cannot read {path}: {error}") from error
 
 
-def read(path):
-    return loads(read_text(path), path)
+def read(path, reading=Loader):
+    return loads(read_text(path), path, reading=reading)
 
 
 def sides(text):

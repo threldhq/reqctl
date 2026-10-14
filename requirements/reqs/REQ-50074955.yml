@@ -27,6 +27,10 @@ assessed:
   REQ-83085784: mB9K6Zw3dGnCXK5mxm-UR8Il9iIXx-NWzPNAVBstG30
   REQ-92272837: JyGx2T7SRoWI8u23WkwmJhfiqhzEKABhxytHnuwiNJo
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  4s3qfv: QUdmQGk9Hq0q2lsCQEgCV3T2HGiUKWDDJ7edzJ1CjlY
+  m5fzoz: EEmrUnI4u0ZaUJ0r_SGgrSmM0d0rbHFib4WBPRLhmfs
+  yo7kod: 7teXI1WofDcR3TPSMARxSmW3w_WGVfY2lDaA8kJSBzk
 priority: medium
 relations:
   REQ-30554264: constrains
