@@ -1327,13 +1327,13 @@ def curl_configured(called, here, prefix):
                       if "$" in homes.get(name, "") or "`" in homes.get(name, "")), None):
         deny(UNREADABLE.format(what=f"which curl config {found} names"))
     default = [] if called[1:2] in (["-q"], ["--disable"]) else [next(
-        (path for name in CURL_HOMES if homes.get(name)
-         for path in [os.path.join(homes[name], ".curlrc")] if os.path.isfile(path)), None)]
+        (path for name, file in zip(CURL_HOMES, (".curlrc", "curlrc", ".curlrc")) if homes.get(name)
+         for path in [os.path.join(homes[name], file)] if os.path.isfile(path)), None)]
     added = []
     for file in [*filter(None, default), *(value for name, value in flags
                                             if name in ("-K", "--config"))]:
         path = os.path.join(here, os.path.expanduser(file))
-        if "$" in file or "`" in file or not os.path.isfile(path):
+        if file == "-" or "$" in file or "`" in file or not os.path.isfile(path):
             deny(UNREADABLE.format(what=f"the curl config {file}"))
         try:
             text = Path(path).read_text()
