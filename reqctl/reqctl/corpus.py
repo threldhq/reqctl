@@ -351,9 +351,15 @@ def items(store):
 
 # @req> REQ-19913588@hBNJrpn4vtZe 5es3j4
 def refuse_misshapen(where, data):
-    if not isinstance(data.get("kind", ""), str):
-        raise ReqctlError(f"{where}: kind is a {type(data['kind']).__name__}, not one "
-                          "name -- state one kind")
+    for field in ("kind", "status"):
+        if not isinstance(data.get(field, ""), str):
+            raise ReqctlError(f"{where}: {field} holds {data[field]!r}, not one name -- "
+                              f"state one {field}")
+    held = data.get("entries")
+    for key, fields in (held.items() if isinstance(held, dict) else ()):
+        if not isinstance(fields, dict):
+            raise ReqctlError(f"{where}: entry {key} holds {fields!r}, not fields -- "
+                              "state its fields under it")
     if found := _untexted(data):
         raise ReqctlError(f"{where}: the key {found[-1]!r} under "
                           f"{'.'.join(map(str, found[:-1])) or 'the item'} is not text -- "
