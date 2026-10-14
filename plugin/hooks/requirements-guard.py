@@ -1075,8 +1075,14 @@ def refuse_commit_on_default(words, here):
 
 
 # @req> REQ-14590906@7HafgqX9CF9- efqhzh
-def origin_default(what, place):
-    urls = (git_reads(["remote", "get-url", "--push", "--all", "origin"], place) or "").splitlines()
+def origin_default(what, place, persisted=False):
+    if persisted:
+        here, options, settings = place
+        place = (here, [word for at, word in enumerate(options)
+                        if word != "-c" and (not at or options[at - 1] != "-c")],
+                 {name: value for name, value in settings.items() if name in READ_ENV})
+    urls = [url for args in (["--push", "--all"], ["--all"])[:1 + persisted]
+            for url in (git_reads(["remote", "get-url", *args, "origin"], place) or "").splitlines()]
     branches = []
     for url in urls or [""]:
         said = url and git_reads(["-c", "protocol.ext.allow=never", "ls-remote", "--symref", "--",
@@ -1119,9 +1125,9 @@ def refuse_moving_origin_head(words, here):
     if subcommand == "symbolic-ref":
         if operands[:1] != ["refs/remotes/origin/HEAD"]:
             return
-        if given("-d", "--delete") or len(operands) > 1 and operands[1] not in [
+        if given("-d", "--delete") or len(operands) > 1 and {operands[1]} != {
                 "refs/remotes/origin/" + branch
-                for branch in origin_default(what, located(words, here))]:
+                for branch in origin_default(what, located(words, here), persisted=True)}:
             deny(MOVES_ORIGIN_HEAD.format(what=what))
         return
     verb, *args = operands or [""]
@@ -1131,8 +1137,8 @@ def refuse_moving_origin_head(words, here):
         deny(MOVES_ORIGIN_HEAD.format(what=what))
     if verb != "set-head" or given("-a", "--auto"):
         return
-    if given("-d", "--delete") or len(args) > 1 and args[1] not in origin_default(
-            what, located(words, here)):
+    if given("-d", "--delete") or len(args) > 1 and {args[1]} != set(origin_default(
+            what, located(words, here), persisted=True)):
         deny(MOVES_ORIGIN_HEAD.format(what=what))
 
 
