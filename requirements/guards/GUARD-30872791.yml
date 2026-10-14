@@ -8,6 +8,8 @@ acceptance_criteria:
   when: the build runs
 assessed:
   wheel_url: oNYIiFLqSV35ae0Ba_KiA4-Ubewk58XH65NEprkCcm0
+citations:
+  eukn2k: Lc42rt9SsXewXSdcC083u8xaBPiVMTiXAS2Ju9P8BGo
 relations: {}
 status: approved
 text: If the README at the root of the repository names no [wheel URL](wheel_url),

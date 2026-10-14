@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 import sys
 import tomllib
 from pathlib import Path
@@ -7,7 +8,9 @@ from pathlib import Path
 WHEEL = Path("reqctl/pyproject.toml")
 MARKETPLACE = Path(".claude-plugin/marketplace.json")
 MANIFEST = Path(".claude-plugin/plugin.json")
+README = Path("README.md")
 REPOSITORY = "https://github.com/threldhq/reqctl.git"
+RELEASES = f"{REPOSITORY.removesuffix('.git')}/releases/download/"
 
 
 def read(root, path, parse):
@@ -71,7 +74,24 @@ def faults(root):
                 f"a git-subdir source pinned to {tag}, the release tag of the "
                 "reqctl wheel's version, with no sha"]
     # @req- el2tax
-    return []
+    # @req+ GUARD-83168738@zhoOQpGgBd9R et6toq
+    try:
+        text = (root / README).read_text()
+    except (OSError, UnicodeDecodeError) as broken:
+        return [f"{README}: cannot read it: {broken}"]
+    # @req- et6toq
+    # @req+ GUARD-30872791@76ZvH9aeC5ry eukn2k
+    named = [(found.group(), found.groups()) for found in re.finditer(
+        re.escape(f"{RELEASES}{manifest.get('name')}--v") + r"([^/\s]+)/"
+        + re.escape(f"{name}-") + r"([^-/\s]+)-[^/\s]*\.whl", text)]
+    if not named:
+        return [f"{README}: names no wheel URL -- name the reqctl wheel of "
+                f"{version} under {RELEASES}{tag}/"]
+    # @req- eukn2k
+    # @req> GUARD-70682435@wxuZzo-y7Z-b vf7ipi
+    return [f"{README}: {url} states {at_tag} in its release tag and {at_file} "
+            f"in its file, the reqctl wheel {version} -- state {version} in both"
+            for url, (at_tag, at_file) in named if {at_tag, at_file} != {version}]
 
 
 def main():
