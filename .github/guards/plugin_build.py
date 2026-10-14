@@ -83,7 +83,7 @@ def faults(root):
     # @req+ GUARD-30872791@76ZvH9aeC5ry eukn2k
     named = re.findall(
         "(" + re.escape(f"{RELEASES}{manifest.get('name')}--v") + r"([^/\s]+)/"
-        + re.escape(f"{name}-") + r"([^-/\s]+)-[^/\s]*\.whl)", text)
+        + re.escape(f"{name}-") + r"([^-/\s]+)-[^/\s]*\.whl(?![\w-]|\.\w))", text)
     if not named:
         return [f"{README}: names no wheel URL -- name the reqctl wheel of "
                 f"{version} under {RELEASES}{tag}/"]
