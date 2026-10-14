@@ -99,6 +99,16 @@ properties:
     type: string
     minLength: 1
 
+  # @req> REQ-22682482@DIadVPxV1yCt 3uk233
+  fields:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items: {type: string, minLength: 1}
+    description: >-
+      Data items only: the fields its entries hold beyond those this schema
+      declares for an entry by name. Excluded from the stamps.
+
   rationale:
     type: string
     x-prose: true
@@ -194,6 +204,7 @@ allOf:
         unit: {not: {}}
         default: {not: {}}
         ceiling: {not: {}}
+        fields: {not: {}}
         rationale: {not: {}}
         entries:
           maxProperties: 1
@@ -204,6 +215,7 @@ allOf:
       required: [name, text, value_type]
       properties:
         ceiling: {not: {}}
+        fields: {not: {}}
         entries: {x-flag: value, additionalProperties: {$ref: "#/$defs/entry"}}
 
   - if: {required: [kind], properties: {kind: {const: data}}}
