@@ -11,6 +11,7 @@ from jsonschema.exceptions import best_match
 from . import baseline as _baseline
 from . import corpus
 from . import fields as _fields
+from . import history
 from . import settings as _settings
 
 SCHEMAS = ("requirement", "guard", "dictionary", "baseline")
@@ -712,7 +713,7 @@ def shared_quantities(records, root):
     return problems
 
 
-def _assessed(uid, data, records, canonical, known, suspect=True):
+def _assessed(uid, data, records, canonical, known, past):
     def held_data(address):
         return records.get(canonical.get(address, address))
 
@@ -745,12 +746,13 @@ def _assessed(uid, data, records, canonical, known, suspect=True):
         held = corpus.address_stamp_of(stamped, records[stamped], rest)
         pinned = pins.get(target)
         # @req> REQ-42390302@QOC4GhS7SkFg w3y4p3
-        if suspect and (not isinstance(pinned, str) or pinned != held):
+        if past and (not isinstance(pinned, str) or pinned != held):
+            # @req> REQ-24608716@rrTjNN2Ay0D0 bzyf37
             problems.append(
                 f"{uid}: suspect link: {target} -- reread both, then "
                 "`reqctl relate` a requirement or `reqctl revise "
                 f"{uid} --ack` the rest to pin it"
-            )
+                + history.lines(past.pinned(stamped, records[stamped], rest, pinned)))
     return problems
 
 
@@ -1608,6 +1610,7 @@ def run(root, exempt=None):
             records[path.stem] = data
     reachable = corpus.reachable(records)
     known = {path.stem for path in paths} | set(reachable)
+    past = history.History(root)
 
     for path in paths:
         uid = path.stem
@@ -1616,12 +1619,12 @@ def run(root, exempt=None):
             problems.append(f"{uid}: {unreadable.get(uid, 'item file is not a mapping')}")
             continue
         problems += item_problems(root, uid, path, records[uid], records,
-                                  reachable, known, broken_schemas)
+                                  reachable, known, broken_schemas, suspect=past)
     return problems + corpus_checks(records, root, paths, exempt)
 
 
-def item_problems(root, uid, path, data, records, reachable, known, broken=(),
-                  suspect=True):
+def item_problems(root, uid, path, data, records, reachable, known, broken=(), *,
+                  suspect):
     # @req+ REQ-42390302@QOC4GhS7SkFg igyueu
     problems = _guarded(uid, _identity, root, path, data)
     try:

@@ -5,6 +5,8 @@ import os
 import subprocess
 import sys
 
+from reqctl import history
+
 
 def read(*argv):
     # @req+ GUARD-87780053@FAmfCmKiJnLk t2bzx7
@@ -49,9 +51,11 @@ def stale(data):
         identity = ids.pop() if ids else None
         remedy = (f"reqctl repin {identity}" if identity
                   else f"reqctl tag {row['path']} --req {row['uid']}")
+        # @req> REQ-24608716@rrTjNN2Ay0D0 otzu27
         rows.append((identity, row["path"], f"{row['uid']}@{row['pinned']} {identity}",
-                     (f"{row['uid']}: {row['path']} pinned @{row['pinned']}, now "
-                      f"@{row['held']} -- read it against {row['uid']}, then {remedy}")))
+                     f"{row['uid']}: {row['path']} pinned @{row['pinned']}, now "
+                     f"@{row['held']} -- read it against {row['uid']}, then {remedy}"
+                     + history.lines(row)))
     return rows
 
 
@@ -78,8 +82,8 @@ def main():
     found, behind = faults(read("trace"), os.environ.get("BASE_REF", ""))
     # @req> REQ-53246456@QyWuIwzUUElO howxzn
     for row in behind:
-        print(f"::notice::behind the corpus: {row}, here or in the pull "
-              "request that carries the code")
+        print("::notice::behind the corpus, here or in the pull request that "
+              f"carries the code: {row}")
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0
