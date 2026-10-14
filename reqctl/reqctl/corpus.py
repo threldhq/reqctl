@@ -283,8 +283,8 @@ def read_text(path):
         raise ReqctlError(f"cannot read {path}: {error}") from error
 
 
-def read(path):
-    return loads(read_text(path), path)
+def read(path, reading=Loader):
+    return loads(read_text(path), path, reading=reading)
 
 
 def sides(text):
