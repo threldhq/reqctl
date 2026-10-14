@@ -372,6 +372,24 @@ def _strings(node, at=()):
         yield at, node
 
 
+# @req> REQ-22682482@DIadVPxV1yCt ijkpsx
+def listed_fields(root, uid, data):
+    if corpus.kind_of(uid, data) != "data":
+        return []
+    schema = corpus.schema_for(root, "data", corpus.name_of(uid, data))
+    declared = ((schema.get("$defs") or {}).get("entry") or {}).get("properties") or {}
+    listed = data.get("fields") if isinstance(data.get("fields"), list) else []
+    return [f"{uid}: entry {key} holds the field {field}, which the kind schema does not "
+            f"declare and the data item does not list -- it lists "
+            f"{', '.join(map(str, listed)) or 'no fields'}; correct the field, or add it "
+            "to fields"
+            for key, entry in sorted((corpus.entries(data) or {}).items(),
+                                     key=lambda item: str(item[0]))
+            if isinstance(entry, dict)
+            for field in sorted(map(str, entry))
+            if field not in declared and field not in listed]
+
+
 # @req> REQ-79956352@OsoTGRd6D5CZ 5uqc7i
 def hidden_values(uid, data):
     problems = []
@@ -1639,6 +1657,7 @@ def item_problems(root, uid, path, data, records, reachable, known, broken=(), *
     problems += _guarded(uid, repeated_labels, uid, data)
     problems += _guarded(uid, hidden_values, uid, data)
     problems += _guarded(uid, dictionary_rules, uid, data)
+    problems += _guarded(uid, listed_fields, root, uid, data)
     problems += _guarded(uid, _relations, uid, data, records, reachable, known)
     problems += _guarded(uid, _references, uid, data, known, root)
     problems += _guarded(uid, _assessed, uid, data, records, reachable, known, suspect)
