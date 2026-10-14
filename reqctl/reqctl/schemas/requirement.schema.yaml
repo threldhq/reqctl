@@ -78,8 +78,8 @@ properties:
     enum: [high, medium, low]
     default: medium
     description: >-
-      In the stamp: reprioritising an approved requirement changes its meaning
-      to whoever ordered work by it, so dependants reassess.
+      Not in the stamp: reprioritising an approved requirement leaves what it
+      obliges unchanged, so its citations and binders stay pinned.
 
   rationale:
     type: string
