@@ -1292,11 +1292,12 @@ def runner(word):
 
 
 @functools.cache
-def gh_aliases(assigned):
+def gh_aliases(assigned, here):
     try:
         done = subprocess.run(["gh", "alias", "list"], capture_output=True, text=True,
-                              timeout=min(15, left()), check=False,
-                              env={**os.environ, **dict(word.split("=", 1) for word in assigned)})
+                              timeout=min(15, left()), check=False, cwd=here or None,
+                              env={**os.environ, **{name: os.path.expanduser(value) for name, value in
+                                                    (word.split("=", 1) for word in assigned)}})
     except subprocess.TimeoutExpired:
         deny(UNREADABLE.format(what="the gh aliases before its time limit"))
     except (OSError, subprocess.SubprocessError):
@@ -1328,7 +1329,8 @@ def curl_configured(called, here, prefix):
         deny(UNREADABLE.format(what=f"which curl config {found} names"))
     default = [] if called[1:2] in (["-q"], ["--disable"]) else [next(
         (path for name, file in zip(CURL_HOMES, (".curlrc", "curlrc", ".curlrc")) if homes.get(name)
-         for path in [os.path.join(homes[name], file)] if os.path.isfile(path)), None)]
+         for path in [os.path.join(here, os.path.expanduser(homes[name]), file)]
+         if os.path.isfile(path)), None)]
     added = []
     for file in [*filter(None, default), *(value for name, value in flags
                                             if name in ("-K", "--config"))]:
@@ -1341,8 +1343,10 @@ def curl_configured(called, here, prefix):
             deny(UNREADABLE.format(what=f"the curl config {file}"))
         for line in filter(None, map(str.strip, text.splitlines())):
             found = CURL_CONFIG_LINE.match(line)
-            if not found:
+            if line.startswith("#"):
                 continue
+            if not found:
+                deny(UNREADABLE.format(what=f"the line {line} of the curl config {file}"))
             name, value = found.groups()
             name = name if name.startswith("-") else ("-" if len(name) == 1 else "--") + name
             if name in ("-K", "--config"):
@@ -1368,7 +1372,7 @@ def refuse_api_write(words, here, said, expanded=False):
         assigned = tuple(word for word in prefix if word.partition("=")[0] in GH_CONFIG_HOMES)
         if found := next((word for word in assigned if "$" in word or "`" in word), None):
             deny(UNREADABLE.format(what=f"which gh config {found} names"))
-        expansion = gh_aliases(assigned).get(called[1])
+        expansion = gh_aliases(assigned, here).get(called[1])
         if called[1:3] == ["alias", "import"]:
             deny(UNREADABLE.format(what="the aliases gh alias import sets"))
         if called[1:3] == ["alias", "set"]:
@@ -1397,7 +1401,8 @@ def refuse_api_write(words, here, said, expanded=False):
     if called[:1] == ["curl"]:
         called = curl_configured(called, here, words[:len(words) - len(called)])
         if found := next((word for word in called if word in ("--next", "-:")
-                          or word.startswith(("--expand-", "--variable"))), None):
+                          or word.startswith(("--expand-", "--variable"))
+                          or word[:1] == "-" and word[1:2] != "-" and ":" in word), None):
             deny(UNREADABLE.format(what=f"which request curl sends past {found}"))
     if called[:2] == ["gh", "api"]:
         flags, operands = options(called[2:], GH_VALUED)
@@ -1447,8 +1452,9 @@ def refuse_unheld_script(words, here):
     if start and runner(words[start - 1]) in RUNNERS:
         start -= 1
     called = words[start:]
-    if called[:1] == ["uvx"] or called[:1] and called[0] in LAUNCHERS and "run" in called[1:]:
-        rest = called[1:] if called[0] == "uvx" else called[called.index("run") + 1:]
+    launcher = os.path.basename(called[0]) if called else ""
+    if launcher == "uvx" or launcher in LAUNCHERS and "run" in called[1:]:
+        rest = called[1:] if launcher == "uvx" else called[called.index("run") + 1:]
         if found := next((word for word in called if "$" in word or "`" in word), None):
             deny(UNREADABLE.format(what=f"which file {called[0]} run runs past {found}"))
         moved = [value for flag, value in itertools.pairwise(called) if flag in ("--directory", "-C")]
