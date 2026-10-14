@@ -29,6 +29,11 @@ assessed:
   origin_query_seconds: cAwdFP4G6MLM-TKYEr5LQyAfz3DG9Z3qA5iBEZT3PiQ
   origin_query_seconds.*: 6SmMhfL6f4iDThF0dJ4oM-iybfVP1cvIPM6GSKBF47I
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  cxtbyd: -rKvVxWrr9ZvTVIDdkS8_sB6Hs8GYuAMfLaxG0h0ibs
+  owo62a: tuH21RQd4wqBQH8hROrsuKDVSX-XUKVIVs_sGzNUYcA
+  sjmzez: 5dX_a2sFpB6mMN50-96_GfdSXnc6vBzUrq2fk0P7Shs
+  vreqvm: ptoXVPRo2rwA6FWGo8-02GL6MNsjHvBHT1mlnXXxkVk
 priority: medium
 relations:
   REQ-38288492: depends_on
