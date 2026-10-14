@@ -1076,26 +1076,25 @@ def refuse_commit_on_default(words, here):
 
 # @req> REQ-14590906@7HafgqX9CF9- efqhzh
 def origin_default(what, place):
-    here, options, settings = place
-    url = git_reads(["remote", "get-url", "--push", "origin"], (here, [
-        word for at, word in enumerate(options)
-        if word != "-c" and (not at or options[at - 1] != "-c")],
-        {name: value for name, value in settings.items() if name in READ_ENV}))
-    said = url and git_reads(["-c", "protocol.ext.allow=never", "ls-remote", "--symref", "--",
-                              url.strip(), "HEAD"], ("/", [], {"GIT_TERMINAL_PROMPT": "0"}),
-                             ORIGIN_QUERY_SECONDS)
-    found = re.search(r"^ref: refs/heads/(\S+)\tHEAD$", said or "", re.MULTILINE)
-    if not found:
-        deny(ORIGIN_SILENT.format(what=what))
-    return found.group(1)
+    urls = (git_reads(["remote", "get-url", "--push", "--all", "origin"], place) or "").splitlines()
+    branches = []
+    for url in urls or [""]:
+        said = url and git_reads(["-c", "protocol.ext.allow=never", "ls-remote", "--symref", "--",
+                                  url, "HEAD"], ("/", [], {"GIT_TERMINAL_PROMPT": "0"}),
+                                 ORIGIN_QUERY_SECONDS)
+        found = re.search(r"^ref: refs/heads/(\S+)\tHEAD$", said or "", re.MULTILINE)
+        if not found:
+            deny(ORIGIN_SILENT.format(what=what))
+        branches.append(found.group(1))
+    return branches
 
 
 # @req> REQ-75564975@kR-BIGM3krAM owo62a
 def refuse_moving_origin_head(words, here):
     subcommand, rest = git_subcommand(words)
     what = " ".join(words)
-    if subcommand in ("fetch", "pull") and any(
-            word.partition(":")[2].endswith("refs/remotes/origin/HEAD") for word in rest):
+    if subcommand and any(":" in word and word.rpartition(":")[2].endswith("remotes/origin/HEAD")
+                          for word in words):
         deny(MOVES_ORIGIN_HEAD.format(what=what))
     if subcommand not in ("remote", "symbolic-ref", "update-ref", "branch"):
         return
@@ -1120,8 +1119,9 @@ def refuse_moving_origin_head(words, here):
     if subcommand == "symbolic-ref":
         if operands[:1] != ["refs/remotes/origin/HEAD"]:
             return
-        if given("-d", "--delete") or len(operands) > 1 and operands[1] != (
-                "refs/remotes/origin/" + origin_default(what, located(words, here))):
+        if given("-d", "--delete") or len(operands) > 1 and operands[1] not in [
+                "refs/remotes/origin/" + branch
+                for branch in origin_default(what, located(words, here))]:
             deny(MOVES_ORIGIN_HEAD.format(what=what))
         return
     verb, *args = operands or [""]
@@ -1131,14 +1131,15 @@ def refuse_moving_origin_head(words, here):
         deny(MOVES_ORIGIN_HEAD.format(what=what))
     if verb != "set-head" or given("-a", "--auto"):
         return
-    if given("-d", "--delete") or len(args) > 1 and args[1] != origin_default(
+    if given("-d", "--delete") or len(args) > 1 and args[1] not in origin_default(
             what, located(words, here)):
         deny(MOVES_ORIGIN_HEAD.format(what=what))
 
 
 # @req> REQ-75564975@kR-BIGM3krAM 2ospre
 def writes_origin_head(said, plain, here):
-    if ">" not in said and (plain == "git" or READ.search(said)):
+    if ">" not in said and (plain == "git" and not OUTPUT_FLAG.search(said)
+                            and "-o" not in tokens_of(said) or READ.search(said)):
         return False
     paths = [os.path.normpath(os.path.join(here, os.path.expanduser(alt.lstrip("<>&|0123456789"))))
              for word in tokens_of(said) for alt in bounded(word)]
@@ -1169,9 +1170,9 @@ def guard_default(what, place, targets, slug=None):
         return
     if url is None or None in targets:
         deny(UNRESOLVED_WRITE.format(what=what))
-    branch = origin_default(what, place)
-    if any(not target or fnmatch.fnmatchcase(branch, target) for target in targets):
-        deny(WRITES_DEFAULT.format(what=what, branch=branch))
+    for branch in origin_default(what, place):
+        if any(not target or fnmatch.fnmatchcase(branch, target) for target in targets):
+            deny(WRITES_DEFAULT.format(what=what, branch=branch))
 
 
 def options(words, valued):
