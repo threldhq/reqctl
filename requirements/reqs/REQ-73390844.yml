@@ -10,6 +10,8 @@ acceptance_criteria:
 assessed:
   REQ-82027237: R-XinrGfTNzLE1-PxO9SeWnxAkNShomWm9kGaZ8zE-Y
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  s7yx36: wtfJnO7PQzsxCQ1bXcjA4D3alhqOop16ePzpwXizXOo
 priority: medium
 relations:
   REQ-82027237: constrains

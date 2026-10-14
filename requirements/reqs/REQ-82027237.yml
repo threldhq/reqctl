@@ -19,6 +19,16 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  3adxsp: L40AQM4_5tHCh96scEijMWv3TIxeqoiUJgQ58RNiHn0
+  aum3ke: qVUfrLoj0MQDFBO-xvFjn5O8ZLixE0k2Mpgk7pTgaf0
+  d3gygm: wtfJnO7PQzsxCQ1bXcjA4D3alhqOop16ePzpwXizXOo
+  e6npos: 5oObs5zPRLvr9Z3S9LkvjaCAFHGTLQOyM4bXL6JtbUI
+  efmrhh: ZUMVJeIWwGdSe9DSVUNcWyBHS089eU3zMUaBi4C3h9c
+  fudp2r: shxa5rHn8K3ldabk-U1-AGKpjijy5BYGk_t_74UvAXU
+  ntmmgk: -WNvz8Xcshsp37hXGU9WrEsF6r1vv7rQJrHK50U88II
+  q4dejo: xtSF9arPxOLWaD7YdrBhBC35JypWIKnf0Ta9JpiGPw0
+  wmao62: BRLiFTbgio4H2YKwXitU3GhGn5labkeEDTrp55Tv7Qk
 priority: medium
 relations:
   REQ-54851939: depends_on
