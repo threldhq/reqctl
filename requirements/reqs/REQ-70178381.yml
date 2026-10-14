@@ -7,7 +7,8 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  dbuwzq: hTGI-zB_-T5Qshw99iPa0wCBUM6f1CE1doUewXvwC18
+  dbuwzq: sth3w0FuR61QZE16LDi_0MR8Th0XACxzrO_9bL1U0lw
+  vzfqst: zkurd-_RGUN-SM-3f6sCP--DibrNYul8Ql0nUVtPghA
 priority: medium
 relations:
   REQ-38288492: depends_on
