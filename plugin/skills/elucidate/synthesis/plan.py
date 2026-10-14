@@ -404,9 +404,10 @@ def unresolved(records, statement):
 # @req> REQ-50074955@8bnOAeMNBdF2 yo7kod
 class Spelled(corpus.Loader):
     def construct_mapping(self, node, deep=False):
+        self.flatten_mapping(node)
         for key, _ in node.value:
-            if key.tag.endswith(":int") and re.fullmatch("0[0-7]+", key.value):
-                key.tag = "tag:yaml.org,2002:str"
+            if key.tag.endswith(":int") and re.fullmatch("[-+]?0[0-7_]+", key.value):
+                key.value = str(int(key.value.replace("_", "")))
         return super().construct_mapping(node, deep)
 
 
