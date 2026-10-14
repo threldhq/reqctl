@@ -13,6 +13,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  sb54ru: wLk288W8S6BUixOpK7YwjXrHF1gL845QGPtjTINnX88
 priority: medium
 relations:
   REQ-30061042: depends_on

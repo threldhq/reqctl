@@ -15,6 +15,13 @@ assessed:
   REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  6pharc: r8DNXitv_0rFKOwlrf4MhIXtxsJSl4N2BlZWybHX6os
+  vlp2ka: i6l_ox1bKs8ox5macjrKGcslJMhWJVmyAP5pV-VLfUk
+  wcjo5z: iTZEduKCR9P8c4WRZXD4Dijsw9ZY32V4M1AfFqGzvcI
+  xx3hop: Zgo79-6g1JplM2D1H2CQkbUvxa6aN-AHo_0xtufTwKQ
+  y7m44o: 43Fn4OcG5e-Ka82zfLtsjxv6qDsqC26kx7W2JK3RTtg
+  zibglc: W27G8hdkD-DMkFKQbI26bUx_nOI8cr_u4iMIPa3Kdbk
 priority: medium
 relations:
   REQ-17757558: derives_from

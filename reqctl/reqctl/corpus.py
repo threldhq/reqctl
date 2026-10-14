@@ -331,8 +331,13 @@ def items(store):
     if store._items is None:
         loaded = []
         for path in item_files(store.root):
+            text = read_text(path)
+            # @req> REQ-38498011@eJXtv0pwMf-A q7wu74
+            if CONFLICTED.search(text):
+                from .resolve import merged
+                raise ReqctlError(merged(path.relative_to(store.root), text))
             # @req> REQ-49870454@KKNV-vdY6oM1 4sqskc
-            data = loads(read_text(path), path, aliases=False)
+            data = loads(text, path, aliases=False)
             if not isinstance(data, dict):
                 raise ReqctlError(f"{path.stem}: item file is not a mapping")
             loaded.append(Item(path.stem, path, data))

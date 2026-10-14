@@ -11,6 +11,8 @@ acceptance_criteria:
   when: reqctl relate names depends_on from the first toward the second
 assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+citations:
+  l7oe6k: GxHImFQSLEN21iD_naZRCB-9gvx0a3QlGlmhEfLabQo
 priority: medium
 relations: {}
 status: approved
