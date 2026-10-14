@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a change moving the [reqctl wheel](reqctl_wheel) to 0.1.12 while the README
+    at the root of the repository names the [wheel URL](wheel_url) of 0.1.11
+  then: the build refuses the change and names the [wheel URL](wheel_url)
+  when: the build runs
+- given: a [wheel URL](wheel_url) whose [release tag](release_tag) states the version
+    the [reqctl wheel](reqctl_wheel) states while the file it names states another
+  then: the build refuses the change
+  when: the build runs
+- given: the README at the root of the repository naming two [wheel URLs](wheel_url),
+    one of them stating another version
+  then: the build refuses the change and names that [wheel URL](wheel_url)
+  when: the build runs
+- given: every [wheel URL](wheel_url) the README at the root of the repository names
+    stating the version the [reqctl wheel](reqctl_wheel) states
+  then: the build refuses nothing on that ground
+  when: the build runs
+assessed:
+  release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+  wheel_url: oNYIiFLqSV35ae0Ba_KiA4-Ubewk58XH65NEprkCcm0
+relations: {}
+status: approved
+text: If a [wheel URL](wheel_url) that the README at the root of the repository names
+  states a version other than the one the [reqctl wheel](reqctl_wheel) states, then
+  the build shall refuse the change.

@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a change that leaves the README at the root of the repository naming no [wheel
+    URL](wheel_url)
+  then: the build refuses the change
+  when: the build runs
+- given: the README at the root of the repository naming a [wheel URL](wheel_url)
+  then: the build refuses nothing on that ground
+  when: the build runs
+assessed:
+  wheel_url: oNYIiFLqSV35ae0Ba_KiA4-Ubewk58XH65NEprkCcm0
+relations: {}
+status: approved
+text: If the README at the root of the repository names no [wheel URL](wheel_url),
+  then the build shall refuse the change.

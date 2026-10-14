@@ -1,0 +1,12 @@
+assessed:
+  release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+entries:
+  wheel_url:
+    aliases:
+    - wheel URLs
+    definition: An address under releases/download of the repository that holds reqctl's
+      sources, naming a [release tag](release_tag) and the file of a [reqctl wheel](reqctl_wheel).
+    word: wheel URL
+kind: term
+status: approved
