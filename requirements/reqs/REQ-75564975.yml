@@ -1,0 +1,41 @@
+acceptance_criteria:
+- given: origin's default branch is main
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs git remote set-head origin feature, git symbolic-ref
+    refs/remotes/origin/HEAD refs/remotes/origin/feature or git update-ref refs/remotes/origin/HEAD
+    naming another commit
+- given: origin's default branch is main
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs git remote set-head origin --auto or git remote
+    set-head origin main
+- given: a local origin/HEAD ref
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs git remote set-head origin -d or git update-ref
+    -d refs/remotes/origin/HEAD
+- given: origin cannot be reached, or has not reported its default branch within ${origin_query_seconds}
+    of the product asking
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs git remote set-head origin main
+- given: a local origin/HEAD ref
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs git remote remove origin or git remote rename
+    origin another
+- given: a local origin/HEAD ref
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) writes .git/refs/remotes/origin/HEAD or .git/packed-refs
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  origin_query_seconds: cAwdFP4G6MLM-TKYEr5LQyAfz3DG9Z3qA5iBEZT3PiQ
+  origin_query_seconds.*: 6SmMhfL6f4iDThF0dJ4oM-iybfVP1cvIPM6GSKBF47I
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-60211288: depends_on
+status: approved
+text: If a [tool call](tool_call) would change or delete the local origin/HEAD ref,
+  other than by setting it to the branch origin reports as its default branch when
+  the [tool call](tool_call) is judged, then the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection
