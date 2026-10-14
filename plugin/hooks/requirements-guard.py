@@ -824,7 +824,7 @@ def names_citation(cmd):
 
 @functools.cache
 def refuse_destructive_push(said):
-    # @req+ REQ-60587913@a-D0sKfFEs62 4aiv2n
+    # @req+ REQ-60587913@64oissmU4Xo2 4aiv2n
     subcommand, rest = git_subcommand(argv(said)[0])
     if subcommand != "push":
         return

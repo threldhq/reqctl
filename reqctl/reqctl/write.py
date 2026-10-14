@@ -1560,7 +1560,7 @@ def delete(tree, uid):
         )
     # @req- nmlqee
     # @req- d223dk
-    # @req+ REQ-60430571@0mnzagTfFcBw ebwpu6
+    # @req+ REQ-60430571@Whq2LW6rLEyb ebwpu6
     holders = sorted(
         other.uid
         for other in corpus.items(tree)
@@ -1572,11 +1572,12 @@ def delete(tree, uid):
     )
     if holders:
         raise ReqctlError(
-            f"{uid} is still reached by {', '.join(holders)} -- removing it "
-            "would leave them pointing at nothing; unlink first"
+            f"{', '.join(holders)} still record a link, a reference or a pin "
+            f"toward {uid} -- removing it would leave them pointing at "
+            "nothing; unlink first"
         )
     # @req- ebwpu6
-    # @req+ REQ-42065260@GlmgQoAFl-Dj s7iyuc
+    # @req+ REQ-42065260@tSlWvFBjE0qf s7iyuc
     corpus.remove(item.path)
     corpus.invalidate(tree)
     return item.path
