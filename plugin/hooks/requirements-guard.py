@@ -244,7 +244,8 @@ WHOLE_TREE: list[str] = []
 FORCE = ("-f", "--force", "--discard-changes")
 # @req> worktree_commands@EtNKXLNk8TvY 3qwrc6
 RESTORES = ("checkout", "restore", "reset", "clean", "switch")
-JUDGED_GIT = ("push", "commit", "apply", "am", *NO_COMMIT, *RESTORES)
+JUDGED_GIT = ("push", "commit", "apply", "am", "remote", "symbolic-ref", "update-ref", "fetch",
+              "branch", *NO_COMMIT, *RESTORES)
 UNTRACKED = ("??", "!!")
 UNTRACKED_ONLY = ("??",)
 
@@ -261,6 +262,26 @@ UNRESOLVED_WRITE = (
     "Name the branch outright, or run `git remote set-head origin --auto`."
 )
 # @req- rmhljp
+
+# @req> origin_query_seconds@QD8PvG3tkf2s lm2l7z
+ORIGIN_QUERY_SECONDS = 10
+
+# @req> REQ-14590906@7HafgqX9CF9- 7r3vt3
+ORIGIN_SILENT = (
+    "{what} blocked: origin did not report its default branch: `git ls-remote --symref "
+    f"origin HEAD` failed, named no default branch, or took over {ORIGIN_QUERY_SECONDS} "
+    "seconds.\n"
+    "Run it to see why, fix origin or the connection, then retry."
+)
+
+# @req+ REQ-75564975@kR-BIGM3krAM sjmzez
+MOVES_ORIGIN_HEAD = (
+    "{what} blocked: it changes or deletes the local origin/HEAD other than by "
+    "setting it to origin's default branch.\n"
+    "  git remote set-head origin --auto"
+)
+ORIGIN_HEAD_FILE = re.compile(r"(?<![\w.-])(?:refs/+remotes/+origin/+HEAD|packed-refs)(?![\w.-])")
+# @req- sjmzez
 
 # @req> REQ-75038049@7JHx4bR_CkbA g3ql3s
 UNHELD_SCRIPT = (
@@ -896,13 +917,13 @@ def left():
     return remaining
 
 
-def git_reads(args, place):
+def git_reads(args, place, seconds=15):
     here, options, settings = place
     try:
         done = subprocess.run(
             ["git", "--no-optional-locks", "-C", here, *options, "-c", "core.fsmonitor=false",
              *args],
-            capture_output=True, text=True, timeout=min(15, left()),
+            capture_output=True, text=True, timeout=min(seconds, left()),
             env={**os.environ, **settings, "UNFILTERED": ""})
     except (OSError, subprocess.SubprocessError):
         return None
@@ -1053,6 +1074,92 @@ def refuse_commit_on_default(words, here):
     # @req- zm6qoo
 
 
+# @req> REQ-14590906@7HafgqX9CF9- efqhzh
+def origin_default(what, place, persisted=False):
+    if persisted:
+        here, options, settings = place
+        place = (here, [word for at, word in enumerate(options)
+                        if word != "-c" and (not at or options[at - 1] != "-c")],
+                 {name: value for name, value in settings.items() if name in READ_ENV})
+    urls = [url for args in (["--push", "--all"], ["--all"])[:1 + persisted]
+            for url in (git_reads(["remote", "get-url", *args, "origin"], place) or "").splitlines()]
+    branches = []
+    for url in urls or [""]:
+        said = url and git_reads(["-c", "protocol.ext.allow=never", "ls-remote", "--symref", "--",
+                                  url, "HEAD"], ("/", [], {"GIT_TERMINAL_PROMPT": "0"}),
+                                 ORIGIN_QUERY_SECONDS)
+        found = re.search(r"^ref: refs/heads/(\S+)\tHEAD$", said or "", re.MULTILINE)
+        if not found:
+            deny(ORIGIN_SILENT.format(what=what))
+        branches.append(found.group(1))
+    return branches
+
+
+# @req> REQ-75564975@kR-BIGM3krAM owo62a
+def refuse_moving_origin_head(words, here):
+    subcommand, rest = git_subcommand(words)
+    what = " ".join(words)
+    if subcommand and any(":" in word and word.rpartition(":")[2].endswith("remotes/origin/HEAD")
+                          for word in words):
+        deny(MOVES_ORIGIN_HEAD.format(what=what))
+    if subcommand not in ("remote", "symbolic-ref", "update-ref", "branch"):
+        return
+    flags, operands = options(rest, ("-m",))
+    named = [name for name, _ in flags]
+
+    def given(*spelled):
+        return any(name in spelled or len(name) > 2 and any(
+            full.startswith(name) for full in spelled) for name in named) or any(
+            short_flagged(named, full[1]) for full in spelled if len(full) == 2)
+
+    if subcommand == "branch":
+        if given("-r", "--remotes") and given("-d", "-D", "--delete") and any(
+                word.endswith("origin/HEAD") for word in operands):
+            deny(MOVES_ORIGIN_HEAD.format(what=what))
+        return
+    if subcommand == "update-ref":
+        if given("--stdin") or not operands or any(
+                word.endswith("refs/remotes/origin/HEAD") for word in operands):
+            deny(MOVES_ORIGIN_HEAD.format(what=what))
+        return
+    if subcommand == "symbolic-ref":
+        if operands[:1] != ["refs/remotes/origin/HEAD"]:
+            return
+        if given("-d", "--delete") or len(operands) > 1 and {operands[1]} != {
+                "refs/remotes/origin/" + branch
+                for branch in origin_default(what, located(words, here), persisted=True)}:
+            deny(MOVES_ORIGIN_HEAD.format(what=what))
+        return
+    verb, *args = operands or [""]
+    if args[:1] != ["origin"]:
+        return
+    if verb in ("remove", "rm", "rename"):
+        deny(MOVES_ORIGIN_HEAD.format(what=what))
+    if verb != "set-head" or given("-a", "--auto"):
+        return
+    if given("-d", "--delete") or len(args) > 1 and {args[1]} != set(origin_default(
+            what, located(words, here), persisted=True)):
+        deny(MOVES_ORIGIN_HEAD.format(what=what))
+
+
+# @req> REQ-75564975@kR-BIGM3krAM 2ospre
+def writes_origin_head(said, plain, here):
+    if ">" not in said and (plain == "git" and not OUTPUT_FLAG.search(said)
+                            and "-o" not in tokens_of(said) or READ.search(said)):
+        return False
+    paths = [os.path.normpath(os.path.join(here, os.path.expanduser(alt.lstrip("<>&|0123456789"))))
+             for word in tokens_of(said) for alt in bounded(word)]
+    if ORIGIN_HEAD_FILE.search(flatten(said)) or any(map(ORIGIN_HEAD_FILE.search, paths)):
+        return True
+    if not any(set("*?[") & set(path) for path in paths):
+        return False
+    common = git_reads(["rev-parse", "--path-format=absolute", "--git-common-dir"], (here, [], {}))
+    targets = [os.path.join(os.path.realpath(common.strip()), name)
+               for name in ("refs/remotes/origin/HEAD", "packed-refs")] if common else []
+    return any(fnmatch.fnmatchcase(target, os.path.realpath(path))
+               for target in targets for path in paths)
+
+
 def repo_slug(url):
     return "/".join(url.strip().removesuffix("/").removesuffix(".git").lower()
                     .replace(":", "/").split("/")[-2:])
@@ -1067,12 +1174,11 @@ def guard_default(what, place, targets, slug=None):
     held = url and repo_slug(url)
     if held and named and named not in (held, held.split("/")[-1]):
         return
-    default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], place)
-    if url is None or default is None or None in targets:
+    if url is None or None in targets:
         deny(UNRESOLVED_WRITE.format(what=what))
-    branch = default.strip().removeprefix("origin/")
-    if any(not target or fnmatch.fnmatchcase(branch, target) for target in targets):
-        deny(WRITES_DEFAULT.format(what=what, branch=branch))
+    for branch in origin_default(what, place):
+        if any(not target or fnmatch.fnmatchcase(branch, target) for target in targets):
+            deny(WRITES_DEFAULT.format(what=what, branch=branch))
 
 
 def options(words, valued):
@@ -1372,6 +1478,11 @@ def judge_command(said, here, stdin=()):
     for word in words:
         if "git" in word and "push" in word and word not in ("git", "push"):
             refuse_destructive_push(word)
+    # @req+ REQ-75564975@kR-BIGM3krAM vreqvm
+    if writes_origin_head(said, plain, here):
+        deny(MOVES_ORIGIN_HEAD.format(what=said.strip()))
+    refuse_moving_origin_head(words, here)
+    # @req- vreqvm
     refuse_commit_on_default(words, here)
     refuse_push_to_default(words, here)
     refuse_api_write(words, here, said)
@@ -1763,6 +1874,12 @@ def decide(data: dict) -> None:
             if CORPUS_DIR.search(named) or reaches_corpus(named, cwd):
                 deny(f"Direct write into the requirements corpus blocked: {value}\n"
                      f"{USE_REQCTL}")
+
+    # @req> REQ-75564975@kR-BIGM3krAM cxtbyd
+    if tool not in ("Bash", "Read", "Grep", "Glob"):
+        for value in named_paths(args) + bare_paths(args):
+            if ORIGIN_HEAD_FILE.search(flatten(value.replace("\\", "/"))):
+                deny(MOVES_ORIGIN_HEAD.format(what=f"{tool} of {value}"))
 
     # @req> REQ-54260750@MTrWbA9_HZWY xkcay3
     if tool in ("Read", "Grep", "Glob"):
