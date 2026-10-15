@@ -10,6 +10,7 @@ LISTS = ("unclaimed", "renamed")
 NAMES = LISTS + ("quote", "owner", "reason", "statement", "proposal")
 # @req> REQ-13591264@tle-mDzkWdnR ybhob6
 BOUNDS = {"reason": 300, "owner": 60}
+EMPHASIS = re.compile(r"[*`]+|(?<!\w)_+|_+(?!\w)")
 
 
 def spoken(text):
@@ -18,7 +19,7 @@ def spoken(text):
 
 # @req+ REQ-12032769@1Km3PLqZHCDu n2lx2b
 def plain(text):
-    return "".join("'" if write._quoting(char) else char for char in text)
+    return EMPHASIS.sub("", "".join("'" if write._quoting(char) else char for char in text))
 
 
 def quoted(said, needle):
@@ -86,8 +87,16 @@ def main(argv=None):
     args = parsed.parse_args(argv)
 
     where = Path(args.found)
-    found = corpus.loads(corpus.read_text(where), where)
+    # @req+ REQ-95375719@-TYbW5JhiwAf k26kry
+    try:
+        found = corpus.loads(corpus.read_text(where), where)
+    except corpus.ReqctlError:
+        corpus.remove(where, missing_ok=True)
+        raise
     held = faults(found, corpus.read_text(args.words))
+    if held:
+        corpus.remove(where)
+    # @req- k26kry
     # @req+ REQ-74501429@3K-aFi7yo4Cp rzcign
     for fault in held:
         print(f"{where.name}: {fault}")

@@ -437,10 +437,9 @@ to share that was minted twice -- nothing validates recall. Wire what the
 read-back finds missing, or put it to the owner, before the pull request opens.
 
 <!-- @req+ REQ-21373303@Y7R6bZxRXU-G vadyl4 -->
-The pull request body carries the declined list and any UNJUDGED slot the
-owner accepted. Nothing else durably records either, and a reader who cannot
-see what was considered and dropped reads the corpus as everything that was
-asked for.
+The pull request body carries the declined list. Nothing else durably records
+it, and a reader who cannot see what was considered and dropped reads the
+corpus as everything that was asked for.
 <!-- @req- vadyl4 -->
 
 An answer that settles more than this batch is a rule. Sort it as step 1 sorts

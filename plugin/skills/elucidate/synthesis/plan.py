@@ -1063,8 +1063,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
                    "verdicts", "workflow"):
         corpus.make_folder(run / folder)
     for stale in list((run / "prompts" / "recall").glob("*.md")) + list(
-            (run / "returns" / "recall").glob("*.json")) + list(
-            (run / "verdicts").glob("*.json")):
+            (run / "returns" / "recall").glob("*.json")):
         corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "recall" / f"{name}.md", body)
@@ -1497,8 +1496,9 @@ def final(run):
 def describe(run):
     # @req+ REQ-21373303@Y7R6bZxRXU-G qzk6eu
     state_held = state(run)
-    declined = (said(run, "declined.md", "") if (run / "declined.md").is_file()
-                else "")
+    declined = ([f"- {' '.join(entry.split())}" for entry in re.split(
+        r"(?m)^\s*- ", (run / "declined.md").read_text()) if entry.strip()]
+        if (run / "declined.md").is_file() else [])
     lines = []
     # @req> REQ-32019340@Ce9zMv1R_f5m il77pj
     if not state_held["judge"]:
@@ -1552,7 +1552,7 @@ def describe(run):
         lines.append("")
     lines.append("### declined\n")
     # @req+ REQ-20454019@BJxxS0ixzdXK vxerce
-    lines += (([declined] if declined else []) + declined_practices(run)
+    lines += (declined + declined_practices(run)
               or ["Nothing was declined in this run."])
     # @req- vxerce
     # @req+ REQ-41970990@LllsbvPcoF0q 6vslgs
