@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: a step running a gate whose command discards its failure through an or-list
+    running true
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate whose script begins with set +e
+  then: the build refuses the change
+  when: the build runs
+- given: 'a step running a gate under if: false'
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate in a job that sets continue-on-error
+  then: the build refuses the change
+  when: the build runs
+- given: a step running no gate whose command discards its failure through an or-list
+    running true
+  then: the build does not refuse the change on that ground
+  when: the build runs
+assessed:
+  GUARD-40603760: BjP6UvmNcOQTrpltSyfoTMvDlG8JDaJHQC63C2HKP_c
+relations:
+  GUARD-40603760: constrains
+status: approved
+text: If a workflow step that runs a gate can fail without failing its job, through
+  continue-on-error, a command whose failure is discarded by || true or || :, a shell
+  that does not stop on a failing command, or a condition that is always false, then
+  the build shall refuse the change.

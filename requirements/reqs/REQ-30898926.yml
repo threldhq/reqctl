@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a reqctl command refused for a fault in what it was given
+  then: it names the step, or the corrected command, that clears the fault
+  when: the refusal is stated
+- given: a reqctl command refused for a fault only an edit by hand clears
+  then: it names that edit
+  when: the refusal is stated
+- given: a reqctl command refused for a fault two different steps would each clear
+  then: it names both
+  when: the refusal is stated
+assessed:
+  REQ-19913588: hBNJrpn4vtZeTo84vHq_GZB_97UAzQuiQwg_WqEXgqU
+priority: medium
+relations:
+  REQ-19913588: constrains
+status: approved
+text: When a reqctl command refuses, the product shall name in the refusal each step
+  that would clear the fault.
+type: functional
+verification: inspection

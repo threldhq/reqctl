@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a statement referencing an [entry](entry) of a [data item](data_item) that
+    states a quantity and a unit
+  then: the product shows the quantity and the unit beside the reference
+  when: reqctl context is run for the statement, with or without --json
+- given: a statement referencing the quantity field of an [entry](entry)
+  then: the product shows the quantity beside the reference
+  when: reqctl context is run for the statement
+- given: a statement referencing an [entry](entry) the [data item](data_item) does
+    not hold
+  then: the product shows the reference as missing
+  when: reqctl context is run for the statement
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations: {}
+status: approved
+text: When reqctl context shows a reference to an [entry](entry) of a [data item](data_item),
+  or to a field of one, the product shall show beside the reference each field the
+  reference names and the value that field holds.
+type: functional
+verification: inspection

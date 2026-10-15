@@ -29,7 +29,7 @@ acceptance_criteria:
   then: the product does not refuse the [tool call](tool_call) on that ground
   when: a [tool call](tool_call) runs it
 assessed:
-  REQ-22704490: 0I1yKEFWt0tXaDvD_wUxALeCSn1230TMwxdefrmcyvM
+  REQ-22704490: u7IClIQOfStAss5hIWQrPe_jxv9hNQ4JUr1VPuJ3SWM
   REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw

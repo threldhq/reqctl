@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) of challenge_bounds over code
+    carrying a judge_group quantity other than the one the corpus states
+  then: the build refuses, naming the [entry](entry), the citation and both values
+  when: the build runs
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+relations: {}
+status: approved
+text: If the code reqctl ships carries, under a [statement citation](statement_citation)
+  of a [data item](data_item)'s [entry](entry), a value other than the one the corpus
+  states for that [entry](entry), then the build shall refuse the change.

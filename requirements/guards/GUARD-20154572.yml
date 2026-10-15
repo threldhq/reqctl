@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a workflow installing reqctl without --require-hashes, or as an editable
+    package without --no-deps or --no-build-isolation
+  then: the build refuses
+  when: the build runs
+- given: a workflow installing reqctl from the runtime lockfile alone, without the
+    development lockfile the check job also installs
+  then: the build does not refuse on that ground
+  when: the build runs
+- given: installs that differ only in --quiet or --disable-pip-version-check
+  then: the build does not refuse on that ground
+  when: the build runs
+assessed:
+  GUARD-93589588: yH4bykpGUeLbQI_1Io16YMNXd2c3lZLrdWj7Svj4NvE
+relations:
+  GUARD-93589588: derives_from
+status: approved
+text: The build shall install reqctl, in every workflow that installs it, from the
+  runtime lockfile and with the pip flags that the check job of CI installs reqctl's
+  runtime with.

@@ -1,0 +1,41 @@
+acceptance_criteria:
+- given: the default branch checked out
+  then: the product refuses it
+  when: a [tool call](tool_call) runs git update-ref, git branch -f or git reset --soft
+    moving it to a commit the local remote-tracking ref of origin's default branch
+    does not reach
+- given: the default branch checked out
+  then: the product does not refuse it on that ground
+  when: a [tool call](tool_call) runs git merge --ff-only origin/main or git pull
+    --ff-only
+- given: a [tool call](tool_call) running git commit-tree alone
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+- given: a [tool call](tool_call) pointing the default branch at what git commit-tree
+    made
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
+- given: no local default branch
+  then: the product does not refuse it on that ground
+  when: a [tool call](tool_call) creates it at the commit the remote-tracking ref
+    of origin's default branch holds
+- given: a local default branch
+  then: the product does not refuse it on that ground
+  when: a [tool call](tool_call) deletes it
+assessed:
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-36925311: depends_on
+  REQ-38288492: depends_on
+  REQ-60211288: depends_on
+status: approved
+text: If a [tool call](tool_call) would create the local default branch, or move it,
+  to a commit that the local remote-tracking ref of origin's default branch neither
+  holds nor reaches, or move it to a commit that does not descend from the one it
+  leaves, then the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection
