@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  fingerprint_list:
+    definition: 'The SHA-256 digests, each over a file''s bytes as stored, that the
+      requirements guard hook of the Claude Code plugin ships with: one for each file
+      of its own plugin it admits to run although origin''s default branch does not
+      hold that file.'
+    word: fingerprint list
+kind: term
+status: approved

@@ -23,17 +23,37 @@ acceptance_criteria:
   when: a [tool call](tool_call) runs the script
 - given: origin names no default branch, or the repository cannot be read
   then: the product refuses the [tool call](tool_call)
-  when: a [tool call](tool_call) runs a file naming a corpus [item](item)'s file
+  when: a [tool call](tool_call) runs a file outside the plugin's folder naming a
+    corpus [item](item)'s file
 - given: a file the local origin/HEAD ref holds unchanged, although origin has moved
     on since the last fetch
   then: the product does not refuse the [tool call](tool_call) on that ground
   when: a [tool call](tool_call) runs it
+- given: a file under the plugin's folder naming the [corpus root](corpus_root), whose
+    SHA-256 digest the [fingerprint list](fingerprint_list) holds
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs it
+- given: a file under the plugin's folder naming a corpus [item](item)'s file, whose
+    SHA-256 digest the [fingerprint list](fingerprint_list) does not hold
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it
+- given: a file outside the plugin's folder naming a corpus [item](item)'s file, that
+    origin's default branch does not hold, whose SHA-256 digest the [fingerprint list](fingerprint_list)
+    holds
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it
+- given: a script in the working repository committed nowhere, holding open("requirements/reqs/x.yml")
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it with python
 assessed:
   REQ-22704490: u7IClIQOfStAss5hIWQrPe_jxv9hNQ4JUr1VPuJ3SWM
   REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  fingerprint_list: IKuN4F4xCtcTuRJWxeEIwcI85RfUbSbEdY045f0hbr0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   g3ql3s: 2Ul--7VCYfk3cqXx1-8N_DPXduCizbwX2JIViyklT1I
@@ -47,7 +67,10 @@ relations:
 status: approved
 text: If a [tool call](tool_call) would run a file whose text names the path of a
   corpus [item](item)'s file, a folder of corpus [items](item), the baseline or the
-  [corpus root](corpus_root), and origin's default branch does not hold that file
-  unchanged at its path, then the product shall refuse the [tool call](tool_call).
+  [corpus root](corpus_root), origin's default branch does not hold that file unchanged
+  at its path, and the file does not both lie under the folder of the Claude Code
+  plugin whose ${plugin_components.requirements_guard_hook} judges the [tool call](tool_call)
+  and have a SHA-256 digest of its bytes that the plugin's [fingerprint list](fingerprint_list)
+  holds, then the product shall refuse the [tool call](tool_call).
 type: functional
 verification: inspection

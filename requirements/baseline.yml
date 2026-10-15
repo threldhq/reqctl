@@ -1,5 +1,5 @@
-baseline: 96
-commit: 1fac1774f3fc093c46f10a70143bd8ebb40cace3
+baseline: 97
+commit: 2f686910b14203f48303cc890125890678d4d67d
 items:
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
   GUARD-12128145: mFuOqNbkyV1oY-6soAHFUkqGN-yitkrFm5SThHXJEzo
@@ -33,6 +33,7 @@ items:
   GUARD-52037270: OztX8T4vOmsHm9mKiyOryYIC-Q3-zmqrnZufQrW70JM
   GUARD-56838909: xIKhRXKhnYS1MYLIbdImBNLs2hvqG6FJ_64zn3NvNu8
   GUARD-56877438: R8tS_bbVly0hV2kIwUWohYrAdYM5Kr92XqDVRjghqvs
+  GUARD-58772071: qal1M_8xilDPW1PLNMl2KvsHf3c9UqJStlcnA5JcqEM
   GUARD-60575106: cyDaQHsIDZhKvI_k7z0nyfMVUPzfsgOz9El4ta0v_Pc
   GUARD-63366473: wqNzDR34_aRK_3b01suBkX5-fkU_9Iw8e95pPLCUSQg
   GUARD-63869848: V9lllz-dAIsMpfUoz1lVI4PXWluTclGl3E1Z-QZb644
@@ -433,7 +434,7 @@ items:
   REQ-74702510: gU2X5OnlUbY3yQzwCDneBQYjtHoHNIE4uLSJFYf-EC8
   REQ-74823322: YWZT0Srw2y2dzl4H8l75VfX1MLDVkHUwWclADh51yiQ
   REQ-74982341: IIwAqzZV1bP38NHqXLXpGbdbA7tUIoqD6Upg6wk7gaE
-  REQ-75038049: 7JHx4bR_CkbAUhSEcsfd5puSSpk_rvNVk8_E2y9rkQQ
+  REQ-75038049: RLeZ6wIWKqXDuaOC_HvI7_cE2zDWZb0WrbteMT2ELNg
   REQ-75041625: fdufkvO5WYz7KFJPtyhJppjVjaZZRPnPp34h5cjF0xA
   REQ-75161909: GUQmRsLIBj6Zzh1F_o6zWwScU-Njwa5POXXuf4obpY0
   REQ-75293842: Une663jQ8uUZ5ISFJpdT7k85dKeLi83sV_GZg9etibI
@@ -580,6 +581,7 @@ items:
   exclusive: 3JKd7AntKjXMn7QIJ76uUWL2l24QYnfM3o0sstKLCsY
   field_of_the_governed_software: jL-3rawb_a5mG9L4XUWQZxlBCv0zHsaJjJXBbj80Z-4
   file_writes: uU0zn_U2-6G4YPuYKTT54Hx2GwvEpivtQf--szRpZSU
+  fingerprint_list: IKuN4F4xCtcTuRJWxeEIwcI85RfUbSbEdY045f0hbr0
   folder_creations: -VW_HOn20a9Y6PtyhjDRM0rAMuun3bZ3Mp1pXm2BKLA
   git_read_forms: jGCtTdda9WNXa1rXATNTiECAtYUUxt7TuH6lDl_ecj4
   guard_input_limit: -exvER4qUHPOHpBCfhPlMNE9PCT6Hx3d1U1Y-mc2i0Y
@@ -628,4 +630,4 @@ items:
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
   write_time_normalisation: oBdIBBNiZAVaalngsKaqiXl0qS4YIZ2G4Wo8drbe4o0
-supersedes: 95
+supersedes: 96
