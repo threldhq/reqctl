@@ -37,7 +37,7 @@ INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
-RUNS = re.compile(r"(?<![\w.-])reqctl\s+[a-z][\w-]*|-m\s*reqctl\b")
+RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
 FAILS = re.compile(r"\bexit\s+[1-9]|\bsys\.exit\(")
 SWALLOWED = re.compile(r"\|\|\s*(?:true|:)(?![\w-])")
 UNSTOPPED = re.compile(r"\bset\s+(?:\+\w*e|\+o\s+errexit)")
