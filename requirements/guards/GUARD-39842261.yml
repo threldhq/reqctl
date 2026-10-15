@@ -9,6 +9,8 @@ acceptance_criteria:
   when: the build runs
 assessed:
   GUARD-20154572: z2_hbXJO9sHnVMQd1fo-1KELeiBgdPt32F2PD4ygZIo
+citations:
+  qko53r: e0PKiDPkEZfPa_aSLr-bFzk17Y7NSENL423lOis7dkg
 relations:
   GUARD-20154572: constrains
 status: approved

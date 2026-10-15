@@ -2,6 +2,7 @@
 import re
 import sys
 from pathlib import Path
+from typing import NamedTuple
 
 import yaml
 
@@ -25,6 +26,24 @@ ACCEPTS = re.compile(r"(?m)^\s*reqctl\s+validate\b")
 VALIDATES = "reqctl validate"
 UNTRUSTED = "pull_request"
 JOBS = 1
+CHECK = WORKFLOWS / "ci.yml"
+RUNTIME = "requirements-lock.txt"
+COSMETIC = {"-q", "--quiet", "--disable-pip-version-check"}
+DEV_INPUTS = Path("reqctl/requirements-dev.in")
+INSTALLERS = Path(".github")
+PACKAGE = DEV_INPUTS.parent.name
+SCRIPT = re.compile(r"\.github/(?:guards/[\w-]+|corpus_gates)\.py")
+SWALLOWED = re.compile(r"\|\|\s*(?:true|:)(?![\w-])")
+UNSTOPPED = re.compile(r"(?m)^\s*set\s+(?:\+\w*e|\+o\s+errexit)")
+STOPS = re.compile(r"-\w*e\w*")
+NEVER = re.compile(r"(?:\$\{\{\s*)?(?:false|0|''|\"\")(?:\s*\}\})?", re.I)
+
+
+class Install(NamedTuple):
+    files: list
+    editable: list
+    positional: list
+    flags: set
 
 
 def triggers(held):
@@ -74,7 +93,73 @@ def settled(steps, where, gates):
     # @req- 3a5aqb
 
 
-def faults(text, where, gates=None):
+def checkers(inputs=DEV_INPUTS, folder=INSTALLERS):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R 5rq7uk
+    try:
+        lines = inputs.read_text().splitlines()
+    except (OSError, UnicodeDecodeError) as broken:
+        raise SystemExit(
+            f"{inputs.as_posix()}: cannot read: {broken}") from broken
+    # @req- 5rq7uk
+    names = [re.sub(r"-py$", "", line.split("==")[0].strip())
+             for line in lines if "==" in line]
+    names += [path.stem.removeprefix("install-")
+              for path in folder.glob("install-*.sh")]
+    return re.compile(r"(?<![\w-])(?:" + "|".join(map(re.escape, names))
+                      + r")(?![\w-])")
+
+
+def gated(step, tools):
+    run = str(step.get("run") or "")
+    return bool(SCRIPT.search(run) or REQCTL.search(run) or IMPORTS.search(run)
+                or tools.search(run))
+
+
+def shell_of(node, inherited):
+    defaults = node.get("defaults")
+    run = defaults.get("run") if isinstance(defaults, dict) else None
+    return run.get("shell", inherited) if isinstance(run, dict) else inherited
+
+
+def never(condition):
+    return (condition is not None
+            and NEVER.fullmatch(str(condition).strip()) is not None)
+
+
+def unstopped(shell):
+    words = str(shell or "").split()
+    return ("{0}" in words and Path(words[0]).name in ("bash", "sh")
+            and not any(STOPS.fullmatch(word) for word in words[1:]))
+
+
+def swallowed(name, job, steps, where, shell, tools):
+    gating = [step for step in steps if gated(step, tools)]
+    found = []
+    # @req+ GUARD-84344643@GlwsRru4lu4P sfx7sh
+    if gating and job.get("continue-on-error"):
+        found.append(f"{where}: job {name} runs a gate and continues on error "
+                     "-- remove continue-on-error")
+    if gating and never(job.get("if")):
+        found.append(f"{where}: job {name} runs a gate under a condition that "
+                     "is always false -- remove the condition")
+    for step in gating:
+        run, named = str(step.get("run") or ""), step.get("name")
+        if SWALLOWED.search(run):
+            found.append(f"{where}: step {named!r} runs a gate and discards its "
+                         "failure with || true or || : -- remove it")
+        if UNSTOPPED.search(run) or unstopped(step.get("shell", shell)):
+            found.append(f"{where}: step {named!r} runs a gate in a shell that "
+                         "does not stop on a failing command -- remove set +e, "
+                         "or give the shell -e")
+        if never(step.get("if")):
+            found.append(f"{where}: step {named!r} runs a gate under a "
+                         "condition that is always false -- remove the "
+                         "condition")
+    # @req- sfx7sh
+    return found
+
+
+def faults(text, where, gates=None, tools=None):
     # @req+ GUARD-83168738@zhoOQpGgBd9R bwk6ho
     try:
         held = yaml.safe_load(text)
@@ -100,6 +185,7 @@ def faults(text, where, gates=None):
                      "alone")
     # @req- wqoe4t
     gates = corpus_gates() if gates is None else gates
+    tools = checkers() if tools is None else tools
     jobs = held.get("jobs") or {}
     if not isinstance(jobs, dict):
         return [*found, f"{where}: jobs is not a mapping"]
@@ -131,6 +217,8 @@ def faults(text, where, gates=None):
                 found.append(
                     f"{where}: step {step.get('name')!r} continues on error, "
                     "so a failed gate leaves the job green")
+        found += swallowed(name, job, steps, where,
+                           shell_of(job, shell_of(held, None)), tools)
         found += settled(steps, where, gates)
     return found + installs(text, where)
 
@@ -153,6 +241,69 @@ def installs(text, where):
     return found
 
 
+def pip_installs(text):
+    held = []
+    for line in PIP.findall(CONTINUED.sub(" ", text)):
+        words = re.sub(r"[\"']", "", line).split(" #", 1)[0].split()[2:]
+        install = Install([], [], [], set())
+        while words:
+            word = words.pop(0)
+            if word in ("-r", "--requirement") and words:
+                install.files.append(words.pop(0))
+            elif word in ("-e", "--editable") and words:
+                install.editable.append(words.pop(0))
+            elif not word.startswith("-"):
+                install.positional.append(word)
+            elif word not in COSMETIC:
+                install.flags.add(word)
+        held.append(install)
+    return held
+
+
+def ours(install):
+    return any(Path(word).name.startswith(PACKAGE)
+               for word in install.editable + install.positional)
+
+
+def runtime(install):
+    return any(Path(word).name == RUNTIME for word in install.files)
+
+
+def model(text):
+    held = pip_installs(text)
+    return (next((one for one in held if runtime(one)), None),
+            next((one for one in held if ours(one)), None))
+
+
+def parity(text, where, lock, own):
+    held = pip_installs(text)
+    if not any(map(ours, held)):
+        return []
+    # @req+ GUARD-20154572@z2_hbXJO9sHn nfv4rg
+    found = [] if any(map(runtime, held)) else [
+        f"{where}: installs reqctl without {RUNTIME} -- install that lockfile "
+        f"first, as {CHECK.as_posix()} does"]
+    found += [f"{where}: installs {RUNTIME} {flagged(one)}, not "
+              f"{flagged(lock)} as {CHECK.as_posix()} does"
+              for one in held if runtime(one) and one.flags != lock.flags]
+    found += [f"{where}: installs reqctl {shaped(one)} {flagged(one)}, not "
+              f"{shaped(own)} {flagged(own)} as {CHECK.as_posix()} does"
+              for one in held if ours(one)
+              and (one.flags, bool(one.editable), one.positional)
+              != (own.flags, bool(own.editable), own.positional)]
+    # @req- nfv4rg
+    return found
+
+
+def flagged(install):
+    return f"with {' '.join(sorted(install.flags)) or 'no flags'}"
+
+
+def shaped(install):
+    return ("as an editable package" if install.editable
+            else f"from {' '.join(install.positional)}")
+
+
 def main():
     paths = sorted(WORKFLOWS.glob("*.yml")) + sorted(WORKFLOWS.glob("*.yaml"))
     found = [] if paths else [f"{WORKFLOWS}: holds no workflow"]
@@ -161,6 +312,7 @@ def main():
         found.append(f"{GUARDS}: holds no gate that reaches reqctl, so the "
                      "ordering check holds nothing -- run this from the "
                      "repository root")
+    tools, texts = checkers(), {}
     for path in paths:
         # @req+ GUARD-83168738@zhoOQpGgBd9R xqino3
         try:
@@ -169,7 +321,16 @@ def main():
             found.append(f"{path.as_posix()}: cannot read: {broken}")
             continue
         # @req- xqino3
-        found += faults(text, path.as_posix(), gates)
+        found += faults(text, path.as_posix(), gates, tools)
+        texts[path.as_posix()] = text
+    lock, own = model(texts.get(CHECK.as_posix(), ""))
+    if lock is None or own is None:
+        found.append(f"{CHECK.as_posix()}: installs no reqctl from {RUNTIME}, "
+                     "so no workflow has an install to match -- run this from "
+                     "the repository root")
+    else:
+        for where, text in texts.items():
+            found += parity(text, where, lock, own)
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0

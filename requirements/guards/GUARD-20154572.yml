@@ -12,6 +12,8 @@ acceptance_criteria:
   when: the build runs
 assessed:
   GUARD-93589588: yH4bykpGUeLbQI_1Io16YMNXd2c3lZLrdWj7Svj4NvE
+citations:
+  nfv4rg: OzHzu5q4k1yKdStFIq5tOFRDpkbv3Qf4gWcvo6jiJZE
 relations:
   GUARD-93589588: derives_from
 status: approved
