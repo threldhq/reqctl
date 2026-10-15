@@ -9,7 +9,7 @@ import yaml
 WORKFLOWS = Path(".github/workflows")
 GUARDS = Path(".github/guards")
 PINNED = re.compile(r"@[0-9a-f]{40}$")
-PIP = re.compile(r"\bpip3?\s+install\b(?:&(?!&)|[^;&|\n])*")
+PIP = re.compile(r"\bpip[\d.]*(?:\s+--?[\w-]+)*\s+install\b(?:&(?!&)|[^;&|\n])*")
 EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
 REQUIREMENT = re.compile(r"--requirement(=.*)?|-[qvUI]*r.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
@@ -26,17 +26,26 @@ ACCEPTS = re.compile(r"(?m)^\s*reqctl\s+validate\b")
 VALIDATES = "reqctl validate"
 UNTRUSTED = "pull_request"
 JOBS = 1
-CHECK = WORKFLOWS / "ci.yml"
+CHECK = (WORKFLOWS / "ci.yml").as_posix()
 RUNTIME = "requirements-lock.txt"
 COSMETIC = {"-q", "--quiet", "--disable-pip-version-check"}
+LONG = {"--requirement": "r", "--editable": "e"}
+CLUSTER = re.compile(r"-([qvUI]*)([re])(.*)")
+REDIRECT = re.compile(r"\d*[<>&].*")
 DEV_INPUTS = Path("reqctl/requirements-dev.in")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
-SCRIPT = re.compile(r"\.github/(?:guards/[\w-]+|corpus_gates)\.py")
+SCRIPT = re.compile(GATE.pattern
+                    + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
+RUNS = re.compile(r"(?<![\w.-])reqctl\s+[a-z][\w-]*|-m\s*reqctl\b")
+FAILS = re.compile(r"\bexit\s+[1-9]|\bsys\.exit\(")
 SWALLOWED = re.compile(r"\|\|\s*(?:true|:)(?![\w-])")
-UNSTOPPED = re.compile(r"(?m)^\s*set\s+(?:\+\w*e|\+o\s+errexit)")
+UNSTOPPED = re.compile(r"\bset\s+(?:\+\w*e|\+o\s+errexit)")
+SHELLS = {"bash", "sh", "dash", "ksh", "zsh"}
 STOPS = re.compile(r"-\w*e\w*")
-NEVER = re.compile(r"(?:\$\{\{\s*)?(?:false|0|''|\"\")(?:\s*\}\})?", re.I)
+RESUMES = re.compile(r"\+\w*e\w*")
+CONTEXT = re.compile(r"[A-Za-z_][\w-]*\s*[.(\[]")
+ALWAYS = re.compile(r"\$\{\{\s*true\s*\}\}|true", re.I)
 
 
 class Install(NamedTuple):
@@ -101,18 +110,20 @@ def checkers(inputs=DEV_INPUTS, folder=INSTALLERS):
         raise SystemExit(
             f"{inputs.as_posix()}: cannot read: {broken}") from broken
     # @req- 5rq7uk
-    names = [re.sub(r"-py$", "", line.split("==")[0].strip())
+    names = [re.sub(r"-py$", "", re.split(r"[\[=<>~!;\s]", line.strip(), maxsplit=1)[0])
              for line in lines if "==" in line]
     names += [path.stem.removeprefix("install-")
               for path in folder.glob("install-*.sh")]
-    return re.compile(r"(?<![\w-])(?:" + "|".join(map(re.escape, names))
-                      + r")(?![\w-])")
+    spelled = ["[-_]".join(map(re.escape, re.split(r"[-_]", name)))
+               for name in names]
+    return re.compile(r"(?<![\w-])(?:" + "|".join(spelled) + r")(?![\w-])")
 
 
 def gated(step, tools):
     run = str(step.get("run") or "")
-    return bool(SCRIPT.search(run) or REQCTL.search(run) or IMPORTS.search(run)
-                or tools.search(run))
+    return bool(SCRIPT.search(run) or RUNS.search(run) or IMPORTS.search(run)
+                or FAILS.search(run) or tools.search(run)
+                or str(step.get("uses") or "").startswith("."))
 
 
 def shell_of(node, inherited):
@@ -121,15 +132,29 @@ def shell_of(node, inherited):
     return run.get("shell", inherited) if isinstance(run, dict) else inherited
 
 
-def never(condition):
-    return (condition is not None
-            and NEVER.fullmatch(str(condition).strip()) is not None)
+def always_false(condition):
+    if condition is None or condition is True:
+        return False
+    text = str(condition).strip()
+    return not CONTEXT.search(text) and not ALWAYS.fullmatch(text)
 
 
 def unstopped(shell):
-    words = str(shell or "").split()
-    return ("{0}" in words and Path(words[0]).name in ("bash", "sh")
-            and not any(STOPS.fullmatch(word) for word in words[1:]))
+    words = re.sub(r"[\"']", "", str(shell or "")).split()
+    if "{0}" not in words:
+        return False
+    words = words[:words.index("{0}")]
+    if words and Path(words[0]).name == "env":
+        words = words[1:]
+    if not words or Path(words[0]).name not in SHELLS:
+        return False
+    stops = False
+    for word, after in zip(words[1:], words[2:] + [""]):
+        if STOPS.fullmatch(word) or (word == "-o" and after == "errexit"):
+            stops = True
+        elif RESUMES.fullmatch(word) or (word == "+o" and after == "errexit"):
+            stops = False
+    return not stops
 
 
 def swallowed(name, job, steps, where, shell, tools):
@@ -139,11 +164,12 @@ def swallowed(name, job, steps, where, shell, tools):
     if gating and job.get("continue-on-error"):
         found.append(f"{where}: job {name} runs a gate and continues on error "
                      "-- remove continue-on-error")
-    if gating and never(job.get("if")):
-        found.append(f"{where}: job {name} runs a gate under a condition that "
-                     "is always false -- remove the condition")
+    if gating and always_false(job.get("if")):
+        found.append(f"{where}: job {name} runs a gate under a constant "
+                     "condition other than true -- remove the condition")
     for step in gating:
-        run, named = str(step.get("run") or ""), step.get("name")
+        run = CONTINUED.sub(" ", str(step.get("run") or ""))
+        named = step.get("name")
         if SWALLOWED.search(run):
             found.append(f"{where}: step {named!r} runs a gate and discards its "
                          "failure with || true or || : -- remove it")
@@ -151,9 +177,9 @@ def swallowed(name, job, steps, where, shell, tools):
             found.append(f"{where}: step {named!r} runs a gate in a shell that "
                          "does not stop on a failing command -- remove set +e, "
                          "or give the shell -e")
-        if never(step.get("if")):
+        if always_false(step.get("if")):
             found.append(f"{where}: step {named!r} runs a gate under a "
-                         "condition that is always false -- remove the "
+                         "constant condition other than true -- remove the "
                          "condition")
     # @req- sfx7sh
     return found
@@ -244,14 +270,24 @@ def installs(text, where):
 def pip_installs(text):
     held = []
     for line in PIP.findall(CONTINUED.sub(" ", text)):
-        words = re.sub(r"[\"']", "", line).split(" #", 1)[0].split()[2:]
+        words = re.sub(r"[\"']", "", line).split(" #", 1)[0].split()
+        words = [part for word in words[words.index("install") + 1:]
+                 for part in (word.split("=", 1) if word.startswith("--")
+                              else [word])]
         install = Install([], [], [], set())
         while words:
             word = words.pop(0)
-            if word in ("-r", "--requirement") and words:
-                install.files.append(words.pop(0))
-            elif word in ("-e", "--editable") and words:
-                install.editable.append(words.pop(0))
+            cluster = CLUSTER.fullmatch(word)
+            if word in LONG or cluster:
+                kind, value = ((LONG[word], "") if word in LONG
+                               else (cluster[2], cluster[3]))
+                if cluster:
+                    install.flags.update({f"-{letter}" for letter in cluster[1]}
+                                         - COSMETIC)
+                value = value or (words.pop(0) if words else "")
+                (install.files if kind == "r" else install.editable).append(value)
+            elif REDIRECT.fullmatch(word):
+                continue
             elif not word.startswith("-"):
                 install.positional.append(word)
             elif word not in COSMETIC:
@@ -260,39 +296,17 @@ def pip_installs(text):
     return held
 
 
-def ours(install):
+def installs_reqctl(install):
     return any(Path(word).name.startswith(PACKAGE)
                for word in install.editable + install.positional)
 
 
-def runtime(install):
+def installs_lock(install):
     return any(Path(word).name == RUNTIME for word in install.files)
 
 
-def model(text):
-    held = pip_installs(text)
-    return (next((one for one in held if runtime(one)), None),
-            next((one for one in held if ours(one)), None))
-
-
-def parity(text, where, lock, own):
-    held = pip_installs(text)
-    if not any(map(ours, held)):
-        return []
-    # @req+ GUARD-20154572@z2_hbXJO9sHn nfv4rg
-    found = [] if any(map(runtime, held)) else [
-        f"{where}: installs reqctl without {RUNTIME} -- install that lockfile "
-        f"first, as {CHECK.as_posix()} does"]
-    found += [f"{where}: installs {RUNTIME} {flagged(one)}, not "
-              f"{flagged(lock)} as {CHECK.as_posix()} does"
-              for one in held if runtime(one) and one.flags != lock.flags]
-    found += [f"{where}: installs reqctl {shaped(one)} {flagged(one)}, not "
-              f"{shaped(own)} {flagged(own)} as {CHECK.as_posix()} does"
-              for one in held if ours(one)
-              and (one.flags, bool(one.editable), one.positional)
-              != (own.flags, bool(own.editable), own.positional)]
-    # @req- nfv4rg
-    return found
+def signature(install):
+    return install.flags, bool(install.editable), install.positional
 
 
 def flagged(install):
@@ -302,6 +316,46 @@ def flagged(install):
 def shaped(install):
     return ("as an editable package" if install.editable
             else f"from {' '.join(install.positional)}")
+
+
+def reference(text):
+    held = pip_installs(text)
+    return (next((one for one in held if installs_lock(one)), None),
+            next((one for one in held if installs_reqctl(one)), None))
+
+
+def parity(text, where, lock, own):
+    held = pip_installs(text)
+    first = next((at for at, one in enumerate(held) if installs_reqctl(one)),
+                 None)
+    if first is None:
+        return []
+    # @req+ GUARD-20154572@z2_hbXJO9sHn nfv4rg
+    found = [] if any(map(installs_lock, held[:first])) else [
+        f"{where}: installs reqctl before {RUNTIME} -- install that lockfile "
+        f"first, as {CHECK} does"]
+    found += [f"{where}: installs {RUNTIME} {flagged(one)}, not "
+              f"{flagged(lock)} as {CHECK} does"
+              for one in held if installs_lock(one) and one.flags != lock.flags]
+    found += [f"{where}: installs reqctl {shaped(one)} {flagged(one)}, not "
+              f"{shaped(own)} {flagged(own)} as {CHECK} does"
+              for one in held
+              if installs_reqctl(one) and signature(one) != signature(own)]
+    # @req- nfv4rg
+    return found
+
+
+def runs_of(text):
+    try:
+        held = yaml.safe_load(text)
+    except (yaml.YAMLError, ValueError):
+        return ""
+    jobs = held.get("jobs") if isinstance(held, dict) else None
+    return "\n".join(str(step.get("run") or "")
+                     for job in (jobs.values() if isinstance(jobs, dict) else [])
+                     if isinstance(job, dict)
+                     for step in job.get("steps") or []
+                     if isinstance(step, dict))
 
 
 def main():
@@ -322,10 +376,10 @@ def main():
             continue
         # @req- xqino3
         found += faults(text, path.as_posix(), gates, tools)
-        texts[path.as_posix()] = text
-    lock, own = model(texts.get(CHECK.as_posix(), ""))
+        texts[path.as_posix()] = runs_of(text)
+    lock, own = reference(texts.get(CHECK, ""))
     if lock is None or own is None:
-        found.append(f"{CHECK.as_posix()}: installs no reqctl from {RUNTIME}, "
+        found.append(f"{CHECK}: installs no reqctl from {RUNTIME}, "
                      "so no workflow has an install to match -- run this from "
                      "the repository root")
     else:

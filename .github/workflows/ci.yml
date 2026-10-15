@@ -194,7 +194,6 @@ jobs:
         run: mypy --config-file reqctl/pyproject.toml reqctl/reqctl
 
       - name: The runtime lock holds what pyproject.toml requires
-        if: steps.touched.outputs.deps == 'true'
         run: python .github/guards/pyproject_lock.py
 
       - name: Dependencies have no known vulnerabilities

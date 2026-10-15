@@ -10,7 +10,7 @@ from packaging.version import InvalidVersion, Version
 
 PROJECT = Path("reqctl/pyproject.toml")
 LOCK = Path("reqctl/requirements-lock.txt")
-PINNED = re.compile(r"([A-Za-z0-9][\w.-]*)(?:\[[^\]]*\])?==(\S+)")
+PINNED = re.compile(r"([A-Za-z0-9][\w.-]*)(?:\[[^\]]*\])?==([^\s\\;]+)")
 REMEDY = ("-- correct the range, or regenerate the lock with the pip-compile "
           "command its header names")
 
@@ -20,49 +20,55 @@ def read(path):
     try:
         return path.read_text()
     except (OSError, UnicodeDecodeError) as broken:
-        raise SystemExit(f"::error::{path}: cannot read: {broken}") from broken
+        raise SystemExit(f"{path}: cannot read: {broken}") from broken
     # @req- de3ihq
 
 
 def declared():
     # @req+ GUARD-83168738@zhoOQpGgBd9R ehhsto
     try:
-        held = tomllib.loads(read(PROJECT))
-        return [Requirement(line) for line in
-                held["project"]["dependencies"] + held["build-system"]["requires"]]
+        project = tomllib.loads(read(PROJECT))
+        return [Requirement(spec) for spec in
+                project["project"]["dependencies"]
+                + project["build-system"]["requires"]]
     except (tomllib.TOMLDecodeError, KeyError, TypeError,
             InvalidRequirement) as broken:
-        raise SystemExit(f"::error::{PROJECT}: cannot parse: {broken}") from broken
+        raise SystemExit(f"{PROJECT}: cannot parse: {broken}") from broken
     # @req- ehhsto
 
 
 def locked():
-    held = {}
+    pins = {}
     for line in read(LOCK).splitlines():
         found = PINNED.match(line)
         if not found:
             continue
         # @req+ GUARD-83168738@zhoOQpGgBd9R us7ggv
         try:
-            held[canonicalize_name(found[1])] = Version(found[2])
+            pins[canonicalize_name(found[1])] = Version(found[2])
         except InvalidVersion as broken:
-            raise SystemExit(f"::error::{LOCK}: cannot parse: {broken}") from broken
+            raise SystemExit(f"{LOCK}: cannot parse: {broken}") from broken
         # @req- us7ggv
-    return held
+    return pins
 
 
 def main():
-    wanted, held = declared(), locked()
-    if not wanted or not held:
+    wanted, pins = declared(), locked()
+    if not wanted or not pins:
         print(f"::error::found {len(wanted)} requirement(s) in {PROJECT} and "
-              f"{len(held)} pin(s) in {LOCK}; nothing left to compare means "
+              f"{len(pins)} pin(s) in {LOCK}; nothing left to compare means "
               "this check is broken, not passing")
         return 1
     found = []
     # @req> GUARD-39842261@bWyFMC8rM_YC qko53r
     for requirement in wanted:
-        pinned = held.get(canonicalize_name(requirement.name))
-        if pinned is None:
+        pinned = pins.get(canonicalize_name(requirement.name))
+        if requirement.marker and not requirement.marker.evaluate():
+            continue
+        if requirement.url:
+            found.append(f"{PROJECT} requires {requirement} from a URL, which "
+                         f"{LOCK} cannot pin -- name a version range instead")
+        elif pinned is None:
             found.append(f"{PROJECT} requires {requirement}, which {LOCK} does "
                          f"not hold {REMEDY}")
         elif not requirement.specifier.contains(pinned, prereleases=True):

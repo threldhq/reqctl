@@ -13,7 +13,7 @@ acceptance_criteria:
 assessed:
   GUARD-93589588: yH4bykpGUeLbQI_1Io16YMNXd2c3lZLrdWj7Svj4NvE
 citations:
-  nfv4rg: OzHzu5q4k1yKdStFIq5tOFRDpkbv3Qf4gWcvo6jiJZE
+  nfv4rg: mRx_d6IaBq86MHcLT4XVuSPppFyut9XlM71HSnGSd5Q
 relations:
   GUARD-93589588: derives_from
 status: approved
