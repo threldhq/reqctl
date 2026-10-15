@@ -1,0 +1,71 @@
+acceptance_criteria:
+- given: a Write [tool call](tool_call) whose file lies under the plugin's folder
+  then: the product refuses the [tool call](tool_call)
+  when: the [tool call](tool_call) is made
+- given: a shell command that copies, moves, redirects into or removes a path under
+    the plugin's folder
+  then: the product refuses the [tool call](tool_call)
+  when: the [tool call](tool_call) is made
+- given: a shell command naming a path under the plugin's folder through quoting,
+    a glob, a variable, a change of directory or a symlink, to a write
+  then: the product refuses it as it refuses the path spelled plainly
+  when: the [tool call](tool_call) is made
+- given: a Read, Grep or Glob of a path under the plugin's folder, or a shell command
+    that only reads it
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: the [tool call](tool_call) is made
+- given: a write to the plugin's sources in a repository, while the plugin whose hook
+    judges the call is installed in another folder
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: the [tool call](tool_call) is made
+- given: reqctl writing a [statement citation](statement_citation) in a file under
+    the plugin's folder
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) running reqctl is made
+- given: a call running reqctl and, in another command, writing a path under the plugin's
+    folder
+  then: the product refuses the [tool call](tool_call)
+  when: the [tool call](tool_call) is made
+- given: a shell command whose write target under a variable, a command substitution
+    or a glob cannot be resolved from its text
+  then: the product refuses the [tool call](tool_call)
+  when: the [tool call](tool_call) is made
+- given: git commit -m, or gh pr, issue or review --title or --body, whose literal
+    text names a path under the plugin's folder
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+- given: a command that installs or updates the plugin and names no path under its
+    folder
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+- given: a shell command that removes, moves, links or changes the mode of the plugin's
+    folder itself
+  then: the product refuses the [tool call](tool_call) and names changing the plugin
+    through a reqctl release as the route
+  when: the [tool call](tool_call) is made
+assessed:
+  REQ-22704490: u7IClIQOfStAss5hIWQrPe_jxv9hNQ4JUr1VPuJ3SWM
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-75038049: hXyFNmxx-SWySt9u7ITdv6t6cQTH7MLACKtVXuTufk0
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-22704490: derives_from
+  REQ-36925311: depends_on
+  REQ-38288492: depends_on
+  REQ-75038049: depends_on
+status: approved
+text: If a [tool call](tool_call) names the folder of the Claude Code plugin whose
+  ${plugin_components.requirements_guard_hook} judges the [tool call](tool_call),
+  or a file or folder under it, as what it would write, edit, create, move, link,
+  remove or change the mode of, other than in literal text, written inline or in a
+  heredoc, that it passes as a commit message or as the title, body or comment of
+  a pull request, an issue or a review, then the product shall refuse the [tool call](tool_call),
+  however the path is spelled, unless each command or tool in the call that names
+  the path is reqctl.
+type: functional
+verification: inspection
