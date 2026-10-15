@@ -23,6 +23,7 @@ jobs:
           cache-dependency-path: |
             reqctl/requirements-lock.txt
             reqctl/requirements-dev-lock.txt
+            reqctl/pyproject.toml
 
       - name: What this change touches
         id: touched
@@ -36,10 +37,10 @@ jobs:
             changed=$(git ls-files)
           fi
           mark() {
-            if printf '%s\n' "$changed" | grep -qE "$2"; then held=true; else held=false; fi
+            if grep -qE "$2" <<<"$changed"; then held=true; else held=false; fi
             echo "$1=$held" | tee -a "$GITHUB_OUTPUT"
           }
-          mark deps '^reqctl/requirements'
+          mark deps '^reqctl/(requirements|pyproject\.toml$)'
 
       - name: No credential in the change
         env:

@@ -28,15 +28,13 @@ DECLARED = 5
 
 PYTHON, HASH, SLASH, MARKUP = "python", "hash", "slash", "markup"
 
-BY_NAME = {".gitattributes": HASH, ".gitignore": HASH, ".npmrc": HASH,
-           ".prettierignore": HASH, ".prettierrc": SLASH, "CODEOWNERS": HASH}
+BY_NAME = {".gitignore": HASH, "CODEOWNERS": HASH}
 
 BY_SUFFIX = {".py": PYTHON,
              ".bash": HASH, ".cfg": HASH, ".in": HASH, ".ini": HASH,
              ".sh": HASH, ".toml": HASH, ".txt": HASH, ".yaml": HASH,
              ".yml": HASH,
-             ".cjs": SLASH, ".js": SLASH, ".json": SLASH, ".mjs": SLASH,
-             ".ts": SLASH, ".tsx": SLASH,
+             ".js": SLASH, ".json": SLASH,
              ".html": MARKUP, ".md": MARKUP}
 
 ALLOWED = {
@@ -54,7 +52,7 @@ def cites(body):
 
 # @req+ GUARD-27671623@3zDwoF3LwQkw ixyyek
 QUOTED = re.compile(r"\"[^\"]*\"|'[^']*'")
-TRAILING = re.compile(r"\S\s+(#.*)")
+TRAILING = re.compile(r"(?:\S\s+|;)(#.*)")
 MARKED = re.compile(r"<!--.*?-->", re.S)
 EMBEDDED = re.compile(rf"{MARKED.pattern}|<(script|style)[^>]*>(.*?)</\1>",
                       re.S | re.I)
