@@ -19,6 +19,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  gamoti: duzNrsnIRKs1H7KwTlaRr_w2mL50ZDSUGxFeTwrMN2o
 priority: medium
 relations:
   REQ-38288492: depends_on

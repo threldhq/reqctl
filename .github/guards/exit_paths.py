@@ -15,20 +15,36 @@ for path in sorted(HOOKS.rglob("*.py")):
         faults.append(f"{path.relative_to(HOOKS)}: cannot parse: {error}")
         continue
     # @req- 4kckqu
+    # @req+ REQ-51060455@Z5EVUURxm1nV qrn3wi
+    failed_write = {id(statement.value)
+                    for deny in ast.walk(tree)
+                    if isinstance(deny, ast.FunctionDef) and deny.name == "deny"
+                    for handler in deny.body if isinstance(handler, ast.Try)
+                    for caught in handler.handlers
+                    if isinstance(caught.type, ast.Name) and caught.type.id == "OSError"
+                    for statement in caught.body if isinstance(statement, ast.Expr)}
+    admitted = 0
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
             func = node.func
+            status = (node.args[0].value if len(node.args) == 1 and not node.keywords
+                      and isinstance(node.args[0], ast.Constant)
+                      and type(node.args[0].value) is int else None)
             if isinstance(func, ast.Name) and func.id in ("exit", "quit"):
                 faults.append(f"{path.relative_to(HOOKS)}:{node.lineno}: "
                               f"{func.id}() is the interpreter's; a hook "
                               "decides with sys.exit(0)")
+            elif (isinstance(func, ast.Attribute) and func.attr == "exit"
+                    and isinstance(func.value, ast.Name) and func.value.id == "sys"
+                    and status == 2 and id(node) in failed_write and not admitted):
+                admitted += 1
+                continue
             elif (isinstance(func, ast.Attribute)
-                    and func.attr in ("exit", "_exit")
-                    and not (len(node.args) == 1 and not node.keywords
-                             and isinstance(node.args[0], ast.Constant)
-                             and node.args[0].value == 0)):
+                    and func.attr in ("exit", "_exit") and status != 0):
                 faults.append(f"{path.relative_to(HOOKS)}:{node.lineno}: "
-                              f"an {func.attr} call that is not exit(0)")
+                              f"an {func.attr} call that is not exit(0), nor the "
+                              "exit(2) deny reaches when its decision cannot be "
+                              "written")
         if isinstance(node, ast.Raise):
             exc = node.exc
             target = exc.func if isinstance(exc, ast.Call) else exc
@@ -36,6 +52,7 @@ for path in sorted(HOOKS.rglob("*.py")):
                 faults.append(f"{path.relative_to(HOOKS)}:{node.lineno}: "
                               "raise SystemExit bypasses the decision; "
                               "sys.exit(0) or deny()")
+    # @req- qrn3wi
 
 if not scanned:
     faults.append(f"no hook script found under {HOOKS}; a check that scanned "

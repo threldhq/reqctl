@@ -447,12 +447,21 @@ def deny(reason: str) -> None:
             }
         }
     ).encode()
-    # @req+ REQ-51060455@DPy54WGr0ngb kfua34
+    # @req+ REQ-51060455@Z5EVUURxm1nV kfua34
     try:
         while decision:
             decision = decision[os.write(1, decision):]
     except OSError:
-        pass
+        # @req+ REQ-15535068@j58MkfsvW9OK 76xt5k
+        refusal = reason.encode(errors="replace")
+        try:
+            while refusal:
+                refusal = refusal[os.write(2, refusal):]
+        except OSError:
+            pass
+        # @req- 76xt5k
+        # @req> REQ-29713167@M7nLInYBwBo2 gamoti
+        sys.exit(2)
     sys.exit(0)
     # @req- kfua34
 
@@ -2534,7 +2543,7 @@ def main() -> None:
     if not isinstance(data, dict):
         deny(UNREADABLE.format(what="the hook input, which is not a JSON object"))
     # @req- mvehq6
-    # @req+ REQ-51060455@DPy54WGr0ngb 4gmqti
+    # @req+ REQ-51060455@Z5EVUURxm1nV 4gmqti
     try:
         decide(data)
     except Exception as error:
