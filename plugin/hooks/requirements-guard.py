@@ -320,12 +320,15 @@ PLUGIN_WRITE = (
     "repository, then `claude plugin update reqctl@reqctl`."
 )
 # @req> REQ-75038049@hXyFNmxx-SWy 6vfbgw
-ENV_CHANGE = re.compile(r"(?:^|[;&|(\n'\"`{])\s*(?:[A-Za-z_]\w*\+?=|(?:env|unset|set|export|"
-                        r"declare|typeset|readonly|local|source|\.)(?=\s|$))")
+ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n'\"`{])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
+                        r"export|declare|typeset|readonly|local|read|readarray|mapfile|getopts|let|"
+                        r"eval|source|\.)(?=\s|$)|printf\s(?:\s*-\S+)*?\s*-v)|\$\{\w+:?=")
 CALL = {"changes_environment": True}
 # @req> REQ-59919160@eEBU6tuB77Dq v6s3eb
 WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", "tee", "install",
-           "rsync", "truncate", "dd", "unlink")
+           "rsync", "truncate", "dd", "unlink", "sed", "perl", "tar", "unzip", "patch", "cpio",
+           "gzip", "gunzip", "bzip2", "xz", "zstd", "ed", "split", "shred", "sort", "curl", "wget")
+READ_WRITES = re.compile(r"^\s*(?:tree|less)\s(?:.*\s)?(?:-[A-Za-z]*[oO]|--log-file|--LOG-FILE)|\s--pre\b")
 
 PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo")
 GH_VALUED = ("-X", "--method", "-f", "--raw-field", "-F", "--field", "--input", "-H",
@@ -2011,7 +2014,9 @@ def names_plugin(text):
 
 # @req> REQ-59919160@eEBU6tuB77Dq gffcbj
 def writes_plugin(said, here):
-    if (READ.search(said) or GIT_READ.search(said)) and not OUTPUT_FLAG.search(said):
+    git = GIT_READ.search(said)
+    if ((READ.search(said) or git and git.group("read"))
+            and not OUTPUT_FLAG.search(said) and not READ_WRITES.search(said)):
         return False
     words = tokens_of(said)
     called = invoked(words)
@@ -2414,10 +2419,10 @@ def decide(data: dict) -> None:
             f"{owner}/{repo}" if all(isinstance(v, str) and v for v in (owner, repo)) else None)
 
     judge_citation_edit(tool, args, cwd)
-    for value in named_paths(args, COMMAND_KEY):
-        judged = messageless(value)
-        # @req> REQ-75038049@hXyFNmxx-SWy hwgp36
-        CALL["changes_environment"] = bool(ENV_CHANGE.search(judged))
+    commands = [messageless(value) for value in named_paths(args, COMMAND_KEY)]
+    # @req> REQ-75038049@hXyFNmxx-SWy hwgp36
+    CALL["changes_environment"] = any(ENV_CHANGE.search(judged) for judged in commands)
+    for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
 
