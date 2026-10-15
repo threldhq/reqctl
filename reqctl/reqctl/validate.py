@@ -379,30 +379,25 @@ def listed_fields(root, uid, data):
     name = corpus.name_of(uid, data)
     schema = corpus.schema_for(root, "data", name)
     own = corpus.schema_name_at(root, "data", name) != corpus.schema_name_for("data")
-    held = corpus.mapping(corpus.mapping(schema, "properties"), "entries")
-    keyed = corpus.mapping(held, "properties")
+    held = _fields._merged(schema, "data")[0].get("entries", {})
     listed = data.get("fields") if isinstance(data.get("fields"), list) else []
     problems = []
     for key, entry in sorted((corpus.entries(data) or {}).items(),
                              key=lambda item: str(item[0])):
         if not isinstance(entry, dict):
             continue
-        applied = keyed.get(str(key), held.get("additionalProperties",
-                                               {"$ref": "#/$defs/entry"}))
-        ref = applied.get("$ref") if isinstance(applied, dict) else None
-        if isinstance(ref, str) and ref.startswith("#/$defs/"):
-            applied = corpus.mapping(schema, "$defs").get(ref.removeprefix("#/$defs/"))
-        applied = applied if isinstance(applied, dict) else {}
+        applied = _fields._resolved(schema, corpus.mapping(held, "properties").get(
+            str(key), held.get("additionalProperties")))
         others = applied.get("additionalProperties")
         if own and (others is False or isinstance(others, dict)):
             continue
-        declared = corpus.mapping(applied, "properties")
         problems += [f"{uid}: entry {key} holds the field {field}, which its schema does "
                      f"not declare and the data item does not list -- it lists "
                      f"{', '.join(map(str, listed)) or 'no fields'}; correct the field, "
                      "or add it to fields"
                      for field in sorted(map(str, entry))
-                     if field not in declared and field not in listed]
+                     if field not in corpus.mapping(applied, "properties")
+                     and field not in listed]
     return problems
 
 
