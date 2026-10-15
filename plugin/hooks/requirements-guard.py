@@ -24,7 +24,7 @@ _BASELINE_FILE = rf"{_ROOT}/baseline\.ya?ml"
 
 ITEM = re.compile(rf"{_ROOT}/({_ITEMS})/({_UIDS})-\d{{8}}\.ya?ml$")
 BASELINE = re.compile(rf"{_ROOT}/baselines/|{_BASELINE_FILE}")
-# @req> REQ-22704490@0I1yKEFWt0tX yn3jbh
+# @req> REQ-22704490@u7IClIQOfStA yn3jbh
 CORPUS_DIR = re.compile(
     rf"{_ROOT}/({_CORPUS})(?![\w.-])"
     rf"|{_BASELINE_FILE}"
@@ -107,7 +107,7 @@ SED_SCRIPT = re.compile(
     rf"(?:\s*(?:{_SED_ADDRESS}(?:,{_SED_ADDRESS})?!?\s*)?"
     r"(?:s(?P<d>[^\\\n\w\s])(?:\\.|(?!(?P=d))[^\\\n])*(?P=d)"
     r"(?:\\.|(?!(?P=d))[^\\\n])*(?P=d)[gpIiMm0-9]*|[pdqP=])\s*(?:;|$))+")
-# @req+ REQ-38099593@_nWaC_p_1ziz 2x3zhi
+# @req+ REQ-38099593@WZbBLy6bHv3j 2x3zhi
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
 OPENS_PAGER = re.compile(r"-[0-9A-Za-z]*O")
@@ -355,7 +355,7 @@ CURL_CONFIG_LINE = re.compile(r"(-{0,2}[A-Za-z0-9][\w-]*)(?:\s*[=:]\s*|\s+|$)(.*
 
 def named_paths(value, keys=PATH_KEY, key=""):
     if isinstance(value, str):
-        # @req> REQ-38099593@_nWaC_p_1ziz okrfi5
+        # @req> REQ-38099593@WZbBLy6bHv3j okrfi5
         if keys.search(key) and len(value) > INPUT_LIMIT:
             deny(LONG_INPUT.format(key=key, length=len(value)))
         return [value] if keys.search(key) else []
@@ -873,7 +873,7 @@ def located(words, here):
     return here, [os.path.expanduser(word) for word in where], settings
 
 
-# @req> REQ-38099593@_nWaC_p_1ziz bc4mmq
+# @req> REQ-38099593@WZbBLy6bHv3j bc4mmq
 def searched(part):
     words = tokens_of(part.split("\n", 1)[0])
     tool, rest = (("git grep", words[2:]) if words[:2] == ["git", "grep"]
@@ -887,7 +887,7 @@ def searched(part):
     return tool, None
 
 
-# @req> REQ-38099593@_nWaC_p_1ziz dek4pk
+# @req> REQ-38099593@WZbBLy6bHv3j dek4pk
 def unreadable(part):
     quote = None
     for char in part:
@@ -898,7 +898,7 @@ def unreadable(part):
     return "a line break" if "\n" in part else None
 
 
-# @req> REQ-38099593@_nWaC_p_1ziz j6ubo7
+# @req> REQ-38099593@WZbBLy6bHv3j j6ubo7
 def only_reads(words):
     tool, rest = (words[0], words[1:]) if words else ("", [])
     if tool == "sort":
@@ -935,7 +935,7 @@ def sink_runs(words):
     return not scripts or not all(SED_SCRIPT.fullmatch(script) for script in scripts)
 
 
-# @req> REQ-38099593@_nWaC_p_1ziz 4h5lnn
+# @req> REQ-38099593@WZbBLy6bHv3j 4h5lnn
 def names_citation(cmd):
     reach = [{"split"}] + [set() for _ in OPENER]
     for char in cmd.replace("\\\n", "").translate(UNQUOTED):
@@ -952,6 +952,80 @@ def names_citation(cmd):
                     step[matched + 1].add("empty")
         reach = step
     return False
+
+
+MESSAGE_HEAD = re.compile(
+    r"(?:\A|(?<=[;(\n])|(?<=(?<![<>])[&|]))[ \t]*(?:git(?:[ \t]+-C[ \t]+[^\s;&|()<>]+)?[ \t]+(?P<git>commit)"
+    r"|gh[ \t]+(?:(?:pr|issue)[ \t]+(?:create|edit|comment)|pr[ \t]+review))(?=[ \t\n;&|)]|\Z)")
+MESSAGE_FLAGS = {"commit": (("-m", "--message"), ("-F", "--file")),
+                 None: (("-t", "--title", "-b", "--body"), ("-F", "--body-file"))}
+SHELL_WORD = re.compile(r"[^\s;&|()<>`]+")
+BLANKS = re.compile(r"[ \t]*")
+LITERAL_TEXT = re.compile(r"'[^']*'|\"[^\"$`\\]*\"")
+
+
+def message_words(cmd, m, at):
+    words, doc = [], None
+    while True:
+        at = BLANKS.match(m, at).end()
+        if opened := heredoc_at(cmd, at):
+            doc, at = opened, opened[3]
+            continue
+        if not (word := SHELL_WORD.match(m, at)):
+            return words, doc
+        words.append(word.span())
+        at = word.end()
+
+
+def heredoc_body(cmd, m, doc):
+    word, quoted, dash, end = doc
+    begins = m.find("\n", end) + 1
+    closing = begins and m[begins - 2] != "\\" and re.compile("^" + "\t*" * dash + re.escape(word) + "$", re.M).search(cmd, begins)
+    if closing and (quoted or not any(c in cmd[begins:closing.start()] for c in "$`\\")):
+        return begins, closing.start()
+    return None
+
+
+# @req> REQ-38099593@WZbBLy6bHv3j xdls2r
+# @req> REQ-22704490@u7IClIQOfStA ypnv3w
+def messageless(cmd):
+    m = masked(cmd)
+    docs = HEREDOC.findall(m)
+    if len(docs) > 1:
+        return cmd
+    cuts, body = [], None
+    for head in MESSAGE_HEAD.finditer(m):
+        if body and body[0] <= head.start() < body[1]:
+            continue
+        texts, stdin = MESSAGE_FLAGS[head["git"]]
+        words, doc = message_words(cmd, m, head.end())
+        said = [cmd[start:end] for start, end in words]
+        fed = False
+        for at, word in enumerate(said):
+            value = None
+            if word in texts and at + 1 < len(words):
+                value = words[at + 1]
+            elif flag := next((f for f in texts if f.startswith("--") and word.startswith(f + "=")), None):
+                value = (words[at][0] + len(flag) + 1, words[at][1])
+            if value and LITERAL_TEXT.fullmatch(cmd[value[0]:value[1]]):
+                cuts.append((*value, "''"))
+            fed = fed or (word in stdin and said[at + 1:at + 2] == ["-"]) or word in {
+                f"{f}=-" for f in stdin if f.startswith("--")}
+        if doc and fed:
+            if not (body := heredoc_body(cmd, m, doc)):
+                return cmd
+            cuts.append((*body, ""))
+    if docs and not body:
+        return cmd
+    judged = cmd
+    for start, end, put in sorted(cuts, reverse=True):
+        judged = judged[:start] + put + judged[end:]
+    before, after = (scan(AMP_REDIRECT.sub(" ", flatten(ESCAPE.sub("", text)))) for text in (cmd, judged))
+    if list(map(len, before)) != list(map(len, after)) or any(
+            old != new and not MESSAGE_HEAD.match(masked(old.lstrip()))
+            for olds, news in zip(before, after) for old, new in zip(olds, news)):
+        return cmd
+    return judged
 
 
 @functools.cache
@@ -1668,7 +1742,7 @@ def judge_command(said, here, stdin=()):
             setter and next((word for word in unquoted if any(map(expands, bounded(word)))), None)):
         deny(UNREADABLE.format(what=f"which command or repository {hidden} leads to"))
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
-    # @req> REQ-22704490@0I1yKEFWt0tX 6cxbfo
+    # @req> REQ-22704490@u7IClIQOfStA 6cxbfo
     if (plain == "rm" or posed) and any(
             (len(w) > 2 and "--recursive".startswith(w))
             or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
@@ -1679,7 +1753,7 @@ def judge_command(said, here, stdin=()):
                  "corpus along with everything else. Name the paths to delete"
                  f"{'' if plain == 'rm' else ', and the command outright'}.")
     # @req> REQ-91051324@ljHcdWSG-nys vdn4ok
-    # @req> REQ-22704490@0I1yKEFWt0tX mrkvmj
+    # @req> REQ-22704490@u7IClIQOfStA mrkvmj
     if (plain == "find" or posed) and any("-delete" in bounded(w) for w in operands):
         at = 0
         while at < len(operands) and (operands[at] in ("-H", "-L", "-P", "-D", "--")
@@ -1767,7 +1841,7 @@ def glob_alternatives(segment):
     return [segment]
 
 
-# @req> REQ-22704490@0I1yKEFWt0tX 3r7rae
+# @req> REQ-22704490@u7IClIQOfStA 3r7rae
 # @req> REQ-54260750@MTrWbA9_HZWY pokpqc
 def is_corpus_root(word):
     for value in {word, word.rpartition("=")[2]}:
@@ -1933,7 +2007,7 @@ def names_corpus(part, cwd):
 
 @functools.cache
 def judge_shell(raw, cwd, stdin=()):
-    # @req+ REQ-22704490@0I1yKEFWt0tX ak47k7
+    # @req+ REQ-22704490@u7IClIQOfStA ak47k7
     if (spelled := ansi_c(raw)) != raw:
         judge_shell(spelled, cwd, stdin)
     cmd = flatten(ESCAPE.sub("", raw))
@@ -2141,7 +2215,7 @@ def notebook_edited(args, cwd):
     return before, "" if mode == "delete" else new
 
 
-# @req> REQ-38099593@_nWaC_p_1ziz 3yvytz
+# @req> REQ-38099593@WZbBLy6bHv3j 3yvytz
 def judge_citation_edit(tool, args, cwd):
     if tool == "NotebookEdit":
         before, after = notebook_edited(args, cwd)
@@ -2155,7 +2229,7 @@ def judge_citation_edit(tool, args, cwd):
         deny(f"{HAND_CITATION}\nIn {args.get('file_path') or args.get('notebook_path')}.")
 
 
-# @req> REQ-38099593@_nWaC_p_1ziz cebvfg
+# @req> REQ-38099593@WZbBLy6bHv3j cebvfg
 def judge_citation_shell(raw):
     cmd = ESCAPE.sub("", raw)
     if not names_citation(cmd):
@@ -2200,7 +2274,7 @@ def decide(data: dict) -> None:
             if CORPUS_DIR.search(named) or is_corpus_root(named) or reaches_corpus(named, cwd):
                 deny(DIRECT_READ.format(target=path))
 
-    # @req> REQ-22704490@0I1yKEFWt0tX qfasw3
+    # @req> REQ-22704490@u7IClIQOfStA qfasw3
     if tool not in ("Bash", "Read", "Grep", "Glob"):
         for value in dict.fromkeys(spelled for found in named_paths(args) + bare_paths(args)
                                    for spelled in (found, unquote(found))):
@@ -2244,8 +2318,9 @@ def decide(data: dict) -> None:
 
     judge_citation_edit(tool, args, cwd)
     for value in named_paths(args, COMMAND_KEY):
-        judge_shell(value, cwd)
-        judge_citation_shell(value)
+        judged = messageless(value)
+        judge_shell(judged, cwd)
+        judge_citation_shell(judged)
 
 
 def main() -> None:

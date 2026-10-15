@@ -535,14 +535,15 @@ def _bare_terms(uid, data, defined):
 def exempted(records, root, exempt):
     prose = {uid: corpus.unlinked_prose(own_words(root, uid, data))
              for uid, data in records.items()}
-    # @req> REQ-88221320@04q8T91NApFU 5gpgix
-    exempt += sorted({
+    # @req> REQ-88221320@vIuzLHP0hHUo 5gpgix
+    # @req> REQ-46373547@54MxhOaz3t8O 3lh7ij
+    exempt += sorted(
         f"{uid}: \"{' '.join(found.group().split())}\" accepted unlinked, a phrase recorded on term {term_uid} -- {reason}"
         for term_uid, _, _, phrases in term_index(_approved(records))
         for uid, text in prose.items() if uid != term_uid
         for phrase, reason in phrases
         for found in phrase.finditer(text)
-    })
+    )
     return []
 
 
