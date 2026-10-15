@@ -1,0 +1,9 @@
+assessed:
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+entries:
+  '2': {}
+kind: parameter
+name: blocking_exit_status
+status: draft
+text: The exit status Claude Code reads as a hook blocking the [tool call](tool_call)
+value_type: count
