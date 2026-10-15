@@ -139,15 +139,15 @@ def installs(text, where):
     found = []
     for line in PIP.findall(CONTINUED.sub(" ", text)):
         held = " ".join(line.split())
-        words = held.split(" #", 1)[0].split()
+        words, kept = held.split(), held.split(" #", 1)[0].split()
         # @req> GUARD-26421773@SDQf4TqpYtSB kt5es3
         if (any(REQUIREMENT.fullmatch(word) for word in words)
-                and "--require-hashes" not in words):
+                and "--require-hashes" not in kept):
             found.append(f"{where}: `{held}` installs from a lockfile without "
                          "--require-hashes")
         # @req> GUARD-72877772@JfdZ18LPQLEi bbo2z6
         if (any(EDITABLE.fullmatch(word) for word in words)
-                and "--no-build-isolation" not in words):
+                and "--no-build-isolation" not in kept):
             found.append(f"{where}: `{held}` builds an editable install without "
                          "--no-build-isolation")
     return found
