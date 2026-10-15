@@ -547,12 +547,6 @@ def _unlinked_terms(records, root):
             for problem in _bare_terms(uid, own_words(root, uid, data), defined)]
 
 
-def unlinked_elsewhere(uid, data, records, root):
-    index = term_index({uid: data})
-    return sorted(other for other, held in records.items()
-                  if _bare_terms(other, own_words(root, other, held), index))
-
-
 QUANTITY = re.compile(
     r"(?<!\w)(?<!\d\.)(?<![^\W\d_]-)"
     r"(\.?\d[\d,_]*(?:\.\d+)*(?:[eE][+-]?\d+)?)(?:(?!\n)[\s-])*"
@@ -1541,7 +1535,10 @@ def _settled(path):
             "settles one that falls within its pins"
         )
     # @req> REQ-49870454@KKNV-vdY6oM1 ogeofb
-    return corpus.loads(text, path, aliases=False)
+    data = corpus.loads(text, path, aliases=False)
+    if isinstance(data, dict):
+        corpus.refuse_misshapen(path, data)
+    return data
 
 
 # @req> REQ-21699310@HJWvkB2QKjez uv4bc5
