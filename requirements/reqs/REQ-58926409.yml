@@ -10,6 +10,8 @@ assessed:
   REQ-71965656: F8ulVugEMpD-KciC93Ppv6DJGlz_QdY_TQ7CH57K7hw
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  54mksz: eoxanRyGUzq4TUGHlHDwUIwpMW8N6njGwBv_g24L3Zg
 priority: medium
 relations:
   REQ-52544202: depends_on

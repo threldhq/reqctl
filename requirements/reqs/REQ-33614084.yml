@@ -18,6 +18,10 @@ assessed:
   code_token: RKSwa_7GLOrcUd7V_FstnVgDVX3CvlQnuD650a2b5qs
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  53mrze: PUdeIs5XY5gfe5XNkul2A8vMOZdNHdnPIq2ZDp-y2gg
+  ily3i7: k9kUdVZaesftV0tgEtU3FilGBw7jClr6Za5BRisy3S4
+  kiiwp5: OKdtd96AEOM_2HsGLpUJSNTII7mzMmvoAyuvAMQlc8E
 priority: medium
 relations:
   REQ-30061042: depends_on

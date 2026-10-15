@@ -589,6 +589,17 @@ def repinned(root, citation, stamp):
     # @req- lqd5pz
 
 
+def renamed(root, citation, name):
+    # @req+ REQ-70208796@rx8OkxlDOpk4 4otwfp
+    target, mark, lines = _lines(root, citation)
+    at = citation["open"] - 1
+    address = f"{name}.{citation['entry']}" if citation["entry"] else name
+    pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+){re.escape(citation['address'])}(?=@)")
+    lines[at] = pinned.sub(lambda found: f"{found.group(1)}{address}", lines[at], count=1)
+    return target, (mark + "".join(lines)).encode()
+    # @req- 4otwfp
+
+
 def untagged(root, citation):
     target, mark, lines = _lines(root, citation)
     marks = set(citation["marks"])
@@ -752,6 +763,56 @@ def compare(root, ref):
             rows.append({"id": identity, "uid": new["uid"], "path": new["path"],
                          "state": state})
         # @req- bicxbc
+    # @req> REQ-33614084@XHPdW0ynnY4c ily3i7
+    files = _whole_rows(root, commit)
     # @req> REQ-70581878@Oua6NaKONA27 w6qryd
-    touched = sorted({row["uid"] for row in rows if row["state"] != ["moved"]})
-    return {"base": commit, "citations": rows, "touches": touched}
+    touched = sorted({row["uid"] for row in rows if row["state"] != ["moved"]}
+                     | {row["uid"] for row in files})
+    return {"base": commit, "citations": rows, "files": files, "touches": touched}
+
+
+def _whole_held(root, commit):
+    listed = subprocess.run(
+        ["git", "grep", "-l", "-z", "-F", corpus.WHOLE_FILES, commit, "--",
+         "requirements"],
+        cwd=root, capture_output=True, text=True, check=False)
+    if listed.returncode not in (0, 1):
+        raise ReqctlError(f"cannot read {commit}: {listed.stderr.strip()}")
+    for named in filter(None, listed.stdout.split("\0")):
+        relative = named.split(":", 1)[1]
+        data = corpus.loads(_git(root, "show", f"{commit}:{relative}"), relative,
+                            aliases=False)
+        if isinstance(data, dict):
+            yield Path(relative).stem, corpus.mapping(data, corpus.WHOLE_FILES)
+
+
+def _whole_text(root, commit, relative):
+    shown = subprocess.run(["git", "show", f"{commit}:{relative}"], cwd=root,
+                           capture_output=True, text=True, check=False)
+    return shown.stdout.removeprefix(BOM) if shown.returncode == 0 else None
+
+
+def _whole_rows(root, commit):
+    # @req+ REQ-33614084@XHPdW0ynnY4c 53mrze
+    was = dict(_whole_held(root, commit))
+    store, _ = corpus.load(root)
+    now = {item.uid: corpus.mapping(item.data, corpus.WHOLE_FILES)
+           for item in corpus.items(store)
+           if corpus.mapping(item.data, corpus.WHOLE_FILES)}
+    rows = []
+    for uid in sorted(set(was) | set(now)):
+        held, holds = was.get(uid, {}), now.get(uid, {})
+        for relative in sorted(set(held) | set(holds)):
+            if relative not in held or relative not in holds:
+                rows.append({"uid": uid, "path": relative,
+                             "state": ["added" if relative in holds else "deleted"]})
+                continue
+            before = _whole_text(root, commit, relative)
+            target = Path(root) / relative
+            after = (target.read_bytes().decode().removeprefix(BOM)
+                     if target.is_file() else None)
+            if (held[relative] != holds[relative] or None in (before, after)
+                    or whole(relative, before) != whole(relative, after)):
+                rows.append({"uid": uid, "path": relative, "state": ["changed"]})
+    return rows
+    # @req- 53mrze

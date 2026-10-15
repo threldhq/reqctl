@@ -717,6 +717,15 @@ def rename(store, uid, new_name):
     # @req> REQ-79956352@OsoTGRd6D5CZ 75mdrs
     _refuse_hidden("name", new_name)
     _refuse_unusable_name(store, new_name, item.uid)
+    # @req+ REQ-99037710@COBChae3SzWZ mbvtpn
+    wore = [held for held in sorted(corpus.carriers(store).get(new_name, []))
+            if held != item.uid]
+    if wore:
+        raise ReqctlError(
+            f"{new_name}: {', '.join(wore)} has carried that name, so a "
+            f"reference to it would be ambiguous -- choose another; {item.uid} "
+            "was not changed")
+    # @req- mbvtpn
     old_name = corpus.name_of(item.uid, item.data)
     olds = {item.uid} | ({old_name} if old_name is not None else set())
     if old_name == new_name and item.path.stem == new_name:
