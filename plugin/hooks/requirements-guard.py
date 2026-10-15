@@ -329,9 +329,6 @@ CALL = {"changes_environment": True}
 WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", "tee", "install",
            "rsync", "truncate", "dd", "unlink", "sed", "perl", "tar", "unzip", "patch", "cpio",
            "gzip", "gunzip", "bzip2", "xz", "zstd", "ed", "split", "shred", "sort", "curl", "wget")
-WRITES_WHEN = {"sort": re.compile(r"\s(?:-[A-Za-z]*[oT]|--(?:output|temporary-directory|compress-program))"),
-               "curl": re.compile(r"\s(?:-[A-Za-z]*[oODcK]|--(?:output|remote-name|dump-header|cookie-jar|"
-                                  r"trace|libcurl|stderr|etag-save|config|hsts|alt-svc))")}
 READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|--(?:log|LOG)-[fF]|--compile)"
                          r"|\s--(?:pre|pager|hostname-bin)\b")
 
@@ -2039,7 +2036,7 @@ def writes_plugin(said, here, whole):
         return True
     naming = [word for word in words if reaches_plugin(word, here)]
     if not naming and not names_plugin(said):
-        return tool in WRITERS and (tool not in WRITES_WHEN or WRITES_WHEN[tool].search(said)) and (
+        return tool in WRITERS and (
             any(EXPANSION.search(os.path.expandvars(word)) for word in called[1:])
             or not here and any(not os.path.isabs(os.path.expanduser(word)) for word in operands))
     if tool in ("cd", "pushd"):
