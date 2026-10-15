@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: coverage findings the product refuses for any fault
+  then: the refusal names spawning the coverage agent again from the manifest the
+    build wrote
+  when: the findings are checked
+assessed:
+  REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
+priority: medium
+relations:
+  REQ-29203000: depends_on
+status: approved
+text: If the product refuses coverage findings, then the product shall name, as the
+  next step, spawning the coverage agent again from the manifest the run's build wrote
+  for it.
+type: functional
+verification: inspection

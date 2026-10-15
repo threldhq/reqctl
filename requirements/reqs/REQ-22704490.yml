@@ -36,6 +36,17 @@ acceptance_criteria:
 - given: reqctl writing a corpus [item](item)'s file or the baseline
   then: the product does not refuse it
   when: the [tool call](tool_call) running reqctl is made
+- given: git commit -m or a heredoc passed to git commit -F -, or gh pr or gh issue
+    create, edit or comment, or gh pr review, with --title or --body, whose literal
+    text names a corpus [item](item)'s file
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+- given: such text holding a command substitution or a process substitution
+  then: the product judges the substitution as it judges any other part of the command
+  when: the [tool call](tool_call) is made
+- given: such text held in a variable the command expands
+  then: the product judges the expansion as it judges any other part of the command
+  when: the [tool call](tool_call) is made
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
@@ -54,8 +65,10 @@ relations:
 status: approved
 text: If a [tool call](tool_call) names the path of a corpus [item](item)'s file,
   a folder of corpus [items](item), the baseline or the [corpus root](corpus_root),
-  then the product shall refuse the [tool call](tool_call), however the path is spelled,
-  unless each command or tool in the call that names the path is reqctl or one the
-  product can tell only reads.
+  other than in literal text, written inline or in a heredoc, that it passes as a
+  commit message or as the title, body or comment of a pull request, an issue or a
+  review, then the product shall refuse the [tool call](tool_call), however the path
+  is spelled, unless each command or tool in the call that names the path is reqctl
+  or one the product can tell only reads.
 type: functional
 verification: inspection

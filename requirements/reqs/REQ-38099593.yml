@@ -20,6 +20,14 @@ acceptance_criteria:
 - given: reqctl citing, re-pinning or removing a [statement citation](statement_citation)
   then: the product does not refuse it
   when: the [tool call](tool_call) running reqctl is made
+- given: a shell command whose only naming of the text opening a [statement citation](statement_citation)
+    is in literal text, written inline or in a heredoc, that it passes as a commit
+    message or as the title, body or comment of a pull request, an issue or a review
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+- given: such text holding a command substitution or a process substitution
+  then: the product judges the substitution as it judges any other part of the command
+  when: the [tool call](tool_call) is made
 assessed:
   REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
   REQ-26984738: 2Cu-ngxaDd6zI2TwmFRCzBrxeAWxGDX1sZQrNQvfa74

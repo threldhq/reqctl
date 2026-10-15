@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a corpus holding an occurrence accepted through a recorded phrase
+  then: the product names the occurrence, the term, the phrase and the reason recorded
+    with it
+  when: the corpus is validated with --verbose
+assessed:
+  REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
+  REQ-88221320: vIuzLHP0hHUoohiy8AhUtlwMV40exjWYPYkM7yLeSe4
+priority: medium
+relations:
+  REQ-24481048: depends_on
+  REQ-88221320: derives_from
+status: approved
+text: Where validate is asked for verbose output, the product shall state, as accepted,
+  every occurrence of an approved term's word or alias that it accepts without a link
+  because a phrase recorded on that term covers it.
+type: functional
+verification: inspection

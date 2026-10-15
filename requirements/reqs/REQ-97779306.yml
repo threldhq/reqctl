@@ -1,0 +1,29 @@
+acceptance_criteria:
+- given: a judge prompt that was not split into groups holding more lines than the
+    line bound
+  then: the product refuses the run, naming the prompt, plan.py build with a larger
+    --lines, and a smaller challenge_bounds.judge_bound in settings.yml
+  when: the judge prompts are built
+- given: a group prompt holding more lines than the line bound
+  then: the product refuses the run, naming the prompt, plan.py build with a larger
+    --lines, and a smaller challenge_bounds.judge_group in settings.yml
+  when: the judge prompts are built
+- given: a final prompt holding more lines than the line bound
+  then: the product refuses the run, naming the prompt and plan.py build with a larger
+    --lines
+  when: the final prompts are built
+assessed:
+  REQ-30631052: IFJ5WPh_dCD4cpqrKvq5nMGkFgQgp59riv09LHTz3eE
+  REQ-68873467: 3-Wc7R2vtu7-18N7BIWJSxtAfsuv2MxGgV409rzQMRQ
+  REQ-80951798: Yv9lsMtU3XdIOfhWtWTfHptWO9bkmyp3LS4FmYVkfDM
+priority: medium
+relations:
+  REQ-30631052: constrains
+  REQ-68873467: constrains
+  REQ-80951798: derives_from
+status: approved
+text: If a judge, group or final prompt holds more lines than the line bound, then
+  the product shall refuse the run, naming the prompt and each bound whose change
+  would bring that prompt within the line bound.
+type: functional
+verification: inspection

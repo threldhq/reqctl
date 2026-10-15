@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: pyproject.toml declaring a lowest version of PyYAML above the version requirements-lock.txt
+    holds
+  then: the build refuses, naming PyYAML and both versions, and rewrites no file
+  when: the build runs
+- given: requirements-lock.txt holding a package no requirement of pyproject.toml
+    names, which a declared one depends on
+  then: the build does not refuse on that ground
+  when: the build runs
+assessed:
+  GUARD-20154572: z2_hbXJO9sHnVMQd1fo-1KELeiBgdPt32F2PD4ygZIo
+relations:
+  GUARD-20154572: constrains
+status: approved
+text: If reqctl's pyproject.toml declares a runtime or build-system requirement that
+  requirements-lock.txt does not hold, or holds at a version outside the declared
+  range, then the build shall refuse the change.

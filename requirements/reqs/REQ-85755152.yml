@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a corpus in which validation finds a problem
+  then: the product refuses, naming the uid and not the problem
+  when: reqctl delete is given a uid no [item](item) carries
+- given: a corpus in which validation finds no problem
+  then: the product refuses, naming the name
+  when: reqctl delete is given a name no [item](item) carries
+assessed:
+  REQ-43148967: 9kz9xDxvdKH56fz0yPMx41bGoQUrQJerBXYwjc2I8vI
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-43148967: constrains
+status: approved
+text: If reqctl delete is given a uid or name that no [item](item) the corpus holds
+  carries, then the product shall refuse the deletion, naming what it was given, whatever
+  problems validation of the corpus finds.
+type: functional
+verification: inspection

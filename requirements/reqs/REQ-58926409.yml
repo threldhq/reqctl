@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a corpus whose value_types holds count, duration, percentage and size
+  then: it lists those four as the value type's choices and no other
+  when: the help of reqctl new is shown
+- given: a corpus whose value_types holds count and size
+  then: the product refuses, listing count and size as the choices
+  when: reqctl new is given a value type value_types does not hold
+assessed:
+  REQ-52544202: FdBPIIOU8f_vUkT30XYkCn77NWut8-qqjIRi3gWLPuo
+  REQ-71965656: F8ulVugEMpD-KciC93Ppv6DJGlz_QdY_TQ7CH57K7hw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-52544202: depends_on
+  REQ-71965656: derives_from
+status: approved
+text: Where the corpus holds a [data item](data_item) named value_types, the product
+  shall list as the choices of reqctl new's value type exactly the [entries](entry)
+  value_types holds.
+type: functional
+verification: inspection

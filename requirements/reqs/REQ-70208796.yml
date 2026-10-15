@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a code file whose [statement citation](statement_citation) names a [data
+    item](data_item)
+  then: the [citation](statement_citation) names the new name and keeps its [stamp](stamp)
+    and its [identity](citation_identity), and trace reports no missing [item](item)
+    for it
+  when: the [data item](data_item) is renamed
+- given: a code file beginning with a UTF-8 byte order mark whose [statement citation](statement_citation)
+    names a [data item](data_item)
+  then: the file begins with the byte order mark
+  when: the [data item](data_item) is renamed
+assessed:
+  REQ-22755763: lFaaseccSg81IX_v5DMXnn03ZufehG0M9UKFDpAdjnw
+  REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
+  citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-22755763: depends_on
+  REQ-88203622: depends_on
+status: approved
+text: When a [dictionary item](dictionary_item) is renamed, the product shall rewrite
+  every [statement citation](statement_citation) naming its former name to name its
+  new name, changing nothing else in the [citation](statement_citation).
+type: functional
+verification: inspection
