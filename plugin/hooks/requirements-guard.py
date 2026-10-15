@@ -320,15 +320,16 @@ PLUGIN_WRITE = (
     "repository, then `claude plugin update reqctl@reqctl`."
 )
 # @req> REQ-75038049@hXyFNmxx-SWy 6vfbgw
-ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n'\"`{])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
+ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
                         r"export|declare|typeset|readonly|local|read|readarray|mapfile|getopts|let|"
-                        r"eval|source|\.)(?=\s|$)|printf\s(?:\s*-\S+)*?\s*-v)|\$\{\w+:?=")
+                        r"eval|exec|source|\.)(?=\s|$)|printf(?:\s+-\S+)*?\s+-v)|\$\{\w+:?=")
 CALL = {"changes_environment": True}
 # @req> REQ-59919160@eEBU6tuB77Dq v6s3eb
 WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", "tee", "install",
            "rsync", "truncate", "dd", "unlink", "sed", "perl", "tar", "unzip", "patch", "cpio",
            "gzip", "gunzip", "bzip2", "xz", "zstd", "ed", "split", "shred", "sort", "curl", "wget")
-READ_WRITES = re.compile(r"^\s*(?:tree|less)\s(?:.*\s)?(?:-[A-Za-z]*[oO]|--log-file|--LOG-FILE)|\s--pre\b")
+READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|--log-file|--LOG-FILE)"
+                         r"|\s--(?:pre|pager|hostname-bin)\b")
 
 PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo")
 GH_VALUED = ("-X", "--method", "-f", "--raw-field", "-F", "--field", "--input", "-H",
@@ -2013,7 +2014,7 @@ def names_plugin(text):
 
 
 # @req> REQ-59919160@eEBU6tuB77Dq gffcbj
-def writes_plugin(said, here):
+def writes_plugin(said, here, whole):
     git = GIT_READ.search(said)
     if ((READ.search(said) or git and git.group("read"))
             and not OUTPUT_FLAG.search(said) and not READ_WRITES.search(said)):
@@ -2021,21 +2022,24 @@ def writes_plugin(said, here):
     words = tokens_of(said)
     called = invoked(words)
     tool = runner(called[0]) if called else ""
+    operands = [word for word in called[1:] if not word.startswith("-")]
+    script = next((word for previous, word in itertools.pairwise(called)
+                   if not word.startswith(("-", "<", ">")) and previous not in RUN_VALUED.get(tool, ())),
+                  "")
+    if tool in RUNNERS and not script and names_plugin(whole):
+        return True
     naming = [word for word in words if reaches_plugin(word, here)]
     if not naming and not names_plugin(said):
-        return tool in WRITERS and any(EXPANSION.search(os.path.expandvars(word))
-                                       for word in called[1:])
+        return tool in WRITERS and any(
+            EXPANSION.search(os.path.expandvars(word))
+            or not here and not os.path.isabs(os.path.expanduser(word)) for word in operands)
     if tool in ("cd", "pushd"):
         return False
     if tool in RUNNERS:
-        inline, valued = RUNNERS[tool], RUN_VALUED.get(tool, ())
         flags = list(itertools.takewhile(lambda word: word.startswith("-"), called[1:]))
-        script = next((word for previous, word in itertools.pairwise(called)
-                       if not word.startswith("-") and previous not in valued), "")
-        return (any(letter in flag for flag in flags for letter in inline)
+        return (any(letter in flag for flag in flags for letter in RUNNERS[tool])
                 or set(naming) - {script} or names_plugin(said.replace(script, "", 1)))
     if tool in ("cp", "rsync"):
-        operands = [word for word in called[1:] if not word.startswith("-")]
         return (not operands or reaches_plugin(operands[-1], here)
                 or any(word.startswith(("-t", "--target")) for word in called))
     return True
@@ -2086,7 +2090,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
                                                         for word in tokens_of(heading(part)))]
         for part, here in itertools.product(pipeline, places_of):
             said = heading(part)
-            if writes_plugin(said, here) or naming and (running or part not in naming and not (
+            if writes_plugin(said, here, unquoted) or naming and (running or part not in naming and not (
                     READ.search(said) or GIT_READ.search(said)
                     or SINK.search(said) and not SINK_WRITES.search(said))):
                 deny(PLUGIN_WRITE.format(target=said.strip()))
@@ -2421,7 +2425,8 @@ def decide(data: dict) -> None:
     judge_citation_edit(tool, args, cwd)
     commands = [messageless(value) for value in named_paths(args, COMMAND_KEY)]
     # @req> REQ-75038049@hXyFNmxx-SWy hwgp36
-    CALL["changes_environment"] = any(ENV_CHANGE.search(judged) for judged in commands)
+    CALL["changes_environment"] = any(ENV_CHANGE.search(re.sub(r"[\\'\"]", "", judged))
+                                      for judged in commands)
     for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
