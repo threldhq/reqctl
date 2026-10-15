@@ -372,22 +372,33 @@ def _strings(node, at=()):
         yield at, node
 
 
-# @req> REQ-22682482@DIadVPxV1yCt ijkpsx
+# @req> REQ-22682482@F_OIMxlkifKy ijkpsx
 def listed_fields(root, uid, data):
     if corpus.kind_of(uid, data) != "data":
         return []
-    schema = corpus.schema_for(root, "data", corpus.name_of(uid, data))
-    declared = ((schema.get("$defs") or {}).get("entry") or {}).get("properties") or {}
+    name = corpus.name_of(uid, data)
+    schema = corpus.schema_for(root, "data", name)
+    own = corpus.schema_name_at(root, "data", name) != corpus.schema_name_for("data")
+    held = _fields._merged(schema, "data")[0].get("entries", {})
     listed = data.get("fields") if isinstance(data.get("fields"), list) else []
-    return [f"{uid}: entry {key} holds the field {field}, which the kind schema does not "
-            f"declare and the data item does not list -- it lists "
-            f"{', '.join(map(str, listed)) or 'no fields'}; correct the field, or add it "
-            "to fields"
-            for key, entry in sorted((corpus.entries(data) or {}).items(),
-                                     key=lambda item: str(item[0]))
-            if isinstance(entry, dict)
-            for field in sorted(map(str, entry))
-            if field not in declared and field not in listed]
+    problems = []
+    for key, entry in sorted((corpus.entries(data) or {}).items(),
+                             key=lambda item: str(item[0])):
+        if not isinstance(entry, dict):
+            continue
+        applied = _fields._resolved(schema, corpus.mapping(held, "properties").get(
+            str(key), held.get("additionalProperties")))
+        others = applied.get("additionalProperties")
+        if own and (others is False or isinstance(others, dict)):
+            continue
+        problems += [f"{uid}: entry {key} holds the field {field}, which its schema does "
+                     f"not declare and the data item does not list -- it lists "
+                     f"{', '.join(map(str, listed)) or 'no fields'}; correct the field, "
+                     "or add it to fields"
+                     for field in sorted(map(str, entry))
+                     if field not in corpus.mapping(applied, "properties")
+                     and field not in listed]
+    return problems
 
 
 # @req> REQ-79956352@OsoTGRd6D5CZ 5uqc7i
