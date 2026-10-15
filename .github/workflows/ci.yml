@@ -167,6 +167,9 @@ jobs:
       - name: Every plugin file belongs to one component
         run: python .github/guards/plugin_components.py
 
+      - name: The guard hook fingerprints the plugin files naming the corpus
+        run: python .github/guards/fingerprints.py
+
       - name: Citations this change touches
         if: github.event_name == 'pull_request'
         env:

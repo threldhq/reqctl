@@ -74,7 +74,7 @@ In a repository whose default branch is `main`:
    Releases are tagged `reqctl--v<version>`:
 
    ```bash
-   pip install https://github.com/threldhq/reqctl/releases/download/reqctl--v0.1.12/reqctl-0.1.12-py3-none-any.whl
+   pip install https://github.com/threldhq/reqctl/releases/download/reqctl--v0.1.13/reqctl-0.1.13-py3-none-any.whl
    ```
 
 2. **Plugin.** With `--scope project` both are declared in the repository rather
