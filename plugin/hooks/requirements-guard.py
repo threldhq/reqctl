@@ -955,7 +955,7 @@ def names_citation(cmd):
 
 
 MESSAGE_HEAD = re.compile(
-    r"(?:\A|(?<=[;&|(\n]))[ \t]*(?:git(?:[ \t]+-C[ \t]+[^\s;&|()<>]+)?[ \t]+(?P<git>commit)"
+    r"(?:\A|(?<=[;(\n])|(?<=(?<!>)[&|]))[ \t]*(?:git(?:[ \t]+-C[ \t]+[^\s;&|()<>]+)?[ \t]+(?P<git>commit)"
     r"|gh[ \t]+(?:(?:pr|issue)[ \t]+(?:create|edit|comment)|pr[ \t]+review))(?=[ \t\n;&|)]|\Z)")
 MESSAGE_FLAGS = {"commit": (("-m", "--message"), ("-F", "--file")),
                  None: (("-t", "--title", "-b", "--body"), ("-F", "--body-file"))}
@@ -1017,9 +1017,15 @@ def messageless(cmd):
             cuts.append((*body, ""))
     if docs and not body:
         return cmd
+    judged = cmd
     for start, end, put in sorted(cuts, reverse=True):
-        cmd = cmd[:start] + put + cmd[end:]
-    return cmd
+        judged = judged[:start] + put + judged[end:]
+    before, after = (scan(AMP_REDIRECT.sub(" ", flatten(ESCAPE.sub("", text)))) for text in (cmd, judged))
+    if list(map(len, before)) != list(map(len, after)) or any(
+            old != new and not MESSAGE_HEAD.match(masked(old.lstrip()))
+            for olds, news in zip(before, after) for old, new in zip(olds, news)):
+        return cmd
+    return judged
 
 
 @functools.cache
