@@ -955,7 +955,7 @@ def names_citation(cmd):
 
 
 MESSAGE_HEAD = re.compile(
-    r"(?:\A|(?<=[;(\n])|(?<=(?<!>)[&|]))[ \t]*(?:git(?:[ \t]+-C[ \t]+[^\s;&|()<>]+)?[ \t]+(?P<git>commit)"
+    r"(?:\A|(?<=[;(\n])|(?<=(?<![<>])[&|]))[ \t]*(?:git(?:[ \t]+-C[ \t]+[^\s;&|()<>]+)?[ \t]+(?P<git>commit)"
     r"|gh[ \t]+(?:(?:pr|issue)[ \t]+(?:create|edit|comment)|pr[ \t]+review))(?=[ \t\n;&|)]|\Z)")
 MESSAGE_FLAGS = {"commit": (("-m", "--message"), ("-F", "--file")),
                  None: (("-t", "--title", "-b", "--body"), ("-F", "--body-file"))}
@@ -980,7 +980,7 @@ def message_words(cmd, m, at):
 def heredoc_body(cmd, m, doc):
     word, quoted, dash, end = doc
     begins = m.find("\n", end) + 1
-    closing = begins and re.compile("^" + "\t*" * dash + re.escape(word) + "$", re.M).search(cmd, begins)
+    closing = begins and m[begins - 2] != "\\" and re.compile("^" + "\t*" * dash + re.escape(word) + "$", re.M).search(cmd, begins)
     if closing and (quoted or not any(c in cmd[begins:closing.start()] for c in "$`\\")):
         return begins, closing.start()
     return None
