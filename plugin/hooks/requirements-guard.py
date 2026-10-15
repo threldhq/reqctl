@@ -1255,9 +1255,44 @@ def head_branch(place):
     return git_sees(["branch", "--show-current"], place).strip()
 
 
+def named_object(target, place):
+    return target and "$" not in target and "`" not in target and (git_reads(
+        ["rev-parse", "--verify", "-q", target], place) or "").strip()
+
+
 def commit_of(target, place):
-    return target and "$" not in target and "`" not in target and git_reads(
-        ["rev-parse", "--verify", "-q", f"{target}^{{commit}}"], place)
+    named = named_object(target, place)
+    return named and (git_reads(
+        ["rev-parse", "--verify", "-q", f"{named}^{{commit}}"], place) or "").strip()
+
+
+def fetched(remotes, specs, flags, place):
+    moves = []
+    for remote in remotes:
+        for spec in specs or (git_reads(["config", "--get-all", f"remote.{remote}.fetch"],
+                                        place) or "").split():
+            src, _, dst = spec.partition(":")
+            name = dst.removeprefix("refs/").removeprefix("heads/")
+            if name and (remote != "origin" or src.startswith("+")
+                         or flagged(flags, "-f", "--force")
+                         or src.removeprefix("refs/heads/") != name):
+                moves.append((name, None))
+    return moves
+
+
+def pushes_here(remote, place):
+    if remote in (None, "origin"):
+        return False
+    if remote == "." or "$" in remote or "`" in remote:
+        return True
+    url = (git_reads(["remote", "get-url", "--push", remote], place) or remote).strip()
+    filed = url.lower().startswith("file:")
+    if not filed and ("://" in url or ":" in url.split("/", 1)[0]):
+        return False
+    path = unquote(urlsplit(url).path) if filed else os.path.expanduser(url)
+    common = ["rev-parse", "--path-format=absolute", "--git-common-dir"]
+    there = git_reads(["-C", path, *common], place)
+    return there is not None and there == git_reads(common, place)
 
 
 def landings(subcommand, rest, place):
@@ -1267,9 +1302,14 @@ def landings(subcommand, rest, place):
         ref = operands[0] if operands else ""
         if ref == "HEAD" and not flagged(flags, "--no-deref"):
             ref = "refs/heads/" + head_branch(place)
-        if flagged(flags, "-d") or not ref.startswith("refs/heads/"):
+        if flagged(flags, "-d", "--delete") or not ref.startswith("refs/heads/") or (
+                operands[1:] and len(operands[1]) in (40, 64) and set(operands[1]) == {"0"}):
             return []
         return [(ref.removeprefix("refs/heads/"), operands[1] if operands[1:] else None)]
+    if subcommand == "symbolic-ref":
+        flags, operands = options(rest, ("-m",))
+        return [(operands[0].removeprefix("refs/heads/"), None)] if len(operands) == 2 and (
+            operands[0].startswith("refs/heads/")) else []
     if subcommand == "branch":
         flags, operands = options(rest, ("-u", "--set-upstream-to"))
         if not operands or flagged(flags, *BRANCH_KEEPS):
@@ -1301,54 +1341,55 @@ def landings(subcommand, rest, place):
         flags, operands = options(rest, ("--depth", "--deepen", "--shallow-since",
                                          "--shallow-exclude", "--refmap", "-o",
                                          "--push-option", "--recurse-submodules", "--repo"))
-        remote = operands[0] if operands else None
-        if subcommand == "push" and remote != ".":
+        if subcommand == "fetch":
+            every = not operands or flagged(flags, "--all", "--multiple")
+            remotes = (git_reads(["remote"], place) or "").split() if every else operands[:1]
+            refmaps = [value for name, value in flags if name == "--refmap"]
+            return fetched(remotes, [*operands[1:], *refmaps] if operands[1:] and not every
+                           else [], flags, place)
+        remote = operands[0] if operands else next(
+            (value for name, value in flags if name == "--repo"), None)
+        if not pushes_here(remote, place):
             return []
-        moves = []
-        for spec in operands[1:]:
-            src, colon, dst = spec.partition(":")
-            name = dst.removeprefix("refs/").removeprefix("heads/") if colon else None
-            if not name:
-                continue
-            if subcommand == "push":
-                moves.append((name, src.removeprefix("+") or None))
-            elif (remote != "origin" or src.startswith("+") or flagged(flags, "-f", "--force")
-                  or src.removeprefix("refs/heads/") != name):
-                moves.append((name, None))
-        return moves
+        return [(dst.removeprefix("refs/").removeprefix("heads/"), src.removeprefix("+"))
+                for src, _, dst in (spec.partition(":") for spec in operands[1:])
+                if dst and src.removeprefix("+")]
     current = head_branch(place)
     flags, operands = options(rest, ("-m", "-s", "--strategy", "-X", "--strategy-option",
                                      "-F", "--file", "--into-name", "--cleanup", "--depth",
                                      "--deepen", "--shallow-since", "--shallow-exclude"))
     if subcommand == "reset":
-        if "--" in rest or len(operands) != 1 or flagged(flags, "-p", "--patch"):
+        after = rest[rest.index("--") + 1:] if "--" in rest else []
+        if after or len(operands) != 1 or flagged(flags, "-p", "--patch"):
             return []
         if "$" in operands[0] or "`" in operands[0]:
             return [(current, None)]
-        return [(current, operands[0])] if commit_of(operands[0], place) else []
+        return [(current, operands[0])] if named_object(operands[0], place) else []
+    refspecs = fetched((git_reads(["remote"], place) or "").split() if not operands
+                       else operands[:1], operands[1:], flags, place
+                       ) if subcommand == "pull" else []
     fast = next((name for name, _ in reversed(flags)
                  if name in ("--ff", "--no-ff", "--ff-only")), None)
     if fast == "--no-ff" or flagged(flags, "--abort", "--quit", "--continue", "--dry-run",
                                     "--squash"):
-        return []
+        return refspecs
     if subcommand == "merge":
         return [(current, operands[0] if len(operands) == 1
                  else "@{upstream}" if not operands else None)]
-    upstream = (git_reads(["rev-parse", "--abbrev-ref", "@{upstream}"], place) or "").strip()
     origin = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], place)
-    pulled = f"origin/{operands[1]}" if operands[1:] else upstream
-    return [] if operands[:1] in ([], ["origin"]) and len(operands) <= 2 and origin and (
-        pulled == origin.strip()) else [(current, None)]
+    pulled = f"origin/{operands[1]}" if operands[1:] else (
+        git_reads(["rev-parse", "--abbrev-ref", "@{upstream}"], place) or "").strip()
+    return refspecs + ([] if operands[:1] in ([], ["origin"]) and len(operands) <= 2 and origin
+                       and pulled == origin.strip() else [(current, None)])
     # @req- amejii
 
 
-BRANCH_KEEPS = ("-d", "-D", "--delete", "-l", "--list", "-a", "--all", "-r", "--remotes", "-u",
-                "--set-upstream-to", "--unset-upstream", "--edit-description", "--contains",
-                "--no-contains", "--merged", "--no-merged", "--points-at", "--show-current",
-                "-v", "--verbose", "--format", "--sort", "--column", "-i", "--ignore-case")
+BRANCH_KEEPS = ("-d", "-D", "--delete", "-l", "--list", "-u", "--set-upstream-to",
+                "--unset-upstream", "--edit-description", "--contains", "--no-contains",
+                "--merged", "--no-merged", "--points-at", "--show-current")
 
-MOVERS = ("update-ref", "branch", "checkout", "switch", "worktree", "fetch", "push", "reset",
-          "merge", "pull")
+MOVERS = ("update-ref", "symbolic-ref", "branch", "checkout", "switch", "worktree", "fetch",
+          "push", "reset", "merge", "pull")
 
 
 def refuse_moving_default(words, here):
@@ -1367,13 +1408,13 @@ def refuse_moving_default(words, here):
     branch = default.strip().removeprefix("origin/")
     stands = git_reads(["rev-parse", "--verify", "-q", f"refs/heads/{branch}"], place)
     for name, target in moves:
-        if not fnmatch.fnmatchcase(branch, name):
+        if "$" not in name and "`" not in name and not fnmatch.fnmatchcase(branch, name):
             continue
         commit = commit_of(target, place)
-        if not commit or git_reads(["merge-base", "--is-ancestor", commit.strip(),
+        if not commit or git_reads(["merge-base", "--is-ancestor", commit,
                                     "refs/remotes/origin/HEAD"], place) is None or (
                 stands and git_reads(["merge-base", "--is-ancestor", stands.strip(),
-                                      commit.strip()], place) is None):
+                                      commit], place) is None):
             deny(MOVES_DEFAULT.format(what=what, branch=branch))
     # @req- nahqvl
 
