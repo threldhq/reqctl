@@ -589,13 +589,25 @@ def repinned(root, citation, stamp):
     # @req- lqd5pz
 
 
+def every(root):
+    held, faults = parse(_sources(root))
+    if faults:
+        raise ReqctlError("the code's citations do not read:\n" + "\n".join(faults))
+    return held
+
+
 def renamed(root, citation, name):
     # @req+ REQ-70208796@rx8OkxlDOpk4 4otwfp
     target, mark, lines = _lines(root, citation)
     at = citation["open"] - 1
     address = f"{name}.{citation['entry']}" if citation["entry"] else name
     pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+){re.escape(citation['address'])}(?=@)")
-    lines[at] = pinned.sub(lambda found: f"{found.group(1)}{address}", lines[at], count=1)
+    lines[at], done = pinned.subn(lambda found: f"{found.group(1)}{address}",
+                                  lines[at], count=1)
+    if not done:
+        raise ReqctlError(f"{citation['path']}:{citation['open']}: citation "
+                          f"{citation['id']} does not read as naming "
+                          f"{citation['address']}; nothing was renamed")
     return target, (mark + "".join(lines)).encode()
     # @req- 4otwfp
 
@@ -787,18 +799,24 @@ def _whole_held(root, commit):
 
 
 def _whole_text(root, commit, relative):
-    shown = subprocess.run(["git", "show", f"{commit}:{relative}"], cwd=root,
-                           capture_output=True, text=True, check=False)
-    return shown.stdout.removeprefix(BOM) if shown.returncode == 0 else None
+    if not _git(root, "ls-tree", "--name-only", commit, "--", relative).strip():
+        return None
+    return _git(root, "show", f"{commit}:{relative}").removeprefix(BOM)
+
+
+def _whole_digest(relative, text):
+    return None if text is None else whole(relative, text)
 
 
 def _whole_rows(root, commit):
     # @req+ REQ-33614084@XHPdW0ynnY4c 53mrze
-    was = dict(_whole_held(root, commit))
     store, _ = corpus.load(root)
-    now = {item.uid: corpus.mapping(item.data, corpus.WHOLE_FILES)
-           for item in corpus.items(store)
-           if corpus.mapping(item.data, corpus.WHOLE_FILES)}
+    renamed_to = {old: item.uid for item in corpus.items(store)
+                  for old in corpus.carried_of(item.uid, item.data)}
+    was = {renamed_to.get(uid, uid): held
+           for uid, held in _whole_held(root, commit)}
+    now = {item.uid: held for item in corpus.items(store)
+           if (held := corpus.mapping(item.data, corpus.WHOLE_FILES))}
     rows = []
     for uid in sorted(set(was) | set(now)):
         held, holds = was.get(uid, {}), now.get(uid, {})
@@ -807,12 +825,12 @@ def _whole_rows(root, commit):
                 rows.append({"uid": uid, "path": relative,
                              "state": ["added" if relative in holds else "deleted"]})
                 continue
-            before = _whole_text(root, commit, relative)
             target = Path(root) / relative
             after = (target.read_bytes().decode().removeprefix(BOM)
                      if target.is_file() else None)
-            if (held[relative] != holds[relative] or None in (before, after)
-                    or whole(relative, before) != whole(relative, after)):
+            if (held[relative] != holds[relative]
+                    or _whole_digest(relative, _whole_text(root, commit, relative))
+                    != _whole_digest(relative, after)):
                 rows.append({"uid": uid, "path": relative, "state": ["changed"]})
     return rows
     # @req- 53mrze

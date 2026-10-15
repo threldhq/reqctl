@@ -148,17 +148,22 @@ def _value(value, unit):
 
 def _named_fields(fields, rest):
     steps = rest.split(".")
-    held = corpus.entries(fields) or {}
-    if steps[0] not in held:
-        return None
-    found = held[steps[0]]
-    for step in steps[1:]:
+    found = corpus.entries(fields) or {}
+    for step in steps:
         if not isinstance(found, dict) or step not in found:
             return None
         found = found[step]
-    if len(steps) > 1:
-        return {steps[-1]: found}
-    return dict(found) if isinstance(found, dict) else {steps[0]: found}
+    if len(steps) == 1 and isinstance(found, dict):
+        return dict(found)
+    return {steps[-1]: found}
+
+
+def _parameter_value(fields, named, held):
+    if named is not None:
+        return named
+    if held is not None:
+        return sorted(held)
+    return _dict_value(fields)
 
 
 def _entry_fields(fields):
@@ -282,8 +287,8 @@ def cmd_rename(args):
     tree, root = corpus.load()
     # @req+ REQ-70208796@rx8OkxlDOpk4 cgdwfu
     item = corpus.find(tree, args.uid)
-    olds = {item.uid, corpus.name_of(item.uid, item.data)}
-    cited = [citation for citation in cite.readable(root)
+    olds = {item.uid, corpus.name_of(item.uid, item.data)} - {None}
+    cited = [citation for citation in cite.every(root)
              if citation["uid"] in olds]
     moved = _write.rename(tree, args.uid, args.name)
     for citation in cited:
@@ -556,16 +561,15 @@ def _context(store, item, dependents, tags, past):
             fields = None
         # @req+ REQ-49042671@vhxkl2dsMRfs pgeszq
         held = corpus.flagged(fields, rest) if fields is not None else None
-        whole = rest in (None, "default", corpus.MEMBERS) or held is not None
-        named = None if fields is None or whole else _named_fields(fields, rest)
-        if fields is None or (not whole and named is None):
+        addresses_item = rest in (None, "default", corpus.MEMBERS) or held is not None
+        named = (None if fields is None or addresses_item
+                 else _named_fields(fields, rest))
+        if fields is None or (not addresses_item and named is None):
             entry.update(name=None, value=None, unit=None, status=None,
                          missing=True, suspect=True)
         else:
             entry.update(name=fields.get("name"),
-                         value=named if named is not None
-                         else sorted(held) if held is not None
-                         else _dict_value(fields),
+                         value=_parameter_value(fields, named, held),
                          unit=fields.get("unit"), status=fields.get("status"),
                          missing=False, **_pins(store, past, item, sorted(
                              corpus.expand_address(lookup, address))))
@@ -1138,6 +1142,7 @@ def _fielded(argv):
 def _value_typed(root, flags):
     # @req+ REQ-58926409@zt0Kl436tNXd 54mksz
     store, _ = corpus.load(root)
+    corpus.items(store)
     try:
         listed = corpus.find(store, _validate.VALUE_TYPES)
     except ReqctlError:
