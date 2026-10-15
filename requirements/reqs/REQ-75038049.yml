@@ -32,7 +32,7 @@ acceptance_criteria:
 - given: a file under the plugin's folder naming the [corpus root](corpus_root), whose
     SHA-256 digest the [fingerprint list](fingerprint_list) holds
   then: the product does not refuse the [tool call](tool_call) on that ground
-  when: a [tool call](tool_call) runs it
+  when: a [tool call](tool_call) runs it without changing the environment
 - given: a file under the plugin's folder naming a corpus [item](item)'s file, whose
     SHA-256 digest the [fingerprint list](fingerprint_list) does not hold
   then: the product refuses the [tool call](tool_call)
@@ -45,6 +45,14 @@ acceptance_criteria:
 - given: a script in the working repository committed nowhere, holding open("requirements/reqs/x.yml")
   then: the product refuses the [tool call](tool_call)
   when: a [tool call](tool_call) runs it with python
+- given: a file under the plugin's folder whose digest the [fingerprint list](fingerprint_list)
+    holds, naming the [corpus root](corpus_root)
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it with PYTHONPATH set on its command line
+- given: the same file
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) exports, unsets or clears a variable earlier in the
+    same command, or runs it under env -i, then runs it
 assessed:
   REQ-22704490: u7IClIQOfStAss5hIWQrPe_jxv9hNQ4JUr1VPuJ3SWM
   REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
@@ -69,9 +77,10 @@ status: approved
 text: If a [tool call](tool_call) would run a file whose text names the path of a
   corpus [item](item)'s file, a folder of corpus [items](item), the baseline or the
   [corpus root](corpus_root), origin's default branch does not hold that file unchanged
-  at its path, and the file does not both lie under the folder of the Claude Code
-  plugin whose ${plugin_components.requirements_guard_hook} judges the [tool call](tool_call)
-  and have a SHA-256 digest of its bytes that the plugin's [fingerprint list](fingerprint_list)
-  holds, then the product shall refuse the [tool call](tool_call).
+  at its path, and the file is not one that lies under the folder of the Claude Code
+  plugin whose ${plugin_components.requirements_guard_hook} judges the [tool call](tool_call),
+  whose bytes have a SHA-256 digest the plugin's [fingerprint list](fingerprint_list)
+  holds, and that the [tool call](tool_call) runs without changing the environment,
+  then the product shall refuse the [tool call](tool_call).
 type: functional
 verification: inspection
