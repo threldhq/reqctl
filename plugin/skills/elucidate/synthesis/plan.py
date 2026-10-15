@@ -1497,7 +1497,7 @@ def describe(run):
     # @req+ REQ-21373303@Y7R6bZxRXU-G qzk6eu
     state_held = state(run)
     declined = ([f"- {' '.join(entry.split())}" for entry in re.split(
-        r"(?m)^\s*- ", (run / "declined.md").read_text()) if entry.strip()]
+        r"(?m)^- ", (run / "declined.md").read_text()) if entry.strip()]
         if (run / "declined.md").is_file() else [])
     lines = []
     # @req> REQ-32019340@Ce9zMv1R_f5m il77pj
