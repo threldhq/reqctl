@@ -731,9 +731,13 @@ def cmd_validate(args):
         _emit(args, {"valid": not problems, "items": count, "problems": problems,
                      "unclaimed": exempted}, "")
         return EXIT_INVALID if problems else EXIT_OK
-    # @req> REQ-88221320@04q8T91NApFU gvnev6
+    # @req> REQ-88221320@vIuzLHP0hHUo gvnev6
+    # @req+ REQ-46373547@54MxhOaz3t8O qu6gxb
     if exempted:
-        print("\n".join(exempted))
+        print("\n".join(exempted) if args.verbose else
+              f"{len(exempted)} occurrence(s) accepted unlinked through a "
+              "recorded phrase; validate --verbose lists them")
+    # @req- qu6gxb
     if problems:
         print("\n".join(problems), file=sys.stderr)
         print(f"\n{len(problems)} problem(s) across {count} item(s)", file=sys.stderr)
@@ -1206,6 +1210,7 @@ def build_parser(root, fielded):
 
     s = _command(sub, "validate",
                  "check every item and every cross-link; exit 1 on problems")
+    s.add_argument("--verbose", action="store_true")
     s.set_defaults(func=cmd_validate)
 
     s = _command(sub, "trace",

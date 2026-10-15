@@ -9,8 +9,8 @@ acceptance_criteria:
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
 citations:
-  5gpgix: LSqDzvVrjgQ5Ht_xcbLhBABkavCUwerMJXJG2s8prQE
-  gvnev6: -ZxjMuefiYfUvLP6jxhIWo8B43Go5NpodJBbI8xgMH8
+  5gpgix: GrUvj1xdg_CT1v5nDTpgSon2ss0vGHfew-jT-FaGqn4
+  gvnev6: ebgoQrm4xBYz9k48HFXJl007ZjnJBR4CFAM9GgQ4Br0
 priority: medium
 relations:
   REQ-24481048: depends_on
