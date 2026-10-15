@@ -64,10 +64,12 @@ assessed:
   plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
+  6vfbgw: qV_vIOJ6F-RynbCzX-jhOE66kujny3wsDMlK9Lz8XvQ
   g3ql3s: 2Ul--7VCYfk3cqXx1-8N_DPXduCizbwX2JIViyklT1I
+  hwgp36: MI1FbZtZmn-luhLZ576dbyjpt1x77qGZmDoil3__3WQ
   kbbyh4: -Ge-iMr06ZEHNe9evDvCgzVAHZ4bDoQU30xEfe5MHwM
   rvzbno: stB5Sl2ST8VA1Sx2mj4S9kY59L8mBWnjdrHHI6naWrI
-  yu277l: -b1B6cC69lQCoZn53KdF_P64m18X1X0w5tO7cf5MMrg
+  yu277l: InQ2iH_Xn_fMx5bAafDleCDreZZGs5pTNZBnUtAVUwo
 priority: medium
 relations:
   REQ-22704490: derives_from
