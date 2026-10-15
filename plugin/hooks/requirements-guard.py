@@ -320,15 +320,19 @@ PLUGIN_WRITE = (
     "repository, then `claude plugin update reqctl@reqctl`."
 )
 # @req> REQ-75038049@hXyFNmxx-SWy 6vfbgw
-ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
+ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
                         r"export|declare|typeset|readonly|local|read|readarray|mapfile|getopts|let|"
-                        r"eval|exec|source|\.)(?=\s|$)|printf(?:\s+-\S+)*?\s+-v)|\$\{\w+:?=")
+                        r"eval|exec|source|for|select|hash|coproc|wait|alias|\.)(?=[\s<]|$)"
+                        r"|printf(?:\s+-\S+)*?\s+-v|[A-Za-z_][\w.-]*\s*\(\s*\))|\$\{\w+(?:\[[^]]*\])?:?=")
 CALL = {"changes_environment": True}
 # @req> REQ-59919160@eEBU6tuB77Dq v6s3eb
 WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", "tee", "install",
            "rsync", "truncate", "dd", "unlink", "sed", "perl", "tar", "unzip", "patch", "cpio",
            "gzip", "gunzip", "bzip2", "xz", "zstd", "ed", "split", "shred", "sort", "curl", "wget")
-READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|--log-file|--LOG-FILE)"
+WRITES_WHEN = {"sed": re.compile(r"\s(?:-[A-Za-z]*i|--in-place)"), "perl": re.compile(r"\s-[A-Za-z]*i"),
+               "sort": re.compile(r"\s(?:-[A-Za-z]*o|--output)"),
+               "curl": re.compile(r"\s(?:-[A-Za-z]*[oO]|--output|--remote-name)")}
+READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|--(?:log|LOG)-[fF]|--compile)"
                          r"|\s--(?:pre|pager|hostname-bin)\b")
 
 PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo")
@@ -2027,19 +2031,21 @@ def writes_plugin(said, here, whole):
                    if not word.startswith("-") and not REDIRECTION.match(word)
                    and not REDIRECTION.fullmatch(previous)
                    and previous not in RUN_VALUED.get(tool, ())), "")
-    if tool in RUNNERS and script in ("", "/dev/stdin", "/dev/fd/0", "/proc/self/fd/0") and names_plugin(whole):
+    inline = any(letter in flag for flag in itertools.takewhile(lambda word: word.startswith("-"), called[1:])
+                 for letter in RUNNERS.get(tool, ""))
+    from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
+        ("dev/", "proc/"))
+    if tool in RUNNERS and (inline or from_stdin) and names_plugin(whole):
         return True
     naming = [word for word in words if reaches_plugin(word, here)]
     if not naming and not names_plugin(said):
-        return tool in WRITERS and (
+        return tool in WRITERS and (tool not in WRITES_WHEN or WRITES_WHEN[tool].search(said)) and (
             any(EXPANSION.search(os.path.expandvars(word)) for word in called[1:])
             or not here and any(not os.path.isabs(os.path.expanduser(word)) for word in operands))
     if tool in ("cd", "pushd"):
         return False
     if tool in RUNNERS:
-        flags = list(itertools.takewhile(lambda word: word.startswith("-"), called[1:]))
-        return (any(letter in flag for flag in flags for letter in RUNNERS[tool])
-                or set(naming) - {script} or names_plugin(said.replace(script, "", 1)))
+        return inline or set(naming) - {script} or names_plugin(said.replace(script, "", 1))
     if tool in ("cp", "rsync"):
         return (not operands or reaches_plugin(operands[-1], here)
                 or any(word.startswith(("-t", "--target")) for word in called))
@@ -2082,8 +2088,9 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
     heres = {cwd}.union(*places)
     for found in REDIRECT_TARGET.finditer(masked(unquoted)):
         target = unquoted[found.start(1):found.end(1)]
-        if names_plugin(target) or EXPANSION.search(os.path.expandvars(target)) or any(
-                reaches_plugin(word, here) for word in tokens_of(target) for here in heres):
+        if (names_plugin(target) or EXPANSION.search(os.path.expandvars(target))
+                or "" in heres and not os.path.isabs(os.path.expanduser(target.strip()))
+                or any(reaches_plugin(word, here) for word in tokens_of(target) for here in heres)):
             deny(PLUGIN_WRITE.format(target=unquoted[found.start():found.end()]))
     for pipeline, places_of in zip(pipelines, places):
         naming = [part for part, here in itertools.product(pipeline, places_of)
@@ -2426,7 +2433,8 @@ def decide(data: dict) -> None:
     judge_citation_edit(tool, args, cwd)
     commands = [messageless(value) for value in named_paths(args, COMMAND_KEY)]
     # @req> REQ-75038049@hXyFNmxx-SWy hwgp36
-    CALL["changes_environment"] = any(ENV_CHANGE.search(re.sub(r"[\\'\"]", "", judged))
+    CALL["changes_environment"] = any(
+        ENV_CHANGE.search(re.sub(r"[\\'\"]", "", ansi_c(judged).replace("\\\n", "")))
                                       for judged in commands)
     for judged in commands:
         judge_shell(judged, cwd)
