@@ -34,8 +34,8 @@ jobs:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: |
-            ${{ inputs.reqctl != '' && '.reqctl/' || '' }}reqctl/requirements-lock.txt
-            ${{ inputs.reqctl != '' && '.reqctl/' || '' }}reqctl/pyproject.toml
+            ${{ inputs.reqctl && '.reqctl/' }}reqctl/requirements-lock.txt
+            ${{ inputs.reqctl && '.reqctl/' }}reqctl/pyproject.toml
 
       - name: Install reqctl
         if: inputs.reqctl == ''
