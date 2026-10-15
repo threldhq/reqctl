@@ -4,8 +4,8 @@ description: >
   The quality pass a branch gets before it becomes a pull request: the CI gates
   run locally, then succinctness, silent failure and comments. Use before
   opening any pull request that carries code -- a requirements pull request
-  runs elucidate's own three checks instead -- and whenever the owner says
-  pre-pr.
+  runs reqctl validate and reqctl baseline --check instead -- and whenever the
+  owner says pre-pr.
 ---
 
 <!-- @req> REQ-38288492@4l6tMNjp19tH twgacs -->

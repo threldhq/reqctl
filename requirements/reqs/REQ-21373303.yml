@@ -14,8 +14,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
-  qzk6eu: ZbQconoW7tdXVlWcnxxrYPsguoY-aZU7S6178gs0BKA
-  vadyl4: aNaW9O6St8YvRZAIKWemSQoH1UowuphMb-1lyGuI9IE
+  qzk6eu: 18iWQlBGQru5c_EMeRYIeUuS1YB0u4mmul0Gkd6aSdg
+  vadyl4: vAnTZs6S9XdwieB5lBddZ-nbq0oaylD4ivliSlkZyvo
 priority: medium
 relations:
   REQ-83939497: depends_on

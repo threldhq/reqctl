@@ -409,7 +409,8 @@ def faults(review, bound, redirects, seconds, attempts):
                 found.append(Transient(f"{line} (a transient failure)")
                              if isinstance(why, Transient) else line)
                 # @req- zrdwyr
-                named = "cannot be read"
+                # @req> REQ-55217837@PsKdezweHHNp 5z24tb
+                named = found[-1].removeprefix(f"practice {number}: {url} ")
             elif not holds(text, clipped(source["passage"])):
                 # @req> REQ-81751575@u9IqdcfRFLSM ot73lz
                 named = why or f"does not hold {source['passage']!r}"
