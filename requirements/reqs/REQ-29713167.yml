@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a [tool call](tool_call) the product refuses, with the hook's standard output
+    closed
+  then: it exits with status ${blocking_exit_status}
+  when: the hook exits
+- given: a [tool call](tool_call) the product refuses, with only part of the deny
+    decision written before standard output fails
+  then: it exits with status ${blocking_exit_status}
+  when: the hook exits
+- given: a [tool call](tool_call) the product refuses, with neither standard output
+    nor standard error writable
+  then: it exits with status ${blocking_exit_status}
+  when: the hook exits
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  blocking_exit_status: ggwujLpRhvhjnouAtPccbpL54uQKPWYXa6MMUaoa1Ho
+  blocking_exit_status.*: 7r6bv5ZCKpyHLukhA-BMLXNZrbLlPjqAkrqNo3bF2UA
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-60211288: constrains
+status: approved
+text: If the ${plugin_components.requirements_guard_hook} cannot write the whole of
+  a deny decision to standard output, then the product shall end that run with exit
+  status ${blocking_exit_status}.
+type: functional
+verification: inspection

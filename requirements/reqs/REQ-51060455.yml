@@ -1,12 +1,18 @@
 acceptance_criteria:
-- given: a fault inside the hook while it judges a [tool call](tool_call)
-  then: it exits zero with a deny decision stated
+- given: a [tool call](tool_call) the product does not refuse
+  then: it exits zero and states no decision
+  when: the hook exits
+- given: a fault inside the hook while it judges a [tool call](tool_call), with standard
+    output writable
+  then: it exits zero with the whole of its deny decision on standard output
   when: the hook exits
 - given: the hook's source
-  then: it holds no exit other than a zero exit and raises no exit of its own
+  then: every exit it holds is a zero exit except the one a failed write of a deny
+    decision reaches, and it raises no exit of its own
   when: it is read
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
@@ -16,8 +22,10 @@ citations:
 priority: medium
 relations:
   REQ-38288492: depends_on
+  REQ-60211288: depends_on
 status: approved
-text: The product shall end every run of the ${plugin_components.requirements_guard_hook}
-  with a zero exit status.
+text: The product shall end with a zero exit status every run of the ${plugin_components.requirements_guard_hook}
+  that does not refuse the [tool call](tool_call), and every run that writes the whole
+  of its deny decision to standard output.
 type: functional
 verification: inspection
