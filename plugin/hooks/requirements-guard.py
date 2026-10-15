@@ -2,6 +2,7 @@
 
 import fnmatch
 import functools
+import hashlib
 import itertools
 import json
 import os
@@ -297,11 +298,20 @@ MOVES_ORIGIN_HEAD = (
 ORIGIN_HEAD_FILE = re.compile(r"(?<![\w.-])(?:refs/+remotes/+origin/+HEAD|packed-refs)(?![\w.-])")
 # @req- sjmzez
 
-# @req> REQ-75038049@7JHx4bR_CkbA g3ql3s
+# @req> REQ-75038049@RLeZ6wIWKqXD g3ql3s
 UNHELD_SCRIPT = (
     "Running {file} blocked: it names the requirements corpus ({found}), and the "
     "default branch of origin does not hold it unchanged at its path.\n" + USE_REQCTL
 )
+
+# @req+ REQ-75038049@RLeZ6wIWKqXD kbbyh4
+PLUGIN_ROOT = Path(__file__).resolve().parent.parent
+FINGERPRINTS = frozenset({
+    "2e1541aa49a1e31f9ee3c23c192d9c66a9b09dfd187279c8a3e2d571a77a82b2",
+    "5dfadb71a60606f5136f02bef2f45f117ec08c3249ddafd80562186f9e9a4a24",
+    "62dbe3f42dd898d819f40a8c7267fda3e80355e38a2e9d9892d5681abfff4555",
+})
+# @req- kbbyh4
 
 PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo")
 GH_VALUED = ("-X", "--method", "-f", "--raw-field", "-F", "--field", "--input", "-H",
@@ -1597,7 +1607,7 @@ def refuse_api_write(words, here, said, expanded=False):
     guard_default(f"{called[0]} to api.github.com{found.group(1) or ''}", place, targets, slug)
 
 
-# @req> REQ-75038049@7JHx4bR_CkbA rvzbno
+# @req> REQ-75038049@RLeZ6wIWKqXD rvzbno
 def refuse_unheld_script(words, here):
     start = len(words) - len(invoked(words))
     if start and runner(words[start - 1]) in RUNNERS:
@@ -1647,7 +1657,7 @@ def refuse_unheld_script(words, here):
         judge_run(raw, file, module, here)
 
 
-# @req> REQ-75038049@7JHx4bR_CkbA yu277l
+# @req> REQ-75038049@RLeZ6wIWKqXD yu277l
 def judge_run(raw, file, module, here):
     if "$" in file or "`" in file or not here and not os.path.isabs(file):
         deny(UNREADABLE.format(what=f"which file {raw} runs"))
@@ -1666,6 +1676,8 @@ def judge_run(raw, file, module, here):
     text = flatten(data.decode(errors="replace")) if CORPUS_ROOT_NAME.encode() in data else ""
     found = CORPUS_DIR.search(text) or ROOT_QUOTED.search(text)
     if not found:
+        return
+    if Path(path).is_relative_to(PLUGIN_ROOT) and hashlib.sha256(data).hexdigest() in FINGERPRINTS:
         return
     place = (here, [], {})
     held = git_reads(["rev-parse", "--verify", "-q", "refs/remotes/origin/HEAD:./"
