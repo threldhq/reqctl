@@ -4,6 +4,7 @@ setuptools==84.0.0
 mypy==2.3.1
 ruff==0.16.9
 pip-audit==2.10.1
+packaging==26.3
 zizmor==1.30.1
 actionlint-py==1.7.12.25
 shellcheck-py==0.11.0.1
