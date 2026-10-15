@@ -329,9 +329,9 @@ CALL = {"changes_environment": True}
 WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", "tee", "install",
            "rsync", "truncate", "dd", "unlink", "sed", "perl", "tar", "unzip", "patch", "cpio",
            "gzip", "gunzip", "bzip2", "xz", "zstd", "ed", "split", "shred", "sort", "curl", "wget")
-WRITES_WHEN = {"sed": re.compile(r"\s(?:-[A-Za-z]*i|--in-place)"), "perl": re.compile(r"\s-[A-Za-z]*i"),
-               "sort": re.compile(r"\s(?:-[A-Za-z]*o|--output)"),
-               "curl": re.compile(r"\s(?:-[A-Za-z]*[oO]|--output|--remote-name)")}
+WRITES_WHEN = {"sort": re.compile(r"\s(?:-[A-Za-z]*[oT]|--(?:output|temporary-directory|compress-program))"),
+               "curl": re.compile(r"\s(?:-[A-Za-z]*[oODcK]|--(?:output|remote-name|dump-header|cookie-jar|"
+                                  r"trace|libcurl|stderr|etag-save|config|hsts|alt-svc))")}
 READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|--(?:log|LOG)-[fF]|--compile)"
                          r"|\s--(?:pre|pager|hostname-bin)\b")
 
