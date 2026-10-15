@@ -15,9 +15,7 @@ GATES = ROOT / ".github" / "workflows" / "corpus-gates.yml"
 VENV = ROOT / ".venv" / "bin"
 EXPRESSION = re.compile(r"\$\{\{\s*(.+?)\s*\}\}")
 EQUALITY = re.compile(r"^([\w.]+)\s*(==|!=)\s*'([^']*)'$")
-PROVISIONS = re.compile(
-    r"\bpip install\b|\bnpm ci\b|\bpnpm install\b|\bcorepack enable\b"
-    r"|playwright install|install-gitleaks")
+PROVISIONS = re.compile(r"\bpip install\b|install-gitleaks")
 NOT_FOUND = 127
 MISSING = re.compile(r"([\w./-]+): command not found")
 
