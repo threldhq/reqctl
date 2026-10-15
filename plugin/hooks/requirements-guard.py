@@ -202,6 +202,20 @@ NO_DEFAULT = (
     "  git remote set-head origin --auto"
 )
 
+MOVES_DEFAULT = (
+    "{what} blocked: it points the default branch {branch} at a commit "
+    "origin/{branch} does not reach, or at one that does not descend from where "
+    "{branch} stands.\n"
+    "  git merge --ff-only origin/{branch} brings it level with origin\n"
+    "Work that is not on origin belongs on its own branch: git checkout -b claude/<name>"
+)
+
+UNNAMED_DEFAULT = (
+    "{what} blocked: origin names no default branch, so the guard cannot tell "
+    "whether this moves it.\n"
+    "  git remote set-head origin --auto"
+)
+
 DISCARDS_WORK = (
     "This discards uncommitted work:\n"
     "{listing}\n"
@@ -1230,6 +1244,140 @@ def refuse_commit_on_default(words, here):
     # @req- zm6qoo
 
 
+def flagged(flags, *spelled):
+    named = [name for name, _ in flags]
+    return any(name in spelled or len(name) > 2 and name.startswith("--") and any(
+        full.startswith(name) for full in spelled) for name in named) or any(
+        short_flagged(named, full[1]) for full in spelled if len(full) == 2)
+
+
+def head_branch(place):
+    return git_sees(["branch", "--show-current"], place).strip()
+
+
+def commit_of(target, place):
+    return target and "$" not in target and "`" not in target and git_reads(
+        ["rev-parse", "--verify", "-q", f"{target}^{{commit}}"], place)
+
+
+def landings(subcommand, rest, place):
+    # @req+ REQ-76235768@1l5tlNlByWT6 amejii
+    if subcommand == "update-ref":
+        flags, operands = options(rest, ("-m",))
+        ref = operands[0] if operands else ""
+        if ref == "HEAD" and not flagged(flags, "--no-deref"):
+            ref = "refs/heads/" + head_branch(place)
+        if flagged(flags, "-d") or not ref.startswith("refs/heads/"):
+            return []
+        return [(ref.removeprefix("refs/heads/"), operands[1] if operands[1:] else None)]
+    if subcommand == "branch":
+        flags, operands = options(rest, ("-u", "--set-upstream-to"))
+        if not operands or flagged(flags, *BRANCH_KEEPS):
+            return []
+        if flagged(flags, "-m", "-M", "--move", "-c", "-C", "--copy"):
+            return [(operands[-1], operands[0] if operands[1:] else "HEAD")]
+        return [(operands[0], operands[1] if operands[1:] else "HEAD")]
+    if subcommand in ("checkout", "switch", "worktree"):
+        if subcommand == "worktree":
+            if rest[:1] != ["add"]:
+                return []
+            rest = rest[1:]
+        flags, operands = options(rest, ("-b", "-B", "-c", "-C", "--create", "--force-create",
+                                         "--orphan", "--reason"))
+        start = operands[1 if subcommand == "worktree" else 0:][:1] or ["HEAD"]
+        named = [(value, start[0]) for name, value in flags
+                 if name in ("-b", "-B", "--create", "--force-create")
+                 or subcommand == "switch" and name in ("-c", "-C")]
+        if named or not operands:
+            return named
+        if subcommand != "worktree":
+            return [(operands[0].removeprefix("refs/remotes/").partition("/")[2],
+                     operands[0])] if flagged(flags, "-t", "--track") else []
+        basename = os.path.basename(operands[0].rstrip("/"))
+        return [(basename, "HEAD")] if len(operands) == 1 and not flagged(
+            flags, "-d", "--detach", "--orphan") and git_reads(
+            ["show-ref", "--verify", "-q", f"refs/heads/{basename}"], place) is None else []
+    if subcommand in ("fetch", "push"):
+        flags, operands = options(rest, ("--depth", "--deepen", "--shallow-since",
+                                         "--shallow-exclude", "--refmap", "-o",
+                                         "--push-option", "--recurse-submodules", "--repo"))
+        remote = operands[0] if operands else None
+        if subcommand == "push" and remote != ".":
+            return []
+        moves = []
+        for spec in operands[1:]:
+            src, colon, dst = spec.partition(":")
+            name = dst.removeprefix("refs/").removeprefix("heads/") if colon else None
+            if not name:
+                continue
+            if subcommand == "push":
+                moves.append((name, src.removeprefix("+") or None))
+            elif (remote != "origin" or src.startswith("+") or flagged(flags, "-f", "--force")
+                  or src.removeprefix("refs/heads/") != name):
+                moves.append((name, None))
+        return moves
+    current = head_branch(place)
+    flags, operands = options(rest, ("-m", "-s", "--strategy", "-X", "--strategy-option",
+                                     "-F", "--file", "--into-name", "--cleanup", "--depth",
+                                     "--deepen", "--shallow-since", "--shallow-exclude"))
+    if subcommand == "reset":
+        if "--" in rest or len(operands) != 1 or flagged(flags, "-p", "--patch"):
+            return []
+        if "$" in operands[0] or "`" in operands[0]:
+            return [(current, None)]
+        return [(current, operands[0])] if commit_of(operands[0], place) else []
+    fast = next((name for name, _ in reversed(flags)
+                 if name in ("--ff", "--no-ff", "--ff-only")), None)
+    if fast == "--no-ff" or flagged(flags, "--abort", "--quit", "--continue", "--dry-run",
+                                    "--squash"):
+        return []
+    if subcommand == "merge":
+        return [(current, operands[0] if len(operands) == 1
+                 else "@{upstream}" if not operands else None)]
+    upstream = (git_reads(["rev-parse", "--abbrev-ref", "@{upstream}"], place) or "").strip()
+    origin = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], place)
+    pulled = f"origin/{operands[1]}" if operands[1:] else upstream
+    return [] if operands[:1] in ([], ["origin"]) and len(operands) <= 2 and origin and (
+        pulled == origin.strip()) else [(current, None)]
+    # @req- amejii
+
+
+BRANCH_KEEPS = ("-d", "-D", "--delete", "-l", "--list", "-a", "--all", "-r", "--remotes", "-u",
+                "--set-upstream-to", "--unset-upstream", "--edit-description", "--contains",
+                "--no-contains", "--merged", "--no-merged", "--points-at", "--show-current",
+                "-v", "--verbose", "--format", "--sort", "--column", "-i", "--ignore-case")
+
+MOVERS = ("update-ref", "branch", "checkout", "switch", "worktree", "fetch", "push", "reset",
+          "merge", "pull")
+
+
+def refuse_moving_default(words, here):
+    # @req+ REQ-76235768@1l5tlNlByWT6 nahqvl
+    subcommand, rest = git_subcommand(words)
+    if subcommand not in MOVERS:
+        return
+    place = located(words, here)
+    moves = landings(subcommand, rest, place)
+    if not moves:
+        return
+    what = shlex.join(["git", subcommand, *rest])
+    default = git_reads(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], place)
+    if default is None:
+        deny(UNNAMED_DEFAULT.format(what=what))
+    branch = default.strip().removeprefix("origin/")
+    stands = git_reads(["rev-parse", "--verify", "-q", f"refs/heads/{branch}"], place)
+    for name, target in moves:
+        if not fnmatch.fnmatchcase(branch, name):
+            continue
+        commit = commit_of(target, place)
+        if not commit or git_reads(["merge-base", "--is-ancestor", commit.strip(),
+                                    "refs/remotes/origin/HEAD"], place) is None or (
+                stands and git_reads(["merge-base", "--is-ancestor", stands.strip(),
+                                      commit.strip()], place) is None):
+            deny(MOVES_DEFAULT.format(what=what, branch=branch))
+    # @req- nahqvl
+
+
 def local_relative(url):
     return bool(url) and "://" not in url and ":" not in url.split("/", 1)[0] and not (
         os.path.isabs(url) or url.startswith("~"))
@@ -1789,6 +1937,7 @@ def judge_command(said, here, stdin=()):
     refuse_moving_origin_head(words, here)
     # @req- vreqvm
     refuse_commit_on_default(words, here)
+    refuse_moving_default(words, here)
     refuse_push_to_default(words, here)
     refuse_api_write(words, here, said)
     refuse_unheld_script(words, here)
