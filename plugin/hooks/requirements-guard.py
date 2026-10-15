@@ -2024,11 +2024,11 @@ def writes_plugin(said, here, whole):
     called = invoked(words)
     tool = runner(called[0]) if called else ""
     operands = [word for word in called[1:] if not word.startswith("-")]
-    script = next((word for previous, word in itertools.pairwise(called)
-                   if not word.startswith("-") and not REDIRECTION.match(word)
-                   and not REDIRECTION.fullmatch(previous)
-                   and previous not in RUN_VALUED.get(tool, ())), "")
-    inline = any(letter in flag for flag in itertools.takewhile(lambda word: word.startswith("-"), called[1:])
+    plain = [word for previous, word in itertools.pairwise(["", *called])
+             if not REDIRECTION.match(word) and not REDIRECTION.fullmatch(previous)]
+    script = next((word for previous, word in itertools.pairwise(plain)
+                   if not word.startswith("-") and previous not in RUN_VALUED.get(tool, ())), "")
+    inline = any(letter in flag for flag in itertools.takewhile(lambda word: word.startswith("-"), plain[1:])
                  for letter in RUNNERS.get(tool, ""))
     from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
         ("dev/", "proc/"))
