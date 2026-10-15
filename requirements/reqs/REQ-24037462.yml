@@ -24,5 +24,5 @@ type: functional
 verification: inspection
 whole_file_citations:
   .claude-plugin/marketplace.json:
-    digest: KzTb9PKZCZQRqAWr9IpCQsVwRzcUlbZ0baWTFtXX07M
+    digest: AKHCyzYJhRejE9_nL2rvpf0c0BfaobzplPSnv8f1e88
     pinned: -TNlniD8O6DW
