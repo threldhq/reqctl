@@ -13,6 +13,9 @@ acceptance_criteria:
 assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  pgeszq: 66i028n-LLUxICGmNNZSJA9KPb8xOxs1uYihWctn6rU
+  t3z2ju: tW-3lKrCUi1CBK-3Em1GQHGczj1z7GaZ8UEYcYhJesU
 priority: medium
 relations: {}
 status: approved

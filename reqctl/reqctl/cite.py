@@ -589,6 +589,29 @@ def repinned(root, citation, stamp):
     # @req- lqd5pz
 
 
+def every(root):
+    held, faults = parse(_sources(root))
+    if faults:
+        raise ReqctlError("the code's citations do not read:\n" + "\n".join(faults))
+    return held
+
+
+def renamed(root, citation, name):
+    # @req+ REQ-70208796@rx8OkxlDOpk4 4otwfp
+    target, mark, lines = _lines(root, citation)
+    at = citation["open"] - 1
+    address = f"{name}.{citation['entry']}" if citation["entry"] else name
+    pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+){re.escape(citation['address'])}(?=@)")
+    lines[at], done = pinned.subn(lambda found: f"{found.group(1)}{address}",
+                                  lines[at], count=1)
+    if not done:
+        raise ReqctlError(f"{citation['path']}:{citation['open']}: citation "
+                          f"{citation['id']} does not read as naming "
+                          f"{citation['address']}; nothing was renamed")
+    return target, (mark + "".join(lines)).encode()
+    # @req- 4otwfp
+
+
 def untagged(root, citation):
     target, mark, lines = _lines(root, citation)
     marks = set(citation["marks"])
@@ -752,6 +775,62 @@ def compare(root, ref):
             rows.append({"id": identity, "uid": new["uid"], "path": new["path"],
                          "state": state})
         # @req- bicxbc
+    # @req> REQ-33614084@XHPdW0ynnY4c ily3i7
+    files = _whole_rows(root, commit)
     # @req> REQ-70581878@Oua6NaKONA27 w6qryd
-    touched = sorted({row["uid"] for row in rows if row["state"] != ["moved"]})
-    return {"base": commit, "citations": rows, "touches": touched}
+    touched = sorted({row["uid"] for row in rows if row["state"] != ["moved"]}
+                     | {row["uid"] for row in files})
+    return {"base": commit, "citations": rows, "files": files, "touches": touched}
+
+
+def _whole_held(root, commit):
+    listed = subprocess.run(
+        ["git", "grep", "-l", "-z", "-F", corpus.WHOLE_FILES, commit, "--",
+         "requirements"],
+        cwd=root, capture_output=True, text=True, check=False)
+    if listed.returncode not in (0, 1):
+        raise ReqctlError(f"cannot read {commit}: {listed.stderr.strip()}")
+    for named in filter(None, listed.stdout.split("\0")):
+        relative = named.split(":", 1)[1]
+        data = corpus.loads(_git(root, "show", f"{commit}:{relative}"), relative,
+                            aliases=False)
+        if isinstance(data, dict):
+            yield Path(relative).stem, corpus.mapping(data, corpus.WHOLE_FILES)
+
+
+def _whole_text(root, commit, relative):
+    if not _git(root, "ls-tree", "--name-only", commit, "--", relative).strip():
+        return None
+    return _git(root, "show", f"{commit}:{relative}").removeprefix(BOM)
+
+
+def _whole_digest(relative, text):
+    return None if text is None else whole(relative, text)
+
+
+def _whole_rows(root, commit):
+    # @req+ REQ-33614084@XHPdW0ynnY4c 53mrze
+    store, _ = corpus.load(root)
+    renamed_to = {old: item.uid for item in corpus.items(store)
+                  for old in corpus.carried_of(item.uid, item.data)}
+    was = {renamed_to.get(uid, uid): held
+           for uid, held in _whole_held(root, commit)}
+    now = {item.uid: held for item in corpus.items(store)
+           if (held := corpus.mapping(item.data, corpus.WHOLE_FILES))}
+    rows = []
+    for uid in sorted(set(was) | set(now)):
+        held, holds = was.get(uid, {}), now.get(uid, {})
+        for relative in sorted(set(held) | set(holds)):
+            if relative not in held or relative not in holds:
+                rows.append({"uid": uid, "path": relative,
+                             "state": ["added" if relative in holds else "deleted"]})
+                continue
+            target = Path(root) / relative
+            after = (target.read_bytes().decode().removeprefix(BOM)
+                     if target.is_file() else None)
+            if (held[relative] != holds[relative]
+                    or _whole_digest(relative, _whole_text(root, commit, relative))
+                    != _whole_digest(relative, after)):
+                rows.append({"uid": uid, "path": relative, "state": ["changed"]})
+    return rows
+    # @req- 53mrze

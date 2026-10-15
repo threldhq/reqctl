@@ -1,4 +1,5 @@
 import argparse
+import dataclasses
 import json
 import os
 import sys
@@ -138,8 +139,31 @@ def _shown(data):
 
 
 def _value(value, unit):
+    # @req> REQ-49042671@vhxkl2dsMRfs t3z2ju
+    if isinstance(value, dict):
+        return ", ".join(f"{field}: {held}" for field, held in value.items())
     suffix = f" {unit}" if unit else ""
     return ", ".join(f"{member}{suffix}" for member in value)
+
+
+def _named_fields(fields, rest):
+    steps = rest.split(".")
+    found = corpus.entries(fields) or {}
+    for step in steps:
+        if not isinstance(found, dict) or step not in found:
+            return None
+        found = found[step]
+    if len(steps) == 1 and isinstance(found, dict):
+        return dict(found)
+    return {steps[-1]: found}
+
+
+def _parameter_value(fields, named, held):
+    if named is not None:
+        return named
+    if held is not None:
+        return sorted(held)
+    return _dict_value(fields)
 
 
 def _entry_fields(fields):
@@ -248,6 +272,8 @@ def cmd_unrelate(args):
 
 def cmd_delete(args):
     tree, root = corpus.load()
+    # @req> REQ-85755152@bVyS0LwfT-4B xuxjui
+    corpus.find(tree, args.uid)
     # @req> REQ-43148967@9kz9xDxvdKH5 nghnwd
     _refuse_invalid(root, "remove")
     where = _write.delete(tree, args.uid)
@@ -258,8 +284,16 @@ def cmd_delete(args):
 
 
 def cmd_rename(args):
-    tree, _ = corpus.load()
+    tree, root = corpus.load()
+    # @req+ REQ-70208796@rx8OkxlDOpk4 cgdwfu
+    item = corpus.find(tree, args.uid)
+    olds = {item.uid, corpus.name_of(item.uid, item.data)} - {None}
+    cited = [citation for citation in cite.every(root)
+             if citation["uid"] in olds]
     moved = _write.rename(tree, args.uid, args.name)
+    for citation in cited:
+        corpus.atomic_write(*cite.renamed(root, citation, args.name))
+    # @req- cgdwfu
     _emit(args, {"uid": args.uid, "name": args.name, "moved": moved},
           f"{args.uid} answers to {args.name}. "
           f"{len(moved)} item(s) now address it by that name.")
@@ -524,16 +558,22 @@ def _context(store, item, dependents, tags, past):
         try:
             fields = corpus.find(store, target).data
         except ReqctlError:
+            fields = None
+        # @req+ REQ-49042671@vhxkl2dsMRfs pgeszq
+        held = corpus.flagged(fields, rest) if fields is not None else None
+        addresses_item = rest in (None, "default", corpus.MEMBERS) or held is not None
+        named = (None if fields is None or addresses_item
+                 else _named_fields(fields, rest))
+        if fields is None or (not addresses_item and named is None):
             entry.update(name=None, value=None, unit=None, status=None,
                          missing=True, suspect=True)
         else:
-            held = corpus.flagged(fields, rest)
             entry.update(name=fields.get("name"),
-                         value=sorted(held) if held is not None
-                         else _dict_value(fields),
+                         value=_parameter_value(fields, named, held),
                          unit=fields.get("unit"), status=fields.get("status"),
                          missing=False, **_pins(store, past, item, sorted(
                              corpus.expand_address(lookup, address))))
+        # @req- pgeszq
         parameters.append(entry)
 
     concepts = []
@@ -971,6 +1011,9 @@ def cmd_compare(args):
     data = cite.compare(root, ref)
     lines = [f"{row['id']}  {row['uid']}  {row['path']}  {', '.join(row['state'])}"
              for row in data["citations"]]
+    # @req> REQ-33614084@XHPdW0ynnY4c kiiwp5
+    lines += [f"whole  {row['uid']}  {row['path']}  {', '.join(row['state'])}"
+              for row in data["files"]]
     lines.append("touches: " + (", ".join(data["touches"]) or "nothing"))
     _emit(args, data, "\n".join(lines))
     return EXIT_OK
@@ -1096,8 +1139,24 @@ def _fielded(argv):
                 None) in FIELDED
 
 
+def _value_typed(root, flags):
+    # @req+ REQ-58926409@zt0Kl436tNXd 54mksz
+    store, _ = corpus.load(root)
+    corpus.items(store)
+    try:
+        listed = corpus.find(store, _validate.VALUE_TYPES)
+    except ReqctlError:
+        return flags
+    if corpus.kind_of(listed.uid, listed.data) != "data":
+        return flags
+    held = tuple(str(key) for key in corpus.entries(listed.data) or {})
+    return [dataclasses.replace(flag, choices=held)
+            if flag.dest == "value_type" else flag for flag in flags]
+    # @req- 54mksz
+
+
 def build_parser(root, fielded):
-    flags = _fields.flags(root) if fielded else []
+    flags = _value_typed(root, _fields.flags(root)) if fielded else []
     clears = _fields.clears(root) if fielded else []
     p = argparse.ArgumentParser(
         prog="reqctl",
