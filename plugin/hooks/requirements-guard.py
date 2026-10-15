@@ -2024,9 +2024,10 @@ def writes_plugin(said, here, whole):
     tool = runner(called[0]) if called else ""
     operands = [word for word in called[1:] if not word.startswith("-")]
     script = next((word for previous, word in itertools.pairwise(called)
-                   if not word.startswith(("-", "<", ">")) and not previous.startswith(("<", ">"))
+                   if not word.startswith("-") and not REDIRECTION.match(word)
+                   and not REDIRECTION.fullmatch(previous)
                    and previous not in RUN_VALUED.get(tool, ())), "")
-    if tool in RUNNERS and not script and names_plugin(whole):
+    if tool in RUNNERS and script in ("", "/dev/stdin", "/dev/fd/0", "/proc/self/fd/0") and names_plugin(whole):
         return True
     naming = [word for word in words if reaches_plugin(word, here)]
     if not naming and not names_plugin(said):
