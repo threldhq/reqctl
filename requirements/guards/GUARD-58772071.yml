@@ -13,13 +13,16 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   fingerprint_list: IKuN4F4xCtcTuRJWxeEIwcI85RfUbSbEdY045f0hbr0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
   plugin_folders: 7ZGw3BF5dCnTaSKveldXgsywKdmz_V7rnnP6Vxf97OY
   plugin_folders.root: eN5D4LXA4EmtVGaOyOOV7Bmt9EjUOJZ_skI4uWathwI
 relations:
   GUARD-65225392: depends_on
 status: approved
 text: If the [fingerprint list](fingerprint_list) of the Claude Code plugin differs
-  from the set of SHA-256 digests of the bytes of the files tracked under ${plugin_folders.root.path}
-  whose text names the path of a corpus [item](item)'s file, a folder of corpus [items](item),
+  from the set of SHA-256 digests of the bytes of the files tracked under ${plugin_folders.root.path},
+  other than the file of the ${plugin_components.requirements_guard_hook}, whose text
+  names the path of a corpus [item](item)'s file, a folder of corpus [items](item),
   the baseline or the [corpus root](corpus_root), then the build shall refuse the
   change.
