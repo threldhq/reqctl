@@ -57,7 +57,7 @@ CITATION_LIST = "citations"
 WHOLE_FILES = "whole_file_citations"
 # @req> REQ-88203622@wlZ9orsr9c7q otmh6w
 CITABLE = ("requirement", "guard", "parameter", "data")
-# @req> REQ-22682482@DIadVPxV1yCt utfemd
+# @req> REQ-22682482@F_OIMxlkifKy utfemd
 ITEM_SKIP = ("entries", "acceptance_criteria", "text", "fields",
              "assessed", "relations", "status", CITATION_LIST, WHOLE_FILES)
 MEMBERS = "*"
