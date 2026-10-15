@@ -41,6 +41,9 @@ SHARD_CHARS = 25_000
 SHARD_ITEMS = 100
 PROMPT_LINES = 2000
 STATED = "stated.json"
+# @req> REQ-97779306@Ql43AqTqpENC f5wtnh
+SPLITS = {"judge": "challenge_bounds.judge_bound",
+          "group": "challenge_bounds.judge_group"}
 CHALLENGERS = ("coverage", "recall", "judge")
 
 BEARING = """A statement bears on a proposal when it states the same obligation in
@@ -687,6 +690,12 @@ def traced(run, words, held):
                 f"{path}: `{TRACE}` states {passages!r} for proposal {number}. "
                 "The form is a list of passages quoted from the owner's words.")
         # @req- fw5ou4
+        # @req> REQ-52610800@GBjWXGDudiQZ rc7t2t
+        if not passages:
+            raise SystemExit(
+                f"{path}: proposal {number} traces to no passage of the owner's "
+                f"words. Record its `{TRACE}` as `{number}: [\"...\"]`, quoting "
+                "what they wrote, or decline the proposal.")
         # @req> REQ-83939497@o4e6KsfHMIgp rfwtjo
         for passage in passages:
             if not _coverage.quoted(spoken, _coverage.spoken(passage)):
@@ -1038,12 +1047,14 @@ def build(run, chars, items, lines=PROMPT_LINES):
                   for _, scope, _ in shards) + len(held)
     ceilinged(counted, bounds["agent_ceiling"])
 
+    # @req> REQ-73764817@hFqW_eXNgs3b oxitt7
     state_held = {
         "agents": agents, "bounds": bounds, "lines": lines,
         "proposals": {str(number): {"kind": kind, "statement": statement,
                                     "path": str(path),
                                     "binding": settled_on.get(number),
-                                    "trace": traces.get(str(number), [])}
+                                    "trace": traces.get(str(number), []),
+                                    "criteria": carried.get(str(number), [])}
                       for number, statement, path, kind in held},
         "shards": {name: {"scope": scope, "items": [uid for uid, _ in block],
                           "batch": bounds["recall_batch"]}
@@ -1251,6 +1262,24 @@ def binding_text(spec):
                       for name, members in sorted(held.items()))
 
 
+def fitted(prompts, lines, stage):
+    # @req+ REQ-97779306@Ql43AqTqpENC duwkrw
+    over = []
+    for name, body in sorted(prompts.items()):
+        count = body.count("\n") + 1
+        if count <= lines:
+            continue
+        kind = "group" if "-g" in name else stage
+        remedies = ["`plan.py build` with a larger --lines"] + (
+            [f"a smaller {SPLITS[kind]} in settings.yml"] if kind in SPLITS
+            else [])
+        over.append(f"{kind} prompt {name} holds {count} lines, past the "
+                    f"line bound of {lines} -- {', or '.join(remedies)}")
+    if over:
+        raise SystemExit("\n".join(over))
+    # @req- duwkrw
+
+
 def judge_prompt(run, number, spec, names, named, state_held, text,
                  dictionary_text, records):
     out = run / "returns" / "judge" / f"{number}.json"
@@ -1362,7 +1391,8 @@ def judge(run):
             spawned.append(spawn(run, "judge", f"{number}-g{at}",
                                  f"group:{number}-g{at}", shapes.GROUP,
                                  judging))
-    lined(prompts, state_held["lines"])
+    # @req> REQ-97779306@Ql43AqTqpENC jcpyex
+    fitted(prompts, state_held["lines"], "judge")
     for stale in list((run / "prompts" / "judge").glob("*.md")) + list(
             (run / "returns" / "judge").glob("*.json")) + list(
             (run / "returns" / "final").glob("*.json")):
@@ -1483,7 +1513,8 @@ def final(run):
     if not prompts:
         print("no proposal was split into groups; nothing to assemble")
         return 0
-    lined(prompts, state_held["lines"])
+    # @req> REQ-97779306@Ql43AqTqpENC 5hvslp
+    fitted(prompts, state_held["lines"], "final")
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "final" / f"{name}.md", body)
     saved(run, state_held)
@@ -1504,6 +1535,20 @@ def describe(run):
     if not state_held["judge"]:
         raise SystemExit("no judge prompt was built; run `plan.py judge` first")
     held = proposals(run)
+    # @req+ REQ-73764817@hFqW_eXNgs3b obajkn
+    criteria = stated(run, held)
+    built = state_held["proposals"]
+    now = {str(number): statement for number, statement, _, _ in held}
+    moved = sorted((number for number in set(built) | set(now)
+                    if number not in built or number not in now
+                    or built[number]["statement"] != now[number]
+                    or built[number].get("criteria")
+                    != criteria.get(number, [])), key=int)
+    if moved:
+        raise SystemExit(
+            f"proposal(s) {', '.join(moved)} differ from what the run was built "
+            "with -- build the run again with `plan.py build`, then judge it")
+    # @req- obajkn
     ledger, answers = answered(run, held)
     traces = traced(run, said(run, "words.md", ""), held)
     # @req> REQ-52114263@JmvDYpVGNRJQ dbzebu

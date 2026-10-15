@@ -48,7 +48,8 @@ def faults(found, words):
         return [f"states no {name} list" for name in missing]
     # @req- uffga6
 
-    said = plain(spoken(words))
+    # @req> REQ-26693396@t2DC4anz7B5V pdq53a
+    said = plain(spoken(words)).casefold()
     # @req+ REQ-86066994@ZdOflpXK5eCb a4gokv
     stated = keys_in(found)
     held = [f"states {name!r}, which is not one of {', '.join(NAMES)}"
@@ -56,13 +57,14 @@ def faults(found, words):
     # @req- a4gokv
     # @req+ REQ-41361856@4UOkrz1niMIl y4zpw2
     # @req+ REQ-67248754@f8kUPPzaG_-U c3jev7
+    # @req+ REQ-26693396@t2DC4anz7B5V czhlcg
     for entry in found["unclaimed"]:
         if not isinstance(entry, dict) or "quote" not in entry:
             held.append(f"an unclaimed entry carries no quote: {entry!r}")
         elif not spoken(entry["quote"]):
             held.append("an unclaimed entry quotes nothing, and every passage "
                         "holds the empty quote")
-        elif not quoted(said, spoken(entry["quote"])):
+        elif not quoted(said, spoken(entry["quote"]).casefold()):
             held.append(f"quotes what the owner did not say: {entry['quote']!r}")
     for entry in found["renamed"]:
         if not isinstance(entry, dict) or "owner" not in entry:
@@ -70,8 +72,9 @@ def faults(found, words):
         elif not spoken(entry["owner"]):
             held.append("a renamed entry names no word, and every passage "
                         "holds the empty one")
-        elif not quoted(said, spoken(entry["owner"])):
+        elif not quoted(said, spoken(entry["owner"]).casefold()):
             held.append(f"names a word the owner did not use: {entry['owner']!r}")
+    # @req- czhlcg
     # @req- c3jev7
     # @req- y4zpw2
     # @req> REQ-13591264@tle-mDzkWdnR ieflg7
@@ -90,13 +93,17 @@ def main(argv=None):
     args = parsed.parse_args(argv)
 
     where = Path(args.found)
+    # @req> REQ-27370034@uYfNuf6k4Q_h ptkgg3
+    respawn = ("spawn the coverage agent again from "
+               f"{where.parent / 'workflow' / 'coverage.json'}")
     # @req+ REQ-95375719@-TYbW5JhiwAf k26kry
     text = corpus.read_text(where)
     try:
         found = corpus.loads(text, where)
-    except corpus.ReqctlError:
+    except corpus.ReqctlError as broken:
         corpus.remove(where)
-        raise
+        # @req> REQ-27370034@uYfNuf6k4Q_h way2fx
+        raise corpus.ReqctlError(f"{broken} -- {respawn}") from broken
     held = faults(found, corpus.read_text(args.words))
     if held:
         corpus.remove(where)
@@ -105,7 +112,9 @@ def main(argv=None):
     for fault in held:
         print(f"{where.name}: {fault}")
     if held:
-        print(f"\n{len(held)} fault(s): the run does not act on these findings")
+        # @req> REQ-27370034@uYfNuf6k4Q_h nodcxf
+        print(f"\n{len(held)} fault(s): the run does not act on these findings "
+              f"-- {respawn}")
         return 1
     print(f"{len(found['unclaimed'])} unclaimed, {len(found['renamed'])} renamed, "
           "every quote the owner's own")

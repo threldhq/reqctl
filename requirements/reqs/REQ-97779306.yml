@@ -16,6 +16,11 @@ assessed:
   REQ-30631052: IFJ5WPh_dCD4cpqrKvq5nMGkFgQgp59riv09LHTz3eE
   REQ-68873467: 3-Wc7R2vtu7-18N7BIWJSxtAfsuv2MxGgV409rzQMRQ
   REQ-80951798: Yv9lsMtU3XdIOfhWtWTfHptWO9bkmyp3LS4FmYVkfDM
+citations:
+  5hvslp: qrnpaKsgv4KpC3X7hjzSVDDlFSTZzssnpi86adFIcFw
+  duwkrw: F4vPctq6XvKHFhnZSfhAqplnRZq6I6z4yb1baeOjOEU
+  f5wtnh: MkQ4GZ3gqIU6K3gt2_vfCDn8SzJYM3KUztfwb_w-ZNw
+  jcpyex: u_HN1ZrhAHcp4Iu0VPZUEsT-gJ7Kiqzdc_voVV2rop8
 priority: medium
 relations:
   REQ-30631052: constrains

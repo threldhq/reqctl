@@ -5,6 +5,10 @@ acceptance_criteria:
   when: the findings are checked
 assessed:
   REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
+citations:
+  nodcxf: dWACS2ihZ9nszJrZmzh-2noChr-QU3f_vtr_AEa8d84
+  ptkgg3: iSKbfcdu7WyMNxrYtyWcdQTjTWzCM5dqlzfrhuCtSS8
+  way2fx: 8e88-adRjwHz09ViI7_1kbvv2uuuobqo7Wlh2q7KUUI
 priority: medium
 relations:
   REQ-29203000: depends_on
