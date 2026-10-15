@@ -2,6 +2,7 @@
 import argparse
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 from reqctl import corpus, write
@@ -24,10 +25,22 @@ def plain(text):
     return " ".join(EMPHASIS.sub("", JOINED.sub(" ", straight)).split())
 
 
+def worded(char):
+    return char == "_" or unicodedata.category(char)[0] in "LNM"
+
+
 def quoted(said, needle):
     needle = plain(needle)
-    return bool(re.search(r"\w", needle)) and re.search(
-        rf"(?<!\w){re.escape(needle)}(?!\w)", said) is not None
+    if not any(map(worded, needle)):
+        return False
+    at = said.find(needle)
+    while at != -1:
+        end = at + len(needle)
+        if not (at and worded(said[at - 1])) and not (
+                end < len(said) and worded(said[end])):
+            return True
+        at = said.find(needle, at + 1)
+    return False
 # @req- n2lx2b
 
 
@@ -97,11 +110,10 @@ def main(argv=None):
     respawn = ("spawn the coverage agent again from "
                f"{where.parent / 'workflow' / 'coverage.json'}")
     # @req+ REQ-95375719@-TYbW5JhiwAf k26kry
-    text = corpus.read_text(where)
     try:
-        found = corpus.loads(text, where)
+        found = corpus.loads(corpus.read_text(where), where)
     except corpus.ReqctlError as broken:
-        corpus.remove(where)
+        corpus.remove(where, missing_ok=True)
         # @req> REQ-27370034@uYfNuf6k4Q_h way2fx
         raise corpus.ReqctlError(f"{broken} -- {respawn}") from broken
     held = faults(found, corpus.read_text(args.words))

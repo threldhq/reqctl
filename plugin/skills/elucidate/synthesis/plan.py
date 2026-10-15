@@ -22,6 +22,7 @@ RELATION = re.compile(rf"^- (?:{'|'.join(write.RELATIONS)}) ((?:{corpus.KINDS})-
 USED_BY = "- used by: "
 TOKEN = re.compile(r"\$\{[^}]*\}?")
 SIBLING = re.compile(r"^proposal (\d+)$")
+GROUPED = re.compile(r"-g\d+$")
 PLUGIN = Path(".claude-plugin") / "plugin.json"
 WORKFLOW = HERE.parent / "workflow.js"
 BINDS = "binds"
@@ -1269,12 +1270,13 @@ def fitted(prompts, lines, stage):
         count = body.count("\n") + 1
         if count <= lines:
             continue
-        kind = "group" if "-g" in name else stage
-        remedies = ["`plan.py build` with a larger --lines"] + (
-            [f"a smaller {SPLITS[kind]} in settings.yml"] if kind in SPLITS
-            else [])
+        kind = "group" if GROUPED.search(name) else stage
+        remedy = "`plan.py build` with a larger --lines"
+        if kind in SPLITS:
+            remedy += (f", or a smaller {SPLITS[kind]} in settings.yml and then "
+                       "`plan.py build`")
         over.append(f"{kind} prompt {name} holds {count} lines, past the "
-                    f"line bound of {lines} -- {', or '.join(remedies)}")
+                    f"line bound of {lines} -- {remedy}")
     if over:
         raise SystemExit("\n".join(over))
     # @req- duwkrw
@@ -1537,13 +1539,14 @@ def describe(run):
     held = proposals(run)
     # @req+ REQ-73764817@hFqW_eXNgs3b obajkn
     criteria = stated(run, held)
-    built = state_held["proposals"]
-    now = {str(number): statement for number, statement, _, _ in held}
-    moved = sorted((number for number in set(built) | set(now)
-                    if number not in built or number not in now
-                    or built[number]["statement"] != now[number]
-                    or built[number].get("criteria")
-                    != criteria.get(number, [])), key=int)
+    was = {number: (spec["statement"],
+                    [_coverage.spoken(one) for one in spec.get("criteria", [])])
+           for number, spec in state_held["proposals"].items()}
+    now = {str(number): (statement, [_coverage.spoken(one)
+                                     for one in criteria.get(str(number), [])])
+           for number, statement, _, _ in held}
+    moved = sorted((number for number in was.keys() | now.keys()
+                    if was.get(number) != now.get(number)), key=int)
     if moved:
         raise SystemExit(
             f"proposal(s) {', '.join(moved)} differ from what the run was built "
