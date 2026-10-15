@@ -9,6 +9,8 @@ assessed:
   REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
   REQ-83939497: o4e6KsfHMIgpZNUMun5sxU_LTejAce5WMR5k_5XAUb4
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  rc7t2t: H-ZqfNhQKIjMQPcixspqXjOfYLOkBaSKQ5YpqZV_svA
 priority: medium
 relations:
   REQ-21373303: constrains
