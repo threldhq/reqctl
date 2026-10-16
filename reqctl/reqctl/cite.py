@@ -702,26 +702,25 @@ def spanned(path, name):
                           "cite lines of it with --from and --to")
     text = Path(path).read_bytes().decode().removeprefix(BOM)
     try:
-        tree = ast.parse(text.replace("\r", " "))
+        tree = ast.parse(text.replace("\r\n", "\n").replace("\r", " "))
     except SyntaxError as error:
         raise ReqctlError(f"{path}: not Python that parses ({error.msg}, line "
                           f"{error.lineno}) -- fix it, or cite lines of it with "
                           "--from and --to") from error
     # @req+ REQ-74702510@gU2X5OnlUbY3 6r4imu
     wanted = name.split(".")
-    found = []
 
     def walk(node, chain):
         for child in ast.iter_child_nodes(node):
             if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 here = [*chain, child.name]
                 if here[-len(wanted):] == wanted:
-                    found.append(child)
-                walk(child, here)
+                    yield child
+                yield from walk(child, here)
             else:
-                walk(child, chain)
+                yield from walk(child, chain)
 
-    walk(tree, [])
+    found = [*walk(tree, [])]
     # @req- 6r4imu
     # @req> REQ-94119327@SaWRJkHCFkNi yvjo27
     if not found:
@@ -736,7 +735,7 @@ def spanned(path, name):
                           "lines with --from and --to")
     # @req+ REQ-74702510@gU2X5OnlUbY3 5jbxzz
     node = found[0]
-    return min([node.lineno, *(above.lineno for above in node.decorator_list)]), node.end_lineno
+    return min(above.lineno for above in [node, *node.decorator_list]), node.end_lineno
     # @req- 5jbxzz
 
 

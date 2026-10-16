@@ -879,7 +879,7 @@ def cmd_tag(args):
         if args.first or args.last:
             raise ReqctlError("give each citation a --name or a --from and --to, not both")
         spans = [cite.spanned(args.path, name) for name in args.names]
-        args.first, args.last = [first for first, _ in spans], [last for _, last in spans]
+        args.first, args.last = map(list, zip(*spans))
     # @req> REQ-30061042@b7B9U8dkoUHI 6mhx6x
     if args.first is None and args.last is None:
         return _whole(tree, root, args)
