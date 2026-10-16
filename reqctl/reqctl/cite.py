@@ -704,10 +704,9 @@ def spanned(path, name):
     try:
         source = text.replace("\r\n", "\n").replace("\r", " ")
         tree = ast.parse(source)
-    except SyntaxError as error:
-        raise ReqctlError(f"{path}: not Python that parses ({error.msg}, line "
-                          f"{error.lineno}) -- fix it, or cite lines of it with "
-                          "--from and --to") from error
+    except (SyntaxError, RecursionError) as error:
+        raise ReqctlError(f"{path}: not Python that parses ({error}) -- fix it, or "
+                          "cite lines of it with --from and --to") from error
     # @req+ REQ-74702510@gU2X5OnlUbY3 6r4imu
     wanted = name.split(".")
 
@@ -718,7 +717,7 @@ def spanned(path, name):
                 if here[-len(wanted):] == wanted:
                     yield child
                 yield from walk(child, here)
-            else:
+            elif isinstance(child, (ast.stmt, ast.excepthandler, ast.match_case)):
                 yield from walk(child, chain)
 
     found = [*walk(tree, [])]
