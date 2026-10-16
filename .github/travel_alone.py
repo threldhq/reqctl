@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import posixpath
 import re
 import subprocess
 import sys
@@ -8,10 +9,12 @@ import yaml
 from reqctl import corpus
 
 LISTED = (corpus.CITATION_LIST,)
-# @req> REQ-43374441@UTw4zjM6nnr9 c6qh2i
+# @req> REQ-43374441@FrpNFcj-eNb_ c6qh2i
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
+COMPONENTS = f"{GOVERNED}{corpus.FOLDERS['data']}/plugin_components.yml"
+PLUGIN_FOLDERS = f"{GOVERNED}{corpus.FOLDERS['data']}/plugin_folders.yml"
 # @req> REQ-41600593@dauTiMee9rmb o3tsro
 STAMPED = re.compile(
     rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
@@ -25,7 +28,7 @@ def _git(*args):
     return done
 
 
-def without(ref, path, keys, digests=False):
+def without(ref, path, keys, digests=False, dropped=()):
     found = _git("show", f"{ref}:{path}")
     if found.returncode != 0:
         return ABSENT
@@ -36,7 +39,7 @@ def without(ref, path, keys, digests=False):
     if not isinstance(held, dict):
         return found.stdout
     kept = {key: value for key, value in held.items() if key not in keys}
-    # @req+ REQ-43374441@UTw4zjM6nnr9 burjli
+    # @req+ REQ-43374441@FrpNFcj-eNb_ burjli
     whole = kept.get(corpus.WHOLE_FILES)
     if digests and isinstance(whole, dict):
         kept[corpus.WHOLE_FILES] = {
@@ -45,12 +48,44 @@ def without(ref, path, keys, digests=False):
                     if isinstance(fields, dict) else fields)
             for cited, fields in whole.items()}
     # @req- burjli
+    # @req+ REQ-43374441@FrpNFcj-eNb_ jp54xx
+    held_entries = corpus.entries(kept)
+    if dropped and held_entries is not None:
+        kept["entries"] = {name: fields for name, fields in held_entries.items()
+                           if name not in dropped}
+    # @req- jp54xx
     return kept
 
 
-def only(base, path, keys, digests=False):
-    return (without(base, path, keys, digests)
-            == without("HEAD", path, keys, digests))
+def only(base, path, keys, digests=False, dropped=()):
+    return (without(base, path, keys, digests, dropped)
+            == without("HEAD", path, keys, digests, dropped))
+
+
+def entries_at(ref, path):
+    held = without(ref, path, ())
+    return (corpus.entries(held) or {}) if isinstance(held, dict) else {}
+
+
+def stated_paths(root, components):
+    return [root + path for fields in components.values() if isinstance(fields, dict)
+            for path in fields.get("paths") or [] if isinstance(path, str)
+            and posixpath.normpath(path).split("/")[0] not in ("", "..", ".")]
+
+
+def added_paths(fork):
+    was = entries_at(fork, COMPONENTS)
+    added = {name: fields for name, fields in entries_at("HEAD", COMPONENTS).items()
+             if name not in was}
+    root = (entries_at(fork, PLUGIN_FOLDERS).get("root") or {}).get("path")
+    if not isinstance(root, str) or not root.endswith("/"):
+        return added, [], []
+    return added, stated_paths(root, added), stated_paths(root, was)
+
+
+def covered(paths, file):
+    return any(file.startswith(path) if path.endswith("/") else file == path
+               for path in paths)
 
 
 def without_stamps(ref, path):
@@ -65,7 +100,7 @@ def repins_only(base, path):
     return was is not ABSENT and was == without_stamps("HEAD", path)
 
 
-# @req+ REQ-43374441@UTw4zjM6nnr9 qya7yo
+# @req+ REQ-43374441@FrpNFcj-eNb_ qya7yo
 def classify(base):
     found = _git("diff", "--no-renames", "--raw", "-z", f"{base}...HEAD")
     fork = _git("merge-base", base, "HEAD")
@@ -85,6 +120,12 @@ def classify(base):
                if only(fork, path, CARRIED, digests=True)]
               + [path for path in other
                  if textual[path] and repins_only(fork, path)])
+    added, paths, held = added_paths(fork) if COMPONENTS in governed else ({}, [], [])
+    loose = [path for path in other if path not in pinned]
+    if paths and loose and all(covered(paths, path) and not covered(held, path)
+                               for path in loose) and only(
+            fork, COMPONENTS, CARRIED, digests=True, dropped=added):
+        pinned += [COMPONENTS, *loose]
     return ([path for path in governed if path not in pinned],
             [path for path in other if path not in pinned], pinned)
 
@@ -92,8 +133,8 @@ def classify(base):
 def main(base):
     content, other, pinned = classify(base)
     for path in pinned:
-        print(f"pins or citation list only, travelling with what moved them: "
-              f"{path}")
+        print(f"pins, citation list or added plugin components only, travelling "
+              f"with what moved them: {path}")
     if not content or not other:
         return 0
     print("::error::this pull request changes requirements and other things; "
