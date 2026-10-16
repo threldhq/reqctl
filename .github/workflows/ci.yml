@@ -155,6 +155,11 @@ jobs:
         if: github.event_name != 'pull_request'
         run: python .github/guards/citations.py
 
+      - name: Cited values match the corpus
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: python .github/guards/cited_values.py
+
       - name: The repository holds no test
         run: python .github/guards/no_tests.py
 
