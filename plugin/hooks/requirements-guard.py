@@ -54,6 +54,7 @@ SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|g
 UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
 PARAMETER = re.compile(r"\$\{[^{}]*\}")
 EXPANSION = re.compile(r"\$(?:\{[^{}]*\}|\((?:[^()]|\([^()]*\))*\)|\w+|[@*#?$!-])|`[^`]*`")
+SINGLE_QUOTED = re.compile(r"(?<!\\)'_*'")
 ANSI_C = re.compile(r"\\.|(\$*)('_*')")
 ANSI_ESCAPE = re.compile(
     r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
@@ -332,6 +333,12 @@ PLUGIN_WRITE = (
     "Changing the reqctl plugin's own folder blocked: {target}\n"
     "The plugin changes through a reqctl release: edit its sources in the reqctl "
     "repository, then `claude plugin update reqctl@reqctl`."
+)
+# @req> REQ-59919160@eEBU6tuB77Dq z3p2ti
+PLUGIN_UNRESOLVED = (
+    "{target} blocked: the guard cannot tell where it writes, so it cannot rule out the reqctl "
+    "plugin's own folder.\n"
+    "Spell the path out, with no variable, substitution, glob or unresolved cd before it."
 )
 # @req> REQ-75038049@hXyFNmxx-SWy 6vfbgw
 ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
@@ -2246,6 +2253,18 @@ def reaches_plugin(word, cwd):
                              *(matches(path) if GLOB_CHAR.search(path) else ())))
 
 
+def literal_quotes(text):
+    kept = list(text)
+    for found in SINGLE_QUOTED.finditer(masked(text)):
+        kept[found.start() + 1:found.end() - 1] = "_" * (found.end() - found.start() - 2)
+    return "".join(kept)
+
+
+def plainly_plugin(text, here):
+    return names_plugin(text) or bool(here) and any(
+        reaches_plugin(word, here) for word in tokens_of(text) if not EXPANSION.search(word))
+
+
 def names_plugin(text):
     spelled = os.path.expandvars(text.replace("~", os.path.expanduser("~")))
     return any(root in spelled for root in PLUGIN_SPELLINGS)
@@ -2274,7 +2293,8 @@ def writes_plugin(said, here, whole):
     naming = [word for word in words if reaches_plugin(word, here)]
     if not naming and not names_plugin(said):
         return tool in WRITERS and (
-            any(EXPANSION.search(os.path.expandvars(word)) for word in called[1:])
+            any(EXPANSION.search(os.path.expandvars(word))
+                for word in invoked(tokens_of(literal_quotes(said)))[1:])
             or not here and any(not os.path.isabs(os.path.expanduser(word)) for word in operands))
     if tool in ("cd", "pushd"):
         return False
@@ -2322,10 +2342,13 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
     heres = {cwd}.union(*places)
     for found in REDIRECT_TARGET.finditer(masked(unquoted)):
         target = unquoted[found.start(1):found.end(1)]
+        if "&" in found.group() and re.fullmatch(r"\d+-?|-", target):
+            continue
         if (names_plugin(target) or EXPANSION.search(os.path.expandvars(target))
                 or "" in heres and not os.path.isabs(os.path.expanduser(target.strip()))
                 or any(reaches_plugin(word, here) for word in tokens_of(target) for here in heres)):
-            deny(PLUGIN_WRITE.format(target=unquoted[found.start():found.end()]))
+            deny((PLUGIN_WRITE if any(plainly_plugin(target, here) for here in heres)
+                  else PLUGIN_UNRESOLVED).format(target=unquoted[found.start():found.end()]))
     for pipeline, places_of in zip(pipelines, places):
         naming = [part for part, here in itertools.product(pipeline, places_of)
                   if names_plugin(heading(part)) or any(reaches_plugin(word, here)
@@ -2335,7 +2358,9 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
             if writes_plugin(said, here, unquoted) or naming and (running or part not in naming and not (
                     READ.search(said) or GIT_READ.search(said)
                     or SINK.search(said) and not SINK_WRITES.search(said))):
-                deny(PLUGIN_WRITE.format(target=said.strip()))
+                deny((PLUGIN_WRITE if any(plainly_plugin(heading(other), place) for other, place
+                                          in itertools.product(pipeline, places_of))
+                      else PLUGIN_UNRESOLVED).format(target=said.strip()))
 
 
 def names_corpus(part, cwd):
