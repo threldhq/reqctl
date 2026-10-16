@@ -1374,20 +1374,21 @@ def landings(subcommand, rest, place):
         return [("*", None)]
     if subcommand == "filter-branch":
         flags, operands = options(rest, FILTER_VALUES)
-        if any(name not in (*FILTER_VALUES, "-f", "--force", "--prune-empty", "--")
+        if any(name not in (*FILTER_VALUES, "-f", "--force", "--prune-empty", "--tags", "--")
                for name, _ in flags):
             return [("*", None)]
-        revisions = [part.lstrip("^").removeprefix("refs/heads/") for operand in operands
-                     for part in re.split(r"\.\.\.?", operand) if part]
-        return [(name, None) for name in revisions or [head_branch(place)]]
+        revisions = [part.lstrip("^").removeprefix("refs/").removeprefix("heads/")
+                     for operand in operands for part in re.split(r"\.\.\.?", operand) if part]
+        return [(head_branch(place) if name in ("HEAD", "@") else name, None)
+                for name in revisions or ([] if flagged(flags, "--tags") else ["HEAD"])]
     if subcommand == "remote":
-        if rest[:1] != ["update"]:
+        flags, operands = options(rest, ())
+        if operands[:1] != ["update"]:
             return []
-        flags, operands = options(rest[1:], ())
         known = (git_reads(["remote"], place) or "").split()
-        remotes = [remote for name in operands or known
+        remotes = [remote for name in operands[1:] or known
                    for remote in ([name] if name in known else (git_reads(
-                       ["config", "--get", f"remotes.{name}"], place) or "").split())]
+                       ["config", "--get-all", f"remotes.{name}"], place) or "").split())]
         return fetched(remotes, [], flags, place)
     if subcommand in ("fetch", "push"):
         flags, operands = options(rest, ("--depth", "--deepen", "--shallow-since",
