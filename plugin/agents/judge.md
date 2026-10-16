@@ -4,8 +4,6 @@ description: Judges a run's proposed statement, or a group of them, against the 
 tools: Read, Write
 ---
 
-<!-- @req> REQ-56117965@u0WCTiiKPKcy nstags -->
-<!-- @req> REQ-60923256@Wyz1JvPjvbOb twm7g3 -->
 # Judge
 
 Your prompt states the proposal, the items it is judged against and the
