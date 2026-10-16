@@ -702,7 +702,8 @@ def spanned(path, name):
                           "cite lines of it with --from and --to")
     text = Path(path).read_bytes().decode().removeprefix(BOM)
     try:
-        tree = ast.parse(text.replace("\r\n", "\n").replace("\r", " "))
+        source = text.replace("\r\n", "\n").replace("\r", " ")
+        tree = ast.parse(source)
     except SyntaxError as error:
         raise ReqctlError(f"{path}: not Python that parses ({error.msg}, line "
                           f"{error.lineno}) -- fix it, or cite lines of it with "
@@ -735,7 +736,12 @@ def spanned(path, name):
                           "lines with --from and --to")
     # @req+ REQ-74702510@gU2X5OnlUbY3 5jbxzz
     node = found[0]
-    return min(above.lineno for above in [node, *node.decorator_list]), node.end_lineno
+    if not node.decorator_list:
+        return node.lineno, node.end_lineno
+    first = node.decorator_list[0]
+    return max(token.start[0] for token in tokenize.generate_tokens(io.StringIO(source).readline)
+               if token.string == "@" and token.start < (first.lineno, first.col_offset)
+               ), node.end_lineno
     # @req- 5jbxzz
 
 
