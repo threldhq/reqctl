@@ -55,7 +55,7 @@ UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
 PARAMETER = re.compile(r"\$\{[^{}]*\}")
 EXPANSION = re.compile(r"\$(?:\{[^{}]*\}|\((?:[^()]|\([^()]*\))*\)|\w+|[@*#?$!-])|`[^`]*`")
 ANSI_C = re.compile(r"\\.|(\$*)('_*')")
-SED_LAST = re.compile(r"(?<=[',;{\s])\$!?[pdlnNPDq=](?=[;}\s']|$)")
+SED_PLAIN = re.compile(r"'(?:(?:(?:\d+|\$|/[^/']*/)(?:,(?:\d+|\$|/[^/']*/))?)?!?[pdlnNPDq=](?:;|(?=')))+'")
 ANSI_ESCAPE = re.compile(
     r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
 STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
@@ -338,7 +338,9 @@ PLUGIN_WRITE = (
 PLUGIN_UNRESOLVED = (
     "{target} blocked: the guard cannot tell where it writes, so it cannot rule out the reqctl "
     "plugin's own folder.\n"
-    "Spell the path out, with no variable, substitution, glob or unresolved cd before it."
+    "Spell the path out, with no variable, substitution, glob or unresolved cd before it. The "
+    "plugin itself changes through a reqctl release: edit its sources in the reqctl repository, "
+    "then `claude plugin update reqctl@reqctl`."
 )
 # @req> REQ-75038049@hXyFNmxx-SWy 6vfbgw
 ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
@@ -2256,9 +2258,8 @@ def reaches_plugin(word, cwd):
 def sed_addresses(text):
     kept = list(text)
     for found in ANSI_C.finditer(masked(text)):
-        if found[2]:
-            for last in SED_LAST.finditer(text, found.start(2), found.end(2)):
-                kept[last.start()] = "_"
+        if found[2] and SED_PLAIN.fullmatch(text, found.start(2), found.end(2)):
+            kept[found.start(2):found.end(2)] = found[2].replace("$", "_")
     return "".join(kept)
 
 
@@ -2342,9 +2343,7 @@ def search_operands(words):
 # @req> REQ-59919160@eEBU6tuB77Dq wxfbic
 def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
     heres = {cwd}.union(*places)
-    message = PLUGIN_WRITE if names_plugin(unquoted) or any(
-        plainly_plugin(heading(part), here) for pipeline, places_of in zip(pipelines, places)
-        for part, here in itertools.product(pipeline, places_of)) else PLUGIN_UNRESOLVED
+    offenders = []
     for found in REDIRECT_TARGET.finditer(masked(unquoted)):
         target = unquoted[found.start(1):found.end(1)]
         if "&" in found.group() and re.fullmatch(r"\d+-?|-", target):
@@ -2352,7 +2351,8 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
         if (names_plugin(target) or EXPANSION.search(os.path.expandvars(target))
                 or "" in heres and not os.path.isabs(os.path.expanduser(target.strip()))
                 or any(reaches_plugin(word, here) for word in tokens_of(target) for here in heres)):
-            deny(message.format(target=unquoted[found.start():found.end()]))
+            offenders.append((unquoted[found.start():found.end()],
+                              any(plainly_plugin(target, here) for here in heres)))
     for pipeline, places_of in zip(pipelines, places):
         naming = [part for part, here in itertools.product(pipeline, places_of)
                   if names_plugin(heading(part)) or any(reaches_plugin(word, here)
@@ -2362,7 +2362,10 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
             if writes_plugin(said, here, unquoted) or naming and (running or part not in naming and not (
                     READ.search(said) or GIT_READ.search(said)
                     or SINK.search(said) and not SINK_WRITES.search(said))):
-                deny(message.format(target=said.strip()))
+                offenders.append((said.strip(), plainly_plugin(said, here)))
+    if offenders:
+        target, plain = max(offenders, key=lambda offender: offender[1])
+        deny((PLUGIN_WRITE if plain else PLUGIN_UNRESOLVED).format(target=target))
 
 
 def names_corpus(part, cwd):
