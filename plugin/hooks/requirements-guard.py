@@ -1345,7 +1345,8 @@ def landings(subcommand, rest, place):
         ref = operands[0] if operands else ""
         if ref == "HEAD" and not flagged(flags, "--no-deref"):
             ref = "refs/heads/" + head_branch(place)
-        if flagged(flags, "-d", "--delete") or not ref.startswith("refs/heads/") or (
+        if flagged(flags, "-d", "--delete") or not ref.startswith("refs/heads/") and (
+                "$" not in ref and "`" not in ref) or (
                 operands[1:] and len(operands[1]) in (40, 64) and set(operands[1]) == {"0"}):
             return []
         return [(ref.removeprefix("refs/heads/"), operands[1] if operands[1:] else None)]
@@ -1393,7 +1394,9 @@ def landings(subcommand, rest, place):
                      if not part.startswith("^")]
         return [((git_reads(["rev-parse", "--symbolic-full-name", name], place) or name)
                  .strip().removeprefix("refs/heads/"), None)
-                for name in revisions or ([] if flagged(flags, "--tags") else ["HEAD"])]
+                for name in revisions or ([] if flagged(flags, "--tags") else ["HEAD"])] + [
+            move for name, value in flags if name == "--state-branch"
+            for move in landings("update-ref", [value], place)]
     if subcommand == "remote":
         flags, operands = options(rest, ())
         if operands[:1] == ["add"]:
@@ -1460,9 +1463,9 @@ BRANCH_KEEPS = ("-d", "-D", "--delete", "-l", "--list", "-u", "--set-upstream-to
 
 MOVERS = ("update-ref", "symbolic-ref", "branch", "checkout", "switch", "worktree", "fetch",
           "push", "reset", "merge", "pull", "fast-import", "filter-branch", "remote")
-FILTER_VALUES = ("--setup", "--subdirectory-filter", "--env-filter", "--tree-filter",
-                 "--index-filter", "--parent-filter", "--msg-filter", "--commit-filter",
-                 "--tag-name-filter", "--original", "-d", "--state-branch")
+FILTER_SCRIPTS = ("--setup", "--env-filter", "--tree-filter", "--index-filter",
+                  "--parent-filter", "--msg-filter", "--commit-filter", "--tag-name-filter")
+FILTER_VALUES = (*FILTER_SCRIPTS, "--subdirectory-filter", "--original", "-d", "--state-branch")
 
 
 def refuse_moving_default(words, here):
@@ -2084,6 +2087,11 @@ def scripts_within(words, here):
                                                          rest[at + 1:]))
                 for at, word in enumerate(rest) if word in FIND_RUNS]
     split = git_split(words)
+    # @req> REQ-76235768@1l5tlNlByWT6 2j3niw
+    if split and split[2] == "filter-branch":
+        scripts = [value for flag, value in itertools.pairwise(split[3]) if flag in FILTER_SCRIPTS]
+        top = scripts and git_sees(["rev-parse", "--show-toplevel"], located(words, here)).strip()
+        return [f"cd {shlex.quote(top)} && {script}" for script in scripts]
     if not split or any(split[2] in git_commands(kinds) for kinds in ("builtins", "main,others")):
         return []
     prefix, options, subcommand, args = split
