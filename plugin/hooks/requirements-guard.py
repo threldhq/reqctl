@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import difflib
 import fnmatch
 import functools
 import hashlib
@@ -2611,6 +2612,73 @@ def judge_citation_edit(tool, args, cwd):
         deny(f"{HAND_CITATION}\nIn {args.get('file_path') or args.get('notebook_path')}.")
 
 
+def reqctl_json(args, here):
+    try:
+        done = subprocess.run(["reqctl", "--json", *args], cwd=here, capture_output=True)
+        return json.loads(done.stdout)
+    except (OSError, ValueError):
+        return None
+
+
+def code_base(target):
+    held = [up for up in target.parents if (up / ".git").exists()]
+    return next((up for up in held if (up / "requirements").is_dir()), held[0] if held else None)
+
+
+# @req> REQ-97212636@WESMQpogO3Mc 5hyq4i
+def governed(statement):
+    criteria = statement.get("acceptance_criteria") or []
+    value = statement.get("value")
+    return "\n".join([
+        f"{statement['uid']}: {statement.get('text') or ''}".rstrip(),
+        *(f"  given {c.get('given')} / when {c.get('when')} / then {c.get('then')}"
+          for c in criteria if isinstance(c, dict)),
+        *([f"  value {', '.join(map(str, value)) if isinstance(value, list) else value}"
+           + (f" {statement['unit']}" if statement.get("unit") else "")]
+          if value is not None else [])])
+
+
+# @req> REQ-97212636@WESMQpogO3Mc 7mtqnh
+def governing(tool, args, cwd):
+    if tool not in ("Edit", "MultiEdit", "Write", "NotebookEdit"):
+        return None
+    before, after = (notebook_edited(args, cwd) if tool == "NotebookEdit"
+                     else edited(tool, args, cwd))
+    if not citations(before):
+        return None
+    target = Path(cwd, os.path.expanduser(args.get("file_path") or args.get("notebook_path") or "")
+                  ).resolve()
+    root = code_base(target)
+    traced = reqctl_json(["trace"], target.parent)
+    if root is None or not isinstance(traced, dict) or not isinstance(traced.get("citations"), list):
+        return (f"{target} holds statement citations, and reqctl could not be run to show "
+                "the statements they name -- run reqctl trace, then reqctl context UID")
+    old, new = before.split("\n"), after.split("\n")
+    changed, inserted = set(), set()
+    for op, first, last, _, _ in difflib.SequenceMatcher(None, old, new, autojunk=False).get_opcodes():
+        changed.update(range(first + 1, last + 1) if op in ("replace", "delete") else ())
+        inserted.update([first + 1] if op == "insert" else [])
+    relative = target.relative_to(root).as_posix()
+    addresses = list(dict.fromkeys(
+        c["address"] for c in traced["citations"] if c.get("path") == relative and (
+            changed & set(c["lines"]) or any(c["open"] < at <= c["close"] for at in inserted))))
+    if not addresses:
+        return None
+    found = reqctl_json(["context", *dict.fromkeys(a.partition(".")[0] for a in addresses)],
+                        target.parent)
+    held = {s.get("uid"): s for s in (found if isinstance(found, list) else [found])
+            if isinstance(s, dict)}
+    shown = []
+    for address in addresses:
+        uid, _, entry = address.partition(".")
+        statement = held.get(uid) or {"uid": uid, "text": "not readable through reqctl context"}
+        fields = (statement.get("entries") or {}).get(entry) if entry else None
+        shown.append(governed(statement) + (f"\n  entry {entry}: {json.dumps(fields)}"
+                                            if entry else ""))
+    return (f"This edit changes lines of {relative} that statement citations cover. "
+            "Read the code against what they name:\n" + "\n".join(shown))
+
+
 # @req> REQ-38099593@WZbBLy6bHv3j cebvfg
 def judge_citation_shell(raw):
     cmd = ESCAPE.sub("", raw)
@@ -2705,6 +2773,7 @@ def decide(data: dict) -> None:
             f"{owner}/{repo}" if all(isinstance(v, str) and v for v in (owner, repo)) else None)
 
     judge_citation_edit(tool, args, cwd)
+    shown = governing(tool, args, cwd)
     commands = [messageless(value) for value in named_paths(args, COMMAND_KEY)]
     # @req> REQ-75038049@hXyFNmxx-SWy hwgp36
     CALL["changes_environment"] = any(
@@ -2713,6 +2782,7 @@ def decide(data: dict) -> None:
     for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
+    return shown
 
 
 def main() -> None:
@@ -2726,9 +2796,18 @@ def main() -> None:
     # @req- mvehq6
     # @req+ REQ-51060455@Z5EVUURxm1nV 4gmqti
     try:
-        decide(data)
+        shown = decide(data)
     except Exception as error:
         deny(UNREADABLE.format(what=f"the call: judging it raised {type(error).__name__}"))
+    # @req> REQ-97212636@WESMQpogO3Mc v7dqys
+    if shown:
+        context = json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse",
+                                                     "additionalContext": shown}}).encode()
+        try:
+            while context:
+                context = context[os.write(1, context):]
+        except OSError:
+            pass
     sys.exit(0)
     # @req- 4gmqti
 
