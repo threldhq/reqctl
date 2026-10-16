@@ -1377,10 +1377,10 @@ def landings(subcommand, rest, place):
         if any(name not in (*FILTER_VALUES, "-f", "--force", "--prune-empty", "--tags", "--")
                for name, _ in flags):
             return [("*", None)]
-        revisions = [part for operand in operands
+        revisions = [part or "HEAD" for operand in operands
                      for part in (operand.split("...") if "..." in operand
                                   else operand.split("..")[-1:])
-                     if part and not part.startswith("^")]
+                     if not part.startswith("^")]
         return [((git_reads(["rev-parse", "--symbolic-full-name", name], place) or name)
                  .strip().removeprefix("refs/heads/"), None)
                 for name in revisions or ([] if flagged(flags, "--tags") else ["HEAD"])]
@@ -1390,9 +1390,9 @@ def landings(subcommand, rest, place):
             return []
         known = (git_reads(["remote"], place) or "").split()
         remotes = [remote for name in operands[1:] or known
-                   for remote in ([name] if name in known else (git_reads(
-                       ["config", "--get-all", f"remotes.{name}"], place) or "").split()
-                       or (known if name == "default" else []))]
+                   for remote in ((git_reads(["config", "--get-all", f"remotes.{name}"], place)
+                                   or "").split() or ([name] if name in known else known
+                                                      if name == "default" else []))]
         return fetched(remotes, [], flags, place)
     if subcommand in ("fetch", "push"):
         flags, operands = options(rest, ("--depth", "--deepen", "--shallow-since",
