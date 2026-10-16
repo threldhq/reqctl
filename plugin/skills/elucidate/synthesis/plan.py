@@ -290,9 +290,13 @@ def written(out, shape):
 
 
 def spawn(run, folder, name, label, shape, held):
+    # @req> REQ-91853430@CiXLnCezOJmV zzjndo
+    # @req> REQ-99520421@EA982CV9V8L5 rqztd7
     return {"label": label, "path": str(run / "prompts" / folder / f"{name}.md"),
             "out": str(run / "returns" / folder / f"{name}.json"),
-            "schema": shape, **held}
+            "schema": shape,
+            "agent": registered("recall" if folder == "recall" else "judge"),
+            **held}
 
 
 def inline(label, prompt, shape, kind, held):

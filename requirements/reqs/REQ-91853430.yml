@@ -12,6 +12,8 @@ assessed:
   elucidate_agents.judge: Uzv_iAqsRki5GtUGmeeOwcpyTwKSqQ_vLXor5Ig0e0o
   elucidate_agents.recall: 3zTw1VvVnPM494HiaVfhXh8r6e79m-mzpbSJNEw29Sc
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  zzjndo: 9wK2Pur6HHZvPWiRwANOOcBS7ny3OGEMyXAdk0jTQW0
 priority: medium
 relations:
   REQ-29203000: constrains
