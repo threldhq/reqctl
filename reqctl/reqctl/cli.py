@@ -506,6 +506,9 @@ def _behind(row, data):
 
 # @req> REQ-24608716@rrTjNN2Ay0D0 o2outx
 def _pins(store, past, binder, addresses):
+    # @req> REQ-81493991@71cbxqAtqZTk dqf5kb
+    if binder.data.get("status") in _validate.RETIRED:
+        return {"suspect": False, "pins": []}
     pins = corpus.mapping(binder.data, "assessed")
     held = [{"address": address, "pinned": pins.get(address),
              **past.pinned(bound.uid, bound.data, rest, pins.get(address))}

@@ -717,6 +717,9 @@ def _assessed(uid, data, records, canonical, known, past):
         problems.append(
             f"{uid}: pins {target}, which is neither related nor referenced"
         )
+    # @req> REQ-81493991@71cbxqAtqZTk w5qzvp
+    if data.get("status") in RETIRED:
+        return problems
     for target in sorted(wanted):
         item_uid, rest = corpus.split_address(target)
         stamped = canonical.get(item_uid, item_uid)
