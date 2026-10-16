@@ -700,27 +700,25 @@ def spanned(path, name):
     if Path(path).suffix != ".py":
         raise ReqctlError(f"{path}: {name} names a definition only in a .py file -- "
                           "cite lines of it with --from and --to")
-    text = Path(path).read_bytes().decode().removeprefix(BOM)
+    source = Path(path).read_bytes().decode().removeprefix(BOM).replace("\r\n", "\n").replace("\r", " ")
     try:
-        source = text.replace("\r\n", "\n").replace("\r", " ")
         tree = ast.parse(source)
-    except (SyntaxError, RecursionError) as error:
+    except (SyntaxError, RecursionError, MemoryError) as error:
         raise ReqctlError(f"{path}: not Python that parses ({error}) -- fix it, or "
                           "cite lines of it with --from and --to") from error
     # @req+ REQ-74702510@gU2X5OnlUbY3 6r4imu
     wanted = name.split(".")
-
-    def walk(node, chain):
+    found, unwalked = [], [(tree, [])]
+    while unwalked:
+        node, chain = unwalked.pop()
         for child in ast.iter_child_nodes(node):
             if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 here = [*chain, child.name]
                 if here[-len(wanted):] == wanted:
-                    yield child
-                yield from walk(child, here)
+                    found.append(child)
+                unwalked.append((child, here))
             elif isinstance(child, (ast.stmt, ast.excepthandler, ast.match_case)):
-                yield from walk(child, chain)
-
-    found = [*walk(tree, [])]
+                unwalked.append((child, chain))
     # @req- 6r4imu
     # @req> REQ-94119327@SaWRJkHCFkNi yvjo27
     if not found:
@@ -730,7 +728,7 @@ def spanned(path, name):
     # @req> REQ-73249972@0ct6LD_NhZts 6qhks7
     if len(found) > 1:
         raise ReqctlError(f"{path}: {name} names more than one definition, at lines "
-                          f"{', '.join(str(node.lineno) for node in found)} -- join "
+                          f"{', '.join(str(line) for line in sorted(node.lineno for node in found))} -- join "
                           "the names enclosing the one meant with dots, or cite "
                           "lines with --from and --to")
     # @req+ REQ-74702510@gU2X5OnlUbY3 5jbxzz
