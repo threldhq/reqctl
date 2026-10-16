@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: the Claude Code plugin as shipped
+  then: it holds a file of its own for the agent named recall and one for the agent
+    named judge
+  when: the folder named agents at its root is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
+  elucidate_agents.judge: Uzv_iAqsRki5GtUGmeeOwcpyTwKSqQ_vLXor5Ig0e0o
+  elucidate_agents.recall: 3zTw1VvVnPM494HiaVfhXh8r6e79m-mzpbSJNEw29Sc
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall place each agent that the Claude Code plugin ships under the
+  name of the ${elucidate_agents.recall} or the ${elucidate_agents.judge} [entry](entry)
+  in a file of its own, in the folder named agents at the root of the Claude Code
+  plugin.
+type: functional
+verification: inspection
