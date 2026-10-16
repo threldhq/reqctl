@@ -1,3 +1,4 @@
+import ast
 import difflib
 import functools
 import io
@@ -692,6 +693,53 @@ def whole(path, text):
     return corpus.digest(held if held is not None
                          else [line.rstrip("\r\n") for line in _feed_lines(text)])
 # @req- 2l4bmd
+
+
+def spanned(path, name):
+    # @req> REQ-94119327@SaWRJkHCFkNi gcrrhf
+    if Path(path).suffix != ".py":
+        raise ReqctlError(f"{path}: {name} names a definition only in a .py file -- "
+                          "cite lines of it with --from and --to")
+    source = Path(path).read_bytes().decode().removeprefix(BOM).replace("\r\n", "\n").replace("\r", " ")
+    try:
+        tree = ast.parse(source)
+    except (SyntaxError, RecursionError, MemoryError) as error:
+        raise ReqctlError(f"{path}: not Python that parses ({error}) -- fix it, or "
+                          "cite lines of it with --from and --to") from error
+    # @req+ REQ-74702510@gU2X5OnlUbY3 6r4imu
+    wanted = name.split(".")
+    found, unwalked = [], [(tree, [])]
+    while unwalked:
+        node, chain = unwalked.pop()
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                here = [*chain, child.name]
+                if here[-len(wanted):] == wanted:
+                    found.append(child)
+                unwalked.append((child, here))
+            elif isinstance(child, (ast.stmt, ast.excepthandler, ast.match_case)):
+                unwalked.append((child, chain))
+    # @req- 6r4imu
+    # @req> REQ-94119327@SaWRJkHCFkNi yvjo27
+    if not found:
+        raise ReqctlError(f"{path}: no function, class or method is named {name} -- "
+                          "name one the file defines, joining enclosing names with "
+                          "dots, or cite lines with --from and --to")
+    # @req> REQ-73249972@0ct6LD_NhZts 6qhks7
+    if len(found) > 1:
+        raise ReqctlError(f"{path}: {name} names more than one definition, at lines "
+                          f"{', '.join(str(line) for line in sorted(node.lineno for node in found))} -- join "
+                          "the names enclosing the one meant with dots, or cite "
+                          "lines with --from and --to")
+    # @req+ REQ-74702510@gU2X5OnlUbY3 5jbxzz
+    node = found[0]
+    if not node.decorator_list:
+        return node.lineno, node.end_lineno
+    first = node.decorator_list[0]
+    return max(token.start[0] for token in tokenize.generate_tokens(io.StringIO(source).readline)
+               if token.string == "@" and token.start < (first.lineno, first.col_offset)
+               ), node.end_lineno
+    # @req- 5jbxzz
 
 
 def _rest(text, citation):
