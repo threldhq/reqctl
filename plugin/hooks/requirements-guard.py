@@ -2656,20 +2656,29 @@ def governing(tool, args, cwd):
     trusted = root is not None and root == code_base(
         Path(os.environ.get("CLAUDE_PROJECT_DIR") or cwd).resolve())
     traced = reqctl_json(["trace"], target.parent) if trusted else None
-    if not isinstance(traced, dict) or not isinstance(traced.get("citations"), list):
+    relative = target.relative_to(root).as_posix() if trusted else ""
+    cited = ([c for c in traced["citations"] if isinstance(c, dict) and c.get("path") == relative]
+             if isinstance(traced, dict) and isinstance(traced.get("citations"), list) else None)
+    if cited is None or not all(
+            isinstance(c.get("address"), str) and isinstance(c.get("lines"), list)
+            and isinstance(c.get("open"), int) and isinstance(c.get("close"), int) for c in cited):
         return (f"{target} holds statement citations, and reqctl could not be run to show "
                 "the statements they name -- run reqctl trace, then reqctl context UID")
-    old, new = before.split("\n"), after.split("\n")
+    old, new = before.split("\n"), after.replace("\r\n", "\n").split("\n")
+    head = next((at for at, (was, now) in enumerate(zip(old, new)) if was != now),
+                min(len(old), len(new)))
+    tail = next((at for at, (was, now) in enumerate(zip(old[head:][::-1], new[head:][::-1]))
+                 if was != now), min(len(old), len(new)) - head)
     changed, inserted = set(), set()
-    for op, first, last, _, _ in difflib.SequenceMatcher(None, old, new, autojunk=False).get_opcodes():
+    for op, first, last, _, _ in difflib.SequenceMatcher(
+            None, old[head:len(old) - tail], new[head:len(new) - tail]).get_opcodes():
         if op == "insert":
-            inserted.add(first + 1)
+            inserted.add(head + first + 1)
         elif op != "equal":
-            changed.update(range(first + 1, last + 1))
-    relative = target.relative_to(root).as_posix()
+            changed.update(range(head + first + 1, head + last + 1))
     addresses = list(dict.fromkeys(
-        c["address"] for c in traced["citations"] if c.get("path") == relative and (
-            changed & set(c["lines"]) or any(c["open"] < at <= c["close"] for at in inserted))))
+        c["address"] for c in cited
+        if changed & set(c["lines"]) or any(c["open"] < at <= c["close"] for at in inserted)))
     if not addresses:
         return None
     found = reqctl_json(["context", *dict.fromkeys(a.partition(".")[0] for a in addresses)],
