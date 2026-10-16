@@ -2259,12 +2259,12 @@ def sed_addresses(text):
     kept = list(text)
     for found in ANSI_C.finditer(masked(text)):
         if found[2] and SED_PLAIN.fullmatch(text, found.start(2), found.end(2)):
-            kept[found.start(2):found.end(2)] = found[2].replace("$", "_")
+            kept[found.start(2):found.end(2)] = found[2]
     return "".join(kept)
 
 
 def plainly_plugin(text, here):
-    return names_plugin(text) or here and any(
+    return names_plugin(text) or bool(here) and any(
         reaches_plugin(word, here) for word in tokens_of(text) if not EXPANSION.search(word))
 
 
@@ -2297,7 +2297,8 @@ def writes_plugin(said, here, whole):
     if not naming and not names_plugin(said):
         return tool in WRITERS and (
             any(EXPANSION.search(os.path.expandvars(word))
-                for word in invoked(tokens_of(sed_addresses(said) if tool == "sed" else said))[1:])
+                for word in invoked(tokens_of(sed_addresses(said) if tool == "sed"
+                                              and not STDIN_ARGUMENTS.search(said) else said))[1:])
             or not here and any(not os.path.isabs(os.path.expanduser(word)) for word in operands))
     if tool in ("cd", "pushd"):
         return False
@@ -2362,7 +2363,8 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
             if writes_plugin(said, here, unquoted) or naming and (running or part not in naming and not (
                     READ.search(said) or GIT_READ.search(said)
                     or SINK.search(said) and not SINK_WRITES.search(said))):
-                offenders.append((said.strip(), plainly_plugin(said, here)))
+                offenders.append((said.strip(), any(plainly_plugin(heading(other), place) for other, place
+                                                    in itertools.product(pipeline, places_of))))
     if offenders:
         target, plain = max(offenders, key=lambda offender: offender[1])
         deny((PLUGIN_WRITE if plain else PLUGIN_UNRESOLVED).format(target=target))
