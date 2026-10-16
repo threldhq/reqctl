@@ -8,6 +8,8 @@ ENDS = {"exit", "_exit"}
 ENDING = {"abort", "kill", "killpg", "execl", "execle", "execlp",
           "execlpe", "execv", "execve", "execvp", "execvpe"}
 VALUES = {"quit", "SystemExit"}
+TAKEN = ENDS | ENDING
+NAMED = TAKEN | VALUES | {"error"}
 
 faults, scanned, admitted = [], 0, 0
 for path in sorted(HOOKS.rglob("*.py")):
@@ -32,17 +34,20 @@ for path in sorted(HOOKS.rglob("*.py")):
         at = f"{path.relative_to(HOOKS)}:{getattr(node, 'lineno', 0)}: "
         if isinstance(node, ast.ImportFrom):
             for alias in node.names:
-                if alias.name == "*" or alias.name in ENDS | ENDING | VALUES:
+                if alias.name == "*" or alias.name in NAMED:
                     faults.append(f"{at}imports {alias.name} from {node.module}; "
                                   "a hook decides with sys.exit(0) or deny()")
         named = (node.attr if isinstance(node, ast.Attribute)
                  else node.id if isinstance(node, ast.Name) else None)
-        if named in VALUES or named in ENDS and isinstance(node, ast.Name):
+        if named in VALUES or (named in ENDS and isinstance(node, ast.Name)):
             faults.append(f"{at}{named} is not the hook's; a hook decides with "
                           "sys.exit(0) or deny()")
-        elif named in ENDS | ENDING and id(node) not in called:
+        elif named in TAKEN and id(node) not in called:
             faults.append(f"{at}{named} taken as a value; call sys.exit(0) or "
                           "deny() where the hook decides")
+        if isinstance(node, ast.Constant) and node.value in NAMED:
+            faults.append(f"{at}{node.value!r} names an exit; call sys.exit(0) "
+                          "or deny() where the hook decides")
         if not isinstance(node, ast.Call):
             continue
         func = node.func
@@ -51,8 +56,7 @@ for path in sorted(HOOKS.rglob("*.py")):
         status = (args[0] if len(args) == 1 and not node.keywords
                   and type(args[0]) is int else None)
         if isinstance(func, ast.Name) and func.id == "getattr" and (
-                len(args) < 2 or not isinstance(args[1], str)
-                or args[1] in ENDS | ENDING | VALUES | {"error"}):
+                len(args) < 2 or not isinstance(args[1], str)):
             faults.append(f"{at}a getattr the guard cannot tell from an exit; "
                           "name the attribute outright")
         if not isinstance(func, ast.Attribute):

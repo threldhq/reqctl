@@ -17,8 +17,9 @@ def carried(node):
 
 
 def keyed(node):
-    keys = [key.value if isinstance(key, ast.Constant) else None for key in node.keys]
-    return dict(zip(keys, node.values))
+    return {key.value if isinstance(key, ast.Constant)
+            else f"[{ast.unparse(key) if key else '**' + ast.unparse(value)}]": value
+            for key, value in zip(node.keys, node.values)}
 
 
 def compared(where, entry, fields, stated):
@@ -63,16 +64,21 @@ def faults(citations, entries):
                     and node.end_lineno <= citation["last"]):
                 continue
             held = keyed(node)
-            if citation["entry"]:
-                if citation["entry"] in stated and set(held) & set(stated[citation["entry"]]):
-                    found.extend(compared(where, citation["entry"], node,
-                                          stated[citation["entry"]]))
+            entry = citation["entry"]
+            if entry:
+                if entry in stated and held.keys() & stated[entry].keys():
+                    found.extend(compared(where, entry, node, stated[entry]))
                 continue
-            for entry, fields in held.items():
-                if entry in stated and isinstance(fields, ast.Dict):
-                    found.extend(compared(where, entry, fields, stated[entry]))
-                elif entry in stated:
-                    found.append(f"{where} carries {entry} as "
+            if not held.keys() & stated.keys():
+                continue
+            for name, fields in held.items():
+                if name not in stated:
+                    found.append(f"{where} carries {name!r}, an entry the "
+                                 f"corpus does not state for {citation['uid']}")
+                elif isinstance(fields, ast.Dict):
+                    found.extend(compared(where, name, fields, stated[name]))
+                else:
+                    found.append(f"{where} carries {name} as "
                                  f"{ast.unparse(fields)!r} -- write its "
                                  "fields as a dict the build can compare")
         # @req- jlm6mf
