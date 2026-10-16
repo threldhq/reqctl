@@ -67,16 +67,20 @@ def entries_at(ref, path):
     return (corpus.entries(held) or {}) if isinstance(held, dict) else {}
 
 
+def stated_paths(root, components):
+    return [root + path for fields in components.values() if isinstance(fields, dict)
+            for path in fields.get("paths") or [] if isinstance(path, str)
+            and posixpath.normpath(path).split("/")[0] not in ("", "..", ".")]
+
+
 def added_paths(fork):
     was = entries_at(fork, COMPONENTS)
     added = {name: fields for name, fields in entries_at("HEAD", COMPONENTS).items()
              if name not in was}
-    root = (entries_at("HEAD", PLUGIN_FOLDERS).get("root") or {}).get("path")
+    root = (entries_at(fork, PLUGIN_FOLDERS).get("root") or {}).get("path")
     if not isinstance(root, str) or not root.endswith("/"):
-        return added, []
-    return added, [root + path for fields in added.values() if isinstance(fields, dict)
-                   for path in fields.get("paths") or [] if isinstance(path, str)
-                   and posixpath.normpath(path).split("/")[0] not in ("", "..", ".")]
+        return added, [], []
+    return added, stated_paths(root, added), stated_paths(root, was)
 
 
 def covered(paths, file):
@@ -116,9 +120,10 @@ def classify(base):
                if only(fork, path, CARRIED, digests=True)]
               + [path for path in other
                  if textual[path] and repins_only(fork, path)])
-    added, paths = added_paths(fork) if COMPONENTS in governed else ({}, [])
+    added, paths, held = added_paths(fork) if COMPONENTS in governed else ({}, [], [])
     loose = [path for path in other if path not in pinned]
-    if paths and loose and all(covered(paths, path) for path in loose) and only(
+    if paths and loose and all(covered(paths, path) and not covered(held, path)
+                               for path in loose) and only(
             fork, COMPONENTS, CARRIED, digests=True, dropped=added):
         pinned += [COMPONENTS, *loose]
     return ([path for path in governed if path not in pinned],
