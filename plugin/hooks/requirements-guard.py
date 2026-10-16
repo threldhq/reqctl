@@ -1301,7 +1301,8 @@ def commit_of(target, place):
 
 def fetched(remotes, specs, flags, place):
     moves = []
-    for remote in remotes:
+    for remote in [member for named in remotes for member in [named, *(git_reads(
+            ["config", "--get-all", f"remotes.{named}"], place) or "").split()]]:
         for spec in specs or (git_reads(["config", "--get-all", f"remote.{remote}.fetch"],
                                         place) or "").split():
             src, _, dst = spec.partition(":")
@@ -1386,6 +1387,9 @@ def landings(subcommand, rest, place):
                 for name in revisions or ([] if flagged(flags, "--tags") else ["HEAD"])]
     if subcommand == "remote":
         flags, operands = options(rest, ())
+        if operands[:1] == ["add"]:
+            return [("*", None)] if flagged(flags, "-f", "--fetch") and flagged(
+                [flag for flag in flags if flag[1] != "push"], "--mirror") else []
         if operands[:1] != ["update"]:
             return []
         known = (git_reads(["remote"], place) or "").split()
@@ -1468,6 +1472,8 @@ def refuse_moving_default(words, here):
     branch = default.strip().removeprefix("origin/")
     stands = git_reads(["rev-parse", "--verify", "-q", f"refs/heads/{branch}"], place)
     for name, target in moves:
+        if "@{" in name:
+            name = (git_reads(["check-ref-format", "--branch", name], place) or "*").strip()
         if "$" not in name and "`" not in name and not fnmatch.fnmatchcase(branch, name):
             continue
         commit = commit_of(target, place)
