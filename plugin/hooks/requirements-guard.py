@@ -2347,7 +2347,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
     offenders = []
     for found in REDIRECT_TARGET.finditer(masked(unquoted)):
         target = unquoted[found.start(1):found.end(1)]
-        if "&" in found.group() and re.fullmatch(r"\d+-?|-", target):
+        if "&" in found.group() and re.fullmatch(r"[0-9]+-?|-", target):
             continue
         if (names_plugin(target) or EXPANSION.search(os.path.expandvars(target))
                 or "" in heres and not os.path.isabs(os.path.expanduser(target.strip()))
