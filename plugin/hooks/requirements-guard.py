@@ -2614,14 +2614,18 @@ def judge_citation_edit(tool, args, cwd):
 
 def reqctl_json(args, here):
     try:
-        done = subprocess.run(["reqctl", "--json", *args], cwd=here, capture_output=True)
+        done = subprocess.run(
+            ["reqctl", "--json", *args], cwd=here, capture_output=True,
+            timeout=max(DEADLINE - time.monotonic(), 0.001),
+            env={**os.environ, "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.fsmonitor",
+                 "GIT_CONFIG_VALUE_0": "false"})
         return json.loads(done.stdout)
-    except (OSError, ValueError):
+    except (OSError, ValueError, subprocess.SubprocessError):
         return None
 
 
 def code_base(target):
-    held = [up for up in target.parents if (up / ".git").exists()]
+    held = [up for up in [target, *target.parents] if (up / ".git").exists()]
     return next((up for up in held if (up / "requirements").is_dir()), held[0] if held else None)
 
 
@@ -2649,15 +2653,19 @@ def governing(tool, args, cwd):
     target = Path(cwd, os.path.expanduser(args.get("file_path") or args.get("notebook_path") or "")
                   ).resolve()
     root = code_base(target)
-    traced = reqctl_json(["trace"], target.parent)
-    if root is None or not isinstance(traced, dict) or not isinstance(traced.get("citations"), list):
+    trusted = root is not None and root == code_base(
+        Path(os.environ.get("CLAUDE_PROJECT_DIR") or cwd).resolve())
+    traced = reqctl_json(["trace"], target.parent) if trusted else None
+    if not isinstance(traced, dict) or not isinstance(traced.get("citations"), list):
         return (f"{target} holds statement citations, and reqctl could not be run to show "
                 "the statements they name -- run reqctl trace, then reqctl context UID")
     old, new = before.split("\n"), after.split("\n")
     changed, inserted = set(), set()
     for op, first, last, _, _ in difflib.SequenceMatcher(None, old, new, autojunk=False).get_opcodes():
-        changed.update(range(first + 1, last + 1) if op in ("replace", "delete") else ())
-        inserted.update([first + 1] if op == "insert" else [])
+        if op == "insert":
+            inserted.add(first + 1)
+        elif op != "equal":
+            changed.update(range(first + 1, last + 1))
     relative = target.relative_to(root).as_posix()
     addresses = list(dict.fromkeys(
         c["address"] for c in traced["citations"] if c.get("path") == relative and (
