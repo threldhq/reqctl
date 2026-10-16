@@ -9,8 +9,9 @@ ENDING = {"abort", "kill", "killpg", "execl", "execle", "execlp",
           "execlpe", "execv", "execve", "execvp", "execvpe", "fexecve"}
 VALUES = {"quit", "SystemExit"}
 TAKEN = ENDS | ENDING
-REFUSED = ENDING | {"error", "parse_args", "parse_known_args"}
-NAMED = TAKEN | VALUES | REFUSED
+REFUSED = ENDING | {"error", "parse_args", "parse_known_args",
+                    "parse_intermixed_args", "parse_known_intermixed_args"}
+NAMED = ENDS | VALUES | REFUSED
 
 faults, scanned, admitted = [], 0, 0
 for path in sorted(HOOKS.rglob("*.py")):

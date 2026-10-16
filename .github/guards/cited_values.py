@@ -2,6 +2,7 @@
 import argparse
 import ast
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -23,6 +24,10 @@ def keyed(node):
             for key, value in zip(node.keys, node.values)}
 
 
+def canonical(value):
+    return json.dumps(value, sort_keys=True, default=repr)
+
+
 def compared(where, entry, fields, stated):
     # @req> GUARD-21296330@1vKKetZd35C0 3fxisb
     for field, node in keyed(fields).items():
@@ -34,8 +39,7 @@ def compared(where, entry, fields, stated):
         elif field not in stated:
             yield (f"{where} carries {entry}.{field} {value!r}, a field the "
                    "corpus does not state for that entry")
-        elif json.dumps(value, sort_keys=True, default=repr) != json.dumps(
-                stated[field], sort_keys=True, default=repr):
+        elif canonical(value) != canonical(stated[field]):
             yield (f"{where} carries {entry}.{field} {value!r}, the corpus "
                    f"states {stated[field]!r}")
 
@@ -95,12 +99,22 @@ def main():
     if not isinstance(listed, dict) or "items" not in listed:
         raise SystemExit(f"cannot read the data items: {listed}")
     data = {item["uid"] for item in listed["items"]}
-    cited = sorted({row["uid"] for row in trace["citations"]} & data)
+    citations = trace["citations"]
+    # @req+ GUARD-21296330@1vKKetZd35C0 ijk324
+    base = os.environ.get("BASE_REF", "")
+    if base:
+        changed = read("compare", "--base", f"origin/{base}")
+        if not isinstance(changed, dict) or "citations" not in changed:
+            raise SystemExit(f"cannot compare against origin/{base}: {changed}")
+        touched = {row["id"] for row in changed["citations"]
+                   if row["state"] != ["deleted"]}
+        citations = [row for row in citations if row["id"] in touched]
+    # @req- ijk324
+    cited = sorted({row["uid"] for row in citations} & data)
     held = read("context", *cited) if cited else []
     if not isinstance(held, list):
         raise SystemExit(f"cannot read context: {held}")
-    found = faults(trace["citations"],
-                   {item["uid"]: item["entries"] for item in held})
+    found = faults(citations, {item["uid"]: item["entries"] for item in held})
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0
