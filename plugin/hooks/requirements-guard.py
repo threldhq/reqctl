@@ -1335,7 +1335,8 @@ def landings(subcommand, rest, place):
         ref = operands[0] if operands else ""
         if ref == "HEAD" and not flagged(flags, "--no-deref"):
             ref = "refs/heads/" + head_branch(place)
-        if flagged(flags, "-d", "--delete") or not ref.startswith("refs/heads/") or (
+        if flagged(flags, "-d", "--delete") or not ref.startswith("refs/heads/") and (
+                "$" not in ref and "`" not in ref) or (
                 operands[1:] and len(operands[1]) in (40, 64) and set(operands[1]) == {"0"}):
             return []
         return [(ref.removeprefix("refs/heads/"), operands[1] if operands[1:] else None)]
