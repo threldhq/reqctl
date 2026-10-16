@@ -29,8 +29,8 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   2j3niw: 2g60Uarqtu58pCeTGfQX8CaxGy3O2vVok_KguNF65eQ
-  amejii: umvhKhhhhaxNecJ5SE0gpWlj5y9I4g4bo9fYXh5Z50U
-  nahqvl: gS9GLcJYiRwHSkVDwqSlbCR7A4z5SAA8NaMJEfri7Yw
+  amejii: JFO3dX-skQ-E7F8pL2KHewdY9en660KTUI4yI5ve5kA
+  nahqvl: gngUvbVrU0tzFbBAJ8IO0tTlXAAIuelE_pNwsEqSr-4
 priority: medium
 relations:
   REQ-36925311: depends_on
