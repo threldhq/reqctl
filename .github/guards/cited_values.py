@@ -6,7 +6,7 @@ import os
 import sys
 from pathlib import Path
 
-from citations import read
+from citations import read, touched
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -103,18 +103,16 @@ def main():
     # @req+ GUARD-21296330@1vKKetZd35C0 ijk324
     base = os.environ.get("BASE_REF", "")
     if base:
-        changed = read("compare", "--base", f"origin/{base}")
-        if not isinstance(changed, dict) or "citations" not in changed:
-            raise SystemExit(f"cannot compare against origin/{base}: {changed}")
-        touched = {row["id"] for row in changed["citations"]
-                   if row["state"] != ["deleted"]}
-        citations = [row for row in citations if row["id"] in touched]
+        changed = touched(base, [(row["id"], row["path"],
+                                  f"{row['address']}@{row['pinned']} {row['id']}", None)
+                                 for row in citations if row["uid"] in data])
+        citations = [row for row in citations if row["id"] in changed]
     # @req- ijk324
     cited = sorted({row["uid"] for row in citations} & data)
-    held = read("context", *cited) if cited else []
-    if not isinstance(held, list):
-        raise SystemExit(f"cannot read context: {held}")
-    found = faults(citations, {item["uid"]: item["entries"] for item in held})
+    contexts = read("context", *cited) if cited else []
+    if not isinstance(contexts, list):
+        raise SystemExit(f"cannot read context: {contexts}")
+    found = faults(citations, {item["uid"]: item["entries"] for item in contexts})
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0

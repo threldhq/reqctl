@@ -4,14 +4,14 @@ import sys
 from pathlib import Path
 
 HOOKS = Path(__file__).resolve().parents[2] / "plugin" / "hooks"
-ENDS = {"exit", "_exit"}
-ENDING = {"abort", "kill", "killpg", "execl", "execle", "execlp",
-          "execlpe", "execv", "execve", "execvp", "execvpe", "fexecve"}
+EXITS = {"exit", "_exit"}
+TERMINATORS = {"abort", "kill", "killpg", "execl", "execle", "execlp",
+               "execlpe", "execv", "execve", "execvp", "execvpe", "fexecve"}
 VALUES = {"quit", "SystemExit"}
-TAKEN = ENDS | ENDING
-REFUSED = ENDING | {"error", "parse_args", "parse_known_args",
-                    "parse_intermixed_args", "parse_known_intermixed_args"}
-NAMED = ENDS | VALUES | REFUSED
+TAKEN = EXITS | TERMINATORS
+REFUSED = TERMINATORS | {"error", "parse_args", "parse_known_args",
+                         "parse_intermixed_args", "parse_known_intermixed_args"}
+NAMED = EXITS | VALUES | REFUSED
 
 faults, scanned, admitted = [], 0, 0
 for path in sorted(HOOKS.rglob("*.py")):
@@ -41,7 +41,7 @@ for path in sorted(HOOKS.rglob("*.py")):
                                   "a hook decides with sys.exit(0) or deny()")
         named = (node.attr if isinstance(node, ast.Attribute)
                  else node.id if isinstance(node, ast.Name) else None)
-        if named in VALUES or (named in ENDS and isinstance(node, ast.Name)):
+        if named in VALUES or (named in EXITS and isinstance(node, ast.Name)):
             faults.append(f"{at}{named} is not the hook's; a hook decides with "
                           "sys.exit(0) or deny()")
         elif named in TAKEN and id(node) not in called:
@@ -74,7 +74,7 @@ for path in sorted(HOOKS.rglob("*.py")):
                 faults.append(f"{at}a second sys.exit(2) a failed write of a "
                               "deny decision reaches; the hooks hold one, in "
                               "the module-level deny")
-        elif func.attr in ENDS and status != 0:
+        elif func.attr in EXITS and status != 0:
             faults.append(f"{at}an {func.attr} call that is not exit(0), nor the "
                           "exit(2) the module-level deny reaches when its "
                           "decision cannot be written")
