@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a [data item](data_item) whose schema declares an [addressable block](addressable_block)
+  then: the product refuses, naming the key and the block, and states renaming the
+    [entry](entry) as the fix
+  when: an [entry](entry) keyed for the block's name is [minted](mint) or revised
+    into the [data item](data_item)
+- given: a corpus holding a [data item](data_item) with an [entry](entry) keyed for
+    the name of an [addressable block](addressable_block)
+  then: the product refuses and names the key
+  when: the corpus is validated
+- given: a [data item](data_item) holding an [entry](entry) keyed for the name of
+    an [addressable block](addressable_block) the schema governing it under a new
+    name declares
+  then: the product refuses the rename, naming the key, and changes nothing
+  when: reqctl rename gives the [data item](data_item) that name
+assessed:
+  REQ-11930677: zW9EYrOae8-u8KwxL5w05JEgFmsILH44ca3s1_IFSls
+  addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
+priority: medium
+relations:
+  REQ-11930677: constrains
+status: approved
+text: If an [entry](entry) of a [data item](data_item) would be keyed for the name
+  of an [addressable block](addressable_block), then the product shall refuse the
+  [entry](entry).
+type: functional
+verification: inspection
