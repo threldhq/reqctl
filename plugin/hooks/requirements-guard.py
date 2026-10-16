@@ -2297,8 +2297,8 @@ def writes_plugin(said, here, whole):
     if not naming and not names_plugin(said):
         return tool in WRITERS and (
             any(EXPANSION.search(os.path.expandvars(word))
-                for word in invoked(tokens_of(sed_addresses(said) if tool == "sed"
-                                              and not STDIN_ARGUMENTS.search(said) else said))[1:])
+                for word in invoked(tokens_of(sed_addresses(said) if words[:1] == ["sed"] and "{}" not in words
+                                              else said))[1:])
             or not here and any(not os.path.isabs(os.path.expanduser(word)) for word in operands))
     if tool in ("cd", "pushd"):
         return False
