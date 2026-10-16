@@ -603,6 +603,11 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 buf.append(char)
                 i += 1
                 continue
+            # @req> REQ-54260750@MTrWbA9_HZWY 5wgwq2
+            if char == "|" and buf[-1:] == [">"]:
+                buf.append(char)
+                i += 1
+                continue
             if char == "|" and line[i:i + 2] != "||":
                 cut_segment()
                 i += 1
@@ -1365,6 +1370,25 @@ def landings(subcommand, rest, place):
         return [(basename, "HEAD")] if len(operands) == 1 and not flagged(
             flags, "-d", "--detach", "--orphan") and git_reads(
             ["show-ref", "--verify", "-q", f"refs/heads/{basename}"], place) is None else []
+    if subcommand == "fast-import":
+        return [("*", None)]
+    if subcommand == "filter-branch":
+        flags, operands = options(rest, FILTER_VALUES)
+        if any(name not in (*FILTER_VALUES, "-f", "--force", "--prune-empty", "--")
+               for name, _ in flags):
+            return [("*", None)]
+        revisions = [part.lstrip("^").removeprefix("refs/heads/") for operand in operands
+                     for part in re.split(r"\.\.\.?", operand) if part]
+        return [(name, None) for name in revisions or [head_branch(place)]]
+    if subcommand == "remote":
+        if rest[:1] != ["update"]:
+            return []
+        flags, operands = options(rest[1:], ())
+        known = (git_reads(["remote"], place) or "").split()
+        remotes = [remote for name in operands or known
+                   for remote in ([name] if name in known else (git_reads(
+                       ["config", "--get", f"remotes.{name}"], place) or "").split())]
+        return fetched(remotes, [], flags, place)
     if subcommand in ("fetch", "push"):
         flags, operands = options(rest, ("--depth", "--deepen", "--shallow-since",
                                          "--shallow-exclude", "--refmap", "-o",
@@ -1417,7 +1441,10 @@ BRANCH_KEEPS = ("-d", "-D", "--delete", "-l", "--list", "-u", "--set-upstream-to
                 "--merged", "--no-merged", "--points-at", "--show-current")
 
 MOVERS = ("update-ref", "symbolic-ref", "branch", "checkout", "switch", "worktree", "fetch",
-          "push", "reset", "merge", "pull")
+          "push", "reset", "merge", "pull", "fast-import", "filter-branch", "remote")
+FILTER_VALUES = ("--setup", "--subdirectory-filter", "--env-filter", "--tree-filter",
+                 "--index-filter", "--parent-filter", "--msg-filter", "--commit-filter",
+                 "--tag-name-filter", "--original", "-d", "--state-branch")
 
 
 def refuse_moving_default(words, here):
