@@ -12,6 +12,9 @@ entries:
   implement_skill:
     paths:
     - skills/implement/
+  judge_agent:
+    paths:
+    - agents/judge.md
   plugin_manifest:
     paths:
     - .claude-plugin/plugin.json
@@ -19,6 +22,9 @@ entries:
   pre_pr_skill:
     paths:
     - skills/pre-pr/
+  recall_agent:
+    paths:
+    - agents/recall.md
   requirements_guard_hook:
     paths:
     - hooks/requirements-guard.py
