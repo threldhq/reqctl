@@ -1,0 +1,43 @@
+acceptance_criteria:
+- given: a deprecated [data item](data_item) referencing an [entry](entry) of another
+    [data item](data_item), the [entry](entry) since revised
+  then: the product reports nothing for the reference
+  when: the corpus is validated
+- given: a superseded requirement whose link toward an approved requirement [awaits
+    assessment](awaiting_assessment)
+  then: the product accepts the superseded requirement
+  when: the corpus is validated
+- given: a deprecated [item](item) whose link toward a term [awaits assessment](awaiting_assessment)
+  then: the product shows the link without marking it suspect
+  when: reqctl context names the [item](item) or the term
+- given: an approved [item](item) whose reference toward a deprecated parameter [awaits
+    assessment](awaiting_assessment)
+  then: the product reports the reference
+  when: the corpus is validated
+- given: a deprecated [item](item) holding a [pin](pin) naming an address the [item](item)
+    neither links nor references
+  then: the product reports the [pin](pin)
+  when: the corpus is validated
+- given: a deprecated [item](item) depending on an [item](item) that cannot be read
+  then: the product names the dependency
+  when: the corpus is validated
+- given: a draft requirement whose reference toward a parameter [awaits assessment](awaiting_assessment)
+  then: the product reports the reference
+  when: the corpus is validated
+assessed:
+  REQ-23898341: oXCyxMhvY0kaypQ7c1vqUdRoSrJoszPLnzFeOWyRcrU
+  REQ-56581795: ZHEasHzzTZLCW7EpcU2t9HLmUUSwKOGE6Q3rfqhT_9M
+  awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations:
+  REQ-23898341: constrains
+  REQ-56581795: constrains
+status: approved
+text: The product shall skip a superseded or deprecated [item](item) in each check
+  of whether a link or a reference the [item](item) holds [awaits assessment](awaiting_assessment).
+type: functional
+verification: inspection
