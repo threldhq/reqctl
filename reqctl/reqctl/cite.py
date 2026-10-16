@@ -1,3 +1,4 @@
+import ast
 import difflib
 import functools
 import io
@@ -692,6 +693,51 @@ def whole(path, text):
     return corpus.digest(held if held is not None
                          else [line.rstrip("\r\n") for line in _feed_lines(text)])
 # @req- 2l4bmd
+
+
+def spanned(path, name):
+    # @req> REQ-94119327@SaWRJkHCFkNi gcrrhf
+    if Path(path).suffix != ".py":
+        raise ReqctlError(f"{path}: {name} names a definition only in a .py file -- "
+                          "cite lines of it with --from and --to")
+    text = Path(path).read_bytes().decode().removeprefix(BOM)
+    try:
+        tree = ast.parse(text.replace("\r", " "))
+    except SyntaxError as error:
+        raise ReqctlError(f"{path}: not Python that parses ({error.msg}, line "
+                          f"{error.lineno}) -- fix it, or cite lines of it with "
+                          "--from and --to") from error
+    # @req+ REQ-74702510@gU2X5OnlUbY3 6r4imu
+    wanted = name.split(".")
+    found = []
+
+    def walk(node, chain):
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                here = [*chain, child.name]
+                if here[-len(wanted):] == wanted:
+                    found.append(child)
+                walk(child, here)
+            else:
+                walk(child, chain)
+
+    walk(tree, [])
+    # @req- 6r4imu
+    # @req> REQ-94119327@SaWRJkHCFkNi yvjo27
+    if not found:
+        raise ReqctlError(f"{path}: no function, class or method is named {name} -- "
+                          "name one the file defines, joining enclosing names with "
+                          "dots, or cite lines with --from and --to")
+    # @req> REQ-73249972@0ct6LD_NhZts 6qhks7
+    if len(found) > 1:
+        raise ReqctlError(f"{path}: {name} names more than one definition, at lines "
+                          f"{', '.join(str(node.lineno) for node in found)} -- join "
+                          "the names enclosing the one meant with dots, or cite "
+                          "lines with --from and --to")
+    # @req+ REQ-74702510@gU2X5OnlUbY3 5jbxzz
+    node = found[0]
+    return min([node.lineno, *(above.lineno for above in node.decorator_list)]), node.end_lineno
+    # @req- 5jbxzz
 
 
 def _rest(text, citation):

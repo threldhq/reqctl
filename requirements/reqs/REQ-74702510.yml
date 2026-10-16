@@ -17,6 +17,11 @@ acceptance_criteria:
 assessed:
   REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  5jbxzz: 7O4_s_5nVfXKtL28Kh0cxL5WqfYgEILsiSVcVulYD9c
+  6r4imu: W_cxXtbQ7r8wyOBc5bh4eOgPCztXxImILnQypPpKdoI
+  hmh22z: ybNNUoc5LHLCEh3-FJqeCOBtcjiF8fhCLXLZY1cVkq0
+  ntl5o7: 5jWzOfuh176fascFuhdbgBtQrEfioTLOm-luNNewMF0
 priority: medium
 relations:
   REQ-60346603: derives_from

@@ -874,12 +874,18 @@ def _whole(tree, root, args):
 
 def cmd_tag(args):
     tree, root = corpus.load()
+    # @req> REQ-74702510@gU2X5OnlUbY3 hmh22z
+    if args.names:
+        if args.first or args.last:
+            raise ReqctlError("give each citation a --name or a --from and --to, not both")
+        spans = [cite.spanned(args.path, name) for name in args.names]
+        args.first, args.last = [first for first, _ in spans], [last for _, last in spans]
     # @req> REQ-30061042@b7B9U8dkoUHI 6mhx6x
     if args.first is None and args.last is None:
         return _whole(tree, root, args)
     # @req+ REQ-62782894@x4o_oB5H0-tY nmyxfc
     if not len(args.first or []) == len(args.last or []) == len(args.req):
-        raise ReqctlError("name --from, --to and --req once for each citation")
+        raise ReqctlError("name --from and --to, or --name, and --req once for each citation")
     asked = []
     for first, last, req in zip(args.first, args.last, args.req):
         item, entry = corpus.cited_item(tree, req)
@@ -1285,14 +1291,18 @@ def build_parser(root, fielded):
                  "entry of a data item at lines of a file, writing one comment "
                  "over a single code statement and a pair of comments over "
                  "more; repeat --from, --to and --req to cite several, each "
-                 "numbered as the file stands before the command; name neither "
-                 "--from nor --to to cite a whole file of a commentless format")
+                 "numbered as the file stands before the command; --name a "
+                 "function, class or method of a .py file in place of --from and "
+                 "--to; name none of them to cite a whole file of a commentless "
+                 "format")
     s.add_argument("path")
     # @req+ REQ-62782894@x4o_oB5H0-tY ou2zvt
     s.add_argument("--from", dest="first", type=int, action="append")
     s.add_argument("--to", dest="last", type=int, action="append")
     s.add_argument("--req", action="append", required=True)
     # @req- ou2zvt
+    # @req> REQ-74702510@gU2X5OnlUbY3 ntl5o7
+    s.add_argument("--name", dest="names", action="append")
     s.add_argument("--exclusive", action="store_true")
     s.set_defaults(func=cmd_tag)
 
