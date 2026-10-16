@@ -1383,7 +1383,9 @@ def landings(subcommand, rest, place):
                      if not part.startswith("^")]
         return [((git_reads(["rev-parse", "--symbolic-full-name", name], place) or name)
                  .strip().removeprefix("refs/heads/"), None)
-                for name in revisions or ([] if flagged(flags, "--tags") else ["HEAD"])]
+                for name in revisions or ([] if flagged(flags, "--tags") else ["HEAD"])] + [
+            move for name, value in flags if name == "--state-branch"
+            for move in landings("update-ref", [value], place)]
     if subcommand == "remote":
         flags, operands = options(rest, ())
         if operands[:1] != ["update"]:
@@ -1447,9 +1449,9 @@ BRANCH_KEEPS = ("-d", "-D", "--delete", "-l", "--list", "-u", "--set-upstream-to
 
 MOVERS = ("update-ref", "symbolic-ref", "branch", "checkout", "switch", "worktree", "fetch",
           "push", "reset", "merge", "pull", "fast-import", "filter-branch", "remote")
-FILTER_VALUES = ("--setup", "--subdirectory-filter", "--env-filter", "--tree-filter",
-                 "--index-filter", "--parent-filter", "--msg-filter", "--commit-filter",
-                 "--tag-name-filter", "--original", "-d", "--state-branch")
+FILTER_SCRIPTS = ("--setup", "--env-filter", "--tree-filter", "--index-filter",
+                  "--parent-filter", "--msg-filter", "--commit-filter", "--tag-name-filter")
+FILTER_VALUES = (*FILTER_SCRIPTS, "--subdirectory-filter", "--original", "-d", "--state-branch")
 
 
 def refuse_moving_default(words, here):
@@ -2069,6 +2071,10 @@ def scripts_within(words, here):
                                                          rest[at + 1:]))
                 for at, word in enumerate(rest) if word in FIND_RUNS]
     split = git_split(words)
+    # @req> REQ-76235768@1l5tlNlByWT6 2j3niw
+    if split and split[2] == "filter-branch":
+        return [split[3][at + 1] for at, word in enumerate(split[3][:-1])
+                if word in FILTER_SCRIPTS]
     if not split or any(split[2] in git_commands(kinds) for kinds in ("builtins", "main,others")):
         return []
     prefix, options, subcommand, args = split
