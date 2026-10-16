@@ -1301,8 +1301,8 @@ def commit_of(target, place):
 
 def fetched(remotes, specs, flags, place):
     moves = []
-    for remote in [member for named in remotes for member in (git_reads(
-            ["config", "--get-all", f"remotes.{named}"], place) or "").split() or [named]]:
+    for remote in [member for named in remotes for member in [named, *(git_reads(
+            ["config", "--get-all", f"remotes.{named}"], place) or "").split()]]:
         for spec in specs or (git_reads(["config", "--get-all", f"remote.{remote}.fetch"],
                                         place) or "").split():
             src, _, dst = spec.partition(":")
