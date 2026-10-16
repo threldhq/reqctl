@@ -1301,7 +1301,8 @@ def commit_of(target, place):
 
 def fetched(remotes, specs, flags, place):
     moves = []
-    for remote in remotes:
+    for remote in [member for named in remotes for member in (git_reads(
+            ["config", "--get-all", f"remotes.{named}"], place) or "").split() or [named]]:
         for spec in specs or (git_reads(["config", "--get-all", f"remote.{remote}.fetch"],
                                         place) or "").split():
             src, _, dst = spec.partition(":")
@@ -1387,9 +1388,8 @@ def landings(subcommand, rest, place):
     if subcommand == "remote":
         flags, operands = options(rest, ())
         if operands[:1] == ["add"]:
-            return [("*", None)] if flagged(flags, "-f", "--fetch") and any(
-                value != "push" for name, value in flags
-                if len(name) > 2 and "--mirror".startswith(name)) else []
+            return [("*", None)] if flagged(flags, "-f", "--fetch") and flagged(
+                [flag for flag in flags if flag[1] != "push"], "--mirror") else []
         if operands[:1] != ["update"]:
             return []
         known = (git_reads(["remote"], place) or "").split()
@@ -1404,8 +1404,7 @@ def landings(subcommand, rest, place):
                                          "--push-option", "--recurse-submodules", "--repo"))
         if subcommand == "fetch":
             every = not operands or flagged(flags, "--all", "--multiple")
-            remotes = (git_reads(["remote"], place) or "").split() if every else (git_reads(
-                ["config", "--get-all", f"remotes.{operands[0]}"], place) or "").split() or operands[:1]
+            remotes = (git_reads(["remote"], place) or "").split() if every else operands[:1]
             refmaps = [value for name, value in flags if name == "--refmap"]
             return fetched(remotes, [*operands[1:], *refmaps] if operands[1:] and not every
                            else [], flags, place)
