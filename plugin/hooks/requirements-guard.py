@@ -54,7 +54,6 @@ SETTER = re.compile(r"^(export|declare|typeset|local|read(only|array)?|mapfile|g
 UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
 PARAMETER = re.compile(r"\$\{[^{}]*\}")
 EXPANSION = re.compile(r"\$(?:\{[^{}]*\}|\((?:[^()]|\([^()]*\))*\)|\w+|[@*#?$!-])|`[^`]*`")
-SINGLE_QUOTED = re.compile(r"(?<!\\)'_*'")
 ANSI_C = re.compile(r"\\.|(\$*)('_*')")
 ANSI_ESCAPE = re.compile(
     r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
@@ -2255,13 +2254,14 @@ def reaches_plugin(word, cwd):
 
 def literal_quotes(text):
     kept = list(text)
-    for found in SINGLE_QUOTED.finditer(masked(text)):
-        kept[found.start() + 1:found.end() - 1] = "_" * (found.end() - found.start() - 2)
+    for found in ANSI_C.finditer(masked(text)):
+        if found[2]:
+            kept[found.start(2) + 1:found.end(2) - 1] = "_" * (len(found[2]) - 2)
     return "".join(kept)
 
 
 def plainly_plugin(text, here):
-    return names_plugin(text) or bool(here) and any(
+    return names_plugin(text) or here and any(
         reaches_plugin(word, here) for word in tokens_of(text) if not EXPANSION.search(word))
 
 
