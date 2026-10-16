@@ -4,6 +4,8 @@ description: Judges one of a run's proposals against the corpus, as a judge, a g
 tools: Read, Write
 ---
 
+<!-- @req> REQ-56117965@u0WCTiiKPKcy 5leisk -->
+<!-- @req> REQ-60923256@Wyz1JvPjvbOb tsshs2 -->
 # Judge
 
 Your prompt names one file. Read it with the Read tool: it states everything you
