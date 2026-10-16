@@ -6,10 +6,11 @@ from pathlib import Path
 HOOKS = Path(__file__).resolve().parents[2] / "plugin" / "hooks"
 ENDS = {"exit", "_exit"}
 ENDING = {"abort", "kill", "killpg", "execl", "execle", "execlp",
-          "execlpe", "execv", "execve", "execvp", "execvpe"}
+          "execlpe", "execv", "execve", "execvp", "execvpe", "fexecve"}
 VALUES = {"quit", "SystemExit"}
 TAKEN = ENDS | ENDING
-NAMED = TAKEN | VALUES | {"error"}
+REFUSED = ENDING | {"error", "parse_args", "parse_known_args"}
+NAMED = TAKEN | VALUES | REFUSED
 
 faults, scanned, admitted = [], 0, 0
 for path in sorted(HOOKS.rglob("*.py")):
@@ -61,7 +62,7 @@ for path in sorted(HOOKS.rglob("*.py")):
                           "name the attribute outright")
         if not isinstance(func, ast.Attribute):
             continue
-        if func.attr in ENDING | {"error"}:
+        if func.attr in REFUSED:
             faults.append(f"{at}{func.attr}() ends the hook without its "
                           "decision; sys.exit(0) or deny()")
         elif (func.attr == "exit" and isinstance(func.value, ast.Name)

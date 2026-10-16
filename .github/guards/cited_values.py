@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import ast
+import json
 import sys
 from pathlib import Path
 
@@ -33,7 +34,8 @@ def compared(where, entry, fields, stated):
         elif field not in stated:
             yield (f"{where} carries {entry}.{field} {value!r}, a field the "
                    "corpus does not state for that entry")
-        elif type(value) is not type(stated[field]) or value != stated[field]:
+        elif json.dumps(value, sort_keys=True, default=repr) != json.dumps(
+                stated[field], sort_keys=True, default=repr):
             yield (f"{where} carries {entry}.{field} {value!r}, the corpus "
                    f"states {stated[field]!r}")
 
@@ -42,9 +44,9 @@ def faults(citations, entries):
     trees, found = {}, []
     for citation in citations:
         stated = entries.get(citation["uid"])
-        if stated is None or not citation["path"].endswith(".py"):
-            continue
         path = citation["path"]
+        if stated is None or not path.endswith(".py"):
+            continue
         if path not in trees:
             # @req+ GUARD-83168738@zhoOQpGgBd9R yhsbhh
             try:
@@ -58,13 +60,13 @@ def faults(citations, entries):
         # @req+ GUARD-21296330@1vKKetZd35C0 jlm6mf
         where = (f"citation {citation['id']} of {citation['address']} in "
                  f"{path}:{citation['first']}-{citation['last']}")
+        entry = citation["entry"]
         for node in ast.walk(trees[path]):
             if not (isinstance(node, ast.Dict)
                     and citation["first"] <= node.lineno
                     and node.end_lineno <= citation["last"]):
                 continue
             held = keyed(node)
-            entry = citation["entry"]
             if entry:
                 if entry in stated and held.keys() & stated[entry].keys():
                     found.extend(compared(where, entry, node, stated[entry]))
