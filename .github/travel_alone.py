@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import posixpath
 import re
 import subprocess
 import sys
@@ -74,7 +75,8 @@ def added_paths(fork):
     if not isinstance(root, str) or not root.endswith("/"):
         return added, []
     return added, [root + path for fields in added.values() if isinstance(fields, dict)
-                   for path in fields.get("paths") or [] if isinstance(path, str)]
+                   for path in fields.get("paths") or [] if isinstance(path, str)
+                   and posixpath.normpath(path).split("/")[0] not in ("", "..", ".")]
 
 
 def covered(paths, file):
