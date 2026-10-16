@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a run's recall, judge, group judge and final judge prompts
+  then: each recall agent is spawned from the agent the Claude Code plugin ships under
+    the name recall, each judge, group judge and final judge from the one it ships
+    under the name judge, and none as the workflow's default subagent
+  when: the product spawns their agents
+assessed:
+  REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-56117965: u0WCTiiKPKcystZjfh9j_INydz3ZgkUMU0RxPWIVA6Q
+  elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
+  elucidate_agents.judge: Uzv_iAqsRki5GtUGmeeOwcpyTwKSqQ_vLXor5Ig0e0o
+  elucidate_agents.recall: 3zTw1VvVnPM494HiaVfhXh8r6e79m-mzpbSJNEw29Sc
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-29203000: constrains
+  REQ-38288492: depends_on
+  REQ-56117965: depends_on
+status: approved
+text: When the product spawns a ${elucidate_agents.recall} agent or a ${elucidate_agents.judge}
+  agent, the product shall spawn it from the agent that the Claude Code plugin ships
+  under the name of that [entry](entry).
+type: functional
+verification: inspection

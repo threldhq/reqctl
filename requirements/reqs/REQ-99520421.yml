@@ -7,12 +7,14 @@ acceptance_criteria:
     under the plugin's name
   then: it names the agent reqctl:coverage
   when: the product spawns the coverage agent
+- given: a session in which the Claude Code plugin is installed, registering its agents
+    under the plugin's name
+  then: it names the agent reqctl:recall
+  when: the product spawns a recall agent
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-61616834: ocFeB1JGP518dTo37bhkp0LKfeG6BTBIFGYwBXIEHEU
-  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
-  plugin_components.best_in_class_agent: u1uaiUuYFzYo5iFrDTEntEfYwc19prv4BbSVmvAHnvM
-  plugin_components.coverage_agent: MLMykc8Gn2mN2POVQUqKUR2bIgNPgK0zPBZZ8AJGUhU
+  REQ-91853430: CiXLnCezOJmV_YsmoA8lJMJugTp1NjytpcOpC4G6OyU
 citations:
   bumf3d: _kkB2rVlkOEUmrT_Ukl9Tn4JMISIedVMRSTH0LnGH-o
   cucduq: N2Wf8gaMMcfDjPswCYEBPo89xTUrS90SCoq6ITeYYPM
@@ -21,9 +23,9 @@ priority: medium
 relations:
   REQ-38288492: depends_on
   REQ-61616834: constrains
+  REQ-91853430: constrains
 status: approved
-text: When the product spawns the ${plugin_components.best_in_class_agent} or the
-  ${plugin_components.coverage_agent}, the product shall name the agent the way the
-  session registers it.
+text: When the product spawns an agent that the Claude Code plugin ships, the product
+  shall name the agent the way the session registers it.
 type: functional
 verification: inspection
