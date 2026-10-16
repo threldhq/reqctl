@@ -2073,8 +2073,9 @@ def scripts_within(words, here):
     split = git_split(words)
     # @req> REQ-76235768@1l5tlNlByWT6 2j3niw
     if split and split[2] == "filter-branch":
-        return [split[3][at + 1] for at, word in enumerate(split[3][:-1])
-                if word in FILTER_SCRIPTS]
+        scripts = [value for flag, value in itertools.pairwise(split[3]) if flag in FILTER_SCRIPTS]
+        top = scripts and git_sees(["rev-parse", "--show-toplevel"], located(words, here)).strip()
+        return [f"cd {shlex.quote(top)} && {script}" for script in scripts]
     if not split or any(split[2] in git_commands(kinds) for kinds in ("builtins", "main,others")):
         return []
     prefix, options, subcommand, args = split
