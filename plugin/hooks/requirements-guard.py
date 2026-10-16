@@ -55,6 +55,7 @@ UNQUOTED_WORD = re.compile(r"[\w@%+=:,./{}-]+")
 PARAMETER = re.compile(r"\$\{[^{}]*\}")
 EXPANSION = re.compile(r"\$(?:\{[^{}]*\}|\((?:[^()]|\([^()]*\))*\)|\w+|[@*#?$!-])|`[^`]*`")
 ANSI_C = re.compile(r"\\.|(\$*)('_*')")
+SED_LAST = re.compile(r"(?<=[',;{\s])\$!?[pdlnNPDq=](?=[;}\s']|$)")
 ANSI_ESCAPE = re.compile(
     r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
 STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
@@ -2252,11 +2253,12 @@ def reaches_plugin(word, cwd):
                              *(matches(path) if GLOB_CHAR.search(path) else ())))
 
 
-def literal_quotes(text):
+def sed_addresses(text):
     kept = list(text)
     for found in ANSI_C.finditer(masked(text)):
         if found[2]:
-            kept[found.start(2) + 1:found.end(2) - 1] = "_" * (len(found[2]) - 2)
+            for last in SED_LAST.finditer(text, found.start(2), found.end(2)):
+                kept[last.start()] = "_"
     return "".join(kept)
 
 
@@ -2294,7 +2296,7 @@ def writes_plugin(said, here, whole):
     if not naming and not names_plugin(said):
         return tool in WRITERS and (
             any(EXPANSION.search(os.path.expandvars(word))
-                for word in invoked(tokens_of(literal_quotes(said)))[1:])
+                for word in invoked(tokens_of(sed_addresses(said) if tool == "sed" else said))[1:])
             or not here and any(not os.path.isabs(os.path.expanduser(word)) for word in operands))
     if tool in ("cd", "pushd"):
         return False
@@ -2340,6 +2342,9 @@ def search_operands(words):
 # @req> REQ-59919160@eEBU6tuB77Dq wxfbic
 def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
     heres = {cwd}.union(*places)
+    message = PLUGIN_WRITE if names_plugin(unquoted) or any(
+        plainly_plugin(heading(part), here) for pipeline, places_of in zip(pipelines, places)
+        for part, here in itertools.product(pipeline, places_of)) else PLUGIN_UNRESOLVED
     for found in REDIRECT_TARGET.finditer(masked(unquoted)):
         target = unquoted[found.start(1):found.end(1)]
         if "&" in found.group() and re.fullmatch(r"\d+-?|-", target):
@@ -2347,8 +2352,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
         if (names_plugin(target) or EXPANSION.search(os.path.expandvars(target))
                 or "" in heres and not os.path.isabs(os.path.expanduser(target.strip()))
                 or any(reaches_plugin(word, here) for word in tokens_of(target) for here in heres)):
-            deny((PLUGIN_WRITE if any(plainly_plugin(target, here) for here in heres)
-                  else PLUGIN_UNRESOLVED).format(target=unquoted[found.start():found.end()]))
+            deny(message.format(target=unquoted[found.start():found.end()]))
     for pipeline, places_of in zip(pipelines, places):
         naming = [part for part, here in itertools.product(pipeline, places_of)
                   if names_plugin(heading(part)) or any(reaches_plugin(word, here)
@@ -2358,9 +2362,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
             if writes_plugin(said, here, unquoted) or naming and (running or part not in naming and not (
                     READ.search(said) or GIT_READ.search(said)
                     or SINK.search(said) and not SINK_WRITES.search(said))):
-                deny((PLUGIN_WRITE if any(plainly_plugin(heading(other), place) for other, place
-                                          in itertools.product(pipeline, places_of))
-                      else PLUGIN_UNRESOLVED).format(target=said.strip()))
+                deny(message.format(target=said.strip()))
 
 
 def names_corpus(part, cwd):
