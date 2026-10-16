@@ -8,12 +8,10 @@ import yaml
 from reqctl import corpus
 
 LISTED = (corpus.CITATION_LIST,)
-# @req> REQ-43374441@FrpNFcj-eNb_ c6qh2i
+# @req> REQ-43374441@UTw4zjM6nnr9 c6qh2i
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
-COMPONENTS = "plugin_components"
-FOLDERS = "plugin_folders"
 # @req> REQ-41600593@dauTiMee9rmb o3tsro
 STAMPED = re.compile(
     rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
@@ -38,7 +36,7 @@ def without(ref, path, keys, digests=False):
     if not isinstance(held, dict):
         return found.stdout
     kept = {key: value for key, value in held.items() if key not in keys}
-    # @req+ REQ-43374441@FrpNFcj-eNb_ burjli
+    # @req+ REQ-43374441@UTw4zjM6nnr9 burjli
     whole = kept.get(corpus.WHOLE_FILES)
     if digests and isinstance(whole, dict):
         kept[corpus.WHOLE_FILES] = {
@@ -67,30 +65,7 @@ def repins_only(base, path):
     return was is not ABSENT and was == without_stamps("HEAD", path)
 
 
-# @req+ REQ-43374441@FrpNFcj-eNb_ qya7yo
-def covered(fork, files):
-    try:
-        store, top = corpus.load()
-        listing = corpus.find(store, COMPONENTS)
-        root = (corpus.entries(corpus.find(store, FOLDERS).data) or {}).get("root")
-    except corpus.ReqctlError:
-        return []
-    prefix = root.get("path") if isinstance(root, dict) else None
-    if not isinstance(prefix, str) or not prefix.endswith("/"):
-        return []
-    held = listing.path.relative_to(top).as_posix()
-    was, now = (without(ref, held, ()) for ref in (fork, "HEAD"))
-    before = (corpus.entries(was) if isinstance(was, dict) else None) or {}
-    after = (corpus.entries(now) if isinstance(now, dict) else None) or {}
-    stated = [path for key, fields in after.items()
-              if key not in before and isinstance(fields, dict)
-              and isinstance(fields.get("paths"), list)
-              for path in fields["paths"] if isinstance(path, str)]
-    return [file for file in files if file.startswith(prefix) and any(
-        file[len(prefix):].startswith(path) if path.endswith("/")
-        else file[len(prefix):] == path for path in stated)]
-
-
+# @req+ REQ-43374441@UTw4zjM6nnr9 qya7yo
 def classify(base):
     found = _git("diff", "--no-renames", "--raw", "-z", f"{base}...HEAD")
     fork = _git("merge-base", base, "HEAD")
@@ -105,25 +80,20 @@ def classify(base):
     governed = [path for path in changed if path.startswith(GOVERNED)]
     other = [path for path in changed if not path.startswith(GOVERNED)]
     if not governed or not other:
-        return [], other, [], []
-    joined = covered(fork, other)
-    other = [path for path in other if path not in joined]
+        return [], other, []
     pinned = ([path for path in governed
                if only(fork, path, CARRIED, digests=True)]
               + [path for path in other
                  if textual[path] and repins_only(fork, path)])
     return ([path for path in governed if path not in pinned],
-            [path for path in other if path not in pinned], pinned, joined)
+            [path for path in other if path not in pinned], pinned)
 
 
 def main(base):
-    content, other, pinned, joined = classify(base)
+    content, other, pinned = classify(base)
     for path in pinned:
         print(f"pins or citation list only, travelling with what moved them: "
               f"{path}")
-    for path in joined:
-        print(f"covered by a plugin component this change adds, travelling "
-              f"with it: {path}")
     if not content or not other:
         return 0
     print("::error::this pull request changes requirements and other things; "
