@@ -351,7 +351,7 @@ def _resolved(text, store):
             if entry not in held:
                 return match.group(0)
             if field:
-                value = (held[entry] or {}).get(field)
+                value = (held[entry] if isinstance(held[entry], dict) else {}).get(field)
                 if isinstance(value, list):
                     value = _value(value, None) or None
                 if value is None:

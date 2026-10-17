@@ -795,12 +795,12 @@ def plain(value):
     return "null" if value is None else str(value)
 
 
-def _stated(fields, skip):
+def _stated(fields, skip, top=()):
     held = []
     if not isinstance(fields, dict):
         return held
     for key, value in fields.items():
-        if key in skip:
+        if key in skip or key in top:
             continue
         if isinstance(value, dict):
             held += _stated(value, skip)
@@ -814,7 +814,7 @@ def _stated(fields, skip):
 def prose(data, skip=STATED_SKIP, item=True):
     pieces = [str(data.get("text") or data.get("definition") or "")]
     if item:
-        pieces += _stated(data, ITEM_SKIP + skip)
+        pieces += _stated(data, skip, ITEM_SKIP)
     for fields in (entries(data) or {}).values():
         pieces += _stated(fields, skip)
     criteria = data.get("acceptance_criteria")
@@ -857,7 +857,8 @@ def unlinked_prose(data):
     return PARAM_REF.sub(
         " ", CONCEPT_LINK.sub(" ", "\n".join(
             [prose(data, POLICED_SKIP + ("value_type",), item=False)]
-            + _stated(data, ITEM_SKIP + POLICED_ITEM_SKIP + ENUMERATED))))
+            + _stated(data, POLICED_SKIP + ("value_type", "unit"),
+                      ITEM_SKIP + POLICED_ITEM_SKIP + ENUMERATED))))
 
 
 def dependencies(data):

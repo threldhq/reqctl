@@ -28,10 +28,8 @@ def _uid(path):
 # @req> REQ-73796163@qg5x9Wvk_AEp bdp26a
 def carried(uid, data, blocks):
     return corpus.stamp_of(uid, data), {
-        key: corpus.entry_stamp_of(uid, data, key)
-        for key in [*(corpus.entries(data) or {}),
-                    *(f"{block}.{member}" for block in blocks
-                      for member in corpus.held_block(data, block) or {})]}
+        **{key: corpus.entry_stamp_of(uid, data, key) for key in corpus.entries(data) or {}},
+        **{block: corpus.held_block(data, block) for block in blocks}}
 
 
 def _flat(value):
@@ -132,7 +130,7 @@ class History:
     # @req> REQ-73796163@qg5x9Wvk_AEp x43h3h
     def updated(self, uid, data):
         self._load()
-        blocks = corpus.addressable_blocks(self.root, uid, data)
+        blocks = corpus.held_blocks(self.root, uid, data)
         now = carried(uid, data, blocks)
         if self._carried(uid, self._head.get(uid), blocks) != now:
             return None

@@ -937,6 +937,10 @@ def _entry_selection(records, root):
                 if not steps:
                     problems.append(f"{uid}: selects {address}, which names {key} of "
                                     f"{target} and none of its block members")
+                elif not isinstance(block.get(steps[0], {}), dict):
+                    problems.append(f"{uid}: selects {address} but {steps[0]} of {key} of "
+                                    f"{target} holds no fields of its own")
+                    continue
                 fields = block
                 for step in steps:
                     if not isinstance(fields, dict) or step not in fields:
