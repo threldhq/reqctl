@@ -2,6 +2,8 @@ name: CI
 
 on:
   pull_request:
+    # @req> GUARD-18239610@b7HqEiGpFOuy 7crqqf
+    types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
 
 permissions:
@@ -149,6 +151,12 @@ jobs:
 
       - name: Corpus is valid
         run: reqctl validate
+
+      - name: The pull request names an issue
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/guards/pr_issue.py
 
       # @req> GUARD-85510467@S-FtmL033UTY ez2foh
       - name: Citations match the corpus, with no base branch
