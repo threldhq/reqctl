@@ -119,6 +119,8 @@ workflows do (`REQ`) and what the build that makes and checks them does
 (`GUARD`). `.github/workflows/ci.yml` and `.github/workflows/corpus-gates.yml`
 gate every pull request, and `python .github/verify.py` runs the steps they
 would run for the tree. `.github/CODEOWNERS` puts the owner on every path: Claude
-writes and opens pull requests, the owner reviews and merges.
+writes and opens pull requests, the owner reviews and merges. Every bug and
+every request starts as a GitHub issue, and each pull request that follows
+names it.
 
 Licensed under Apache-2.0; see `LICENSE.txt`.

@@ -35,6 +35,12 @@ When rules conflict, higher wins.
 
 ## Requirements are the gate
 
+Every bug and every request from the owner becomes a GitHub issue before it
+becomes a requirement or a fix. Search the open issues first and reuse a match.
+Every pull request that follows from one names it in its body: `Closes #N` on
+the one that finishes it, `Refs #N` on the rest. A pull request nothing asked
+for, such as a dependency bump, names none.
+
 Every change to what `reqctl`, `reqportal` or `elucidate` does must cite a
 governing approved requirement. If none exists, **stop** and ask the owner to
 create one. No exceptions, including fixes.
