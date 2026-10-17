@@ -2648,7 +2648,7 @@ def governing(tool, args, cwd):
         return None
     before, after = (notebook_edited(args, cwd) if tool == "NotebookEdit"
                      else edited(tool, args, cwd))
-    if not citations(before):
+    if not citations(before.removeprefix("﻿")):
         return None
     target = Path(cwd, os.path.expanduser(args.get("file_path") or args.get("notebook_path") or "")
                   ).resolve()
@@ -2719,7 +2719,7 @@ def judge_citation_shell(raw):
         deny(NOT_A_READ.format(tool=words[0]))
 
 
-def decide(data: dict) -> None:
+def decide(data: dict) -> "str | None":
     tool = str(data.get("tool_name") or "")
     args = data.get("tool_input")
     # @req+ REQ-18701923@7CvKXOjSI6Kb hyuozw
