@@ -58,6 +58,20 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+citations:
+  2nario: sZS9JjYP-0EjcqaQqvfNFNXEJcRvpEVLObOerQACcE0
+  a7a4eb: KVtoC2Xck3pY3i69LzKQJqHijgh1SA19_8hKy5nt9zY
+  h6snkl: BwbI_WjQyLaOeAkmp6WPtC9HZ4kOdkhz3ggHQyBxl2U
+  krnbz5: KC5YYBz_sVR-w3nv1YxBFLfx_owBLjO8-bVeN17tMIY
+  lzcna6: YAbU2vLf7HH46UOeoc6NcHfqCEuPnWRHIEBpZF8M1rQ
+  ne5nva: nkIobVZ2HSwMrUDXHw9moeB2UrNvyiRPYtW_kR7Z9q4
+  ra2sb2: JHSqMAFAkVHicZ2zVwpxe1HqiRHmvb3XtLqX6Rm6FlE
+  rbec5m: O0dLbVClnXpb2-CG3mVhmDGsMZ-e90eEoUZ3WaUPFa0
+  rkree6: f4_i36IRZReDOMWdZMo-kpOh2ES9KaXW6qNOy74YoL4
+  rzbuud: vA3Rsiw3xeSFNaKNwm-tzgRWZCeYSQG9GlOAaEfs5Q4
+  ujoctz: BD0vZgK0BjiUGFs8yh-ToHY6tpphUMaKQBXnALd5hGE
+  wgpma6: kRaGfQuzo9fFETonBjcAthbLDXnwzKa7E1wy1qBScQM
+  xxvuas: M12-h7E80__pcrKmuRrn4m4CwbknCzzAmnLkV3cIvzA
 priority: medium
 relations:
   REQ-44791607: constrains

@@ -309,11 +309,13 @@ def _addresses_match(store, address, ack):
             return False
     if wanted_rest is None:
         return True
-    if "." in wanted_rest:
-        return wanted_rest == rest
+    # @req+ REQ-11930677@zW9EYrOae8-u wgpma6
     lookup = corpus.data_lookup(store)
     asked = corpus.expand_address(lookup, f"{held}.{wanted_rest}") - {held}
+    if "." in wanted_rest and f"{held}.{wanted_rest}" not in asked:
+        return wanted_rest == rest
     return bool(asked) and asked <= corpus.expand_address(lookup, address)
+    # @req- wgpma6
 
 
 def resolve_names(store, text, index=None, carried=(frozenset(), frozenset())):
@@ -1156,6 +1158,19 @@ def _new_item_faults(store, written):
     # @req- vbwcqp
 
 
+# @req> REQ-15211173@2tindbOlAUEJ krbgcj
+def _placed(uid, blocks, prospective, flag, named):
+    block, dot, key = named.partition(".")
+    if dot and not (block in blocks and key and "." not in key):
+        raise ReqctlError(f"{flag} {named}: names no block member of {uid} -- a block "
+                          "member is named block.key, where the schema marks block "
+                          "addressable")
+    place = block if dot else "entries"
+    held = prospective.get(place)
+    prospective[place] = held = dict(held) if isinstance(held, dict) else {}
+    return held, key if dot else named
+
+
 def revisable_fields(own, kind):
     return [field for field in own if field.name != "entries"
             or kind == "parameter" and field.dest not in OPERATIONS]
@@ -1318,37 +1333,38 @@ def _revision(store, uid, fields):
                 fields.get("unset") or [], key)
             prospective["entries"] = held
     elif kind == "data":
-        held = dict(corpus.entries(before) or {})
+        # @req+ REQ-11930677@zW9EYrOae8-u ra2sb2
+        blocks = corpus.addressable_blocks(store.root, uid, before)
         if fields.get("new_entry") is not None:
-            key = str(fields["new_entry"]).strip()
+            named = str(fields["new_entry"]).strip()
+            held, key = _placed(uid, blocks, prospective, "--new-entry", named)
             if key in held:
                 raise ReqctlError(
-                    f"--new-entry {key}: already an entry; use --entry {key}"
+                    f"--new-entry {named}: already an entry; use --entry {named}"
                 )
             held[key] = _append_fields(
                 _set_fields({}, fields.get("set") or [], carried),
                 fields.get("append") or [], carried)
-            prospective["entries"] = held
         if fields.get("entry") is not None:
-            key = str(fields["entry"]).strip()
+            named = str(fields["entry"]).strip()
+            held, key = _placed(uid, blocks, prospective, "--entry", named)
             if key not in held:
                 raise ReqctlError(
-                    f"--entry {key}: not an entry of {uid}; to add one, pass "
-                    f"--new-entry {key}"
+                    f"--entry {named}: not an entry of {uid}; to add one, pass "
+                    f"--new-entry {named}"
                 )
             held[key] = _unset_fields(
                 _append_fields(
                     _set_fields(dict(held[key] or {}), fields.get("set") or [], carried),
                     fields.get("append") or [], carried),
-                fields.get("unset") or [], key)
-            prospective["entries"] = held
+                fields.get("unset") or [], named)
         if fields.get("drop_entry") is not None:
-            held = dict(corpus.entries(prospective) or {})
-            key = str(fields["drop_entry"]).strip()
+            named = str(fields["drop_entry"]).strip()
+            held, key = _placed(uid, blocks, prospective, "--drop-entry", named)
             if key not in held:
-                raise ReqctlError(f"--drop-entry {key}: no such entry")
+                raise ReqctlError(f"--drop-entry {named}: no such entry")
             held.pop(key)
-            prospective["entries"] = held
+        # @req- ra2sb2
         if default is not None:
             chosen = str(default).strip()
             # @req> REQ-67914848@cRb9rHls6z6c znrmhw

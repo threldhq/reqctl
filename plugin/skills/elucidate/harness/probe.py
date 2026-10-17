@@ -380,7 +380,8 @@ def report(rows, absent, unread, totals):
 def cmd_mint(args):
     _store, records = plan.loaded()
     key = build(records, args.count, args.faults, args.seed, args.pairs)
-    dims = plan.dimensions(corpus.find_root(), records)
+    root = corpus.find_root()
+    dims = plan.dimensions(root, records)
 
     out = Path(args.out)
     stale =(sorted((out / "proposals").glob("*.md"))
@@ -398,9 +399,10 @@ def cmd_mint(args):
     if dims:
         recorded[plan.BINDS] = {
             name: {probe["proposal"]:
-                   sorted(plan.bound(name, uid, probe["statement"])) or "all"
+                   sorted(plan.bound(name, uid, probe["statement"], blocks)) or "all"
                    for probe in key["probes"]}
-            for name, (uid, _members) in dims.items()}
+            for name, (uid, _members) in dims.items()
+            for blocks in [corpus.addressable_blocks(root, uid, records[uid])]}
     recorded[plan.TRACE] = {probe["proposal"]: [probe["statement"]]
                             for probe in key["probes"]}
     corpus.atomic_write(out / "run.yaml", yaml.safe_dump(recorded, sort_keys=False))

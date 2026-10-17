@@ -368,7 +368,8 @@ def dimensions(root, records):
     for name in corpus.binding_dimensions(root):
         uid, data = named_item(records, name)
         # @req+ REQ-29846444@V-kcyDuwiOZS zjcgv2
-        members = set(corpus.entries(data) or {})
+        # @req> REQ-11930677@zW9EYrOae8-u rbec5m
+        members = set(corpus.entries(data) or {}) | block_members(root, uid, data)
         if not members:
             raise SystemExit(
                 f"{uid} defines no member, so every proposal binds to all of "
@@ -379,28 +380,43 @@ def dimensions(root, records):
     return held
 
 
+def block_members(root, uid, data):
+    return {f"{block}.{key}" for block, held in corpus.held_blocks(root, uid, data).items()
+            for key in held}
+
+
+def named_member(rest, blocks):
+    head, _, tail = rest.lstrip(".").partition(".")
+    return f"{head}.{tail.partition('.')[0]}" if head in blocks and tail else head
+
+
 # @req> REQ-54045696@m7842dVOG3jf fi3f7l
-def bound(name, uid, statement):
-    held = {found.group(2).lstrip(".").split(".")[0]
+# @req> REQ-11930677@zW9EYrOae8-u rzbuud
+def bound(name, uid, statement, blocks):
+    held = {named_member(found.group(2), blocks)
             for found in corpus.PARAM_REF.finditer(statement)
             if found.group(1) in (name, uid)}
     for found in corpus.CONCEPT_LINK.finditer(statement):
         linked, _, member = found.group(2).partition(".")
         if linked in (name, uid):
-            held.add(member.split(".")[0])
+            held.add(named_member(member, blocks))
     return held
 
 
-def unresolved(records, statement):
+# @req> REQ-11930677@zW9EYrOae8-u rkree6
+def unresolved(records, statement, root):
     # @req> REQ-77623729@vjmOfyXPn_43 elfpax
     held = {str(data.get("name")): set(corpus.entries(data) or {})
             | ({"default"} if data.get("default") is not None else set())
+            | block_members(root, uid, data)
             for uid, data in records.items()
             if corpus.kind_of(uid, data) in ("parameter", "data")}
+    blocks = {str(data.get("name")): corpus.held_blocks(root, uid, data)
+              for uid, data in records.items() if corpus.kind_of(uid, data) == "data"}
     stray, defaultless = set(), set()
     # @req> REQ-77623729@vjmOfyXPn_43 gufo22
     for found in corpus.PARAM_REF.finditer(statement):
-        member = found.group(2).lstrip(".").split(".")[0]
+        member = named_member(found.group(2), blocks.get(found.group(1), ()))
         if found.group(1) not in held or (member
                                           and member not in held[found.group(1)]):
             stray.add(found.group())
@@ -521,7 +537,7 @@ def binding(run, held, root, records):
                     "a reference -- the form is ${name} or ${name.member}. One "
                     "that does not parse reads here as no reference at all, "
                     "which is how a statement binding to every member reads.")
-        stray, defaultless = unresolved(records, statement)
+        stray, defaultless = unresolved(records, statement, root)
         if stray:
             named = {corpus.PARAM_REF.fullmatch(ref).group(1) for ref in stray}
             raise SystemExit(
@@ -537,7 +553,8 @@ def binding(run, held, root, records):
         settled_on = {}
         for name, (uid, members) in dims.items():
             stated = said[name]
-            written = bound(name, uid, statement)
+            written = bound(name, uid, statement,
+                            corpus.addressable_blocks(root, uid, records[uid]))
             # @req> REQ-45221432@7p3Uxweu-mBn 2p6w7j
             if kind == "GUARD":
                 if str(number) in stated:

@@ -401,6 +401,16 @@ def listed_fields(root, uid, data):
     return problems
 
 
+# @req> REQ-20342497@XOTP8seel4tN sm5nxf
+def _shadowed_blocks(records, root):
+    return [f"{uid}: an entry may not be keyed {key} -- the schema marks {key} as "
+            "an addressable block, so an address naming it would name both; "
+            "rename the entry"
+            for uid, data in sorted(records.items())
+            for blocks in [corpus.addressable_blocks(root, uid, data)]
+            for key in sorted(map(str, corpus.entries(data) or {})) if key in blocks]
+
+
 # @req> REQ-79956352@OsoTGRd6D5CZ 5uqc7i
 def hidden_values(uid, data):
     problems = []
@@ -906,11 +916,12 @@ def _circular_definitions(records):
     # @req- ijccb5
 
 
-def _entry_selection(records):
+def _entry_selection(records, root):
     canonical = corpus.reachable(records)
     problems = []
     for uid, data in sorted(records.items()):
-        for address in corpus.references(data) + corpus.concept_references(data):
+        links = corpus.concept_references(data)
+        for address in corpus.references(data) + links:
             target, rest = corpus.split_address(address)
             if rest is None:
                 continue
@@ -918,7 +929,32 @@ def _entry_selection(records):
             if held is None:
                 continue
             existing = corpus.entries(held)
-            key = rest.split(".")[0]
+            key, *steps = rest.split(".")
+            # @req+ REQ-15211173@2tindbOlAUEJ sggzwh
+            # @req+ REQ-11930677@zW9EYrOae8-u xxvuas
+            block = corpus.held_blocks(root, canonical.get(target, target), held).get(key)
+            if block is not None:
+                if not steps:
+                    problems.append(f"{uid}: selects {address}, which names {key} of "
+                                    f"{target} and none of its block members")
+                elif not isinstance(block.get(steps[0], {}), dict):
+                    problems.append(f"{uid}: selects {address} but {steps[0]} of {key} of "
+                                    f"{target} holds no fields of its own")
+                    continue
+                fields = block
+                for step in steps:
+                    if not isinstance(fields, dict) or step not in fields:
+                        problems.append(f"{uid}: selects {address} but {key} of "
+                                        f"{target} holds no {step!r}")
+                        break
+                    fields = fields[step]
+                continue
+            # @req- xxvuas
+            if address in links and "." in rest:
+                problems.append(f"{uid}: links {address}, which names neither an "
+                                f"entry nor a block member of {target}")
+                continue
+            # @req- sggzwh
             # @req+ REQ-62329029@wjRs5FRIhJ3C rc5mmy
             if existing is None:
                 problems.append(
@@ -1189,11 +1225,12 @@ def _entry_term_fields(records, root):
 
 def coherence(records, root, run=lambda check, *args: check(*args)):
     return (run(_approved_bindings, records) + run(_shared_words, records)
-            + run(_circular_definitions, records) + run(_entry_selection, records)
+            + run(_circular_definitions, records) + run(_entry_selection, records, root)
             + run(_duplicate_names, records) + run(_entry_term_fields, records, root)
             + run(_typed_entries, records) + run(_entry_of_values, records, root)
             + run(_value_types, records, root) + run(_unit_quantities, records, root)
-            + run(_listed_units, records) + run(_bounds, records))
+            + run(_listed_units, records) + run(_bounds, records)
+            + run(_shadowed_blocks, records, root))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf

@@ -25,9 +25,11 @@ def _uid(path):
 
 
 # @req> REQ-82027237@R-XinrGfTNzL q4dejo
-def carried(uid, data):
+# @req> REQ-73796163@qg5x9Wvk_AEp bdp26a
+def carried(uid, data, blocks):
     return corpus.stamp_of(uid, data), {
-        key: corpus.entry_stamp_of(uid, data, key) for key in corpus.entries(data) or {}}
+        **{key: corpus.entry_stamp_of(uid, data, key) for key in corpus.entries(data) or {}},
+        **{block: corpus.held_block(data, block) for block in blocks}}
 
 
 def _flat(value):
@@ -117,22 +119,25 @@ class History:
             self._parsed[sha] = held if isinstance(held, dict) else None
         return self._parsed[sha]
 
-    def _carried(self, uid, sha):
+    def _carried(self, uid, sha, blocks):
         if (uid, sha) not in self._states:
             held = self._held(uid, sha)
-            self._states[uid, sha] = None if held is None else carried(uid, held)
+            self._states[uid, sha] = None if held is None else carried(uid, held, blocks)
         return self._states[uid, sha]
 
     # @req> REQ-59306961@EGz7Ll3e9FKA jw6cdl
     # @req> REQ-82027237@R-XinrGfTNzL aum3ke
+    # @req> REQ-73796163@qg5x9Wvk_AEp x43h3h
     def updated(self, uid, data):
         self._load()
-        now = carried(uid, data)
-        if self._carried(uid, self._head.get(uid)) != now:
+        blocks = corpus.held_blocks(self.root, uid, data)
+        now = carried(uid, data, blocks)
+        if self._carried(uid, self._head.get(uid), blocks) != now:
             return None
         return next((iso for _, iso, new, parents in self._rows.get(uid, ())
-                     if self._carried(uid, new) == now
-                     and all(self._carried(uid, parent) != now for parent in parents)),
+                     if self._carried(uid, new, blocks) == now
+                     and all(self._carried(uid, parent, blocks) != now
+                             for parent in parents)),
                     None)
 
     # @req> REQ-50929621@tSdGG-tCMu8G qgp2gz
