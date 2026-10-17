@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-59707978: txCcQRCbn81hlLObvxd4mjeLkutqLVcJ8e9iWdlzW8I
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations:
+  REQ-59707978: depends_on
+status: approved
+text: When reqctl repin-links has [pinned](pin) the links and references it re-pins,
+  the product shall run the checks validate runs over the whole corpus once, over
+  the corpus as the command would leave it, before it writes any [item](item).
+type: functional
+verification: inspection

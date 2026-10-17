@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+priority: medium
+relations:
+  REQ-13148397: constrains
+  REQ-44451070: constrains
+status: approved
+text: The product shall build at most one validator in a process for each distinct
+  schema content it validates against, whether the schema is read from a file or derived
+  from one by the product.
+type: non_functional
+verification: inspection

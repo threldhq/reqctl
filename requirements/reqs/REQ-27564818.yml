@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: an [item](item) holding a link that does not [await assessment](awaiting_assessment)
+  then: the product leaves that [pin](pin) as it was
+  when: reqctl repin-links names the [item](item)
+- given: an [item](item) holding no relation toward a requirement
+  then: the product records no relation toward it
+  when: reqctl repin-links names the [item](item)
+assessed:
+  REQ-59707978: txCcQRCbn81hlLObvxd4mjeLkutqLVcJ8e9iWdlzW8I
+  REQ-76604940: SEVyiDrbH-EzvPpo-WT2sH_VUKQtzmV93dqJW5yLMCU
+  awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations:
+  REQ-59707978: constrains
+  REQ-76604940: constrains
+status: approved
+text: When reqctl repin-links writes an [item](item), the product shall change no
+  field of the [item](item) other than the [pins](pin) of the links and references
+  in it that [awaited assessment](awaiting_assessment) when the command began.
+type: functional
+verification: inspection

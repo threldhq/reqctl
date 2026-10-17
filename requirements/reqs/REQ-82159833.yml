@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a corpus already carrying a fault the checks validate runs over the whole
+    corpus find
+  then: the product writes the [pins](pin)
+  when: reqctl repin-links re-pins links whose [pins](pin) add no fault
+assessed:
+  REQ-23691260: 3s5Nt8Pn1BXAVd_feq3s3Qkt2l-yDafVRXKdh1_jxOA
+  REQ-42390302: QOC4GhS7SkFgNUySBJec_QcZkx_27rINTsnxqVsDklQ
+  REQ-74985073: u--jP_zHM8wWewjMiNqAHuZC_WXnlcL8bJYFpH3PPZI
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations:
+  REQ-23691260: depends_on
+  REQ-42390302: derives_from
+  REQ-74985073: constrains
+status: approved
+text: If the checks validate runs over the whole corpus find, over the corpus as reqctl
+  repin-links would leave it, a fault the corpus did not carry before the command,
+  then the product shall refuse the command and write no [item](item).
+type: functional
+verification: inspection

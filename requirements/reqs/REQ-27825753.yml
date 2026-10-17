@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-30898926: Vu28eWaG_1mEOkNDj-6x3uKFNaUwFedOiL2MhrAGpR4
+  REQ-59707978: txCcQRCbn81hlLObvxd4mjeLkutqLVcJ8e9iWdlzW8I
+priority: medium
+relations:
+  REQ-30898926: derives_from
+  REQ-59707978: constrains
+status: approved
+text: If reqctl repin-links is given neither a uid nor --all, or is given a uid together
+  with --all, then the product shall refuse the command, naming the two forms it takes.
+type: functional
+verification: inspection
