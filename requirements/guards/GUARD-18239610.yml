@@ -4,6 +4,8 @@ acceptance_criteria:
   when: 'its body is edited to write Refs #N where N is an issue'
 assessed:
   GUARD-54236737: mQ9hKg4LFSMffeRfhhF9GDpavMYykTfvlYjiSyHLHzg
+citations:
+  7crqqf: JkZxneUyoxeswkHu5w1tIaPOEjz-jS4n_G3BjfRGcN8
 relations:
   GUARD-54236737: depends_on
 status: approved

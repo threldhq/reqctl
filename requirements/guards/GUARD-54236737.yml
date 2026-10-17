@@ -6,6 +6,8 @@ acceptance_criteria:
   then: the build does not refuse it for naming no issue
   when: the build checks it
 assessed: {}
+citations:
+  r44fy4: z5k5aVzO4vd8URHieZ0wDlE6I3Oo4F_zjHT6zhJcXy4
 relations: {}
 status: approved
 text: If the body of a pull request that dependabot did not open names no issue of
