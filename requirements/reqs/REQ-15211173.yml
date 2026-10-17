@@ -20,8 +20,8 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
-  krbgcj: 6swrLUV5Vb-wWSqhZ5jep2ogvQezX6h59VShp65BAYA
-  sggzwh: ki04JZGn1NOhQWCEGk5YFFyrRKKHO7Z1FIeMBUMWFE8
+  krbgcj: fApOaV876r5RVGAFazoWlC8Cgdk1jmT97kll0NeIqUI
+  sggzwh: RHCsRstbbzTg-MOG4V6xg48kVk4vXIz4xNOADpMk-pQ
 priority: medium
 relations:
   REQ-11930677: depends_on

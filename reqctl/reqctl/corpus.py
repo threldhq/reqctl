@@ -935,11 +935,14 @@ def unclaimed(data):
             if isinstance(held, dict) else {})
 
 
-def concept_at(uid, data, rest):
+def concept_at(root, uid, data, rest):
     if data is None:
         return None
     if rest is not None:
-        held = entry_at(data, rest)
+        # @req+ REQ-11930677@zW9EYrOae8-u krnbz5
+        head, dot, _ = rest.partition(".")
+        held = None if dot and head not in held_blocks(root, uid, data) else entry_at(data, rest)
+        # @req- krnbz5
         return None if held is None else (
             held.get("name"), str(held.get("definition") or "").strip())
     if kind_of(uid, data) == "term":
@@ -1155,6 +1158,12 @@ def addressable_blocks(root, uid, data):
     return frozenset(name for name, stated in fields._merged(
         held if isinstance(held, dict) else {}, "data")[0].items()
         if name not in ITEM_SKIP and stated.get(ADDRESSABLE) is True)
+
+
+def held_blocks(root, uid, data):
+    held = {name: block for name in data if (block := held_block(data, name)) is not None}
+    marked = addressable_blocks(root, uid, data) if held else ()
+    return {name: held[name] for name in sorted(marked) if name in held}
 
 
 def named_schemas(root):

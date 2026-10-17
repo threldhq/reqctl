@@ -381,19 +381,19 @@ def dimensions(root, records):
 
 
 def block_members(root, uid, data):
-    return {f"{block}.{key}" for block in corpus.addressable_blocks(root, uid, data)
-            for key in corpus.held_block(data, block) or {}}
+    return {f"{block}.{key}" for block, held in corpus.held_blocks(root, uid, data).items()
+            for key in held}
 
 
 def named_member(rest, blocks):
-    head, _, tail = rest.partition(".")
+    head, _, tail = rest.lstrip(".").partition(".")
     return f"{head}.{tail.partition('.')[0]}" if head in blocks and tail else head
 
 
 # @req> REQ-54045696@m7842dVOG3jf fi3f7l
 # @req> REQ-11930677@zW9EYrOae8-u rzbuud
 def bound(name, uid, statement, blocks):
-    held = {named_member(found.group(2).lstrip("."), blocks)
+    held = {named_member(found.group(2), blocks)
             for found in corpus.PARAM_REF.finditer(statement)
             if found.group(1) in (name, uid)}
     for found in corpus.CONCEPT_LINK.finditer(statement):
@@ -411,13 +411,12 @@ def unresolved(records, statement, root):
             | block_members(root, uid, data)
             for uid, data in records.items()
             if corpus.kind_of(uid, data) in ("parameter", "data")}
-    blocks = {str(data.get("name")): corpus.addressable_blocks(root, uid, data)
+    blocks = {str(data.get("name")): corpus.held_blocks(root, uid, data)
               for uid, data in records.items() if corpus.kind_of(uid, data) == "data"}
     stray, defaultless = set(), set()
     # @req> REQ-77623729@vjmOfyXPn_43 gufo22
     for found in corpus.PARAM_REF.finditer(statement):
-        member = named_member(found.group(2).lstrip("."),
-                              blocks.get(found.group(1), frozenset()))
+        member = named_member(found.group(2), blocks.get(found.group(1), ()))
         if found.group(1) not in held or (member
                                           and member not in held[found.group(1)]):
             stray.add(found.group())

@@ -26,11 +26,11 @@ def _uid(path):
 
 # @req> REQ-82027237@R-XinrGfTNzL q4dejo
 # @req> REQ-73796163@qg5x9Wvk_AEp bdp26a
-def carried(uid, data, blocks=frozenset()):
+def carried(uid, data, blocks):
     return corpus.stamp_of(uid, data), {
         key: corpus.entry_stamp_of(uid, data, key)
         for key in [*(corpus.entries(data) or {}),
-                    *(f"{block}.{member}" for block in sorted(blocks)
+                    *(f"{block}.{member}" for block in blocks
                       for member in corpus.held_block(data, block) or {})]}
 
 

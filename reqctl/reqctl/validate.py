@@ -402,11 +402,12 @@ def listed_fields(root, uid, data):
 
 
 # @req> REQ-20342497@XOTP8seel4tN sm5nxf
-def shadowed_blocks(root, uid, data):
-    blocks = corpus.addressable_blocks(root, uid, data)
+def _shadowed_blocks(records, root):
     return [f"{uid}: an entry may not be keyed {key} -- the schema marks {key} as "
             "an addressable block, so an address naming it would name both; "
             "rename the entry"
+            for uid, data in sorted(records.items())
+            for blocks in [corpus.addressable_blocks(root, uid, data)]
             for key in sorted(map(str, corpus.entries(data) or {})) if key in blocks]
 
 
@@ -919,8 +920,8 @@ def _entry_selection(records, root):
     canonical = corpus.reachable(records)
     problems = []
     for uid, data in sorted(records.items()):
-        links = set(corpus.concept_references(data))
-        for address in corpus.references(data) + sorted(links):
+        links = corpus.concept_references(data)
+        for address in corpus.references(data) + links:
             target, rest = corpus.split_address(address)
             if rest is None:
                 continue
@@ -928,13 +929,11 @@ def _entry_selection(records, root):
             if held is None:
                 continue
             existing = corpus.entries(held)
-            key = rest.split(".")[0]
+            key, *steps = rest.split(".")
             # @req+ REQ-15211173@2tindbOlAUEJ sggzwh
             # @req+ REQ-11930677@zW9EYrOae8-u xxvuas
-            block = (corpus.held_block(held, key) if key in corpus.addressable_blocks(
-                root, canonical.get(target, target), held) else None)
+            block = corpus.held_blocks(root, canonical.get(target, target), held).get(key)
             if block is not None:
-                steps = rest.split(".")[1:]
                 if not steps:
                     problems.append(f"{uid}: selects {address}, which names {key} of "
                                     f"{target} and none of its block members")
@@ -1226,7 +1225,8 @@ def coherence(records, root, run=lambda check, *args: check(*args)):
             + run(_duplicate_names, records) + run(_entry_term_fields, records, root)
             + run(_typed_entries, records) + run(_entry_of_values, records, root)
             + run(_value_types, records, root) + run(_unit_quantities, records, root)
-            + run(_listed_units, records) + run(_bounds, records))
+            + run(_listed_units, records) + run(_bounds, records)
+            + run(_shadowed_blocks, records, root))
 
 
 # @req> REQ-41697188@IRR8A-_NbYw4 pkvemf
@@ -1658,7 +1658,6 @@ def item_problems(root, uid, path, data, records, reachable, known, broken=(), *
     problems += _guarded(uid, hidden_values, uid, data)
     problems += _guarded(uid, dictionary_rules, uid, data)
     problems += _guarded(uid, listed_fields, root, uid, data)
-    problems += _guarded(uid, shadowed_blocks, root, uid, data)
     problems += _guarded(uid, _relations, uid, data, records, reachable, known)
     problems += _guarded(uid, _references, uid, data, known, root)
     problems += _guarded(uid, _assessed, uid, data, records, reachable, known, suspect)

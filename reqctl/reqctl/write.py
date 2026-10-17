@@ -752,10 +752,6 @@ def rename(store, uid, new_name):
     # @req> REQ-81815730@fForAOZqtxKN k27etl
     faults = [fault for fault in _validate.dictionary_rules(new_name, after[new_name])
               if fault not in _validate.dictionary_rules(new_name, item.data)]
-    # @req> REQ-20342497@XOTP8seel4tN cwvepe
-    faults += [fault for fault in _validate.shadowed_blocks(store.root, new_name,
-                                                            after[new_name])
-               if fault not in _validate.shadowed_blocks(store.root, new_name, item.data)]
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
     faults += [fault for fault in found if fault not in stood]
@@ -1163,15 +1159,16 @@ def _new_item_faults(store, written):
 
 
 # @req> REQ-15211173@2tindbOlAUEJ krbgcj
-def _placed(uid, blocks, flag, named):
+def _placed(uid, blocks, prospective, flag, named):
     block, dot, key = named.partition(".")
-    if not dot:
-        return "entries", named
-    if block in blocks and key and "." not in key:
-        return block, key
-    raise ReqctlError(f"{flag} {named}: names no block member of {uid} -- a block "
-                      "member is named block.key, where the schema marks block "
-                      "addressable")
+    if dot and not (block in blocks and key and "." not in key):
+        raise ReqctlError(f"{flag} {named}: names no block member of {uid} -- a block "
+                          "member is named block.key, where the schema marks block "
+                          "addressable")
+    place = block if dot else "entries"
+    held = prospective.get(place)
+    prospective[place] = held = dict(held) if isinstance(held, dict) else {}
+    return held, key if dot else named
 
 
 def revisable_fields(own, kind):
@@ -1340,8 +1337,7 @@ def _revision(store, uid, fields):
         blocks = corpus.addressable_blocks(store.root, uid, before)
         if fields.get("new_entry") is not None:
             named = str(fields["new_entry"]).strip()
-            place, key = _placed(uid, blocks, "--new-entry", named)
-            held = dict(prospective.get(place) or {})
+            held, key = _placed(uid, blocks, prospective, "--new-entry", named)
             if key in held:
                 raise ReqctlError(
                     f"--new-entry {named}: already an entry; use --entry {named}"
@@ -1349,11 +1345,9 @@ def _revision(store, uid, fields):
             held[key] = _append_fields(
                 _set_fields({}, fields.get("set") or [], carried),
                 fields.get("append") or [], carried)
-            prospective[place] = held
         if fields.get("entry") is not None:
             named = str(fields["entry"]).strip()
-            place, key = _placed(uid, blocks, "--entry", named)
-            held = dict(prospective.get(place) or {})
+            held, key = _placed(uid, blocks, prospective, "--entry", named)
             if key not in held:
                 raise ReqctlError(
                     f"--entry {named}: not an entry of {uid}; to add one, pass "
@@ -1364,15 +1358,12 @@ def _revision(store, uid, fields):
                     _set_fields(dict(held[key] or {}), fields.get("set") or [], carried),
                     fields.get("append") or [], carried),
                 fields.get("unset") or [], named)
-            prospective[place] = held
         if fields.get("drop_entry") is not None:
             named = str(fields["drop_entry"]).strip()
-            place, key = _placed(uid, blocks, "--drop-entry", named)
-            held = dict(prospective.get(place) or {})
+            held, key = _placed(uid, blocks, prospective, "--drop-entry", named)
             if key not in held:
                 raise ReqctlError(f"--drop-entry {named}: no such entry")
             held.pop(key)
-            prospective[place] = held
         # @req- ra2sb2
         if default is not None:
             chosen = str(default).strip()
@@ -1380,12 +1371,6 @@ def _revision(store, uid, fields):
             if chosen not in (corpus.entries(prospective) or {}):
                 raise ReqctlError(f"--default {default}: not an entry")
             prospective["default"] = chosen
-        # @req+ REQ-20342497@XOTP8seel4tN ki4x24
-        shadowed = [fault for fault in _validate.shadowed_blocks(store.root, uid, prospective)
-                    if fault not in _validate.shadowed_blocks(store.root, uid, before)]
-        if shadowed:
-            raise ReqctlError("\n".join(shadowed))
-        # @req- ki4x24
 
     targets = _targets(before)
     prospective = _resolved_prose(store, uid, prospective, targets)
