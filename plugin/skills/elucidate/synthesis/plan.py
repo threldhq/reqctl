@@ -6,8 +6,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
-
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import coverage as _coverage
@@ -1131,7 +1129,7 @@ def read_return(path, shape):
         data = json.loads(path.read_text())
     except (ValueError, RecursionError) as broken:
         return None, f"does not parse as JSON: {broken}"
-    found = sorted(Draft202012Validator(shape).iter_errors(data), key=str)
+    found = sorted(corpus.validator(shape).iter_errors(data), key=str)
     if found:
         where = "/".join(str(part) for part in found[0].absolute_path) or "root"
         return None, f"schema: {where}: {found[0].message}"

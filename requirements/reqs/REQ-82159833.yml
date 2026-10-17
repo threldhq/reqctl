@@ -9,6 +9,8 @@ assessed:
   REQ-74985073: u--jP_zHM8wWewjMiNqAHuZC_WXnlcL8bJYFpH3PPZI
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+citations:
+  u4gac2: gB4YQIpXoAcnhk6TuiGHewmvhTDmZ8rodw4kHNepZ7s
 priority: medium
 relations:
   REQ-23691260: depends_on

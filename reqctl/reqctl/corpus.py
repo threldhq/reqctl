@@ -956,6 +956,17 @@ def schema_path(root, name):
     return Path(root) / "requirements" / "schemas" / f"{name}.schema.yaml"
 
 
+_VALIDATORS: dict[tuple[str, int], Draft202012Validator] = {}
+
+
+# @req> REQ-21229437@Hp3-AwgxgHMK bzxs2e
+def validator(schema, format_checker=None):
+    key = (digest(schema), id(format_checker))
+    if key not in _VALIDATORS:
+        _VALIDATORS[key] = Draft202012Validator(schema, format_checker=format_checker)
+    return _VALIDATORS[key]
+
+
 @functools.lru_cache(maxsize=None)
 def _parsed_schema(path, stamped):
     # @req+ REQ-19913588@hBNJrpn4vtZe rnou7b
@@ -982,7 +993,9 @@ def _parsed_schema(path, stamped):
                           "-- YAML keeps the last, so drop the one that does not govern")
     # @req+ REQ-19913588@hBNJrpn4vtZe mszvfu
     try:
-        Draft202012Validator.check_schema(declared)
+        for fault in validator(Draft202012Validator.META_SCHEMA,
+                               Draft202012Validator.FORMAT_CHECKER).iter_errors(declared):
+            raise SchemaError.create_from(fault)
         _refuse_unfollowable(path, DRAFT202012.create_resource(declared))
     except SchemaError as error:
         where = ".".join(str(p) for p in error.absolute_path) or "(schema)"

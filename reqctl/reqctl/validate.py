@@ -5,7 +5,7 @@ import re
 import unicodedata
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import FormatChecker
 from jsonschema.exceptions import best_match
 
 from . import baseline as _baseline
@@ -72,9 +72,8 @@ def schema_problems(root, uid, data):
         return [f"{uid}: {absent}"]
     # @req+ REQ-33359142@u8vbxFMjrV6Z p3hzqn
     # @req> REQ-62072712@m81ZZqYdquaS qvzmoq
-    validator = Draft202012Validator(declared, format_checker=DATED)
     problems = []
-    for error in sorted(validator.iter_errors(data), key=str):
+    for error in sorted(corpus.validator(declared, DATED).iter_errors(data), key=str):
         error = best_match([error])
         where = ".".join(str(p) for p in error.absolute_path) or "(item)"
         said = error.message
@@ -1027,7 +1026,7 @@ def _judgement(root, uid, data, judged):
     if uid not in judged:
         schema = corpus.schema_for(root, corpus.kind_of(uid, data),
                                    corpus.name_of(uid, data))
-        validator = Draft202012Validator(schema)
+        validator = corpus.validator(schema)
         judged[uid] = (validator, tuple(_fault_paths(validator, data)),
                        (str(root), uid, corpus.digest(repr(schema)),
                         corpus.digest(repr(data))))
@@ -1085,8 +1084,7 @@ def _marked_paths(root, uid, data, marks):
     schema = corpus.schema_for(root, corpus.kind_of(uid, data),
                                corpus.name_of(uid, data))
     return [tuple(str(step) for step in fault.absolute_path)
-            for fault in Draft202012Validator(
-                _unmarked(schema, marks)).iter_errors(data)
+            for fault in corpus.validator(_unmarked(schema, marks)).iter_errors(data)
             if fault.validator == "const" and fault.validator_value == UNMARKED]
 
 

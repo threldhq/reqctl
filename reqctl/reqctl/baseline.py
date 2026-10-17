@@ -2,10 +2,10 @@ import subprocess
 from pathlib import Path
 
 import yaml
-from jsonschema import Draft202012Validator
 
 from .corpus import (CONFLICTED, FOLDERS, ReqctlError, atomic_write,
-                     carriers, items, loads, raw, read, schema, sides, stamp)
+                     carriers, items, loads, raw, read, schema, sides, stamp,
+                     validator)
 
 
 def path(root):
@@ -267,8 +267,7 @@ def check(tree, root):
     number = manifest.get("baseline")
     head = f"baseline {number}" if type(number) is int else path(root).name
 
-    validator = Draft202012Validator(schema(root, "baseline"))
-    for error in sorted(validator.iter_errors(manifest), key=str):
+    for error in sorted(validator(schema(root, "baseline")).iter_errors(manifest), key=str):
         where = ".".join(str(p) for p in error.absolute_path) or "(manifest)"
         problems.append(f"{head}: schema: {where}: {error.message}")
 

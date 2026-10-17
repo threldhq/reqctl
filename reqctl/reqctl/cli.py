@@ -264,6 +264,16 @@ def cmd_relate(args):
     return EXIT_OK
 
 
+def cmd_repin_links(args):
+    tree, _ = corpus.load()
+    repinned = _write.repin_links(tree, args.uids, args.all)
+    _emit(args, repinned,
+          "\n".join(f"{uid}: re-pinned {', '.join(addresses)}"
+                    for uid, addresses in repinned.items())
+          or "no link or reference awaited assessment; nothing was written")
+    return EXIT_OK
+
+
 def cmd_unrelate(args):
     tree, _ = corpus.load()
     removed = _write.unrelate(tree, args.source, args.target)
@@ -1247,6 +1257,13 @@ def build_parser(root, fielded):
     s.add_argument("relation", choices=list(_write.RELATIONS))
     s.add_argument("target", help="the requirement it points at")
     s.set_defaults(func=cmd_relate)
+
+    s = _command(sub, "repin-links",
+                 "pin every link and reference awaiting assessment in the items "
+                 "named, or with --all in every item, checking the corpus once")
+    s.add_argument("uids", nargs="*", metavar="UID")
+    s.add_argument("--all", action="store_true")
+    s.set_defaults(func=cmd_repin_links)
 
     s = _command(sub, "unrelate", "remove a relation")
     s.add_argument("source")

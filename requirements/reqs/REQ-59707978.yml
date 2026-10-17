@@ -22,6 +22,9 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  5usm7z: piQGCODxYjH01NplTyd3teAH38-OxVhIdbIW9-0YHH0
+  ipk7bd: plUO03lMZAwMJlBgJaUU52HIVyxBETtlCyMVfteiqw8
 priority: medium
 relations:
   REQ-54851939: depends_on

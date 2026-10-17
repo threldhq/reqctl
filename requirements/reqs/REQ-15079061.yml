@@ -16,6 +16,10 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   per_item_check: L8I25OZJNU3F27YFjUYLQ2KOi_HawZhox0_ayr4PUC4
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+citations:
+  acmucb: gLh16TBM8htJH3_ate1LXxV7Xp6zxPI2hzThFfljGwM
+  gtdcql: 1UxlmtWelBMvPMTnNquvoO7w4RteHp6VyFKjjSvF4xs
+  s4egdj: 0m0EpDt3hIhdLThMvon3oY4q_MfNRkZwGUy83tFegTo
 priority: medium
 relations:
   REQ-42390302: derives_from
