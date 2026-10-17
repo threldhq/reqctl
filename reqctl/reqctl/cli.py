@@ -93,6 +93,10 @@ def _describe(tree, item):
         out["unclaimed"] = corpus.unclaimed(data)
     elif corpus.kind_of(uid, data) == "data":
         out.update(name=data.get("name"), entries=corpus.entries(data) or {})
+        # @req> REQ-32949873@Zm9yVRdGWKOQ 4ffzw2
+        out.update({block: corpus.held_block(data, block)
+                    for block in sorted(corpus.addressable_blocks(tree.root, uid, data))
+                    if corpus.held_block(data, block) is not None})
     else:
         out.update(
             name=data.get("name"),
@@ -146,9 +150,11 @@ def _value(value, unit):
     return ", ".join(f"{member}{suffix}" for member in value)
 
 
-def _named_fields(fields, rest):
+def _named_fields(fields, rest, blocks):
     steps = rest.split(".")
     found = corpus.entries(fields) or {}
+    if steps[0] in blocks and len(steps) > 1:
+        found, steps = corpus.held_block(fields, steps[0]), steps[1:]
     for step in steps:
         if not isinstance(found, dict) or step not in found:
             return None
@@ -338,6 +344,13 @@ def _resolved(text, store):
             shown = f"{member} {unit}" if unit else str(member)
         else:
             entry, _, field = rest.partition(".")
+            # @req+ REQ-11930677@zW9EYrOae8-u ne5nva
+            block = (corpus.held_block(fields, entry) if entry in
+                     corpus.addressable_blocks(store.root, item.uid, fields) else None)
+            if block is not None:
+                held, unit = block, None
+                entry, _, field = field.partition(".")
+            # @req- ne5nva
             if entry not in held:
                 return match.group(0)
             if field:
@@ -349,7 +362,7 @@ def _resolved(text, store):
                 shown = field if isinstance(value, dict) else str(value)
             else:
                 # @req+ REQ-62905646@_RkSNpGGoJXv cs3jo4
-                stated = corpus.cited_entries(item).get(entry)
+                stated = (corpus.cited_entries(item) if block is None else block).get(entry)
                 if (isinstance(stated, dict) and "value_type" in stated
                         and "quantity" in stated and _write.typed(store)):
                     shown = _value([stated["quantity"]], stated.get("unit"))
@@ -370,8 +383,12 @@ def _resolved(text, store):
         # @req- o72rua
         if rest is None:
             return f"[{match.group(1)}](#{found.uid})"
+        block, _, member = rest.partition(".")
         # @req> REQ-13364391@mP1skaGV3Fbm fgekao
-        if rest not in (corpus.entries(found.data) or {}):
+        # @req> REQ-11930677@zW9EYrOae8-u 7lts2l
+        if rest not in (corpus.entries(found.data) or {}) and not (
+                block in corpus.addressable_blocks(store.root, found.uid, found.data)
+                and member in (corpus.held_block(found.data, block) or {})):
             return match.group(0)
         # @req> REQ-22770949@2z1l08YISr1R 54eioc
         return f"[{match.group(1)}](#{found.uid}.{rest})"
@@ -474,6 +491,16 @@ def cmd_export(args):
             for key, fields in (corpus.entries(data) or {}).items():
                 # @req> REQ-22770949@2z1l08YISr1R qc2ek5
                 lines += _entry_lines(key, fields, anchor=f"{uid}.{key}")
+            # @req> REQ-32949873@Zm9yVRdGWKOQ iwaspp
+            for block in sorted(corpus.addressable_blocks(root, uid, data)):
+                held = corpus.held_block(data, block)
+                if held is None:
+                    continue
+                lines.append(f"- {block}")
+                for member, fields in held.items():
+                    lines += (_entry_lines(member, fields, 1, f"{uid}.{block}.{member}")
+                              if isinstance(fields, dict)
+                              else [f"  - {member}: {corpus.plain(fields)}"])
             lines.append(f"- status: {data.get('status')}")
         else:
             # @req> REQ-22770949@2z1l08YISr1R adyi2v
@@ -565,8 +592,10 @@ def _context(store, item, dependents, tags, past):
         # @req+ REQ-49042671@vhxkl2dsMRfs pgeszq
         held = corpus.flagged(fields, rest) if fields is not None else None
         addresses_item = rest in (None, "default", corpus.MEMBERS) or held is not None
+        # @req> REQ-11930677@zW9EYrOae8-u h6snkl
         named = (None if fields is None or addresses_item
-                 else _named_fields(fields, rest))
+                 else _named_fields(fields, rest, corpus.addressable_blocks(
+                     store.root, target, fields)))
         if fields is None or (not addresses_item and named is None):
             entry.update(name=None, value=None, unit=None, status=None,
                          missing=True, suspect=True)
@@ -587,7 +616,11 @@ def _context(store, item, dependents, tags, past):
             fields = corpus.find(store, target).data
         except ReqctlError:
             fields = None
-        held = corpus.concept_at(target, fields, rest)
+        # @req> REQ-11930677@zW9EYrOae8-u rve7el
+        held = (None if fields is not None and "." in (rest or "")
+                and rest.partition(".")[0] not in corpus.addressable_blocks(
+                    store.root, target, fields)
+                else corpus.concept_at(target, fields, rest))
         if held is None:
             entry.update(word=None, definition=None, status=None, missing=True,
                          suspect=True)

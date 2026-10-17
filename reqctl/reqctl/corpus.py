@@ -36,7 +36,8 @@ UID_IN_PROSE = re.compile(rf"\b(?:{KINDS})-\d{{8}}\b")
 PARAM_REF = re.compile(rf"\$\{{({NAME})((?:\.[^}}\s]+)?)\}}")
 PARAM_NEAR = re.compile(r"\$\{?(?:param|data)[-_]\d+(?:\.[\w.-]+)?\}?", re.IGNORECASE)
 NAME_FORM = "${name}"
-CONCEPT_TARGET = re.compile(rf"{NAME}(?:\.{NAME})?")
+# @req> REQ-11930677@zW9EYrOae8-u lzcna6
+CONCEPT_TARGET = re.compile(rf"{NAME}(?:\.{NAME}){{0,2}}")
 CONCEPT_LINK = re.compile(rf"\[([^\]\n]+)\]\(({CONCEPT_TARGET.pattern})\)")
 TERM_NEAR = re.compile(r"\bterm[-_]\d+\b", re.IGNORECASE)
 LINK_FORM = "[the words](handle)"
@@ -634,6 +635,13 @@ def flagged(data, flag):
             if isinstance(fields, dict) and fields.get(flag) is True}
 
 
+def held_block(data, name):
+    if name in (entries(data) or {}) or name in ITEM_SKIP:
+        return None
+    held = data.get(name)
+    return held if isinstance(held, dict) else None
+
+
 def entry_at(data, key):
     held = entries(data) or {}
     if key in held:
@@ -642,6 +650,11 @@ def entry_at(data, key):
     if not isinstance(key, str):
         return None
     steps = key.split(".")
+    # @req+ REQ-11930677@zW9EYrOae8-u 2nario
+    block = held_block(data, steps[0])
+    if block is not None and len(steps) > 1:
+        held, steps = block, steps[1:]
+    # @req- 2nario
     while steps:
         name = steps.pop(0)
         if not isinstance(held, dict) or name not in held:
@@ -705,6 +718,11 @@ def covered(uid, data, entry_key=None):
     fields = entry_at(data, entry_key)
     if kind_of(uid, data) == "term":
         return {"definition": (fields or {}).get("definition")}
+    # @req+ REQ-11930677@zW9EYrOae8-u a7a4eb
+    block, _, member = str(entry_key).partition(".")
+    if member and held_block(data, block) is not None:
+        return {block: {member: fields}}
+    # @req- a7a4eb
     return {"entries": {entry_key: fields}}
 
 
@@ -864,7 +882,12 @@ def expand_address(lookup, address):
         if member is not None:
             wanted.add(f"{uid}.{member}")
     else:
-        wanted.add(f"{uid}.{rest.split('.', 1)[0]}")
+        # @req+ REQ-11930677@zW9EYrOae8-u ujoctz
+        head, _, tail = rest.partition(".")
+        member = tail.partition(".")[0]
+        wanted.add(f"{uid}.{head}.{member}" if member and held_block(target, head) is not None
+                   else f"{uid}.{head}")
+        # @req- ujoctz
     return wanted
 
 
@@ -1121,6 +1144,17 @@ def schema_for(root, kind, name=None):
 
 
 BINDING = "x-binding"
+ADDRESSABLE = "x-addressable"
+
+
+def addressable_blocks(root, uid, data):
+    if kind_of(uid, data) != "data":
+        return frozenset()
+    from . import fields
+    held = schema_for(root, "data", name_of(uid, data))
+    return frozenset(name for name, stated in fields._merged(
+        held if isinstance(held, dict) else {}, "data")[0].items()
+        if name not in ITEM_SKIP and stated.get(ADDRESSABLE) is True)
 
 
 def named_schemas(root):

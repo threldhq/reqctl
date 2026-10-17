@@ -19,6 +19,10 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
+citations:
+  cwvepe: 4o4pLPbiX4DHw7p89kKTEeKAMs68FdrccK8_62FP75k
+  ki4x24: Ld0wXh3btl_yMW4x-EVapM4O4XZkevVQhcCxyG9MZOM
+  sm5nxf: Ao8UpyUu373X9vCFn0TCWeyFHOoeM2dYDZGeTcXWdpU
 priority: medium
 relations:
   REQ-11930677: constrains
