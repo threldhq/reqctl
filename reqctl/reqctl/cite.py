@@ -345,10 +345,12 @@ def following(path, text, number):
 
 
 def covered(citations):
+    # @req> REQ-73495055@cPNC8izAHGTl lihjvk
     marks = {(c["path"], line) for c in citations for line in c["marks"]}
     for citation in citations:
         lines = []
         for line in range(citation["first"], citation["last"] + 1):
+            # @req> REQ-73495055@cPNC8izAHGTl jtgzg5
             if (citation["path"], line) in marks:
                 continue
             spanning = [c for c in citations if c["path"] == citation["path"]
