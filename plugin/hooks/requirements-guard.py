@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import difflib
 import fnmatch
 import functools
 import hashlib
@@ -2611,6 +2612,90 @@ def judge_citation_edit(tool, args, cwd):
         deny(f"{HAND_CITATION}\nIn {args.get('file_path') or args.get('notebook_path')}.")
 
 
+def reqctl_json(args, here):
+    try:
+        done = subprocess.run(
+            ["reqctl", "--json", *args], cwd=here, capture_output=True,
+            timeout=max(DEADLINE - time.monotonic(), 0.001),
+            env={**os.environ, "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.fsmonitor",
+                 "GIT_CONFIG_VALUE_0": "false"})
+        return json.loads(done.stdout)
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return None
+
+
+def code_base(target):
+    held = [up for up in [target, *target.parents] if (up / ".git").exists()]
+    return next((up for up in held if (up / "requirements").is_dir()), held[0] if held else None)
+
+
+# @req> REQ-97212636@WESMQpogO3Mc 5hyq4i
+def governed(statement):
+    criteria = statement.get("acceptance_criteria") or []
+    value = statement.get("value")
+    return "\n".join([
+        f"{statement['uid']}: {statement.get('text') or ''}".rstrip(),
+        *(f"  given {c.get('given')} / when {c.get('when')} / then {c.get('then')}"
+          for c in criteria if isinstance(c, dict)),
+        *([f"  value {', '.join(map(str, value)) if isinstance(value, list) else value}"
+           + (f" {statement['unit']}" if statement.get("unit") else "")]
+          if value is not None else [])])
+
+
+# @req> REQ-97212636@WESMQpogO3Mc 7mtqnh
+def governing(tool, args, cwd):
+    if tool not in ("Edit", "MultiEdit", "Write", "NotebookEdit"):
+        return None
+    before, after = (notebook_edited(args, cwd) if tool == "NotebookEdit"
+                     else edited(tool, args, cwd))
+    if not citations(before.removeprefix("\ufeff")):
+        return None
+    target = Path(cwd, os.path.expanduser(args.get("file_path") or args.get("notebook_path") or "")
+                  ).resolve()
+    root = code_base(target)
+    trusted = root is not None and root == code_base(
+        Path(os.environ.get("CLAUDE_PROJECT_DIR") or cwd).resolve())
+    traced = reqctl_json(["trace"], target.parent) if trusted else None
+    relative = target.relative_to(root).as_posix() if trusted else ""
+    cited = ([c for c in traced["citations"] if isinstance(c, dict) and c.get("path") == relative]
+             if isinstance(traced, dict) and isinstance(traced.get("citations"), list) else None)
+    if cited is None or not all(
+            isinstance(c.get("address"), str) and isinstance(c.get("lines"), list)
+            and isinstance(c.get("open"), int) and isinstance(c.get("close"), int) for c in cited):
+        return (f"{target} holds statement citations, and the statements they name could not be "
+                "shown -- run reqctl trace, then reqctl context UID")
+    old, new = before.split("\n"), after.replace("\r\n", "\n").split("\n")
+    head = next((at for at, (was, now) in enumerate(zip(old, new)) if was != now),
+                min(len(old), len(new)))
+    tail = next((at for at, (was, now) in enumerate(zip(old[head:][::-1], new[head:][::-1]))
+                 if was != now), min(len(old), len(new)) - head)
+    changed, inserted = set(), set()
+    for op, first, last, _, _ in difflib.SequenceMatcher(
+            None, old[head:len(old) - tail], new[head:len(new) - tail]).get_opcodes():
+        if op == "insert":
+            inserted.add(head + first + 1)
+        elif op != "equal":
+            changed.update(range(head + first + 1, head + last + 1))
+    addresses = list(dict.fromkeys(
+        c["address"] for c in cited
+        if changed & set(c["lines"]) or any(c["open"] < at <= c["close"] for at in inserted)))
+    if not addresses:
+        return None
+    found = reqctl_json(["context", *dict.fromkeys(a.partition(".")[0] for a in addresses)],
+                        target.parent)
+    held = {s.get("uid"): s for s in (found if isinstance(found, list) else [found])
+            if isinstance(s, dict) and "kind" in s}
+    shown = []
+    for address in addresses:
+        uid, _, entry = address.partition(".")
+        statement = held.get(uid) or {"uid": uid, "text": "not readable through reqctl context"}
+        fields = (statement.get("entries") or {}).get(entry) if entry else None
+        shown.append(governed(statement) + (f"\n  entry {entry}: {json.dumps(fields)}"
+                                            if entry else ""))
+    return (f"This edit changes lines of {relative} that statement citations cover. "
+            "Read the code against what they name:\n" + "\n".join(shown))
+
+
 # @req> REQ-38099593@WZbBLy6bHv3j cebvfg
 def judge_citation_shell(raw):
     cmd = ESCAPE.sub("", raw)
@@ -2634,7 +2719,7 @@ def judge_citation_shell(raw):
         deny(NOT_A_READ.format(tool=words[0]))
 
 
-def decide(data: dict) -> None:
+def decide(data: dict) -> "str | None":
     tool = str(data.get("tool_name") or "")
     args = data.get("tool_input")
     # @req+ REQ-18701923@7CvKXOjSI6Kb hyuozw
@@ -2705,6 +2790,7 @@ def decide(data: dict) -> None:
             f"{owner}/{repo}" if all(isinstance(v, str) and v for v in (owner, repo)) else None)
 
     judge_citation_edit(tool, args, cwd)
+    shown = governing(tool, args, cwd)
     commands = [messageless(value) for value in named_paths(args, COMMAND_KEY)]
     # @req> REQ-75038049@hXyFNmxx-SWy hwgp36
     CALL["changes_environment"] = any(
@@ -2713,6 +2799,7 @@ def decide(data: dict) -> None:
     for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
+    return shown
 
 
 def main() -> None:
@@ -2726,9 +2813,18 @@ def main() -> None:
     # @req- mvehq6
     # @req+ REQ-51060455@Z5EVUURxm1nV 4gmqti
     try:
-        decide(data)
+        shown = decide(data)
     except Exception as error:
         deny(UNREADABLE.format(what=f"the call: judging it raised {type(error).__name__}"))
+    # @req> REQ-97212636@WESMQpogO3Mc v7dqys
+    if shown:
+        context = json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse",
+                                                     "additionalContext": shown}}).encode()
+        try:
+            while context:
+                context = context[os.write(1, context):]
+        except OSError:
+            pass
     sys.exit(0)
     # @req- 4gmqti
 

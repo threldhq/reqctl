@@ -20,6 +20,9 @@ assessed:
   exclusive: 3JKd7AntKjXMn7QIJ76uUWL2l24QYnfM3o0sstKLCsY
   multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  jtgzg5: OmSJMVlAABGPCkUmbJXF7q_BA4sn6JKCzmKI6D1M_Po
+  lihjvk: NH3GMNZN9mubACE-0MVSFpLNZwY5adBtDS9xgCEuyAs
 priority: medium
 relations:
   REQ-17608335: constrains
