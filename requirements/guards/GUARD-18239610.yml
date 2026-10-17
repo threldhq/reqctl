@@ -1,0 +1,11 @@
+acceptance_criteria:
+- given: a refused pull request
+  then: the build checks it again and no longer refuses it for naming no issue
+  when: 'its body is edited to write Refs #N where N is an issue'
+assessed:
+  GUARD-54236737: mQ9hKg4LFSMffeRfhhF9GDpavMYykTfvlYjiSyHLHzg
+relations:
+  GUARD-54236737: depends_on
+status: approved
+text: When the body of a pull request is edited, the build shall check again whether
+  the body names an issue of this repository.

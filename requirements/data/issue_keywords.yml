@@ -12,6 +12,6 @@ entries:
   resolves: {}
 kind: data
 name: issue_keywords
-status: draft
+status: approved
 text: 'each word that, followed by # and an issue''s number in a pull request''s body,
   names that issue'

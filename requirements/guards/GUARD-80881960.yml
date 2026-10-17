@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: 'a body writing Refs #N where N is an issue of this repository'
+  then: the body names an issue
+  when: the build checks it
+- given: 'a body writing Closes #N where N is a pull request'
+  then: the body names no issue
+  when: the build checks it
+- given: 'a body writing #N with no keyword before it'
+  then: the body names no issue
+  when: the build checks it
+- given: 'a body writing closes: #N or FIXES #N where N is an issue of this repository'
+  then: the body names an issue
+  when: the build checks it
+- given: 'a body writing Refs # N, a space between # and the number'
+  then: the body names no issue
+  when: the build checks it
+- given: 'a body writing Refs #N where the build cannot learn whether N is an issue'
+  then: the body names no issue and the refusal names N
+  when: the build checks it
+assessed:
+  GUARD-18239610: b7HqEiGpFOuyJoA8Dnb9vXTWNjl5kIPDfSY761OjSi8
+  GUARD-54236737: mQ9hKg4LFSMffeRfhhF9GDpavMYykTfvlYjiSyHLHzg
+  issue_keywords: 78auURu7swNOHAOcX2L2o36u0MaXg_poSke6cbgMux8
+  issue_keywords.*: aZK17ObYu7OsWE_9c6X4jD7Z86L2ZYXAWM4Xm4wW-Ow
+relations:
+  GUARD-18239610: constrains
+  GUARD-54236737: constrains
+status: approved
+text: 'The build shall count a pull request body as naming an issue only where the
+  body writes one of ${issue_keywords} followed by # and the number of an issue of
+  this repository that is not a pull request.'

@@ -1,0 +1,12 @@
+acceptance_criteria:
+- given: a pull request a person opened whose body names no issue
+  then: the build refuses the pull request
+  when: the build checks it
+- given: a pull request dependabot opened whose body names no issue
+  then: the build does not refuse it for naming no issue
+  when: the build checks it
+assessed: {}
+relations: {}
+status: approved
+text: If the body of a pull request that dependabot did not open names no issue of
+  this repository, then the build shall refuse the pull request.
