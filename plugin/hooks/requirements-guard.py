@@ -2684,7 +2684,7 @@ def governing(tool, args, cwd):
     found = reqctl_json(["context", *dict.fromkeys(a.partition(".")[0] for a in addresses)],
                         target.parent)
     held = {s.get("uid"): s for s in (found if isinstance(found, list) else [found])
-            if isinstance(s, dict) and "error" not in s}
+            if isinstance(s, dict) and "kind" in s}
     shown = []
     for address in addresses:
         uid, _, entry = address.partition(".")
