@@ -270,7 +270,7 @@ def cmd_repin_links(args):
     _emit(args, repinned,
           "\n".join(f"{uid}: re-pinned {', '.join(addresses)}"
                     for uid, addresses in repinned.items())
-          or "no link or reference awaited assessment; nothing was written")
+          or "nothing to re-pin; nothing was written")
     return EXIT_OK
 
 

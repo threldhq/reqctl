@@ -31,7 +31,7 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
-  zrp6x7: _Yb0qoIuHIqlOnXVdQPzbwksSZIEzLpU2eFRDu5p84g
+  zrp6x7: _VPWpgawZpoQyR6HLdBPK7neAVwOS2AloweQyFylz4I
 priority: medium
 relations:
   REQ-13148397: depends_on

@@ -1,5 +1,6 @@
 import copy
 import datetime
+import functools
 import math
 import re
 import unicodedata
@@ -1106,6 +1107,11 @@ def _date(node):
     return node.get("format") == DATE
 
 
+@functools.cache
+def _entry_of(target):
+    return lambda node: node.get(corpus.ENTRY_OF) == target
+
+
 def prose_paths(root, uid, data):
     return _marked_paths(root, uid, data, _prose)
 
@@ -1297,9 +1303,7 @@ def _entry_of_values(records, root):
         schema = corpus.schema_for(root, corpus.kind_of(uid, data),
                                    corpus.name_of(uid, data))
         for target in sorted(_marker_targets(schema) & held.keys()):
-            for path in sorted(_marked_paths(
-                    root, uid, data,
-                    lambda node, target=target: node.get(corpus.ENTRY_OF) == target)):
+            for path in sorted(_marked_paths(root, uid, data, _entry_of(target))):
                 value = _at(data, path)
                 problems += [f"{uid}: {'.'.join(path)} {member!r} names no entry "
                              f"of {target}"
