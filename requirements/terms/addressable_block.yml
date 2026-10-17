@@ -1,0 +1,13 @@
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+entries:
+  addressable_block:
+    aliases:
+    - addressable blocks
+    definition: A field that the schema governing a [data item](data_item) declares
+      beside the field holding its [entries](entry) and marks as addressable, holding
+      members under keys of their own.
+    word: addressable block
+kind: term
+status: approved

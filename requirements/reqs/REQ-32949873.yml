@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a [data item](data_item) holding an [addressable block](addressable_block)
+  then: the product shows, after the [entries](entry), the block's name with each
+    [block member](block_member) and its fields under it
+  when: reqctl context is run for the [data item](data_item)
+- given: a [data item](data_item) holding an [addressable block](addressable_block)
+  then: the record carries, beside the [entries](entry), one record keyed by the block's
+    name holding each [block member](block_member) and its fields
+  when: reqctl --json context is run for the [data item](data_item)
+- given: a [data item](data_item) holding an [addressable block](addressable_block)
+  then: the export shows, after the [entries](entry), a line naming the block with
+    each [block member](block_member) nested under it with its fields and an anchor
+    at it
+  when: the corpus is exported
+- given: a [data item](data_item) holding two [addressable blocks](addressable_block)
+  then: the blocks stand after the [entries](entry) in the order of their names
+  when: reqctl context or export shows the [data item](data_item)
+assessed:
+  addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
+  block_member: pnK2LnQcIC7Fb2GdpY_qJ0gmifdRLURXuAFAW31S-Bg
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations: {}
+status: approved
+text: When reqctl context or export shows a [data item](data_item) holding an [addressable
+  block](addressable_block), the product shall show each [block member](block_member)
+  with its fields, nested under the block's name after the [entries](entry).
+type: functional
+verification: inspection

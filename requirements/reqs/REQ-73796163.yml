@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a [data item](data_item) one of whose [block members](block_member) a later
+    commit revised
+  then: the committer date and time of that commit stand as the date of its last update
+  when: reqctl context, export or list shows the [data item](data_item)
+assessed:
+  REQ-11930677: zW9EYrOae8-u8KwxL5w05JEgFmsILH44ca3s1_IFSls
+  REQ-82027237: R-XinrGfTNzLE1-PxO9SeWnxAkNShomWm9kGaZ8zE-Y
+  addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
+  block_member: pnK2LnQcIC7Fb2GdpY_qJ0gmifdRLURXuAFAW31S-Bg
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-11930677: derives_from
+  REQ-82027237: derives_from
+status: approved
+text: When the product dates the last update of a [data item](data_item) holding an
+  [addressable block](addressable_block), the product shall count each commit that
+  changed a [block member](block_member) as one that changed an [entry](entry) the
+  [data item](data_item) holds.
+type: functional
+verification: inspection
