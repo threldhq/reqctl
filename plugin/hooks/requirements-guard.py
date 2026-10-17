@@ -2648,7 +2648,7 @@ def governing(tool, args, cwd):
         return None
     before, after = (notebook_edited(args, cwd) if tool == "NotebookEdit"
                      else edited(tool, args, cwd))
-    if not citations(before.removeprefix("﻿")):
+    if not citations(before.removeprefix("\ufeff")):
         return None
     target = Path(cwd, os.path.expanduser(args.get("file_path") or args.get("notebook_path") or "")
                   ).resolve()
@@ -2662,8 +2662,8 @@ def governing(tool, args, cwd):
     if cited is None or not all(
             isinstance(c.get("address"), str) and isinstance(c.get("lines"), list)
             and isinstance(c.get("open"), int) and isinstance(c.get("close"), int) for c in cited):
-        return (f"{target} holds statement citations, and reqctl could not be run to show "
-                "the statements they name -- run reqctl trace, then reqctl context UID")
+        return (f"{target} holds statement citations, and the statements they name could not be "
+                "shown -- run reqctl trace, then reqctl context UID")
     old, new = before.split("\n"), after.replace("\r\n", "\n").split("\n")
     head = next((at for at, (was, now) in enumerate(zip(old, new)) if was != now),
                 min(len(old), len(new)))
@@ -2684,7 +2684,7 @@ def governing(tool, args, cwd):
     found = reqctl_json(["context", *dict.fromkeys(a.partition(".")[0] for a in addresses)],
                         target.parent)
     held = {s.get("uid"): s for s in (found if isinstance(found, list) else [found])
-            if isinstance(s, dict)}
+            if isinstance(s, dict) and "error" not in s}
     shown = []
     for address in addresses:
         uid, _, entry = address.partition(".")
