@@ -1,0 +1,71 @@
+acceptance_criteria:
+- given: a [data item](data_item) holding an [addressable block](addressable_block)
+    with a [block member](block_member)
+  then: the product accepts the reference or the link as it accepts one naming an
+    [entry](entry) or a field of one
+  when: a statement referencing or linking the [block member](block_member), or referencing
+    a field it holds, is written or the corpus is validated
+- given: an [addressable block](addressable_block) holding no [block member](block_member)
+    under a key
+  then: the product refuses and names the reference
+  when: a statement referencing the block's name and that key is written or the corpus
+    is validated
+- given: two [items](item), one binding a [block member](block_member) and one binding
+    another member of the block or an [entry](entry) of the same [data item](data_item)
+  then: the product makes the binder of the revised member suspect and leaves the
+    other [pinned](pin)
+  when: the [block member](block_member) is revised
+- given: a statement whose reference to a [block member](block_member) [awaits assessment](awaiting_assessment)
+  then: the product [pins](pin) the reference
+  when: reqctl revise --ack names the reference's address
+- given: a statement referencing a [block member](block_member)
+  then: the product shows beside the reference each field the member holds and the
+    value that field holds
+  when: reqctl context is run for the statement
+- given: a statement referencing or linking a [block member](block_member)
+  then: the export shows the reference as it shows one to an [entry](entry), and resolves
+    the link to an anchor at the member
+  when: the corpus is exported
+- given: a statement whose reference to a [block member](block_member) is [pinned](pin),
+    and another whose reference to one [awaits assessment](awaiting_assessment)
+  then: both name the [data item](data_item) by its new name, the first [pinned](pin)
+    and the second still [awaiting assessment](awaiting_assessment)
+  when: the [data item](data_item) is renamed
+- given: a [data item](data_item) whose schema marks a field addressable
+  then: the product changes, adds or drops that [block member](block_member) as it
+    does an [entry](entry), making the block where the [data item](data_item) held
+    none, and leaves every [entry](entry) as it was
+  when: reqctl revise --entry, --new-entry or --drop-entry names the block's name
+    and a key joined by a dot
+- given: a statement referencing a [block member](block_member)
+  then: the product refuses the request
+  when: reqctl revise --drop-entry names that member
+- given: a statement referencing a [data item](data_item) that holds an [addressable
+    block](addressable_block), naming no member or naming a field its [entries](entry)
+    carry
+  then: the product leaves the statement [pinned](pin)
+  when: a [block member](block_member) is revised
+- given: lines of code
+  then: the product refuses, as it refuses an address naming no [entry](entry)
+  when: reqctl tag is asked to cite a [block member](block_member)
+assessed:
+  REQ-44791607: 6FX5SSp9MG3BrMXFTObcLLmHuMfwj51H-fvEu_Gf1fw
+  REQ-62329029: wjRs5FRIhJ3CvH2pvvOVXfuJpTzBWxXbyJ_vUhcQebI
+  addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
+  awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
+  block_member: pnK2LnQcIC7Fb2GdpY_qJ0gmifdRLURXuAFAW31S-Bg
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations:
+  REQ-44791607: constrains
+  REQ-62329029: constrains
+status: approved
+text: Where a reference, a link or reqctl revise names a [block member](block_member)
+  by its [addressable block](addressable_block)'s name and its key joined by a dot,
+  the product shall treat the [block member](block_member) as an [entry](entry) of
+  the [data item](data_item) keyed by that name and key.
+type: functional
+verification: inspection

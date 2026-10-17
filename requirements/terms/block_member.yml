@@ -1,0 +1,13 @@
+assessed:
+  addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+entries:
+  block_member:
+    aliases:
+    - block members
+    definition: One member an [addressable block](addressable_block) holds under a
+      key of its own, apart from the [entries](entry) of the [data item](data_item).
+    word: block member
+kind: term
+status: approved

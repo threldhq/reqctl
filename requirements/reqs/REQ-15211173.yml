@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a [data item](data_item) whose schema declares a field beside its [entries](entry)
+    without marking it addressable
+  then: the product refuses and names the reference or the link
+  when: a statement referencing or linking a key of that field is written
+- given: a corpus holding a statement that references a key of a field its [data item](data_item)'s
+    schema does not mark addressable
+  then: the product refuses and names the reference
+  when: the corpus is validated
+- given: a [data item](data_item) whose schema declares a field beside its [entries](entry)
+    without marking it addressable
+  then: the product refuses the revision and changes nothing
+  when: reqctl revise names a key of that field as the [entry](entry) to change, add
+    or drop
+assessed:
+  REQ-11930677: zW9EYrOae8-u8KwxL5w05JEgFmsILH44ca3s1_IFSls
+  REQ-42390302: QOC4GhS7SkFgNUySBJec_QcZkx_27rINTsnxqVsDklQ
+  REQ-62329029: wjRs5FRIhJ3CvH2pvvOVXfuJpTzBWxXbyJ_vUhcQebI
+  addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-11930677: depends_on
+  REQ-42390302: constrains
+  REQ-62329029: derives_from
+status: approved
+text: If a reference, a link or reqctl revise names a key of a field of a [data item](data_item)
+  that is neither the field holding its [entries](entry) nor an [addressable block](addressable_block),
+  then the product shall refuse the prose or the revision that names it.
+type: functional
+verification: inspection
