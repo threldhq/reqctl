@@ -1080,26 +1080,44 @@ def _unmarked(node, marks):
     return node
 
 
+_DERIVED: dict[tuple[int, object], tuple[object, object]] = {}
+
+
 def _marked_paths(root, uid, data, marks):
     schema = corpus.schema_for(root, corpus.kind_of(uid, data),
                                corpus.name_of(uid, data))
+    held = _DERIVED.get((id(schema), marks))
+    if held is None or held[0] is not schema:
+        held = _DERIVED[id(schema), marks] = (schema, _unmarked(schema, marks))
     return [tuple(str(step) for step in fault.absolute_path)
-            for fault in corpus.validator(_unmarked(schema, marks)).iter_errors(data)
+            for fault in corpus.validator(held[1]).iter_errors(data)
             if fault.validator == "const" and fault.validator_value == UNMARKED]
 
 
+def _prose(node):
+    return node.get(PROSE) is True
+
+
+def _observed(node):
+    return node.get(OBSERVED) is True
+
+
+def _date(node):
+    return node.get("format") == DATE
+
+
 def prose_paths(root, uid, data):
-    return _marked_paths(root, uid, data, lambda node: node.get(PROSE) is True)
+    return _marked_paths(root, uid, data, _prose)
 
 
 def observed_paths(root, uid, data):
     # @req> REQ-48500355@rnstkLKM48vN t3fuqq
-    return _marked_paths(root, uid, data, lambda node: node.get(OBSERVED) is True)
+    return _marked_paths(root, uid, data, _observed)
 
 
 def dated_paths(root, uid, data):
     # @req> REQ-62072712@m81ZZqYdquaS npwa4k
-    return _marked_paths(root, uid, data, lambda node: node.get("format") == DATE)
+    return _marked_paths(root, uid, data, _date)
 
 
 def _dropped(node, paths, at=()):

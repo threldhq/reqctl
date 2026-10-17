@@ -1604,15 +1604,15 @@ def repin_links(store, uids, everything):
         moved = _awaiting_pins(item, records, canonical)
         # @req> REQ-27564818@6ED2a9SQcZSQ trkw5f
         if moved:
-            stated = item.data.get("assessed")
-            pins = dict(stated) if isinstance(stated, dict) else {}
+            pins = {**_assessed_map(item.uid, item.data), **moved}
             written[item.uid] = corpus.Item(item.uid, item.path,
-                                            {**item.data, "assessed": {**pins, **moved}})
+                                            {**item.data, "assessed": pins})
             repinned[item.uid] = sorted(moved)
     # @req- 5usm7z
+    if not written:
+        return repinned
     # @req> REQ-74985073@u--jP_zHM8wW k3f324
-    faults = _new_corpus_faults(
-        store, {uid: one.data for uid, one in written.items()}) if written else []
+    faults = _new_corpus_faults(store, {uid: one.data for uid, one in written.items()})
     # @req+ REQ-82159833@XT-Vyx7SgeW0 u4gac2
     if faults:
         raise ReqctlError("\n".join(faults) + "\nno item was written")

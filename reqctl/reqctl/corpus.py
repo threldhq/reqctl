@@ -957,13 +957,21 @@ def schema_path(root, name):
 
 
 _VALIDATORS: dict[tuple[str, int], Draft202012Validator] = {}
+_HELD: dict[tuple[int, int], tuple[object, Draft202012Validator]] = {}
 
 
 # @req> REQ-21229437@Hp3-AwgxgHMK bzxs2e
 def validator(schema, format_checker=None):
+    seen = (id(schema), id(format_checker))
+    held = _HELD.get(seen)
+    if held is not None and held[0] is schema:
+        return held[1]
     key = (digest(schema), id(format_checker))
     if key not in _VALIDATORS:
         _VALIDATORS[key] = Draft202012Validator(schema, format_checker=format_checker)
+    if len(_HELD) >= 256:
+        _HELD.clear()
+    _HELD[seen] = (schema, _VALIDATORS[key])
     return _VALIDATORS[key]
 
 
