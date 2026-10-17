@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: an [item](item) whose relation [awaits assessment](awaiting_assessment)
+  then: the product [pins](pin) it without running the checks validate runs over the
+    whole corpus
+  when: reqctl relate is run again for that relation
+- given: an [item](item) whose reference [awaits assessment](awaiting_assessment)
+  then: the product [pins](pin) it without running the checks validate runs over the
+    whole corpus
+  when: reqctl revise --ack names the reference and changes nothing else
+- given: an [item](item)
+  then: the product runs the checks validate runs over the whole corpus
+  when: reqctl revise changes its text
+assessed:
+  REQ-42390302: QOC4GhS7SkFgNUySBJec_QcZkx_27rINTsnxqVsDklQ
+  awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  per_item_check: L8I25OZJNU3F27YFjUYLQ2KOi_HawZhox0_ayr4PUC4
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+priority: medium
+relations:
+  REQ-42390302: derives_from
+status: approved
+text: When reqctl revise or reqctl relate would write an [item](item) changing nothing
+  in it but its [pins](pin), the product shall run the [per-item checks](per_item_check)
+  on that [item](item) alone, and none of the checks validate runs over the whole
+  corpus.
+type: functional
+verification: inspection

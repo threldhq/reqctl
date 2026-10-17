@@ -1,0 +1,35 @@
+acceptance_criteria:
+- given: an [item](item) holding a link that [awaits assessment](awaiting_assessment)
+    and names an [item](item) the corpus does not hold
+  then: the product leaves that link as it was and [pins](pin) the rest
+  when: reqctl repin-links names the [item](item)
+- given: an [item](item) whose term link, parameter reference and data reference each
+    [await assessment](awaiting_assessment)
+  then: the product [pins](pin) each to the [stamp](stamp) its target carries
+  when: reqctl repin-links names the [item](item)
+- given: an [item](item) whose relation toward a requirement [awaits assessment](awaiting_assessment)
+    after the requirement's text changed
+  then: the product [pins](pin) the relation to the requirement's [stamp](stamp)
+  when: reqctl repin-links names the [item](item)
+- given: a corpus in which several [items](item) hold links [awaiting assessment](awaiting_assessment)
+  then: the product [pins](pin) every such link in every [item](item)
+  when: reqctl repin-links is given --all
+assessed:
+  REQ-54851939: n6YOz94UUTn7qlBLIhltdfT7UD6BNEW5cnz7S6_AkiA
+  REQ-56581795: ZHEasHzzTZLCW7EpcU2t9HLmUUSwKOGE6Q3rfqhT_9M
+  awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations:
+  REQ-54851939: depends_on
+  REQ-56581795: depends_on
+status: approved
+text: When reqctl repin-links is run, the product shall [pin](pin) each link and each
+  reference that [awaits assessment](awaiting_assessment) in each [item](item) the
+  command names, or in every [item](item) the corpus holds where the command is given
+  --all, to the [stamp](stamp) the [item](item) or [entry](entry) it names carries.
+type: functional
+verification: inspection
