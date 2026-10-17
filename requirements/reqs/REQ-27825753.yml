@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   REQ-30898926: Vu28eWaG_1mEOkNDj-6x3uKFNaUwFedOiL2MhrAGpR4
   REQ-59707978: txCcQRCbn81hlLObvxd4mjeLkutqLVcJ8e9iWdlzW8I
+citations:
+  cyo2du: zssgqJBgchVCdOwTIz9v4ZYeX1_ZNKf7L8yQvzg8GjI
 priority: medium
 relations:
   REQ-30898926: derives_from

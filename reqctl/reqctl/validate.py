@@ -1,11 +1,12 @@
 import copy
 import datetime
+import functools
 import math
 import re
 import unicodedata
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import FormatChecker
 from jsonschema.exceptions import best_match
 
 from . import baseline as _baseline
@@ -72,9 +73,8 @@ def schema_problems(root, uid, data):
         return [f"{uid}: {absent}"]
     # @req+ REQ-33359142@u8vbxFMjrV6Z p3hzqn
     # @req> REQ-62072712@m81ZZqYdquaS qvzmoq
-    validator = Draft202012Validator(declared, format_checker=DATED)
     problems = []
-    for error in sorted(validator.iter_errors(data), key=str):
+    for error in sorted(corpus.validator(declared, DATED).iter_errors(data), key=str):
         error = best_match([error])
         where = ".".join(str(p) for p in error.absolute_path) or "(item)"
         said = error.message
@@ -1027,7 +1027,7 @@ def _judgement(root, uid, data, judged):
     if uid not in judged:
         schema = corpus.schema_for(root, corpus.kind_of(uid, data),
                                    corpus.name_of(uid, data))
-        validator = Draft202012Validator(schema)
+        validator = corpus.validator(schema)
         judged[uid] = (validator, tuple(_fault_paths(validator, data)),
                        (str(root), uid, corpus.digest(repr(schema)),
                         corpus.digest(repr(data))))
@@ -1081,27 +1081,49 @@ def _unmarked(node, marks):
     return node
 
 
+_DERIVED: dict[tuple[int, object], tuple[object, object]] = {}
+
+
 def _marked_paths(root, uid, data, marks):
     schema = corpus.schema_for(root, corpus.kind_of(uid, data),
                                corpus.name_of(uid, data))
+    held = _DERIVED.get((id(schema), marks))
+    if held is None or held[0] is not schema:
+        held = _DERIVED[id(schema), marks] = (schema, _unmarked(schema, marks))
     return [tuple(str(step) for step in fault.absolute_path)
-            for fault in Draft202012Validator(
-                _unmarked(schema, marks)).iter_errors(data)
+            for fault in corpus.validator(held[1]).iter_errors(data)
             if fault.validator == "const" and fault.validator_value == UNMARKED]
 
 
+def _prose(node):
+    return node.get(PROSE) is True
+
+
+def _observed(node):
+    return node.get(OBSERVED) is True
+
+
+def _date(node):
+    return node.get("format") == DATE
+
+
+@functools.cache
+def _entry_of(target):
+    return lambda node: node.get(corpus.ENTRY_OF) == target
+
+
 def prose_paths(root, uid, data):
-    return _marked_paths(root, uid, data, lambda node: node.get(PROSE) is True)
+    return _marked_paths(root, uid, data, _prose)
 
 
 def observed_paths(root, uid, data):
     # @req> REQ-48500355@rnstkLKM48vN t3fuqq
-    return _marked_paths(root, uid, data, lambda node: node.get(OBSERVED) is True)
+    return _marked_paths(root, uid, data, _observed)
 
 
 def dated_paths(root, uid, data):
     # @req> REQ-62072712@m81ZZqYdquaS npwa4k
-    return _marked_paths(root, uid, data, lambda node: node.get("format") == DATE)
+    return _marked_paths(root, uid, data, _date)
 
 
 def _dropped(node, paths, at=()):
@@ -1281,9 +1303,7 @@ def _entry_of_values(records, root):
         schema = corpus.schema_for(root, corpus.kind_of(uid, data),
                                    corpus.name_of(uid, data))
         for target in sorted(_marker_targets(schema) & held.keys()):
-            for path in sorted(_marked_paths(
-                    root, uid, data,
-                    lambda node, target=target: node.get(corpus.ENTRY_OF) == target)):
+            for path in sorted(_marked_paths(root, uid, data, _entry_of(target))):
                 value = _at(data, path)
                 problems += [f"{uid}: {'.'.join(path)} {member!r} names no entry "
                              f"of {target}"

@@ -1105,27 +1105,30 @@ def _checked(check, *args):
                           f"{type(fault).__name__}: {fault}") from fault
 
 
-def _new_corpus_faults(store, uid, prospective):
+def _corpus_faults(store, checked, written, records):
+    return (_validate.coherence(checked, store.root, _checked)
+            + _checked(_validate.shared_quantities, checked, store.root)
+            + _checked(_validate.approved_relations, checked)
+            + _checked(_validate.conflicts, checked)
+            + _checked(_validate.supersedes, checked)
+            + _checked(_validate._bound_guards, checked, store.root)
+            + [fault for uid in sorted(written)
+               for fault in _checked(_validate.unlinked_terms, uid,
+                                     checked.get(uid) or {}, records, store.root)])
+
+
+def _new_corpus_faults(store, written):
     records = {item.uid: item.data for item in corpus.items(store)}
-    joined = {**records, uid: prospective}
-    found = (_validate.coherence(joined, store.root, _checked)
-             + _checked(_validate.shared_quantities, joined, store.root)
-             + _checked(_validate.approved_relations, joined)
-             + _checked(_validate.conflicts, joined)
-             + _checked(_validate.supersedes, joined)
-             + _checked(_validate._bound_guards, joined, store.root)
-             + _checked(_validate.unlinked_terms, uid, prospective, records, store.root))
+    found = _corpus_faults(store, {**records, **written}, written, records)
     if not found:
         return []
-    held = records.get(uid) or {}
-    stood = (_validate.coherence(records, store.root, _checked)
-             + _checked(_validate.shared_quantities, records, store.root)
-             + _checked(_validate.approved_relations, records)
-             + _checked(_validate.conflicts, records)
-             + _checked(_validate.supersedes, records)
-             + _checked(_validate._bound_guards, records, store.root)
-             + _checked(_validate.unlinked_terms, uid, held, records, store.root))
+    stood = _corpus_faults(store, records, written, records)
     return [problem for problem in found if problem not in stood]
+
+
+def _pins_only(before, prospective):
+    return all(corpus.same(prospective.get(key), before.get(key))
+               for key in {*before, *prospective} - {"assessed"})
 
 
 def _new_cycles(store, uid, prospective):
@@ -1380,9 +1383,11 @@ def _revision(store, uid, fields):
         faults = _unknown_references(store, uid, prospective, targets)
         if faults:
             raise ReqctlError("\n".join(faults))
+    # @req> REQ-15079061@DGcuZTEeq7ZL s4egdj
+    pinning = not words and _pins_only(before, prospective)
     # @req+ REQ-53480164@5yFhCLJmuTBt xpj5go
     # @req+ REQ-62819035@SRb6tL8xEERF qgjwmq
-    stranded = _new_corpus_faults(store, uid, prospective)
+    stranded = [] if pinning else _new_corpus_faults(store, {uid: prospective})
     if stranded:
         raise ReqctlError("\n".join(stranded))
     # @req- qgjwmq
@@ -1536,13 +1541,15 @@ def relate(store, source_uid, relation, target_uid):
     prospective["assessed"] = _assessed_map(source_uid, source.data)
     prospective["relations"] = kinds
     _prune_assessed(corpus.data_lookup(store), source_uid, prospective)
+    # @req> REQ-15079061@DGcuZTEeq7ZL acmucb
+    pinning = repinned and _pins_only(source.data, prospective)
     # @req+ REQ-44520277@w92ngdeF87Mm 6sepga
-    closed = _new_cycles(store, source_uid, prospective)
+    closed = [] if pinning else _new_cycles(store, source_uid, prospective)
     if closed:
         raise ReqctlError("\n".join(closed) + f"\n{source_uid} was not changed")
     # @req- 6sepga
     # @req+ REQ-53480164@5yFhCLJmuTBt ssmh6o
-    stranded = _new_corpus_faults(store, source_uid, prospective)
+    stranded = [] if pinning else _new_corpus_faults(store, {source_uid: prospective})
     if stranded:
         raise ReqctlError("\n".join(stranded) + f"\n{source_uid} was not changed")
     # @req- ssmh6o
@@ -1550,8 +1557,68 @@ def relate(store, source_uid, relation, target_uid):
         prospective["assessed"][target_uid] = corpus.stamp(
             corpus.find(store, target_uid)
         )
-    corpus.save(store, corpus.Item(source_uid, source.path, prospective))
+    # @req+ REQ-15079061@DGcuZTEeq7ZL gtdcql
+    written = corpus.Item(source_uid, source.path, prospective)
+    faults = _new_item_faults(store, [written]) if pinning else []
+    if faults:
+        raise ReqctlError("\n".join(faults) + f"\n{source_uid} was not changed")
+    # @req- gtdcql
+    corpus.save(store, written)
     source.data = prospective
+    return repinned
+
+
+# @req> REQ-59707978@txCcQRCbn81h ipk7bd
+def _awaiting_pins(item, records, canonical):
+    def held(address):
+        return records.get(canonical.get(address, address))
+
+    pins = corpus.mapping(item.data, "assessed")
+    moved = {}
+    for target in corpus.pin_addresses(held, item.data):
+        target_uid, rest = corpus.split_address(target)
+        stamped = canonical.get(target_uid, target_uid)
+        if stamped not in records:
+            continue
+        stamp = corpus.address_stamp_of(stamped, records[stamped], rest)
+        if stamp is not None and pins.get(target) != stamp:
+            moved[target] = stamp
+    return moved
+
+
+def repin_links(store, uids, everything):
+    # @req> REQ-27825753@2D8M3t-t1BG1 cyo2du
+    if bool(uids) == bool(everything):
+        raise ReqctlError("repin-links names the items to re-pin or takes --all, "
+                          "not both and not neither -- run `reqctl repin-links "
+                          "UID [UID ...]` or `reqctl repin-links --all`")
+    held = list(corpus.items(store))
+    records = {item.uid: item.data for item in held}
+    canonical = corpus.reachable(records)
+    # @req+ REQ-59707978@txCcQRCbn81h 5usm7z
+    chosen = held if everything else [corpus.find(store, uid) for uid in uids]
+    written, repinned = {}, {}
+    for item in chosen:
+        if item.uid in written or item.data.get("status") in _validate.RETIRED:
+            continue
+        moved = _awaiting_pins(item, records, canonical)
+        # @req> REQ-27564818@6ED2a9SQcZSQ trkw5f
+        if moved:
+            pins = {**_assessed_map(item.uid, item.data), **moved}
+            written[item.uid] = corpus.Item(item.uid, item.path,
+                                            {**item.data, "assessed": pins})
+            repinned[item.uid] = sorted(moved)
+    # @req- 5usm7z
+    if not written:
+        return repinned
+    # @req> REQ-74985073@u--jP_zHM8wW k3f324
+    faults = _new_corpus_faults(store, {uid: one.data for uid, one in written.items()})
+    # @req+ REQ-82159833@XT-Vyx7SgeW0 u4gac2
+    if faults:
+        raise ReqctlError("\n".join(faults) + "\nno item was written")
+    for one in written.values():
+        corpus.save(store, one)
+    # @req- u4gac2
     return repinned
 
 
