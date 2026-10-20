@@ -1,0 +1,16 @@
+assessed: {}
+entries:
+  claude_md:
+    files: any file named CLAUDE.md in any folder
+  claude_rules:
+    files: every file under a .claude/rules folder
+  license:
+    files: any file whose name begins LICENSE in any folder
+  readme:
+    files: any file named README or README.* in any folder
+fields:
+- files
+kind: data
+name: uncited_code_exemptions
+status: draft
+text: the files that trace does not check for uncited code

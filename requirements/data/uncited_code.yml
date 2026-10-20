@@ -1,0 +1,12 @@
+assessed: {}
+entries:
+  check:
+    definition: 'which lines of code trace reports as uncited: off reports none, changed_lines
+      reports those a branch adds or changes, all reports every one'
+    mode: 'off'
+fields:
+- mode
+kind: data
+name: uncited_code
+status: draft
+text: how trace treats a line of code that no citation covers
