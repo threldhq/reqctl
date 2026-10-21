@@ -129,9 +129,9 @@ def classify(base):
               + [path for path in other
                  if textual[path] and repins_only(fork, path)])
     added, paths, held = added_paths(fork) if COMPONENTS in governed else ({}, [], [])
-    moved = moved_wholes(fork, governed)
     carriers = [path for path in governed if path not in pinned
                 and only(fork, path, CARRIED + (corpus.WHOLE_FILES,))]
+    moved = moved_wholes(fork, carriers)
     if paths and only(fork, COMPONENTS, CARRIED, digests=True, dropped=added):
         carriers.append(COMPONENTS)
     loose = [path for path in other if path not in pinned]
