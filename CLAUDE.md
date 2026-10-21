@@ -100,8 +100,10 @@ markdown unless `reqctl --json` asks for the records.
 Cite implementation with `reqctl tag PATH --from N --to M --req UID` over the
 smallest region whose behaviour satisfies the requirement. It writes one comment
 over a single code statement and a pair of comments over more, pinned to the
-statement as it stands, so no stamp is ever composed or pasted. Do not cite helpers or
-incidental code. A stale citation is re-pinned by reading the code against the
+statement as it stands, so no stamp is ever composed or pasted. Cover the code
+that satisfies a clause and every line that code names, directly or through what
+those lines name, in any language: a citation's digest takes in only the lines it
+covers. A stale citation is re-pinned by reading the code against the
 statement that now stands, then `reqctl repin ID`; one that no longer governs
 goes with `reqctl untag ID`, and a region that moved is untagged and cited again.
 The hook refuses an edit, or a shell command naming a citation, that adds,

@@ -19,7 +19,9 @@ Cite the code that satisfies a requirement with
 behaviour satisfies it. Never compose or paste a citation. Once the code is read
 against the statement that now stands, re-pin a stale citation with
 `reqctl repin ID`; remove one that no longer governs with `reqctl untag ID`.
-Do not cite helpers or incidental code. A region that moved is untagged and
+Cover the code that satisfies a clause and every line that code names, directly
+or through what those lines name, in any language: a citation's digest takes in
+only the lines it covers. A region that moved is untagged and
 cited again. A statement citation is the only form `reqctl trace` accepts.
 
 Verify code by reading it against the statement it cites: `reqctl compare` names
