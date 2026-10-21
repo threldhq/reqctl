@@ -555,15 +555,13 @@ def check(run):
         print(f"{path}: the review {why}; {again}")
         return 1
     # @req+ REQ-82432523@dA6MI5WknAH4 mwzi36
-    blind = readme(corpus.find_root()) is None
+    blind = README.split("{text}")[0] not in plan.read_json(
+        plan.manifested(run, SPAWN))["prompts"][0]["prompt"]
     misfit = [one["practice"] for one in review["practices"]
               if (one["fit"] is None) != blind]
     if misfit:
-        print(f"{path}: fit is " + (
-            "null for each practice, as the repository holds no README"
-            if blind else "each practice's fit to the project, assessed "
-            "against the README") + f", and is not for: {'; '.join(misfit)}; "
-            f"{again}")
+        print(f"{path}: fit is null exactly where the review's prompt holds no "
+              f"README, and is not for: {'; '.join(misfit)}; {again}")
         return 1
     # @req- mwzi36
     # @req> REQ-40447106@_7d9O2HDnoPr xbu22f
