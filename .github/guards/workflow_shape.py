@@ -10,7 +10,7 @@ from packaging.utils import canonicalize_name
 WORKFLOWS = Path(".github/workflows")
 GUARDS = Path(".github/guards")
 PINNED = re.compile(r"@[0-9a-f]{40}$")
-PIP = re.compile(r"\bpip[\d.]*\s(?:&(?!&)|[^;&|\n])*")
+PIP = re.compile(r"\bpip[\d.]*$")
 EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
 REQUIREMENT = re.compile(r"--requirement(=.*)?|-[qvUI]*r.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
@@ -38,10 +38,9 @@ DEV_LOCK = DEV_INPUTS.with_name("requirements-dev-lock.txt")
 HOOK = Path(".claude/hooks/session-start.sh")
 LISTED = re.compile(r"(?m)^\s*([A-Za-z0-9][\w.-]*)")
 NESTED = re.compile(r"(?m)^\s*(?:-r\s*|--requirement(?:\s+|=))(\S+)")
-ENTRY = re.compile(r"(?m)^\s*(?:(?:-e|--editable)(?:\s+|=))?([^\s#-]\S*)")
+ENTRY = re.compile(r"(?m)^\s*(?:-e\s*|--editable(?:\s+|=))?([^\s#-]\S*)")
 ARCHIVES = (".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2", ".tbz", ".tar.xz",
             ".txz", ".tar")
-VERSIONED = re.compile(r"(.+?)-\d")
 EGG = re.compile(r"[#&]egg=([^&]+)")
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
 INSTALLERS = Path(".github")
@@ -262,13 +261,15 @@ def faults(text, where, gates=None, tools=None):
 
 def pip_lines(text):
     found = []
-    for line in PIP.findall(CONTINUED.sub(" ", re.sub(r"[\"']", "", text))):
-        words = line.split()[1:]
-        if "install" in words and all(
-                word.startswith("-") or before.startswith("-")
-                for before, word in zip([""] + words,
-                                        words[:words.index("install")])):
-            found.append(line)
+    for segment in re.split(r"[;|\n]|&&",
+                            CONTINUED.sub(" ", re.sub(r"[\"']", "", text))):
+        words, reaches, end, start = segment.split(), False, None, len(found)
+        for at in reversed(range(len(words))):
+            if reaches and PIP.search(words[at]):
+                found.insert(start, " ".join(words[at:end]))
+                end = at
+            reaches = words[at] == "install" or reaches and (
+                words[at].startswith("-") or words[at - 1].startswith("-"))
     return found
 
 
@@ -381,12 +382,12 @@ def held_by(path):
 def names_of(word):
     base = re.sub(r"(?<=\.git)@.*", "", re.split(r"[#?]", word)[0])
     tail = re.split(r"[@\[]", Path(base).name)[0]
-    stem = VERSIONED.match(tail) if tail.lower().endswith(ARCHIVES) else None
+    parts = tail.split("-")
+    stems = ({"-".join(parts[:at]) for at in range(1, len(parts))}
+             if tail.lower().endswith(ARCHIVES) else {tail.removesuffix(".git")})
     egg, first = EGG.search(word), NAMED.match(word)
     return {canonicalize_name(name) for name in
-            (stem[1] if stem else tail.removesuffix(".git"),
-             egg and egg[1], first and first[0])
-            if name}
+            stems | {egg and egg[1], first and first[0]} if name}
 
 
 def sources(text, where, dev):
