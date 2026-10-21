@@ -8,5 +8,5 @@ fields:
 - mode
 kind: data
 name: uncited_code
-status: draft
+status: approved
 text: how trace treats a line of code that no citation covers

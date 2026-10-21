@@ -13,7 +13,7 @@ acceptance_criteria:
   then: the product names that [item](item)
   when: the product states what the change touches
 assessed:
-  REQ-30061042: b7B9U8dkoUHISTdbzsklwBOuu4h10PhXjQTIUPotY20
+  REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
   REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
   code_token: RKSwa_7GLOrcUd7V_FstnVgDVX3CvlQnuD650a2b5qs
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
@@ -24,7 +24,7 @@ citations:
   kiiwp5: OKdtd96AEOM_2HsGLpUJSNTII7mzMmvoAyuvAMQlc8E
 priority: medium
 relations:
-  REQ-30061042: depends_on
+  REQ-40478019: depends_on
   REQ-70581878: derives_from
 status: approved
 text: When the product states what a change touches, the product shall name every

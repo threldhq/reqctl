@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a README.md, a LICENSE.txt and a CLAUDE.md in a subfolder, and a file under
+    .claude/rules
+  then: no line of those files is reported
+  when: the product checks the [code base](code_base) for uncited code
+- given: a .claude/settings.json no [item](item) cites
+  then: the file is checked
+  when: the product checks the [code base](code_base) for uncited code
+- given: a [test](test) no [statement citation](statement_citation) covers
+  then: no line of the [test](test) is reported
+  when: the product checks the [code base](code_base) for uncited code
+assessed:
+  REQ-27097724: _Ou3SW4xVhzd0GjUC9e9sRCzK14TM6rbwkKw_e8om_4
+  REQ-27534660: 0hcOvPj91rV96Lzr58zqTrYzvBbDbdoqZyHuZ65aQzc
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
+  uncited_code_exemptions: YbBV-Yqad-59rx0GIcKY5pTZPU-rupZFpMDosz4-G-0
+  uncited_code_exemptions.*: JBZ3PKEM2_CjKaVnfmDlfF8sNwtqeWjD_KXVVPh8Ixo
+priority: medium
+relations:
+  REQ-27097724: constrains
+  REQ-27534660: constrains
+status: approved
+text: When the product checks the [code base](code_base) for uncited code, the product
+  shall check no [test](test), and no file that the files field of an [entry](entry)
+  of ${uncited_code_exemptions} names.
+type: functional
+verification: inspection

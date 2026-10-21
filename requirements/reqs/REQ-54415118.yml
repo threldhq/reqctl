@@ -24,7 +24,7 @@ priority: medium
 relations:
   REQ-38288492: derives_from
   REQ-83468274: depends_on
-status: approved
+status: superseded
 text: When the ${plugin_components.pre_pr_skill} makes its pass over a branch, the
   product shall cite the guard stating the rule over each change to code enforcing
   a [rule of the build](rule_of_the_build), and cite nothing over a change to code

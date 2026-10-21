@@ -12,5 +12,5 @@ fields:
 - files
 kind: data
 name: uncited_code_exemptions
-status: draft
+status: approved
 text: the files that trace does not check for uncited code

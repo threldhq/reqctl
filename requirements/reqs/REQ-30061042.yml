@@ -43,7 +43,7 @@ citations:
   xw76q7: 7b4XiC4dgaJdEcGjc-mcIw4t2AtJYJuVDG4bI-f_Oqs
 priority: medium
 relations: {}
-status: approved
+status: superseded
 text: Where a file of the [code base](code_base) is in one of the ${commentless_formats},
   the product shall let an [item](item) hold a [whole-file citation](whole_file_citation)
   of the file, [pinned](pin) to the [item](item)'s [stamp](stamp) as a [statement

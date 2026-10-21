@@ -1,0 +1,38 @@
+acceptance_criteria:
+- given: a Python file holding an import spread over three lines
+  then: no line of the import is taken as code
+  when: the product checks the file for uncited code
+- given: a JavaScript file holding an import statement
+  then: no line of the import is taken as code
+  when: the product checks the file for uncited code
+- given: a file holding a blank line, a line holding only a comment, and the lines
+    of a [multiline comment](multiline_comment) from its opening to its closing delimiter
+  then: none of those lines is taken as code
+  when: the product checks the file for uncited code
+- given: a line holding a statement followed by a comment
+  then: the line is taken as code
+  when: the product checks the file for uncited code
+- given: a JSON file
+  then: each line holding a key or a value is taken as code
+  when: the product checks the file for uncited code
+- given: a file holding a constant assignment
+  then: the line of the assignment is taken as code
+  when: the product checks the file for uncited code
+assessed:
+  REQ-27097724: _Ou3SW4xVhzd0GjUC9e9sRCzK14TM6rbwkKw_e8om_4
+  REQ-27534660: 0hcOvPj91rV96Lzr58zqTrYzvBbDbdoqZyHuZ65aQzc
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-27097724: constrains
+  REQ-27534660: constrains
+status: approved
+text: When the product checks a file for uncited code, the product shall take as code
+  every line of the file except a blank line, a line holding nothing but all or part
+  of a comment, and a line within a [code statement](code_statement) that imports
+  another module in a language whose files the product reads [statement citations](statement_citation)
+  in.
+type: functional
+verification: inspection
