@@ -1577,7 +1577,8 @@ def describe(run):
             "with -- build the run again with `plan.py build`, then judge it")
     # @req- obajkn
     ledger, answers = answered(run, held)
-    traces = traced(run, said(run, "words.md", ""), held)
+    words = said(run, "words.md", "")
+    traces = traced(run, words, held)
     # @req> REQ-52114263@85vP2wA4G2MR dbzebu
     records = {uid: [record.get(field) for field in STATING]
                for uid, record in glossary().items()
@@ -1628,7 +1629,7 @@ def describe(run):
               or ["Nothing was declined in this run."])
     # @req- vxerce
     # @req+ REQ-80620603@d9HSssP4TTeh tpibvr
-    postponed = deferred(run)
+    postponed = deferred(run, words)
     if postponed:
         lines += ["", "### deferred", ""] + postponed
     # @req- tpibvr
@@ -1688,12 +1689,10 @@ def declined_practices(run):
     # @req- mkqci7
 
 
-def deferred(run):
+def deferred(run, words):
     path, read = recorded(run)
     held = [] if read.get(DEFERRED) is None else read[DEFERRED]
-    spoken = _coverage.plain(_coverage.spoken(
-        said(run, "words.md", "the deferred list is read against the owner's "
-             "words")))
+    spoken = _coverage.plain(_coverage.spoken(words))
     if not isinstance(held, list) or not all(
             isinstance(one, dict) and isinstance(one.get("what"), str)
             and one["what"].strip() and isinstance(one.get("answer"), str)
