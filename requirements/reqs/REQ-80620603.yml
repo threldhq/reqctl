@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a question a verdict raises that the run does not convert, and no answer
+    of the owner asking that it be deferred
+  then: nothing is recorded as deferred
+  when: the run ends
+- given: an answer of the owner asking that a [practice](practice) be deferred
+  then: that [practice](practice) is recorded as deferred
+  when: the run ends
+assessed:
+  REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: high
+relations:
+  REQ-21373303: constrains
+status: approved
+text: The product shall record a passage of the owner's words, a [practice](practice)
+  or a question a verdict raises as deferred to a later run only where the owner's
+  answer asks that it be deferred.
+type: functional
+verification: inspection
