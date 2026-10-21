@@ -102,8 +102,10 @@ smallest region whose behaviour satisfies the requirement. It writes one comment
 over a single code statement and a pair of comments over more, pinned to the
 statement as it stands, so no stamp is ever composed or pasted. Cover the code
 that satisfies a clause and every line that code names, directly or through what
-those lines name, in any language: a citation's digest takes in only the lines it
-covers. A stale citation is re-pinned by reading the code against the
+those lines name, that no citation digest takes in. A Python citation's digest
+takes in each function, class and constant of the code base its lines name, and
+what those name in turn, so those get no citation of their own; code in any other
+language that the lines name is cited too. A stale citation is re-pinned by reading the code against the
 statement that now stands, then `reqctl repin ID`; one that no longer governs
 goes with `reqctl untag ID`, and a region that moved is untagged and cited again.
 The hook refuses an edit, or a shell command naming a citation, that adds,
