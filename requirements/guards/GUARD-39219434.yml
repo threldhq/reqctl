@@ -1,0 +1,35 @@
+acceptance_criteria:
+- given: reqctl/requirements-dev.in naming mypy at one version and reqctl/requirements-dev-lock.txt
+    holding another
+  then: the build refuses the change, naming mypy and both versions
+  when: the build runs
+- given: reqctl/requirements-dev.in naming a package without a version
+  then: the build refuses the change, naming the package
+  when: the build runs
+- given: reqctl/requirements-dev.in naming a package reqctl/requirements-dev-lock.txt
+    does not hold
+  then: the build refuses the change, naming the package
+  when: the build runs
+- given: reqctl/requirements-dev.in naming a package by a version range rather than
+    one version
+  then: the build refuses the change, naming the package
+  when: the build runs
+- given: reqctl/requirements-dev-lock.txt holding a package reqctl/requirements-dev.in
+    does not name, which a named one depends on
+  then: the build does not refuse on that ground
+  when: the build runs
+assessed: {}
+citations:
+  7wet6o: 8JrZ4ofh3oJ0I0tBNMol0FBA_IBqroewUnQKceUccDA
+relations: {}
+status: approved
+text: If reqctl/requirements-dev-lock.txt does not hold each package that reqctl/requirements-dev.in
+  names at the version reqctl/requirements-dev.in states for it, then the build shall
+  refuse the change.
+whole_file_citations:
+  reqctl/requirements-dev-lock.txt:
+    digest: zYnR5vVCyIIuA-ipsYtxG3c_yEygXM9-jk1nRk2GxJg
+    pinned: QVmE7MsFwn8t
+  reqctl/requirements-dev.in:
+    digest: wgrY3E6_5eOixImzuSB0hkPDIjb1BlYhqZQu-neXc9U
+    pinned: QVmE7MsFwn8t
