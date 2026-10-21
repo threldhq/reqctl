@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: code of the build that carries no behaviour of the product
+  then: it states that the session cites no requirement there
+  when: the implement skill is read
+assessed:
+  REQ-34984028: TZ0U0-vLTqkzAd_XisXzgjKURwTi9GFKS5MSzn39Ieo
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-34984028: constrains
+  REQ-38288492: derives_from
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session cites a requirement at the code of the product that satisfies it.
+type: functional
+verification: inspection

@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: code the session has written
+  then: it states that the session reads the code against each acceptance criterion,
+    and takes a criterion the code does not meet as a requirement not yet satisfied
+  when: the implement skill is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session writes no more code than satisfies the [item](item)'s statement and each
+  of its acceptance criteria.
+type: functional
+verification: inspection

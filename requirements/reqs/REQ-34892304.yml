@@ -1,0 +1,23 @@
+acceptance_criteria: []
+assessed:
+  REQ-16376491: pLH6qM9Dx4whD6nFVGa7Avgh7rUd4lXKVM2K8PwlIYA
+  REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
+  REQ-32191310: aZkvQ6hvIwPv7dwtDhJL8Ueb_kDpcyzi1J_lbXQYl0g
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-88079673: EiXeHoq_wF_zIVobtgjt-ETHDFzKdiAqUjAdPXMD5DE
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-16376491: constrains
+  REQ-18833394: depends_on
+  REQ-32191310: depends_on
+  REQ-38288492: depends_on
+  REQ-88079673: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session re-pins a [statement citation](statement_citation) that reqctl trace reports
+  as stale only after reading the code it covers against the statement that now stands.
+type: functional
+verification: inspection

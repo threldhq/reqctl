@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a [statement citation](statement_citation) the session writes
+  then: it states that the [statement citation](statement_citation) covers whole [code
+    statements](code_statement) and that the session composes no [stamp](stamp)
+  when: the implement skill is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-60346603: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session writes each [statement citation](statement_citation) with reqctl tag and
+  never by hand.
+type: functional
+verification: inspection
