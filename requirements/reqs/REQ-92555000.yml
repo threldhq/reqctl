@@ -9,6 +9,9 @@ assessed:
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
   elucidate_agents.judge: HjOYb75hR7Rg09gI8hCr7VjyzrzdwKoliWnF9u1p764
   elucidate_agents.recall: M1iPgKaFnrUC6af0jjxnux4WvZ807vzJIlDBw1qNnhg
+citations:
+  ayqwmo: whbBJ_OgZAYRiSJxaEF2teO9KIK6NQDygtkI3kWLyaA
+  rnilml: whbBJ_OgZAYRiSJxaEF2teO9KIK6NQDygtkI3kWLyaA
 priority: medium
 relations:
   REQ-29981224: constrains

@@ -7,6 +7,8 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
   elucidate_agents.coverage: 4gYWl6IA6NXblLFuvvUb_UiN5RZoPIP2KMHvT-5CYIY
+citations:
+  iuqu4u: v5gpjpXNZ_CqXG2xKYAnpCurMaRHTEcFSuyEh99w-cA
 priority: medium
 relations:
   REQ-38288492: depends_on

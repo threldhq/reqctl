@@ -8,6 +8,11 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
   elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
+citations:
+  6emtf7: man5s5dWHnIHhVUcILPikQwnQ5td9xpkK9ojfbWfo60
+  fiz6gp: u3kr6QlTTYE3OktcUS3a3XR38U6G2BfVZzhORceheTk
+  lf5wht: u3kr6QlTTYE3OktcUS3a3XR38U6G2BfVZzhORceheTk
+  m5lz5z: man5s5dWHnIHhVUcILPikQwnQ5td9xpkK9ojfbWfo60
 priority: medium
 relations:
   REQ-29981224: constrains
