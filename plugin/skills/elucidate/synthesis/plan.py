@@ -734,13 +734,13 @@ def answered(run, held):
     if not isinstance(found, dict):
         raise SystemExit(
             f"{path}: `{ANSWERS}` maps a proposal number to its verdict's "
-            "questions, each question to `owner: ANSWER` or to `corpus: "
-            "[{uid: UID, clause: QUOTE}]`.")
+            "questions, each question to `owner: ANSWER`, to `corpus: "
+            "[{uid: UID, clause: QUOTE}]` or to `declined: true`.")
     return path, keyed(path, ANSWERS, found, held)
 
 
 def settling(path, number, question, held, records):
-    # @req+ REQ-52114263@JmvDYpVGNRJQ huroi7
+    # @req+ REQ-52114263@85vP2wA4G2MR huroi7
     held = held if isinstance(held, dict) else {}
     owner, evidence = held.get("owner"), held.get("corpus")
     if isinstance(owner, str) and owner.strip():
@@ -749,6 +749,8 @@ def settling(path, number, question, held, records):
         raise SystemExit(
             f"{path}: proposal {number}'s answer to {question!r} reads as "
             f"{owner!r}, not as the owner's words; quote what they said")
+    if held.get("declined") is True:
+        return "declined as naming no contradiction with an approved item"
     if isinstance(evidence, list) and evidence and all(
             isinstance(one, dict) and isinstance(one.get("clause"), str)
             and one["clause"].strip() and str(one.get("uid")) in records
@@ -761,9 +763,10 @@ def settling(path, number, question, held, records):
             for one in evidence)
     raise SystemExit(
         f"{path}: proposal {number}'s verdict asks {question!r}, and `{ANSWERS}` "
-        "records neither the owner's answer nor a clause quoted from a corpus "
-        "item that settled it. Answer it against the corpus or put it to the "
-        "owner, then record the result.")
+        "records neither the owner's answer, a clause quoted from a corpus "
+        "item that settled it, nor `declined: true`. Answer it against the "
+        "corpus, decline it where it names no contradiction with an approved "
+        "item, or put it to the owner, then record the result.")
     # @req- huroi7
 
 
@@ -1574,7 +1577,7 @@ def describe(run):
     # @req- obajkn
     ledger, answers = answered(run, held)
     traces = traced(run, said(run, "words.md", ""), held)
-    # @req> REQ-52114263@JmvDYpVGNRJQ dbzebu
+    # @req> REQ-52114263@85vP2wA4G2MR dbzebu
     records = {uid: [record.get(field) for field in STATING]
                for uid, record in glossary().items()
                if record.get("status") == "approved"}
@@ -1610,7 +1613,7 @@ def describe(run):
                          f"{entry['defined_by'] or 'no term'}, {entry['reason']}")
         for entry in verdict["faults"]:
             lines.append(f"- fault {entry['fault']}: {entry['reason']}")
-        # @req> REQ-52114263@JmvDYpVGNRJQ gedop6
+        # @req> REQ-52114263@85vP2wA4G2MR gedop6
         for question in verdict["questions"]:
             asked = answers.get(str(number))
             answer = settling(ledger, number, question,

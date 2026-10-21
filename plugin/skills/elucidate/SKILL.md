@@ -47,9 +47,10 @@ a proposal carrying no criteria is left out of that map rather than written
 empty. `run.yaml` also holds `declined_practices`, the numbers of the review's
 practices the owner declined, and `answers`, keyed by proposal number and
 then by each question its verdict raises, exactly as the verdict words it: the
-owner's answer as `owner: ANSWER`, or what settled it as `corpus: [{uid: UID,
-clause: QUOTE}]`, each clause quoted from the item it names. `plan.py
-describe` refuses a question recorded neither way. `synthesis/review.py`
+owner's answer as `owner: ANSWER`, what settled it as `corpus: [{uid: UID,
+clause: QUOTE}]`, each clause quoted from the item it names, or `declined:
+true` where it names no contradiction with an approved item. `plan.py
+describe` refuses a question recorded none of these ways. `synthesis/review.py`
 writes the review's manifest, prompt and all, into `workflow/`, and the
 review agent writes
 `review.json`. `synthesis/plan.py` writes the rest
@@ -216,7 +217,7 @@ something the statement does not already say. Then:
   as an established fact, and a check nobody can see you skip is one you skip.
   What survives joins the questions.
 
-<!-- @req+ REQ-82432523@VoDkIJau94BB drprho -->
+<!-- @req+ REQ-82432523@dA6MI5WknAH4 drprho -->
 **Make the best-in-class review before any question.** The first time you
 convert a run's words, build the review's prompt:
 
@@ -250,7 +251,8 @@ to them, and take the step their answer names.
 <!-- @req- 4avail -->
 
 A review that passes is the run's review; nothing later in the run makes
-another.
+another. Each of its practices records its fit to the project, assessed against
+the README, or null where there is no README.
 <!-- @req- drprho -->
 
 <!-- @req+ REQ-90096667@PunOebgQZAD6 cbcn57 -->
