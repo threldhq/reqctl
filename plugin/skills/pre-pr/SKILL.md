@@ -36,21 +36,17 @@ First: every behavioural change on the branch cites its governing approved
 requirement -- run `reqctl trace`, then read the diff for changes carrying no
 `@req` tag.
 
-<!-- @req+ REQ-54415118@nySID1kfSK1I tzrban -->
 Code enforcing a rule of the build cites its approved `GUARD` instead; what
 only carries the build -- dependency pins, CI wiring, lockfiles -- cites
 nothing. Cite what is missing with `reqctl tag` before going on. A change
 owing a citation that no statement governs stops the pass; ask the owner to
 create one.
-<!-- @req- tzrban -->
 
-<!-- @req+ REQ-22625894@pLUy8k7jMwKk wpzdfm -->
 Cover the code that decides a clause or acceptance criterion of the item
 cited, or, for a parameter, a data item or one of its entries, the code stating
 its value -- where a data item's entries are stated in one place and read in
 another, the place stating them. Leave uncited a helper the deciding code calls,
 and code incidental to every clause.
-<!-- @req- wpzdfm -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->
 `python .github/verify.py`, where the repository carries it: it reads every

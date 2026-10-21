@@ -61,11 +61,6 @@ assessed:
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
-citations:
-  burjli: ar2muFtSoaJ27pgV0FA5RIPLkoWv3rjYUkwGHRWyU2g
-  c6qh2i: fIcx0gXAAIubm8I4M5fj4fkAvjDJ9WV0Lo-_qRZweAQ
-  jp54xx: WzWJ5cghCnNF5eP3MP1ALBuCxW6Zs3E1FiXm3CfaonM
-  qya7yo: zBtx7Uy6DemArvfXhaiC2E1Vtj3X5hT_p0KoQ4Y_IFU
 priority: medium
 relations:
   REQ-30061042: depends_on

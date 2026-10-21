@@ -715,7 +715,6 @@ def cmd_context(args):
     store, root = corpus.load()
     # @req> REQ-35805881@37XtC4gyD98k dktwfq
     tags = cite.cited(cite.readable(root))
-    # @req> REQ-30061042@b7B9U8dkoUHI aucabo
     graph.whole(store, tags)
     dependents = {}
     for other in corpus.items(store):
@@ -871,7 +870,6 @@ def _listed(store, uid, entries):
 
 
 def _whole(tree, root, args):
-    # @req+ REQ-30061042@b7B9U8dkoUHI cig5it
     target = Path(args.path).resolve()
     if target.suffix[1:] not in cite.COMMENTLESS:
         raise ReqctlError(f"{args.path}: a whole-file citation is held only of a file "
@@ -898,7 +896,6 @@ def _whole(tree, root, args):
     _emit(args, {"path": relative, "uids": asked},
           f"{relative} cited whole for {', '.join(asked)}")
     return EXIT_OK
-    # @req- cig5it
 
 
 def cmd_tag(args):
@@ -909,7 +906,6 @@ def cmd_tag(args):
             raise ReqctlError("give each citation a --name or a --from and --to, not both")
         spans = [cite.spanned(args.path, name) for name in args.names]
         args.first, args.last = map(list, zip(*spans))
-    # @req> REQ-30061042@b7B9U8dkoUHI 6mhx6x
     if args.first is None and args.last is None:
         return _whole(tree, root, args)
     # @req+ REQ-62782894@x4o_oB5H0-tY nmyxfc

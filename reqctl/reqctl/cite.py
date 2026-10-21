@@ -678,7 +678,6 @@ def digest(path, text, lines):
     return corpus.digest(held)
 
 
-# @req+ REQ-30061042@b7B9U8dkoUHI 2l4bmd
 JSON_TOKEN = re.compile(r'(?P<string>"(?:\\.|[^"\\\n])*")'
                         r"|(?P<number>-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)"
                         r"|(?P<name>true|false|null)|(?P<op>[{}\[\]:,])"
@@ -694,7 +693,6 @@ def whole(path, text):
             held = None
     return corpus.digest(held if held is not None
                          else [line.rstrip("\r\n") for line in _feed_lines(text)])
-# @req- 2l4bmd
 
 
 def spanned(path, name):

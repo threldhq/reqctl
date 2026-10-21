@@ -168,7 +168,6 @@ properties:
       type: string
       pattern: "^[A-Za-z0-9_-]{43}$"
 
-  # @req> REQ-30061042@b7B9U8dkoUHI addnmd
   whole_file_citations:
     type: object
     readOnly: true
