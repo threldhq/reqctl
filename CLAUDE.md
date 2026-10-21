@@ -52,10 +52,13 @@ Code plugin, the requirements-guard hook included, is product, so its rules are
 and checks reqctl rather than for reqctl itself; it is minted, approved and
 baselined like a requirement, and cited at the code that enforces it.
 
-What carries the build rather than stating a rule of ours -- dependency pins, CI
-wiring, lockfiles -- is governed by the gates in CI. A rule of ours is sorted as
-the elucidate skill sorts it (REQ-83468274): a rule a behaviour of reqctl
-depends on is a `REQ`, even where only this repository runs that behaviour
+A lockfile, a dependency manifest or a configuration file holds no citation of
+its own, so each item whose rule it serves cites it whole (REQ-78788058):
+`reqctl tag PATH --req UID`, naming no lines. Where such a file carries the
+build and no guard states the rule it serves, stop and ask the owner to create
+one. A rule of ours is sorted as the elucidate skill sorts it (REQ-83468274): a
+rule a behaviour of reqctl depends on is a `REQ`, even where only this
+repository runs that behaviour
 today; a rule only this repository's own check depends on -- the comment and
 help budgets, CODEOWNERS -- is a `GUARD`; a rule both depend on is one of each.
 Where a rule is enforced does not sort it: travel-alone is a corpus gate reqctl
