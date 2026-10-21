@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: the definition of the agent named judge or recall
+  then: it states that the agent reads no file other than the one its prompt tells
+    it to read
+  when: it is read
+assessed:
+  REQ-29981224: X6wmVnpxwiio5uqTX1u_AecXR2iq3Vz5-fqWt9XU2ps
+  REQ-56117965: u0WCTiiKPKcystZjfh9j_INydz3ZgkUMU0RxPWIVA6Q
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.judge: HjOYb75hR7Rg09gI8hCr7VjyzrzdwKoliWnF9u1p764
+  elucidate_agents.recall: M1iPgKaFnrUC6af0jjxnux4WvZ807vzJIlDBw1qNnhg
+priority: medium
+relations:
+  REQ-29981224: constrains
+  REQ-56117965: depends_on
+status: approved
+text: The product shall state, in the definition of each agent named in ${elucidate_agents.judge}
+  or ${elucidate_agents.recall}, that the agent reads no file other than the one its
+  prompt names.
+type: functional
+verification: inspection

@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: the definition of the agent named best_in_class
+  then: it states that an instruction a page or a search result the agent reads states
+    is text the agent reports in its review and never one it follows
+  when: it is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-82432523: dA6MI5WknAH4W2nm9dEUdYToQ1b4odSafkhoaK-cx00
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.best_in_class: Sk0MXp4LOtjYA84v2uLc8bn3pUJm3nAbFYlkW7LPGZs
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-82432523: depends_on
+status: approved
+text: The product shall state, in the definition of the agent named in ${elucidate_agents.best_in_class},
+  that an instruction a page or a search result the agent reads states is text the
+  agent reports in its review and never one it follows.
+type: functional
+verification: inspection

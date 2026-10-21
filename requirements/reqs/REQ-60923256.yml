@@ -14,7 +14,7 @@ assessed:
 priority: medium
 relations:
   REQ-91853430: constrains
-status: approved
+status: superseded
 text: The product shall define each agent that the Claude Code plugin ships under
   the name of the ${elucidate_agents.recall} or the ${elucidate_agents.judge} [entry](entry)
   with no tool other than Read and Write.

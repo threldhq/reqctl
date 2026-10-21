@@ -5,9 +5,9 @@ acceptance_criteria:
   when: the folder named agents at its root is read
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
-  elucidate_agents.judge: Uzv_iAqsRki5GtUGmeeOwcpyTwKSqQ_vLXor5Ig0e0o
-  elucidate_agents.recall: 3zTw1VvVnPM494HiaVfhXh8r6e79m-mzpbSJNEw29Sc
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.judge: HjOYb75hR7Rg09gI8hCr7VjyzrzdwKoliWnF9u1p764
+  elucidate_agents.recall: M1iPgKaFnrUC6af0jjxnux4WvZ807vzJIlDBw1qNnhg
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
   5leisk: WWuEVDzOU2OrwxFpvQAB2XtEt9YmVCPnHUmKYvgtFNw
