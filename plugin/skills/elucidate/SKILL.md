@@ -1,4 +1,5 @@
 ---
+# @req+ REQ-38288492@4l6tMNjp19tH yjwycv
 name: elucidate
 description: >
   Take one idea or a bulk list of ideas from the owner and carry them to a pull
@@ -10,6 +11,7 @@ description: >
   -- and whenever they say elucidate. Not for running reqctl operations on their
   own -- cutting a baseline, revising or querying the corpus -- with no new idea
   in hand.
+# @req- yjwycv
 ---
 
 <!-- @req> REQ-38288492@4l6tMNjp19tH wtuxki -->

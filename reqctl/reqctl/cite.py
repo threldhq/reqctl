@@ -44,13 +44,36 @@ def _feed_lines(text):
     return io.StringIO(text).readlines()
 
 
+@functools.cache
+def _front(text):
+    lines = _feed_lines(text)
+    if not lines or lines[0].rstrip("\r\n") != "---":
+        return 0
+    return next((number for number, line in enumerate(lines[1:], start=2)
+                 if line.rstrip("\r\n") == "---"), 0)
+
+
+@functools.cache
+def _matter(text):
+    close = _front(text)
+    return "".join(line if 1 < number < close else _ending(line)
+                   for number, line in enumerate(_feed_lines(text), start=1))
+
+
+def _view(suffix, text, number):
+    if suffix == ".md" and 1 < number < _front(text):
+        return ".yml", _matter(text)
+    return suffix, text
+
+
 def markers(text, suffix):
     for number, line in enumerate(_feed_lines(text), start=1):
         # @req+ REQ-52925332@8dtaEN9KH9jO yuyqhd
         # @req+ REQ-12490145@aKVRSLNQy976 dsvgt4
         if not SIGN.search(line):
             continue
-        body = DELIMITERS.get(suffix, MARKUP).sub("", line).strip()
+        # @req> REQ-35587066@UWrbgGEbefJg g2x6cn
+        body = DELIMITERS.get(_view(suffix, text, number)[0], MARKUP).sub("", line).strip()
         yield number, body, MARKER.match(body)
         # @req- dsvgt4
         # @req- yuyqhd
@@ -105,15 +128,26 @@ NESTS = {".py": _depths, ".yml": _indents, ".yaml": _indents}
 
 
 def cut(path, text, spans):
-    read = NESTS.get(Path(path).suffix)
+    suffix = Path(path).suffix
+    problems = []
+    # @req> REQ-55291596@DLuklmxajzSV 5hrvsm
+    if suffix == ".md":
+        close = _front(text)
+        problems = [(identity, f"{path}: citation {identity} crosses the edge of the "
+                               "front matter -- it must lie between its --- lines")
+                    for identity, first, last in spans if 1 < first - 1 < close <= last]
+        spans = [span for span in spans if 1 < span[1] and span[2] < close]
+        if not spans:
+            return problems
+        suffix, text = ".yml", _matter(text)
+    read = NESTS.get(suffix)
     if read is None:
         return []
     try:
         depths, starts, ends = read(text)
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
-        return [(path, f"{path}: cannot read its nest levels ({broken}), so no "
-                       "citation in it can be checked")]
-    problems = []
+        return problems + [(path, f"{path}: cannot read its nest levels ({broken}), so no "
+                                  "citation in it can be checked")]
     for identity, first, last in spans:
         code = [n for n in range(first, last + 1) if n in depths]
         if not code:
@@ -139,7 +173,8 @@ REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
 
 
 def hollow(path, text, first, last):
-    bare = REMARKS[Path(path).suffix].sub(
+    suffix, text = _view(Path(path).suffix, text, first)
+    bare = REMARKS[suffix].sub(
         lambda found: found.groupdict().get("kept") or "\n" * found[0].count("\n"), text)
     return not "".join(_feed_lines(bare)[first - 1:last]).strip()
 # @req- 6fth2x
@@ -157,6 +192,16 @@ def _scalars(text):
 
 def _alone(path, text):
     suffix = Path(path).suffix
+    # @req+ REQ-35587066@UWrbgGEbefJg lds6u4
+    if suffix != ".md":
+        return _lone(suffix, text)
+    close = _front(text)
+    return ({number for number in _lone(suffix, text) if not 1 < number < close}
+            | _lone(".yml", _matter(text)))
+    # @req- lds6u4
+
+
+def _lone(suffix, text):
     try:
         spoken = (_depths(text)[0] if suffix == ".py"
                   else _scalars(text) if suffix in (".yml", ".yaml") else {})
@@ -318,8 +363,9 @@ def _citation(held, relative, start, close, first, last, marks):
             "marks": marks}
 
 
-def following(path, text, number):
-    read = NESTS.get(Path(path).suffix)
+def following(path, text, number, viewed=None):
+    suffix, text = _view(Path(path).suffix, text, viewed or number)
+    read = NESTS.get(suffix)
     if read is not None:
         try:
             depths, starts, _ = read(text)
@@ -483,13 +529,21 @@ def tagged(root, path, asked, exclusive=False):
     for first, last, _, _ in asked:
         if not 1 <= first <= last <= len(lines):
             raise ReqctlError(f"{path}: lines {first}-{last} are not in the file")
+    # @req+ REQ-55291596@DLuklmxajzSV 7nnmie
+    edge = _front(text) if target.suffix == ".md" else 0
+    crossing = [f"{path}: lines {first}-{last} cross the edge of the front matter -- "
+                "cite lines between its --- lines, or lines after them"
+                for first, last, _, _ in asked
+                if first <= edge and not 1 < first <= last < edge]
+    if crossing:
+        raise ReqctlError("\n".join(crossing))
+    # @req- 7nnmie
     sources = list(_sources(root))
     held, problems = parse(sources)
     # @req> REQ-35805881@37XtC4gyD98k kz4urn
     if any(text is None for _, text in sources):
         raise ReqctlError("the code's citations do not read:\n" + "\n".join(problems))
     taken = {c["id"] for c in held}
-    lead, tail = COMMENTS[target.suffix]
     word = " exclusive" if exclusive else ""
     # @req+ REQ-81417723@q6UfXsP6e-N7 kmbhnk
     # @req+ REQ-62782894@x4o_oB5H0-tY k2lzwu
@@ -499,6 +553,8 @@ def tagged(root, path, asked, exclusive=False):
         taken.add(identity)
         minted.append(identity)
         indent = _indent(lines[first - 1])
+        # @req> REQ-55291596@DLuklmxajzSV 7zqv4i
+        lead, tail = COMMENTS[_view(target.suffix, text, first)[0]]
         # @req+ REQ-61906662@vIt4Qdb6Q01L 4z5goa
         single = _statement(path, text, first, last)
         sign = SINGLE if single else OPEN
@@ -636,7 +692,7 @@ def _statement(path, text, first, last):
     code = [n for n in range(first, last + 1) if lines[n - 1].strip()]
     if not code or code[0] != first:
         return False
-    return following(path, text, first - 1) == (first, code[-1])
+    return following(path, text, first - 1, first) == (first, code[-1])
 
 
 # @req> REQ-31471659@hKmNhTkU9xOA k3upi2
