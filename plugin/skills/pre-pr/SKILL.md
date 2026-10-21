@@ -1,4 +1,5 @@
 ---
+# @req+ REQ-38288492@4l6tMNjp19tH 3dxf7n
 name: pre-pr
 description: >
   The quality pass a branch gets before it becomes a pull request: the CI gates
@@ -6,6 +7,7 @@ description: >
   opening any pull request that carries code -- a requirements pull request
   runs reqctl validate and reqctl baseline --check instead -- and whenever the
   owner says pre-pr.
+# @req- 3dxf7n
 ---
 
 <!-- @req> REQ-38288492@4l6tMNjp19tH twgacs -->

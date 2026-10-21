@@ -1,4 +1,5 @@
 ---
+# @req+ REQ-38288492@4l6tMNjp19tH s4a54e
 name: implement
 description: >
   Write code against an approved requirement: read its neighbourhood through
@@ -7,6 +8,7 @@ description: >
   for behaviour to be built, changed or fixed under a requirement, and whenever
   they say implement. Not for writing or revising requirements -- that is
   elucidate -- and not for the pass a finished branch gets, which is pre-pr.
+# @req- s4a54e
 ---
 
 <!-- @req> REQ-38288492@4l6tMNjp19tH qtmeg3 -->

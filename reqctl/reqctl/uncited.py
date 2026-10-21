@@ -95,6 +95,8 @@ def code_lines(path, text):
         quiet |= _script(text)
     elif suffix in (".md", ".html"):
         quiet |= _fenced(text, MARKUP, False)
+        quiet |= {number for number, line in enumerate(lines, 1)
+                  if 1 < number < cite._front(text) and line.lstrip().startswith("#")}
     elif suffix in HASHED:
         quiet |= {number for number, line in enumerate(lines, 1)
                   if line.lstrip().startswith("#")}
