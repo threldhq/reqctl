@@ -15,9 +15,11 @@ code until each is read against the statement that now stands and re-pinned.
 - **`reqctl`** -- the CLI, and the only way a corpus is read or written. Python
   3.13 or later.
 - **The Claude Code plugin** -- the `elucidate`, `implement` and `pre-pr`
-  skills; the `best-in-class` and `coverage` agents; a hook before every tool
-  call that keeps the corpus behind `reqctl`, and one that gives each session
-  reqctl's rules when it starts or compacts.
+  skills; the `best-in-class`, `coverage`, `recall` and `judge` agents
+  `elucidate` spawns; a hook before every tool call that keeps the corpus
+  behind `reqctl` and refuses any edit of a citation that `reqctl` did not
+  make; and one that gives each session reqctl's rules when it starts or
+  compacts.
 - **Reusable workflows** -- `.github/workflows/corpus-gates.yml` refuses a pull
   request that fails a corpus gate; `.github/workflows/corpus-view.yml`
   publishes the corpus for the portal; `.github/workflows/corpus-write.yml`
@@ -38,33 +40,44 @@ code until each is read against the statement that now stands and re-pinned.
 | data | its name | a set of entries statements reference |
 
 - Requirements and guards are EARS statements -- The, When, While, If, Where --
-  and `reqctl validate` checks the form.
+  and `reqctl validate` checks the form. `reqctl lint` reports what `reqctl new`
+  would refuse, writing nothing.
 - An item's stamp is a digest of the fields that state it.
 - An item is draft, approved, deprecated or superseded. Approval is the merge:
   only the default branch states what is approved, and `reqctl baseline` cuts
   and checks the manifest of it.
 - A `settings.yml` in `requirements/` replaces values reqctl ships: review
   limits, challenge bounds, the elucidate agents' models and effort, the portal
-  token's permissions.
+  token's permissions, and whether `reqctl trace` reports code no citation
+  covers.
 
 ## Working
 
-1. **State.** Give `elucidate` an idea. It reviews what best in class does,
-   drafts EARS statements, challenges them against the approved corpus, and
-   opens a pull request that changes the corpus and nothing else.
+1. **State.** Give `elucidate` an idea. It reviews what best in class does and
+   proposes the practice that fits the project as each idea's default answer,
+   drafts EARS statements, challenges them against the approved corpus through
+   the `recall` and `judge` agents, puts to the owner only a question that
+   names a contradiction with an approved item, and opens a pull request that
+   changes the corpus and nothing else.
 2. **Read.** `reqctl context UID` prints an item, its links and the code that
    cites it. Never implement from a UID alone.
 3. **Build and cite.** Write the smallest code that satisfies the statement,
-   then `reqctl tag PATH --from N --to M --req UID`. `implement` carries steps 2
+   then `reqctl tag PATH --from N --to M --req UID`; `--name` cites a Python
+   function, class or method, and a path alone cites a whole file. A citation
+   covers the code that decides a clause and every line that code names which
+   no citation digest takes in; a Python citation's digest takes in each
+   function, class and constant its lines name. `implement` carries steps 2
    and 3.
 4. **Check.** `reqctl compare` names every cited region the branch touches; read
-   each against its statement. `reqctl trace` maps citations to the corpus.
-   `pre-pr` runs the gates before a code pull request.
+   each against its statement. `reqctl trace` maps citations to the corpus and,
+   where `settings.yml` asks, reports the lines no citation covers. `pre-pr`
+   runs the gates before a code pull request.
 5. **Re-pin.** A merged statement change leaves its citations stale. Read the
    code against the new statement, then `reqctl repin ID`, or `reqctl untag ID`
    where it no longer governs.
 
-`reqctl list` names what the corpus holds; `reqctl export` prints it.
+`reqctl list` names what the corpus holds; `reqctl export` prints what is
+approved, or everything with `--all`.
 
 ## Adopting reqctl
 
@@ -120,7 +133,8 @@ workflows do (`REQ`) and what the build that makes and checks them does
 gate every pull request, and `python .github/verify.py` runs the steps they
 would run for the tree. `.github/CODEOWNERS` puts the owner on every path: Claude
 writes and opens pull requests, the owner reviews and merges. Every bug and
-every request starts as a GitHub issue, and each pull request that follows
-names it.
+every request starts as a GitHub issue, and CI refuses a pull request whose body
+names none. A push to `main` that first pins the plugin to a new version tags
+the release and attaches the reqctl wheel to it.
 
 Licensed under Apache-2.0; see `LICENSE.txt`.
