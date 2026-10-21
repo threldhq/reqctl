@@ -39,9 +39,14 @@ PORTAL_TOKEN_PERMISSIONS = {
     "contents": {"access": "read"},
     "pull_requests": {"access": "read"},
 }
+# @req> uncited_code@9PEeh-VZLFNA ishqik
+UNCITED_CODE = {
+    "check": {"mode": "off"},
+}
 SHIPPED = {"review_limits": REVIEW_LIMITS, "challenge_bounds": CHALLENGE_BOUNDS,
            AGENTS: ELUCIDATE_AGENTS,
-           "portal_token_permissions": PORTAL_TOKEN_PERMISSIONS}
+           "portal_token_permissions": PORTAL_TOKEN_PERMISSIONS,
+           "uncited_code": UNCITED_CODE}
 # @req- 7yxrtp
 
 

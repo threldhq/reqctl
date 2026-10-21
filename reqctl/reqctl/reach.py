@@ -177,10 +177,10 @@ class Reach:
                 held or [self.texts[key[0]].splitlines()[n - 1] for n in sorted(lines)])
         return self.digests[key]
 
-    def taken(self, path, lines):
+    def _closure(self, path, lines):
         path = path.replace("\\", "/")
         if path not in self.texts:
-            return []
+            return set()
         todo, seen = self._calls(path, set(lines)), set()
         while todo:
             key = todo.pop()
@@ -190,5 +190,13 @@ class Reach:
             if key not in self.edges:
                 self.edges[key] = self._calls(key[0], self._lines(key))
             todo += self.edges[key]
-        return [[held, name, self._digest((held, name))] for held, name in sorted(seen)]
+        return seen
+
+    def taken(self, path, lines):
+        return [[held, name, self._digest((held, name))]
+                for held, name in sorted(self._closure(path, lines))]
+
+    def reached(self, path, lines):
+        return {(key[0], line) for key in self._closure(path, lines)
+                for line in self._lines(key)}
 # @req- 4pmkcf

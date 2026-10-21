@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from . import cite, corpus, history
+from . import cite, corpus, history, uncited
 
 
 def unstamped(uid, path):
@@ -83,7 +83,7 @@ def whole(tree, tags, root=None, uid=None):
     return problems
 
 
-def trace(tree, root, uid=None):
+def trace(tree, root, uid=None, base=None):
     citations, cited_problems = cite.read(root, digested=True, uid=uid)
     # @req+ REQ-19896380@lvCPXiVYZ6ud 6rtw6m
     shown = [c for c in citations if not corpus.is_test(c["path"])]
@@ -91,6 +91,10 @@ def trace(tree, root, uid=None):
     # @req- 6rtw6m
     # @req> REQ-40478019@_dwqsOpSOQXA rvd6f2
     cited_problems += whole(tree, tags, root, uid)
+    # @req> REQ-27534660@0hcOvPj91rV9 bc223j
+    # @req> REQ-64570886@Zckz3LzHUzXn fv2hvw
+    if not uid:
+        cited_problems += uncited.problems(tree, root, citations, base)
     # @req> REQ-76962559@NU0P43-PPSGC dyday2
     if uid:
         corpus.find(tree, uid)

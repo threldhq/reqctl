@@ -36,6 +36,10 @@ assessed:
   uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
   uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  bc223j: wsv4FSeErKGiLESbq-dEGB0jY8EKq32Z3YVnY7TovvI
+  tml2jy: xvRrI4-tkqWbEEMb1-a6lyw0K1AWpB6OXQbT4IJL-xA
+  zu7qeg: 5w30_qx1Fl0MklFr3hQGl-o1Tl7_Rdx3vSUAdnoj4jA
 priority: medium
 relations:
   REQ-40478019: depends_on
