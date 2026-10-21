@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a workflow installing by name a package that reqctl/requirements-dev-lock.txt
+    holds
+  then: the build refuses the change
+  when: the build runs
+- given: the session-start hook installing by name a package that reqctl/requirements-dev-lock.txt
+    holds
+  then: the build refuses the change
+  when: the build runs
+- given: a workflow installing a package that both lockfiles hold from reqctl/requirements-lock.txt
+    alone
+  then: the build does not refuse on that ground
+  when: the build runs
+- given: gitleaks installed by its script at one version checked against a SHA-256
+  then: the build does not refuse on that ground
+  when: the build runs
+- given: a workflow installing with -r reqctl/requirements-dev-lock.txt and --require-hashes
+  then: the build does not refuse on that ground
+  when: the build runs
+assessed:
+  GUARD-20154572: z2_hbXJO9sHnVMQd1fo-1KELeiBgdPt32F2PD4ygZIo
+  GUARD-26421773: SDQf4TqpYtSBsSd7GbN6Icbm8-N7Ee3B2uJ3Idc6lXE
+  GUARD-93589588: yH4bykpGUeLbQI_1Io16YMNXd2c3lZLrdWj7Svj4NvE
+relations:
+  GUARD-20154572: constrains
+  GUARD-26421773: depends_on
+  GUARD-93589588: constrains
+status: approved
+text: If a workflow or the session-start hook installs a Python package that reqctl/requirements-dev-lock.txt
+  holds other than from reqctl/requirements-dev-lock.txt or reqctl/requirements-lock.txt,
+  then the build shall refuse the change.
