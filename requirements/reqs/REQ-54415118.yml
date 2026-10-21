@@ -18,8 +18,6 @@ assessed:
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
   rule_of_the_build: vGcgrKfm0qFsbGTFdzp0g7Qi0vaPrTxB33xmTcTpH9Y
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
-citations:
-  tzrban: bTW1bvJRF_q_Wis4fNm7scZTyqAtJH3NnDuG5sKzSL0
 priority: medium
 relations:
   REQ-38288492: derives_from
