@@ -45,6 +45,7 @@ def listing(tree, citations, uid=None):
     return problems
 
 
+# @req> REQ-40478019@_dwqsOpSOQXA bkbrwo
 def whole(tree, tags, root=None, uid=None):
     problems = []
     for item in corpus.items(tree):
@@ -88,6 +89,7 @@ def trace(tree, root, uid=None):
     shown = [c for c in citations if not corpus.is_test(c["path"])]
     tags = cite.cited(shown)
     # @req- 6rtw6m
+    # @req> REQ-40478019@_dwqsOpSOQXA rvd6f2
     cited_problems += whole(tree, tags, root, uid)
     # @req> REQ-76962559@NU0P43-PPSGC dyday2
     if uid:

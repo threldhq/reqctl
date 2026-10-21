@@ -13,6 +13,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  ec6fz5: CC4aP3X36tzA5Jffa_sgHP8FDvLKPsHV4fAxhrFDSgQ
 priority: medium
 relations:
   REQ-38288492: derives_from

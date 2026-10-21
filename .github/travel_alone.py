@@ -8,15 +8,18 @@ import yaml
 
 from reqctl import corpus
 
+# @req+ REQ-50816200@5wr7JJhod9Gm kzojze
 LISTED = (corpus.CITATION_LIST,)
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
 COMPONENTS = f"{GOVERNED}{corpus.FOLDERS['data']}/plugin_components.yml"
 PLUGIN_FOLDERS = f"{GOVERNED}{corpus.FOLDERS['data']}/plugin_folders.yml"
+# @req- kzojze
 # @req> REQ-41600593@dauTiMee9rmb o3tsro
 STAMPED = re.compile(
     rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
+# @req+ REQ-50816200@5wr7JJhod9Gm dyii6c
 ABSENT = object()
 
 
@@ -83,6 +86,17 @@ def covered(paths, file):
                for path in paths)
 
 
+def wholes(ref, path):
+    held = without(ref, path, ())
+    found = held.get(corpus.WHOLE_FILES) if isinstance(held, dict) else None
+    return set(found) if isinstance(found, dict) else set()
+
+
+def moved_wholes(fork, governed):
+    return {cited for path in governed
+            for cited in wholes(fork, path) ^ wholes("HEAD", path)}
+
+
 def without_stamps(ref, path):
     found = _git("show", f"{ref}:{path}")
     if found.returncode != 0:
@@ -115,11 +129,16 @@ def classify(base):
               + [path for path in other
                  if textual[path] and repins_only(fork, path)])
     added, paths, held = added_paths(fork) if COMPONENTS in governed else ({}, [], [])
+    moved = moved_wholes(fork, governed)
+    carriers = [path for path in governed if path not in pinned
+                and only(fork, path, CARRIED + (corpus.WHOLE_FILES,))]
+    if paths and only(fork, COMPONENTS, CARRIED, digests=True, dropped=added):
+        carriers.append(COMPONENTS)
     loose = [path for path in other if path not in pinned]
-    if paths and loose and all(covered(paths, path) and not covered(held, path)
-                               for path in loose) and only(
-            fork, COMPONENTS, CARRIED, digests=True, dropped=added):
-        pinned += [COMPONENTS, *loose]
+    if carriers and loose and all(
+            path in moved or (covered(paths, path) and not covered(held, path))
+            for path in loose):
+        pinned += [*carriers, *loose]
     return ([path for path in governed if path not in pinned],
             [path for path in other if path not in pinned], pinned)
 
@@ -127,8 +146,8 @@ def classify(base):
 def main(base):
     content, other, pinned = classify(base)
     for path in pinned:
-        print(f"pins, citation list or added plugin components only, travelling "
-              f"with what moved them: {path}")
+        print(f"pins, citation list, whole-file citations or added plugin "
+              f"components only, travelling with what moved them: {path}")
     if not content or not other:
         return 0
     print("::error::this pull request changes requirements and other things; "
@@ -138,6 +157,7 @@ def main(base):
     print("everything else:")
     print("\n".join(f"  {path}" for path in other))
     return 1
+# @req- dyii6c
 
 
 def cli(argv):

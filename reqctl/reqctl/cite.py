@@ -35,9 +35,6 @@ ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
 # @req> REQ-60346603@FI4Rjvk1iDNp ulk4ve
 COMMENTS = {**dict.fromkeys((".py", ".yml", ".yaml"), ("# ", "")),
             ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
-# @req> commentless_formats@nLgr55U75GyS n5tk7r
-# @req> REQ-87066486@AtzPEAcAbJ1v uvpfar
-COMMENTLESS = ("json",)
 BOM = "\ufeff"
 
 
@@ -684,7 +681,10 @@ JSON_TOKEN = re.compile(r'(?P<string>"(?:\\.|[^"\\\n])*")'
                         r"|(?P<space>[ \t\r\n]+)|(?P<other>.)", re.S)
 
 
+# @req> REQ-40478019@_dwqsOpSOQXA udeu7w
 def whole(path, text):
+    if Path(path).suffix == ".py":
+        return digest(path, text, range(1, len(_feed_lines(text)) + 1))
     held = None
     if Path(path).suffix == ".json":
         held = [[found.lastgroup, found.group()] for found in JSON_TOKEN.finditer(text)

@@ -168,12 +168,13 @@ properties:
       type: string
       pattern: "^[A-Za-z0-9_-]{43}$"
 
+  # @req> REQ-40478019@_dwqsOpSOQXA wg7rlk
   whole_file_citations:
     type: object
     readOnly: true
     description: >-
-      The whole-file citations this parameter or data item holds: the path of each file of a
-      commentless format it is cited against, to the tag stamp it was read
+      The whole-file citations this parameter or data item holds: the path of each file it is
+      cited against, to the tag stamp it was read
       against and a digest of the entire file. Excluded from the stamp.
       Written by reqctl tag, never by hand.
     propertyNames:
