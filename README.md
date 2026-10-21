@@ -17,9 +17,12 @@ code until each is read against the statement that now stands and re-pinned.
 - **The Claude Code plugin** -- the `elucidate`, `implement` and `pre-pr`
   skills; the `best-in-class`, `coverage`, `recall` and `judge` agents
   `elucidate` spawns; a hook before every tool call that keeps the corpus
-  behind `reqctl` and refuses any edit of a citation that `reqctl` did not
-  make; and one that gives each session reqctl's rules when it starts or
-  compacts.
+  behind `reqctl`, refuses any edit of a citation that `reqctl` did not make,
+  shows the governing statement when an edit reaches cited lines, and refuses
+  a commit or push to the default branch, a force push and a git command that
+  discards uncommitted work; and one that gives each session reqctl's rules
+  when it starts or compacts. It installs into any git repository, with or
+  without a corpus.
 - **Reusable workflows** -- `.github/workflows/corpus-gates.yml` refuses a pull
   request that fails a corpus gate; `.github/workflows/corpus-view.yml`
   publishes the corpus for the portal; `.github/workflows/corpus-write.yml`
@@ -49,35 +52,42 @@ code until each is read against the statement that now stands and re-pinned.
 - A `settings.yml` in `requirements/` replaces values reqctl ships: review
   limits, challenge bounds, the elucidate agents' models and effort, the portal
   token's permissions, and whether `reqctl trace` reports code no citation
-  covers.
+  covers. reqctl reads it as the default branch at `origin` carries it, so a
+  change to it takes effect on merge.
 
 ## Working
 
-1. **State.** Give `elucidate` an idea. It reviews what best in class does and
-   proposes the practice that fits the project as each idea's default answer,
-   drafts EARS statements, challenges them against the approved corpus through
-   the `recall` and `judge` agents, puts to the owner only a question that
-   names a contradiction with an approved item, and opens a pull request that
-   changes the corpus and nothing else.
+1. **State.** Give `elucidate` an idea. It reads the repository's README for
+   the field the software is in, reviews what best in class does there, and
+   puts to the owner the practices the idea does not state. It proposes the
+   practice that fits the project as each idea's default answer, drafts EARS
+   statements, challenges them against the approved corpus through the
+   `recall` and `judge` agents, puts to the owner from that challenge only a
+   question naming a contradiction with an approved item, asks which proposals
+   to mint, and opens a pull request that changes the corpus and nothing else.
 2. **Read.** `reqctl context UID` prints an item, its links and the code that
    cites it. Never implement from a UID alone.
 3. **Build and cite.** Write the smallest code that satisfies the statement,
    then `reqctl tag PATH --from N --to M --req UID`; `--name` cites a Python
-   function, class or method, and a path alone cites a whole file. A citation
-   covers the code that decides a clause and every line that code names which
-   no citation digest takes in; a Python citation's digest takes in each
-   function, class and constant its lines name. `implement` carries steps 2
-   and 3.
+   function, class or method, and a path alone cites a whole file. The
+   citation pins the statement's stamp in the code, and the item records a
+   digest of the lines it covers. A citation covers the code that decides a
+   clause and every line that code names which no citation digest takes in; a
+   Python citation's digest takes in each function, class and constant its
+   lines name. `implement` carries steps 2 and 3.
 4. **Check.** `reqctl compare` names every cited region the branch touches; read
-   each against its statement. `reqctl trace` maps citations to the corpus and,
-   where `settings.yml` asks, reports the lines no citation covers. `pre-pr`
-   runs the gates before a code pull request.
+   each against its statement. `reqctl trace` maps citations to the corpus:
+   it reports a citation whose covered lines changed since it was pinned or
+   that names a deprecated statement, warns of each approved statement nothing
+   cites, and, where `settings.yml` asks, reports the lines no citation covers.
+   `pre-pr` runs the gates before a code pull request.
 5. **Re-pin.** A merged statement change leaves its citations stale. Read the
    code against the new statement, then `reqctl repin ID`, or `reqctl untag ID`
    where it no longer governs.
 
 `reqctl list` names what the corpus holds; `reqctl export` prints what is
-approved, or everything with `--all`.
+approved, or everything with `--all`. `reqctl --json` before any command prints
+records in place of markdown.
 
 ## Adopting reqctl
 
@@ -115,15 +125,16 @@ In a repository whose default branch is `main`:
      `corpus-view` branch, where the portal reads it.
    - A workflow named `corpus-write.yml`, run on `workflow_dispatch` with inputs
      `change` and `title`, that calls `.github/workflows/corpus-write.yml` with
-     them. It applies the portal's steps through reqctl and opens a pull
-     request.
+     them. It applies the portal's steps -- new, revise, relate, unrelate,
+     delete -- through reqctl, cuts and checks a baseline where a step changes
+     something approved, and opens a pull request.
    - Both calls pass the two secrets, and `reqctl` as a full 40-character commit
      SHA. Each stops before reading a secret when `reqctl` is anything else or a
      pull request triggered the caller.
    - Run `reqctl portal` in a clone whose `origin` is the repository. It serves
      the page at `http://127.0.0.1:8374` and asks for a fine-grained token
      scoped to that repository: actions read and write, contents read, pull
-     requests read.
+     requests read. The page sends requests to GitHub's API and nowhere else.
 
 ## This repository
 
@@ -131,7 +142,9 @@ reqctl governs itself. Its corpus states what reqctl, the plugin and the
 workflows do (`REQ`) and what the build that makes and checks them does
 (`GUARD`). `.github/workflows/ci.yml` and `.github/workflows/corpus-gates.yml`
 gate every pull request, and `python .github/verify.py` runs the steps they
-would run for the tree. `.github/CODEOWNERS` puts the owner on every path: Claude
+would run for the tree. The repository holds no test and the corpus offers no
+automated_test verification: code is verified by reading it against the
+statement it cites. `.github/CODEOWNERS` puts the owner on every path: Claude
 writes and opens pull requests, the owner reviews and merges. Every bug and
 every request starts as a GitHub issue, and CI refuses a pull request whose body
 names none. A push to `main` that first pins the plugin to a new version tags
