@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session, when a merged pull request that changed the corpus has left code citing
+  statements it changed, makes re-pinning those [statement citations](statement_citation)
+  its next pull request.
+type: functional
+verification: inspection

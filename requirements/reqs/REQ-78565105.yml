@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session changes no [item](item) of the corpus beyond the [citation lists](citation_list)
+  and [pins](pin) that reqctl tag, reqctl repin and reqctl untag write.
+type: functional
+verification: inspection

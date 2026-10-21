@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: an implement run about to write a new unit of code
+  then: it reads the code of products solving the same kind of problem before writing
+    any
+  when: the session begins the work
+- given: an implement run that extends code already citing the requirement
+  then: no research is required of it
+  when: the run proceeds
+- given: an implement run that researched and wrote code
+  then: its body names the sources the session read and the example it chose, or states
+    that none could be read
+  when: the pull request carrying the code is prepared
+assessed:
+  REQ-26967281: _UMD2dn--MVzSdcUN3uf-ha_Zg_fhdZYEo_AN9VYKWw
+  REQ-91999340: aXqzmdm7TRCaTLHra4nodALhyLePft6miLdAPhlQDe8
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-26967281: supersedes
+  REQ-91999340: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session, before writing new code rather than extending code that already cites the
+  requirement, researches the code of products solving the same kind of problem, in
+  any field, for a best-in-class example of that code.
+type: functional
+verification: inspection

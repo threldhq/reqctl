@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  ${plugin_components.pre_pr_skill} runs after the ${plugin_components.implement_skill}
+  and before the pull request is opened.
+type: functional
+verification: inspection
