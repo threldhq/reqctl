@@ -715,6 +715,7 @@ def cmd_context(args):
     store, root = corpus.load()
     # @req> REQ-35805881@37XtC4gyD98k dktwfq
     tags = cite.cited(cite.readable(root))
+    # @req> REQ-40478019@_dwqsOpSOQXA fgrxuj
     graph.whole(store, tags)
     dependents = {}
     for other in corpus.items(store):
@@ -869,12 +870,9 @@ def _listed(store, uid, entries):
     return [(item.path, corpus.dump(item.data))]
 
 
+# @req> REQ-40478019@_dwqsOpSOQXA pcofn5
 def _whole(tree, root, args):
     target = Path(args.path).resolve()
-    if target.suffix[1:] not in cite.COMMENTLESS:
-        raise ReqctlError(f"{args.path}: a whole-file citation is held only of a file "
-                          f"in a commentless format ({', '.join(cite.COMMENTLESS)}) "
-                          "-- cite lines of it with --from and --to")
     try:
         relative = target.relative_to(Path(root).resolve()).as_posix()
     except ValueError as error:
@@ -906,6 +904,7 @@ def cmd_tag(args):
             raise ReqctlError("give each citation a --name or a --from and --to, not both")
         spans = [cite.spanned(args.path, name) for name in args.names]
         args.first, args.last = map(list, zip(*spans))
+    # @req> REQ-40478019@_dwqsOpSOQXA jwvxph
     if args.first is None and args.last is None:
         return _whole(tree, root, args)
     # @req+ REQ-62782894@x4o_oB5H0-tY nmyxfc
@@ -1325,8 +1324,7 @@ def build_parser(root, fielded):
                  "more; repeat --from, --to and --req to cite several, each "
                  "numbered as the file stands before the command; --name a "
                  "function, class or method of a .py file in place of --from and "
-                 "--to; name none of them to cite a whole file of a commentless "
-                 "format")
+                 "--to; name none of them to cite a whole file")
     s.add_argument("path")
     # @req+ REQ-62782894@x4o_oB5H0-tY ou2zvt
     s.add_argument("--from", dest="first", type=int, action="append")

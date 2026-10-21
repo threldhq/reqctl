@@ -34,19 +34,31 @@ than the branch under review, so the agent would read the wrong code.
 
 First: every behavioural change on the branch cites its governing approved
 requirement -- run `reqctl trace`, then read the diff for changes carrying no
-`@req` tag.
+`@req` tag. A behavioural change no approved requirement governs stops the
+pass; ask the owner to create one.
 
-Code enforcing a rule of the build cites its approved `GUARD` instead; what
-only carries the build -- dependency pins, CI wiring, lockfiles -- cites
-nothing. Cite what is missing with `reqctl tag` before going on. A change
-owing a citation that no statement governs stops the pass; ask the owner to
-create one.
+<!-- @req+ REQ-33819161@O5VukwcHBX9h f7v7yc -->
+Code enforcing a rule of the build cites the approved `GUARD` stating that
+rule; cite what is missing with `reqctl tag` before going on. Where no guard
+states the rule, stop the pass and ask the owner to create one.
+<!-- @req- f7v7yc -->
 
+<!-- @req+ REQ-78788058@k3hmt9gXlpDt ec6fz5 -->
+A lockfile, a dependency manifest or a configuration file the branch changes is
+held whole by the `GUARD` whose rule it serves -- `reqctl tag PATH --req UID`,
+naming no lines -- before going on. Where no guard states that rule, stop the
+pass and ask the owner to create one.
+<!-- @req- ec6fz5 -->
+
+<!-- @req+ REQ-34984028@TZ0U0-vLTqkz j6i32e -->
 Cover the code that decides a clause or acceptance criterion of the item
 cited, or, for a parameter, a data item or one of its entries, the code stating
 its value -- where a data item's entries are stated in one place and read in
-another, the place stating them. Leave uncited a helper the deciding code calls,
-and code incidental to every clause.
+another, the place stating them -- and every line that code names, directly or
+through what those lines name, in any language. A citation's digest takes in
+only the lines it covers, so a helper it calls or a constant it reads is
+accounted for only once it is cited too.
+<!-- @req- j6i32e -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->
 `python .github/verify.py`, where the repository carries it: it reads every

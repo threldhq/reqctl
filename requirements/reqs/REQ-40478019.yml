@@ -31,6 +31,16 @@ assessed:
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  aem4lb: K2Ayaykw5wHwu037GL9--vN3YJbYr02oFrffq9npwdQ
+  bkbrwo: -Lz7At-bR1nMRNVFtBO2diHr1k1nbE_NU7ODE8x2dhQ
+  bormph: PbTO4cpgnqPeaW6Jo0j8UJMyisbfKOIGvnYev_AOTCo
+  fgrxuj: OmToVxxZBHvSU0N_Mefso8bSmCaacJQhudtfZ4fgcEo
+  jwvxph: jQg9Bd3ZptH5xzHgzcRXPr2d7VLfQnJDLQ5TPS0VYIc
+  pcofn5: z5QHSehhf1NypwuxGUARemFZ1fbBA-U-WVMKkCZ0ZPA
+  rvd6f2: F24iIozFJbLZjiKdHXf-lQofIwM4WWePuE9BHvjDcJg
+  udeu7w: sk2oZCVcoCW9LoSKWjMml7MvZ8817_ZzutFgt2oILVk
+  wg7rlk: c3wb9pw52hz5DRJMFBQVVrB0YvTcIwcqCNdW0n7Ny1Q
 priority: medium
 relations:
   REQ-30061042: supersedes

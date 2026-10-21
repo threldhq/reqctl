@@ -54,11 +54,15 @@ requirement not yet satisfied.
 Cite it with `reqctl tag PATH --from N --to M --req UID`, over the whole
 statements that satisfy it. The tool writes the stamp; never compose one.
 
+<!-- @req+ REQ-34984028@TZ0U0-vLTqkz vc4i2s -->
 Cover the code that decides a clause or acceptance criterion of the item
 cited, or, for a parameter, a data item or one of its entries, the code stating
 its value -- where a data item's entries are stated in one place and read in
-another, the place stating them. Leave uncited a helper the deciding code calls,
-and code incidental to every clause.
+another, the place stating them -- and every line that code names, directly or
+through what those lines name, in any language. A citation's digest takes in
+only the lines it covers, so a helper it calls or a constant it reads is
+accounted for only once it is cited too.
+<!-- @req- vc4i2s -->
 
 ## 4 -- Prove it
 
