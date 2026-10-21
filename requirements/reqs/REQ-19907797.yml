@@ -8,6 +8,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  ck3qdz: u9Pa2S6_NSKaQ07YtBiWHwPSD19Vbf_xMIqHtkHlcBs
 priority: medium
 relations:
   REQ-38288492: depends_on

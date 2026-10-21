@@ -4,6 +4,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+citations:
+  jhaqo3: GslD0aGwnls_0kmDxXzo5Ja6v0G9mNIUDDxGwdRXh8g
 priority: medium
 relations:
   REQ-38288492: depends_on

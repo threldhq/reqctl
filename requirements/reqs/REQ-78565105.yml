@@ -6,6 +6,8 @@ assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  lkg3bt: iGEAzp9OMylfMvIjtOk1KlBhnYJllm80AlTV58iAcvc
 priority: medium
 relations:
   REQ-38288492: depends_on

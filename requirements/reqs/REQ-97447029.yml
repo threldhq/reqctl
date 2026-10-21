@@ -9,6 +9,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
   rule_of_the_build: vGcgrKfm0qFsbGTFdzp0g7Qi0vaPrTxB33xmTcTpH9Y
+citations:
+  np46an: OswTnQdiS1LpbYXbWdrYX2P9hOMjY1NM6yySRsMesSw
 priority: medium
 relations:
   REQ-33819161: derives_from
