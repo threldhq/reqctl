@@ -20,8 +20,10 @@ behaviour satisfies it. Never compose or paste a citation. Once the code is read
 against the statement that now stands, re-pin a stale citation with
 `reqctl repin ID`; remove one that no longer governs with `reqctl untag ID`.
 Cover the code that satisfies a clause and every line that code names, directly
-or through what those lines name, in any language: a citation's digest takes in
-only the lines it covers. A region that moved is untagged and
+or through what those lines name, that no citation digest takes in. A Python
+citation's digest takes in each function, class and constant of the code base its
+lines name, and what those name in turn, so those get no citation of their own;
+code in any other language that the lines name is cited too. A region that moved is untagged and
 cited again. A statement citation is the only form `reqctl trace` accepts.
 
 Verify code by reading it against the statement it cites: `reqctl compare` names
