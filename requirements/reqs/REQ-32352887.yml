@@ -4,7 +4,7 @@ acceptance_criteria:
   then: the product refuses the review and names the [practice](practice)
   when: the review is checked
 assessed:
-  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  REQ-82432523: dA6MI5WknAH4W2nm9dEUdYToQ1b4odSafkhoaK-cx00
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
 citations:

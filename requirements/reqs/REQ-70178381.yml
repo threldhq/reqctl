@@ -8,7 +8,7 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   dbuwzq: Pzy-2GueYzx76HubCJ8xochzKCg8FQLIN7NZZo9h338
-  vzfqst: cKI8EoDE2AtzuSuycVNcaxvjBGStE3UHrhnPEY_KWZE
+  vzfqst: sc6h-lQtqzTBtWhgyay7zSi9BVVZZCpVbIJY9b3PtHE
 priority: medium
 relations:
   REQ-38288492: depends_on

@@ -20,16 +20,16 @@ acceptance_criteria:
   when: the owner answers
 assessed:
   REQ-46711731: rqojAeSdcYOnIgKWWfTXSfGr9gWGYpBFMtEHxbCuE80
-  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  REQ-82432523: dA6MI5WknAH4W2nm9dEUdYToQ1b4odSafkhoaK-cx00
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
   m75ejw: STsWLr4ZB_O1C9Xzevyp7PzSU1jAfJUiSECxjise1qg
-  px3ye3: ohZHDznsj8JeGlsAj5aM0BYSUdnk_HO9uis5qdIBYBA
-  z6krrc: lo7CrS7CTmDhrTcOat5-HB9unErLlVoBnx_YsaWWYEU
-  zf7cg7: KqUNLI_vtB3s-LFiqxffSuAud2jfbFiJvtVIfpfsc50
+  px3ye3: ImuyzghFYBiUOsbWlJ7vUQXDddKppMSFe9c2ugDNm3g
+  z6krrc: TXS6jfCCvI47HLkaj8n9Kx42Z6dfVXQZN6BkOE4erBI
+  zf7cg7: d29pYsLONTsHsEhKF9bE_VQhh07sjALkHFsh8mrCRbs
 priority: medium
 relations:
   REQ-46711731: constrains

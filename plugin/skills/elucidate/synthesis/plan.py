@@ -34,6 +34,7 @@ STATE = "build.json"
 REVIEWED = "review.json"
 REMOVED = "removed.json"
 DECLINED = "declined_practices"
+DEFERRED = "deferred"
 OBLIGATION = {"REQ": "requirements", "GUARD": "guards"}
 KIND_NAME = {"REQ": "requirement", "GUARD": "guard"}
 SIBLINGS = "siblings"
@@ -734,13 +735,13 @@ def answered(run, held):
     if not isinstance(found, dict):
         raise SystemExit(
             f"{path}: `{ANSWERS}` maps a proposal number to its verdict's "
-            "questions, each question to `owner: ANSWER` or to `corpus: "
-            "[{uid: UID, clause: QUOTE}]`.")
+            "questions, each question to `owner: ANSWER`, to `corpus: "
+            "[{uid: UID, clause: QUOTE}]` or to `declined: true`.")
     return path, keyed(path, ANSWERS, found, held)
 
 
 def settling(path, number, question, held, records):
-    # @req+ REQ-52114263@JmvDYpVGNRJQ huroi7
+    # @req+ REQ-52114263@85vP2wA4G2MR huroi7
     held = held if isinstance(held, dict) else {}
     owner, evidence = held.get("owner"), held.get("corpus")
     if isinstance(owner, str) and owner.strip():
@@ -749,6 +750,8 @@ def settling(path, number, question, held, records):
         raise SystemExit(
             f"{path}: proposal {number}'s answer to {question!r} reads as "
             f"{owner!r}, not as the owner's words; quote what they said")
+    if held.get("declined") is True:
+        return "declined as naming no contradiction with an approved item"
     if isinstance(evidence, list) and evidence and all(
             isinstance(one, dict) and isinstance(one.get("clause"), str)
             and one["clause"].strip() and str(one.get("uid")) in records
@@ -761,9 +764,10 @@ def settling(path, number, question, held, records):
             for one in evidence)
     raise SystemExit(
         f"{path}: proposal {number}'s verdict asks {question!r}, and `{ANSWERS}` "
-        "records neither the owner's answer nor a clause quoted from a corpus "
-        "item that settled it. Answer it against the corpus or put it to the "
-        "owner, then record the result.")
+        "records neither the owner's answer, a clause quoted from a corpus "
+        "item that settled it, nor `declined: true`. Answer it against the "
+        "corpus, decline it where it names no contradiction with an approved "
+        "item, or put it to the owner, then record the result.")
     # @req- huroi7
 
 
@@ -1573,8 +1577,9 @@ def describe(run):
             "with -- build the run again with `plan.py build`, then judge it")
     # @req- obajkn
     ledger, answers = answered(run, held)
-    traces = traced(run, said(run, "words.md", ""), held)
-    # @req> REQ-52114263@JmvDYpVGNRJQ dbzebu
+    words = said(run, "words.md", "")
+    traces = traced(run, words, held)
+    # @req> REQ-52114263@85vP2wA4G2MR dbzebu
     records = {uid: [record.get(field) for field in STATING]
                for uid, record in glossary().items()
                if record.get("status") == "approved"}
@@ -1610,7 +1615,7 @@ def describe(run):
                          f"{entry['defined_by'] or 'no term'}, {entry['reason']}")
         for entry in verdict["faults"]:
             lines.append(f"- fault {entry['fault']}: {entry['reason']}")
-        # @req> REQ-52114263@JmvDYpVGNRJQ gedop6
+        # @req> REQ-52114263@85vP2wA4G2MR gedop6
         for question in verdict["questions"]:
             asked = answers.get(str(number))
             answer = settling(ledger, number, question,
@@ -1623,6 +1628,11 @@ def describe(run):
     lines += (declined + declined_practices(run)
               or ["Nothing was declined in this run."])
     # @req- vxerce
+    # @req+ REQ-80620603@d9HSssP4TTeh tpibvr
+    postponed = deferred(run, words)
+    if postponed:
+        lines += ["", "### deferred", ""] + postponed
+    # @req- tpibvr
     # @req+ REQ-41970990@LllsbvPcoF0q 6vslgs
     overrides = used(run)
     if overrides:
@@ -1677,6 +1687,25 @@ def declined_practices(run):
             f"{practice['practice']} ({', '.join(practice['leaders'])})"
             for practice in held]
     # @req- mkqci7
+
+
+def deferred(run, words):
+    path, read = recorded(run)
+    held = [] if read.get(DEFERRED) is None else read[DEFERRED]
+    spoken = _coverage.plain(_coverage.spoken(words))
+    if not isinstance(held, list) or not all(
+            isinstance(one, dict) and isinstance(one.get("what"), str)
+            and one["what"].strip() and isinstance(one.get("answer"), str)
+            and one["answer"].strip()
+            and _coverage.quoted(spoken, _coverage.spoken(one["answer"]))
+            for one in held):
+        raise SystemExit(
+            f"{path}: `{DEFERRED}` lists only what an answer of the owner asks "
+            "be deferred to a later run, each as `{what: ..., answer: QUOTE}` "
+            "with the answer quoted from the owner's words. Quote their answer, "
+            "or remove the entry they did not ask to defer.")
+    return [f"- {' '.join(one['what'].split())}, deferred on the owner's "
+            f"answer: “{_coverage.spoken(one['answer'])}”" for one in held]
 
 
 def main(argv=None):

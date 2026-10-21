@@ -5,14 +5,14 @@ acceptance_criteria:
   when: the product makes the [best-in-class review](best_in_class_review)
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  REQ-82432523: dA6MI5WknAH4W2nm9dEUdYToQ1b4odSafkhoaK-cx00
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   elucidate_workflow: LLnSfqUTLbwl39eM7HWxSLD1q97stP7Pc5uZbHCJu_o
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.best_in_class_agent: u1uaiUuYFzYo5iFrDTEntEfYwc19prv4BbSVmvAHnvM
 citations:
   b2u3gj: zKfzHI1auvrCCDQ0P2E5igGoCq_dDAA5sh0JTI2Mlfo
-  dnioty: 1NlDfwjPSTgjCfjyKG8NiPa7no7ErnWuERhA8HkWdZw
+  dnioty: TxTmHDWRU0K2Ry8AXbA0Iw0pEjfkr2IlkBptSyfHKuE
   oit5jj: ketoSitEnCoLzzoqz1pQHFhocX4M2TGpYobBWmxGksM
   q34cuz: RDHjtoYlzMgGDBNiXpBItC9wmUDXwZmPAeULN1-BuQE
 priority: medium

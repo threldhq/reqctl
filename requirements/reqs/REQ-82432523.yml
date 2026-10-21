@@ -9,17 +9,24 @@ acceptance_criteria:
     that show the [practice](practice) and the sources it rests on, each source with
     a passage quoted from it
   when: it is made
+- given: a [best-in-class review](best_in_class_review)
+  then: it records for each [practice](practice) its fit to the project as assessed
+    against the README at the [project root](project_root), or that no README was
+    found
+  when: it is made
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   leader: dm5_xg96tGA19Bo0hQuihnMGrFeIw0IMNirpKcLnBLo
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
 citations:
   4cioyu: yl2UisLXMVwf9iWaxi5BuJnupWeGTTHuhmx_MMC2uyI
-  drprho: qpXCPaqEmLSW4QSaPDn9AY-kiaL9xBSn82F-o6umBG0
-  poc76h: RnuQGBUXs11xFm-jJHgMvtqTTcke2Px_SreHebsrYJg
-  sfrez4: ELm2U29ri1BToWbTFZphLZuiX06e-VMDnav_tsbXg0A
+  drprho: ohHKGgrqYXUK-v30OzP148_mh-UwoKB8IHEFt2GYDkc
+  mwzi36: JhvBBARcnLZx0SBOdXXEG4eKs1kuioTdfp8r7xGKP4c
+  poc76h: yBS-b3evSnfySYwucrHDoZvl6DYG5cKoFmghk1HoJh4
+  sfrez4: iBoRa-p1Dqi_bqj2jSI_jlL3E5mn-vjonfTl4fpGy-A
 priority: medium
 relations:
   REQ-38288492: depends_on
