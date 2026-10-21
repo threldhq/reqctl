@@ -8,8 +8,8 @@ acceptance_criteria:
   when: a run is built
 assessed:
   REQ-23060027: zeNeSryv-0-1-V7CNGTlk3RN2_KxE0P3zV9SCZD6ZSs
-  elucidate_agents: 94RWE3TluJ6N5xkmJiqn4UQyMen3XsMPas9siVvu5j8
-  elucidate_agents.*: wpfamgxi_mt-7nuX3IW0mErlSS94rF11TjMeODKUmbc
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
   4iahip: _MibzfaCbfHMqHiOnb83eVq9sWFqQ7qHC4hDNt3gaVI

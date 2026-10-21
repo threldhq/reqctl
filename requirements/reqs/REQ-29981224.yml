@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: the agent named best_in_class as the Claude Code plugin ships it
+  then: it grants no tool other than WebSearch, WebFetch and Write
+  when: its definition is read
+- given: the agent named coverage as the Claude Code plugin ships it
+  then: it grants no tool other than Write
+  when: its definition is read
+- given: the agent named judge or recall as the Claude Code plugin ships it
+  then: it grants no tool other than Read and Write
+  when: its definition is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-60923256: Wyz1JvPjvbObcCo-EGVPfhBbJIbo2-dsXHOU7E_UdcY
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-60923256: supersedes
+status: approved
+text: The product shall define each agent named in ${elucidate_agents} with no tool
+  other than the tools that the tools field of the agent's [entry](entry) states.
+type: functional
+verification: inspection
