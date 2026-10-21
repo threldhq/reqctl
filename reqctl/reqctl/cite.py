@@ -805,21 +805,9 @@ def _python_at(root, commit):
              _git(root, "ls-tree", "-r", "-z", commit).split("\0")
              if "\t" in line and line.split()[1] == "blob"]
     base = Path(root)
-    paths = [path for path in blobs if path.endswith(".py") and not any(
-        corpus.skipped(base, base / folder) for folder in Path(path).parents[:-1])]
-    found = subprocess.run(["git", "cat-file", "--batch"], cwd=root, check=False,
-                           input="".join(f"{commit}:{path}\n" for path in paths).encode(),
-                           capture_output=True)
-    if found.returncode:
-        raise ReqctlError(f"cannot read {commit}: {found.stderr.decode().strip()}")
-    texts, at = {}, 0
-    for path in paths:
-        end = found.stdout.index(b"\n", at)
-        size = int(found.stdout[at:end].split()[2])
-        texts[path] = (found.stdout[end + 1:end + 1 + size]
-                       .decode(errors="ignore").removeprefix(BOM))
-        at = end + 2 + size
-    return texts
+    return {path: _git(root, "show", f"{commit}:{path}").removeprefix(BOM)
+            for path in blobs if path.endswith(".py") and not any(
+                corpus.skipped(base, base / folder) for folder in Path(path).parents[:-1])}
 
 
 def compare(root, ref):
