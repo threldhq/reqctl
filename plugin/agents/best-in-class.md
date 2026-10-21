@@ -1,7 +1,9 @@
 ---
+# @req+ REQ-38288492@4l6tMNjp19tH ptkrb7
 name: best-in-class
 description: Makes the best-in-class review of a run's owner's words -- what best in class in each idea's field does, and what market leaders do in fields similar to the governed software -- every practice resting on a page it read. Spawned only by the elucidate skill's step 1; not for general work.
 tools: WebSearch, WebFetch, Write
+# @req- ptkrb7
 ---
 
 <!-- @req> REQ-38288492@4l6tMNjp19tH 26246r -->

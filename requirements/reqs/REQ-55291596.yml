@@ -29,6 +29,10 @@ assessed:
   front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
   nest_level: ZBG5hueA94O71Lx_L6dhMkqhJ-nCJXsbS_pjI3Hm6CI
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  5hrvsm: NZ3oBq2zUV8t5xdd--otd2xi4QYqIZmM970as-FxtBU
+  7nnmie: 2wVemMbqDACUIYxJQqFCwT6HnnW8tn7tijq3gH7mVbA
+  7zqv4i: 0KcvGa2VNT9GES5gSOnxcVCdBjGu5kG0L5VpDjD0BWk
 priority: medium
 relations:
   REQ-12235023: depends_on
