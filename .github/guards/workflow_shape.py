@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import NamedTuple
 
 import yaml
+from packaging.utils import canonicalize_name
 
 WORKFLOWS = Path(".github/workflows")
 GUARDS = Path(".github/guards")
@@ -34,11 +35,9 @@ CLUSTER = re.compile(r"-([qvUI]*)([re])(.*)")
 REDIRECT = re.compile(r"\d*[<>&].*")
 DEV_INPUTS = Path("reqctl/requirements-dev.in")
 DEV_LOCK = DEV_INPUTS.with_name("requirements-dev-lock.txt")
-LOCKS = (DEV_LOCK.name, RUNTIME)
 HOOK = Path(".claude/hooks/session-start.sh")
 LOCKED = re.compile(r"(?m)^([A-Za-z0-9][\w.-]*)(?:\[[^\]]*\])?==")
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
-QUOTES = re.compile(r"[\"']")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
 SCRIPT = re.compile(GATE.pattern
@@ -275,8 +274,8 @@ def installs(text, where):
 
 def pip_installs(text):
     held = []
-    for line in PIP.findall(CONTINUED.sub(" ", text)):
-        words = re.sub(r"[\"']", "", line).split(" #", 1)[0].split()
+    for line in PIP.findall(CONTINUED.sub(" ", re.sub(r"[\"']", "", text))):
+        words = line.split(" #", 1)[0].split()
         words = [part for word in words[words.index("install") + 1:]
                  for part in (word.split("=", 1) if word.startswith("--")
                               else [word])]
@@ -351,10 +350,6 @@ def parity(text, where, lock, own):
     return found
 
 
-def normal(name):
-    return re.sub(r"[-_.]+", "-", name).lower()
-
-
 def held_by(path):
     # @req+ GUARD-83168738@zhoOQpGgBd9R st7nb6
     try:
@@ -362,11 +357,7 @@ def held_by(path):
     except (OSError, UnicodeDecodeError) as broken:
         return set(), f"{path.as_posix()}: cannot read: {broken}"
     # @req- st7nb6
-    return {normal(name) for name in LOCKED.findall(text)}, None
-
-
-def from_lock(file):
-    return Path(file).name in LOCKS and Path(file).parent.name == PACKAGE
+    return {canonicalize_name(name) for name in LOCKED.findall(text)}, None
 
 
 def sources(text, where, dev):
@@ -374,18 +365,19 @@ def sources(text, where, dev):
     for install in pip_installs(text):
         for word in install.positional + install.editable:
             named = NAMED.match(Path(word).name)
-            if named and normal(named[0]) in dev:
+            if named and canonicalize_name(named[0]) in dev:
                 found.append(f"{where}: installs {word} by name, and "
                              f"{DEV_LOCK} holds it -- install it with "
                              f"-r {DEV_LOCK}")
         for file in install.files:
-            if from_lock(file):
+            if (Path(file).parent.name == PACKAGE
+                    and Path(file).name in (DEV_LOCK.name, RUNTIME)):
                 continue
             held, fault = held_by(Path(file))
             if fault:
                 found.append(f"{where}: {fault}")
-            elif held & dev:
-                found.append(f"{where}: installs {', '.join(sorted(held & dev))} "
+            elif shared := held & dev:
+                found.append(f"{where}: installs {', '.join(sorted(shared))} "
                              f"from {file}, and {DEV_LOCK} holds them -- install "
                              f"them from {DEV_LOCK} or {PACKAGE}/{RUNTIME}")
     return found
@@ -433,13 +425,13 @@ def main():
             found += parity(text, where, lock, own)
     # @req+ GUARD-24264620@IECSQ_EeiXfC ytkt47
     dev, fault = held_by(DEV_LOCK)
-    if fault or not dev:
+    if not dev:
         found.append(fault or f"{DEV_LOCK}: holds no locked package, so no "
                      "install has a source to check -- run this from the "
                      "repository root")
     # @req+ GUARD-83168738@zhoOQpGgBd9R qp7dag
     try:
-        texts[HOOK.as_posix()] = QUOTES.sub("", HOOK.read_text())
+        texts[HOOK.as_posix()] = HOOK.read_text()
     except (OSError, UnicodeDecodeError) as broken:
         found.append(f"{HOOK.as_posix()}: cannot read: {broken}")
     # @req- qp7dag
