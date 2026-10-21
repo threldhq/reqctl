@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  front_matter:
+    definition: The YAML block at the start of a Markdown file, opened by a first
+      line holding only --- and closed by the next line holding only ---.
+    word: front matter
+kind: term
+status: approved

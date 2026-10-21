@@ -1,0 +1,45 @@
+acceptance_criteria:
+- given: a Markdown file whose first line opens its [front matter](front_matter)
+  then: each comment carrying the [statement citation](statement_citation) is a YAML
+    comment within the [front matter](front_matter), and the file's first line still
+    opens the [front matter](front_matter)
+  when: reqctl tag cites a requirement at lines within the [front matter](front_matter)
+- given: a Markdown file whose [front matter](front_matter) holds a [statement citation](statement_citation)
+    written as a YAML comment
+  then: it reads as the mapping it held before the [statement citation](statement_citation)
+    was written
+  when: the [front matter](front_matter) is read as YAML
+- given: a [statement citation](statement_citation) asked over lines that begin within
+    a Markdown file's [front matter](front_matter) and end after it
+  then: the product refuses the [statement citation](statement_citation) and writes
+    nothing
+  when: reqctl tag is run
+- given: a [statement citation](statement_citation) asked over lines within a Markdown
+    file's [front matter](front_matter) that covers a line at a [nest level](nest_level)
+    shallower than the first line it covers, or opens a nest without covering every
+    line that nest holds
+  then: the product refuses the [statement citation](statement_citation)
+  when: reqctl tag is run
+assessed:
+  REQ-12235023: uEMBe2x_2uwpUPWALnQh0Su8WNFBtxP5TCyeBq7vQcs
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
+  front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
+  nest_level: ZBG5hueA94O71Lx_L6dhMkqhJ-nCJXsbS_pjI3Hm6CI
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-12235023: depends_on
+  REQ-42668747: depends_on
+  REQ-52925332: depends_on
+  REQ-60346603: derives_from
+  REQ-89706423: depends_on
+status: approved
+text: When the product writes a [statement citation](statement_citation) at lines
+  that lie within a Markdown file's [front matter](front_matter), the product shall
+  write each comment carrying the [statement citation](statement_citation) as a YAML
+  comment within that [front matter](front_matter).
+type: functional
+verification: inspection

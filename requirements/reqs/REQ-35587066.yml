@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a Markdown file whose [front matter](front_matter) holds a YAML comment carrying
+    a [citation marker](citation_marker)
+  then: the product reads the comment as a [statement citation](statement_citation)
+    of the [item](item) it names
+  when: trace is run
+- given: a Markdown file whose [front matter](front_matter) holds a YAML comment carrying
+    no [citation marker](citation_marker)
+  then: the product reads no [statement citation](statement_citation) from it
+  when: trace is run
+assessed:
+  REQ-12235023: uEMBe2x_2uwpUPWALnQh0Su8WNFBtxP5TCyeBq7vQcs
+  REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
+  REQ-37846580: oqAWJFdNHvDobEcUhvTRISucr4tOzSV0Tzd9ObmLFb4
+  REQ-95865306: 6u2XMnjDwlvRWL5-_pKrk8iVp0_3hH-ZmMG-kwF55DA
+  citation_marker: PIwiVw0PtA6YbmzdHivRCKCzPw-Rq-JX6IIehV5RfU0
+  front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-12235023: derives_from
+  REQ-15770866: depends_on
+  REQ-37846580: depends_on
+  REQ-95865306: constrains
+status: approved
+text: When the product scans a Markdown file for [statement citations](statement_citation),
+  the product shall read a YAML comment within the file's [front matter](front_matter)
+  that carries a [citation marker](citation_marker) as a [statement citation](statement_citation),
+  as it reads a Markdown comment that carries one.
+type: functional
+verification: inspection
