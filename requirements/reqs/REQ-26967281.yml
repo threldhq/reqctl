@@ -15,7 +15,7 @@ assessed:
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
 priority: medium
 relations: {}
-status: approved
+status: superseded
 text: When the ${plugin_components.implement_skill} would write code, the product
   shall have the session first research the code of products solving the same kind
   of problem, in any field, for a best-in-class example of that code.

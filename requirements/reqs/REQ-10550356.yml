@@ -9,12 +9,12 @@ acceptance_criteria:
   then: the session copies none of it and writes its own code from the idea
   when: the session would copy its code
 assessed:
-  REQ-26967281: _UMD2dn--MVzSdcUN3uf-ha_Zg_fhdZYEo_AN9VYKWw
+  REQ-83654288: zCIRC3g5z-mwD2GXDwkBw8VmavPjDugWRDiFCWNB4ic
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
 priority: medium
 relations:
-  REQ-26967281: depends_on
+  REQ-83654288: depends_on
 status: approved
 text: When the ${plugin_components.implement_skill} finds a best-in-class example,
   the product shall have the session copy the example's code, unchanged or adapted,

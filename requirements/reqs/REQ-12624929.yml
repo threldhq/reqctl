@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session proposes a goal whose condition names a command whose output in the transcript
+  shows the goal is met.
+type: functional
+verification: inspection

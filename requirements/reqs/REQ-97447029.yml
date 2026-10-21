@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: code of the product that enforces no [rule of the build](rule_of_the_build)
+  then: it states that the session cites no guard there
+  when: the implement skill is read
+assessed:
+  REQ-33819161: O5VukwcHBX9hyjH9RlxWIcJEbHt7BfzimdzlE-bJUgw
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-83468274: 0xeqDjC8CkiLRmCr-dN6t8s5D2O-vdpENUbPdIxZzpY
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+  rule_of_the_build: vGcgrKfm0qFsbGTFdzp0g7Qi0vaPrTxB33xmTcTpH9Y
+priority: medium
+relations:
+  REQ-33819161: derives_from
+  REQ-38288492: depends_on
+  REQ-83468274: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session cites a guard at the code that enforces its [rule of the build](rule_of_the_build).
+type: functional
+verification: inspection

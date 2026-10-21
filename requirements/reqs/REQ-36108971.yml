@@ -11,13 +11,13 @@ acceptance_criteria:
   when: the copied code is read
 assessed:
   REQ-10550356: 00YjqSp62ZTRPNww7aNlFnqdVmxNGrvdVF_iBMXDvDA
-  REQ-26967281: _UMD2dn--MVzSdcUN3uf-ha_Zg_fhdZYEo_AN9VYKWw
+  REQ-83654288: zCIRC3g5z-mwD2GXDwkBw8VmavPjDugWRDiFCWNB4ic
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
 priority: medium
 relations:
   REQ-10550356: depends_on
-  REQ-26967281: depends_on
+  REQ-83654288: depends_on
 status: approved
 text: When the ${plugin_components.implement_skill} copies an example's code, unchanged
   or adapted, the product shall have the session record the source repository, the

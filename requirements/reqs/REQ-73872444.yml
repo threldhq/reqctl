@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session runs reqctl context for each [item](item) the work cites or changes, and
+  reads all that it prints, before writing code.
+type: functional
+verification: inspection
