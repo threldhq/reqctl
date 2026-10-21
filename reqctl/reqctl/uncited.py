@@ -12,10 +12,16 @@ from .reach import Reach
 MODES = ("all", "changed_lines")
 # @req> uncited_code_exemptions@zlVU6_sD_Cmy 7z5oma
 EXEMPTIONS = {
-    "readme": re.compile(r"(?:^|/)README(?:\.[^/]*)?$"),
-    "license": re.compile(r"(?:^|/)LICENSE[^/]*$"),
+    "claude_md": {"files": "any file named CLAUDE.md in any folder"},
+    "claude_rules": {"files": "every file under a .claude/rules folder"},
+    "license": {"files": "any file whose name begins LICENSE in any folder"},
+    "readme": {"files": "any file named README or README.* in any folder"},
+}
+EXEMPT_FILES = {
     "claude_md": re.compile(r"(?:^|/)CLAUDE\.md$"),
     "claude_rules": re.compile(r"(?:^|/)\.claude/rules/"),
+    "license": re.compile(r"(?:^|/)LICENSE[^/]*$"),
+    "readme": re.compile(r"(?:^|/)README(?:\.[^/]*)?$"),
 }
 HASHED = (".yml", ".yaml", ".toml", ".sh", ".cfg", ".txt")
 SCRIPT = (("//", None), ("/*", "*/"))
@@ -97,7 +103,8 @@ def code_lines(path, text):
 
 # @req> REQ-97409889@RWCU92P-iWbp 2c3ddu
 def exempt(path):
-    return corpus.is_test(path) or any(rule.search(path) for rule in EXEMPTIONS.values())
+    return corpus.is_test(path) or any(EXEMPT_FILES[entry].search(path)
+                                       for entry in EXEMPTIONS)
 
 
 def _moved(path, was, now):
