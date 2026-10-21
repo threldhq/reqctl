@@ -9,7 +9,6 @@ import yaml
 from reqctl import corpus
 
 LISTED = (corpus.CITATION_LIST,)
-# @req> REQ-43374441@FrpNFcj-eNb_ c6qh2i
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
@@ -39,7 +38,6 @@ def without(ref, path, keys, digests=False, dropped=()):
     if not isinstance(held, dict):
         return found.stdout
     kept = {key: value for key, value in held.items() if key not in keys}
-    # @req+ REQ-43374441@FrpNFcj-eNb_ burjli
     whole = kept.get(corpus.WHOLE_FILES)
     if digests and isinstance(whole, dict):
         kept[corpus.WHOLE_FILES] = {
@@ -47,13 +45,10 @@ def without(ref, path, keys, digests=False, dropped=()):
                      if field not in ("digest", "pinned")}
                     if isinstance(fields, dict) else fields)
             for cited, fields in whole.items()}
-    # @req- burjli
-    # @req+ REQ-43374441@FrpNFcj-eNb_ jp54xx
     held_entries = corpus.entries(kept)
     if dropped and held_entries is not None:
         kept["entries"] = {name: fields for name, fields in held_entries.items()
                            if name not in dropped}
-    # @req- jp54xx
     return kept
 
 
@@ -100,7 +95,6 @@ def repins_only(base, path):
     return was is not ABSENT and was == without_stamps("HEAD", path)
 
 
-# @req+ REQ-43374441@FrpNFcj-eNb_ qya7yo
 def classify(base):
     found = _git("diff", "--no-renames", "--raw", "-z", f"{base}...HEAD")
     fork = _git("merge-base", base, "HEAD")
@@ -144,7 +138,6 @@ def main(base):
     print("everything else:")
     print("\n".join(f"  {path}" for path in other))
     return 1
-# @req- qya7yo
 
 
 def cli(argv):

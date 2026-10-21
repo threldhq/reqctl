@@ -46,7 +46,6 @@ def listing(tree, citations, uid=None):
 
 
 def whole(tree, tags, root=None, uid=None):
-    # @req+ REQ-30061042@b7B9U8dkoUHI cgpbde
     problems = []
     for item in corpus.items(tree):
         owner = str(item.uid)
@@ -81,7 +80,6 @@ def whole(tree, tags, root=None, uid=None):
                     f"that changed since it took its digest -- read it against "
                     f"{owner}, then reqctl tag {path} --req {owner}")
     return problems
-    # @req- cgpbde
 
 
 def trace(tree, root, uid=None):
@@ -90,9 +88,7 @@ def trace(tree, root, uid=None):
     shown = [c for c in citations if not corpus.is_test(c["path"])]
     tags = cite.cited(shown)
     # @req- 6rtw6m
-    # @req+ REQ-30061042@b7B9U8dkoUHI eizlko
     cited_problems += whole(tree, tags, root, uid)
-    # @req- eizlko
     # @req> REQ-76962559@NU0P43-PPSGC dyday2
     if uid:
         corpus.find(tree, uid)
