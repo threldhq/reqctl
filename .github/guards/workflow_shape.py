@@ -36,7 +36,7 @@ REDIRECT = re.compile(r"\d*[<>&].*")
 DEV_INPUTS = Path("reqctl/requirements-dev.in")
 DEV_LOCK = DEV_INPUTS.with_name("requirements-dev-lock.txt")
 HOOK = Path(".claude/hooks/session-start.sh")
-LOCKED = re.compile(r"(?m)^([A-Za-z0-9][\w.-]*)(?:\[[^\]]*\])?==")
+LISTED = re.compile(r"(?m)^\s*([A-Za-z0-9][\w.-]*)")
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
@@ -357,15 +357,15 @@ def held_by(path):
     except (OSError, UnicodeDecodeError) as broken:
         return set(), f"{path.as_posix()}: cannot read: {broken}"
     # @req- st7nb6
-    return {canonicalize_name(name) for name in LOCKED.findall(text)}, None
+    return {canonicalize_name(name) for name in LISTED.findall(text)}, None
 
 
 def sources(text, where, dev):
     found = []
     for install in pip_installs(text):
         for word in install.positional + install.editable:
-            named = NAMED.match(Path(word).name)
-            if named and canonicalize_name(named[0]) in dev:
+            if any(named and canonicalize_name(named[0]) in dev
+                   for named in (NAMED.match(word), NAMED.match(Path(word).name))):
                 found.append(f"{where}: installs {word} by name, and "
                              f"{DEV_LOCK} holds it -- install it with "
                              f"-r {DEV_LOCK}")
