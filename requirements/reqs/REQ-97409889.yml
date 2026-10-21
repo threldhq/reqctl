@@ -19,6 +19,8 @@ assessed:
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
   uncited_code_exemptions: YbBV-Yqad-59rx0GIcKY5pTZPU-rupZFpMDosz4-G-0
   uncited_code_exemptions.*: JBZ3PKEM2_CjKaVnfmDlfF8sNwtqeWjD_KXVVPh8Ixo
+citations:
+  2c3ddu: vxGxpb-SxgDUpSqzs3feEJ4u7YYqGOAXAKTRGO5NfLs
 priority: medium
 relations:
   REQ-27097724: constrains

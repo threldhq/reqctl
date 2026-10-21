@@ -34,6 +34,12 @@ assessed:
   uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
   uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  a5rd75: N_oW5oi5wn8CGbAKuqj2Am58o_NmaQDwXxE2ykYU_BE
+  htlxvr: FSZDYYQeK9T3G4FrE4dfx3Vt2CqdeIrzQX8ACWiB1p0
+  jo2uxv: 9H3_85h8XJ0Cnn_biWi_9bkQqoVW4RqepFXLJcdzZxM
+  updzi2: prb_FqbJIocDis-2aJX6P7sKz0trX9afCki_y4S-8WE
+  x7jy55: _RCmZbTeaVIlg9eTgIuFqq4KaIa9kqfLaky5lQw-5rc
 priority: medium
 relations:
   REQ-17608335: depends_on
