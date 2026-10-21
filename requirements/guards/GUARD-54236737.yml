@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the build checks it
 assessed: {}
 citations:
-  r44fy4: VAXLCZGmh945tn1T0fs1Ev5IzWSx3rgwVm2TPhkZ_Zg
+  r44fy4: zhNIys80w6lFybjSNulLSmWEV0nL3FRAbEaHvn-Ptf0
 relations: {}
 status: approved
 text: If the body of a pull request that dependabot did not open names no issue of

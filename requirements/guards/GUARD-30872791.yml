@@ -9,7 +9,7 @@ acceptance_criteria:
 assessed:
   wheel_url: oNYIiFLqSV35ae0Ba_KiA4-Ubewk58XH65NEprkCcm0
 citations:
-  eukn2k: aPyIEVKYktNh1PpsoRdPq7yN6FESS7jZlh7YMFb3BOA
+  eukn2k: 5sUHuNtg4a0E3Ub5iQDgyVeDclJ99_FZf7dy_2Y9u_Y
 relations: {}
 status: approved
 text: If the README at the root of the repository names no [wheel URL](wheel_url),

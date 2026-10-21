@@ -8,8 +8,8 @@ acceptance_criteria:
 assessed:
   REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
 citations:
-  35mtk4: lSntm7kcxeBOhnYgyJbwcpvWTPmvWfncY9oPoxvEtq4
-  45ks43: il_-LFE8PvrWB9V_Erpbw6E1Nra9sGJSuv-SdHghODY
+  35mtk4: FchSbcrR21VvjuKBHXmN9tmMwIeYBF-etN399MUvONo
+  45ks43: dqWjbd-0XKbukbTO3lXJiSIDVzAyBBeuVbHkMPg3MI4
 priority: medium
 relations:
   REQ-13148397: constrains

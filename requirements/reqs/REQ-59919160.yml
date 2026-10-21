@@ -53,12 +53,12 @@ assessed:
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  gffcbj: Ftr3gnjKAmRqaT0rMI1EXbr0zS28uPQrc5KWVpEcFXw
-  sdfaun: RanRw_mXk4gaz6NzSD-HcQgAzB4SCdqvSXpym8sZIuU
-  v6s3eb: jozenVNbL1P3S1N24yTouOlz7OrLoYeYeo_KE5UIe3c
-  wxfbic: AXpp9cFqTLzAZ3Itsjc88qRhfxz2CA00VMbJHMWXJGI
-  xae2nk: hoN9F07Okhz7oMZ7ZnSaApdP5B1qBM3nkby66ddr-LQ
-  z3p2ti: DQ_TAxl7hI-GgdEqDIbBpdssrXFfFwK4lU89NFyWaEc
+  gffcbj: e7M0sKqUOtDFdqjBvmBWG83Dnu_v-tOhJ39M91j1070
+  sdfaun: oNxeuHRw9OxAns_5hWk-zOETctVtbZAPO0UICXz6Q_0
+  v6s3eb: R0f-kJf9RFFoeknQckFARSe5AKwqaKxuPNcvgesXiBw
+  wxfbic: QcbG8JFcu-knPdHx57-4wWVmjh2YA2yIgkXnpW_pw0I
+  xae2nk: q-_HVpQ_H8Wc2m_aV9eS76qdZjp_sggCfqwtDtAPeHo
+  z3p2ti: Xq9ftdBc20xggGlpgzzkOF5nSB8oYjTuh_WYgB4ysws
 priority: medium
 relations:
   REQ-22704490: derives_from

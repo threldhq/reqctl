@@ -14,8 +14,8 @@ assessed:
   REQ-19913588: hBNJrpn4vtZeTo84vHq_GZB_97UAzQuiQwg_WqEXgqU
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  7acuon: VtvX4ObWWQFZF-d0VGdSOEE4SrrKppKST--aqmWG-Eg
-  s75lcl: 2gLwaf56_jtOUKbDoAp7OokT4D9pwzb7y-9sEX-TUfE
+  7acuon: a90F3MOyXEL3O-g2o5BYwPTHLGyYVYxwjLqQqAeE16w
+  s75lcl: yuMhJMsuMRg9BCAFOYT7E4CabIPkvO71YCzI_H8BAQ0
 priority: medium
 relations:
   REQ-19913588: derives_from

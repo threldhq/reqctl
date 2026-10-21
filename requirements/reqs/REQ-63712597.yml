@@ -15,7 +15,7 @@ assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
 citations:
-  okjacr: jdMWreEog8OIfWl_9vhyG4OI7Zqj9f-0Sb5P-0TfkJQ
+  okjacr: rYK7zo4mUp_GJ8tc_KfaMbbFd5ERCN4L8Dy4giJLnbQ
 priority: medium
 relations:
   REQ-79222815: depends_on

@@ -12,7 +12,7 @@ acceptance_criteria:
 assessed:
   REQ-75438506: DQIXYiIoQ0eV9KHwCGKaaVhe4ph0O67hiZwas5SA_1c
 citations:
-  tdrp6q: oJD8Qtx9qdMdxyT8frA26truOQkHdyNEr8WfFCK6oHg
+  tdrp6q: 6goyJ4gHkX-ZSinWWwzbiU1OwS2k8PMJ307Gvpy35vQ
 priority: medium
 relations:
   REQ-75438506: depends_on

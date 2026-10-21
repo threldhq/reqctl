@@ -18,11 +18,11 @@ assessed:
   REQ-91051324: ljHcdWSG-nys57fRKMJEzapdA6usPqPdbZy00tgXHpw
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  4k6mvu: Fw-oNnbppcVLkOfe-y41Q72ltvH5y8Iup3kJOWAdy70
-  4tzkdu: HZJU9hLHqaYTFgdfbRTyWRtHUBZboJ2FN3PVeVLXB6Q
-  7sfcit: 2MnRDTVZNPTealBVhLHGg12Ld99JI1B0rdtj_DwsK-g
-  etn3fq: BsKbuUWLLZAItTCpzwx-7evF61qXnb1roxmmiJKjXQg
-  jcpru4: DusXDdqgncn4U8N4IB2oVR54DLyjeVNWgzJ8yLvIGZw
+  4k6mvu: DqJ8K7gGw0LvgqKj3hR29Hevk8cf83xzP0Wz5v5xeQY
+  4tzkdu: C1LB6ceytqYEdVoLFwo0nKnj36hTGia6hQ8K9loBKjI
+  7sfcit: 8T5SCdFzCuGWJll1VR3YDagSDUlB-QA17iS5POm7FpM
+  etn3fq: XASlLz7NCoJc9EySqLr4P41Djs-wWA2xFHJFhhzTFO4
+  jcpru4: xCmyGlQRWI081T6359vcnJzxvU4ZN6IGrpZf0ZXaHks
 priority: medium
 relations:
   REQ-18701923: constrains

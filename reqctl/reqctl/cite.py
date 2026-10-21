@@ -14,6 +14,7 @@ import yaml
 
 from . import corpus
 from .corpus import ReqctlError
+from .reach import Reach
 
 OPEN, CLOSE, SINGLE = "+", "-", ">"
 EVERY = object()
@@ -184,9 +185,11 @@ def read(root, digested=False, uid=None):
     # @req> REQ-32191310@aZkvQ6hvIwPv yjp5s6
     if digested:
         texts = dict(sources)
+        # @req> REQ-59827868@bWN38P4cOthQ tsczoy
+        reach = Reach(texts)
         for citation in citations:
             citation["digest"] = digest(citation["path"], texts[citation["path"]],
-                                        citation["lines"])
+                                        citation["lines"], reach)
     # @req+ REQ-79989567@oaSFUA9o3D48 bz6frh
     texts = dict(sources)
     # @req> REQ-64570886@Zckz3LzHUzXn o4sv56
@@ -537,15 +540,21 @@ def tagged(root, path, asked, exclusive=False):
     if problems:
         raise ReqctlError("\n".join(problems))
     # @req- zkxsxx
-    # @req> REQ-36103991@1sBO1pub0_IK wcjo5z
+    # @req+ REQ-59827868@bWN38P4cOthQ entyuu
+    relative = target.resolve().relative_to(base).as_posix()
+    reach = Reach({**dict(sources), relative: written})
+    # @req- entyuu
+    # @req> REQ-36103991@1sBO1pub0_IK xfy5v4
     return ((target, (raw[:len(raw) - len(text)] + written).encode()),
-            [(c["id"], c["uid"], digest(path, written, c["lines"])) for c in new])
+            [(c["id"], c["uid"], digest(relative, written, c["lines"], reach))
+             for c in new])
 
 
 # @req> REQ-64846889@TSG5uy3nM0nk 6vgx2i
 def standing(root, citation):
     text = (Path(root) / citation["path"]).read_bytes().decode().removeprefix(BOM)
-    return digest(citation["path"], text, citation["lines"])
+    # @req> REQ-59827868@bWN38P4cOthQ 47poz3
+    return digest(citation["path"], text, citation["lines"], Reach(dict(_sources(root))))
 
 
 # @req+ REQ-62685242@nMlCr6nshoNZ yqdz42
@@ -658,7 +667,7 @@ def _tokens(text, wanted):
     return held
 
 
-def digest(path, text, lines):
+def digest(path, text, lines, reach=None):
     wanted = set(lines)
     held = None
     if Path(path).suffix == ".py":
@@ -667,6 +676,11 @@ def digest(path, text, lines):
             held = _tokens(text, wanted)
         except (tokenize.TokenError, IndentationError, SyntaxError):
             held = None
+        # @req+ REQ-59827868@bWN38P4cOthQ kwj4mx
+        taken = reach.taken(path, wanted) if held is not None and reach else []
+        if taken:
+            held = [held, taken]
+        # @req- kwj4mx
     if held is None:
         # @req+ REQ-15770866@PJj7anRT1m47 soehrs
         split = [line.rstrip("\r\n") for line in _feed_lines(text)]
@@ -785,6 +799,17 @@ def _carried(root, commit):
         yield relative, _git(root, "show", f"{commit}:{relative}").removeprefix(BOM)
 
 
+# @req> REQ-59827868@bWN38P4cOthQ jwvhp4
+def _python_at(root, commit):
+    blobs = [line.split("\t", 1)[1] for line in
+             _git(root, "ls-tree", "-r", "-z", commit).split("\0")
+             if "\t" in line and line.split()[1] == "blob"]
+    base = Path(root)
+    return {path: _git(root, "show", f"{commit}:{path}").removeprefix(BOM)
+            for path in blobs if path.endswith(".py") and not any(
+                corpus.skipped(base, base / folder) for folder in Path(path).parents[:-1])}
+
+
 def compare(root, ref):
     commit = _git(root, "merge-base", "HEAD", ref).strip()
     was_texts = dict(_carried(root, commit))
@@ -800,6 +825,8 @@ def compare(root, ref):
     before = {c["id"]: c for c in was}
     after = {c["id"]: c for c in now}
     # @req- a5i7lc
+    # @req> REQ-59827868@bWN38P4cOthQ 5swpuo
+    was_reach, now_reach = Reach(_python_at(root, commit)), Reach(dict(_sources(root)))
     rows = []
     for identity in sorted(set(before) | set(after)):
         old, new = before.get(identity), after.get(identity)
@@ -810,14 +837,14 @@ def compare(root, ref):
                          "path": held["path"],
                          "state": ["added"] if old is None else ["deleted"]})
             continue
-        if (old["path"] == new["path"]
+        if (old["path"] == new["path"] and not old["path"].endswith(".py")
                 and was_texts[old["path"]] == now_texts[new["path"]]):
             continue
         state = []
         if crossed(old, was_texts[old["path"]], new, now_texts[new["path"]]):
             state.append("moved")
-        if (digest(old["path"], was_texts[old["path"]], old["lines"])
-                != digest(new["path"], now_texts[new["path"]], new["lines"])):
+        if (digest(old["path"], was_texts[old["path"]], old["lines"], was_reach)
+                != digest(new["path"], now_texts[new["path"]], new["lines"], now_reach)):
             state.append("changed")
         if state:
             rows.append({"id": identity, "uid": new["uid"], "path": new["path"],

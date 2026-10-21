@@ -7,7 +7,7 @@ acceptance_criteria:
   when: baseline --generate is run
 assessed: {}
 citations:
-  ygxzq3: MwBdm5joI1E_aLmow4kdCzjgeIGzWSQ3-n2TgTkvbkM
+  ygxzq3: KDdxUHBACJxXFp8G54PgbWn7ch1zbHJ9lpJh4q9CfdQ
 priority: medium
 relations: {}
 status: approved

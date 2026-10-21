@@ -16,7 +16,7 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
-  kt5es3: yK4wSP-arebyauU4iJTpAXGbkrp8ksfJsmPjtzSA5KQ
+  kt5es3: AFhiio1sqwgO4N8_foyQ-8FceOPEP8ThpRQTleG6fN4
 relations: {}
 status: approved
 text: If a workflow installs from a lockfile without requiring hashes, then the build

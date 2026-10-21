@@ -21,8 +21,8 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
-  cf76cn: VBPFPS9OlqP9vuB8CXrZF4MQfwmQQcUGNW2rVeuLovU
-  snr2ig: rVyPui2HYLVA4cMQmhgbXqP8px8vNHP9CL6C61tyz_Q
+  cf76cn: 9GYLxtKqtzXjl4fhfxE5AC3TgOfdRHD9nHPgEErEhTw
+  snr2ig: rseyNaeEZFjWNzA0dDaJXRpuUxKgokr_sR9RlL2K9TE
 priority: medium
 relations:
   REQ-15362279: depends_on

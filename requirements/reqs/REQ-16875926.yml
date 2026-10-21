@@ -20,10 +20,10 @@ assessed:
   review_limits.fetch_seconds: Zg4hZDHLwQ1PWblVI8jA6cj8qHLuZg44lQon3IXmVHs
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
-  eunqii: ExdnWgLraEd7rHrCSjWNlqLwMf74UqXetwJf5H7ufuo
-  hnfov3: 3ABCgWgZv8RYJc14uQVttvk72l__pvckg59y5OlCto0
-  wuv5em: 8H42MSQJ5TRmd_-hASBMPIsufZiM3CmYUpq2W1vFpjQ
-  zrdwyr: I4XJjcQDVKZPZnofaVDxRhMIiqmbiu4GvuoglZQBfh4
+  eunqii: vnBSQLN-3RDJZK2LI69_1IQj2s6Kth3CpHRC96a_MoI
+  hnfov3: 8qVY2FYmdTTz3DRpvboAOe43FogyYjcbs_Af-YDWLvY
+  wuv5em: fC_lmbnIyme2EE-jnpQlApw70iTdsHxmW1zg-jGLh60
+  zrdwyr: OqgIfB8rMtUk_ql6GuRE8o6k088ejjcEjiJyiO3Prf0
 priority: medium
 relations:
   REQ-46144308: constrains

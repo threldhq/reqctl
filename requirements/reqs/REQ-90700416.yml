@@ -10,7 +10,7 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.session_rules_hook: Tx3G6OYhH7nRFUOqsuRQHgaWPeNfTfpLxgkfH_ZuAXM
 citations:
-  reo737: iNCKT3PrJNmsQ91iESkQV-j0-JJQ7aIa_6tht6pja2E
+  reo737: csJvaUxcJNJ975K3RfS33CVFgUS2YZn8fYW__hgcWbQ
 priority: medium
 relations:
   REQ-38288492: depends_on

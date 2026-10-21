@@ -12,7 +12,7 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
-  3a5aqb: FvB3uJrIV49aHWhZZhVzXRIYG2lEUm8tdn6Vc6pL4qw
+  3a5aqb: Dj8HRjtVDi-aCOGxm-iIPiMvzEhzdPo105OSrsupoz8
 relations: {}
 status: approved
 text: If a workflow runs a step that reads the corpus before the step that runs reqctl

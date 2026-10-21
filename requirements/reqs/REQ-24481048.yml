@@ -14,8 +14,8 @@ acceptance_criteria:
 assessed:
   REQ-83702299: kBGzIwAyKDHLaQr2uEZDpQDAHRtNn5Lkk6r0WFUdTvA
 citations:
-  2k7l5j: R1CvdIfUACod-akrud6wSVqZmS6LnB2dW2ieUaYOjoQ
-  bapzey: 5NO-iEtCQmVs9xKxizHTeTaFla7sVSz7ppckptzvp4M
+  2k7l5j: fy_qubA42p0gaN86i8WGVoTmovq3x-9GE_nImVqXtwc
+  bapzey: tMzQuNm4F8Y1gtCrKyDUdIuoIV6dC1_G9FK7Gw8cfhI
 priority: medium
 relations:
   REQ-83702299: constrains

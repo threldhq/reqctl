@@ -24,9 +24,9 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  bzkfod: XB7ckSXP4O93F9ET8UcAFL7s_34DS8DyXJvPZAYH3B8
-  dzwaj3: XB7ckSXP4O93F9ET8UcAFL7s_34DS8DyXJvPZAYH3B8
-  iiu22k: 5GQVS2tl_AIYbSGKSDzI8PX5xiJLRX1kPfuCl6tuecQ
+  bzkfod: y8wi_w1TtDngKPms_u5dfGRgqw92ZmmWPMkOE4YJCZ4
+  dzwaj3: y8wi_w1TtDngKPms_u5dfGRgqw92ZmmWPMkOE4YJCZ4
+  iiu22k: 2d_l5Su74Sgh0rfLCJpX_YOUbiKI8SbDzenUIgDTKik
 priority: medium
 relations:
   REQ-10839190: constrains

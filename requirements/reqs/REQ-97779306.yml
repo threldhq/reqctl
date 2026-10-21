@@ -17,10 +17,10 @@ assessed:
   REQ-68873467: 3-Wc7R2vtu7-18N7BIWJSxtAfsuv2MxGgV409rzQMRQ
   REQ-80951798: Yv9lsMtU3XdIOfhWtWTfHptWO9bkmyp3LS4FmYVkfDM
 citations:
-  5hvslp: qrnpaKsgv4KpC3X7hjzSVDDlFSTZzssnpi86adFIcFw
-  duwkrw: okabDLyBNYBDibOn4zmve-lKhiD_Hutn5heHfBF1FqM
-  f5wtnh: MkQ4GZ3gqIU6K3gt2_vfCDn8SzJYM3KUztfwb_w-ZNw
-  jcpyex: u_HN1ZrhAHcp4Iu0VPZUEsT-gJ7Kiqzdc_voVV2rop8
+  5hvslp: V2nFfjuMPZSOvfG9xXfkuyKU4r-A_KoFPMMaZcw_vhA
+  duwkrw: zeNFCkpsrVye8EhO1DYrFq_rUbypxR4OhswN4vYtVZk
+  f5wtnh: 5jA8p0mw4R5dZpdlOYCcb2vTL8lY2joQgctW5i4rY9k
+  jcpyex: tCZzhdx7br50lOydfrR-AWtN9zrAkJDvMNO9fyOadU4
 priority: medium
 relations:
   REQ-30631052: constrains

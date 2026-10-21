@@ -30,11 +30,11 @@ assessed:
   origin_query_seconds.*: 6SmMhfL6f4iDThF0dJ4oM-iybfVP1cvIPM6GSKBF47I
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  2ospre: 8s7syRt7nW-jyl3r8NP0wYnM0_qAWZOytTSvQbFs63s
-  cxtbyd: -rKvVxWrr9ZvTVIDdkS8_sB6Hs8GYuAMfLaxG0h0ibs
-  owo62a: wmp8RH7reGIVWR-dtZqJjZS9kZ6RE3tNK5SLBrb0m6A
-  sjmzez: D22lFo_0UG8B54SiGnZe21o16LLZ-hKfQI4BbCUNrBw
-  vreqvm: qpX42aU-G76fVt9mU73OHcvi74XX7nX-9HV4oX_eYPE
+  2ospre: u1QdgWqInjsNmJB97Nw-YbVlpbCJjiu34OZobZ2ln9E
+  cxtbyd: of4-PJ_WSZPTvBhiO-iVBzLo_1TxZ7aYQl05kZP_-vY
+  owo62a: FC5WW84yFBbpZIfSY3EdLZCkY5AR0pecFI-PbMzU6eM
+  sjmzez: LJuGIkHQK_F3Kf6wD9IWoT_eY0IhGmAe4v16LSsVi24
+  vreqvm: S3HgjoYD-TmA4HiL5K5d8wmhfiiGcqJ-UHI6t5Tkx2c
 priority: medium
 relations:
   REQ-38288492: depends_on

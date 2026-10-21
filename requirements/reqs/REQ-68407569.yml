@@ -8,7 +8,7 @@ acceptance_criteria:
 assessed:
   REQ-83702299: kBGzIwAyKDHLaQr2uEZDpQDAHRtNn5Lkk6r0WFUdTvA
 citations:
-  bzk766: POhWsx-hhb9QbSK2PSY6jfTHRbZ4KoOrOJEakZk2TUk
+  bzk766: i4OXZuuBwp4bpM0vuoCnmzBdOBpuR0CwN2LHgJHq6bI
 priority: medium
 relations:
   REQ-83702299: constrains

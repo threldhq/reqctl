@@ -10,7 +10,7 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
-  innerm: AcQMswRhNlxa-CDafnOJRIo6mtyzsrUrL0VwVHmbkzs
+  innerm: nfgP2yNH3A7mfKgu-FXi1cCHxyMcaMzKhZ3AUVmHY7A
 relations: {}
 status: approved
 text: If a path pattern that a rules file states does not read as a glob, then the

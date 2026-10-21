@@ -14,8 +14,8 @@ assessed:
   REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
-  bl2ps5: FLVrksLLhrbwS7xy8AP06ssG2Hjy0WPUKj0LIzBGgpg
-  m5bqyr: 11Z0BZL-NCxgmVRwwGvnIhMtP3jLpJi8qZRqoLlxDQs
+  bl2ps5: CEUE9N0Wh5puC10MYALe89enp9_9sHCfWZ_E_s-9WFg
+  m5bqyr: 9ztqAydpmTREyhzccZYTKjSu_rMo5A6dX0gyjc12z0o
 priority: medium
 relations:
   REQ-31526771: constrains

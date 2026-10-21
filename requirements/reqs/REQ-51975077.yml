@@ -26,10 +26,10 @@ assessed:
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
-  m75ejw: Yx_zW7XFhiQSKGzUKgX0zb6MH_7rpKnkJ-342bBDcRo
-  px3ye3: -j9szJso-KJThhrDV5axbVjDx_HLs8RYhOyjbJxROkI
-  z6krrc: hY3YN5bZegX4PNne9Bi_LnIZwMtCSsQJ1VhqccJZfbw
-  zf7cg7: -JXjscSi0S7fy1vg_q0dg7n4deL9GfdKgTZhl6RfQtQ
+  m75ejw: STsWLr4ZB_O1C9Xzevyp7PzSU1jAfJUiSECxjise1qg
+  px3ye3: ohZHDznsj8JeGlsAj5aM0BYSUdnk_HO9uis5qdIBYBA
+  z6krrc: lo7CrS7CTmDhrTcOat5-HB9unErLlVoBnx_YsaWWYEU
+  zf7cg7: n9Vh8eOA-jQRLEbxblPuF6G07VS0ppp1yS5vOpVt_nQ
 priority: medium
 relations:
   REQ-46711731: constrains

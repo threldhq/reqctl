@@ -12,7 +12,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  hbpm4t: LPkSG8DlyGRU7tE3oq326c4TCV1AM1MBt2yQH_Gr9LU
+  hbpm4t: 5kaNs3DI4A7QghPy30zTBNNj1Mxdo6oRb9gdE_6-Gbo
 priority: medium
 relations: {}
 status: approved

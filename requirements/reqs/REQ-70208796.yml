@@ -19,8 +19,8 @@ assessed:
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  4otwfp: FXk5fu_OV30sV4wQ4BtVUEPXEiYqUMJhAfEgKxSBSZ8
-  cgdwfu: yHzwBu0893xXQrtXgzQaR1VJe3Q2WcTkV5Hm3kcWXb4
+  4otwfp: HuYg_aH3_WbU8a0Quob9Cj2NJK3E0OJM3XqSiz5HSUA
+  cgdwfu: N3Yos1jwWVwxsJL09rYNxx_L2Isxb2JOMKGaCSqW7RU
 priority: medium
 relations:
   REQ-22755763: depends_on

@@ -16,7 +16,7 @@ assessed:
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
   reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
 citations:
-  nc7w6k: 6JwMdI8j2qz32RMleSz60ES0cmeR198hRwdo3xSAPM4
+  nc7w6k: D6oE0Ltj85qgTk6kirrg-23eHZZrB5NYKxvQbSPzpUM
 relations:
   GUARD-56838909: depends_on
 status: approved

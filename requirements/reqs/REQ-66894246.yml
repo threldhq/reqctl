@@ -8,7 +8,7 @@ acceptance_criteria:
 assessed:
   REQ-83939497: o4e6KsfHMIgpZNUMun5sxU_LTejAce5WMR5k_5XAUb4
 citations:
-  rc5ai4: SqpfoNdIdNv6mNtHo7olISuQkckHL3YnEqu6gxayEOg
+  rc5ai4: g6lSCt7HMsS0I1-X6A_16gBhMjoSkACjWxjVco77YBo
 priority: medium
 relations:
   REQ-83939497: constrains

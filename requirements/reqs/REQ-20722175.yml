@@ -10,7 +10,7 @@ acceptance_criteria:
   when: probes are minted
 assessed: {}
 citations:
-  rgpt75: KLon17CTDCuiYAbasDvSbJ0g-Jlm0Afzurv1jh49ewc
+  rgpt75: J2eLlBsexMtZx1IWNA5aLWY3n2eA9ZL0N7JP6KOADGs
 priority: medium
 relations: {}
 status: approved

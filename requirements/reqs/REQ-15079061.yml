@@ -17,9 +17,9 @@ assessed:
   per_item_check: L8I25OZJNU3F27YFjUYLQ2KOi_HawZhox0_ayr4PUC4
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
-  acmucb: gLh16TBM8htJH3_ate1LXxV7Xp6zxPI2hzThFfljGwM
-  gtdcql: 1UxlmtWelBMvPMTnNquvoO7w4RteHp6VyFKjjSvF4xs
-  s4egdj: 0m0EpDt3hIhdLThMvon3oY4q_MfNRkZwGUy83tFegTo
+  acmucb: J15-rifyez9mlkyy71oZy7zb75tLVvG_rJXpahIyJQs
+  gtdcql: eqdY_GiOejbkyiyCYbBw87kep7vU69KC4HqfVqAfxWk
+  s4egdj: sCDLSNtKcCjuAEnQQtKFnglTIN8Os46sN6D4no7an6M
 priority: medium
 relations:
   REQ-42390302: derives_from

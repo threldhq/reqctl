@@ -2,7 +2,7 @@ acceptance_criteria: []
 assessed:
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  zikuq2: cT51BO3yVwtr_A5ouICSxa3suOdbn_98gUJLmrFJxmQ
+  zikuq2: lmiF8630TjmNEERwwjGS4ipGLW8SzT1fAXsylKYmq3k
 priority: medium
 rationale: reqctl's reusable workflows place their checkout of reqctl at .reqctl/
   inside the calling repository, and the [statement citations](statement_citation)

@@ -43,6 +43,14 @@ assessed:
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  47poz3: hq7wC9x8s7ki2reCk_2JLcYh1_C6Bir_u3VRjpqLQtc
+  4pmkcf: 2UxPdmZ4pPlasWDIi3_3EzrcN2geHM4WAgIYhIqWPD8
+  5swpuo: 7sDQhduRntRivyaiSLDE87hRmyw00JTqnHvs9D8E5_w
+  entyuu: rUDNfNJUuUPxCyhQD3eO3uGdZThyopjzGhaDagw-kxc
+  jwvhp4: 6xzQWIG3wI60Xe6iKqdGU6NjKcVX3ind2zGJC3r9Y2g
+  kwj4mx: hzAuz5dMbj6qDM-vd60a5puJJ6uNR2pXYW0HGKv6vlA
+  tsczoy: mU7IgeY1N8gbJ_vOP3_9N3-4d_IX4QTaQYtOOW1FJKs
 priority: medium
 relations:
   REQ-15770866: constrains

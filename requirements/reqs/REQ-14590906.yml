@@ -24,8 +24,8 @@ assessed:
   origin_query_seconds.*: 6SmMhfL6f4iDThF0dJ4oM-iybfVP1cvIPM6GSKBF47I
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  7r3vt3: QlJgnRXzrvfbAclMFOsRDwPvEEr9vb4Gpa57KlGFbKs
-  efqhzh: SN0GZLd8DDRuYBrB9_OzQNP13h22RkrxttLjbNreY9c
+  7r3vt3: gutbV5b81TNq3zETJOKeLP__hwYdGGniyh2P8TVaGms
+  efqhzh: JTZL1aYd9J4JU7NBjXYl55SDbYJPaY9Tl6V50a_UOPo
 priority: medium
 relations:
   REQ-30013664: constrains
