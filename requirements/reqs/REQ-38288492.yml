@@ -25,3 +25,7 @@ status: approved
 text: The product shall ship a Claude Code plugin holding each of the ${plugin_components}.
 type: functional
 verification: inspection
+whole_file_citations:
+  plugin/.claude-plugin/plugin.json:
+    digest: KhXULfIP9t2PQFTVzdLpIzHPtR1LWj0f-Z0IDau93gA
+    pinned: 4l6tMNjp19tH
