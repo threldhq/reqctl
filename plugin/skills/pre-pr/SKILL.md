@@ -11,9 +11,6 @@ description: >
 <!-- @req> REQ-38288492@4l6tMNjp19tH twgacs -->
 # Pre-PR
 
-The branch is finished. This is the last pass before CI is the only thing
-still checking it.
-
 Run the steps in order and fix what each one finds before starting the next.
 A finding you defer is a finding CI catches on a paid runner, or does not catch
 at all.
@@ -73,8 +70,6 @@ green having invoked the wrong thing.
 
 Read what it skipped. Every skip states its reason, and one of them --
 provisioning, or a tool absent here -- means that step is only checked by CI.
-
-A pull request that lands red has wasted a runner and the owner's attention.
 
 ## 2 -- Succinctness
 

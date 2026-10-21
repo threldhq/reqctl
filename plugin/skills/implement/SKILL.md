@@ -15,9 +15,6 @@ description: >
 An approved statement in, cited and proven code out. The corpus is the input
 and never the output: nothing here writes to the corpus.
 
-The session's context holds the rules for working a corpus. This is the order
-they run in.
-
 ## 1 -- The goal names its proof
 
 A goal set as an outcome rather than a command -- "the export works" --

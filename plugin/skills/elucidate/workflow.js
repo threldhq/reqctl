@@ -1,15 +1,19 @@
+// @req+ REQ-29203000@rYU8NmxmlHLn awfsja
 export const meta = {
   name: 'elucidate',
   description: 'Spawn one agent per prompt the build wrote, each writing its return',
   phases: [{ title: 'Spawn', detail: 'one agent per prompt, in parallel' }],
 }
+// @req- awfsja
 
+// @req+ REQ-36422345@O-3IKmoFSYSG dnv4ob
 function task(one) {
   return [
     `Read exactly one file with the Read tool: ${one.path}. It states everything you are given and everything you are asked, including the path to write to and the shape to write.`,
     `Do exactly what it says: write the JSON result to ${one.out} with the Write tool, then return it. Read nothing else. Do not narrate.`,
   ].join('\n')
 }
+// @req- dnv4ob
 
 // @req+ REQ-29203000@rYU8NmxmlHLn o7zxou
 // @req+ REQ-23060027@zeNeSryv-0-1 xxpn4n

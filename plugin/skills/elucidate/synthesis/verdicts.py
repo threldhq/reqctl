@@ -4,8 +4,10 @@ import json
 import sys
 from pathlib import Path
 
+# @req+ REQ-38288492@4l6tMNjp19tH btqw4r
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+# @req- btqw4r
 import plan
 import shapes
 
@@ -148,6 +150,7 @@ def main(argv=None):
     return 0
 
 
+# @req+ REQ-29234402@b5_8tR6bNR44 oaxxcb
 if __name__ == "__main__":
     # @req+ REQ-29234402@b5_8tR6bNR44 vihdxq
     try:
@@ -160,3 +163,4 @@ if __name__ == "__main__":
             sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
         raise
     # @req- vihdxq
+# @req- oaxxcb
