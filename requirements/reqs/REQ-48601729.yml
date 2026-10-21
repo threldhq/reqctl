@@ -17,8 +17,8 @@ assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  7ycfsi: xXeDssKEagl9lL8J2u6gih5Pk3wZ7oQQ1Vcf3vabnaY
-  oxn6if: __C2Wp7WnppvXM090k_jn7aJSjE9sE42z5ggKIuXcwI
+  7ycfsi: 8vyrgC342HPUWnns_cj41-UMNLai-M5L1B9T7er_zVk
+  oxn6if: _TvdqossDh7c77OaR7oj1II4gy57CQA5db_Om2uvAyQ
 priority: medium
 relations:
   REQ-57492239: derives_from

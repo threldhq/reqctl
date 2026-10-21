@@ -10,7 +10,7 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
-  yekzpu: aZeO92DIIEr1V8rz7A3aliDF59CztSo2YUMnb1D5rZ8
+  yekzpu: X1kHN9t6BnGVJ-exJOnayGT8w6PmNbB6Wz62D_I8bvA
 relations: {}
 status: approved
 text: If a workflow uses an action or a reusable workflow that is not pinned to a

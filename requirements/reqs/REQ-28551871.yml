@@ -31,7 +31,7 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
-  jnnngp: L78gDibHIDUyEkcBTtQv3cr0tNbr3NKoDBAC74KjHek
+  jnnngp: hadYnNMmY95KV39DJ3QSBy3OsOZi6wF053nd31gmu_w
 priority: medium
 relations:
   REQ-52544202: depends_on

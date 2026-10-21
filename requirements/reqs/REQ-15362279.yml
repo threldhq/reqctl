@@ -12,8 +12,8 @@ assessed:
   pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
-  5pi6tp: a0w0BqgeqkjeouObjDIePXtfJ2mRnnvp_U4srGenNaQ
-  fxnobd: sMdSnANV7UfKLHD9sRK_Xd8wspLX10i1il5nn3WBmgU
+  5pi6tp: F0MIdLwrrEEhtJ2HH4D3rtGpcGhYyyDYy6FYLrU8ZGo
+  fxnobd: kJH0Bv7jKlQGGwUaDcP-9OAJNuwD_A2jhuXNJKqlfpI
 priority: medium
 relations:
   REQ-40447106: constrains

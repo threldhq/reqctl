@@ -8,8 +8,8 @@ acceptance_criteria:
   when: .github/verify.py runs
 assessed: {}
 citations:
-  5xmujr: S-vEU6rWcsPSUwzzhLeSxamwPFNvnCGyvY6En3E_K_Y
-  ykvsgh: CZdvpKp-qjHp2sEx7DCo1SpH2OjKYw-NCNJJYLqqsao
+  5xmujr: 9PdevV65wOekN4qSd9wVqIsmJJhuIv__hEZqbufSsmE
+  ykvsgh: xxQhS6ldnoCmDfN88EBNus2gHf1sbmM8v0YfLi2CG-U
 relations: {}
 status: approved
 text: When .github/verify.py runs over a working tree holding uncommitted changes,

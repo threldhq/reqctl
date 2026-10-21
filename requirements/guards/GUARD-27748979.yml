@@ -14,8 +14,8 @@ assessed:
   owned_paths: 5uBm_4PmH1-c0tHvRRkdcOHNjbipvaGXy4nBbbhG0iY
   owned_paths.*: NQsnvnfjF2CIy4YOe4lpO7lb9Lc7n8SKOLGRWLstbfg
 citations:
-  a2bfib: 1LUv4jGAIVJYu0xQhWxBIcltgcbyfkD37phnoC4zsW8
-  hgyrkk: S7QzKt7ulhIPbcJLp54NLjmppZodthK5VAP1JRFMqB0
+  a2bfib: NbxwcYdu5tDL4Af1eUJIVkcKxRCiQ4Sujb-g05a0yDU
+  hgyrkk: 9jXnyB8_WkxDG4debhzJJtJ2IbRvw1oJv6AOEyrouCA
 relations:
   GUARD-10823996: derives_from
 status: approved

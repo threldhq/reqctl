@@ -15,9 +15,9 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
-  hjzm3v: pxUj8rtEPfeYhv5v8_hhLjTBbu-vGTx3UQwPq6eCbWg
-  umdv5h: C0rG8o2WAcRAxSSyWH0XjxJYSH0jdHALh9HAHlxe-88
-  yhxviy: hsOjoQ1CxX6mR3jG4h-68WqDlquNBn2lSG1mtJ5M2JI
+  hjzm3v: Llit1SyVQv42cKc6mgr8Qi0oCijHm3-Elt9AXQZatXw
+  umdv5h: afFA18kAZ9aqB7oibxUqAPGnRD_pjWSXmgAszCp7oYw
+  yhxviy: NIaCI0vHBJqOfYycs6BbWzJkp62_C_Ljv1fsDSGmU5M
 relations: {}
 status: approved
 text: The build shall install through the session-start hook exactly the Python requirement

@@ -10,8 +10,8 @@ assessed:
   REQ-94917590: 2yP1VjEjzn4-QYnaf6_2LW-F1vjIzDSpE-vV8yPzr7A
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  db6w7v: T6MJQgynrOEfjmWhzEbGiIY9Iibf7mg9b7AOn47-BIc
-  nmlqee: WCRxYCCOtljGfRfBhqLn4RixdwHFDr2bUTaEFNW5HFg
+  db6w7v: ENxxT0epMpCtBvyrpsZQNRxVLpTB9szGLF4h9pXdgc8
+  nmlqee: IfqK5iFWh_2Cp2xo2YAX7ePRczIKBzOZ_LRdHNypIdI
 priority: medium
 relations:
   REQ-44642786: constrains

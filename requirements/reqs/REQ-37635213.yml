@@ -11,8 +11,8 @@ assessed:
   review_limits: UPSuHlsQZqT7GXjskz-Z-rhN826eBPukAOBjuJvU6aU
   review_limits.redirects: U5pWPEKuGkAiSJQnmnncNI21Htv6vChZqtlsZwFQCHE
 citations:
-  elw5bl: ql7NIalmEe_DNjdbjseHptU46bBMePZxAbyPfsuE6jo
-  x27tsv: U32EBCpKF4JYhK9-a3tmg3aOm-v0ajND7fF0GGSZi_4
+  elw5bl: 5hsHFqAS7Fkgsx-kjPgpAOy_pfmx-d4c1wAtVZoE5lM
+  x27tsv: 8fowfnXZdTM9ufb7Vsv-bWQnft8vDcBxjs8DIxGld1I
 priority: medium
 relations:
   REQ-46144308: derives_from

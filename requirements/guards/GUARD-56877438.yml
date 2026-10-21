@@ -12,10 +12,10 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
-  33d7t4: AQL4LYyUuNgYqJdRJ_rJ4w4jdFOR_liNms5D1uTldIc
+  33d7t4: PR7rS6whxZtP_rj6nDyMYDNN5MHNEhxE708x8lrCN2A
   6g44ix: bWjlRqr2TNt71m4WUkCTlDlVhBeAMZvXgk8zuQ1x19E
-  sekx6w: zAlxaTyIo26i2RplSpxBR3alZbOQ-RKhCDCQhB34iEE
-  ywumnj: Zg3dGpSKnSAociKhNaRiA9ahvcz1nzJpyzY7DvMhY0w
+  sekx6w: CI3uoSdECsMw13WUqdF8_ZK8CPKOqv3lV6b5O8l9iSg
+  ywumnj: kQEnv2tYTHj2oon77Ea9kFQwBRWS-TSu1uqGf_NZlQ8
 relations: {}
 status: approved
 text: If a skill shows a --value example whose value type or members the build cannot

@@ -18,8 +18,8 @@ assessed:
   GUARD-60575106: cyDaQHsIDZhKvI_k7z0nyfMVUPzfsgOz9El4ta0v_Pc
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
 citations:
-  ls2q44: lotYy7gMAHvAZCMJjsJVpMkaPNZ4VlGuJ4_0SUAIp7g
-  w4sjw2: eGxkn9Ul1NyruQ9pxy5tx5T5SdoS16J3W079F0T-Pts
+  ls2q44: wpNy-BhOemWXBmt7mCPqYwpPrC1u9QAA5NxxA7-iNdg
+  w4sjw2: OLfwGDmPDF7-2_fs_8ECQdu5wxslbVj1kFBaZ-2Wb1k
 relations:
   GUARD-60575106: depends_on
 status: approved

@@ -19,12 +19,12 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  3xsagz: GyU_jBvwc0Au9o-EqOqTRdvaHdoKganQHWBOQLUv9vM
+  3xsagz: a5KioCL2tcdT1N77lHoayRYeb4xjvPQujSh8zW1dYFw
   jez5bu: vzfbNdZB6ok66KzSZDAd5HvijujCKb6GnCIL4lq_YMU
-  myjx5s: 3pm_AkGa4ZnK8wP8k-C1B6-9kAkwuL132CtQukljA2w
-  otmh6w: fnxXmMssr-s8BBNQWtP82wHswh_fFLhpENZrtREzB_w
-  y644wh: F8gpq2PF2tYojXA58ZfNjJocEp7EI0cgMKxyWQaa7TQ
-  zi6xxa: fDzKLQw_kv52vqS2cTNhQ33PPMq_z76Wr44HAiDKv3w
+  myjx5s: fV6bX_u15kEOtT_1MPicEWMVka2z61bWf8GQTAmjGHc
+  otmh6w: YncFrhYEq7p1MOvW0YSPoiLk3nOH9lxATjXNlAc4cz0
+  y644wh: uaSCX4HGafdF3Exav_KsPBPXOUxe5VtXcDWHKbco7dI
+  zi6xxa: 8j-cYxx66_UbZofmZEYneQpKotmDhF7kXirdWoQ-Ynk
 priority: medium
 relations:
   REQ-60346603: derives_from

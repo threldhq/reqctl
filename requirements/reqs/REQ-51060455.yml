@@ -17,9 +17,9 @@ assessed:
   plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  4gmqti: xWoHWpFbSq6x-YdOkYiPpFepf3nXGTgbwwU5klavqYU
+  4gmqti: hAO2XXSVg3gKDbzyS2U0OQlb76oc8TiNwCCNITN2XB4
   kfua34: G9YtdJwJtcUGRHO1SAOD-IWpI2ppOV37fwBPIZwNaeE
-  qrn3wi: _O5PULNmAylxRMjPEHMqF82qBmI1XoBmqKRn7n7mhpQ
+  qrn3wi: 9o6HZZlEKJrTQzt6da9UVjWNv04tAIL6o2Uus8lvTpw
 priority: medium
 relations:
   REQ-38288492: depends_on

@@ -7,7 +7,7 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
-  nfk4cl: z1hEi3_BbPpPQBCB8SizKet4TFWB98l5CD7tglIkw9k
+  nfk4cl: n2bqbzBAwhurSWApp_PqqB3tNI73GQQNaORlMI7iEcM
 relations: {}
 status: approved
 text: If the CODEOWNERS file holds no rule for *, then the build shall refuse the

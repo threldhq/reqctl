@@ -6,7 +6,7 @@ acceptance_criteria:
   when: baseline --generate is run
 assessed: {}
 citations:
-  thbrwa: 6Ezu-AkRDHmCW42R211k5fY50yCsenBnEAVfIyB2OqU
+  thbrwa: IsQ0INk1bTxAvUNRjLva07xXRoKm1EWA2QyghjaaWqQ
 priority: medium
 relations: {}
 status: approved

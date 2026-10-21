@@ -13,8 +13,8 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  kgrg4l: GRhDJzyqhN3JQXEkUPCLLW4iOOXbdAEaTyE3JWcv4ps
-  oan2d2: bBqW_E1OUwYNo0Ki_G06asPGg12z6TnynozbeUSOfWQ
+  kgrg4l: dyyhpGajw5Qkqz_YdH_tWszAFVp9JnyVRf53ap9SEgA
+  oan2d2: s-E-aQm-95iKyhAwoOM8yZWqlCVm04F_CZkVy2bP_DY
 priority: medium
 relations: {}
 status: approved

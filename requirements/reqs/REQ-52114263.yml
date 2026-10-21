@@ -15,9 +15,9 @@ assessed:
   REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  dbzebu: iidGRUEZC7qQ7deNo8F5Nh7n-d_HXkKZ91i8PXei3l4
-  gedop6: iTfwvSHzHREAlvru2H-tz-horLVyfl2aTpSouJfRKRg
-  huroi7: ikSW9IJciRCVA8sk8KJwr-OAd7cx2d5MIF9fwTuVaVM
+  dbzebu: lKzIexNQe1eW7U73B8wu4fjlf0TO-kBsKujHXBdK6bI
+  gedop6: Fk2vAdI4tJxJARzD1G76XIvotdoDC5Ln-8tFerP7akk
+  huroi7: 7u6NlYN1VWHulEo8j2WYJ39iQp3PyKRsb15NmwoeTco
 priority: medium
 relations:
   REQ-21373303: derives_from

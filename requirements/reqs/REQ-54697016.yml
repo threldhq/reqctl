@@ -16,9 +16,9 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
-  mzmppv: 4FY7wSs6d7Bn4Czof2DmeSleYk6bcJWyVuxeiuOrd7c
-  ncotff: QbVxNyz0hwy2uS_u3iupaF2fctkeRRurQKlJi9cDD3I
-  rvmjri: pXqz4oU2FByUGHb1ZeAdgF_RfoQQz8lbJoYL6-lCEEM
+  mzmppv: dWZ1hZmjSSLq96E3esXBqI41mhmPh1Ab5o-mve0_6tY
+  ncotff: WMs8SU_eCOrOGjJp0sou_HxRNK-W3DOsYWB-d7AAc3g
+  rvmjri: ZOWFy6eTxKuWZjb3Czgjd4gYj3L4S5okhazAKyp9RxA
 priority: medium
 relations:
   REQ-67539399: derives_from

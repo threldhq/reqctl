@@ -15,7 +15,7 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
-  wljy47: yZVOFo7OISro0jzXs2nyo_gDHv18I5sW6p9COcgS9sw
+  wljy47: 8kWex6FEAN45VOpQpKSkjQSCOVfi2Y_g9gSDAuc5JlY
 priority: high
 rationale: A schema named for an [item](item) is the repository saying its corpus
   holds one. Holding it to that is how a project requires a [data item](data_item)

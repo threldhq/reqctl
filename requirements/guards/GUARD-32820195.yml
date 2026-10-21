@@ -4,7 +4,7 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
-  32oezj: cZyAxjwCbfAnOfarFUFgpstueX6ffT5OzvMW7qbFaMM
+  32oezj: eFhjivsGLRihJuf0SEEgl0_QwrfOigwc_wPIRxMTWfs
 relations: {}
 status: approved
 text: If a rule in the CODEOWNERS file names no owner, then the build shall refuse

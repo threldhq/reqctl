@@ -10,7 +10,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  ijccb5: 4luOuaAm_AR2cLHmW4T2AzJgvydTob103GMGlGFKDo4
+  ijccb5: Lb5iZRjNHoK4jIz0QZCcq5eg1VpwDKrelm5UftJ68RU
 priority: medium
 relations: {}
 status: approved

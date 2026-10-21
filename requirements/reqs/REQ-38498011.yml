@@ -24,8 +24,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
-  3sjv5b: Z8rI08aUe8AXXKRVgmhgBnej25fZalF6IyI6BGcqEqw
-  q7wu74: LH5WeJLpxsujXvl5JBh8ouYYbm1-vI8ke5fwppowEI0
+  3sjv5b: keQ_sMEqNowvbfZFNAByO648joWmsBkGDDto4bga6ko
+  q7wu74: DLduBabcxLugRzJxrgFdGO713LBy1Nwii4W73s56u-4
 priority: medium
 relations:
   REQ-19913588: constrains

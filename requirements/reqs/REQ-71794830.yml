@@ -13,7 +13,7 @@ assessed:
   skipped_folders.build: qXHxAvPpIAIsKJav_fRWI9y4jM1EhwBw1SJW6bGUA7s
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  tbkz5r: oXfS-ZBsuMgAPr5CWds22wF0U1kiy11vBRmTRYI3mA8
+  tbkz5r: OW8PYt6Dr4Wx2HQmGzeHrthpajjJzaQvisLUmMtzVLY
 priority: medium
 relations:
   REQ-10966072: depends_on

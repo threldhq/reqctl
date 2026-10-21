@@ -11,9 +11,9 @@ assessed:
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  5lq35y: vlCXAdChyjz79NAFwP6791j34v_5eRVzazpTFmqCuek
-  jflstj: 1IWS-9ZAOswzBa3IElhZwcgHzKxCWnTlX24f6TQbzp4
-  stzuaz: vDyS52BEcO7utyxzreYAnPUxC21P1NhevY4u2FmumMg
+  5lq35y: xmMPhDIZ4ntEc7SqGUzFk11cW3HPxBYG2DIhLgq6by8
+  jflstj: xLxPSbfsbCjge5Uv76hnkVd5V6B4AyitXYh5e6b7lHU
+  stzuaz: 7QoiIKkCCps38DYHdkRYpSKypb-ixJhwJHrFiRa5I84
 priority: medium
 relations:
   REQ-42668747: depends_on

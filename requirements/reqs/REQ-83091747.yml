@@ -10,7 +10,7 @@ acceptance_criteria:
   when: a member that reads as a word is stated
 assessed: {}
 citations:
-  q5fj2f: BOv58PTrWtgO5psfSPHdIyDPVVi7OA6IGXGND2kOQCc
+  q5fj2f: gBmhr1RqKeuu3iZOyh6ha7w87oIoUh8F5UnyhO5hiX4
 priority: medium
 relations: {}
 status: approved

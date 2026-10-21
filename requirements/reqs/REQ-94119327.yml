@@ -12,8 +12,8 @@ assessed:
   REQ-74702510: gU2X5OnlUbY3yQzwCDneBQYjtHoHNIE4uLSJFYf-EC8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  gcrrhf: Bmawg4xpRCwRO-V0g-ptbvMbWtkCAX6AmPCsqmtjwYo
-  yvjo27: sYtdCLSYzHw1WNj-9fQIjksOwnP2yq7RTgRx09u1XXQ
+  gcrrhf: GlHRGi7EAeubNnqW1KzstmCzze4T1ryyRW5bKuqq9Po
+  yvjo27: Fk2jzVgR0d88IrIGdJ-BQfoFXVu0syiGfgMG-JQTt90
 priority: medium
 relations:
   REQ-74702510: constrains

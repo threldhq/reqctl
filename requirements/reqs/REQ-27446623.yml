@@ -6,7 +6,7 @@ acceptance_criteria:
 assessed:
   REQ-23706540: e-JqhR3Ui-keWIPxNZLUjlVjA3fPWTM1awZuzyA7rJk
 citations:
-  3xjgfd: mqy8DtW5d64q31nqZzKZ6ro0hz_r-cthSz2KfBRgbp4
+  3xjgfd: A0mPiqkHcsxPLPLWnI0lGaFonb_oEGAygT3m7AB08KY
 priority: medium
 relations:
   REQ-23706540: constrains

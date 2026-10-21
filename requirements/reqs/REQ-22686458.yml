@@ -5,7 +5,7 @@ acceptance_criteria:
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
 citations:
-  q5tknl: zSQ8nAEgrkTs1YeCqWUUVs3FhEwrjnSJUR-hTgAkRvc
+  q5tknl: BXDdzGWtfXrtcmKT6snlDfkb3kZN-xyqV4yLOBIQX54
 priority: medium
 relations:
   REQ-24481048: depends_on
