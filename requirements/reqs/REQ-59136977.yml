@@ -12,7 +12,7 @@ assessed:
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  s3g7ya: y5j9nP1UZxit8tgwR7DzN1eDgW7PZTzaVK7lqhVsKTQ
+  s3g7ya: NNns-LoFVu6KaE9ftajYBp70ismbQi0xE4VD_JaO658
 priority: medium
 relations:
   REQ-75539229: depends_on

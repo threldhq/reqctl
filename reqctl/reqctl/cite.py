@@ -129,11 +129,16 @@ NESTS = {".py": _depths, ".yml": _indents, ".yaml": _indents}
 
 def cut(path, text, spans):
     suffix = Path(path).suffix
+    problems = []
     # @req> REQ-55291596@DLuklmxajzSV 5hrvsm
     if suffix == ".md":
-        spans = [span for span in spans if _view(suffix, text, span[1])[0] != suffix]
+        close = _front(text)
+        problems = [(identity, f"{path}: citation {identity} crosses the edge of the "
+                               "front matter -- it must lie between its --- lines")
+                    for identity, first, last in spans if 1 < first < close <= last]
+        spans = [span for span in spans if 1 < span[1] and span[2] < close]
         if not spans:
-            return []
+            return problems
         suffix, text = ".yml", _matter(text)
     read = NESTS.get(suffix)
     if read is None:
@@ -141,9 +146,8 @@ def cut(path, text, spans):
     try:
         depths, starts, ends = read(text)
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
-        return [(path, f"{path}: cannot read its nest levels ({broken}), so no "
-                       "citation in it can be checked")]
-    problems = []
+        return problems + [(path, f"{path}: cannot read its nest levels ({broken}), so no "
+                                  "citation in it can be checked")]
     for identity, first, last in spans:
         code = [n for n in range(first, last + 1) if n in depths]
         if not code:
