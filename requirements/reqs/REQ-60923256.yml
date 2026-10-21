@@ -11,15 +11,10 @@ assessed:
   elucidate_agents.judge: Uzv_iAqsRki5GtUGmeeOwcpyTwKSqQ_vLXor5Ig0e0o
   elucidate_agents.recall: 3zTw1VvVnPM494HiaVfhXh8r6e79m-mzpbSJNEw29Sc
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
-citations:
-  gu5dkl: Fh9NA2KQ4-eGKXRQUbBcSCS26HhJGuYeTYxo2X7k8Ak
-  k77ck6: rKLnQQe6qxg6p7vlZ78rMPHNcvPMQ1gsZmguZqKFyTA
-  sqhzmb: rKLnQQe6qxg6p7vlZ78rMPHNcvPMQ1gsZmguZqKFyTA
-  tsshs2: WWuEVDzOU2OrwxFpvQAB2XtEt9YmVCPnHUmKYvgtFNw
 priority: medium
 relations:
   REQ-91853430: constrains
-status: approved
+status: superseded
 text: The product shall define each agent that the Claude Code plugin ships under
   the name of the ${elucidate_agents.recall} or the ${elucidate_agents.judge} [entry](entry)
   with no tool other than Read and Write.

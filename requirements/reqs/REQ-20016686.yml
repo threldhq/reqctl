@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: the [front matter](front_matter) of each agent named in elucidate_agents
+  then: it states, in whatever words, that only the elucidate skill spawns the agent
+  when: its description field is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-56117965: u0WCTiiKPKcystZjfh9j_INydz3ZgkUMU0RxPWIVA6Q
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
+  front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-56117965: depends_on
+status: approved
+text: The product shall state, in the description field of the [front matter](front_matter)
+  of each agent named in ${elucidate_agents}, that only the elucidate skill spawns
+  the agent.
+type: functional
+verification: inspection

@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: the definition of the agent named best_in_class
+  then: it states that the agent copies each passage it quotes character for character
+    from the [page text](page_text)
+  when: it is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.best_in_class: Sk0MXp4LOtjYA84v2uLc8bn3pUJm3nAbFYlkW7LPGZs
+  page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-46144308: derives_from
+status: approved
+text: The product shall state, in the definition of the agent named in ${elucidate_agents.best_in_class},
+  that the agent copies each passage it quotes exactly as the [page text](page_text)
+  of its page states it.
+type: functional
+verification: inspection

@@ -3,13 +3,11 @@
 # @req> REQ-56117965@u0WCTiiKPKcy mgqpfl
 name: judge
 description: Judges one of a run's proposals against the corpus, as a judge, a group judge or a final judge. Spawned only by the elucidate skill's step 2; not for general work.
-# @req> REQ-60923256@Wyz1JvPjvbOb k77ck6
 tools: Read, Write
 # @req- cartup
 ---
 
 <!-- @req> REQ-56117965@u0WCTiiKPKcy 5leisk -->
-<!-- @req> REQ-60923256@Wyz1JvPjvbOb tsshs2 -->
 # Judge
 
 Your prompt names one file. Read it with the Read tool: it states everything you

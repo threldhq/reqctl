@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: the definition of the agent named coverage
+  then: it states that the agent copies each passage it quotes character for character
+    from the owner's words
+  when: it is read
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.coverage: 4gYWl6IA6NXblLFuvvUb_UiN5RZoPIP2KMHvT-5CYIY
+priority: medium
+relations:
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the definition of the agent named in ${elucidate_agents.coverage},
+  that the agent copies each passage it quotes exactly as the owner's words state
+  it.
+type: functional
+verification: inspection

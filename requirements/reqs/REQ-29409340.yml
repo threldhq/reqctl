@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: the definition of each agent named in elucidate_agents
+  then: it states that the agent writes no file other than the one its prompt tells
+    it to write its result to
+  when: it is read
+assessed:
+  REQ-29981224: X6wmVnpxwiio5uqTX1u_AecXR2iq3Vz5-fqWt9XU2ps
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
+priority: medium
+relations:
+  REQ-29981224: constrains
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the definition of each agent named in ${elucidate_agents},
+  that the agent writes no file other than the one its prompt names.
+type: functional
+verification: inspection
