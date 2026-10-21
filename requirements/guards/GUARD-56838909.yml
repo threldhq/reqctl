@@ -12,3 +12,7 @@ relations: {}
 status: approved
 text: The build shall refuse a Claude Code plugin whose version differs from the version
   of the [reqctl wheel](reqctl_wheel).
+whole_file_citations:
+  reqctl/pyproject.toml:
+    digest: B-B-fy5-sULqTLoO1JdM7QfsXMjkwVexBNYZpq4ZDng
+    pinned: xIKhRXKhnYS1
