@@ -19,6 +19,8 @@ acceptance_criteria:
   then: the build does not refuse on that ground
   when: the build runs
 assessed: {}
+citations:
+  7wet6o: 8JrZ4ofh3oJ0I0tBNMol0FBA_IBqroewUnQKceUccDA
 relations: {}
 status: approved
 text: If reqctl/requirements-dev-lock.txt does not hold each package that reqctl/requirements-dev.in

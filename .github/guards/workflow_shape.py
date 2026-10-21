@@ -33,6 +33,12 @@ LONG = {"--requirement": "r", "--editable": "e"}
 CLUSTER = re.compile(r"-([qvUI]*)([re])(.*)")
 REDIRECT = re.compile(r"\d*[<>&].*")
 DEV_INPUTS = Path("reqctl/requirements-dev.in")
+DEV_LOCK = DEV_INPUTS.with_name("requirements-dev-lock.txt")
+LOCKS = (DEV_LOCK.name, RUNTIME)
+HOOK = Path(".claude/hooks/session-start.sh")
+LOCKED = re.compile(r"(?m)^([A-Za-z0-9][\w.-]*)(?:\[[^\]]*\])?==")
+NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
+QUOTES = re.compile(r"[\"']")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
 SCRIPT = re.compile(GATE.pattern
@@ -345,6 +351,46 @@ def parity(text, where, lock, own):
     return found
 
 
+def normal(name):
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def held_by(path):
+    # @req+ GUARD-83168738@zhoOQpGgBd9R st7nb6
+    try:
+        text = path.read_text()
+    except (OSError, UnicodeDecodeError) as broken:
+        return set(), f"{path.as_posix()}: cannot read: {broken}"
+    # @req- st7nb6
+    return {normal(name) for name in LOCKED.findall(text)}, None
+
+
+def from_lock(file):
+    return Path(file).name in LOCKS and Path(file).parent.name == PACKAGE
+
+
+def sources(text, where, dev):
+    found = []
+    for install in pip_installs(text):
+        for word in install.positional + install.editable:
+            named = NAMED.match(Path(word).name)
+            if named and normal(named[0]) in dev:
+                found.append(f"{where}: installs {word} by name, and "
+                             f"{DEV_LOCK} holds it -- install it with "
+                             f"-r {DEV_LOCK}")
+        for file in install.files:
+            if from_lock(file):
+                continue
+            held, fault = held_by(Path(file))
+            if fault:
+                found.append(f"{where}: {fault}")
+            elif held & dev:
+                found.append(f"{where}: installs {', '.join(sorted(held & dev))} "
+                             f"from {file}, and {DEV_LOCK} holds them -- install "
+                             f"them from {DEV_LOCK} or {PACKAGE}/{RUNTIME}")
+    return found
+
+
 def runs_of(text):
     try:
         held = yaml.safe_load(text)
@@ -385,6 +431,21 @@ def main():
     else:
         for where, text in texts.items():
             found += parity(text, where, lock, own)
+    # @req+ GUARD-24264620@IECSQ_EeiXfC ytkt47
+    dev, fault = held_by(DEV_LOCK)
+    if fault or not dev:
+        found.append(fault or f"{DEV_LOCK}: holds no locked package, so no "
+                     "install has a source to check -- run this from the "
+                     "repository root")
+    # @req+ GUARD-83168738@zhoOQpGgBd9R qp7dag
+    try:
+        texts[HOOK.as_posix()] = QUOTES.sub("", HOOK.read_text())
+    except (OSError, UnicodeDecodeError) as broken:
+        found.append(f"{HOOK.as_posix()}: cannot read: {broken}")
+    # @req- qp7dag
+    for where, text in texts.items():
+        found += sources(text, where, dev)
+    # @req- ytkt47
     for fault in found:
         print(f"::error::{fault}")
     return 1 if found else 0
