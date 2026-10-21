@@ -1,20 +1,32 @@
 acceptance_criteria:
 - given: an idea that a [practice](practice) the review recommends adopting bears
     on
-  then: that [practice](practice) is proposed as the default answer, and no [proposal](proposal)
-    beyond it is drafted until the owner answers
+  then: that [practice](practice), assessed against the README at the [project root](project_root)
+    for fit to the project and then adapted to the approved requirements the idea
+    touches, is proposed as the default answer, and no [proposal](proposal) beyond
+    it is drafted until the owner answers
   when: the owner's words are converted
+- given: an adapted [practice](practice) that conflicts with an approved requirement
+  then: the conflict is named with the requirement it conflicts with and put to the
+    owner as a [question for the owner](question_for_the_owner)
+  when: it is proposed as the default answer
+- given: no README at the [project root](project_root)
+  then: it is adapted to the approved requirements the idea touches without a fit
+    assessment, and the run states that no README was found
+  when: a [practice](practice) is proposed as the default answer
 - given: an idea that no [practice](practice) the review recommends adopting bears
     on
   then: the idea is converted as the owner's words state it
   when: the owner's words are converted
 assessed:
   REQ-58598892: Ac8QPjjAwTy9U0mrdllRuDfPId5q6TBy6pVCi5AbTXM
-  REQ-82432523: VoDkIJau94BBAQrC5hOOM8sJxP3mAEBuElhp-0Q364Y
+  REQ-82432523: dA6MI5WknAH4W2nm9dEUdYToQ1b4odSafkhoaK-cx00
   REQ-93075993: _Ewq27hRC5AGFYwrTHcfopr54PGnskIY0uid1w57qt8
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+  project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
 priority: high
 relations:
   REQ-58598892: constrains
@@ -24,6 +36,8 @@ status: approved
 text: When the elucidate skill converts the owner's words after the run's [best-in-class
   review](best_in_class_review) is made, the product shall propose, for each idea
   that a [practice](practice) the review recommends adopting bears on, that [practice](practice)
-  as the idea's default answer before drafting any [proposal](proposal) beyond it.
+  as the idea's default answer, assessed against the README at the [project root](project_root)
+  for fit to the project and then adapted to the approved requirements the idea touches,
+  before drafting any [proposal](proposal) beyond it.
 type: functional
 verification: inspection
