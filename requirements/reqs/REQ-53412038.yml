@@ -14,6 +14,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+citations:
+  m2mad7: c-VSyL-dPNU9bKHu0xm6HVAgw_tVAthZKWvIudihPjc
 priority: high
 relations:
   REQ-18597283: constrains

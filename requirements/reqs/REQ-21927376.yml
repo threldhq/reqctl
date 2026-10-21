@@ -27,6 +27,8 @@ assessed:
   project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+citations:
+  kmfcsp: z_1_vaqHrSd3pX8qj9VMMz3XjqV85MF5XkcV8SzhddE
 priority: high
 relations:
   REQ-58598892: constrains
