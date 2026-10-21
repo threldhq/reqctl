@@ -10,8 +10,7 @@ from packaging.utils import canonicalize_name
 WORKFLOWS = Path(".github/workflows")
 GUARDS = Path(".github/guards")
 PINNED = re.compile(r"@[0-9a-f]{40}$")
-PIP = re.compile(r"\bpip[\d.]*(?:\s+--?[\w-]+(?:[=\s]+[^\s-]\S*)?)*\s+install\b"
-                 r"(?:&(?!&)|[^;&|\n])*")
+PIP = re.compile(r"\bpip[\d.]*\s(?:&(?!&)|[^;&|\n])*")
 EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
 REQUIREMENT = re.compile(r"--requirement(=.*)?|-[qvUI]*r.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
@@ -38,8 +37,12 @@ DEV_INPUTS = Path("reqctl/requirements-dev.in")
 DEV_LOCK = DEV_INPUTS.with_name("requirements-dev-lock.txt")
 HOOK = Path(".claude/hooks/session-start.sh")
 LISTED = re.compile(r"(?m)^\s*([A-Za-z0-9][\w.-]*)")
-NESTED = re.compile(r"(?m)^\s*(?:-r|--requirement)(?:\s+|=)(\S+)")
-ARCHIVES = (".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2")
+NESTED = re.compile(r"(?m)^\s*(?:-r\s*|--requirement(?:\s+|=))(\S+)")
+ENTRY = re.compile(r"(?m)^\s*(?:(?:-e|--editable)(?:\s+|=))?([^\s#-]\S*)")
+ARCHIVES = (".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2", ".tbz", ".tar.xz",
+            ".txz", ".tar")
+VERSIONED = re.compile(r"(.+?)-\d")
+EGG = re.compile(r"[#&]egg=([^&]+)")
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
@@ -258,7 +261,15 @@ def faults(text, where, gates=None, tools=None):
 
 
 def pip_lines(text):
-    return PIP.findall(CONTINUED.sub(" ", re.sub(r"[\"']", "", text)))
+    found = []
+    for line in PIP.findall(CONTINUED.sub(" ", re.sub(r"[\"']", "", text))):
+        words = line.split()[1:]
+        if "install" in words and all(
+                word.startswith("-") or before.startswith("-")
+                for before, word in zip([""] + words,
+                                        words[:words.index("install")])):
+            found.append(line)
+    return found
 
 
 def installs(text, where):
@@ -362,21 +373,20 @@ def held_by(path):
     try:
         text = path.read_text()
     except (OSError, UnicodeDecodeError) as broken:
-        return set(), [], f"{path.as_posix()}: cannot read: {broken}"
+        return "", f"{path.as_posix()}: cannot read: {broken}"
     # @req- st7nb6
-    return ({canonicalize_name(name) for name in LISTED.findall(text)},
-            [path.parent / nested for nested in NESTED.findall(text)], None)
+    return text, None
 
 
 def names_of(word):
-    tail = re.split(r"[#?]", word)[0].rstrip("/").rsplit("/", 1)[-1].split("@")[0]
-    parts = tail.split("-")
-    stems = ({"-".join(parts[:at]) for at in range(1, len(parts))}
-             if tail.endswith(ARCHIVES) else {tail.removesuffix(".git")})
-    first = NAMED.match(word)
-    return {canonicalize_name(stem) for stem in
-            stems | {word.partition("#egg=")[2], first[0] if first else ""}
-            if stem}
+    base = re.sub(r"(?<=\.git)@.*", "", re.split(r"[#?]", word)[0])
+    tail = re.split(r"[@\[]", Path(base).name)[0]
+    stem = VERSIONED.match(tail) if tail.lower().endswith(ARCHIVES) else None
+    egg, first = EGG.search(word), NAMED.match(word)
+    return {canonicalize_name(name) for name in
+            (stem[1] if stem else tail.removesuffix(".git"),
+             egg and egg[1], first and first[0])
+            if name}
 
 
 def sources(text, where, dev):
@@ -394,11 +404,11 @@ def sources(text, where, dev):
                                 and file.name in (DEV_LOCK.name, RUNTIME)):
                 continue
             seen.add(file)
-            held, nested, fault = held_by(file)
-            pending += nested
+            held, fault = held_by(file)
+            pending += [file.parent / nested for nested in NESTED.findall(held)]
             if fault:
                 found.append(f"{where}: {fault}")
-            elif shared := held & dev:
+            elif shared := set().union(*map(names_of, ENTRY.findall(held))) & dev:
                 found.append(f"{where}: installs {', '.join(sorted(shared))} "
                              f"from {file}, and {DEV_LOCK} holds them -- install "
                              f"them from {DEV_LOCK} or {PACKAGE}/{RUNTIME}")
@@ -446,7 +456,8 @@ def main():
         for where, text in texts.items():
             found += parity(text, where, lock, own)
     # @req+ GUARD-24264620@IECSQ_EeiXfC ytkt47
-    dev, _, fault = held_by(DEV_LOCK)
+    held, fault = held_by(DEV_LOCK)
+    dev = {canonicalize_name(name) for name in LISTED.findall(held)}
     if not dev:
         found.append(fault or f"{DEV_LOCK}: holds no locked package, so no "
                      "install has a source to check -- run this from the "
