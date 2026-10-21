@@ -83,7 +83,8 @@ jobs:
       - name: Help budget, what a session reads through reqctl --help
         run: python .github/guards/help_budget.py --max 41
 
-      # @req> GUARD-83168738@zhoOQpGgBd9R mdhv4d
+      # @req> GUARD-39219434@QVmE7MsFwn8t 7wet6o
+      # @req> GUARD-83168738@zhoOQpGgBd9R yekgof
       - name: Lockfile inputs state their versions
         run: |
           python3 - <<'CHECK'

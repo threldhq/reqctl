@@ -21,6 +21,8 @@ assessed:
   GUARD-20154572: z2_hbXJO9sHnVMQd1fo-1KELeiBgdPt32F2PD4ygZIo
   GUARD-26421773: SDQf4TqpYtSBsSd7GbN6Icbm8-N7Ee3B2uJ3Idc6lXE
   GUARD-93589588: yH4bykpGUeLbQI_1Io16YMNXd2c3lZLrdWj7Svj4NvE
+citations:
+  ytkt47: ZtyBj_B-hYMA66PLi3cEyUpzqvBDuNlcCD4vYh0hQKQ
 relations:
   GUARD-20154572: constrains
   GUARD-26421773: depends_on
