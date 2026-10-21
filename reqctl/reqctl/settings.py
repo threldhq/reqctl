@@ -26,6 +26,7 @@ CHALLENGE_BOUNDS = {
     "judge_group": {"quantity": 20},
     "recall_batch": {"quantity": 40},
 }
+# @req> elucidate_agents@n9BNBtOe7I6g uyqkbs
 ELUCIDATE_AGENTS = {
     "best_in_class": {"model": "claude-sonnet-5-5", "effort": "high"},
     "coverage": {"model": "claude-sonnet-5-5", "effort": "high"},

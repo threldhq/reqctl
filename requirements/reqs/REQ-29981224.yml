@@ -14,6 +14,11 @@ assessed:
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
   elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+citations:
+  lwwpzc: zqyP5YxJZEHolqiu_0KbNCayNjoTb5Kh76vwKzAVraY
+  xjqq7j: rKLnQQe6qxg6p7vlZ78rMPHNcvPMQ1gsZmguZqKFyTA
+  ynjmyj: 5CQ9oqUSgN9k-3XG1VBSRv278FFTpuPOxxVuuH8BH2A
+  zkbkk5: rKLnQQe6qxg6p7vlZ78rMPHNcvPMQ1gsZmguZqKFyTA
 priority: medium
 relations:
   REQ-38288492: depends_on

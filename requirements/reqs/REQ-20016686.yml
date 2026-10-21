@@ -8,6 +8,11 @@ assessed:
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
   elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
   front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
+citations:
+  4du72q: ISaHzFn5Tytylf7bKRzCrQTLYBCRwNP7YUtOA38oTSA
+  f7rxlw: Avt-mkHz1k4NG1ktXs7S3d3HRZDhNPTZDB0-ZM7QOyc
+  ookqxt: 4KZqGZARU0SMb4bf9rKpP5U5VRrgADpNrhfABkQGQlQ
+  tmyab3: NrKTzIeKeobKarNQIMk6nwV6Up1RPZPd3RxOeGDudJU
 priority: medium
 relations:
   REQ-38288492: depends_on

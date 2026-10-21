@@ -8,6 +8,8 @@ assessed:
   REQ-82432523: dA6MI5WknAH4W2nm9dEUdYToQ1b4odSafkhoaK-cx00
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
   elucidate_agents.best_in_class: Sk0MXp4LOtjYA84v2uLc8bn3pUJm3nAbFYlkW7LPGZs
+citations:
+  4vgfxe: HgtD-rSHPgQj9B9-Z69j4ImqqI2fZPjZDufeO2PlvnI
 priority: medium
 relations:
   REQ-38288492: depends_on
