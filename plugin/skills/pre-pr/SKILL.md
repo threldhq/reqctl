@@ -55,9 +55,10 @@ Cover the code that decides a clause or acceptance criterion of the item
 cited, or, for a parameter, a data item or one of its entries, the code stating
 its value -- where a data item's entries are stated in one place and read in
 another, the place stating them -- and every line that code names, directly or
-through what those lines name, in any language. A citation's digest takes in
-only the lines it covers, so a helper it calls or a constant it reads is
-accounted for only once it is cited too.
+through what those lines name, that no citation digest takes in. A Python
+citation's digest takes in each function, class and constant of the code base its
+lines name, and what those name in turn, so those get no citation of their own;
+code in any other language that the lines name is cited too.
 <!-- @req- j6i32e -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->
