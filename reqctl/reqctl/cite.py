@@ -135,7 +135,7 @@ def cut(path, text, spans):
         close = _front(text)
         problems = [(identity, f"{path}: citation {identity} crosses the edge of the "
                                "front matter -- it must lie between its --- lines")
-                    for identity, first, last in spans if 1 < first < close <= last]
+                    for identity, first, last in spans if 1 < first - 1 < close <= last]
         spans = [span for span in spans if 1 < span[1] and span[2] < close]
         if not spans:
             return problems
