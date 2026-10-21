@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a verdict raising a question that names a contradiction between its [proposal](proposal)
+    and an approved [item](item)
+  then: the question is put to the owner as a [question for the owner](question_for_the_owner)
+  when: the [challenge](challenge) ends
+- given: a verdict raising a question that names no such contradiction
+  then: the question is declined, is not put to the owner, and no [proposal](proposal)
+    is drafted for it
+  when: the [challenge](challenge) ends
+assessed:
+  REQ-18597283: h9OoEEN62bql8LsOeURL1DZrXYoMyBQJDDzs12qBfAQ
+  REQ-32446903: I3rgjDNBKOJCBdXRHATslJv9k2ys7PnBoxVDS8a4rcE
+  challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+priority: high
+relations:
+  REQ-18597283: constrains
+  REQ-32446903: constrains
+status: approved
+text: If a verdict raises a question that names no contradiction between its [proposal](proposal)
+  and an approved [item](item), then the product shall decline the question without
+  putting it to the owner and without drafting a [proposal](proposal) for it.
+type: functional
+verification: inspection
