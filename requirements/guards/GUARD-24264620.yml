@@ -31,3 +31,7 @@ status: approved
 text: If a workflow or the session-start hook installs a Python package that reqctl/requirements-dev-lock.txt
   holds other than from reqctl/requirements-dev-lock.txt or reqctl/requirements-lock.txt,
   then the build shall refuse the change.
+whole_file_citations:
+  reqctl/requirements-dev-lock.txt:
+    digest: zYnR5vVCyIIuA-ipsYtxG3c_yEygXM9-jk1nRk2GxJg
+    pinned: IECSQ_EeiXfC
