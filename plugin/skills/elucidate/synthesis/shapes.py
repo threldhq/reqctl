@@ -92,10 +92,10 @@ DICTIONARY_CITING = {"values": "belongs_with", "words": "defined_by"}
 
 LABEL = {"type": "string", "minLength": 1, "maxLength": 120}
 
-# @req> REQ-82432523@VoDkIJau94BB poc76h
+# @req> REQ-82432523@dA6MI5WknAH4 poc76h
 REVIEW = _object(["practices"], {
     "practices": _list(_object(
-        ["practice", "field", "leaders", "sources", "stated", "adopt"], {
+        ["practice", "field", "leaders", "sources", "stated", "adopt", "fit"], {
             "practice": REASON,
             "field": LABEL,
             "leaders": {"type": "array", "minItems": 1, "items": LABEL},
@@ -105,6 +105,7 @@ REVIEW = _object(["practices"], {
             })),
             "stated": {"anyOf": [REASON, {"type": "null"}]},
             "adopt": {"type": "boolean"},
+            "fit": {"anyOf": [REASON, {"type": "null"}]},
         })),
 })
 
