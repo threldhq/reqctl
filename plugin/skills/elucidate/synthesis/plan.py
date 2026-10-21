@@ -34,6 +34,7 @@ STATE = "build.json"
 REVIEWED = "review.json"
 REMOVED = "removed.json"
 DECLINED = "declined_practices"
+DEFERRED = "deferred"
 OBLIGATION = {"REQ": "requirements", "GUARD": "guards"}
 KIND_NAME = {"REQ": "requirement", "GUARD": "guard"}
 SIBLINGS = "siblings"
@@ -1576,7 +1577,8 @@ def describe(run):
             "with -- build the run again with `plan.py build`, then judge it")
     # @req- obajkn
     ledger, answers = answered(run, held)
-    traces = traced(run, said(run, "words.md", ""), held)
+    words = said(run, "words.md", "")
+    traces = traced(run, words, held)
     # @req> REQ-52114263@85vP2wA4G2MR dbzebu
     records = {uid: [record.get(field) for field in STATING]
                for uid, record in glossary().items()
@@ -1626,6 +1628,11 @@ def describe(run):
     lines += (declined + declined_practices(run)
               or ["Nothing was declined in this run."])
     # @req- vxerce
+    # @req+ REQ-80620603@d9HSssP4TTeh tpibvr
+    postponed = deferred(run, words)
+    if postponed:
+        lines += ["", "### deferred", ""] + postponed
+    # @req- tpibvr
     # @req+ REQ-41970990@LllsbvPcoF0q 6vslgs
     overrides = used(run)
     if overrides:
@@ -1680,6 +1687,25 @@ def declined_practices(run):
             f"{practice['practice']} ({', '.join(practice['leaders'])})"
             for practice in held]
     # @req- mkqci7
+
+
+def deferred(run, words):
+    path, read = recorded(run)
+    held = [] if read.get(DEFERRED) is None else read[DEFERRED]
+    spoken = _coverage.plain(_coverage.spoken(words))
+    if not isinstance(held, list) or not all(
+            isinstance(one, dict) and isinstance(one.get("what"), str)
+            and one["what"].strip() and isinstance(one.get("answer"), str)
+            and one["answer"].strip()
+            and _coverage.quoted(spoken, _coverage.spoken(one["answer"]))
+            for one in held):
+        raise SystemExit(
+            f"{path}: `{DEFERRED}` lists only what an answer of the owner asks "
+            "be deferred to a later run, each as `{what: ..., answer: QUOTE}` "
+            "with the answer quoted from the owner's words. Quote their answer, "
+            "or remove the entry they did not ask to defer.")
+    return [f"- {' '.join(one['what'].split())}, deferred on the owner's "
+            f"answer: “{_coverage.spoken(one['answer'])}”" for one in held]
 
 
 def main(argv=None):

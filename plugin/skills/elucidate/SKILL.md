@@ -294,6 +294,19 @@ Put the table `check` prints to the owner as one question: they adopt or
 decline each practice in it, and each row carries the review's recommendation.
 <!-- @req- 25edfl -->
 
+<!-- @req+ REQ-21927376@QwR1cNzGEntf kmfcsp -->
+For each idea a practice the review recommends adopting bears on, that practice
+is the idea's default answer. Take its fit to the project from the review,
+assessed against the README at the project root, then adapt it to the approved
+requirements the idea touches, read with `reqctl context`. Where the review
+found no README, adapt it without a fit and say in the message that no README
+was found. Propose the adapted practice in the message as the idea's default
+answer, and draft nothing beyond it until the owner answers. Where the adapted
+practice conflicts with an approved requirement, name that requirement and put
+the conflict to the owner as a question. An idea no recommended practice bears
+on is converted as their words state it.
+<!-- @req- kmfcsp -->
+
 <!-- @req+ REQ-18597283@h9OoEEN62bql vb4fww -->
 Every question you put the owner once the review passes carries a
 recommendation drawn from the run's review:
@@ -312,6 +325,14 @@ Record each practice the owner declines, by its number, under
 `declined_practices` in `run.yaml`; `plan.py describe` states them in the
 declined list.
 <!-- @req- wquver -->
+
+<!-- @req+ REQ-80620603@d9HSssP4TTeh 32enfk -->
+Defer nothing on your own. A passage of the owner's words, a practice or a
+question a verdict raises that the run does not convert is declined or asked,
+never set aside for a later run. Only where an answer of the owner asks that one
+be deferred, record it under `deferred` in `run.yaml` as `{what: ..., answer:
+QUOTE}`, the answer quoted from their words; `plan.py describe` states the list.
+<!-- @req- 32enfk -->
 
 Feed the answers back and convert again.
 
@@ -349,10 +370,17 @@ names for it, once the answers are in, and
 --found FILE` checks every quote back against the owner's words.
 <!-- @req- 7pvcrn -->
 
-A value or a word a verdict flagged, a conflict with an approved statement, a
-part cover whose parts may account for the whole, and every question take the
-same route: answered against the corpus first, then put to the owner as one
-message. Duplication between the run's own statements is yours to confirm,
+A value or a word a verdict flagged, a conflict with an approved statement, and
+a part cover whose parts may account for the whole take the same route:
+<!-- @req+ REQ-53412038@i8VnjjZfn-sC m2mad7 -->
+answered against the corpus first, then put to the owner as one message.
+A question a verdict raises takes that route only where it names a
+contradiction between its proposal and an approved item. One that names none
+is declined: record it as `declined: true` under `answers`, put it to no one,
+<!-- @req- m2mad7 -->
+and draft no proposal for it.
+
+Duplication between the run's own statements is yours to confirm,
 before anything is minted, from the verdicts naming another proposal.
 
 Changing what this step asks, or what it gives an agent, is measured rather

@@ -9,6 +9,9 @@ acceptance_criteria:
 assessed:
   REQ-21373303: Y7R6bZxRXU-GUfi7YDWTCC9NAnwgYoSQDZk3NQ9KIJI
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+citations:
+  32enfk: N8COqzxHc98dMUkHkvInKYz4WDKaN28t4oIN65bN9xQ
+  tpibvr: -SZayQTNEJ1m_bqMdaDY1AfnxXRdQBHffBUJZSLi6sU
 priority: high
 relations:
   REQ-21373303: constrains
