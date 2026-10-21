@@ -19,3 +19,7 @@ text: When a session starts or a session's context is compacted, the product sha
   add reqctl's rules for working a corpus to the session's context through the ${plugin_components.session_rules_hook}.
 type: functional
 verification: demonstration
+whole_file_citations:
+  plugin/hooks/session-rules.md:
+    digest: k43xXvuX3SoWZv5I3c66-Vk7D4lAU1jf0N1oCDbz42c
+    pinned: AGFmCuLqPUC4

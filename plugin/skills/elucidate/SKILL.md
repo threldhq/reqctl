@@ -26,12 +26,6 @@ the answers with the question picker.
 <!-- @req- 7wkwzy -->
 <!-- @req- bzkv6x -->
 
-```
-1  convert     the owner's words become EARS statements   inline, beside one review agent
-2  challenge   recall over every shard, then one judge each   agents on the models reqctl ships
-3  approve     reqctl, then the pull request              owner reviews and merges
-```
-
 This file says only what is not already said elsewhere. EARS shape, the
 schema, parameter references and relations are enforced by `reqctl validate`,
 which prints the five forms when a statement misses the shape. Atomicity,
@@ -65,11 +59,13 @@ review agent writes
 fresh at the start of a run and goes at the end, so an abandoned one is never
 inherited.
 
+<!-- @req+ REQ-61616834@ocFeB1JGP518 q34cuz -->
 ## 1 -- Convert
 
 Convert them yourself: the owner's words are already here, and so is the owner.
 The one agent this step spawns makes the best-in-class review, and drafts
 nothing.
+<!-- @req- q34cuz -->
 
 Their words are the whole input. Not the README -- it describes an aspiration
 and carries no approval, so feeding it in authors requirements against a second
@@ -190,12 +186,14 @@ something the statement does not already say. Then:
   validates cleanly so nobody finds it later. When the referenced clause has no
   counterpart in the corpus, ask the owner -- name any corpus item that matches
   it by meaning as a candidate, and never resolve the reference by guessing.
+<!-- @req+ REQ-21373303@Y7R6bZxRXU-G a52wiq -->
 - **Say what you did not convert, and why** -- a question they were asking
   themselves, another way of saying a line you already took, or nothing to do
   with the software. Turning a musing into a `shall` makes it an obligation
   nobody chose. Keep that list: step 2 gives it to every agent so settled ground
   is not re-raised, and step 3 puts it in the pull request, where it is the only
   durable trace of what was considered and declined.
+<!-- @req- a52wiq -->
 - **Account for every phrase.** Read the statements and the declined list back
   against the owner's words, and name what neither claims. An idea that
   produced nothing leaves nothing behind to notice it by. What is unclaimed
@@ -368,6 +366,7 @@ request section with `python3 ${CLAUDE_SKILL_DIR}/synthesis/plan.py describe
 <!-- @req- wmw3cf -->
 <!-- @req- msg57t -->
 
+<!-- @req+ REQ-32446903@I3rgjDNBKOJC 4ar2sa -->
 ## 3 -- Approve
 
 Only what the owner settled:
@@ -388,6 +387,7 @@ git add requirements && git commit    # the items, before the baseline
 reqctl baseline --generate
 git add requirements && git commit    # the manifest
 ```
+<!-- @req- 4ar2sa -->
 
 `[[word]]`, `[other words](word)` and `${name...}` are authoring forms:
 `reqctl` resolves them as it writes and stores UIDs and addresses, so a
@@ -454,4 +454,3 @@ Marking `approved` is a proposal; it becomes true when the owner merges. Run
 - Never let anything but `reqctl` touch the corpus.
 - Never carry code into the requirements pull request; CI rejects the mixture.
 - Never merge it.
-- Never invent a mode for bulk; step 1 sizes the job.
