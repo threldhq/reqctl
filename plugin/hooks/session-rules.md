@@ -1,3 +1,4 @@
+<!-- @req+ REQ-90700416@AGFmCuLqPUC4 rqniex -->
 # Working a reqctl corpus
 
 The corpus under `requirements/` is read and written only through `reqctl`. Never
@@ -40,3 +41,4 @@ Commit the corpus, then run `reqctl baseline --generate`, then commit the
 baseline. A baseline holding an unresolved merge is regenerated with
 `reqctl baseline --generate`, never merged by hand. Run `reqctl validate` and
 `reqctl baseline --check` before pushing a corpus change.
+<!-- @req- rqniex -->
