@@ -16,8 +16,10 @@ from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
 from pathlib import Path
 
+# @req+ REQ-38288492@4l6tMNjp19tH 6mjij4
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+# @req- 6mjij4
 import coverage
 import plan
 import shapes
@@ -592,6 +594,7 @@ def main(argv=None):
     return args.handler(args)
 
 
+# @req+ REQ-29234402@b5_8tR6bNR44 63vysd
 if __name__ == "__main__":
     # @req+ REQ-29234402@b5_8tR6bNR44 gwnavy
     try:
@@ -604,3 +607,4 @@ if __name__ == "__main__":
             sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
         raise
     # @req- gwnavy
+# @req- 63vysd

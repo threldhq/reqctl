@@ -134,6 +134,7 @@ def main(argv=None):
     return 0
 
 
+# @req+ REQ-29234402@b5_8tR6bNR44 25ygr7
 if __name__ == "__main__":
     # @req+ REQ-29234402@b5_8tR6bNR44 ifziur
     try:
@@ -145,3 +146,4 @@ if __name__ == "__main__":
             sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
         raise
     # @req- ifziur
+# @req- 25ygr7

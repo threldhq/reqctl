@@ -9,8 +9,10 @@ import yaml
 
 from reqctl import corpus, validate
 
+# @req+ REQ-38288492@4l6tMNjp19tH ynw5ex
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "synthesis"))
+# @req- ynw5ex
 import plan
 import shapes
 
@@ -466,6 +468,7 @@ def main(argv=None):
     return args.handler(args)
 
 
+# @req+ REQ-29234402@b5_8tR6bNR44 mu2xtl
 if __name__ == "__main__":
     # @req+ REQ-29234402@b5_8tR6bNR44 3sr6w7
     try:
@@ -478,3 +481,4 @@ if __name__ == "__main__":
             sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
         raise
     # @req- 3sr6w7
+# @req- mu2xtl

@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+# @req> REQ-38288492@4l6tMNjp19tH wphsc4
 sys.path.insert(0, str(HERE))
 import coverage as _coverage
 import shapes
@@ -1700,6 +1701,7 @@ def main(argv=None):
     return args.handler(args)
 
 
+# @req+ REQ-29234402@b5_8tR6bNR44 2ua27o
 if __name__ == "__main__":
     # @req+ REQ-29234402@b5_8tR6bNR44 ownlqe
     try:
@@ -1712,3 +1714,4 @@ if __name__ == "__main__":
             sys.exit(f"{Path(__file__).name}: " + " ".join(stop.code.split()))
         raise
     # @req- ownlqe
+# @req- 2ua27o
