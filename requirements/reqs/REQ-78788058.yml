@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a branch changing a lockfile, and a guard governing the lockfile
+  then: the guard holds a [whole-file citation](whole_file_citation) of the lockfile
+    before the pass goes on
+  when: the pre-pr skill makes its pass over the branch
+- given: a branch changing a configuration file whose rule no guard states
+  then: the pass stops, and the owner is asked to create the guard
+  when: the pre-pr skill makes its pass over the branch
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
+  REQ-83468274: 0xeqDjC8CkiLRmCr-dN6t8s5D2O-vdpENUbPdIxZzpY
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+priority: medium
+relations:
+  REQ-38288492: derives_from
+  REQ-40478019: depends_on
+  REQ-83468274: depends_on
+status: approved
+text: When the ${plugin_components.pre_pr_skill} makes its pass over a branch that
+  changes a lockfile, a dependency manifest or a configuration file, the product shall
+  have the guard whose rule the file serves hold a [whole-file citation](whole_file_citation)
+  of the file, or, where no guard states such a rule, stop the pass and ask the owner
+  to create one.
+type: functional
+verification: inspection

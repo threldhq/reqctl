@@ -67,7 +67,7 @@ relations:
   REQ-38288492: depends_on
   REQ-64846889: depends_on
   REQ-75539229: depends_on
-status: approved
+status: superseded
 text: If a change touches both a file under the [corpus root](corpus_root) other than
   the baseline, in more than its [pins](pin), its [citation list](citation_list),
   the digest of each of its [whole-file citations](whole_file_citation) and the [entries](entry)

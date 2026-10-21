@@ -11,7 +11,7 @@ acceptance_criteria:
     of the file
   when: the product is asked to remove the first [item](item)'s [citation](whole_file_citation)
 assessed:
-  REQ-30061042: b7B9U8dkoUHISTdbzsklwBOuu4h10PhXjQTIUPotY20
+  REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
@@ -20,7 +20,7 @@ citations:
   fzxhli: Rl6nY-gBc5FDSv159hZrfS9ZHbe_gr3kJ58SDuWzjl4
 priority: medium
 relations:
-  REQ-30061042: depends_on
+  REQ-40478019: depends_on
 status: approved
 text: When the product is asked to remove an [item](item)'s [whole-file citation](whole_file_citation),
   naming the [item](item) and the path of the file it covers, the product shall remove

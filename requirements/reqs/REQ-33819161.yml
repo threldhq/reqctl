@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: a branch changing code that enforces a [rule of the build](rule_of_the_build)
+    a guard states, the change citing nothing
+  then: the guard is cited over the change before the pass goes on
+  when: the pre-pr skill makes its pass over the branch
+- given: a branch changing code that enforces a [rule of the build](rule_of_the_build)
+    no guard states
+  then: the pass stops, and the owner is asked to create the governing statement
+  when: the pre-pr skill makes its pass over the branch
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-54415118: nySID1kfSK1ITdGCWDx2ciwUjpRtUDb59-gcdJTIu9o
+  REQ-83468274: 0xeqDjC8CkiLRmCr-dN6t8s5D2O-vdpENUbPdIxZzpY
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  rule_of_the_build: vGcgrKfm0qFsbGTFdzp0g7Qi0vaPrTxB33xmTcTpH9Y
+priority: medium
+relations:
+  REQ-38288492: derives_from
+  REQ-54415118: supersedes
+  REQ-83468274: depends_on
+status: approved
+text: When the ${plugin_components.pre_pr_skill} makes its pass over a branch, the
+  product shall cite the guard stating the rule over each change to code enforcing
+  a [rule of the build](rule_of_the_build).
+type: functional
+verification: inspection

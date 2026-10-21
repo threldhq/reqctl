@@ -1,0 +1,57 @@
+acceptance_criteria:
+- given: a Python [statement citation](statement_citation) over a line calling a function
+    of the [code base](code_base)
+  then: the product reports the [citation](statement_citation) as a problem
+  when: the body of that function changes and trace is run
+- given: a Python [statement citation](statement_citation) over a line calling a function
+    that calls a second function of the [code base](code_base)
+  then: the product reports the [citation](statement_citation) as a problem
+  when: the body of the second function changes and trace is run
+- given: a Python [statement citation](statement_citation) over a line reading a module-level
+    constant of the [code base](code_base)
+  then: the product reports the [citation](statement_citation) as a problem
+  when: the constant's value changes and trace is run
+- given: a function of the [code base](code_base) called by the cited lines of two
+    [items](item)
+  then: the product reports the [citation](statement_citation) of each [item](item)
+    as a problem
+  when: its body changes and trace is run
+- given: a Python [statement citation](statement_citation) over a line calling a function
+    of a library outside the [code base](code_base)
+  then: the [citation digest](citation_digest) is unchanged
+  when: the library changes
+- given: a [statement citation](statement_citation) over lines of a file that is not
+    Python
+  then: the [citation digest](citation_digest) takes in the covered lines and no other
+  when: trace is run
+- given: a Python [statement citation](statement_citation) over a line naming a class
+    of the [code base](code_base)
+  then: the product reports the [citation](statement_citation) as a problem
+  when: a method of that class changes and trace is run
+- given: a Python [statement citation](statement_citation) over a line calling a function
+    chosen by a name built while the code runs
+  then: the function's definition is not taken in
+  when: the product takes the [citation digest](citation_digest)
+- given: a Python [statement citation](statement_citation) over a line calling a function
+    of the [code base](code_base)
+  then: the product reports no problem for the [citation](statement_citation)
+  when: only the spacing of that function changes and trace is run
+assessed:
+  REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
+  REQ-31471659: hKmNhTkU9xOAFkZt4GkdGC-Prnfl7nQD1cBEFSp2-so
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-15770866: constrains
+  REQ-31471659: constrains
+status: approved
+text: Where the lines a [statement citation](statement_citation) covers are Python,
+  the product shall take into the [citation digest](citation_digest), as it takes
+  the covered lines, each function, method, class and constant defined in the [code
+  base](code_base) to which a name in those lines resolves without running the code,
+  and each one to which a name in those definitions resolves in turn.
+type: functional
+verification: inspection

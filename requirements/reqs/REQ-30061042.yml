@@ -33,7 +33,7 @@ assessed:
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 priority: medium
 relations: {}
-status: approved
+status: superseded
 text: Where a file of the [code base](code_base) is in one of the ${commentless_formats},
   the product shall let an [item](item) hold a [whole-file citation](whole_file_citation)
   of the file, [pinned](pin) to the [item](item)'s [stamp](stamp) as a [statement

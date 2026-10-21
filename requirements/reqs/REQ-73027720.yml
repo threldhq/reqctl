@@ -24,7 +24,7 @@ acceptance_criteria:
   then: the product warns of it
   when: trace is run
 assessed:
-  REQ-30061042: b7B9U8dkoUHISTdbzsklwBOuu4h10PhXjQTIUPotY20
+  REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
@@ -36,7 +36,7 @@ citations:
   iy3utt: nxPQrp1WBWEUdJeF1Zjbph8SUr0_G1M1351oGHvW_CY
 priority: medium
 relations:
-  REQ-30061042: depends_on
+  REQ-40478019: depends_on
 status: approved
 text: When trace is run, the product shall warn of each approved requirement and each
   approved guard that no [statement citation](statement_citation) names and that holds

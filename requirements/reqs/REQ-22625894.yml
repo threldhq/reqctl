@@ -32,7 +32,7 @@ relations:
   REQ-54415118: constrains
   REQ-60346603: constrains
   REQ-87066486: constrains
-status: approved
+status: superseded
 text: When a skill of the product's Claude Code plugin writes a [statement citation](statement_citation),
   the product shall make the [statement citation](statement_citation) cover the code
   that decides a clause or acceptance criterion of the [item](item) it names, or,

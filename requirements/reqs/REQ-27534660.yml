@@ -1,0 +1,53 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to all, and a function that no [statement citation](statement_citation) covers
+    and no [citation digest](citation_digest) takes in
+  then: the product reports each line of the function as a problem
+  when: trace is run
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to all, and a Python helper that no [statement citation](statement_citation) covers
+    but a cited line calls by name
+  then: the product reports no line of the helper
+  when: trace is run
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to all, and a lockfile an [item](item) holds a [whole-file citation](whole_file_citation)
+    of
+  then: the product reports no line of the lockfile
+  when: trace is run
+- given: a repository whose [settings file](settings_file) states no uncited-code
+    mode, and a function no [statement citation](statement_citation) covers
+  then: the product reports no line of the function as uncited
+  when: trace is run
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to all, and a file in a folder the product skips when it scans for [statement
+    citations](statement_citation)
+  then: the product reports no line of the file
+  when: trace is run
+assessed:
+  REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  REQ-58348893: R_L-kvYuW4h9S12EVKVk7nH8C5qngGn4_QcOqeyEq8A
+  REQ-59827868: bWN38P4cOthQ3DLGYdEsIa5aVYbA0UrXVvMuAzgyR-0
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
+  uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+priority: medium
+relations:
+  REQ-40478019: depends_on
+  REQ-42668747: depends_on
+  REQ-52925332: depends_on
+  REQ-58348893: depends_on
+  REQ-59827868: depends_on
+status: approved
+text: Where ${uncited_code.check.mode} is all, when trace is run, the product shall
+  report as a problem each line of code in a file the product scans for [statement
+  citations](statement_citation) that no [statement citation](statement_citation)
+  covers, that no [citation digest](citation_digest) takes in, and that lies in no
+  file an [item](item) holds a [whole-file citation](whole_file_citation) of.
+type: functional
+verification: inspection

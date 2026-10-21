@@ -1,0 +1,60 @@
+acceptance_criteria:
+- given: each skill of the plugin that writes [statement citations](statement_citation),
+    as shipped
+  then: they direct the [statement citation](statement_citation) to cover the code
+    that decides a clause or acceptance criterion of the [item](item) it names, or
+    the code stating the value of the parameter, [data item](data_item) or [entry](entry)
+    it names
+  when: its steps for citing code are read
+- given: a Python function the code deciding a clause calls by name
+  then: no further [statement citation](statement_citation) of the [item](item) is
+    written over the function, since the [citation digest](citation_digest) takes
+    it in
+  when: a skill of the plugin cites the [item](item)
+- given: a JavaScript function the code deciding a clause calls
+  then: a [statement citation](statement_citation) of the [item](item) covers the
+    function
+  when: a skill of the plugin cites the [item](item)
+- given: a [data item](data_item) whose [entries](entry) one part of the code states
+    and another part reads
+  then: the [statement citation](statement_citation) covers the code stating the [entries](entry)
+  when: a skill of the plugin cites the [data item](data_item)
+assessed:
+  REQ-17608335: ejFjhGoCg5c7xx31BmDLrVdrs9rLBqVkDgiXkKKHH7c
+  REQ-22625894: pLUy8k7jMwKkug4noDETeHGqixCrlJlfPHGxuzkXUc0
+  REQ-33202540: Y-kVcYdmW6zTcfyPW0gQbqERQlV0ZOk6KlJTbpszSrM
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-41552912: G_9UzXwu1WULxz5ME-VT-ehmIqGopOqbIZlOQDskX7s
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  REQ-59827868: bWN38P4cOthQ3DLGYdEsIa5aVYbA0UrXVvMuAzgyR-0
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-73495055: cPNC8izAHGTlO-pV3PMxG7rA_QlzF3Mw2rayt2wDKVs
+  REQ-87066486: AtzPEAcAbJ1vtpLCqCZnXdrS-wd-THi3TvLIgx4VcF0
+  REQ-88203622: wlZ9orsr9c7qa3HPlqh3Kyna4Oym34RUgGqMdGCWHwk
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-17608335: depends_on
+  REQ-22625894: supersedes
+  REQ-33202540: depends_on
+  REQ-38288492: derives_from
+  REQ-41552912: constrains
+  REQ-52925332: depends_on
+  REQ-59827868: depends_on
+  REQ-60346603: constrains
+  REQ-73495055: depends_on
+  REQ-87066486: constrains
+  REQ-88203622: depends_on
+status: approved
+text: When a skill of the product's Claude Code plugin writes a [statement citation](statement_citation),
+  the product shall make the [statement citation](statement_citation) cover the code
+  that decides a clause or acceptance criterion of the [item](item) it names, or,
+  for a parameter, [data item](data_item) or [entry](entry), the code stating its
+  value, together with each line of code that code names, directly or through what
+  those lines name, which no [citation digest](citation_digest) takes in.
+type: functional
+verification: inspection
