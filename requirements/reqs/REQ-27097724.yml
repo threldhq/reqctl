@@ -9,22 +9,31 @@ acceptance_criteria:
   then: the product reports no line of that function
   when: trace is given a base branch
 - given: a repository whose [settings file](settings_file) sets the uncited-code mode
-    to changed_lines, and an uncited line the branch moves to another place in its
-    file without changing its text
+    to changed_lines, and an uncited line the branch moves past another line of code
+    in its file without changing its text
   then: the product reports the moved line as a problem
   when: trace is given a base branch
 - given: a repository whose [settings file](settings_file) sets the uncited-code mode
     to changed_lines, and an uncited function the branch moves to another file
   then: the product reports each moved line as a problem
   when: trace is given a base branch
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to changed_lines, and a branch adding only blank lines or comment lines above
+    an uncited line of code
+  then: the product reports no problem for that line
+  when: trace is given a base branch
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to changed_lines, and a branch adding an uncited line to an [unknown-syntax file](unknown_syntax_file)
+  then: the product reports no line of the file
+  when: trace is given a base branch
 assessed:
   REQ-17608335: ejFjhGoCg5c7xx31BmDLrVdrs9rLBqVkDgiXkKKHH7c
-  REQ-27534660: 0hcOvPj91rV96Lzr58zqTrYzvBbDbdoqZyHuZ65aQzc
+  REQ-27534660: OcqGUyoB-NORU6eCVbYC54QnZiOWTAQq5gWGC73tN7I
   REQ-31471659: hKmNhTkU9xOAFkZt4GkdGC-Prnfl7nQD1cBEFSp2-so
   REQ-36428128: pWyff7uDBZIKbIhTGaXFVm15vu9rsKCTSN2VWnceoec
   REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
   REQ-56906371: wq3BL0IRTLVVKuOe3drLtf2CYn6JfDGY337Kk20tmfM
-  REQ-58348893: R_L-kvYuW4h9S12EVKVk7nH8C5qngGn4_QcOqeyEq8A
+  REQ-58348893: GQ3L2sQGRlkWYuSQBNYBploS5pLF6smXPVr4ab0sTMY
   REQ-59827868: bWN38P4cOthQ3DLGYdEsIa5aVYbA0UrXVvMuAzgyR-0
   REQ-97409889: RWCU92P-iWbpmu8wCmpP1ndrZvKVFL_Kc1ZMWSdzeus
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
@@ -33,6 +42,7 @@ assessed:
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
   uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
+  unknown_syntax_file: gEcZshhwJdScPVZog-WdJ03SbLvkNT7Xis63qXJAL44
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 citations:
   a5rd75: 4RbDMRK1kiXF8jYa4IsUcr6lTOnKKpGPZuLqZwpZNGQ
@@ -53,11 +63,11 @@ relations:
   REQ-97409889: depends_on
 status: approved
 text: Where ${uncited_code.check.mode} is changed_lines, when trace is given a base
-  branch, the product shall report as a problem each line of code the branch adds,
-  changes, or moves to another place in its file or to another file, in a file the
-  product scans for [statement citations](statement_citation), that no [statement
-  citation](statement_citation) covers, that no [citation digest](citation_digest)
-  takes in, and that lies in no file an [item](item) holds a [whole-file citation](whole_file_citation)
-  of.
+  branch, the product shall report as a problem each line of code the branch adds
+  or changes, or moves past another line of code or from another file, in a file the
+  product scans for [statement citations](statement_citation), other than an [unknown-syntax
+  file](unknown_syntax_file), that no [statement citation](statement_citation) covers,
+  that no [citation digest](citation_digest) takes in, and that lies in no file an
+  [item](item) holds a [whole-file citation](whole_file_citation) of.
 type: functional
 verification: inspection

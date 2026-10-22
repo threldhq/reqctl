@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to changed_lines, and a branch adding an uncited line to an [unknown-syntax file](unknown_syntax_file)
+  then: the product reports the file once, stating that its comment syntax is unknown
+    and naming both remedies
+  when: trace is given a base branch
+assessed:
+  REQ-27097724: BlP6FCylGOKS6CSQXkt9Ye-Y7VHUMbpx44H772gdKz8
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
+  uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
+  unknown_syntax_file: gEcZshhwJdScPVZog-WdJ03SbLvkNT7Xis63qXJAL44
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+priority: medium
+relations:
+  REQ-27097724: constrains
+status: approved
+text: Where ${uncited_code.check.mode} is changed_lines, when trace is given a base
+  branch, the product shall report as one problem each [unknown-syntax file](unknown_syntax_file)
+  the product scans for [statement citations](statement_citation) in which the branch
+  adds or changes a line of code, or moves one past another line of code or from another
+  file, that no [statement citation](statement_citation) covers and no [citation digest](citation_digest)
+  takes in, and of which no [item](item) holds a [whole-file citation](whole_file_citation),
+  stating that the product knows no comment syntax for the file and naming as remedies
+  citing the file whole and adding the file's comment syntax to the product.
+type: functional
+verification: inspection

@@ -23,11 +23,15 @@ acceptance_criteria:
     citations](statement_citation)
   then: the product reports no line of the file
   when: trace is run
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to all, and an uncited [unknown-syntax file](unknown_syntax_file)
+  then: the product reports no line of the file
+  when: trace is run
 assessed:
   REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
   REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
   REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
-  REQ-58348893: R_L-kvYuW4h9S12EVKVk7nH8C5qngGn4_QcOqeyEq8A
+  REQ-58348893: GQ3L2sQGRlkWYuSQBNYBploS5pLF6smXPVr4ab0sTMY
   REQ-59827868: bWN38P4cOthQ3DLGYdEsIa5aVYbA0UrXVvMuAzgyR-0
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
@@ -35,6 +39,7 @@ assessed:
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
   uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
+  unknown_syntax_file: gEcZshhwJdScPVZog-WdJ03SbLvkNT7Xis63qXJAL44
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 citations:
   bc223j: hrx5PcvxyKUORE36_iCVhHBx4agTOUiv-dEH4lbSmls
@@ -50,8 +55,9 @@ relations:
 status: approved
 text: Where ${uncited_code.check.mode} is all, when trace is run, the product shall
   report as a problem each line of code in a file the product scans for [statement
-  citations](statement_citation) that no [statement citation](statement_citation)
-  covers, that no [citation digest](citation_digest) takes in, and that lies in no
-  file an [item](item) holds a [whole-file citation](whole_file_citation) of.
+  citations](statement_citation), other than an [unknown-syntax file](unknown_syntax_file),
+  that no [statement citation](statement_citation) covers, that no [citation digest](citation_digest)
+  takes in, and that lies in no file an [item](item) holds a [whole-file citation](whole_file_citation)
+  of.
 type: functional
 verification: inspection
