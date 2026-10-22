@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-21927376: QwR1cNzGEntfizUbKUBUYHNjHn-hEBB7G02Uyv0f_bg
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+priority: medium
+relations:
+  REQ-12222066: derives_from
+  REQ-21927376: constrains
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session takes a gap in the owner's words as out of scope or as a [question for the
+  owner](question_for_the_owner), never as a statement it supplies.
+type: functional
+verification: inspection

@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-93964176: AH9x2CxZXnH7t3B6jR134283VfCfCbFnSTY4cNFkv7k
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-93964176: derives_from
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session relates a statement refining an existing requirement to that requirement
+  with derives_from.
+type: functional
+verification: inspection
