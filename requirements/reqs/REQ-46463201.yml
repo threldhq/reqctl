@@ -14,6 +14,8 @@ assessed:
   uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
   unknown_syntax_file: gEcZshhwJdScPVZog-WdJ03SbLvkNT7Xis63qXJAL44
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  aoss24: qlADq_EeSwkTX664UEKqxwkfnO_fsj7p8t4qAgKx9R0
 priority: medium
 relations:
   REQ-27097724: constrains

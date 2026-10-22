@@ -8,8 +8,8 @@ from pathlib import PurePosixPath
 from . import cite, corpus, settings
 from .reach import Reach
 
-# @req> REQ-27534660@0hcOvPj91rV9 zu7qeg
-MODES = ("all", "changed_lines")
+# @req> REQ-27534660@OcqGUyoB-NOR zu7qeg
+MODES = settings.MODES[1:]
 # @req> uncited_code_exemptions@zlVU6_sD_Cmy 7z5oma
 EXEMPTIONS = {
     "claude_md": {"files": "any file named CLAUDE.md in any folder"},
@@ -24,6 +24,8 @@ EXEMPT_FILES = {
     "readme": re.compile(r"(?:^|/)README(?:\.[^/]*)?$"),
 }
 HASHED = (".yml", ".yaml", ".toml", ".sh", ".cfg", ".txt")
+# @req> commentless_formats.json@zjmZ8jE-Au2_ yjmqbb
+COMMENTLESS = (".json",)
 SCRIPT = (("//", None), ("/*", "*/"))
 MARKUP = (("<!--", "-->"),)
 UNREAD = (tokenize.COMMENT, tokenize.NL, tokenize.NEWLINE, tokenize.INDENT,
@@ -84,7 +86,7 @@ def _script(text):
     return imports | _fenced(text, SCRIPT, True)
 
 
-# @req> REQ-58348893@R_L-kvYuW4h9 yvnqdz
+# @req> REQ-58348893@GQ3L2sQGRlkW yvnqdz
 def code_lines(path, text):
     suffix = PurePosixPath(path).suffix
     lines = _lines(text)
@@ -95,8 +97,10 @@ def code_lines(path, text):
         quiet |= _script(text)
     elif suffix in (".md", ".html"):
         quiet |= _fenced(text, MARKUP, False)
+        close = cite._front(text)
         quiet |= {number for number, line in enumerate(lines, 1)
-                  if 1 < number < cite._front(text) and line.lstrip().startswith("#")}
+                  if 1 < number < close and line.lstrip().startswith("#")}
+        quiet |= {1, close} if close else set()
     elif suffix in HASHED:
         quiet |= {number for number, line in enumerate(lines, 1)
                   if line.lstrip().startswith("#")}
@@ -109,6 +113,10 @@ def exempt(path):
                                        for entry in EXEMPTIONS)
 
 
+def unknown_syntax(path):
+    return PurePosixPath(path).suffix not in (*cite.COMMENTS, *HASHED, *COMMENTLESS)
+
+
 def _moved(path, was, now):
     before, after = code_lines(path, was), code_lines(path, now)
     was_lines, now_lines = _lines(was), _lines(now)
@@ -119,7 +127,7 @@ def _moved(path, was, now):
             for at in range(first, last)}
 
 
-# @req> REQ-27097724@_Ou3SW4xVhzd a5rd75
+# @req> REQ-27097724@BlP6FCylGOKS a5rd75
 def _changed(root, base, texts):
     fork = cite._git(root, "merge-base", "HEAD", base).strip()
     named = cite._git(root, "-c", "core.quotePath=false", "diff", "--name-only",
@@ -152,7 +160,7 @@ def _remedy(path, first, last):
     return f"have the item governing it hold the whole file with reqctl tag {path} --req UID"
 
 
-# @req> REQ-27534660@0hcOvPj91rV9 tml2jy
+# @req> REQ-27534660@OcqGUyoB-NOR tml2jy
 def problems(tree, root, citations, base=None):
     mode = settings.table(settings.read(root)[1], "uncited_code")["check"]["mode"]
     if mode not in MODES or (mode == "changed_lines" and not base):
@@ -165,17 +173,27 @@ def problems(tree, root, citations, base=None):
         covered |= reach.reached(citation["path"], citation["lines"])
     whole = {path for item in corpus.items(tree)
              for path in corpus.mapping(item.data, corpus.WHOLE_FILES)}
-    # @req> REQ-27097724@_Ou3SW4xVhzd jo2uxv
+    # @req> REQ-27097724@BlP6FCylGOKS jo2uxv
     changed = _changed(root, base, texts) if mode == "changed_lines" else None
     found = []
     for path, text in sorted(texts.items()):
         if text is None or path in whole or exempt(path):
             continue
         lines = code_lines(path, text)
-        # @req> REQ-27097724@_Ou3SW4xVhzd x7jy55
+        # @req> REQ-27097724@BlP6FCylGOKS x7jy55
         if changed is not None:
             lines = [line for line in lines if line in changed.get(path, ())]
-        for first, last in _spans([line for line in lines if (path, line) not in covered]):
+        # @req+ REQ-33946954@dE-TCnSywwn3 u54yfr
+        # @req+ REQ-46463201@OD-ZDKioCyPa aoss24
+        uncovered = [line for line in lines if (path, line) not in covered]
+        if uncovered and unknown_syntax(path):
+            found.append(f"{path}: reqctl knows no comment syntax for this file -- have the "
+                         f"item governing it hold the whole file with reqctl tag {path} "
+                         "--req UID, or add its comment syntax to reqctl")
+            continue
+        # @req- aoss24
+        # @req- u54yfr
+        for first, last in _spans(uncovered):
             found.append(f"{path}:{first}-{last}: no statement citation covers this code "
                          f"-- {_remedy(path, first, last)}, or delete it")
     return found

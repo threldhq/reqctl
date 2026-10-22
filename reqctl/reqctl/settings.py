@@ -48,6 +48,7 @@ SHIPPED = {"review_limits": REVIEW_LIMITS, "challenge_bounds": CHALLENGE_BOUNDS,
            "portal_token_permissions": PORTAL_TOKEN_PERMISSIONS,
            "uncited_code": UNCITED_CODE}
 # @req- 7yxrtp
+MODES = ("off", "all", "changed_lines")
 
 
 def path(root):
@@ -91,6 +92,10 @@ def faults(document):
             # @req> REQ-78887253@ZroFZuS_zv0q yaohat
             found.append(f"{key}: {value!r} is not of the YAML type of the "
                          f"{shipped!r} the product ships")
+        # @req> REQ-96727029@6dPRzcJtt-s- hrxovc
+        elif at == ("uncited_code", "check", "mode") and value not in MODES:
+            found.append(f"{key}: {value!r} is not a mode -- state off, all or "
+                         "changed_lines")
         # @req> REQ-21585959@QkioE_Ciddeh q7jgw2
         elif at[-1] == "quantity" and value < 1:
             found.append(f"{key}: {value!r} is not a whole number of at least "

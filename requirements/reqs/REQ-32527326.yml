@@ -38,7 +38,7 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
-  44gp2u: Mv5tRAFB8w5FdX-1u1FGA3w6rrPVHF1wlAmJwKfR7sQ
+  44gp2u: -q_YOwpFaF3w1xAVSOW5i51kIZgG0pXHMZdHY_3IBc8
 priority: medium
 relations:
   REQ-62905646: depends_on

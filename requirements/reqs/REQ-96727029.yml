@@ -9,6 +9,8 @@ assessed:
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
   uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
   uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
+citations:
+  hrxovc: 5nFqfGUDJ5KQfWYIJ7J9yLO0QCL-xezDESUAp84AzCg
 priority: medium
 relations:
   REQ-40447106: constrains
