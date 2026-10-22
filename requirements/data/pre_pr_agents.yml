@@ -1,4 +1,6 @@
 assessed: {}
+citations:
+  hqp6ec: B4jAgRgsRX4FfPR-K1Nxqz_d68ShgZqlcprLOekLBho
 entries:
   silent_failure_hunter:
     definition: the pr-review-toolkit:silent-failure-hunter agent, run over the branch's

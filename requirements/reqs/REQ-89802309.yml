@@ -5,6 +5,8 @@ assessed:
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
   pre_pr_agents: DIDghQ2eUuO2v_6eDDo4Lovv4SVCueefyMViGMhnSpE
   pre_pr_agents.silent_failure_hunter: qw1sCoUXG54ZzJx7q-inzm2Ki1_grDLYgK731yY8410
+citations:
+  zuhffx: hG10RwDMbynhDgz-6tjmHrTQEtCnbgzFP4vXcs9BeMY
 priority: medium
 relations:
   REQ-38288492: depends_on

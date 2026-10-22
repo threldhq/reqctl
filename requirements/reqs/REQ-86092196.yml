@@ -4,6 +4,8 @@ assessed:
   REQ-50194960: i3SEmJi1QYT5QMthWt4e4omYPilwDc3vIToyWO2nqS8
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+citations:
+  3iyp7h: blAIMF3aPY5PMjI3GpzICx_RxG-j8I6vX0VB8yTvrYM
 priority: medium
 relations:
   REQ-38288492: depends_on

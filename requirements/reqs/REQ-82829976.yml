@@ -4,6 +4,8 @@ assessed:
   REQ-76006040: TkSC3b2dW_YSz1HpuvfbOlzgAtJDDu2VPO5sA0qmiqc
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+citations:
+  xh5md3: ql0KnoA6jsYdZ3Kjj1GkGIhnxJZbHH-daYZ0N7OqPHw
 priority: medium
 relations:
   REQ-38288492: depends_on
