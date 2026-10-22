@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-51001407: CLFQHU6-XTzdaf6D58L1bXwp6PCYgfrsInvCbsS96OI
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-51001407: derives_from
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session states in the pull request, of a step of its pass that found nothing, that
+  it ran.
+type: functional
+verification: inspection

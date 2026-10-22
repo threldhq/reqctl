@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: an agent the pass names does not resolve
+  then: the session stops the pass, asks the owner, and runs no other agent in its
+    place
+  when: the pass reaches the step that runs it
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+priority: medium
+relations:
+  REQ-12222066: derives_from
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session, where an agent the pass names does not resolve, stops the pass and puts
+  a [question for the owner](question_for_the_owner) rather than running a different
+  agent.
+type: functional
+verification: inspection
