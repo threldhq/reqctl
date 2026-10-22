@@ -1,24 +1,38 @@
 acceptance_criteria:
-- given: an example under a licence that permits copies on condition of attribution
-  then: the session copies it and meets the condition in the third-party notices file
+- given: an example under a licence whose SPDX identifier is one of the ${copyable_licences}
+    and is compatible with the receiving repository's licence
+  then: the session copies it and meets the licence's conditions in the third-party
+    notices file
   when: the session would copy its code
-- given: an example in a repository that states no licence
+- given: an example in a repository that states no licence, or whose licence resolves
+    to no SPDX identifier
   then: the session copies none of it and writes its own code from the idea
   when: the session would copy its code
-- given: an example under a copyleft licence
+- given: an example under a copyleft licence, weak copyleft included
   then: the session copies none of it and writes its own code from the idea
   when: the session would copy its code
+- given: an example under one of the ${copyable_licences} whose compatibility with
+    the receiving repository's licence the session cannot tell
+  then: the session copies none of it and writes its own code from the idea
+  when: the session would copy its code
+- given: a receiving repository whose licence resolves to no SPDX identifier
+  then: the session copies none of it and writes its own code from the idea
+  when: the session would copy an example's code
 assessed:
   REQ-83654288: zCIRC3g5z-mwD2GXDwkBw8VmavPjDugWRDiFCWNB4ic
+  copyable_licences: 2z8od0kKJ3tpyS7cDuBXiocxaTnrmOSTAcqaD5VDR1Q
+  copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
 priority: medium
 relations:
   REQ-83654288: depends_on
 status: approved
-text: When the ${plugin_components.implement_skill} finds a best-in-class example,
-  the product shall have the session copy the example's code, unchanged or adapted,
-  only where the licence of the repository holding the example permits the copy on
-  conditions the repository receiving it can meet.
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session copies a best-in-class example's code, unchanged or adapted, only where
+  the licence of the repository holding the example resolves to the SPDX identifier
+  of one of the ${copyable_licences}, the licence of the repository receiving the
+  copy resolves to an SPDX identifier, and the first licence is compatible with the
+  second.
 type: functional
 verification: inspection

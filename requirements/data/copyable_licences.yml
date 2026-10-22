@@ -1,0 +1,18 @@
+assessed: {}
+entries:
+  apache_2_0:
+    definition: the licence whose SPDX identifier is Apache-2.0
+  bsd_2_clause:
+    definition: the licence whose SPDX identifier is BSD-2-Clause
+  bsd_3_clause:
+    definition: the licence whose SPDX identifier is BSD-3-Clause
+  isc:
+    definition: the licence whose SPDX identifier is ISC
+  mit:
+    definition: the licence whose SPDX identifier is MIT
+  zero_bsd:
+    definition: the licence whose SPDX identifier is 0BSD
+kind: data
+name: copyable_licences
+status: approved
+text: the licences under which the implement skill may copy an example's code
