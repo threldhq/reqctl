@@ -14,5 +14,5 @@ entries:
     definition: the licence whose SPDX identifier is 0BSD
 kind: data
 name: copyable_licences
-status: draft
+status: approved
 text: the licences under which the implement skill may copy an example's code
