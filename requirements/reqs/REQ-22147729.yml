@@ -4,6 +4,8 @@ assessed:
   REQ-42935523: AScfCOLEPzJsxrC7PBQo43U6lz5XuG00nRYFzVZfSis
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  onlsgo: hv2waukE720NGP7jfJz8OM5hOOQJeUUCIRrZGJynEt0
 priority: medium
 relations:
   REQ-38288492: depends_on

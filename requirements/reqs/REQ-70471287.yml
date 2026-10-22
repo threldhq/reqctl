@@ -5,6 +5,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+citations:
+  mqesje: sJaWInl3Kn-OGuvUDgJcyw7omxp1hlDTkWxpIhvTil0
 priority: medium
 relations:
   REQ-12222066: derives_from

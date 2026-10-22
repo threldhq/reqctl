@@ -4,6 +4,8 @@ assessed:
   REQ-61952013: _qXMtY79bXaYfCjB9gRC1sZIJraR2ZDvptGSXywIWMU
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  tze5ch: 6YTKYh9-SW8ph75Bbs8xNvJ5FG_I-0JzfQa7jCt1aSw
 priority: medium
 relations:
   REQ-38288492: depends_on

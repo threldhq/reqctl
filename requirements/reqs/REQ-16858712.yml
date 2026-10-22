@@ -5,6 +5,8 @@ assessed:
   REQ-85764802: N7tHuybyVI0x3-1pIFtmjcWDttp7UCIf5RuGJ2_t4bg
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  bh4gxa: -ZoZapEg6z7brcQf-9SR-NbLj4RkamwTruvuqk9ezRk
 priority: medium
 relations:
   REQ-38288492: depends_on

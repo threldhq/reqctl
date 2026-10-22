@@ -5,6 +5,8 @@ assessed:
   mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  xwvit4: svTFYjzITZriHRxUPqngjSd2A2yl5Ryb6klIx3Ed1tc
 priority: medium
 relations:
   REQ-38288492: depends_on

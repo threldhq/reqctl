@@ -8,6 +8,8 @@ assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  btucoz: fNb8CS1oJ51meN6lCmgfOWgjd9IDPa9Q8MuafCPqFe0
 priority: medium
 relations:
   REQ-23559711: depends_on

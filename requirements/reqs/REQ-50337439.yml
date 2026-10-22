@@ -5,6 +5,8 @@ assessed:
   REQ-67566291: gxQ9gY4t9fkVeH0WqqaEAw5HTmhi7tWgLxJWbI7S240
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  4vulur: kWvt1uI5MVSjV5qrW7itnEGtLZUreKC4FKmSOEBO5lc
 priority: medium
 relations:
   REQ-22686458: depends_on

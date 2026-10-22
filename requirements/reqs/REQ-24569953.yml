@@ -4,6 +4,7 @@ acceptance_criteria:
   when: the names the findings check accepts are compared against the prompt
 assessed: {}
 citations:
+  kflapp: qjwjmwu6fvES3gRl8o7yAe3hW4kBkhktwY7hR1JzYM0
   ssc6p2: 2KNpnaRWxmAMORPICG346Fnwb87OlNWQGWqPMxYr03A
 priority: medium
 relations: {}

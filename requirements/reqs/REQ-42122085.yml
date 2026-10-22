@@ -5,6 +5,8 @@ assessed:
   REQ-83702299: kBGzIwAyKDHLaQr2uEZDpQDAHRtNn5Lkk6r0WFUdTvA
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  6ytpbz: 19a-FFMgnEmxdEKyN5qscpePTzFdjVkgn9GfwSZiLHY
 priority: medium
 relations:
   REQ-12222066: depends_on
