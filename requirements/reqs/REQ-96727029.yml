@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) states the uncited-code
+    mode as a value other than off, all or changed_lines
+  then: the command is refused, naming the file, the key, the value, and off, all
+    and changed_lines
+  when: a command reads the [settings file](settings_file)
+assessed:
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+  uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
+  uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
+priority: medium
+relations:
+  REQ-40447106: constrains
+status: approved
+text: If a repository's [settings file](settings_file) states for ${uncited_code.check.mode}
+  a value other than off, all or changed_lines, then the product shall refuse each
+  command that reads the [settings file](settings_file), naming the file, the key,
+  its value, and off, all and changed_lines as the values it accepts.
+type: functional
+verification: inspection

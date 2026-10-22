@@ -10,8 +10,8 @@ acceptance_criteria:
   then: no line of the [test](test) is reported
   when: the product checks the [code base](code_base) for uncited code
 assessed:
-  REQ-27097724: _Ou3SW4xVhzd0GjUC9e9sRCzK14TM6rbwkKw_e8om_4
-  REQ-27534660: 0hcOvPj91rV96Lzr58zqTrYzvBbDbdoqZyHuZ65aQzc
+  REQ-27097724: BlP6FCylGOKS6CSQXkt9Ye-Y7VHUMbpx44H772gdKz8
+  REQ-27534660: OcqGUyoB-NORU6eCVbYC54QnZiOWTAQq5gWGC73tN7I
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M

@@ -1,0 +1,12 @@
+assessed:
+  commentless_formats: cVPhw5hQwyUGb9ILeidRO2QKQe0GITBz6lOxlnyAeUU
+  commentless_formats.*: 1i5BXhUNKrqkdy_DHOGkVg9eejiXqrs9Le7aRSS6d_4
+entries:
+  unknown_syntax_file:
+    aliases:
+    - unknown-syntax files
+    definition: A file whose name carries no suffix, or carries a suffix naming neither
+      a format whose comment lines the product recognises nor one of the ${commentless_formats}.
+    word: unknown-syntax file
+kind: term
+status: approved

@@ -18,10 +18,15 @@ acceptance_criteria:
 - given: a file holding a constant assignment
   then: the line of the assignment is taken as code
   when: the product checks the file for uncited code
+- given: a Markdown file opening with [front matter](front_matter)
+  then: neither the line opening nor the line closing the [front matter](front_matter)
+    is taken as code
+  when: the product checks the file for uncited code
 assessed:
-  REQ-27097724: _Ou3SW4xVhzd0GjUC9e9sRCzK14TM6rbwkKw_e8om_4
-  REQ-27534660: 0hcOvPj91rV96Lzr58zqTrYzvBbDbdoqZyHuZ65aQzc
+  REQ-27097724: BlP6FCylGOKS6CSQXkt9Ye-Y7VHUMbpx44H772gdKz8
+  REQ-27534660: OcqGUyoB-NORU6eCVbYC54QnZiOWTAQq5gWGC73tN7I
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
+  front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
   multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
@@ -33,8 +38,9 @@ relations:
 status: approved
 text: When the product checks a file for uncited code, the product shall take as code
   every line of the file except a blank line, a line holding nothing but all or part
-  of a comment, and a line within a [code statement](code_statement) that imports
-  another module in a language whose files the product reads [statement citations](statement_citation)
+  of a comment, the line opening and the line closing a Markdown file's [front matter](front_matter),
+  and a line within a [code statement](code_statement) that imports another module
+  in a language whose files the product reads [statement citations](statement_citation)
   in.
 type: functional
 verification: inspection
