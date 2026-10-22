@@ -4,6 +4,8 @@ assessed:
   REQ-51001407: CLFQHU6-XTzdaf6D58L1bXwp6PCYgfrsInvCbsS96OI
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+citations:
+  n6qbmv: PaaFrLxBLfXbhzUfT7SbI_ci3m_kKcOpCKO3v2asN-Q
 priority: medium
 relations:
   REQ-38288492: depends_on

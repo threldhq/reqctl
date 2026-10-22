@@ -13,28 +13,37 @@ description: >
 <!-- @req> REQ-38288492@4l6tMNjp19tH twgacs -->
 # Pre-PR
 
-Run the steps in order and fix what each one finds before starting the next.
-A finding you defer is a finding CI catches on a paid runner, or does not catch
-at all.
+<!-- @req> REQ-76006040@TkSC3b2dW_YS fz5nx6 -->
+Run the steps of the pass in the order this skill gives them.
 
-Step 3 uses a plugin agent. If it will not resolve, **stop and ask the
-owner** -- do not substitute a different agent.
+<!-- @req> REQ-82829976@GA6KvnJAa1jt xh5md3 -->
+Fix what a step finds before starting the next step.
 
-Every agent in this pass has tool access that could write, whatever its own
-prompt says it will do. Record `git status` and `git rev-parse HEAD` before
-each step and compare both after: a clean tree alone says nothing, because it
-is equally what a committed change leaves behind. What an agent left is its own
-doing and not a finding -- revert it and read the report. Neither check reaches
-an ignored path or anything outside the repository, and worktree isolation is
-not the answer either: the worktree came up on the repository's head rather
-than the branch under review, so the agent would read the wrong code.
+<!-- @req+ REQ-21326520@Xe7THRpwH02F f4rorg -->
+Where an agent the pass names does not resolve, stop the pass and put a
+question for the owner; never run a different agent in its place.
+<!-- @req- f4rorg -->
 
-## 1 -- Gates
+<!-- @req+ REQ-24229583@UrNzYDzLB7cC imqndm -->
+Before each step that runs an agent, record the output of `git status` and the
+commit HEAD names (`git rev-parse HEAD`).
+<!-- @req- imqndm -->
 
-First: every behavioural change on the branch cites its governing approved
-requirement -- run `reqctl trace`, then read the diff for changes carrying no
-`@req` tag. A behavioural change no approved requirement governs stops the
-pass; ask the owner to create one.
+<!-- @req+ REQ-97146077@4hRJH8jQmcjj 5i3pez -->
+After each step that runs an agent, compare both with what was recorded before
+that step.
+<!-- @req- 5i3pez -->
+
+<!-- @req+ REQ-83623105@AeUsg7xQ9X_V 6nhtiz -->
+Set aside what an agent left -- `git reset --soft` to the commit recorded
+before the step, then `git stash` -- rather than taking it as a finding.
+<!-- @req- 6nhtiz -->
+
+<!-- @req+ REQ-52512923@Yft4Zq-0-DMZ abvyex -->
+Run `reqctl trace` and read the branch's diff for each behavioural change. On
+finding one no approved requirement governs, stop the pass and put a question
+for the owner asking that one be created.
+<!-- @req- abvyex -->
 
 <!-- @req+ REQ-33819161@O5VukwcHBX9h f7v7yc -->
 Code enforcing a rule of the build cites the approved `GUARD` stating that
@@ -70,46 +79,55 @@ they are more than a session recalls, and recalling them is how a run reports
 green having invoked the wrong thing.
 <!-- @req- bd2fgi -->
 
-Read what it skipped. Every skip states its reason, and one of them --
-provisioning, or a tool absent here -- means that step is only checked by CI.
+<!-- @req> REQ-50194960@i3SEmJi1QYT5 kqwkzf -->
+Read each step the gates skipped, with the reason stated for it.
 
-## 2 -- Succinctness
+<!-- @req+ REQ-86092196@9J9t699MENdr 3iyp7h -->
+Take a step the gates skipped for provisioning, or for a tool absent from the
+session, as checked only by CI.
+<!-- @req- 3iyp7h -->
 
-`/simplify` over the branch diff.
+<!-- @req+ REQ-54304000@TEvCMLPewLpu nd77dd -->
+State in the pull request each step the gates skipped and the reason stated for
+it.
+<!-- @req- nd77dd -->
 
-Succinctness outranks simplicity and maintainability. Reject any suggestion
-that buys clarity with more code, more names, or more indirection -- that is
-the trade most simplifiers are tuned to make.
+<!-- @req> REQ-28817717@8Xdz-kSb63h1 rf66iu -->
+Run `/simplify` over the branch's diff.
 
-## 3 -- Silent failure
+<!-- @req> REQ-95204218@9MzEJ54_1PzP uqkkgl -->
+Rank succinctness above simplicity and maintainability.
 
-The `pr-review-toolkit:silent-failure-hunter` agent over the branch diff.
-Sonnet.
+<!-- @req> REQ-80081791@-tGzsJetLhFp r3gd6k -->
+Reject a suggestion of `/simplify` that adds code, names or indirection.
 
-`reqctl` and the requirements-guard hook are gates. A gate that returns allowed
-when it errors is worse than no gate, and nothing else in this pass looks for
-that.
-
-## 4 -- Comments
+<!-- @req+ pre_pr_agents.silent_failure_hunter@g1C5-8nPZF5R hqp6ec -->
+<!-- @req+ REQ-89802309@scSvke1X3gFa zuhffx -->
+Run the `pr-review-toolkit:silent-failure-hunter` agent over the branch's diff
+<!-- @req- hqp6ec -->
+on `claude-sonnet-5-5`.
+<!-- @req- zuhffx -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz w4p2zx -->
 `python .github/guards/comment_budget.py --max 0`, where the repository
 carries it; where it does not, this step has nothing to run.
 <!-- @req- w4p2zx -->
 
-The count is zero and the guard holds it, so there is no judgement left to
-make and no agent to run. It fails on a comment, a docstring, or a file type it
-has no rule for. A directive a tool reads is exempt only once it is named in
-`comment_budget.ALLOWED` and the tool has been run both ways to show what it
-refuses without it.
+<!-- @req+ REQ-57899112@64ONbe8G-1dz 7kivsv -->
+Open the pull request only once every step of the pass before it is clean: a
+step is clean once every finding it made is fixed.
+<!-- @req- 7kivsv -->
 
-## 5 -- Open it
+<!-- @req> REQ-89729325@YaLqg2PAK0fr bti6bz -->
+Run the pass again after any commit made on the branch once the pass has run.
 
-Only once 1 to 4 are clean. Any commit after the pass means running the pass
-again.
+<!-- @req> REQ-90962130@o5kc67OEz0fP kh3pdd -->
+State in the pull request what each step of the pass changed.
 
-Say in the pull request what each step changed. A step that found nothing is
-worth one line -- it tells the owner the pass ran.
+<!-- @req+ REQ-30003319@t1NWLDK_ppH5 n6qbmv -->
+State in the pull request, of a step of the pass that found nothing, that it
+ran.
+<!-- @req- n6qbmv -->
 
 <!-- @req+ REQ-51001407@CLFQHU6-XTzd hbi4d7 -->
 List in the pull request every requirement, guard, parameter and data item
@@ -117,3 +135,11 @@ List in the pull request every requirement, guard, parameter and data item
 each with what reading the code citing it against the item found; where it
 names none, say that none was touched.
 <!-- @req- hbi4d7 -->
+
+<!-- @req+ REQ-16376491@pLH6qM9Dx4wh zvf5ke -->
+Where reading code a statement citation covers finds that the code does not
+satisfy the item the citation names, put a question for the owner: change the
+code, or revise the item. Write no pull request body before the owner answers.
+Where that item is deprecated, ask nothing, and remove the citation with
+`reqctl untag ID`.
+<!-- @req- zvf5ke -->

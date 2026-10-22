@@ -8,6 +8,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+citations:
+  abvyex: FuX_Cz9UTJpGIb74BgVqHvTzy2rj5EfnW0Wawm85V38
 priority: medium
 relations:
   REQ-12222066: depends_on
