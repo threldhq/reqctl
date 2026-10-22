@@ -59,6 +59,27 @@ names the sources read and the example chosen, or states that none could be
 read.
 <!-- @req- sesbd4 -->
 
+<!-- @req+ REQ-10550356@x68qj9sz8bcL xtehwt -->
+Copy an example's code, unchanged or adapted, only where three things hold: the
+licence of the repository holding it resolves to one of these SPDX identifiers,
+<!-- @req> copyable_licences@uFytX5GuhrRB kagdws -->
+MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC, 0BSD;
+the licence of the repository receiving it resolves to an SPDX identifier; and
+the first licence is compatible with the second. Then meet the first licence's
+conditions in the third-party notices file. Where the example's repository
+states no licence, either licence resolves to no SPDX identifier, the example's
+licence is copyleft, weak copyleft included, or whether the two are compatible
+cannot be told, copy none of it and write the code from the idea.
+<!-- @req- xtehwt -->
+
+<!-- @req+ REQ-36108971@NoDvOdAAqqbz xr4cbg -->
+Record each copy in `THIRD_PARTY_NOTICES.md` at the repository's root, creating
+it if the repository holds no third-party notices file, and otherwise in the one
+it holds: the source repository, the commit, the file, the full text of the
+licence and the path the copy takes. No comment in the copied code names its
+source.
+<!-- @req- xr4cbg -->
+
 <!-- @req+ REQ-19907797@Tp3qg0hgddNV ck3qdz -->
 Write no more code than satisfies the item's statement and each of its
 acceptance criteria. Read the code against each criterion: a criterion the code
