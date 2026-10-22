@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: a step that runs an agent, after which HEAD names a commit the session did
+    not record and the working tree holds changes
+  then: HEAD names the recorded commit again, git stash holds the changes, and no
+    change is discarded
+  when: the session sets aside what the agent left
+assessed:
+  REQ-24229583: UrNzYDzLB7cCDlaxlGTC5yAGmb6UoQZSSf_HmZNWws0
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-97146077: 4hRJH8jQmcjjApLQZO2CqJR8Q_nxc2rU1dGcKpe5i9c
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+priority: medium
+relations:
+  REQ-24229583: depends_on
+  REQ-38288492: depends_on
+  REQ-97146077: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session sets aside what an agent left, with git reset --soft to the commit recorded
+  before the step and git stash, rather than taking it as a finding.
+type: functional
+verification: inspection

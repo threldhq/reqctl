@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-28817717: 8Xdz-kSb63h1qyP7cikgKYB4gDStpvEV44JSmSGA-Zg
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+priority: medium
+relations:
+  REQ-28817717: depends_on
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session rejects a suggestion of /simplify that adds code, names or indirection.
+type: functional
+verification: inspection

@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a branch whose diff holds a behavioural change that cites no approved requirement
+  then: the pass stops, and the owner is asked to create the governing requirement
+  when: the pass reads the diff
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+priority: medium
+relations:
+  REQ-12222066: depends_on
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session runs reqctl trace and reads the branch's diff for each behavioural change,
+  and, on finding one no approved requirement governs, stops the pass and puts a [question
+  for the owner](question_for_the_owner) asking that one be created.
+type: functional
+verification: inspection

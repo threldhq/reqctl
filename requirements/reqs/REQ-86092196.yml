@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-50194960: i3SEmJi1QYT5QMthWt4e4omYPilwDc3vIToyWO2nqS8
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-50194960: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session takes a step the gates skipped for provisioning, or for a tool absent from
+  the session, as checked only by CI.
+type: functional
+verification: inspection

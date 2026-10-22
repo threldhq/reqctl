@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a step that runs an agent, after which HEAD names another commit while git
+    status shows a clean tree
+  then: the session finds that the agent left a commit
+  when: the session compares what it recorded
+assessed:
+  REQ-24229583: UrNzYDzLB7cCDlaxlGTC5yAGmb6UoQZSSf_HmZNWws0
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+priority: medium
+relations:
+  REQ-24229583: depends_on
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session compares the output of git status and the commit HEAD names after each step
+  of its pass that runs an agent with what it recorded before that step.
+type: functional
+verification: inspection

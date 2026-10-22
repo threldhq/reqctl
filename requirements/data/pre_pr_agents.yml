@@ -1,0 +1,13 @@
+assessed: {}
+entries:
+  silent_failure_hunter:
+    definition: the pr-review-toolkit:silent-failure-hunter agent, run over the branch's
+      diff
+    model: claude-sonnet-5-5
+fields:
+- definition
+- model
+kind: data
+name: pre_pr_agents
+status: approved
+text: each agent that a pass of the pre-pr skill runs, with the model it is run on
