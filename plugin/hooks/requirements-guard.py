@@ -122,6 +122,7 @@ WRITES_NOTHING = tuple(verb for verb in READ_VERBS
 SORT_WRITES = re.compile(r"-[A-Za-z]*o|--o|--co")
 OPENER = "@req"
 SPLITS = "$`{}"
+# @req> guard_input_limit@v87jyIhQeygI vjlbgl
 INPUT_LIMIT = 20_000
 # @req- 2x3zhi
 # @req> git_read_forms@5d0_Etfuv7Lx r2wro4
@@ -249,8 +250,8 @@ NOT_A_READ = (
 )
 
 LONG_INPUT = (
-    "{key} of {length} characters blocked: the guard reads a path or command of at "
-    f"most {INPUT_LIMIT} characters.\n"
+    "{key} of {length} characters blocked: the guard reads a path, command or "
+    f"pattern of at most {INPUT_LIMIT} characters.\n"
     "Write a longer script to a file with the Write tool and run the file, or name "
     "the path without redundant segments."
 )
@@ -409,6 +410,7 @@ CURL_CONFIG_LINE = re.compile(r"(-{0,2}[A-Za-z0-9][\w-]*)(?:\s*[=:]\s*|\s+|$)(.*
 def named_paths(value, keys=PATH_KEY, key=""):
     if isinstance(value, str):
         # @req> REQ-38099593@WZbBLy6bHv3j okrfi5
+        # @req> REQ-68392771@WJbbGhVR9pq9 bmmpeb
         if keys.search(key) and len(value) > INPUT_LIMIT:
             deny(LONG_INPUT.format(key=key, length=len(value)))
         return [value] if keys.search(key) else []
@@ -2769,6 +2771,10 @@ def decide(data: dict) -> "str | None":
         for value in named_paths(args) + bare_paths(args):
             if ORIGIN_HEAD_FILE.search(flatten(value.replace("\\", "/"))):
                 deny(MOVES_ORIGIN_HEAD.format(what=f"{tool} of {value}"))
+
+    # @req> REQ-68392771@WJbbGhVR9pq9 vcozfz
+    if tool == "Grep":
+        named_paths(args.get("pattern", ""), GLOB_KEY, "pattern")
 
     # @req> REQ-54260750@MTrWbA9_HZWY xkcay3
     if tool in ("Read", "Grep", "Glob"):
