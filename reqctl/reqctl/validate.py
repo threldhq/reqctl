@@ -597,6 +597,8 @@ ISO_UNITS = {
     "%": "%", "percent": "%", "pct": "%",
 }
 
+HYPHENATED = re.compile(r"(?<![\w.-])[^\W\d_][\w.]*(?:-[\w.]*)+")
+
 RADIX = "."
 GROUPED_DIGITS = {"Zs", "Pc", "Pi", "Pf", "Po"}
 SPLIT_DIGITS = re.compile(r"(?<=\d)(\D)(?=\d{3}(?!\d))")
@@ -628,7 +630,7 @@ def _quantity(written):
 
 
 def quantities(text, units=ISO_UNITS):
-    held = _ungrouped(corpus.UID_IN_PROSE.sub(" ", text))
+    held = _ungrouped(HYPHENATED.sub(" ", corpus.UID_IN_PROSE.sub(" ", text)))
     return {(_quantity(found.group(1)), _unit(found.group(2), units))
             for found in QUANTITY.finditer(held)}
 
