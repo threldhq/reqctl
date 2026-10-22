@@ -24,6 +24,8 @@ assessed:
   copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  xtehwt: MEqcOEVgdolYsFNn_mPAq2IjgrHMOM76Q-q9pwT6G-Y
 priority: medium
 relations:
   REQ-83654288: depends_on
