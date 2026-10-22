@@ -8,6 +8,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  ogny6p: 1XZ0t0vOi5txwodMxNSC4Qnyvl__a0Dk6X1s_8gHuJk
 priority: medium
 relations:
   REQ-16376491: constrains

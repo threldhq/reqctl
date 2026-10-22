@@ -11,6 +11,8 @@ assessed:
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  vuyexu: nvnNWlOS-LSp48hJ7KkWP_UZ_sWJEQFu0eri3g8Hk5w
 priority: medium
 relations:
   REQ-38288492: depends_on

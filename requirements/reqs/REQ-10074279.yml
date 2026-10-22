@@ -7,6 +7,8 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  vlm5uy: 9lE33VHfde_KHbr7UoNZOSbFMZa9wJUTAtYRarh1YFI
 priority: medium
 relations:
   REQ-38288492: depends_on

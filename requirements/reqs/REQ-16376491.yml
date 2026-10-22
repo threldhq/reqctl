@@ -24,6 +24,8 @@ assessed:
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  hr6rvl: t8ca9D0Sxsy7VymP24wRtwBezv0CAImgPPVJAaycLJI
 priority: medium
 relations:
   REQ-12222066: derives_from
