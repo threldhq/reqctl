@@ -161,11 +161,12 @@ def _previous(root):
     if ref is not None:
         return _carried(root, ref), claimed
     # @req- bbqmqm
+    # @req> REQ-20411754@mcpvTzFw73NC d3ntho
     if claimed is not None:
         raise ReqctlError(
             f"{path(root).name} holds an unresolved merge, and no default "
-            "branch says which baseline it follows -- fetch origin, then "
-            "generate"
+            "branch says which baseline it follows -- add origin with `git "
+            "remote add origin URL`, fetch it, then generate"
         )
     return stated, None
 

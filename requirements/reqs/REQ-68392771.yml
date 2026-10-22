@@ -15,6 +15,9 @@ assessed:
   guard_input_limit: -exvER4qUHPOHpBCfhPlMNE9PCT6Hx3d1U1Y-mc2i0Y
   guard_input_limit.*: ajjIKQo0Fby7T2H-jm2Yh6YW-FymNi9JyNPoZIqoxvc
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  bmmpeb: LFujf1WSmNW7rzKJWNDWj-c8w6bZYTVxL9AGes8rP7g
+  vcozfz: byWBbpTzo4WI-8FSFrMF7ajeS7yi3igFNmxGePp6XWg
 priority: medium
 relations:
   REQ-18701923: derives_from

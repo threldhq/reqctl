@@ -280,6 +280,15 @@ def dictionary_rules(uid, data):
                 problems.append(
                     f"{uid}: records \"{phrase}\" as not the term but gives no "
                     f"reason -- write --unclaimed \"{phrase}=the reason\"")
+        # @req+ REQ-23885960@rwNen-FIWBND 5n63fi
+        words = [_worded(word) for word in _term_words(data)]
+        for phrase in corpus.unclaimed(data):
+            if not any(word.search(phrase) for word in words):
+                problems.append(
+                    f"{uid}: records \"{phrase}\" as not the term, but it holds "
+                    "neither the word nor an alias -- record a phrase that holds "
+                    f"one, or drop it with --drop-unclaimed \"{phrase}\"")
+        # @req- 5n63fi
         return problems
     # @req+ REQ-67914848@cRb9rHls6z6c fnsqos
     default = data.get("default")

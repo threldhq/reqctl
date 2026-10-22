@@ -6,6 +6,8 @@ acceptance_criteria:
 assessed:
   REQ-28086776: 7S0DPOiDLvSmYxEyEecsONPUw08rTnlwXdq3SpNsXIA
   REQ-43924642: SDx_e7a7A1XMQPML3XbBx3zHEK_udtWgckeshRvI3qU
+citations:
+  d3ntho: pOiWtPtOpkPOOa41CWZBLq3VmDLDGUE0yfzl3kpxz38
 priority: medium
 relations:
   REQ-28086776: constrains

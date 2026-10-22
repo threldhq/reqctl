@@ -126,6 +126,7 @@ def read(root):
     named = SETTINGS.as_posix()
     where = f"{ref.removeprefix('refs/remotes/')}:{named}"
     listed = _git(root, "ls-tree", ref, "--", named)
+    # @req> REQ-29005932@BIHyox0VxBlI v2mmft
     if listed.returncode:
         raise ReqctlError(f"cannot read the tree {ref} names, so whether it "
                           f"holds {named} cannot be told: "
@@ -134,8 +135,10 @@ def read(root):
     if not listed.stdout.strip():
         return where, {}
     shown = _git(root, "show", f"{ref}:{named}")
+    # @req> REQ-29005932@BIHyox0VxBlI s4pa57
     if shown.returncode:
         raise ReqctlError(f"{where} cannot be read: {shown.stderr.strip()}")
+    # @req> REQ-29005932@BIHyox0VxBlI mgfbvw
     document = loads(shown.stdout, where)
     found = faults(document)
     # @req> REQ-99278123@vBQXVC8aZZp3 lcnls5
