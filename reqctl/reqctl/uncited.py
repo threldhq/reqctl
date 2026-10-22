@@ -9,7 +9,7 @@ from . import cite, corpus, settings
 from .reach import Reach
 
 # @req> REQ-27534660@OcqGUyoB-NOR zu7qeg
-MODES = ("all", "changed_lines")
+MODES = settings.MODES[1:]
 # @req> uncited_code_exemptions@zlVU6_sD_Cmy 7z5oma
 EXEMPTIONS = {
     "claude_md": {"files": "any file named CLAUDE.md in any folder"},
@@ -24,7 +24,6 @@ EXEMPT_FILES = {
     "readme": re.compile(r"(?:^|/)README(?:\.[^/]*)?$"),
 }
 HASHED = (".yml", ".yaml", ".toml", ".sh", ".cfg", ".txt")
-COMMENTED = (".py", ".js", ".md", ".html", *HASHED)
 # @req> commentless_formats.json@zjmZ8jE-Au2_ yjmqbb
 COMMENTLESS = (".json",)
 SCRIPT = (("//", None), ("/*", "*/"))
@@ -115,7 +114,7 @@ def exempt(path):
 
 
 def unknown_syntax(path):
-    return PurePosixPath(path).suffix not in COMMENTED + COMMENTLESS
+    return PurePosixPath(path).suffix not in (*cite.COMMENTS, *HASHED, *COMMENTLESS)
 
 
 def _moved(path, was, now):
