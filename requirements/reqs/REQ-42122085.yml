@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-83702299: kBGzIwAyKDHLaQr2uEZDpQDAHRtNn5Lkk6r0WFUdTvA
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+priority: medium
+relations:
+  REQ-12222066: depends_on
+  REQ-38288492: depends_on
+  REQ-83702299: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session puts to the owner, as its own revision, each draft term's approval with
+  the number of statements it would police.
+type: functional
+verification: inspection

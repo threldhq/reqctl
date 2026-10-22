@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-83468274: 0xeqDjC8CkiLRmCr-dN6t8s5D2O-vdpENUbPdIxZzpY
+  REQ-85764802: N7tHuybyVI0x3-1pIFtmjcWDttp7UCIf5RuGJ2_t4bg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-83468274: derives_from
+  REQ-85764802: constrains
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session lands an answer of the owner that settles more than the run's batch as a
+  requirement, code, a schema or a guard.
+type: functional
+verification: inspection

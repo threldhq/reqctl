@@ -1,0 +1,24 @@
+acceptance_criteria: []
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-30037092: wJeLHn0mRAOmMgCt-fB9acOkLckyv4zysYWoVV6I6AM
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-68873210: e7MRMGqsYrnxhzHTt0XMmx14YUpYBmgSSNHW5F-ZA8s
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+priority: medium
+relations:
+  REQ-12222066: depends_on
+  REQ-30037092: constrains
+  REQ-38288492: depends_on
+  REQ-68873210: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session, where the corpus nominates a binding dimension, puts its reading of the
+  members each requirement binds to as one [question for the owner](question_for_the_owner)
+  holding a table of the [proposal](proposal), the dimension, the members or all,
+  and the phrase the reading rests on.
+type: functional
+verification: inspection

@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-32446903: I3rgjDNBKOJCBdXRHATslJv9k2ys7PnBoxVDS8a4rcE
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+priority: medium
+relations:
+  REQ-32446903: depends_on
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session holds a question on how something is [minted](mint) until the message the
+  [challenge](challenge) step sends.
+type: functional
+verification: inspection

@@ -1,0 +1,21 @@
+acceptance_criteria: []
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-48506023: q6jkawEyDH5aHNoRY5jNsK7gq3GyvL8BxfxQh2lTCSY
+  REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+priority: medium
+relations:
+  REQ-12222066: depends_on
+  REQ-38288492: depends_on
+  REQ-48506023: depends_on
+  REQ-89642091: constrains
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session wires what the read-back finds missing, or puts it as a [question for the
+  owner](question_for_the_owner), before the pull request opens.
+type: functional
+verification: inspection

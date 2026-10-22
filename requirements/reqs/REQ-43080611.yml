@@ -1,0 +1,22 @@
+acceptance_criteria: []
+assessed:
+  REQ-23559711: r9BvkcpE5_rbPlIiX046h-Y0IdOyEoMiThBKwZPzg50
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-46507577: d0I3RQglsWl9-W8cAGARr1qZKHO7N9CkfATKf4VAJV4
+  REQ-62691725: zNnjGRBOA-oD7dN0tjFfQ6fJpVNsUaGab6cRInDwBlU
+  REQ-95187450: rDrgCNPe2Kg3OUbPa2aSDiv1fP6bVWNyaDOhYHYnqVc
+  pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+priority: medium
+relations:
+  REQ-23559711: depends_on
+  REQ-38288492: depends_on
+  REQ-46507577: depends_on
+  REQ-62691725: depends_on
+  REQ-95187450: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session [pins](pin) each fresh relation by running the same reqctl relate again.
+type: functional
+verification: inspection
