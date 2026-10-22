@@ -5,6 +5,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  rbmt6r: U1kdU9PTQqHTy3SX1tjEziEFm9BVqit1a0_gij7t10I
 priority: medium
 relations:
   REQ-38288492: depends_on

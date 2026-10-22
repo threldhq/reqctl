@@ -5,6 +5,8 @@ assessed:
   challenge: Qc2lkdxK6B3ur57pmcx__y0tVYmovCcTRfhvjS3UyXI
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  6skxee: GsntSYwE424IQX_MDlFytGpGqsE4e-sQWB9_gwhiQYc
 priority: medium
 relations:
   REQ-21927376: constrains

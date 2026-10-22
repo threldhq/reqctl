@@ -3,6 +3,8 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+citations:
+  mjm6lz: qO_JkZLRq-rJQUjzeW6FNnGYOifE-Nr81ASP974pFEs
 priority: medium
 relations:
   REQ-38288492: depends_on

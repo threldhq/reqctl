@@ -8,6 +8,8 @@ assessed:
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+citations:
+  tktbtb: r2Eo8P3CXrdQ5W0kH_zfHb56rCwYb7H_ak7y6yLoYpU
 priority: medium
 relations:
   REQ-12222066: depends_on
