@@ -252,8 +252,8 @@ NOT_A_READ = (
 LONG_INPUT = (
     "{key} of {length} characters blocked: the guard reads a path, command or "
     f"pattern of at most {INPUT_LIMIT} characters.\n"
-    "Write a longer script to a file with the Write tool and run the file, or name "
-    "the path without redundant segments."
+    "Write a longer script to a file with the Write tool and run the file, name "
+    "the path without redundant segments, or search with a shorter pattern."
 )
 
 UNREAD_COMMAND = (
