@@ -153,8 +153,9 @@ def _blank_or_hidden(fields, own, kind, carried=frozenset()):
                     field.name == "text" and kind in STATEMENTS):
                 # @req> REQ-30898926@Vu28eWaG_1mE 3vca72
                 raise ReqctlError(f"{field.flag} must not be blank -- give it "
-                                  "a value, or leave it out; on revise, its "
-                                  "--no- flag clears the field")
+                                  "a value, or leave it out"
+                                  + (f"; on revise, {field.clears} clears the field"
+                                     if field.clears else ""))
             # @req+ REQ-79956352@OsoTGRd6D5CZ i24q67
             found = _validate.hidden(str(member))
             if found is not None and not _restated(field, str(member), carried):
