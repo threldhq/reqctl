@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import re
 import sys
 from pathlib import Path
@@ -404,7 +405,7 @@ def sources(text, where, dev):
             # @req> GUARD-24264620@IECSQ_EeiXfC 5zpm7c
             if file in seen or file in (DEV_LOCK, DEV_LOCK.with_name(RUNTIME)) or (
                     file.parent.name == PACKAGE and file.name in (DEV_LOCK.name, RUNTIME)
-                    and not file.is_file()):
+                    and not os.path.isfile(file)):
                 continue
             seen.add(file)
             held, fault = held_by(file)
