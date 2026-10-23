@@ -26,10 +26,10 @@ assessed:
   REQ-55939360: qvRmeRuBl0T95bqLSci1RvjlgF7DrPyDgNVmpo55Nzo
   awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
 citations:
-  lmav5l: EXWsRQ1xn_v1x8-HjxsM-WR4yMCP4bUN9jUtchhofYk
-  sri72v: 4bp8ph_GyHrhn3xpu93Xl9tHl55AgVohv2xyjv3VvRQ
-  sz4ty3: MEsQ7zLa9s5rwGdb5HnPSaaya1PM8fV2FWQNPWTP2Bo
-  td4i2r: s_6Tcy0okGDsQrM5XGK-X89y1UmQVKL6sC44IXy8gyY
+  lmav5l: DhFjwIm_tl_YAYbxixQO1VpnhIsW_Q5DRVV8-DzU7RY
+  sri72v: r_T4YoAWuo_8Dgnrg8qIKL_U4h6g27WmTiMseB3jHq4
+  sz4ty3: QrFQgT5mnowtS19T63T8CslnifwDTbmVmBIxIZQEm0w
+  td4i2r: JMokNe-F07yKdlsssV6kVNK4ttYXd1QsbfAsX0KFHYs
 priority: medium
 relations:
   REQ-23691260: depends_on

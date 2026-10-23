@@ -46,19 +46,28 @@ def _identity(root, path, data):
         unreadable_named = (data is None and kind is None
                            and path.parent.name in NAMED_FOLDERS)
         if not unreadable_named and not corpus.UID.match(uid):
-            problems.append(f"{uid}: filename is not PREFIX-NNNNNNNN")
+            # @req> REQ-30898926@Vu28eWaG_1mE awdccf
+            problems.append(f"{uid}: filename is not PREFIX-NNNNNNNN -- rename "
+                            "the file by hand to a uid of that form")
     elif not corpus.UID.match(uid) and uid != corpus.name_of(uid, data or {}):
+        # @req> REQ-30898926@Vu28eWaG_1mE 5uybod
         problems.append(
-            f"{uid}: filename is not the name the item carries")
+            f"{uid}: filename is not the name the item carries -- rename the "
+            "file by hand to that name, or give both one name with `reqctl "
+            f"rename {uid} NAME`")
     # @req> REQ-48186295@E_K39S9hbhEz yvekz4
     if corpus.UID.match(uid) or kind is not None:
         expected = corpus.folder_for(root, corpus.kind_of(uid, data))
         if path.parent != expected:
+            # @req> REQ-30898926@Vu28eWaG_1mE 7vh2hf
             problems.append(
-                f"{uid}: file is in {path.parent.name}/, not {expected.name}/"
+                f"{uid}: file is in {path.parent.name}/, not {expected.name}/ "
+                f"-- move it into {expected.name}/ by hand"
             )
     if path.suffix != ".yml":
-        problems.append(f"{uid}: item file is named {path.name}; items are .yml")
+        # @req> REQ-30898926@Vu28eWaG_1mE 52fz5f
+        problems.append(f"{uid}: item file is named {path.name}; items are .yml "
+                        f"-- rename it by hand to {uid}.yml")
     return problems
 
 
@@ -82,12 +91,16 @@ def schema_problems(root, uid, data):
             kind = corpus.kind_of(uid, data)
             said = ("does not apply to a data item" if kind == "data"
                     else f"does not apply to a {kind}")
-        problems.append(f"{uid}: schema: {where}: {said}")
+        # @req> REQ-30898926@Vu28eWaG_1mE cgpecz
+        problems.append(f"{uid}: schema: {where}: {said} -- correct it "
+                        "through the flag that writes it, or by hand in "
+                        f"{uid}'s file where none does")
     # @req- p3hzqn
     # @req> REQ-35443917@I_xqd07AsRI5 znhrrb
     if data.get("verification") == "automated_test" and not any(
             problem.startswith(f"{uid}: schema: verification:")
             for problem in problems):
+        # @req> REQ-30898926@Vu28eWaG_1mE pz3h7r
         problems.append(f"{uid}: verification: automated_test is not a "
                         "verification method; state inspection, analysis or "
                         "demonstration")
@@ -154,9 +167,11 @@ def ears(uid, data):
 
     if not faults:
         return []
+    # @req> REQ-30898926@Vu28eWaG_1mE ew3q5h
     return [
         f"{uid}: EARS: {'; '.join(faults)}\n"
         f"  statement: {text[:100]}{'...' if len(text) > 100 else ''}\n"
+        "  restate it with --text in one of these forms:\n"
         f"{ears_forms(noun)}"
     ]
 
@@ -181,6 +196,7 @@ NESTING = 100
 
 
 def _nesting(uid, held):
+    # @req> REQ-30898926@Vu28eWaG_1mE r3hsm2
     return [f"{uid}: entry {'.'.join(path)} nests deeper than {NESTING} "
             "levels -- flatten it"
             for path, fields in _entries_within(held) if fields is None]
@@ -213,20 +229,30 @@ def _typed(where, value_type, stated, unit):
     problems = []
     shape = KEY_SHAPES.get(value_type)
     if shape is None and isinstance(value_type, str):
+        # @req> REQ-30898926@Vu28eWaG_1mE sza2az
         problems.append(f"{where}: value_type {value_type} is not a type "
-                        "reqctl reads an entry key as")
+                        "reqctl reads an entry key as -- state one with "
+                        "--value-type")
     if shape is not None:
         # @req> REQ-41697188@IRR8A-_NbYw4 fv4qpq
         for named, written in stated:
             if not shape.match(written):
+                # @req> REQ-30898926@Vu28eWaG_1mE mhsloy
                 problems.append(f"{where}: {named} does not parse as "
-                                f"{value_type}")
+                                f"{value_type} -- write it as a {value_type}, "
+                                "or change value_type to the type it is")
     # @req+ REQ-57061306@grhOhf7rpAJV gf75aj
     if value_type in UNITLESS and unit is not None:
-        problems.append(f"{where}: unit does not apply to {value_type}")
+        # @req> REQ-30898926@Vu28eWaG_1mE gwseiw
+        problems.append(f"{where}: unit does not apply to {value_type} -- "
+                        "drop it with --no-unit on a parameter, or --unset "
+                        "unit on a data entry")
     if (value_type is not None and value_type not in UNITLESS
             and unit is None):
-        problems.append(f"{where}: {value_type} carries a unit")
+        # @req> REQ-30898926@Vu28eWaG_1mE o447gk
+        problems.append(f"{where}: {value_type} carries a unit -- state it "
+                        "with --unit on a parameter, or --set unit=UNIT on a "
+                        "data entry")
     # @req- gf75aj
     return problems
 
@@ -236,6 +262,7 @@ def dictionary_rules(uid, data):
     item_kind = corpus.kind_of(uid, data)
     declared = data.get("kind")
     if declared is not None and declared != item_kind:
+        # @req> REQ-30898926@Vu28eWaG_1mE wvfq3z
         problems.append(
             f"{uid}: states kind {declared} -- state {item_kind} or mint the "
             f"item you meant")
@@ -245,11 +272,13 @@ def dictionary_rules(uid, data):
     # @req> REQ-67450031@dHzdY0EyKyJ3 5qg2a5
     for key in ("default", "pinned", "text", "name"):
         if key in held and (item_kind, corpus.name_of(uid, data)) != ("data", VALUE_TYPES):
+            # @req> REQ-30898926@Vu28eWaG_1mE iuktgn
             problems.append(f"{uid}: an entry may not be keyed {key} -- it "
                             "would shadow an item field of that name; rename "
                             "the entry")
     # @req> REQ-22887335@Tt3HpjzWuiU6 idfqw5
     if corpus.MEMBERS in held:
+        # @req> REQ-30898926@Vu28eWaG_1mE 35cjyj
         problems.append(f"{uid}: an entry may not be keyed {corpus.MEMBERS} -- "
                         "that address pins the item's membership; rename the "
                         "entry")
@@ -257,18 +286,24 @@ def dictionary_rules(uid, data):
     if item_kind == "term":
         # @req> REQ-79013939@LHWesLk8a6d7 wcl7vt
         if len(held) != 1:
-            problems.append(f"{uid}: a term holds exactly one entry -- its word")
+            # @req> REQ-30898926@Vu28eWaG_1mE hckx4k
+            problems.append(f"{uid}: a term holds exactly one entry, its word "
+                            f"-- edit {uid}'s file by hand so it holds that "
+                            "one entry")
         # @req+ REQ-47317077@nmlbp2InoWXJ iwiit6
         stated = corpus.term_fields(data).get("word")
         if not (isinstance(stated, str) and stated.strip()):
+            # @req> REQ-30898926@Vu28eWaG_1mE 3kpufa
             problems.append(f"{uid}: word is {stated!r} -- a term states the "
                             "word it is known by, as text; the entry key is a "
-                            "handle and addresses it")
+                            "handle and addresses it -- state the word with "
+                            "--term")
         # @req- iwiit6
         # @req+ REQ-20325022@eJ3lXlumh7tY smwuev
         aliases = corpus.term_fields(data).get("aliases")
         for alias in aliases if isinstance(aliases, list) else []:
             if ALIAS_SEPARATOR in str(alias):
+                # @req> REQ-30898926@Vu28eWaG_1mE y3z2hn
                 problems.append(
                     f"{uid}: alias {alias!r} holds {ALIAS_SEPARATOR!r}, which "
                     "separates an alias list -- give each wording an alias of "
@@ -277,6 +312,7 @@ def dictionary_rules(uid, data):
         # @req> REQ-15469759@ETBwvNW6rbpC b6qizb
         for phrase, reason in corpus.unclaimed(data).items():
             if not reason.strip():
+                # @req> REQ-30898926@Vu28eWaG_1mE coceck
                 problems.append(
                     f"{uid}: records \"{phrase}\" as not the term but gives no "
                     f"reason -- write --unclaimed \"{phrase}=the reason\"")
@@ -284,6 +320,7 @@ def dictionary_rules(uid, data):
         words = [_worded(word) for word in _term_words(data)]
         for phrase in corpus.unclaimed(data):
             if not any(word.search(phrase) for word in words):
+                # @req> REQ-30898926@Vu28eWaG_1mE gnjmvl
                 problems.append(
                     f"{uid}: records \"{phrase}\" as not the term, but it holds "
                     "neither the word nor an alias -- record a phrase that holds "
@@ -293,14 +330,19 @@ def dictionary_rules(uid, data):
     # @req+ REQ-67914848@cRb9rHls6z6c fnsqos
     default = data.get("default")
     if default is not None and default not in held:
+        # @req> REQ-30898926@Vu28eWaG_1mE weapt5
         problems.append(f"{uid}: default names {default!r}, which is not an "
-                        "entry")
+                        "entry -- name an entry with --default, or clear it "
+                        "with --no-default")
     # @req- fnsqos
     if item_kind == "data":
         for key in held:
             if not corpus.DATA_KEY.match(str(key)):
+                # @req> REQ-30898926@Vu28eWaG_1mE qgxblp
                 problems.append(f"{uid}: entry key {key!r} is not a snake_case "
-                                "handle")
+                                "handle -- add the entry again under a "
+                                "snake_case key with --new-entry and remove "
+                                "this one with --drop-entry, or rekey it by hand")
         return problems
     return problems + _typed(
         uid, data.get("value_type"),
@@ -319,12 +361,14 @@ def text_values(uid, data):
             continue
         found = QUANTITY.fullmatch(re.sub(r"\A[+-](?=\.?\d)", "", member.strip()))
         if found and not isinstance(_quantity(found.group(1)), str):
+            # @req> REQ-30898926@Vu28eWaG_1mE btxjsu
             problems.append(
                 f"{uid}: text value {member!r} is shaped like a quantity -- "
                 "give it a numeric value_type, or reword the name"
             )
     # @req> REQ-40026456@tmXkAn-osOnn 6qstia
     if len(corpus.entries(data) or {}) > 1:
+        # @req> REQ-30898926@Vu28eWaG_1mE 23iaaz
         problems.append(f"{uid}: a parameter of text holding more than one "
                         f"member is a data item -- `reqctl refile {uid}`")
     return problems
@@ -344,6 +388,7 @@ def repeated_labels(uid, data):
                               re.IGNORECASE)
                      if isinstance(part, str) and isinstance(said, str) else None)
             if found:
+                # @req> REQ-30898926@Vu28eWaG_1mE jpevge
                 problems.append(f"{uid}: criterion {at}'s {part} {said!r} begins "
                                 f"with {found.group()!r}, which reqctl writes "
                                 f"before it -- drop the word from the {part}")
@@ -400,6 +445,7 @@ def listed_fields(root, uid, data):
         others = applied.get("additionalProperties")
         if own and (others is False or isinstance(others, dict)):
             continue
+        # @req> REQ-30898926@Vu28eWaG_1mE yee54k
         problems += [f"{uid}: entry {key} holds the field {field}, which its schema does "
                      f"not declare and the data item does not list -- it lists "
                      f"{', '.join(map(str, listed)) or 'no fields'}; correct the field, "
@@ -412,6 +458,7 @@ def listed_fields(root, uid, data):
 
 # @req> REQ-20342497@XOTP8seel4tN sm5nxf
 def _shadowed_blocks(records, root):
+    # @req> REQ-30898926@Vu28eWaG_1mE azzv2t
     return [f"{uid}: an entry may not be keyed {key} -- the schema marks {key} as "
             "an addressable block, so an address naming it would name both; "
             "rename the entry"
@@ -426,6 +473,7 @@ def hidden_values(uid, data):
     for at, said in _strings(data):
         char = hidden(said)
         if char is not None:
+            # @req> REQ-30898926@Vu28eWaG_1mE gpeu6h
             problems.append(f"{uid}: {'.'.join(at) or '(item)'} {said!r} "
                             f"{hidden_fault(char)}")
     return problems
@@ -433,8 +481,10 @@ def hidden_values(uid, data):
 
 def _relations(uid, data, records, canonical, known):
     stated = data.get("relations")
+    # @req> REQ-30898926@Vu28eWaG_1mE cyqvl3
     problems = [
-        f"{uid}: relates {target!r}, which is not a {corpus.NAMED} uid"
+        f"{uid}: relates {target!r}, which is not a {corpus.NAMED} uid -- "
+        f"remove it from {uid}'s relations by hand"
         for target in sorted(stated if isinstance(stated, dict) else {}, key=str)
         if not isinstance(target, str)
     ]
@@ -442,7 +492,9 @@ def _relations(uid, data, records, canonical, known):
     for target in sorted(corpus.mapping(data, "relations")):
         # @req> REQ-26911169@Ty70WfMx9YfH p2wcdn
         if target == uid:
-            problems.append(f"{uid}: links to itself")
+            # @req> REQ-30898926@Vu28eWaG_1mE 5usqw3
+            problems.append(f"{uid}: links to itself -- `reqctl unrelate "
+                            f"{uid} {uid}`")
             continue
         if requirement:
             held = canonical.get(target)
@@ -450,20 +502,27 @@ def _relations(uid, data, records, canonical, known):
                     else corpus.kind_for_uid(target))
             if kind in ("parameter", "data"):
                 noun = "a parameter" if kind == "parameter" else "a data item"
+                # @req> REQ-30898926@Vu28eWaG_1mE 3bxk3t
                 problems.append(
                     f"{uid}: relates {target}; {noun} is bound by referencing "
-                    "it in the statement, not by a relation"
+                    "it in the statement, not by a relation -- `reqctl "
+                    f"unrelate {uid} {target}`"
                 )
                 continue
             if kind == "term":
+                # @req> REQ-30898926@Vu28eWaG_1mE iyunoa
                 problems.append(
                     f"{uid}: relates {target}; a term is bound by linking it in "
-                    "the statement, written [the words](" + target + ")"
+                    "the statement, written [the words](" + target + ") -- "
+                    f"`reqctl unrelate {uid} {target}`"
                 )
                 continue
         # @req> REQ-35877465@zMIttKgLLwy- cx6r6x
         if target not in known:
-            problems.append(f"{uid}: links to {target}, which does not exist")
+            # @req> REQ-30898926@Vu28eWaG_1mE 22tyzi
+            problems.append(f"{uid}: links to {target}, which does not exist "
+                            f"-- `reqctl unrelate {uid} {target}`, or mint "
+                            f"{target} with `reqctl new`")
     return problems
 
 
@@ -473,10 +532,14 @@ def _references(uid, data, known, root):
     for address in corpus.references(data):
         target, _ = corpus.split_address(address)
         if target not in known:
-            problems.append(f"{uid}: references {target}, which does not exist")
+            # @req> REQ-30898926@Vu28eWaG_1mE wpeyzk
+            problems.append(f"{uid}: references {target}, which does not "
+                            f"exist -- mint {target} with `reqctl new`, or "
+                            f"reword {uid} without the reference")
     for near in corpus.PARAM_NEAR.finditer(corpus.prose(data)):
         token = near.group()
         if not corpus.PARAM_REF.fullmatch(token):
+            # @req> REQ-30898926@Vu28eWaG_1mE vin7kb
             problems.append(
                 f"{uid}: text contains {token}, which is not a parameter "
                 f"reference -- the form is {corpus.NAME_FORM}"
@@ -484,10 +547,14 @@ def _references(uid, data, known, root):
     for address in corpus.concept_references(data):
         target, _ = corpus.split_address(address)
         if target not in known:
-            problems.append(f"{uid}: links to {target}, which does not exist")
+            # @req> REQ-30898926@Vu28eWaG_1mE 7dubyp
+            problems.append(f"{uid}: links to {target}, which does not exist "
+                            f"-- mint {target} with `reqctl new`, or reword "
+                            f"{uid} without the link")
     # @req- e5vzf6
     for near in corpus.CONCEPT_NEAR.finditer(
             corpus.CONCEPT_LINK.sub(" ", corpus.prose(data))):
+        # @req> REQ-30898926@Vu28eWaG_1mE b35ssj
         problems.append(
             f"{uid}: {' '.join(near.group(1).split())} does not read as a "
             "link -- an item is addressed by the name it carries, the words "
@@ -496,6 +563,7 @@ def _references(uid, data, known, root):
     # @req> REQ-48500355@rnstkLKM48vN f7binw
     for near in corpus.TERM_NEAR.finditer(
             corpus.unlinked_prose(own_words(root, uid, data))):
+        # @req> REQ-30898926@Vu28eWaG_1mE j74ncb
         problems.append(
             f"{uid}: text contains {near.group()} outside a link -- a term is "
             f"written {corpus.LINK_FORM}"
@@ -541,6 +609,7 @@ def _bare_terms(uid, data, defined):
     # @req+ REQ-83702299@kBGzIwAyKDHL tmczgb
     bare = corpus.unlinked_prose(data)
     # @req> REQ-24481048@ZhiYUpKwnPlA bapzey
+    # @req> REQ-30898926@Vu28eWaG_1mE db25wj
     return [
         f"{uid}: uses \"{word}\" without linking it -- write "
         f"[{word}]({term_uid}), or reword so the statement does not "
@@ -705,6 +774,7 @@ def shared_quantities(records, root):
     # @req> REQ-31827606@LqXaOXp6DLBG 4h2aan
     for (value, unit), uids in sorted(where.items(), key=lambda pair: str(pair[0])):
         if len(uids) > 1:
+            # @req> REQ-30898926@Vu28eWaG_1mE nn2awc
             problems.append(
                 f"{', '.join(sorted(uids))} each state {value} {unit}".rstrip()
                 + " -- a quantity more than one statement makes belongs in a "
@@ -723,6 +793,7 @@ def _assessed(uid, data, records, canonical, known, past):
         found = corpus.ADDRESS.match(str(address))
         if found and found.group(1) in known and held_data(found.group(1)) is None:
             unreadable.add(found.group(1))
+    # @req> REQ-30898926@Vu28eWaG_1mE xe6om6
     problems = [f"{uid}: depends on {target}, which could not be read -- "
                 f"fix {target} first" for target in sorted(unreadable)]
     # @req- gxi4g4
@@ -735,8 +806,11 @@ def _assessed(uid, data, records, canonical, known, past):
         found = corpus.ADDRESS.match(str(target))
         if found and found.group(1) in unreadable:
             continue
+        # @req> REQ-30898926@Vu28eWaG_1mE phxt2t
         problems.append(
-            f"{uid}: pins {target}, which is neither related nor referenced"
+            f"{uid}: pins {target}, which is neither related nor referenced "
+            f"-- relate or reference {target} again, or remove the pin from "
+            f"{uid}'s assessed by hand"
         )
     # @req> REQ-81493991@71cbxqAtqZTk w5qzvp
     if data.get("status") in RETIRED:
@@ -751,6 +825,7 @@ def _assessed(uid, data, records, canonical, known, past):
         # @req> REQ-42390302@QOC4GhS7SkFg w3y4p3
         if past and (not isinstance(pinned, str) or pinned != held):
             # @req> REQ-24608716@rrTjNN2Ay0D0 bzyf37
+            # @req> REQ-30898926@Vu28eWaG_1mE utkrv6
             problems.append(
                 f"{uid}: suspect link: {target} -- reread both, then "
                 "`reqctl relate` a requirement or `reqctl revise "
@@ -772,6 +847,7 @@ def conflicts(records):
         for target, relation in sorted(corpus.mapping(data, "relations").items()):
             if relation == "conflicts_with" and target in approved:
                 declared.append(tuple(sorted((uid, target))))
+    # @req> REQ-30898926@Vu28eWaG_1mE ssnfls
     return [
         f"{left} and {right} are both approved and declare conflicts_with -- "
         "resolve it by deprecating one, superseding both, or rewriting them"
@@ -783,6 +859,7 @@ def conflicts(records):
 def supersedes(records):
     approved = _approved(records)
     # @req> REQ-53480164@5yFhCLJmuTBt qxi4hb
+    # @req> REQ-30898926@Vu28eWaG_1mE 2evdh5
     return [
         f"{uid} supersedes {target}, which is still approved -- "
         "revise it to superseded or deprecated in this same change"
@@ -806,6 +883,7 @@ def approved_relations(records):
             held = records.get(target)
             if held is None or target in approved:
                 continue
+            # @req> REQ-30898926@Vu28eWaG_1mE bcyrxr
             problems.append(
                 f"{uid} is approved but {relation} {target}, which is "
                 f"{held.get('status')} -- approve {target}, or revise {uid} "
@@ -825,6 +903,7 @@ def _approved_bindings(records):
             held = records.get(stated)
             if held is None or stated in approved:
                 continue
+            # @req> REQ-30898926@Vu28eWaG_1mE p5bokx
             problems.append(
                 f"{uid} is approved but stated against {target}, which is "
                 f"{held.get('status')} -- approve {target}, or revise {uid}"
@@ -842,13 +921,17 @@ def _shared_words(records):
     for _, (uids, word) in sorted(claims.items()):
         # @req> REQ-18059226@M_Z00FMwux9p 2troxr
         if len(set(uids)) > 1:
+            # @req> REQ-30898926@Vu28eWaG_1mE yrx3ss
             problems.append(
                 f"{', '.join(sorted(set(uids)))} each claim \"{word}\" -- a "
                 "reader cannot tell which definition governs; merge them or "
                 "reword one"
             )
         elif len(uids) > 1:
-            problems.append(f"{uids[0]}: claims \"{word}\" more than once")
+            # @req> REQ-30898926@Vu28eWaG_1mE 3jvhux
+            problems.append(f"{uids[0]}: claims \"{word}\" more than once -- "
+                            "restate its aliases with --alias, leaving out the "
+                            "repeat, or clear them with --no-alias")
     return problems
 
 
@@ -906,9 +989,10 @@ def _caught(edges, group):
     return " -> ".join(round_trip) + (f", and {', '.join(others)}" if others else "")
 
 
-def _cycle_problems(edges, noun, tail):
+def _cycle_problems(edges, noun, tail, step):
+    # @req> REQ-30898926@Vu28eWaG_1mE vd7u6s
     return [
-        f"{_caught(edges, group)}: circular {noun} -- {tail}"
+        f"{_caught(edges, group)}: circular {noun}, so {tail} -- {step}"
         for group in _components(edges)
         if len(group) > 1 or group[0] in edges.get(group[0], ())
     ]
@@ -922,8 +1006,11 @@ def _circular_definitions(records):
                               str(corpus.term_fields(data).get("definition")))})
              for uid, data in records.items()
              if corpus.kind_of(uid, data) == "term"}
+    # @req> REQ-30898926@Vu28eWaG_1mE 46diyb
     return _cycle_problems(edges, "definition",
-                           "none of these means anything before the others")
+                           "none of these means anything before the others",
+                           "reword one definition with --definition so it no "
+                           "longer links the next")
     # @req- ijccb5
 
 
@@ -946,41 +1033,58 @@ def _entry_selection(records, root):
             block = corpus.held_blocks(root, canonical.get(target, target), held).get(key)
             if block is not None:
                 if not steps:
+                    # @req> REQ-30898926@Vu28eWaG_1mE k6ab75
                     problems.append(f"{uid}: selects {address}, which names {key} of "
-                                    f"{target} and none of its block members")
+                                    f"{target} and none of its block members -- "
+                                    f"reword {uid} to select one of its members")
                 elif not isinstance(block.get(steps[0], {}), dict):
+                    # @req> REQ-30898926@Vu28eWaG_1mE kssexg
                     problems.append(f"{uid}: selects {address} but {steps[0]} of {key} of "
-                                    f"{target} holds no fields of its own")
+                                    f"{target} holds no fields of its own -- "
+                                    f"reword {uid} to select a member of {key} "
+                                    "that holds fields")
                     continue
                 fields = block
                 for step in steps:
                     if not isinstance(fields, dict) or step not in fields:
+                        # @req> REQ-30898926@Vu28eWaG_1mE kijt3f
                         problems.append(f"{uid}: selects {address} but {key} of "
-                                        f"{target} holds no {step!r}")
+                                        f"{target} holds no {step!r} -- reword "
+                                        f"{uid} to select what {key} holds, or "
+                                        f"add {step!r} to it")
                         break
                     fields = fields[step]
                 continue
             # @req- xxvuas
             if address in links and "." in rest:
+                # @req> REQ-30898926@Vu28eWaG_1mE xeqgyv
                 problems.append(f"{uid}: links {address}, which names neither an "
-                                f"entry nor a block member of {target}")
+                                f"entry nor a block member of {target} -- reword "
+                                f"{uid} to link {target} or one of its entries")
                 continue
             # @req- sggzwh
             # @req+ REQ-62329029@wjRs5FRIhJ3C rc5mmy
             if existing is None:
+                # @req> REQ-30898926@Vu28eWaG_1mE hagaom
                 problems.append(
-                    f"{uid}: selects {address} but {target} has no entries"
+                    f"{uid}: selects {address} but {target} has no entries -- "
+                    f"reword {uid} to reference {target} whole, or give "
+                    f"{target} entries"
                 )
             elif rest == "default":
                 if held.get("default") is None:
+                    # @req> REQ-30898926@Vu28eWaG_1mE 6lxfme
                     problems.append(
                         f"{uid}: selects ${{{target}.default}} but {target} "
-                        "names no default"
+                        f"names no default -- name one with `reqctl revise "
+                        f"{target} --default`, or reword {uid} to select an "
+                        "entry"
                     )
             # @req> REQ-93367131@liYuAavoXSA4 vye4xb
             elif rest == key and key in existing and any(
                     isinstance(fields, dict) and rest in fields
                     for fields in existing.values()):
+                # @req> REQ-30898926@Vu28eWaG_1mE bcq3ce
                 problems.append(
                     f"{uid}: selects {address}, which names both an entry of "
                     f"{target} and a field its entries carry -- rename one"
@@ -991,28 +1095,37 @@ def _entry_selection(records, root):
                           and not isinstance(fields[rest], bool)]
                 # @req> REQ-28975717@sXPovM6T9HGc p5hfxl
                 if stated:
+                    # @req> REQ-30898926@Vu28eWaG_1mE burvbt
                     problems.append(
                         f"{uid}: selects {address} but {target} states {rest} "
-                        f"{stated[0]!r} -- true or false"
+                        f"{stated[0]!r} -- set {rest} to true or false on each "
+                        f"entry of {target} with --set"
                     )
                 # @req> REQ-10000795@VNUKO0iJNjTj bg3tyu
                 elif not corpus.flagged(held, rest):
+                    # @req> REQ-30898926@Vu28eWaG_1mE 5t4oer
                     problems.append(
                         f"{uid}: selects {address} but no entry of {target} "
-                        f"is {rest}"
+                        f"is {rest} -- set {rest}=true on an entry of "
+                        f"{target} with --set, or reword {uid}"
                     )
             elif key not in existing:
+                # @req> REQ-30898926@Vu28eWaG_1mE i3ezb4
                 problems.append(
                     f"{uid}: selects {address} but {target} has no entry "
-                    f"{key!r}"
+                    f"{key!r} -- reword {uid} to select an entry {target} "
+                    f"holds, or add {key!r} to {target}"
                 )
             elif "." in rest:
                 fields = existing[key]
                 for field in rest.split(".")[1:]:
                     if not isinstance(fields, dict) or field not in fields:
+                        # @req> REQ-30898926@Vu28eWaG_1mE jo2xia
                         problems.append(
                             f"{uid}: selects {address} but entry {key!r} of "
-                            f"{target} has no field {field!r}"
+                            f"{target} has no field {field!r} -- reword {uid} "
+                            f"to select a field it holds, or set {field!r} on "
+                            "it with --set"
                         )
                         break
                     fields = fields[field]
@@ -1226,6 +1339,7 @@ def _entry_term_fields(records, root):
                 held_by = corpus.name_of(term_uid, records[term_uid]) or term_uid
                 link = f"[{word}]({held_by})"
                 if _admits_link(root, uid, data, where, field, link, judged):
+                    # @req> REQ-30898926@Vu28eWaG_1mE vl4u63
                     problems.append(
                         f"{uid}: entry {'.'.join(where)} field {field} is "
                         f'named for "{word}" but its value does not link '
@@ -1237,6 +1351,7 @@ def _entry_term_fields(records, root):
                                    refused):
                 for target in sorted(linked):
                     if spelled not in words_of.get(target, ()):
+                        # @req> REQ-30898926@Vu28eWaG_1mE dzkfxs
                         problems.append(
                             f"{uid}: entry {'.'.join(where)} field "
                             f"{field} links {target} but is not named "
@@ -1316,8 +1431,10 @@ def _entry_of_values(records, root):
         for target in sorted(_marker_targets(schema) & held.keys()):
             for path in sorted(_marked_paths(root, uid, data, _entry_of(target))):
                 value = _at(data, path)
+                # @req> REQ-30898926@Vu28eWaG_1mE ip7mux
                 problems += [f"{uid}: {'.'.join(path)} {member!r} names no entry "
-                             f"of {target}"
+                             f"of {target} -- name one of its entries, or add "
+                             f"{member!r} to {target}"
                              for member in (value if isinstance(value, list) else [value])
                              if str(member) not in held[target]]
     return problems
@@ -1340,7 +1457,10 @@ def _listed_units(records):
                 if corpus.kind_of(uid, data) == "data"
                 for where, fields in _entries_within(corpus.entries(data))
                 if fields is not None]
-    return [f"{uid}:{where} unit {stated['unit']!r} is no unit of {stated['value_type']}"
+    # @req> REQ-30898926@Vu28eWaG_1mE ncsger
+    return [f"{uid}:{where} unit {stated['unit']!r} is no unit of {stated['value_type']} "
+            f"-- state a unit {held} lists for it, or add the unit to that entry "
+            f"of {held}"
             for uid, where, stated in stating
             if str(stated.get("value_type")) in listed and stated.get("unit") is not None
             and str(stated["unit"]) not in listed[str(stated["value_type"])]]
@@ -1408,22 +1528,30 @@ def _bounds(records):
                                if str(key) == str(fields[bound])), None)
                 # @req+ REQ-75293842@Une663jQ8uUZ l7qntp
                 if not isinstance(target, dict) or "quantity" not in target:
-                    problems.append(f"{at} names no entry of {uid} stating a quantity")
+                    # @req> REQ-30898926@Vu28eWaG_1mE hvhx2p
+                    problems.append(f"{at} names no entry of {uid} stating a quantity "
+                                    f"-- name a sibling entry that states one, or "
+                                    f"give {fields[bound]!r} a quantity")
                     continue
                 mine, theirs = fields.get("value_type"), target.get("value_type")
                 if mine is None or str(theirs) != str(mine):
+                    # @req> REQ-30898926@Vu28eWaG_1mE be5qdp
                     problems.append(f"{at} states {theirs or 'no value type'}, entry "
                                     f"{'.'.join(where)} states {mine or 'no value type'} "
-                                    f"-- they cannot be compared")
+                                    f"and the two cannot be compared -- give both "
+                                    "the same value type")
                     continue
                 # @req- l7qntp
                 # @req+ REQ-58100850@NgW3efYeVw1k p3q7no
                 spans = _span(value_types, spellings, fields), _span(value_types, spellings, target)
                 if None not in spans and _less(*(spans if bound == "at_least" else spans[::-1])):
+                    # @req> REQ-30898926@Vu28eWaG_1mE ovhbsq
                     problems.append(f"{at}: quantity {fields.get('quantity')} "
                                     f"{fields.get('unit') or ''}".rstrip()
                                     + f" is {words} than {target['quantity']} "
-                                    f"{target.get('unit') or ''}".rstrip())
+                                    f"{target.get('unit') or ''}".rstrip()
+                                    + " -- correct this quantity, or the one "
+                                    f"{bound} names")
                 # @req- p3q7no
         if "ceiling" not in data:
             continue
@@ -1431,15 +1559,20 @@ def _bounds(records):
                         if str(key) == str(data["ceiling"])), None)
         # @req> REQ-36099384@oqIHWa_e7CDN uhu3bz
         if not isinstance(ceiling, dict) or "quantity" not in ceiling:
+            # @req> REQ-30898926@Vu28eWaG_1mE 6vqmrg
             problems.append(f"{uid}: ceiling {data['ceiling']!r} names no entry of "
-                            f"{uid} stating a quantity")
+                            f"{uid} stating a quantity -- name one with "
+                            "--ceiling, or clear it with --no-ceiling")
             continue
         # @req+ REQ-27382610@9np_bpPH3xzx 4unc6n
         top = _span(value_types, spellings, ceiling)
+        # @req> REQ-30898926@Vu28eWaG_1mE hsw6rh
         problems += [f"{uid}: ceiling {data['ceiling']!r} states "
                      + f"{ceiling['quantity']} {ceiling.get('unit') or ''}".rstrip()
                      + f", less than entry {'.'.join(where)} at "
                      + f"{fields['quantity']} {fields.get('unit') or ''}".rstrip()
+                     + " -- raise the ceiling's quantity, name a higher entry "
+                     "with --ceiling, or lower that entry's quantity"
                      for where, fields in _entries_within(held_entries)
                      if fields is not None and ceiling.get("value_type") is not None
                      and str(fields.get("value_type")) == str(ceiling.get("value_type"))
@@ -1484,6 +1617,7 @@ def _unit_quantities(records, root):
                           for pattern, prose in ((QUANTITY, _ungrouped(text)), (WORDED, text))
                           for found in pattern.finditer(prose)
                           if found.group(2).lower() in units})
+        # @req> REQ-30898926@Vu28eWaG_1mE p4sy2b
         problems += [f"{uid}: writes {quantity} -- reference the parameter or "
                      f"entry holding it, {corpus.NAME_FORM}" for quantity in written]
     return problems
@@ -1496,6 +1630,7 @@ def _value_types(records, root):
     listed = next((field.choices for field in _fields.of(root, "parameter")
                    if field.name == "value_type"), ())
     # @req> REQ-34134685@7WjKv7L7yONz tr5vto
+    # @req> REQ-30898926@Vu28eWaG_1mE bti7u2
     problems = [f"{uid}: entry {'.'.join(where)}: value_type "
                 f"{fields['value_type']!r} is a "
                 f"{'list' if isinstance(fields['value_type'], list) else 'mapping'} "
@@ -1508,8 +1643,10 @@ def _value_types(records, root):
     for key, stated in (corpus.entries(records[held]) or {}).items():
         # @req> REQ-50607767@HUHiB9K0Vm5f zfnoqs
         if str(key) not in listed:
+            # @req> REQ-30898926@Vu28eWaG_1mE b3icej
             problems.append(f"{held}: entry {key} is no value type the kind schema "
-                            "for parameters lists")
+                            "for parameters lists -- remove it with --drop-entry, "
+                            "or add it to that schema's value_type by hand")
         # @req+ REQ-39867440@lNag_-a2yKhi jbq26t
         units = stated.get("units") if isinstance(stated, dict) else None
         units = (dict.fromkeys(map(str, units if isinstance(units, list) else [units]))
@@ -1518,6 +1655,7 @@ def _value_types(records, root):
             bounds = ({key for key in ("factor", "least", "most") if unit.get(key) is not None}
                       if isinstance(unit, dict) else set())
             if bounds not in ({"factor"}, {"least", "most"}):
+                # @req> REQ-30898926@Vu28eWaG_1mE nq4wli
                 problems.append(f"{held}: entry {key} unit {symbol} states "
                                 f"{', '.join(sorted(bounds)) or 'no bound'} -- state "
                                 "a factor, or a least with a most")
@@ -1532,6 +1670,7 @@ def _duplicate_names(records):
         name = corpus.name_of(uid, data)
         if name is not None:
             named.setdefault(name, []).append(uid)
+    # @req> REQ-30898926@Vu28eWaG_1mE 2emtrk
     return [
         f"{' and '.join(sorted(uids))} share the name `{name}` -- "
         "a name addresses one item; rename all but one"
@@ -1560,7 +1699,9 @@ def cycles(records):
             )
             for uid, data in records.items()
         }
-        problems += _cycle_problems(edges, relation, tail)
+        # @req> REQ-30898926@Vu28eWaG_1mE frqcqo
+        problems += _cycle_problems(edges, relation, tail,
+                                    "`reqctl unrelate` one link of the cycle")
     return problems
 
 
@@ -1577,6 +1718,7 @@ def _strays(root, paths):
             continue
         if any(skip in held.parents for skip in skipped):
             continue
+        # @req> REQ-30898926@Vu28eWaG_1mE a7qobc
         problems.append(
             f"{held.relative_to(root)}: not where an item lives -- an item is "
             "requirements/(reqs|params|terms|data)/UID.yml; move or delete it"
@@ -1613,6 +1755,7 @@ def _settled(path):
     text = corpus.read_text(path)
     # @req> REQ-98359235@ZY1HJ0hcSyAZ 5wu7pz
     if corpus.CONFLICTED.search(text):
+        # @req> REQ-30898926@Vu28eWaG_1mE kriku5
         raise corpus.ReqctlError(
             f"holds an unresolved merge -- `reqctl resolve {path.stem}` "
             "settles one that falls within its pins"
@@ -1627,6 +1770,7 @@ def _settled(path):
 # @req> REQ-21699310@HJWvkB2QKjez uv4bc5
 def _bound_guards(records, root):
     nominated = corpus.binding_dimensions(root)
+    # @req> REQ-30898926@Vu28eWaG_1mE iccei7
     return [
         f"{uid}: references {address}, which binds the guard to {name} -- "
         "reword the guard without the reference, or state the rule as a "
@@ -1641,6 +1785,7 @@ def _bound_guards(records, root):
 def _named_schemas(records, root):
     # @req+ REQ-48136849@EXeydTy0CfsX wljy47
     held = {corpus.name_of(uid, data) for uid, data in records.items()}
+    # @req> REQ-30898926@Vu28eWaG_1mE klvbx7
     return [f"corpus: {name}.schema.yaml governs an item named {name}, and "
             "the corpus holds none -- mint it, or remove the schema"
             for name in corpus.named_schemas(root) if name not in held]
@@ -1669,7 +1814,10 @@ def run(root, exempt=None):
         uid = path.stem
         if uid not in records:
             problems += _guarded(uid, _identity, root, path, None)
-            problems.append(f"{uid}: {unreadable.get(uid, 'item file is not a mapping')}")
+            # @req> REQ-30898926@Vu28eWaG_1mE haoc6o
+            problems.append(f"{uid}: " + unreadable.get(
+                uid, "item file is not a mapping -- edit it by hand into a "
+                     "mapping of the item's fields"))
             continue
         problems += item_problems(root, uid, path, records[uid], records,
                                   reachable, known, broken_schemas, suspect=past)
