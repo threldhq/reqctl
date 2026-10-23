@@ -242,12 +242,9 @@ def check(tree, root):
     ]
 
     if not path(root).is_file():
-        approved = derive(tree)
-        if approved:
-            problems.append(
-                f"{len(approved)} item(s) are approved but no baseline states "
-                "them -- run `reqctl baseline --generate`"
-            )
+        # @req> REQ-44642786@f_tuj97sj5Zn wywtng
+        problems += [f"{uid}: approved but no baseline states it -- run "
+                     "`reqctl baseline --generate`" for uid in sorted(derive(tree))]
         return None, problems
 
     # @req+ REQ-52307457@2GAIsxcSUISq w27scf

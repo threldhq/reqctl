@@ -762,6 +762,7 @@ def cited_entries(item):
 def cited_item(store, address):
     named, entry = split_address(address)
     item = find(store, named)
+    # @req> REQ-11930677@zW9EYrOae8-u bwqnk4
     if entry is not None and entry not in cited_entries(item):
         raise ReqctlError(f"{address}: {named} is not a data item holding "
                           f"{entry} -- only an entry of a data item is cited "
