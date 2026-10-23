@@ -7,8 +7,11 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  dbuwzq: Pzy-2GueYzx76HubCJ8xochzKCg8FQLIN7NZZo9h338
-  vzfqst: sc6h-lQtqzTBtWhgyay7zSi9BVVZZCpVbIJY9b3PtHE
+  ao42pp: Vb9UbH_DN7Haq-6wDyqIERjv5ZcbdpohLHMFfNJNZRw
+  dbuwzq: o9O9wZPn1Gl_AcaD_VqHgXe8nYmgVeFQv06C1m2-Zg8
+  ivxbcb: 5HbMxCybKD_1KMLImgFgjdr7mhtMZSpJDlqET9XBhOE
+  vzfqst: VQkES1ggG-oIlL8t2gYr9b8hX425Ah4BdiKnNguwTTg
+  yxuqs4: flGq4EqmSd5DQbOqXPqyzUtyNabbId31oWwctZbETww
 priority: medium
 relations:
   REQ-38288492: depends_on

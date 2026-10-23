@@ -80,6 +80,8 @@ YAML_TYPES = ("yaml", "crystal", "dockercompose", "all")
 CWD_LIMIT = 64
 DEADLINE = time.monotonic() + 30
 JUDGED = ("git", "rm", "patch", "find", "eval", *SHELLS)
+DASHED_GIT = re.compile(r"git-[A-Za-z0-9][\w-]*")
+BASH_SEQUENCE = re.compile(r"\{(?:[+-]?\d+\.\.[+-]?\d+|[A-Za-z]\.\.[A-Za-z])(?:\.\.[+-]?\d+)?\}")
 LONG_FLAGS = ("--force", "--hard", "--discard-changes", "--dry-run", "--staged",
               "--worktree")
 NO_COMMIT = {"merge": ("--ff-only", "--no-commit", "--squash", "--abort", "--quit"),
@@ -888,17 +890,23 @@ def invoked(words):
     while i < len(words) and (os.path.basename(words[i]) in WRAPPERS or "=" in words[i]
                               or REDIRECTION.match(words[i]) or (i and (
             words[i].startswith("-") or words[i][:1].isdigit()
-            or words[i - 1].startswith("-") and os.path.basename(words[i]) not in JUDGED))):
+            or words[i - 1].startswith("-") and not judged(words[i])))):
         i += 2 if REDIRECTION.fullmatch(words[i]) else 1
-    if i < len(words) and os.path.basename(words[i]) not in (*JUDGED, *WRITES_NOTHING):
+    if i < len(words) and not judged(words[i]) and os.path.basename(words[i]) not in WRITES_NOTHING:
         i = next((j for j in range(i, len(words))
                   if os.path.basename(words[j]) in ("rm", "find") or posing(words[j:])
+                  or DASHED_GIT.fullmatch(os.path.basename(words[j])) and judged(words[j])
                   or os.path.basename(words[j]) == "git" and j + 1 < len(words)
                   and (words[j + 1].startswith("-") or words[j + 1] in JUDGED_GIT
                        or EXPANSION.search(words[j + 1]))), i)
     if posing(words[i:]):
         return ["git", *words[i + 1:]]
     return [os.path.basename(words[i]), *words[i + 1:]] if i < len(words) else []
+
+
+def judged(word):
+    name = os.path.basename(word)
+    return name in JUDGED or bool(DASHED_GIT.fullmatch(name)) and name[4:] in (*JUDGED_GIT, *MOVERS)
 
 
 def posing(words):
@@ -1416,7 +1424,11 @@ def landings(subcommand, rest, place):
     if subcommand in ("fetch", "push"):
         flags, operands = options(rest, ("--depth", "--deepen", "--shallow-since",
                                          "--shallow-exclude", "--refmap", "-o",
-                                         "--push-option", "--recurse-submodules", "--repo"))
+                                         "--push-option", "--recurse-submodules", "--repo",
+                                         "-j", "--jobs", "--upload-pack", "--negotiation-tip",
+                                         "--server-option", "--filter", "--submodule-prefix",
+                                         "--recurse-submodules-default", "--receive-pack",
+                                         "--exec"))
         if subcommand == "fetch":
             every = not operands or flagged(flags, "--all", "--multiple")
             remotes = (git_reads(["remote"], place) or "").split() if every else operands[:1]
@@ -1433,7 +1445,9 @@ def landings(subcommand, rest, place):
     current = head_branch(place)
     flags, operands = options(rest, ("-m", "-s", "--strategy", "-X", "--strategy-option",
                                      "-F", "--file", "--into-name", "--cleanup", "--depth",
-                                     "--deepen", "--shallow-since", "--shallow-exclude"))
+                                     "--deepen", "--shallow-since", "--shallow-exclude",
+                                     "--upload-pack", "-o", "--server-option",
+                                     "--negotiation-tip", "--refmap"))
     if subcommand == "reset":
         after = rest[rest.index("--") + 1:] if "--" in rest else []
         if after or len(operands) != 1 or flagged(flags, "-p", "--patch"):
@@ -2002,6 +2016,30 @@ def judge_command(said, here, stdin=()):
     operands = called[1:]
     plain = called[0] if called else None
     posed = plain is not None and EXPANSION.search(plain) is not None
+    # @req> REQ-74982341@IIwAqzZV1bP3 e7ck3d
+    # @req> REQ-76235768@1l5tlNlByWT6 vrjbnq
+    # @req> REQ-30013664@ijHTWP75cTcK jxtur5
+    # @req> REQ-36282702@sK_P4PZZM9_w 7quncd
+    # @req> REQ-75564975@kR-BIGM3krAM b64jr6
+    # @req> REQ-60587913@64oissmU4Xo2 ckab7k
+    # @req> REQ-70178381@2GE_TPwGTZKU ao42pp
+    if posed and any(f"git-{sub}" in text for text in (plain, EXPANSION.sub("", plain))
+                     for sub in (*JUDGED_GIT, *MOVERS)):
+        deny(UNREADABLE.format(what=f"which git command {plain} runs"))
+    # @req> REQ-74982341@IIwAqzZV1bP3 4a5bsj
+    # @req> REQ-76235768@1l5tlNlByWT6 vt4nrs
+    # @req> REQ-30013664@ijHTWP75cTcK iwz7i7
+    # @req> REQ-36282702@sK_P4PZZM9_w qwtlue
+    # @req> REQ-75564975@kR-BIGM3krAM soebre
+    # @req> REQ-60587913@64oissmU4Xo2 6qzcqn
+    # @req> REQ-70178381@2GE_TPwGTZKU ivxbcb
+    if (plain == "git" or DASHED_GIT.fullmatch(plain or "")) and any(
+            map(expands, unquoted[len(words) - len(called) + 1:])):
+        if sequenced := next((word for word in unquoted[len(words) - len(called) + 1:]
+                              if BASH_SEQUENCE.search(word)), None):
+            deny(UNREADABLE.format(what=f"which words {sequenced} expands to"))
+        judge_shell(shlex.join(alt for word in words for alts in [bounded(word)]
+                               for alt in alts if alt or len(alts) == 1), here, stdin)
     # @req> REQ-60587913@64oissmU4Xo2 4qdiqf
     if "xargs" in map(os.path.basename, words[:len(words) - len(called)]) and (
             plain in SHELLS or plain == "git" and subcommand in (None, *JUDGED_GIT)):
@@ -2089,6 +2127,16 @@ def scripts_within(words, here):
                          for word in itertools.takewhile(lambda word: word not in (";", "+"),
                                                          rest[at + 1:]))
                 for at, word in enumerate(rest) if word in FIND_RUNS]
+    # @req> REQ-74982341@IIwAqzZV1bP3 b75cgx
+    # @req> REQ-76235768@1l5tlNlByWT6 rnakdc
+    # @req> REQ-30013664@ijHTWP75cTcK lgiylq
+    # @req> REQ-36282702@sK_P4PZZM9_w j72czn
+    # @req> REQ-75564975@kR-BIGM3krAM qnq6pl
+    # @req> REQ-60587913@64oissmU4Xo2 lj6sn6
+    # @req> REQ-70178381@2GE_TPwGTZKU yxuqs4
+    if DASHED_GIT.fullmatch(tool) and any(tool[4:] in git_commands(kinds)
+                                          for kinds in ("builtins", "main,others")):
+        return [shlex.join([*words[:len(words) - len(rest) - 1], "git", tool[4:], *rest])]
     split = git_split(words)
     # @req> REQ-76235768@1l5tlNlByWT6 2j3niw
     if split and split[2] == "filter-branch":
@@ -2548,7 +2596,8 @@ def moved(pipeline, heres, certain, places):
 def citations(text):
     if "\0" in text:
         return Counter()
-    return Counter(line.strip() for line in text.split("\n")
+    # @req> REQ-38099593@WZbBLy6bHv3j mexsdk
+    return Counter(line.strip() for line in text.removeprefix("\ufeff").split("\n")
                    if CITATION_LINE.match(line))
 
 
@@ -2568,7 +2617,8 @@ def edited(tool, args, cwd):
                                    else "the old_string field"))
         # @req> REQ-67599992@TMfnHY-C4hOv lh5igq
         if old and old not in after and any(
-                CITATION_LINE.match(line) for text in (after, new) for line in text.split("\n")):
+                CITATION_LINE.match(line) for text in (after, new)
+                for line in text.removeprefix("\ufeff").split("\n")):
             deny(INEXACT.format(target=target))
         if not new and not old.endswith("\n") and old + "\n" in after:
             old += "\n"
