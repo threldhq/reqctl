@@ -68,7 +68,8 @@ def _leaves(held, shipped, at):
     if not isinstance(held, dict) or not isinstance(shipped, dict):
         yield at, held, shipped
         return
-    if not held and not shipped:
+    # @req> REQ-99278123@vBQXVC8aZZp3 moafaq
+    if not held and at:
         yield at, held, shipped
     for key, value in held.items():
         yield from _leaves(value, shipped.get(key, {}), (*at, key))

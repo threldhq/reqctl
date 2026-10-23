@@ -744,6 +744,7 @@ def _readdressed_item(data, olds, new):
     held = {key: value if key in ("assessed", "relations")
             else _readdressed(value, olds, new)
             for key, value in data.items()}
+    # @req+ REQ-11930677@zW9EYrOae8-u yycc7l
     pins = data.get("assessed")
     if isinstance(pins, dict):
         moved = {}
@@ -752,6 +753,7 @@ def _readdressed_item(data, olds, new):
             key = (f"{new}.{rest}" if rest else new) if target in olds else address
             moved[key] = pin
         held["assessed"] = moved
+    # @req- yycc7l
     return held
 
 
