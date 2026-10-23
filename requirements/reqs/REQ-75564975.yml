@@ -32,9 +32,11 @@ assessed:
 citations:
   2ospre: u1QdgWqInjsNmJB97Nw-YbVlpbCJjiu34OZobZ2ln9E
   cxtbyd: OJ_64zVVMlGzWUaUJFoUUChrgrXNMb-9D2YScD_MFv4
-  owo62a: FC5WW84yFBbpZIfSY3EdLZCkY5AR0pecFI-PbMzU6eM
+  owo62a: v2nc-IC7wD1RIwtb1L_R09Q0UfyBiTUUlc74UrnZy7U
+  qnq6pl: lgs4vtN13HWx2jmGLOWxfKK15Xia1cTcfAJXAMssh_w
   sjmzez: LJuGIkHQK_F3Kf6wD9IWoT_eY0IhGmAe4v16LSsVi24
-  vreqvm: S3HgjoYD-TmA4HiL5K5d8wmhfiiGcqJ-UHI6t5Tkx2c
+  soebre: dwJ1R7YWJXsN8635dfFFqE1IJT-CUPcQJA7tEC9ewyg
+  vreqvm: ocCh9x3Jz5GH5rL9NbGXDusj0EJgj9FfdVMfad_JyJc
 priority: medium
 relations:
   REQ-38288492: depends_on

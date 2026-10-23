@@ -28,9 +28,11 @@ assessed:
   REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  2j3niw: 9oCJczRkH1AL_5WkaiMMc4KhDN0rgWbDImNtfTKmcUc
-  amejii: RKDHIkzryuSmS81crweHuwrAdSl9ATrWc1Z5mA3AVqU
-  nahqvl: NphzrXkejrMydmpckd8wmG0fu4QUkN4BNxe0zWIu_7c
+  2j3niw: QmmWlOmvTVVg7CZSbbJAX6gLEIbdMiaGfxPmUXtXddU
+  amejii: 0fcumcKpEzH3Eex76t7n9xIKQKUU9En8ZdQIctNMKpY
+  nahqvl: RxAE5aWdUTO_qcONGHAva2YJHA3iy7XE2ch8KeHrZp0
+  rnakdc: lgs4vtN13HWx2jmGLOWxfKK15Xia1cTcfAJXAMssh_w
+  vt4nrs: dwJ1R7YWJXsN8635dfFFqE1IJT-CUPcQJA7tEC9ewyg
 priority: medium
 relations:
   REQ-36925311: depends_on
