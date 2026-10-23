@@ -6,7 +6,7 @@ assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
   REQ-91205530: FiUaykViw6dQBHW7EnBC6n0Z561dMImVZMcXtg1FxdA
 citations:
-  xna7hd: Xa-Txlme2uz8faCgPUpvNtPW4jMPYJ5yUQIHxw4pfgI
+  xna7hd: DzpF7q50xKf6r8gQpwZuS1avRnhNt5gLLKZKL5d8gRs
 priority: medium
 relations:
   REQ-24481048: depends_on
