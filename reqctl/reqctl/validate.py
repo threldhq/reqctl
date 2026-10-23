@@ -92,7 +92,7 @@ def schema_problems(root, uid, data):
             said = ("does not apply to a data item" if kind == "data"
                     else f"does not apply to a {kind}")
         # @req> REQ-30898926@Vu28eWaG_1mE cgpecz
-        problems.append(f"{uid}: schema: {where}: {said} -- correct {where} "
+        problems.append(f"{uid}: schema: {where}: {said} -- correct it "
                         "through the flag that writes it, or by hand in "
                         f"{uid}'s file where none does")
     # @req- p3hzqn
