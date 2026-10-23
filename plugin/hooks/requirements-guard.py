@@ -81,7 +81,7 @@ CWD_LIMIT = 64
 DEADLINE = time.monotonic() + 30
 JUDGED = ("git", "rm", "patch", "find", "eval", *SHELLS)
 DASHED_GIT = re.compile(r"git-[A-Za-z0-9][\w-]*")
-BASH_SEQUENCE = re.compile(r"\{(?:-?\d+\.\.-?\d+|[A-Za-z]\.\.[A-Za-z])(?:\.\.-?\d+)?\}")
+BASH_SEQUENCE = re.compile(r"\{(?:[+-]?\d+\.\.[+-]?\d+|[A-Za-z]\.\.[A-Za-z])(?:\.\.[+-]?\d+)?\}")
 LONG_FLAGS = ("--force", "--hard", "--discard-changes", "--dry-run", "--staged",
               "--worktree")
 NO_COMMIT = {"merge": ("--ff-only", "--no-commit", "--squash", "--abort", "--quit"),
@@ -1445,7 +1445,9 @@ def landings(subcommand, rest, place):
     current = head_branch(place)
     flags, operands = options(rest, ("-m", "-s", "--strategy", "-X", "--strategy-option",
                                      "-F", "--file", "--into-name", "--cleanup", "--depth",
-                                     "--deepen", "--shallow-since", "--shallow-exclude"))
+                                     "--deepen", "--shallow-since", "--shallow-exclude",
+                                     "--upload-pack", "-o", "--server-option",
+                                     "--negotiation-tip", "--refmap"))
     if subcommand == "reset":
         after = rest[rest.index("--") + 1:] if "--" in rest else []
         if after or len(operands) != 1 or flagged(flags, "-p", "--patch"):
@@ -2014,6 +2016,16 @@ def judge_command(said, here, stdin=()):
     operands = called[1:]
     plain = called[0] if called else None
     posed = plain is not None and EXPANSION.search(plain) is not None
+    # @req> REQ-74982341@IIwAqzZV1bP3 e7ck3d
+    # @req> REQ-76235768@1l5tlNlByWT6 vrjbnq
+    # @req> REQ-30013664@ijHTWP75cTcK jxtur5
+    # @req> REQ-36282702@sK_P4PZZM9_w 7quncd
+    # @req> REQ-75564975@kR-BIGM3krAM b64jr6
+    # @req> REQ-60587913@64oissmU4Xo2 ckab7k
+    # @req> REQ-70178381@2GE_TPwGTZKU ao42pp
+    if posed and any(f"git-{sub}" in text for text in (plain, EXPANSION.sub("", plain))
+                     for sub in (*JUDGED_GIT, *MOVERS)):
+        deny(UNREADABLE.format(what=f"which git command {plain} runs"))
     # @req> REQ-74982341@IIwAqzZV1bP3 4a5bsj
     # @req> REQ-76235768@1l5tlNlByWT6 vt4nrs
     # @req> REQ-30013664@ijHTWP75cTcK iwz7i7
