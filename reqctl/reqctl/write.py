@@ -153,7 +153,8 @@ def _blank_or_hidden(fields, own, kind, carried=frozenset()):
                     field.name == "text" and kind in STATEMENTS):
                 # @req> REQ-30898926@Vu28eWaG_1mE 3vca72
                 raise ReqctlError(f"{field.flag} must not be blank -- give it "
-                                  "a value that is not blank")
+                                  "a value, or leave it out; on revise, its "
+                                  "--no- flag clears the field")
             # @req+ REQ-79956352@OsoTGRd6D5CZ i24q67
             found = _validate.hidden(str(member))
             if found is not None and not _restated(field, str(member), carried):
@@ -574,7 +575,8 @@ def _unset_fields(entry, names, key):
             if not isinstance(nested, dict):
                 # @req> REQ-30898926@Vu28eWaG_1mE ocglhp
                 raise ReqctlError(f"--unset {gone}: {step} holds no entries -- "
-                                  f"unset {step} itself rather than a field under it")
+                                  "name a field the entry records, as `reqctl "
+                                  "context` shows them")
             where[step] = nested = dict(nested)
             where = nested
         if steps[-1] not in where:
@@ -1070,7 +1072,7 @@ def _placeholder_for(kind, uid):
         # @req> REQ-30898926@Vu28eWaG_1mE qnl3yk
         raise ReqctlError(
             f"{uid}: a {kind} is minted under {prefix}- and eight digits -- "
-            f"pass --uid {prefix}-NNNNNNNN")
+            f"pass --uid {prefix}-NNNNNNNN, or leave --uid out to mint a free one")
     return uid.removeprefix(f"{prefix}-")
 
 
@@ -1378,12 +1380,13 @@ def _revision(store, uid, fields):
             and fields.get("new_entry") is None):
         # @req> REQ-30898926@Vu28eWaG_1mE ygfwfy
         raise ReqctlError("--set needs --entry -- name the entry with --entry "
-                          "KEY, or a new one with --new-entry KEY")
+                          "KEY; a data item also takes a new one with --new-entry KEY")
     if (fields.get("append") and fields.get("entry") is None
             and fields.get("new_entry") is None):
         # @req> REQ-30898926@Vu28eWaG_1mE yearku
         raise ReqctlError("--append needs --entry -- name the entry with "
-                          "--entry KEY, or a new one with --new-entry KEY")
+                          "--entry KEY; a data item also takes a new one with "
+                          "--new-entry KEY")
     if fields.get("unset") and fields.get("entry") is None:
         # @req> REQ-30898926@Vu28eWaG_1mE oblxrc
         raise ReqctlError(
