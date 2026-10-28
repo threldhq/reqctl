@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a run holding recall returns, one of whose [proposals](proposal) is then
+    edited
+  then: every other [proposal](proposal)'s [recall result](recall_result) for each
+    corpus shard whose content is unchanged is reused and no recall agent is spawned
+    for it
+  when: the run is built
+- given: a run holding recall returns, whose dictionary has since changed
+  then: no [recall result](recall_result) is reused
+  when: the run is built
+assessed:
+  REQ-16868696: xXhoCmAQTytnVrvnTQYgjV8cwWwvJUq3oO1yFYNtDPE
+  REQ-18405752: FCxc3x0E2EZUNqmp06MeH34UxsaAniBz3rPit2klDEU
+  REQ-48772986: cB0IdrcBwgHWKSo2OnmmP74SJyVg4T9o1MWpOLPGs18
+  REQ-54045696: m7842dVOG3jfAQVDFEmk4lKHnWPiRptaE2NwQSgLLww
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+  recall_result: bvoXpm-av7i-xeJlRnBDgXHfKvmbYOr0ix7GgOEdy6A
+priority: medium
+relations:
+  REQ-16868696: constrains
+  REQ-18405752: depends_on
+  REQ-48772986: depends_on
+  REQ-54045696: depends_on
+status: approved
+text: When a run is built, the product shall reuse a [proposal](proposal)'s [recall
+  result](recall_result) for a corpus shard, without recalling that [proposal](proposal)
+  in that shard again, where its statement and binding, the shard's content, the dictionary
+  and the fixed text of the recall prompt are all unchanged since that [recall result](recall_result)
+  was returned.
+type: functional
+verification: inspection

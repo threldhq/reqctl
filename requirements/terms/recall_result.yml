@@ -1,0 +1,12 @@
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+entries:
+  recall_result:
+    aliases:
+    - recall results
+    definition: What a recall return states for one [proposal](proposal) in one shard,
+      whether it names an [item](item) or none.
+    word: recall result
+kind: term
+status: approved

@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: the text of the elucidate skill
+  then: it states that, before spawning a run's agents again after the owner's answers
+    change a [proposal](proposal)'s statement or criteria, the session puts the agent
+    count, the models and the approximate token count the product reports to the owner
+    and waits for the answer
+  when: it is read
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-96453437: bZSLsL3QNLJaTKb2rFRQiHxaYLVwXTeffm6a3e3fKBE
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+priority: medium
+relations:
+  REQ-12222066: depends_on
+  REQ-38288492: depends_on
+  REQ-96453437: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
+  session puts the number of agents, models and approximate count of tokens the product
+  reports for a spawn manifest to the owner, and waits for the owner's answer, before
+  spawning a run's agents again after the owner's answers change a [proposal](proposal)'s
+  statement or criteria.
+type: functional
+verification: inspection

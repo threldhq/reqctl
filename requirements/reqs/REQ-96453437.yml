@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a run whose build writes a spawn manifest for recall agents
+  then: before the manifest is written, the report states the number of agents, the
+    model of each and an approximate count of the tokens in their prompts
+  when: the run is built
+assessed:
+  REQ-16868696: xXhoCmAQTytnVrvnTQYgjV8cwWwvJUq3oO1yFYNtDPE
+  REQ-18337665: j18ypL2DSMhnTn25OUonESMhUGraMbYYAJ5Q-U7c3VA
+  REQ-23060027: zeNeSryv-0-1-V7CNGTlk3RN2_KxE0P3zV9SCZD6ZSs
+  REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
+  REQ-56479390: CzOsA-KyXyrWRwdwuc094oX8CXwHQidGbETuAaYFTSE
+priority: medium
+relations:
+  REQ-16868696: constrains
+  REQ-18337665: constrains
+  REQ-23060027: depends_on
+  REQ-29203000: depends_on
+  REQ-56479390: constrains
+status: approved
+text: When the build, judge or final step of a run writes a spawn manifest, the product
+  shall report, before writing it, the number of agents the manifest spawns, the model
+  each runs on, and an approximate count of the tokens in the prompts it spawns them
+  with.
+type: functional
+verification: inspection

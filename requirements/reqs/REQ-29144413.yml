@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a recall agent whose prompt names the one file it reads
+  then: the [tool call](tool_call) is refused
+  when: the agent calls Read on another path
+assessed:
+  REQ-29981224: X6wmVnpxwiio5uqTX1u_AecXR2iq3Vz5-fqWt9XU2ps
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  REQ-92555000: mAs-Mq_DPKHG8X5swkBtBzrOERl9dSwEOYxAste3Ogw
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.judge: HjOYb75hR7Rg09gI8hCr7VjyzrzdwKoliWnF9u1p764
+  elucidate_agents.recall: M1iPgKaFnrUC6af0jjxnux4WvZ807vzJIlDBw1qNnhg
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-29981224: constrains
+  REQ-36925311: depends_on
+  REQ-60211288: depends_on
+  REQ-92555000: derives_from
+status: approved
+text: If a [tool call](tool_call) of an agent named in ${elucidate_agents.judge} or
+  ${elucidate_agents.recall} would read a path other than the one its prompt names
+  for it to read, then the product shall refuse it.
+type: functional
+verification: inspection
