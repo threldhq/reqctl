@@ -1,0 +1,14 @@
+acceptance_criteria:
+- given: a directory that holds no corpus
+  then: the version the installed [reqctl wheel](reqctl_wheel) states is printed and
+    reqctl exits successfully
+  when: '`reqctl --version` is run with no subcommand'
+assessed:
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+priority: medium
+relations: {}
+status: approved
+text: When `reqctl --version` is run, the product shall print the version the installed
+  [reqctl wheel](reqctl_wheel) states and exit successfully.
+type: functional
+verification: inspection

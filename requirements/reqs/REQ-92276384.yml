@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: an elucidate agent's [tool call](tool_call) whose check has not finished
+    when the boundary check time limit passes
+  then: the [tool call](tool_call) is refused
+  when: the time limit passes
+assessed:
+  REQ-29144413: xUHITg06zyjbm-DRyqOZdGmgHApmRF73iI6lDQ3K4iE
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
+  REQ-76059602: 5XTkNVOEhMxoeofNFdGj5kgMc0ES7zvQiDAwehQHnz8
+  boundary_check_seconds: Lb-WJCl6j1LiW5yIZLPtrritnLTwJqCKSM8Vgb24eXk
+  boundary_check_seconds.*: 26tKiZe1aTRKMgPzUUyeQjXubwzlXllrEl7YYesK_HY
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-29144413: depends_on
+  REQ-36925311: depends_on
+  REQ-76059602: depends_on
+status: approved
+text: If the product's check of a [tool call](tool_call) of an agent named in ${elucidate_agents}
+  does not finish within ${boundary_check_seconds}, then the product shall refuse
+  the call.
+type: functional
+verification: inspection

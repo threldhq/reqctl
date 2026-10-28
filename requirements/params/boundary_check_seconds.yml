@@ -4,7 +4,7 @@ entries:
   '10': {}
 kind: parameter
 name: boundary_check_seconds
-status: draft
+status: approved
 text: The longest the product spends checking a [tool call](tool_call) of an elucidate
   agent against the paths its prompt names, before it refuses the call
 unit: s

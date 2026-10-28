@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a run of three [proposals](proposal) holding recall returns, one of which
+    is then edited
+  then: corpus-shard recall prompts are built for the edited [proposal](proposal)
+    and for no other
+  when: the run is built
+- given: a run holding recall returns, to which a new [proposal](proposal) is then
+    added
+  then: recall prompts are built for the new [proposal](proposal) in every corpus
+    shard
+  when: the run is built
+assessed:
+  REQ-32866040: hbsvPKXBNujzx44hvDJBuO8T-SLXMdakLBWV5FJbrWU
+  REQ-84799660: Jkvs__laWrIKPU_bIvWqZdSOh_OOIi6cIsq5xc9XC0A
+  REQ-94426583: 8JHtrZp73dHbt0YdrxVVJJCwoQIjtjEQO5VDptA7dRQ
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+  recall_result: bvoXpm-av7i-xeJlRnBDgXHfKvmbYOr0ix7GgOEdy6A
+priority: medium
+relations:
+  REQ-32866040: constrains
+  REQ-84799660: depends_on
+  REQ-94426583: constrains
+status: approved
+text: When a run is built, the product shall build a corpus shard's recall prompts
+  only for the [proposals](proposal) whose [recall result](recall_result) for that
+  shard it does not reuse.
+type: functional
+verification: inspection
