@@ -1,5 +1,6 @@
 import argparse
 import dataclasses
+import importlib.metadata
 import json
 import os
 import sys
@@ -1199,6 +1200,9 @@ def build_parser(root, fielded):
                     "the command: reqctl --json <command> ...",
     )
     p.add_argument("--json", action="store_true", help="machine-readable output")
+    # @req> REQ-94206537@I4xcLLW1nbOH 47la7c
+    p.add_argument("--version", action="version",
+                   version=importlib.metadata.version("reqctl"))
     sub = p.add_subparsers(dest="command", required=True)
 
     s = _command(sub, "new", "mint a requirement, parameter, term or data item")

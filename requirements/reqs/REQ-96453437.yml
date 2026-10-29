@@ -9,6 +9,8 @@ assessed:
   REQ-23060027: zeNeSryv-0-1-V7CNGTlk3RN2_KxE0P3zV9SCZD6ZSs
   REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
   REQ-56479390: CzOsA-KyXyrWRwdwuc094oX8CXwHQidGbETuAaYFTSE
+citations:
+  e3ps5d: nSoUKhEBONrrDjRvP02H70_aTNjp1iW0MseQraawr88
 priority: medium
 relations:
   REQ-16868696: constrains

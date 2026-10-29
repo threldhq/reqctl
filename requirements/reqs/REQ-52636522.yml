@@ -15,6 +15,8 @@ assessed:
   REQ-94426583: 8JHtrZp73dHbt0YdrxVVJJCwoQIjtjEQO5VDptA7dRQ
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
   recall_result: bvoXpm-av7i-xeJlRnBDgXHfKvmbYOr0ix7GgOEdy6A
+citations:
+  ttitkk: pmGBwYs5E9dtld_p2LpP2Hk9D0B2R6u3mAjHtcDSBuA
 priority: medium
 relations:
   REQ-32866040: constrains
