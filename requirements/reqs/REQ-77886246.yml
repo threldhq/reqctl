@@ -16,8 +16,8 @@ assessed:
   kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
   schema_marker: aUPBsCbKNXsnZ9A1k4uL3ic-N6BgBilXd4Qx3mqWpLM
 citations:
-  hghw3m: C2k7rx_gYlITJ_LA4E9pJgOttN48hAASqWTP2Ym8uE8
-  i2zwhw: 77FF6GV87AGKW7DdlIYdVehMTNi4_cf5b2K8Gv_YVjY
+  hghw3m: iUSYY0fzarJ7WaepI1vpxMD46COxVTyqfrSLmAmwLB0
+  i2zwhw: UpYNCUvWkMcRcjIwI0SqZjmmo-UFhM4QZXu6oBvyJEE
 priority: medium
 relations:
   REQ-13148397: depends_on

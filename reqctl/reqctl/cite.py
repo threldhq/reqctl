@@ -146,8 +146,10 @@ def cut(path, text, spans):
     try:
         depths, starts, ends = read(text)
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError) as broken:
+        # @req> REQ-30898926@Vu28eWaG_1mE 4cfehc
         return problems + [(path, f"{path}: cannot read its nest levels ({broken}), so no "
-                                  "citation in it can be checked")]
+                                  "citation in it can be checked -- fix the file so "
+                                  "its nest levels parse, then retry")]
     for identity, first, last in spans:
         code = [n for n in range(first, last + 1) if n in depths]
         if not code:
@@ -158,9 +160,12 @@ def cut(path, text, spans):
         if (code[0] not in starts or code[-1] not in ends
                 or any(depths[n] < level for n in code)
                 or (after and depths[min(after)] > level)):
+            # @req> REQ-30898926@Vu28eWaG_1mE whom5u
             problems.append((identity,
-                             f"{path}: citation {identity} cuts a block -- it must "
-                             "cover whole statements at the nest level of its first line"))
+                             f"{path}: citation {identity} cuts a block, as it must "
+                             "cover whole statements at the nest level of its first "
+                             f"line -- reqctl untag {identity}, then reqctl tag lines "
+                             "that do"))
     return problems
 
 
@@ -238,7 +243,9 @@ def read(root, digested=False, uid=None):
     # @req+ REQ-79989567@oaSFUA9o3D48 bz6frh
     texts = dict(sources)
     # @req> REQ-64570886@Zckz3LzHUzXn o4sv56
-    problems += [f"{c['path']}: citation {c['id']} covers no code statement"
+    # @req> REQ-30898926@Vu28eWaG_1mE ar62n7
+    problems += [f"{c['path']}: citation {c['id']} covers no code statement -- "
+                 f"reqctl untag {c['id']}, then reqctl tag a code statement"
                  for c in citations if len(c["marks"]) == 2 and mine(c["uid"])
                  and hollow(c["path"], texts[c["path"]], c["first"], c["last"])]
     # @req- bz6frh
@@ -252,8 +259,10 @@ def former(sources):
     for relative, text in sources:
         for number, line in enumerate(_feed_lines(text or ""), start=1):
             for uid in FORMER.findall(line):
+                # @req> REQ-30898926@Vu28eWaG_1mE 2fo354
                 yield uid, (f"{relative}:{number}: names {uid} in a single-line "
-                            "tag -- cite it with reqctl tag")
+                            "tag -- remove that comment, then cite the code with "
+                            "reqctl tag")
 
 
 def cited(citations):
@@ -274,8 +283,10 @@ def _parse(sources, nests=True):
     for relative, text in sources:
         # @req> REQ-35805881@37XtC4gyD98k 5h3hpr
         if text is None:
+            # @req> REQ-30898926@Vu28eWaG_1mE nltcdy
             faults.append((EVERY, f"{relative}: unreadable while scanning for "
-                                  "statement citations"))
+                                  "statement citations -- make it readable (fix "
+                                  "its permissions), then retry"))
             continue
         # @req> REQ-25428163@jtztw34heeVp ap76fb
         if TIGHT.search(text):
@@ -288,9 +299,12 @@ def _parse(sources, nests=True):
         if not found:
             continue
         if Path(relative).suffix not in COMMENTS:
+            # @req> REQ-30898926@Vu28eWaG_1mE 3lg537
             faults.append((None,
                            f"{relative}: carries a statement citation, but citations "
-                           f"are read only in {', '.join(sorted(COMMENTS))} files"))
+                           f"are read only in {', '.join(sorted(COMMENTS))} files -- "
+                           "reqctl untag each citation id it carries, or remove the "
+                           "comment by hand where it names none"))
             continue
         # @req> REQ-12235023@uEMBe2x_2uwp 4s3qrw
         alone = _alone(relative, text)
@@ -299,35 +313,48 @@ def _parse(sources, nests=True):
         for number, body, parsed in found:
             # @req> REQ-12235023@uEMBe2x_2uwp sbc4do
             if number not in alone:
+                # @req> REQ-30898926@Vu28eWaG_1mE nmx3xd
                 faults.append((None, f"{relative}:{number}: holds a citation marker "
                                      "and more than white space and one single-line "
-                                     "comment, so no citation is read from it"))
+                                     "comment, so no citation is read from it -- "
+                                     "reqctl untag its citation, then reqctl tag "
+                                     "again"))
                 continue
             # @req> REQ-11268295@s4gX4poitxmM q7622j
             if parsed is None or not parsed["id"]:
+                # @req> REQ-30898926@Vu28eWaG_1mE a7oxjp
                 faults.append((None, f"{relative}:{number}: `{body}` names no "
-                                     "citation identity"))
+                                     "citation identity -- remove the comment by "
+                                     "hand, or replace it by citing the code with "
+                                     "reqctl tag"))
                 continue
             identity = parsed["id"]
             if parsed["sign"] in (OPEN, SINGLE):
                 if not parsed["uid"]:
+                    # @req> REQ-30898926@Vu28eWaG_1mE aogklo
                     faults.append((identity, f"{relative}:{number}: citation "
-                                             f"{identity} names no requirement"))
+                                             f"{identity} names no requirement -- "
+                                             f"reqctl untag {identity}, then reqctl "
+                                             "tag again"))
                     continue
                 # @req> REQ-44424329@FMmHjrkfDEYR det3om
                 if identity in seen:
+                    # @req> REQ-30898926@Vu28eWaG_1mE k2nkiy
                     faults.append((identity,
                                    f"{relative}:{number}: citation {identity} is also "
-                                   f"opened at {seen[identity]} -- an identity names "
-                                   "one citation"))
+                                   f"opened at {seen[identity]}, though an identity "
+                                   "names one citation -- reqctl untag one of the "
+                                   "two, then reqctl tag again"))
                 seen.setdefault(identity, f"{relative}:{number}")
                 if parsed["sign"] == SINGLE:
                     singles.append((number, parsed))
                     continue
                 live[identity] = (number, parsed)
             elif identity not in live:
+                # @req> REQ-30898926@Vu28eWaG_1mE mqimpm
                 faults.append((identity, f"{relative}:{number}: closes citation "
-                                         f"{identity}, which is not open here"))
+                                         f"{identity}, which is not open here -- "
+                                         f"reqctl untag {identity}"))
             else:
                 # @req+ REQ-52925332@8dtaEN9KH9jO wbbbtu
                 start, held = live.pop(identity)
@@ -336,15 +363,20 @@ def _parse(sources, nests=True):
                                         start + 1, number - 1, [start, number]))
                 # @req- wbbbtu
         for identity, (number, _) in live.items():
+            # @req> REQ-30898926@Vu28eWaG_1mE gf5tft
             faults.append((identity, f"{relative}:{number}: opens citation "
-                                     f"{identity} and never closes it"))
+                                     f"{identity} and never closes it -- reqctl "
+                                     f"untag {identity}, then reqctl tag the lines "
+                                     "again"))
         # @req- gqpqj6
         for number, held in singles:
             span = following(relative, text, number)
             # @req> REQ-95865306@6u2XMnjDwlvR ytqmle
             if span is None:
+                # @req> REQ-30898926@Vu28eWaG_1mE gt4zxq
                 faults.append((held["id"], f"{relative}:{number}: citation "
-                                           f"{held['id']} has no code statement after it"))
+                                           f"{held['id']} has no code statement after "
+                                           f"it -- reqctl untag {held['id']}"))
                 continue
             opened.append(_citation(held, relative, number, span[1], *span,
                                     [number]))
@@ -493,10 +525,12 @@ def _duplicates(path, found, asked):
                        or order.index(other["id"]) < order.index(identity))
             if (other["address"] == uid and earlier
                     and spanned[other["id"]] == spanned[identity]):
+                # @req> REQ-30898926@Vu28eWaG_1mE dz352n
                 problems.append(
                     f"{path}: lines {first}-{last} are already cited for {uid}"
                     + (" by this command" if other["id"] in asked
-                       else f" by citation {other['id']}"))
+                       else f" by citation {other['id']}")
+                    + " -- reqctl untag the existing citation, or cite other lines")
                 break
     return problems
 
@@ -505,17 +539,22 @@ def _duplicates(path, found, asked):
 def tagged(root, path, asked, exclusive=False):
     target = Path(path)
     if target.suffix not in COMMENTS:
+        # @req> REQ-30898926@Vu28eWaG_1mE z2sgqd
         raise ReqctlError(f"{path}: citations are written only in "
-                          f"{', '.join(sorted(COMMENTS))} files")
+                          f"{', '.join(sorted(COMMENTS))} files -- cite a file of "
+                          "one of those types")
     # @req> REQ-89706423@fyVHTsenA51D thl334
     if not target.resolve().is_relative_to(Path(root).resolve()):
-        raise ReqctlError(f"{path}: not in the code base at {root}")
+        # @req> REQ-30898926@Vu28eWaG_1mE mh6b74
+        raise ReqctlError(f"{path}: not in the code base at {root} -- give a "
+                          "path inside it")
     # @req+ REQ-71794830@YqhGXWh66eq_ tbkz5r
     base = Path(root).resolve()
     folder = next((up for up in target.resolve().parents
                    if up != base and up.is_relative_to(base)
                    and corpus.skipped(base, up)), None)
     if folder is not None:
+        # @req> REQ-30898926@Vu28eWaG_1mE kn3gln
         raise ReqctlError(f"{path}: {folder.relative_to(base)} is a folder the "
                           "citation scan skips, so a citation there is never "
                           "read -- cite code outside it")
@@ -528,7 +567,9 @@ def tagged(root, path, asked, exclusive=False):
     # @req> REQ-65738797@3jHtqzLVQUal msfg5w
     for first, last, _, _ in asked:
         if not 1 <= first <= last <= len(lines):
-            raise ReqctlError(f"{path}: lines {first}-{last} are not in the file")
+            # @req> REQ-30898926@Vu28eWaG_1mE wnhqm4
+            raise ReqctlError(f"{path}: lines {first}-{last} are not in the file "
+                              "-- pass --from and --to within the file")
     # @req+ REQ-55291596@DLuklmxajzSV 7nnmie
     edge = _front(text) if target.suffix == ".md" else 0
     crossing = [f"{path}: lines {first}-{last} cross the edge of the front matter -- "
@@ -536,12 +577,14 @@ def tagged(root, path, asked, exclusive=False):
                 for first, last, _, _ in asked
                 if first <= edge and not 1 < first <= last < edge]
     if crossing:
+        # @req> REQ-30898926@Vu28eWaG_1mE xqueam
         raise ReqctlError("\n".join(crossing))
     # @req- 7nnmie
     sources = list(_sources(root))
     held, problems = parse(sources)
     # @req> REQ-35805881@37XtC4gyD98k kz4urn
     if any(text is None for _, text in sources):
+        # @req> REQ-30898926@Vu28eWaG_1mE 2ejkra
         raise ReqctlError("the code's citations do not read:\n" + "\n".join(problems))
     taken = {c["id"] for c in held}
     word = " exclusive" if exclusive else ""
@@ -573,27 +616,34 @@ def tagged(root, path, asked, exclusive=False):
     alone = _alone(path, written)
     falling = {parsed["id"] for number, _, parsed in markers(written, target.suffix)
                if parsed and number not in alone}
+    # @req> REQ-30898926@Vu28eWaG_1mE 6tukfm
     inside = [f"{path}: lines {first}-{last}: a comment carrying the citation would "
-              "fall inside a multiline comment or string"
+              "fall inside a multiline comment or string -- choose lines "
+              "outside it"
               for identity, (first, last, _, _) in zip(minted, asked)
               if identity in falling]
     if inside:
+        # @req> REQ-30898926@Vu28eWaG_1mE dlokdg
         raise ReqctlError("\n".join(inside))
     # @req- n5z4vo
     found, dropped = parse([(path, written)])
     new = [c for identity in minted for c in found if c["id"] == identity]
     # @req> REQ-82335572@EEu579sUxCO2 stzuaz
     if len(new) < len(minted):
+        # @req> REQ-30898926@Vu28eWaG_1mE dejtqm
         raise ReqctlError("\n".join(dropped))
     # @req+ REQ-65738797@3jHtqzLVQUal zkxsxx
     problems = [problem for _, problem in cut(
         path, written, [(c["id"], c["first"], c["last"])
                         for c in new if len(c["marks"]) == 2])]
     # @req> REQ-82335572@EEu579sUxCO2 5lq35y
-    problems += [f"{path}: lines {first}-{last} hold no code statement"
+    # @req> REQ-30898926@Vu28eWaG_1mE 3pdc4x
+    problems += [f"{path}: lines {first}-{last} hold no code statement -- "
+                 "choose --from and --to lines that hold one"
                  for first, last, _, _ in asked if hollow(path, text, first, last)]
     problems += _duplicates(path, found, dict(zip(minted, asked)))
     if problems:
+        # @req> REQ-30898926@Vu28eWaG_1mE c7h3c7
         raise ReqctlError("\n".join(problems))
     # @req- zkxsxx
     # @req+ REQ-59827868@bWN38P4cOthQ entyuu
@@ -620,6 +670,7 @@ def readable(root, identity=EVERY, nests=True):
     files = () if identity is EVERY else [citation["path"] for citation in found]
     against = [fault for about, fault in faults if about in (identity, EVERY, *files)]
     if against:
+        # @req> REQ-30898926@Vu28eWaG_1mE z4stql
         raise ReqctlError("the code's citations do not read:\n" + "\n".join(against))
     return found
 
@@ -629,7 +680,9 @@ def named(root, identity, nests=True):
         return citation
     # @req> REQ-51778557@2aIQFI4KxvJ3 2j6t3u
     # @req> REQ-41024637@JaitgDKH7S2S cdi6vq
-    raise ReqctlError(f"no statement citation names {identity}")
+    # @req> REQ-30898926@Vu28eWaG_1mE bw5uk2
+    raise ReqctlError(f"no statement citation names {identity} -- reqctl "
+                      "trace UID lists the identities an item is cited by")
 # @req- yqdz42
 
 
@@ -657,6 +710,7 @@ def repinned(root, citation, stamp):
 def every(root):
     held, faults = parse(_sources(root))
     if faults:
+        # @req> REQ-30898926@Vu28eWaG_1mE 3qmuhz
         raise ReqctlError("the code's citations do not read:\n" + "\n".join(faults))
     return held
 
@@ -670,9 +724,12 @@ def renamed(root, citation, name):
     lines[at], done = pinned.subn(lambda found: f"{found.group(1)}{address}",
                                   lines[at], count=1)
     if not done:
+        # @req> REQ-30898926@Vu28eWaG_1mE 5hzcy3
         raise ReqctlError(f"{citation['path']}:{citation['open']}: citation "
                           f"{citation['id']} does not read as naming "
-                          f"{citation['address']}; nothing was renamed")
+                          f"{citation['address']}; nothing was renamed -- "
+                          f"reqctl untag {citation['id']}, then reqctl tag "
+                          "again")
     return target, (mark + "".join(lines)).encode()
     # @req- 4otwfp
 
@@ -768,12 +825,14 @@ def whole(path, text):
 def spanned(path, name):
     # @req> REQ-94119327@SaWRJkHCFkNi gcrrhf
     if Path(path).suffix != ".py":
+        # @req> REQ-30898926@Vu28eWaG_1mE jmsg5p
         raise ReqctlError(f"{path}: {name} names a definition only in a .py file -- "
                           "cite lines of it with --from and --to")
     source = Path(path).read_bytes().decode().removeprefix(BOM).replace("\r\n", "\n").replace("\r", " ")
     try:
         tree = ast.parse(source)
     except (SyntaxError, RecursionError, MemoryError) as error:
+        # @req> REQ-30898926@Vu28eWaG_1mE mgkjni
         raise ReqctlError(f"{path}: not Python that parses ({error}) -- fix it, or "
                           "cite lines of it with --from and --to") from error
     # @req+ REQ-74702510@gU2X5OnlUbY3 6r4imu
@@ -792,11 +851,13 @@ def spanned(path, name):
     # @req- 6r4imu
     # @req> REQ-94119327@SaWRJkHCFkNi yvjo27
     if not found:
+        # @req> REQ-30898926@Vu28eWaG_1mE 6w3pmt
         raise ReqctlError(f"{path}: no function, class or method is named {name} -- "
                           "name one the file defines, joining enclosing names with "
                           "dots, or cite lines with --from and --to")
     # @req> REQ-73249972@0ct6LD_NhZts 6qhks7
     if len(found) > 1:
+        # @req> REQ-30898926@Vu28eWaG_1mE pxprub
         raise ReqctlError(f"{path}: {name} names more than one definition, at lines "
                           f"{', '.join(str(line) for line in sorted(node.lineno for node in found))} -- join "
                           "the names enclosing the one meant with dots, or cite "
@@ -839,7 +900,10 @@ def _git(root, *args):
     found = subprocess.run(["git", *args], cwd=root, capture_output=True,
                            text=True, check=False)
     if found.returncode:
-        raise ReqctlError(f"git {' '.join(args)}: {found.stderr.strip()}")
+        # @req> REQ-30898926@Vu28eWaG_1mE h7pbvo
+        raise ReqctlError(f"git {' '.join(args)}: {found.stderr.strip()} -- "
+                          "install git or put it on PATH, run reqctl inside the "
+                          "repository, or fetch the ref it names, then retry")
     return found.stdout
 
 
@@ -849,7 +913,9 @@ def _carried(root, commit):
         ["git", "grep", "-l", "-z", "-E", "@req[+>-]([[:space:]]|$)", commit, "--"],
         cwd=root, capture_output=True, text=True, check=False)
     if listed.returncode not in (0, 1):
-        raise ReqctlError(f"cannot read {commit}: {listed.stderr.strip()}")
+        # @req> REQ-30898926@Vu28eWaG_1mE eanwpu
+        raise ReqctlError(f"cannot read {commit}: {listed.stderr.strip()} -- "
+                          "run `git fetch origin`, then retry")
     for named in filter(None, listed.stdout.split("\0")):
         relative = named.split(":", 1)[1]
         yield relative, _git(root, "show", f"{commit}:{relative}").removeprefix(BOM)
@@ -875,6 +941,7 @@ def compare(root, ref):
     was, _ = parse(was_texts.items())
     now, problems = parse(now_texts.items())
     if problems:
+        # @req> REQ-30898926@Vu28eWaG_1mE 6swkkb
         raise ReqctlError("the code's citations do not read:\n"
                           + "\n".join(problems))
     # @req+ REQ-36428128@pWyff7uDBZIK a5i7lc
@@ -920,7 +987,9 @@ def _whole_held(root, commit):
          "requirements"],
         cwd=root, capture_output=True, text=True, check=False)
     if listed.returncode not in (0, 1):
-        raise ReqctlError(f"cannot read {commit}: {listed.stderr.strip()}")
+        # @req> REQ-30898926@Vu28eWaG_1mE lxsrkt
+        raise ReqctlError(f"cannot read {commit}: {listed.stderr.strip()} -- "
+                          "run `git fetch origin`, then retry")
     for named in filter(None, listed.stdout.split("\0")):
         relative = named.split(":", 1)[1]
         data = corpus.loads(_git(root, "show", f"{commit}:{relative}"), relative,

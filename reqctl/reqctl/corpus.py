@@ -105,7 +105,9 @@ def find_root(start=None):
     for candidate in [here, *here.parents]:
         if (candidate / ".git").exists():
             return candidate
-    raise ReqctlError("not inside a git repository (no .git here or above)")
+    # @req> REQ-30898926@Vu28eWaG_1mE nq47sk
+    raise ReqctlError("not inside a git repository (no .git here or above) -- "
+                      "run reqctl inside the repository")
 
 
 def load(root=None):
@@ -117,7 +119,9 @@ def _for_prefix(uid, table):
     for prefix, value in table.items():
         if uid.startswith(prefix):
             return value
-    raise ReqctlError(f"{uid}: not a {NAMED} uid")
+    # @req> REQ-30898926@Vu28eWaG_1mE vtwjpf
+    raise ReqctlError(f"{uid}: not a {NAMED} uid -- use a uid of one of those "
+                      "kinds; `reqctl list` names them")
 
 
 def kind_of(uid, data):
@@ -126,7 +130,8 @@ def kind_of(uid, data):
 
 def folder_for(root, kind):
     if kind not in FOLDERS:
-        raise ReqctlError(f"{kind}: not a {KINDS_NAMED} kind")
+        # @req> REQ-30898926@Vu28eWaG_1mE 5vz2qe
+        raise ReqctlError(f"{kind}: not a {KINDS_NAMED} kind -- use one of those kinds")
     return Path(root) / "requirements" / FOLDERS[kind]
 
 
@@ -145,9 +150,11 @@ def item_files(root):
     for path in found:
         first = seen.setdefault(path.stem, path)
         if first is not path:
+            # @req> REQ-30898926@Vu28eWaG_1mE k6zhqw
             raise ReqctlError(
                 f"{path.stem}: two files claim this uid: "
-                f"{first.relative_to(root)} and {path.relative_to(root)}"
+                f"{first.relative_to(root)} and {path.relative_to(root)} -- "
+                "remove one of the two files, or rename it to a different uid"
             )
     return found
 
@@ -190,6 +197,7 @@ def loads(text, where, aliases=True, reading=Loader):
             for event in yaml.parse(text, Loader=Loader)
             if isinstance(event, yaml.AliasEvent)]
         if named:
+            # @req> REQ-30898926@Vu28eWaG_1mE danz6r
             raise ReqctlError(f"{where} holds the YAML alias {', '.join(named)} "
                               "-- write each value out in full in place of its alias")
         # @req- ts6cfc
@@ -197,6 +205,7 @@ def loads(text, where, aliases=True, reading=Loader):
         twice = _repeated(node)
         # @req> REQ-84465433@iXBRKIfkf18a pkvikc
         if twice:
+            # @req> REQ-30898926@Vu28eWaG_1mE e2tsff
             raise ReqctlError(
                 f"{where} states {', '.join(twice)} more than once -- YAML "
                 "keeps the last, so drop the one that does not govern"
@@ -207,13 +216,16 @@ def loads(text, where, aliases=True, reading=Loader):
         except (yaml.YAMLError, RecursionError):
             raise
         except Exception as error:
-            raise ReqctlError(f"{where} holds a value YAML cannot build -- "
-                              f"{type(error).__name__}: {error}") from error
+            # @req> REQ-30898926@Vu28eWaG_1mE obrq2j
+            raise ReqctlError(f"{where} holds a value YAML cannot build, "
+                              f"{type(error).__name__}: {error} -- replace the "
+                              "value with plain YAML") from error
         # @req- 3222m4
         # @req+ REQ-48650108@-jXFakmxSYbB i4wv7k
         # @req+ REQ-83085784@mB9K6Zw3dGnC lxmmuv
         folded = _folded(loader, node)
         if folded:
+            # @req> REQ-30898926@Vu28eWaG_1mE q232n2
             raise ReqctlError(
                 f"{where} states the key {folded[0]} twice in one mapping -- YAML "
                 "keeps the last, so drop the one that does not govern"
@@ -225,16 +237,23 @@ def loads(text, where, aliases=True, reading=Loader):
             fault = _unreadable(value)
             looped = _looped(text) if fault else None
             if looped:
+                # @req> REQ-30898926@Vu28eWaG_1mE 5l5zyz
                 raise ReqctlError(
                     f"{where}: the YAML alias {looped} forms a cycle, so it "
                     "cannot be read as text -- state it without an alias to itself")
             if fault:
+                # @req> REQ-30898926@Vu28eWaG_1mE xnluqf
                 raise ReqctlError(f"{where}: {field} {fault}")
         return document
     except yaml.YAMLError as error:
-        raise ReqctlError(f"{where} is not YAML: {error}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE 5ek57f
+        raise ReqctlError(f"{where} is not YAML: {error} -- correct the YAML where "
+                          "the parser points; a settings file is corrected on "
+                          "the default branch") from error
     except RecursionError as error:
-        raise ReqctlError(f"{where} nests too deeply to read") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE aykasy
+        raise ReqctlError(f"{where} nests too deeply to read -- flatten the "
+                          "nesting") from error
     finally:
         loader.dispose()
 
@@ -280,11 +299,17 @@ def read_text(path):
     try:
         return Path(path).read_text()
     except UnicodeDecodeError as error:
-        raise ReqctlError(f"cannot read {path}: not valid UTF-8") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE 6yjen4
+        raise ReqctlError(f"cannot read {path}: not valid UTF-8 -- save the file "
+                          "as UTF-8") from error
     except OSError as error:
-        raise ReqctlError(f"cannot read {path}: {error.strerror}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE acn4ae
+        raise ReqctlError(f"cannot read {path}: {error.strerror} -- make the file "
+                          "readable, then retry") from error
     except ValueError as error:
-        raise ReqctlError(f"cannot read {path}: {error}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE epjjtu
+        raise ReqctlError(f"cannot read {path}: {error} -- name a path that can "
+                          "be read, then retry") from error
 
 
 def read(path, reading=Loader):
@@ -328,7 +353,9 @@ def path_for(root, uid):
     for path in item_files(root):
         if path.stem == uid:
             return path
-    raise ReqctlError(f"no such item: {uid}")
+    # @req> REQ-30898926@Vu28eWaG_1mE vdl325
+    raise ReqctlError(f"no such item: {uid} -- `reqctl list` names the uids that "
+                      "exist")
 
 
 def items(store):
@@ -339,11 +366,14 @@ def items(store):
             # @req> REQ-38498011@eJXtv0pwMf-A q7wu74
             if CONFLICTED.search(text):
                 from .resolve import merged
+                # @req> REQ-30898926@Vu28eWaG_1mE tts4hh
                 raise ReqctlError(merged(path.relative_to(store.root), text))
             # @req> REQ-49870454@KKNV-vdY6oM1 4sqskc
             data = loads(text, path, aliases=False)
             if not isinstance(data, dict):
-                raise ReqctlError(f"{path.stem}: item file is not a mapping")
+                # @req> REQ-30898926@Vu28eWaG_1mE kytafn
+                raise ReqctlError(f"{path.stem}: item file is not a mapping -- edit the "
+                                  "file by hand so it holds a YAML mapping of fields")
             refuse_misshapen(path.relative_to(store.root), data)
             loaded.append(Item(path.stem, path, data))
         store._items = loaded
@@ -354,14 +384,17 @@ def items(store):
 def refuse_misshapen(where, data):
     for field in ("kind", "status"):
         if not isinstance(data.get(field, ""), str):
+            # @req> REQ-30898926@Vu28eWaG_1mE 3grind
             raise ReqctlError(f"{where}: {field} holds {data[field]!r}, not one name -- "
                               f"state one {field}")
     held = data.get("entries")
     for key, fields in (held.items() if isinstance(held, dict) else ()):
         if not isinstance(fields, dict):
+            # @req> REQ-30898926@Vu28eWaG_1mE mmffva
             raise ReqctlError(f"{where}: entry {key} holds {fields!r}, not fields -- "
                               "state its fields under it")
     if found := _untexted(data):
+        # @req> REQ-30898926@Vu28eWaG_1mE d5vilj
         raise ReqctlError(f"{where}: the key {found[-1]!r} under "
                           f"{'.'.join(map(str, found[:-1])) or 'the item'} is not text -- "
                           "quote it or rename it")
@@ -394,7 +427,9 @@ def find(store, uid):
     try:
         return store._index[uid]
     except KeyError:
-        raise ReqctlError(f"no such item: {uid}") from None
+        # @req> REQ-30898926@Vu28eWaG_1mE j6yens
+        raise ReqctlError(f"no such item: {uid} -- `reqctl list` names the uids that "
+                          "exist") from None
 
 
 def raw(item):
@@ -421,8 +456,10 @@ def atomic_write(path, content):
         os.replace(temp, target)
         staged = False
     except OSError as error:
+        # @req> REQ-30898926@Vu28eWaG_1mE azwvi6
         raise ReqctlError(
-            f"cannot write {path}: {error.strerror or error}"
+            f"cannot write {path}: {error.strerror or error} -- make the path "
+            "writable, then retry"
         ) from error
     finally:
         if staged:
@@ -465,10 +502,15 @@ def all_or_nothing():
         kept += [f"{folder}{os.sep}" for folder in reversed(_made)
                  if _stands(folder)]
         if kept:
-            left = f"not put back: {', '.join(kept)}"
+            # @req> REQ-30898926@Vu28eWaG_1mE vtahuy
+            left = (f"not put back: {', '.join(kept)} -- restore each file by hand "
+                    "(`git restore PATH`) and "
+                    "remove each folder")
             if isinstance(error, SystemExit):
+                # @req> REQ-30898926@Vu28eWaG_1mE qdhgis
                 raise SystemExit(f"{error}; {left}") from error
             if isinstance(error, (ReqctlError, OSError, UnicodeError)):
+                # @req> REQ-30898926@Vu28eWaG_1mE exlmdp
                 raise ReqctlError(f"{error}; {left}") from error
             error.add_note(left)
         # @req- v2zljr
@@ -559,7 +601,9 @@ def entries(data):
 def split_address(address):
     found = ADDRESS.match(str(address))
     if not found:
-        raise ReqctlError(f"{address}: not a UID or UID.entry address")
+        # @req> REQ-30898926@Vu28eWaG_1mE ibipo5
+        raise ReqctlError(f"{address}: not a UID or UID.entry address -- write UID, "
+                          "or UID.entry")
     return found.group(1), found.group(2)
 
 
@@ -586,9 +630,11 @@ def carried_of(uid, data):
         return []
     if not isinstance(held, list) or not all(
             isinstance(one, str) for one in held):
+        # @req> REQ-30898926@Vu28eWaG_1mE pgm2dk
         raise ReqctlError(
             f"{uid}: carried is not a list of names, so what this item has "
-            "answered to cannot be read -- `reqctl validate` names the fault"
+            "answered to cannot be read -- `reqctl validate` names the fault; edit "
+            "the item by hand so carried is a list of names, or remove carried"
         )
     return held
 
@@ -764,9 +810,11 @@ def cited_item(store, address):
     item = find(store, named)
     # @req> REQ-11930677@zW9EYrOae8-u bwqnk4
     if entry is not None and entry not in cited_entries(item):
+        # @req> REQ-30898926@Vu28eWaG_1mE lxj56m
         raise ReqctlError(f"{address}: {named} is not a data item holding "
                           f"{entry} -- only an entry of a data item is cited "
-                          "by its name")
+                          "by its name; name a data item that holds it "
+                          "(`reqctl list data`), or cite the item without an entry")
     return item, entry
 
 
@@ -989,15 +1037,22 @@ def _parsed_schema(path, stamped):
         finally:
             loader.dispose()
     except UnicodeDecodeError as error:
-        raise ReqctlError(f"unreadable schema {path}: not valid UTF-8") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE hcnzso
+        raise ReqctlError(f"unreadable schema {path}: not valid UTF-8 -- save the "
+                          "schema as UTF-8") from error
     except (OSError, yaml.YAMLError) as error:
-        raise ReqctlError(f"unreadable schema {path}: {error}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE phwexs
+        raise ReqctlError(f"unreadable schema {path}: {error} -- correct the schema "
+                          "where the parser points") from error
     except Exception as error:
-        raise ReqctlError(f"unreadable schema {path}: a value YAML cannot build -- "
-                          f"{type(error).__name__}: {error}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE ytojsb
+        raise ReqctlError(f"unreadable schema {path}: a value YAML cannot build, "
+                          f"{type(error).__name__}: {error} -- replace the value "
+                          "with plain YAML") from error
     # @req- rnou7b
     # @req> REQ-81761490@4QFne8WaXttt 35mtk4
     if folded:
+        # @req> REQ-30898926@Vu28eWaG_1mE 5jzbmw
         raise ReqctlError(f"{path.name} states the key {folded[0]} twice in one mapping "
                           "-- YAML keeps the last, so drop the one that does not govern")
     # @req+ REQ-19913588@hBNJrpn4vtZe mszvfu
@@ -1008,9 +1063,13 @@ def _parsed_schema(path, stamped):
         _refuse_unfollowable(path, DRAFT202012.create_resource(declared))
     except SchemaError as error:
         where = ".".join(str(p) for p in error.absolute_path) or "(schema)"
-        raise ReqctlError(f"{path.name}: {where}: {error.message}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE 63jzmw
+        raise ReqctlError(f"{path.name}: {where}: {error.message} -- correct the "
+                          "schema at that place") from error
     except RecursionError as error:
-        raise ReqctlError(f"{path.name}: nests too deeply to check") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE aml3cg
+        raise ReqctlError(f"{path.name}: nests too deeply to check -- flatten the "
+                          "schema's nesting") from error
     # @req- mszvfu
     return declared
 
@@ -1025,8 +1084,9 @@ def _refuse_unfollowable(path, resource):
                for _, schema in walked[1:]):
             return
     except ValueError as error:
-        raise ReqctlError(f"{path.name}: an $id or $schema is not an address -- "
-                          f"{error}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE hme6mh
+        raise ReqctlError(f"{path.name}: an $id or $schema is not an address, "
+                          f"{error} -- make it an address") from error
     root = resource.id() or ""
     registry = Registry().with_resource(root, resource)
     with contextlib.suppress(ValueError):
@@ -1043,9 +1103,13 @@ def _refuse_unfollowable(path, resource):
                 continue
             target = registry.resolver(base).lookup(ref).contents
         except Exception as error:
-            raise ReqctlError(f"{path.name}: {keyword} {ref!r} cannot be followed") from error
+            # @req> REQ-30898926@Vu28eWaG_1mE hwsp72
+            raise ReqctlError(f"{path.name}: {keyword} {ref!r} cannot be followed -- "
+                              "point it at a schema the file holds") from error
         if not isinstance(target, (dict, bool)):
-            raise ReqctlError(f"{path.name}: {keyword} {ref!r} names a value, not a schema")
+            # @req> REQ-30898926@Vu28eWaG_1mE gphyzw
+            raise ReqctlError(f"{path.name}: {keyword} {ref!r} names a value, not a "
+                              "schema -- point it at a schema")
 
 
 def _walked(resource, base):
@@ -1072,15 +1136,20 @@ def schema(root, name):
     if not path.is_file():
         path = packaged_schema_path(name)
         if not path.is_file():
-            raise ReqctlError(f"missing schema: {stated}")
+            # @req> REQ-30898926@Vu28eWaG_1mE 7oohd6
+            raise ReqctlError(f"missing schema: {stated} -- add the schema there, or "
+                              "remove what refers to it")
     stat = path.stat()
     stamped = (stat.st_mtime_ns, stat.st_size)
     # @req> REQ-14895892@JjrTwHoJqTRe yz3x2d
     if path == stated and name in SCHEMA_NAMES.values():
         lacking = _unmarked(path, stamped, name, _data_held(root))
         if lacking:
+            # @req> REQ-30898926@Vu28eWaG_1mE sa2ijn
             raise RefusedCopy(f"{stated}: the shipped schema carries {lacking}, "
-                              "which this copy lacks")
+                              "which this copy lacks -- add them to the copy "
+                              "by hand from the schema in the installed reqctl "
+                              "package, or delete the copy to use the shipped one")
     return _parsed_schema(path, stamped)
 
 
@@ -1154,7 +1223,8 @@ def schema_names(root):
 
 def schema_name_for(kind):
     if kind not in SCHEMA_NAMES:
-        raise ReqctlError(f"{kind}: not a {KINDS_NAMED} kind")
+        # @req> REQ-30898926@Vu28eWaG_1mE okae4a
+        raise ReqctlError(f"{kind}: not a {KINDS_NAMED} kind -- use one of those kinds")
     return SCHEMA_NAMES[kind]
 
 

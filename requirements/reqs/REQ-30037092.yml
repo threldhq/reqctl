@@ -12,9 +12,9 @@ assessed:
   REQ-68873210: e7MRMGqsYrnxhzHTt0XMmx14YUpYBmgSSNHW5F-ZA8s
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
-  5nfu7e: OoL2kFcZkYOIfVGsByRmTmLYSej0xgrS4t1kiSrkmqs
+  5nfu7e: Lx-_MUbjWVtkaKV-Q5OE-HgvHR8RD4UO4QMbAU1KeX4
   6bxg5g: 9MuejesvhkbaLd4Ef9wjNHaSre6QDRXzOxwF7PetpJ4
-  avbh7j: f5ikpy4lPDon6m8NI9snuTmCTayDyH5LEjez1Zx6ROA
+  avbh7j: bJGg9LelXLxPTLQUERW3JLIfOXTORMGuVSlQam9KlaU
 priority: medium
 relations:
   REQ-29846444: depends_on

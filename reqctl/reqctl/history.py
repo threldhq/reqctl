@@ -10,10 +10,15 @@ def _git(root, *args, given=b"", absent=None):
         found = subprocess.run(["git", *args], cwd=root, input=given,
                                capture_output=True, check=False)
     except OSError as error:
-        raise ReqctlError(f"cannot run git: {error.strerror}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE vvgdbf
+        raise ReqctlError(f"cannot run git: {error.strerror} -- install git or "
+                          "put it on PATH") from error
     if found.returncode not in (0, absent):
-        raise ReqctlError(f"cannot read the history: git {args[0]} -- "
-                          f"{found.stderr.decode(errors='replace').strip()}")
+        # @req> REQ-30898926@Vu28eWaG_1mE vcr2ti
+        raise ReqctlError(f"cannot read the history: git {args[0]}: "
+                          f"{found.stderr.decode(errors='replace').strip()} -- "
+                          "run inside a git work tree, or repair the "
+                          "repository (`git fsck` names the damage)")
     return None if found.returncode else found.stdout
 
 
@@ -103,7 +108,11 @@ class History:
             end = out.index(b"\n", at)
             _, kind, *size = out[at:end].decode().split()
             if not size:
-                raise ReqctlError(f"cannot read the history: git cat-file -- {sha} {kind}")
+                # @req> REQ-30898926@Vu28eWaG_1mE hz3bqm
+                raise ReqctlError(
+                    f"cannot read the history: git cat-file: {sha} {kind} -- "
+                    "fetch it with `git fetch origin`, or repair the "
+                    "repository (`git fsck` names the damage)")
             at = end + 2 + int(size[0])
             if kind == "blob":
                 self._blobs[sha] = out[end + 1:at - 1]

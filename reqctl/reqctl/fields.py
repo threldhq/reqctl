@@ -1,3 +1,4 @@
+import argparse
 import copy
 import re
 from dataclasses import dataclass
@@ -11,7 +12,9 @@ ENTRIES = "entries"
 
 def boolean(text):
     if text not in ("true", "false"):
-        raise ValueError(text)
+        # @req> REQ-30898926@Vu28eWaG_1mE kyzn7q
+        raise argparse.ArgumentTypeError(
+            f"{text!r} is not a boolean -- pass true or false")
     return text == "true"
 
 
@@ -105,12 +108,16 @@ def _resolved(schema, node):
     while "$ref" in node:
         ref = node["$ref"]
         if ref in seen:
-            raise ReqctlError(f"{named}: {ref} refers back to itself")
+            # @req> REQ-30898926@Vu28eWaG_1mE njzgy6
+            raise ReqctlError(f"{named}: {ref} refers back to itself -- break the "
+                              "self-reference in the schema")
         target = _pointed(schema, ref)
         if isinstance(target, bool):
             target = {} if target else {"not": {}}
         if not isinstance(target, dict):
-            raise ReqctlError(f"{named}: {ref} names nothing within the schema")
+            # @req> REQ-30898926@Vu28eWaG_1mE uzmekp
+            raise ReqctlError(f"{named}: {ref} names nothing within the schema -- "
+                              "point it at a property the schema holds")
         seen.add(ref)
         node = {**target, **{key: value for key, value in node.items()
                              if key != "$ref"}}
@@ -161,8 +168,10 @@ def _prose(node):
 def _field(schema, name, stated, required, entry):
     said = stated.get("x-flag", name)
     if not isinstance(said, str) or not corpus.DATA_KEY.fullmatch(said):
+        # @req> REQ-30898926@Vu28eWaG_1mE 4syjdu
         raise ReqctlError(f"{schema.get('$id', 'a kind schema')}: {name} would "
-                          f"take the flag {said!r}, which is not a snake_case word")
+                          f"take the flag {said!r}, which is not a snake_case word -- "
+                          "give the field a snake_case x-flag")
     shape = stated.get("type")
     repeated = shape in ("array", "object")
     items = _resolved(schema, stated.get("items", {})) if shape == "array" else {}
@@ -209,6 +218,7 @@ def of(root, kind):
     for field in held:
         for flag in filter(None, (field.flag, field.clears, field.drops)):
             if flag in taken:
+                # @req> REQ-30898926@Vu28eWaG_1mE 3xifyq
                 raise ReqctlError(f"{kind}: {taken[flag]} and {field.name} would "
                                   f"both take {flag}; give one an x-flag")
             taken[flag] = field.name
@@ -234,6 +244,7 @@ def flags(root):
         for field in of(root, kind):
             stated = held.get(field.flag, field)
             if (stated.repeated, stated.convert) != (field.repeated, field.convert):
+                # @req> REQ-30898926@Vu28eWaG_1mE me6yhq
                 raise ReqctlError(f"{field.flag} takes a different kind of value "
                                   f"for a {kind}; give one field an x-flag")
             choices = (tuple(dict.fromkeys(stated.choices + field.choices))

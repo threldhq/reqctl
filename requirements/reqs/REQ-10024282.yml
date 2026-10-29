@@ -9,8 +9,8 @@ acceptance_criteria:
   when: the baseline is checked
 assessed: {}
 citations:
-  7qnfkg: 9yyiMHKyqVaBypr0lZeIRtmYthEBlin7jisSu9L2kxE
-  njzhlf: PHcs_Mbb0h9UPEjcQ_AC74sHyGXDVxsfRcOWHSdqFEI
+  7qnfkg: ftoS9iA3A0D-JlyQimTaftpRKh1y-kuZKyNZ1rJjVes
+  njzhlf: zS7t2yS0c8pA1KtibRoUhQe6hTtcDxW58nT6eVL1Ptw
 priority: medium
 relations: {}
 status: approved

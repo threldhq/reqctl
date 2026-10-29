@@ -4,7 +4,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  2mb54k: mBSW2S07FI3Vjor8dNXOVfM8V42_x9acq_oc9WLLYk0
+  2mb54k: P11N7bSa4TOE4fbrqYkz-LDlWFoLQQljDComWGd7qUY
 priority: medium
 relations: {}
 status: approved

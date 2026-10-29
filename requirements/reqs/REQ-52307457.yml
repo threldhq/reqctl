@@ -4,7 +4,7 @@ acceptance_criteria:
   when: baseline --check is run
 assessed: {}
 citations:
-  w27scf: PHcs_Mbb0h9UPEjcQ_AC74sHyGXDVxsfRcOWHSdqFEI
+  w27scf: zS7t2yS0c8pA1KtibRoUhQe6hTtcDxW58nT6eVL1Ptw
 priority: medium
 relations: {}
 status: approved

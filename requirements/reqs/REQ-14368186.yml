@@ -20,9 +20,9 @@ assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
 citations:
-  mgzb3c: fyqxMiZUsJtWjT0bKoJYc1UB3vO_B-BZVrUmIq4vwwk
-  p2igyc: riNLeSr5L9x1L5RIlKWv1i9lx12FUtuXs1khj_VRi_U
-  yrfrdz: DzkRPkyerJh5iz7KtaD6IpiTITvpJ1MQOTzEn4qn8jE
+  mgzb3c: 02YZcgZxWdgOUY1d2T3YxwJwUe1GyRcNkKxnsK9WU9Q
+  p2igyc: O1sbjGFSTZuGqy9mAJb6G-gANLzHARC3IN8KK7kHg78
+  yrfrdz: SYVibpL6_8N1hkjS2qsFjo239B3y7smXEe5PcUBG9Bo
 priority: medium
 relations:
   REQ-32527326: constrains

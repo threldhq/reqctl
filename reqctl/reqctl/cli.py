@@ -1,6 +1,8 @@
 import argparse
+import contextlib
 import dataclasses
 import importlib.metadata
+import io
 import json
 import os
 import sys
@@ -33,6 +35,7 @@ def _emit(args, data, text):
 def _refuse_invalid(root, said):
     problems = _validate.run(root)
     if problems:
+        # @req> REQ-30898926@Vu28eWaG_1mE hjpd4a
         raise ReqctlError("the corpus does not validate; fix these, "
                           f"then {said}:\n" + "\n".join(problems))
 
@@ -117,8 +120,10 @@ def _describe(tree, item):
 def _refuse_broken(uid, data):
     if (corpus.kind_of(uid, data) not in ("requirement", "guard")
             and corpus.entries(data) is None):
+        # @req> REQ-30898926@Vu28eWaG_1mE zlnal5
         raise ReqctlError(
-            f"{uid}: has no entries -- `reqctl validate` names the fault"
+            f"{uid}: has no entries -- `reqctl validate` names the fault; "
+            f"edit {uid}'s file by hand so entries maps each key to its fields"
         )
 
 
@@ -441,6 +446,7 @@ def cmd_export(args):
         try:
             declared = set(_validate.prose_paths(root, uid, stored))
         except ReqctlError as unreadable:
+            # @req> REQ-30898926@Vu28eWaG_1mE 5djpyt
             raise ReqctlError(f"{uid}: {unreadable}") from unreadable
         data = corpus.prosed(stored, declared,
                              lambda text: _resolved(text, tree))
@@ -736,6 +742,7 @@ def cmd_context(args):
 
     held = [data for data, _ in rows]
     if all("error" in data for data in held):
+        # @req> REQ-30898926@Vu28eWaG_1mE wo5x6j
         raise ReqctlError("; ".join(data["error"] for data in held))
 
     if args.json:
@@ -878,15 +885,19 @@ def _whole(tree, root, args):
     try:
         relative = target.relative_to(Path(root).resolve()).as_posix()
     except ValueError as error:
-        raise ReqctlError(f"{args.path}: not in the code base at {root}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE qgpboq
+        raise ReqctlError(f"{args.path}: not in the code base at {root} -- "
+                          "give a path inside it") from error
     digest = cite.whole(relative, target.read_bytes().decode())
     asked = list(dict.fromkeys(args.req))
     changes = {}
     for req in asked:
         item, entry = corpus.cited_item(tree, req)
         if entry or not corpus.citable(item):
+            # @req> REQ-30898926@Vu28eWaG_1mE oiki6a
             raise ReqctlError(f"{req}: a whole-file citation is held by a requirement, "
-                              "a guard, a parameter or a data item")
+                              "a guard, a parameter or a data item -- name one of "
+                              "those, not an entry of one, with --req")
         item.data[corpus.WHOLE_FILES] = {
             **corpus.mapping(item.data, corpus.WHOLE_FILES),
             relative: {"pinned": corpus.cited_stamp(item),
@@ -903,6 +914,7 @@ def cmd_tag(args):
     # @req> REQ-74702510@gU2X5OnlUbY3 hmh22z
     if args.names:
         if args.first or args.last:
+            # @req> REQ-30898926@Vu28eWaG_1mE ygm75x
             raise ReqctlError("give each citation a --name or a --from and --to, not both")
         spans = [cite.spanned(args.path, name) for name in args.names]
         args.first, args.last = map(list, zip(*spans))
@@ -911,14 +923,17 @@ def cmd_tag(args):
         return _whole(tree, root, args)
     # @req+ REQ-62782894@x4o_oB5H0-tY nmyxfc
     if not len(args.first or []) == len(args.last or []) == len(args.req):
+        # @req> REQ-30898926@Vu28eWaG_1mE vgjbxe
         raise ReqctlError("name --from and --to, or --name, and --req once for each citation")
     asked = []
     for first, last, req in zip(args.first, args.last, args.req):
         item, entry = corpus.cited_item(tree, req)
         # @req> REQ-88203622@wlZ9orsr9c7q myjx5s
         if not corpus.citable(item):
+            # @req> REQ-30898926@Vu28eWaG_1mE h5bqh2
             raise ReqctlError(f"{req}: only a requirement, a guard, a parameter, "
-                              "a data item or one entry of a data item is cited")
+                              "a data item or one entry of a data item is cited "
+                              "-- name one of those with --req")
         # @req> REQ-22755763@lFaaseccSg81 yiibpx
         # @req> REQ-34330878@E2ViDxqgA25l nqvtul
         # @req> REQ-18176935@A6AhLhUZ7MdW wkv6gw
@@ -947,6 +962,7 @@ def cmd_repin(args):
     item, entry = corpus.cited_item(tree, citation["address"])
     # @req> REQ-70626698@nJ3cW5CgMJtE dhjmro
     if corpus.raw(item).get("status") == "deprecated":
+        # @req> REQ-30898926@Vu28eWaG_1mE 3yexoh
         raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
                           f"is removed, not re-pinned: `reqctl untag {args.id}`")
     # @req> REQ-41600593@dauTiMee9rmb rsw2w2
@@ -968,7 +984,9 @@ def _unwhole(tree, root, args):
         relative = Path(args.id).resolve().relative_to(
             Path(root).resolve()).as_posix()
     except ValueError as error:
-        raise ReqctlError(f"{args.id}: not in the code base at {root}") from error
+        # @req> REQ-30898926@Vu28eWaG_1mE 2g2etu
+        raise ReqctlError(f"{args.id}: not in the code base at {root} -- "
+                          "give a path inside it") from error
     asked = list(dict.fromkeys(args.req))
     changes = {}
     for req in asked:
@@ -976,8 +994,10 @@ def _unwhole(tree, root, args):
         held = corpus.mapping(item.data, corpus.WHOLE_FILES)
         # @req> REQ-21009265@yuxuTugeVMu5 p3htis
         if relative not in held:
+            # @req> REQ-30898926@Vu28eWaG_1mE uxrhvu
             raise ReqctlError(f"{req} holds no whole-file citation of "
-                              f"{relative}; nothing was changed")
+                              f"{relative}; nothing was changed -- "
+                              f"reqctl trace {req} lists what it cites")
         # @req+ REQ-98709103@JryTDKzxpwrF ckhfaq
         # @req+ REQ-49367452@tPjE-de7pYv_ m6zfum
         rest = {path: cited for path, cited in held.items() if path != relative}
@@ -1022,11 +1042,14 @@ def cmd_unlist(args):
     # @req> REQ-44322088@sDoz9XZ22EBj 7e5dqc
     if (not corpus.citable(item)
             or args.id not in corpus.mapping(item.data, corpus.CITATION_LIST)):
-        raise ReqctlError(f"{uid}: its citation list does not hold {args.id}")
+        # @req> REQ-30898926@Vu28eWaG_1mE 2x7oac
+        raise ReqctlError(f"{uid}: its citation list does not hold {args.id} -- "
+                          "reqctl trace names the item whose list holds it")
     # @req+ REQ-59136977@-tsi9nTBSL9- s3g7ya
     # @req> REQ-81063063@v5hfLK63eQj_ rphl5n
     # @req> REQ-62685242@nMlCr6nshoNZ cwxoe2
     if any(citation["uid"] == uid for citation in cite.readable(root, args.id)):
+        # @req> REQ-30898926@Vu28eWaG_1mE pkwvbp
         raise ReqctlError(
             f"{uid}: a statement citation names {args.id} -- reqctl untag "
             f"{args.id} removes the citation, reqctl repin {args.id} re-pins it")
@@ -1042,6 +1065,7 @@ def cmd_compare(args):
     root = corpus.find_root()
     ref = args.base or _baseline._default_ref(root)
     if ref is None:
+        # @req> REQ-30898926@Vu28eWaG_1mE gl353f
         raise ReqctlError("no origin to compare against -- name one with --base")
     data = cite.compare(root, ref)
     lines = [f"{row['id']}  {row['uid']}  {row['path']}  {', '.join(row['state'])}"
@@ -1148,6 +1172,7 @@ def _field_arguments(s, flags, taken=()):
         if flag.dest in taken and flag.entries:
             continue
         if flag.dest in RESERVED + tuple(taken):
+            # @req> REQ-30898926@Vu28eWaG_1mE 5w6stc
             raise ReqctlError(f"a kind schema gives a field {flag.flag}, which "
                               "reqctl takes for its own; mark the field readOnly "
                               "if tooling writes it, or give it another x-flag")
@@ -1159,8 +1184,10 @@ def _field_arguments(s, flags, taken=()):
                                action="append" if flag.repeated else "store",
                                type=flag.convert, metavar=flag.metavar)
         except argparse.ArgumentError as clash:
+            # @req> REQ-30898926@Vu28eWaG_1mE jvhvno
             raise ReqctlError(f"a kind schema gives a field {flag.flag}, which "
-                              f"reqctl takes for its own: {clash}") from None
+                              f"reqctl takes for its own: {clash} -- give the "
+                              "field another x-flag in its kind schema") from None
 
 
 def _item_arguments(s, flags):
@@ -1423,18 +1450,24 @@ def main(argv=None):
     except (ReqctlError, OSError, UnicodeError) as error:
         return _fault("--json" in argv, error)
     # @req- zh6xly
+    # @req+ REQ-30898926@Vu28eWaG_1mE wwtx5y
+    said = io.StringIO()
     try:
-        args = parser.parse_args(argv)
+        with contextlib.redirect_stderr(said):
+            args = parser.parse_args(argv)
     except SystemExit as usage:
         # @req> REQ-61484030@LpHoz6FzkKeT 7acuon
-        if "--json" in argv and usage.code:
+        if "--json" in argv and usage.code and sys.stdout is not None:
             try:
-                print(json.dumps({"error": "usage: the fault is on stderr; "
-                                           "`reqctl --help` lists the commands"},
-                                 indent=2), flush=True)
+                print(json.dumps({"error": said.getvalue().strip()}, indent=2),
+                      flush=True)
+                raise
             except OSError:
                 _drop_output()
+        with contextlib.suppress(AttributeError, OSError):
+            sys.stderr.write(said.getvalue())
         raise
+    # @req- wwtx5y
     # @req+ REQ-19913588@hBNJrpn4vtZe dw57fs
     try:
         # @req> REQ-51372579@dWaIOhXJzQnK 7fex4d

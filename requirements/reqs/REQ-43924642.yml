@@ -10,7 +10,7 @@ acceptance_criteria:
   when: a baseline is generated
 assessed: {}
 citations:
-  bbqmqm: ODSFxDzhP7pV7ZWrEPjEDthru3BNMUUa4dLP1GMFeR4
+  bbqmqm: RxsrnybZ87WWW6An2FPfcUijO0vGtwX9PT20vsZp44Y
 priority: medium
 relations: {}
 status: approved
