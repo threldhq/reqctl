@@ -4,8 +4,8 @@ acceptance_criteria:
   when: a default is named for the term
 assessed: {}
 citations:
-  5apnio: 1FWm_hEmY5AiLfTPC7hFKxUnn00DWvohFqd-iIGuhKM
-  nk637k: IIXSkMz4YUH_dkqpw9ZbvZkbQhpRWpOq5Wl7A7hWQ2U
+  5apnio: XnCC2jtYyL5Jv9YB6DYvek1k_XPGlRY4hPisGtCUYHE
+  nk637k: WXodDEcfPRaxjmgYzqJTxxJPGxHKk3N6E2Beii9dC2E
 priority: medium
 relations: {}
 status: approved

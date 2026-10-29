@@ -9,6 +9,7 @@ def _side(text, where):
     # @req> REQ-49870454@KKNV-vdY6oM1 ilmqvb
     held = loads(text, where, aliases=False)
     if not isinstance(held, dict):
+        # @req> REQ-30898926@Vu28eWaG_1mE hjcyzp
         raise ReqctlError(
             f"{where.stem} holds an unresolved merge, and a side of it does "
             "not read as an item -- settle it by hand"
@@ -32,12 +33,14 @@ def merged(path, text):
     try:
         reached = _reached(path, text)[-1]
     except ReqctlError:
-        return f"{path} holds an unresolved merge"
+        # @req> REQ-30898926@Vu28eWaG_1mE damfks
+        return f"{path} holds an unresolved merge -- settle it by hand"
     if not reached:
         return (f"{path} holds an unresolved merge within its pins and citation "
                 f"list -- `reqctl resolve {path.stem}` settles it")
+    # @req> REQ-30898926@Vu28eWaG_1mE zsxafm
     return (f"{path} holds an unresolved merge reaching {', '.join(reached)}, "
-            "outside its pins and citation list")
+            "outside its pins and citation list -- settle it by hand")
     # @req- 3sjv5b
 
 
@@ -46,9 +49,11 @@ def resolve(store, uid):
     path = path_for(store.root, uid)
     text = read_text(path)
     if not CONFLICTED.search(text):
-        raise ReqctlError(f"{uid} holds no unresolved merge")
+        # @req> REQ-30898926@Vu28eWaG_1mE wlfoj4
+        raise ReqctlError(f"{uid} holds no unresolved merge -- nothing to resolve")
     ours, theirs, skipped, spoken, reached = _reached(path, text)
     if reached:
+        # @req> REQ-30898926@Vu28eWaG_1mE vxs7av
         raise ReqctlError(
             f"{uid}: the merge reaches {', '.join(reached)}, outside its pins "
             f"and citation list -- settle {'it' if len(reached) == 1 else 'them'}"

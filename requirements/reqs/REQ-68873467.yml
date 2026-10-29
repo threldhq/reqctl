@@ -10,8 +10,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
-  3fqq4z: iKXdm61k4_AM9XPF8cR0-BaZorYBYCLcVMkqvryKuww
-  4eflcn: HXHDv-Ca0DopDEWgD7CxGsiv8zT_xY3rKOmii5204Y4
+  3fqq4z: jXiezSYZWJJJGhIEd6y6_BvFfDT-TJ6DY7N6m4LQOt0
+  4eflcn: L1Cd5fTpAxKECzSaB3UNP-_3D8GPSWQGwIOO2INfltc
 priority: medium
 relations:
   REQ-48762557: depends_on

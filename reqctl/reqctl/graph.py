@@ -66,14 +66,20 @@ def whole(tree, tags, root=None, uid=None):
                 continue
             target = (Path(root) / path).resolve()
             if not target.is_relative_to(Path(root).resolve()):
+                # @req> REQ-30898926@Vu28eWaG_1mE plek4e
                 problems.append(f"{owner}: it holds a whole-file citation of {path}, "
-                                "which is not a file of the code base")
+                                "which is not a file of the code base -- edit "
+                                f"{owner}'s whole_file_citations by hand to "
+                                f"drop {path}")
                 continue
             try:
                 text = target.read_bytes().decode()
             except (OSError, UnicodeDecodeError):
+                # @req> REQ-30898926@Vu28eWaG_1mE kf3fxw
                 problems.append(f"{owner}: it holds a whole-file citation of {path}, "
-                                "which does not read")
+                                "which does not read -- make the file readable "
+                                f"(fix its permissions), or reqctl untag {path} "
+                                f"--req {owner}")
                 continue
             if held.get("digest") != cite.whole(path, text):
                 problems.append(
@@ -125,10 +131,12 @@ def trace(tree, root, uid=None, base=None):
             }
         )
         if files and not corpus.citable(item):
+            # @req> REQ-30898926@Vu28eWaG_1mE 4urczb
             problems.append(
                 f"{current}: referenced by {', '.join(files)} -- only a "
-                "requirement, a guard, a parameter or a data item is cited. "
-                "Tag the requirement stated against it instead"
+                "requirement, a guard, a parameter or a data item is cited "
+                f"-- reqctl untag each citation of {current}, then reqctl tag "
+                "the requirement stated against it"
             )
         # @req> REQ-35979865@pd7CVJ7isMys iz2v2g
         # @req> REQ-77594104@x3D--4236Dno tizjds
@@ -141,9 +149,12 @@ def trace(tree, root, uid=None, base=None):
             continue
         if data.get("status") != "approved":
             if files:
+                # @req> REQ-30898926@Vu28eWaG_1mE 6ddckc
                 problems.append(
                     f"{current}: referenced by {', '.join(files)} but is "
-                    f"{data.get('status')}, not approved"
+                    f"{data.get('status')}, not approved -- approve it through "
+                    f"a corpus pull request, or reqctl untag each citation of "
+                    f"{current}"
                 )
             continue
         # @req> REQ-77594104@x3D--4236Dno lgfhiu
@@ -152,7 +163,11 @@ def trace(tree, root, uid=None, base=None):
                 # @req+ REQ-74122607@f-RdDZCNkgqC pbsx4y
                 address = f"{current}.{entry}" if entry else current
                 if entry and entry not in corpus.cited_entries(item):
-                    problems.append(f"{address}: referenced by {path} but no such entry")
+                    # @req> REQ-30898926@Vu28eWaG_1mE fv4ej6
+                    problems.append(
+                        f"{address}: referenced by {path} but no such entry -- "
+                        f"reqctl untag the citation, or add the entry with "
+                        f"reqctl revise {current} --new-entry {entry}")
                     continue
                 held = corpus.cited_stamp(item, entry)
                 # @req- pbsx4y
@@ -171,11 +186,13 @@ def trace(tree, root, uid=None, base=None):
     if not uid:
         for tagged in sorted(tags):
             if tagged not in known:
+                # @req> REQ-30898926@Vu28eWaG_1mE li6jfv
                 problems.append(
                     f"{tagged}: referenced by "
                     f"{', '.join(dict.fromkeys(p for p, _, _ in tags[tagged]))}"
-                    " but no "
-                    "such requirement"
+                    " but no such requirement -- reqctl untag each citation "
+                    f"of {tagged}, or mint it with reqctl new KIND --uid "
+                    f"{tagged}"
                 )
     # @req> REQ-67655319@ezp6TxUzJ72E eznv3q
     # @req> REQ-13384695@P9NXsZKZp683 qtu6ly

@@ -16,9 +16,9 @@ assessed:
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
-  mgfbvw: _T3EivvNJLMjuebrKG04NhPT7q8_q7Hxvz2vQjyf7I4
-  s4pa57: bDgU5HKCl2Ax-cjnBTQyqdjz3n_cVqZWXYcevKtr_7g
-  v2mmft: G3t3DosnpV_7njssF6HqF8msFUkum4wOENiwMRRI7eo
+  mgfbvw: aSOaU9LAO-VwXbSUMIX1mXXAC0bfPBsoO18CCKIeev0
+  s4pa57: 748q3b9Y3DD6Xuk9TTUzQctG2scBygkFbMYlTyxGA-0
+  v2mmft: bUTj3B1HoK3CtE4Tfrp21E3WPS1Pi7DdZj76NO1DNC8
 priority: medium
 relations:
   REQ-32331515: depends_on

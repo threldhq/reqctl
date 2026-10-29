@@ -27,16 +27,21 @@ USERINFO = re.compile(r"(?<=//)[^@/]+@")
 def repository(where):
     # @req+ REQ-95796962@u8QGW_upRZM7 2v7p2v
     if _git(where, "rev-parse", "--git-dir").returncode:
+        # @req> REQ-30898926@Vu28eWaG_1mE ikwiin
         raise ReqctlError("not inside a git repository, so no origin remote "
-                          "names the portal's repository")
+                          "names the portal's repository -- run `reqctl "
+                          "portal` inside the repository")
     url = _git(where, "remote", "get-url", "origin").stdout.strip()
     if not url:
+        # @req> REQ-30898926@Vu28eWaG_1mE ajkroh
         raise ReqctlError("no origin remote names the portal's repository -- "
                           "add one naming a GitHub owner/repo")
     found = GITHUB.fullmatch(url)
     if found is None:
+        # @req> REQ-30898926@Vu28eWaG_1mE cpeug2
         raise ReqctlError(f"origin is {USERINFO.sub('', url)}, not a GitHub "
-                          "owner/repo")
+                          "owner/repo -- set it with `git remote set-url "
+                          "origin https://github.com/OWNER/REPO`")
     # @req- 2v7p2v
     # @req> REQ-53764133@s638VvRMfEgi mbl5cu
     return found.group(1)
@@ -120,5 +125,7 @@ def server():
     try:
         return ThreadingHTTPServer((HOST, PORT), Page)
     except OSError as busy:
+        # @req> REQ-30898926@Vu28eWaG_1mE g5ihnj
         raise ReqctlError(f"cannot serve the portal at {HOST}:{PORT}: "
-                          f"{busy.strerror}") from busy
+                          f"{busy.strerror} -- stop whatever holds the port, "
+                          "then retry") from busy

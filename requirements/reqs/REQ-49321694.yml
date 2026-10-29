@@ -10,7 +10,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed: {}
 citations:
-  ijccb5: NsKA-3_MChVQD1Tp8KeBSPB8d3Utc3tEUx_J8pugbVs
+  ijccb5: VWuO595v1F_KKpel92bL_DDC0dZQWCHFIJSFJd-zH3Q
 priority: medium
 relations: {}
 status: approved

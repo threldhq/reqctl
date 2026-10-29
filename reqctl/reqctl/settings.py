@@ -91,16 +91,19 @@ def faults(document):
                          f"{NESTED}")
         elif type(value) is not type(shipped):
             # @req> REQ-78887253@ZroFZuS_zv0q yaohat
+            # @req> REQ-30898926@Vu28eWaG_1mE aq4jso
             found.append(f"{key}: {value!r} is not of the YAML type of the "
-                         f"{shipped!r} the product ships")
+                         f"{shipped!r} the product ships -- state a value of "
+                         "that type, on the default branch")
         # @req> REQ-96727029@6dPRzcJtt-s- hrxovc
         elif at == ("uncited_code", "check", "mode") and value not in MODES:
             found.append(f"{key}: {value!r} is not a mode -- state off, all or "
                          "changed_lines")
         # @req> REQ-21585959@QkioE_Ciddeh q7jgw2
         elif at[-1] == "quantity" and value < 1:
+            # @req> REQ-30898926@Vu28eWaG_1mE c6k5gb
             found.append(f"{key}: {value!r} is not a whole number of at least "
-                         "one")
+                         "one -- state one, on the default branch")
         # @req> REQ-15362279@YwMnA4sMLpfF 5pi6tp
         # @req> REQ-82356895@juJepJj5Wt1K rtqqce
         elif at[-1] == "model" and not PINNED.fullmatch(value):
@@ -129,16 +132,20 @@ def read(root):
     listed = _git(root, "ls-tree", ref, "--", named)
     # @req> REQ-29005932@BIHyox0VxBlI v2mmft
     if listed.returncode:
+        # @req> REQ-30898926@Vu28eWaG_1mE 2omnbm
         raise ReqctlError(f"cannot read the tree {ref} names, so whether it "
                           f"holds {named} cannot be told: "
-                          f"{listed.stderr.strip()}")
+                          f"{listed.stderr.strip()} -- run `git fetch origin`, "
+                          "then retry")
     # @req> REQ-31526771@dzOAej5vGh2Y wa4iuz
     if not listed.stdout.strip():
         return where, {}
     shown = _git(root, "show", f"{ref}:{named}")
     # @req> REQ-29005932@BIHyox0VxBlI s4pa57
     if shown.returncode:
-        raise ReqctlError(f"{where} cannot be read: {shown.stderr.strip()}")
+        # @req> REQ-30898926@Vu28eWaG_1mE vocmcm
+        raise ReqctlError(f"{where} cannot be read: {shown.stderr.strip()} -- "
+                          "restore the file on the default branch")
     # @req> REQ-29005932@BIHyox0VxBlI mgfbvw
     document = loads(shown.stdout, where)
     found = faults(document)
@@ -148,6 +155,7 @@ def read(root):
     # @req> REQ-15362279@YwMnA4sMLpfF fxnobd
     # @req> REQ-59792666@dkbVbhN0Y4FS txoz2e
     if found:
+        # @req> REQ-30898926@Vu28eWaG_1mE jg7ukv
         raise ReqctlError(f"{where} cannot be used -- correct it on the "
                           "default branch:\n"
                           + "\n".join(f"  {fault}" for fault in found))
