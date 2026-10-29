@@ -12,6 +12,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  55vtbf: P1lQpNvyFoCbr6lW13Fln6ZC4zfCuahBo1TPtSXG39o
 priority: medium
 relations:
   REQ-12222066: depends_on

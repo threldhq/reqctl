@@ -5,6 +5,8 @@ acceptance_criteria:
   when: '`reqctl --version` is run with no subcommand'
 assessed:
   reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+citations:
+  47la7c: rf0EraYS1kzj3C05c0PFPZMmjTw6hNhMXZvxEKCFcX0
 priority: medium
 relations: {}
 status: approved

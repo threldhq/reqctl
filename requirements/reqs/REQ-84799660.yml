@@ -15,6 +15,10 @@ assessed:
   REQ-54045696: m7842dVOG3jfAQVDFEmk4lKHnWPiRptaE2NwQSgLLww
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
   recall_result: bvoXpm-av7i-xeJlRnBDgXHfKvmbYOr0ix7GgOEdy6A
+citations:
+  qqouz4: VdBEOVMCFUsPQCIrZV3ZvYFeYwsngv84Bxev3CW2pbQ
+  tdyuuy: HbiZKebvmUHeWtY__m8R2aNU4evWKLV2P9w4yt48Grg
+  usej3u: QOhE_J75EkADcl9jSEFBEhHb9XUx634sBAI88J1mZ14
 priority: medium
 relations:
   REQ-16868696: constrains

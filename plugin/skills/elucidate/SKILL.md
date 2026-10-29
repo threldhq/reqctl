@@ -446,6 +446,13 @@ that manifest. Each agent reads its prompt, writes its return, and nothing
 else. Each step that names a manifest is followed by a spawn and the next step
 waits on it: run `judge` only once the spawn has returned.
 
+<!-- @req+ REQ-99682173@IOd4h42V9snI 55vtbf -->
+When the owner's answers change a proposal's statement or criteria, put the
+agent count, models and approximate token count the build reports for its
+manifest to the owner, and wait for their answer before spawning the run's
+agents again.
+<!-- @req- 55vtbf -->
+
 ```bash
 python3 ${CLAUDE_SKILL_DIR}/synthesis/plan.py judge --run DIR     # recall returns in, judge prompts out
 python3 ${CLAUDE_SKILL_DIR}/synthesis/plan.py final --run DIR     # only where a proposal was split into groups

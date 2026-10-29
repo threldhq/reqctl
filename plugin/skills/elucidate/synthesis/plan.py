@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import collections
 import json
 import re
 import subprocess
@@ -973,7 +974,20 @@ def manifested(run, name):
     return run / "workflow" / f"{name}.json"
 
 
+def reported(prompts):
+    models = collections.Counter(one.get("model") for one in prompts)
+    tokens = sum(len(one["prompt"] if "prompt" in one
+                     else corpus.read_text(Path(one["path"])))
+                 for one in prompts) // 4
+    print(f"{len(prompts)} agent(s) to spawn, prompts of about {tokens} "
+          "token(s) at four characters each: " + (", ".join(
+              f"{count} on {model or 'the session model'}"
+              for model, count in sorted(models.items(), key=str)) or "none"))
+
+
 def manifest(run, name, prompts):
+    # @req> REQ-96453437@bZSLsL3QNLJa e3ps5d
+    reported(prompts)
     held, listed = {}, []
     for one in prompts:
         shape = next((key for key, value in held.items() if value == one["schema"]),
@@ -1003,6 +1017,52 @@ def saved(run, held):
     corpus.atomic_write(run / STATE, json.dumps(held, indent=1) + "\n")
 
 
+def recall_keys(state_held, numbers, scope, heading, text, dictionary_text):
+    if scope == SIBLINGS:
+        return {}
+    return {str(number): corpus.digest(
+        [state_held["proposals"][str(number)]["statement"],
+         state_held["proposals"][str(number)]["binding"], heading, text,
+         dictionary_text, RECALL, BEARING, WRITE, DICTIONARY, shapes.recall(scope)])
+            for number in numbers}
+
+
+def reusable(run, state_held, held, shards, records, dictionary_text, total):
+    try:
+        prior = read_json(run / STATE) if (run / STATE).is_file() else {}
+    except corpus.ReqctlError as broken:
+        print(f"{broken}; no recall result is reused")
+        prior = {}
+    found = {}
+    for label, spec in prior.get("recall", {}).items():
+        if not spec.get("keys"):
+            continue
+        _, stopped, refused = recalled(run, {**prior, "recall": {label: spec}})
+        if stopped or refused:
+            continue
+        data, _ = read_return(run / "returns" / "recall" / f"{label}.json",
+                              shapes.recall(prior["shards"][spec["shard"]]["scope"]))
+        for entry in data["results"]:
+            found[spec["keys"][str(entry["proposal"])]] = entry["hits"]
+    kept = {}
+    for name, scope, block in shards:
+        keys = {number: key for number, key in recall_keys(
+            state_held, judged_by(held, scope), scope,
+            SHARD.format(shard=name, count=len(block), total=total, scope=scope),
+            assembled(scope, block, records), dictionary_text).items()
+                if key in found}
+        if not keys:
+            continue
+        label = f"{name}-k1"
+        results = [{"proposal": int(number), "hits": found[key]}
+                   for number, key in keys.items()]
+        state_held["recall"][label] = {
+            "shard": name, "batch": 1, "kept": True,
+            "proposals": [one["proposal"] for one in results], "keys": keys}
+        kept[label] = {"shard": name, "batch": 1, "results": results}
+    return kept
+
+
 def recall_prompts(run, held, state_held, shards, only, words, declined,
                    dictionary_text, records, total):
     prompts, spawned, texts = {}, [], {}
@@ -1011,8 +1071,17 @@ def recall_prompts(run, held, state_held, shards, only, words, declined,
             continue
         texts[name] = assembled(scope, block, records)
         batch = state_held["shards"][name]["batch"]
+        heading = SHARD.format(shard=name, count=len(block), total=total,
+                               scope=scope)
+        # @req+ REQ-52636522@8nfhZAnAxLEH ttitkk
+        covered = {number for spec in state_held["recall"].values()
+                   if spec["shard"] == name
+                   for number in spec["proposals"]}
+        fresh = [number for number in judged_by(held, scope)
+                 if number not in covered]
+        # @req- ttitkk
         # @req> REQ-32866040@hbsvPKXBNujz pdjir4
-        for at, chunk in enumerate(batched(judged_by(held, scope), batch), 1):
+        for at, chunk in enumerate(batched(fresh, batch), 1):
             label = f"{name}-b{at}"
             prompts[label] = recall_prompt(
                 run, name, at, scope, len(block), total, set(chunk), held,
@@ -1021,8 +1090,11 @@ def recall_prompts(run, held, state_held, shards, only, words, declined,
             spawned.append(spawn(run, "recall", label, f"recall:{label}",
                                  shapes.recall(scope),
                                  state_held["agents"]["recall"]))
-            state_held["recall"][label] = {"shard": name, "batch": at,
-                                          "proposals": chunk}
+            # @req> REQ-84799660@Jkvs__laWrIK qqouz4
+            state_held["recall"][label] = {
+                "shard": name, "batch": at, "proposals": chunk,
+                "keys": recall_keys(state_held, chunk, scope, heading,
+                                    texts[name], dictionary_text)}
     return prompts, spawned, texts
 
 
@@ -1068,9 +1140,6 @@ def build(run, chars, items, lines=PROMPT_LINES):
     sibling = siblings(held)
     if sibling is not None:
         shards.append(sibling)
-    counted = sum(len(batched(judged_by(held, scope), bounds["recall_batch"]))
-                  for _, scope, _ in shards) + len(held)
-    ceilinged(counted, bounds["agent_ceiling"])
 
     # @req> REQ-73764817@hFqW_eXNgs3b oxitt7
     state_held = {
@@ -1088,9 +1157,13 @@ def build(run, chars, items, lines=PROMPT_LINES):
     }
     # @req> REQ-62710822@DZLgFus7Dgs- 46kjic
     dictionary_text, state_held["dictionary"] = dictionary(records)
+    # @req> REQ-84799660@Jkvs__laWrIK usej3u
+    kept = reusable(run, state_held, held, shards, records, dictionary_text,
+                    len(blocked))
     prompts, spawned, texts = recall_prompts(
         run, held, state_held, shards, None, words, declined, dictionary_text,
         records, len(blocked))
+    ceilinged(len(spawned) + len(held), bounds["agent_ceiling"])
     lined(prompts, lines)
 
     # @req> REQ-81667762@82D0B66GuW3u ef2rgh
@@ -1103,6 +1176,10 @@ def build(run, chars, items, lines=PROMPT_LINES):
         corpus.remove(stale)
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "recall" / f"{name}.md", body)
+    # @req> REQ-84799660@Jkvs__laWrIK tdyuuy
+    for label, data in kept.items():
+        corpus.atomic_write(run / "returns" / "recall" / f"{label}.json",
+                            json.dumps(data, indent=1) + "\n")
     for name, text in texts.items():
         corpus.atomic_write(run / "shards" / f"{name}.md", text)
     corpus.atomic_write(run / "dictionary.md", dictionary_text)
@@ -1190,9 +1267,10 @@ def halved(run, state_held, stopped, held, words, declined, dictionary_text,
     for name, whys in sorted(stopped.items()):
         # @req> REQ-33633053@mo4XdZGYpUJ5 7upokg
         batch = min(state_held["shards"][name]["batch"],
-                    max(len(spec["proposals"])
-                        for spec in state_held["recall"].values()
-                        if spec["shard"] == name))
+                    max((len(spec["proposals"])
+                         for spec in state_held["recall"].values()
+                         if spec["shard"] == name and not spec.get("kept")),
+                        default=state_held["shards"][name]["batch"]))
         # @req> REQ-33633053@mo4XdZGYpUJ5 mrzj65
         if batch < 2:
             raise SystemExit(
@@ -1390,7 +1468,8 @@ def judge(run):
         names = sorted(named[number], key=lambda uid: (SIBLING.match(uid) is not None, uid))
         plans[number] = (names, grouped(names, bounds["judge_bound"],
                                         bounds["judge_group"]))
-    counted = len(state_held["recall"]) + sum(
+    counted = sum(not spec.get("kept")
+                  for spec in state_held["recall"].values()) + sum(
         1 if groups is None else len(groups) + 1
         for _, groups in plans.values())
     ceilinged(counted, bounds["agent_ceiling"])
