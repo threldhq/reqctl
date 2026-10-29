@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import collections
-import hashlib
 import json
 import re
 import subprocess
@@ -1018,25 +1017,24 @@ def saved(run, held):
     corpus.atomic_write(run / STATE, json.dumps(held, indent=1) + "\n")
 
 
-def recall_key(spec, scope, heading, text, dictionary_text):
-    return hashlib.sha256(json.dumps(
-        [spec["statement"], spec["binding"], heading, text, dictionary_text,
-         RECALL, BEARING, WRITE, DICTIONARY, shapes.recall(scope)],
-        sort_keys=True).encode()).hexdigest()
-
-
 def recall_keys(state_held, numbers, scope, heading, text, dictionary_text):
     if scope == SIBLINGS:
         return {}
-    return {str(number): recall_key(state_held["proposals"][str(number)], scope,
-                                    heading, text, dictionary_text)
+    return {str(number): corpus.digest(
+        [state_held["proposals"][str(number)]["statement"],
+         state_held["proposals"][str(number)]["binding"], heading, text,
+         dictionary_text, RECALL, BEARING, WRITE, DICTIONARY, shapes.recall(scope)])
             for number in numbers}
 
 
-def reusable(run, prior, state_held, held, shards, records, dictionary_text,
-             total):
+def reusable(run, state_held, held, shards, records, dictionary_text, total):
+    try:
+        prior = read_json(run / STATE) if (run / STATE).is_file() else {}
+    except corpus.ReqctlError as broken:
+        print(f"{broken}; no recall result is reused")
+        prior = {}
     found = {}
-    for label, spec in (prior or {}).get("recall", {}).items():
+    for label, spec in prior.get("recall", {}).items():
         if not spec.get("keys"):
             continue
         _, stopped, refused = recalled(run, {**prior, "recall": {label: spec}})
@@ -1048,20 +1046,19 @@ def reusable(run, prior, state_held, held, shards, records, dictionary_text,
             found[spec["keys"][str(entry["proposal"])]] = entry["hits"]
     kept = {}
     for name, scope, block in shards:
-        keys = recall_keys(state_held, judged_by(held, scope), scope,
-                           SHARD.format(shard=name, count=len(block),
-                                        total=total, scope=scope),
-                           assembled(scope, block, records), dictionary_text)
-        results = [{"proposal": int(number), "hits": found[key]}
-                   for number, key in keys.items() if key in found]
-        if not results:
+        keys = {number: key for number, key in recall_keys(
+            state_held, judged_by(held, scope), scope,
+            SHARD.format(shard=name, count=len(block), total=total, scope=scope),
+            assembled(scope, block, records), dictionary_text).items()
+                if key in found}
+        if not keys:
             continue
         label = f"{name}-k1"
+        results = [{"proposal": int(number), "hits": found[key]}
+                   for number, key in keys.items()]
         state_held["recall"][label] = {
             "shard": name, "batch": 1, "kept": True,
-            "proposals": [one["proposal"] for one in results],
-            "keys": {str(one["proposal"]): keys[str(one["proposal"])]
-                     for one in results}}
+            "proposals": [one["proposal"] for one in results], "keys": keys}
         kept[label] = {"shard": name, "batch": 1, "results": results}
     return kept
 
@@ -1077,11 +1074,11 @@ def recall_prompts(run, held, state_held, shards, only, words, declined,
         heading = SHARD.format(shard=name, count=len(block), total=total,
                                scope=scope)
         # @req+ REQ-52636522@8nfhZAnAxLEH ttitkk
-        kept = {number for spec in state_held["recall"].values()
-                if spec["shard"] == name and spec.get("kept")
-                for number in spec["proposals"]}
+        covered = {number for spec in state_held["recall"].values()
+                   if spec["shard"] == name
+                   for number in spec["proposals"]}
         fresh = [number for number in judged_by(held, scope)
-                 if number not in kept]
+                 if number not in covered]
         # @req- ttitkk
         # @req> REQ-32866040@hbsvPKXBNujz pdjir4
         for at, chunk in enumerate(batched(fresh, batch), 1):
@@ -1161,9 +1158,8 @@ def build(run, chars, items, lines=PROMPT_LINES):
     # @req> REQ-62710822@DZLgFus7Dgs- 46kjic
     dictionary_text, state_held["dictionary"] = dictionary(records)
     # @req> REQ-84799660@Jkvs__laWrIK usej3u
-    kept = reusable(run, read_json(run / STATE) if (run / STATE).is_file()
-                    else None, state_held, held, shards, records,
-                    dictionary_text, len(blocked))
+    kept = reusable(run, state_held, held, shards, records, dictionary_text,
+                    len(blocked))
     prompts, spawned, texts = recall_prompts(
         run, held, state_held, shards, None, words, declined, dictionary_text,
         records, len(blocked))
