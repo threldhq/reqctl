@@ -713,15 +713,46 @@ def quantities(text, units=ISO_UNITS):
             for found in QUANTITY.finditer(held)}
 
 
-def _quantities(data, units=ISO_UNITS):
-    data = dict(data, entries={
-        key: {**fields, "quantity": f"{fields['quantity']} {fields['unit']}"}
-        if isinstance(fields, dict) and "quantity" in fields and fields.get("unit")
-        else fields
-        for key, fields in (corpus.entries(data) or {}).items()})
-    return quantities(
-        corpus.PARAM_REF.sub(" ", corpus.CONCEPT_LINK.sub(r"\1", corpus.prose(data))),
-        units)
+def _quantities(text, units=ISO_UNITS):
+    return quantities(corpus.PARAM_REF.sub(" ", corpus.CONCEPT_LINK.sub(r"\1", text)), units)
+
+
+def _leaves(node, at=(), field=()):
+    if isinstance(node, dict):
+        unit = node.get("unit") if "quantity" in node else None
+        typed = isinstance(unit, str) and unit.strip() != ""
+        for key, value in node.items():
+            where = at + (str(key),)
+            if typed and key == "unit":
+                continue
+            if typed and key == "quantity":
+                yield where, where, f"{_written(value)} {unit}"
+            else:
+                yield from _leaves(value, where, where)
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            yield from _leaves(value, at + (str(index),), field)
+    else:
+        yield at, field, _written(node)
+
+
+def _stated_quantities(root, uid, data, units):
+    own = own_quantities(root, uid, data)
+    kind, name = corpus.kind_of(uid, own), corpus.name_of(uid, own) or uid
+    prose = prose_paths(root, uid, own)
+    written, held = set(), {}
+    for at, field, value in _leaves(own):
+        if any(at[:len(path)] == path for path in prose):
+            written |= _quantities(value, units)
+        elif kind == "data" and at[:1] == ("entries",) and field[-1:] != ("definition",):
+            for quantity in _quantities(value, units):
+                held.setdefault(quantity, ".".join((name, *field[1:])))
+    if kind == "parameter":
+        unit = own.get("unit") if isinstance(own.get("unit"), str) else ""
+        for key in corpus.entries(own) or {}:
+            for quantity in _quantities(f"{key} {unit}", units):
+                held.setdefault(quantity, name)
+    return written, held
 
 
 def _unit(written, units=ISO_UNITS):
@@ -754,7 +785,8 @@ def shared_quantities(records, root):
     held = corpus.reachable(records).get(VALUE_TYPES, VALUE_TYPES)
     typed = corpus.kind_of(held, records.get(held)) == "data"
     units = _units(records)
-    where = {}
+    # @req+ REQ-31827606@wZxuCl2JsAvY lfsavh
+    where, structured = {}, {}
     for uid, data in records.items():
         # @req> REQ-71775839@o0Rw6sW3xCGB 2afre5
         if typed and uid == held:
@@ -762,16 +794,12 @@ def shared_quantities(records, root):
         # @req> REQ-74163593@shkbFgp8gpvT bzkfod
         if data.get("status") in RETIRED:
             continue
-        own = own_quantities(root, uid, data)
-        # @req> REQ-30792942@jO6e3Cn6To-1 ozipy3
-        if typed:
-            own = _dropped(own, {("entries", *at, "quantity")
-                                 for at, fields in _entries_within(corpus.entries(own))
-                                 if fields is not None and "value_type" in fields})
-        for quantity in _quantities(own, units):
+        written, held_at = _stated_quantities(root, uid, data, units)
+        for quantity in written:
             where.setdefault(quantity, []).append(uid)
+        for quantity, address in held_at.items():
+            structured.setdefault(quantity, []).append((uid, address))
     problems = []
-    # @req> REQ-31827606@LqXaOXp6DLBG 4h2aan
     for (value, unit), uids in sorted(where.items(), key=lambda pair: str(pair[0])):
         if len(uids) > 1:
             # @req> REQ-30898926@Vu28eWaG_1mE nn2awc
@@ -780,7 +808,14 @@ def shared_quantities(records, root):
                 + " -- a quantity more than one statement makes belongs in a "
                 f"single parameter, referenced {corpus.NAME_FORM}"
             )
+        # @req> REQ-30898926@Vu28eWaG_1mE gja424
+        problems += [f"{uid} states {value} {unit}".rstrip()
+                     + f", which {address} holds -- reference it as ${{{address}}}"
+                     for uid in sorted(uids) if unit
+                     for holder, address in sorted(structured.get((value, unit), []))
+                     if holder != uid]
     return problems
+    # @req- lfsavh
 
 
 def _assessed(uid, data, records, canonical, known, past):
