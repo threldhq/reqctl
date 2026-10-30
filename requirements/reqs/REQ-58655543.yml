@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a requirements guard hook whose script cannot be started
+  then: the [tool call](tool_call) is refused
+  when: a [tool call](tool_call) is made
+- given: a requirements guard hook that does not finish within guard_hook_seconds
+  then: the [tool call](tool_call) is refused
+  when: a [tool call](tool_call) is made
+assessed:
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
+  REQ-51060455: Z5EVUURxm1nV1SfAQkawXqJLw5kJ7tgLcBEw6m_lpuk
+  guard_hook_seconds: W6zff0Aq2nifBgReERysTgX2ET08qjjpO9ouwqA723I
+  guard_hook_seconds.*: _aG6H5hOB4y8unfScqb2vB_NeYaElH_46CqhXntowTo
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-36925311: depends_on
+  REQ-51060455: constrains
+status: approved
+text: If the ${plugin_components.requirements_guard_hook} cannot start, ends in an
+  error or does not finish within ${guard_hook_seconds} when it judges a [tool call](tool_call),
+  then the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection
