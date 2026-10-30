@@ -739,12 +739,12 @@ def _leaves(node, at=(), field=()):
 def _stated_quantities(root, uid, data, units):
     own = own_quantities(root, uid, data)
     kind, name = corpus.kind_of(uid, own), corpus.name_of(uid, own) or uid
-    prose = prose_paths(root, uid, own)
-    written, held = set(), {}
+    prose = set(prose_paths(root, uid, own))
+    written, held = [], {}
     for at, field, value in _leaves(own):
-        if any(at[:len(path)] == path for path in prose):
-            written |= _quantities(value, units)
-        elif kind == "data" and at[:1] == ("entries",) and field[-1:] != ("definition",):
+        if any(at[:depth] in prose for depth in range(len(at) + 1)):
+            written.append(value)
+        elif kind == "data" and at[:1] == ("entries",):
             for quantity in _quantities(value, units):
                 held.setdefault(quantity, ".".join((name, *field[1:])))
     if kind == "parameter":
@@ -752,7 +752,7 @@ def _stated_quantities(root, uid, data, units):
         for key in corpus.entries(own) or {}:
             for quantity in _quantities(f"{key} {unit}", units):
                 held.setdefault(quantity, name)
-    return written, held
+    return _quantities("\n".join(written), units), held
 
 
 def _unit(written, units=ISO_UNITS):

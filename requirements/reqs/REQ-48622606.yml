@@ -7,7 +7,7 @@ assessed:
   REQ-85308584: 4lLbQIsexIidcdMrRNf4_YEBX2JeB1nAN7AiCH0MSjU
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
-  kjkm4f: _QZRgwtWBaeh4jEm2W7e78f14nDhu06mbytOps7W9Uw
+  kjkm4f: mqv-CK5WIuL1FigG0lphHeD6hidX9HT7sFXNbe4G2gg
 priority: medium
 relations:
   REQ-85308584: depends_on
