@@ -12,7 +12,8 @@ acceptance_criteria:
   then: the product refuses the field
   when: the corpus is validated
 assessed:
-  REQ-31827606: LqXaOXp6DLBG4aOCyP0U-zpI-zSfqD_lGFJ72CQ1Pqw
+  REQ-31827606: 28dBCp4nAL4YDySH80XCG3XDH4TLDohOSKX9FK_fAMA
+  REQ-32273668: L9hJHW9UXgPYlbumtlrPa1LulsyV30YuWVS3Kn1J6Sw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   5ii662: z05gHlRl2WMunoKhYqOixVNgnEVb9unhkqK-sniuKII
@@ -22,6 +23,7 @@ citations:
 priority: medium
 relations:
   REQ-31827606: constrains
+  REQ-32273668: constrains
 status: approved
 text: Where the governing schema constrains a field to a date, the product shall exclude
   that field from every check that reads an [item](item)'s quantities.
