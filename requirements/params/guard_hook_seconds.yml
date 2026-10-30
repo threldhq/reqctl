@@ -4,7 +4,7 @@ entries:
   '30': {}
 kind: parameter
 name: guard_hook_seconds
-status: draft
+status: approved
 text: The longest the host gives the requirements guard hook to judge a [tool call](tool_call)
   before the hook is stopped
 unit: s

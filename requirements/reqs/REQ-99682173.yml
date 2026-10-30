@@ -8,10 +8,11 @@ acceptance_criteria:
 assessed:
   REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  REQ-96453437: bZSLsL3QNLJaTKb2rFRQiHxaYLVwXTeffm6a3e3fKBE
+  REQ-96453437: dDiUrHNJAjxvHcaG8BSrM38xv_ZVkLd0CRJnfwUGeqE
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.elucidate_skill: X5RIsuQd3qQulxV0myNqEsW9uz3oK8Mp7O6R1vyoukw
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+  spawn_manifest: LeqZRL9C1nI_-1gFS7vV0swbkClsManYXpNbwBAobyM
 citations:
   55vtbf: P1lQpNvyFoCbr6lW13Fln6ZC4zfCuahBo1TPtSXG39o
 priority: medium
@@ -22,8 +23,8 @@ relations:
 status: approved
 text: The product shall state, in the ${plugin_components.elucidate_skill}, that the
   session puts the number of agents, models and approximate count of tokens the product
-  reports for a spawn manifest to the owner, and waits for the owner's answer, before
-  spawning a run's agents again after the owner's answers change a [proposal](proposal)'s
-  statement or criteria.
+  reports for a [spawn manifest](spawn_manifest) to the owner, and waits for the owner's
+  answer, before spawning a run's agents again after the owner's answers change a
+  [proposal](proposal)'s statement or criteria.
 type: functional
 verification: inspection

@@ -14,7 +14,7 @@ relations:
   REQ-29409340: derives_from
   REQ-36925311: depends_on
   REQ-60211288: depends_on
-status: approved
+status: superseded
 text: If a [tool call](tool_call) of an agent named in ${elucidate_agents} would write
   to a path other than the one its prompt names for its return, then the product shall
   refuse it.

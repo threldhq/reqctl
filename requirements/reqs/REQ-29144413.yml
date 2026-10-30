@@ -17,7 +17,7 @@ relations:
   REQ-36925311: depends_on
   REQ-60211288: depends_on
   REQ-92555000: derives_from
-status: approved
+status: superseded
 text: If a [tool call](tool_call) of an agent named in ${elucidate_agents.judge} or
   ${elucidate_agents.recall} would read a path other than the one its prompt names
   for it to read, then the product shall refuse it.
