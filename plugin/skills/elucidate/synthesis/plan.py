@@ -986,7 +986,7 @@ def reported(prompts):
 
 
 def manifest(run, name, prompts):
-    # @req> REQ-96453437@bZSLsL3QNLJa e3ps5d
+    # @req> REQ-96453437@dDiUrHNJAjxv e3ps5d
     reported(prompts)
     held, listed = {}, []
     for one in prompts:
