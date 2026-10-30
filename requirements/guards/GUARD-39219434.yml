@@ -28,8 +28,8 @@ text: If reqctl/requirements-dev-lock.txt does not hold each package that reqctl
   refuse the change.
 whole_file_citations:
   reqctl/requirements-dev-lock.txt:
-    digest: zYnR5vVCyIIuA-ipsYtxG3c_yEygXM9-jk1nRk2GxJg
+    digest: MoB6VIIoMvlyd8RikCi6StexO5X4-iBYE_5XJql23SM
     pinned: QVmE7MsFwn8t
   reqctl/requirements-dev.in:
-    digest: wgrY3E6_5eOixImzuSB0hkPDIjb1BlYhqZQu-neXc9U
+    digest: BXxVnh_xHZqIbbDWeu_aRysn9Z7ru2eifCXSbzFw6q8
     pinned: QVmE7MsFwn8t
