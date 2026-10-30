@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: a judge agent, and a run whose judge [spawn manifest](spawn_manifest) states
+    that agent's return path
+  then: the [tool call](tool_call) is refused
+  when: the agent calls Write on a path no [spawn manifest](spawn_manifest) states
+    as a judge's return path
+- given: a judge agent
+  then: the [tool call](tool_call) is not refused on that ground
+  when: the agent calls Write on the return path a [spawn manifest](spawn_manifest)
+    of a run states for another judge
+assessed:
+  REQ-29409340: tDdPsgiXDyDRBCsAH1_wuxoQa3shtwOYqvbOsb7P4SU
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  REQ-76059602: 5XTkNVOEhMxoeofNFdGj5kgMc0ES7zvQiDAwehQHnz8
+  elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
+  elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  spawn_manifest: LeqZRL9C1nI_-1gFS7vV0swbkClsManYXpNbwBAobyM
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-29409340: derives_from
+  REQ-36925311: depends_on
+  REQ-60211288: depends_on
+  REQ-76059602: supersedes
+status: approved
+text: If a [tool call](tool_call) of an agent named in ${elucidate_agents} would write
+  to a path that no [spawn manifest](spawn_manifest) of any run states as the return
+  path of an agent of the same [entry](entry), then the product shall refuse it.
+type: functional
+verification: inspection

@@ -4,9 +4,9 @@ acceptance_criteria:
   then: the [tool call](tool_call) is refused
   when: the time limit passes
 assessed:
-  REQ-29144413: xUHITg06zyjbm-DRyqOZdGmgHApmRF73iI6lDQ3K4iE
   REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
-  REQ-76059602: 5XTkNVOEhMxoeofNFdGj5kgMc0ES7zvQiDAwehQHnz8
+  REQ-73144852: yU84_78bOmur3hVG8gqtAJzScInMA_QHx7jW8f_W78k
+  REQ-85731550: GpdDXMWGeLgCU2XJE1TMiAt9-AR6VMpZMiw2vyonZfU
   boundary_check_seconds: Lb-WJCl6j1LiW5yIZLPtrritnLTwJqCKSM8Vgb24eXk
   boundary_check_seconds.*: 26tKiZe1aTRKMgPzUUyeQjXubwzlXllrEl7YYesK_HY
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
@@ -14,9 +14,9 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 priority: medium
 relations:
-  REQ-29144413: depends_on
   REQ-36925311: depends_on
-  REQ-76059602: depends_on
+  REQ-73144852: depends_on
+  REQ-85731550: depends_on
 status: approved
 text: If the product's check of a [tool call](tool_call) of an agent named in ${elucidate_agents}
   does not finish within ${boundary_check_seconds}, then the product shall refuse
