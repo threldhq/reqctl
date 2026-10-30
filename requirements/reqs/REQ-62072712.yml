@@ -12,7 +12,7 @@ acceptance_criteria:
   then: the product refuses the field
   when: the corpus is validated
 assessed:
-  REQ-31827606: ap7J9LObV7YYygxU4267H2OlTLv2x-v5vQKg7Ks-n2c
+  REQ-31827606: WRNUhOElejk9AjrqtWMoIVEsZ9zFrwcSlT5limKWihQ
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
   5ii662: z05gHlRl2WMunoKhYqOixVNgnEVb9unhkqK-sniuKII

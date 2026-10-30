@@ -20,7 +20,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-10839190: o1M0SkcZ_uZgZfRMbopkf_K77sy_Tm7RFYxpvMQxIA8
-  REQ-31827606: ap7J9LObV7YYygxU4267H2OlTLv2x-v5vQKg7Ks-n2c
+  REQ-31827606: WRNUhOElejk9AjrqtWMoIVEsZ9zFrwcSlT5limKWihQ
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:

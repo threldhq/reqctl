@@ -12,7 +12,7 @@ acceptance_criteria:
   then: the product refuses the [item](item)
   when: the corpus is validated
 assessed:
-  REQ-31827606: ap7J9LObV7YYygxU4267H2OlTLv2x-v5vQKg7Ks-n2c
+  REQ-31827606: WRNUhOElejk9AjrqtWMoIVEsZ9zFrwcSlT5limKWihQ
   REQ-83702299: kBGzIwAyKDHLaQr2uEZDpQDAHRtNn5Lkk6r0WFUdTvA
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
