@@ -123,7 +123,7 @@ WRITES_NOTHING = tuple(verb for verb in READ_VERBS
     "tr", "tac", "rev", "od", "paste", "fold", "fmt", "cd")
 SORT_WRITES = re.compile(r"-[A-Za-z]*o|--o|--co")
 OPENER = "@req"
-SPLITS = "$`{}"
+SPLITS = "$`{}%"
 # @req> guard_input_limit@v87jyIhQeygI vjlbgl
 INPUT_LIMIT = 20_000
 # @req- 2x3zhi
@@ -1018,10 +1018,8 @@ def names_citation(cmd):
     for char in cmd.replace("\\\n", "").translate(UNQUOTED):
         step = [set() for _ in reach]
         for matched, gaps in enumerate(reach):
-            for gap in gaps:
+            for gap in gaps - {"plain"}:
                 step[matched].add("split" if char in SPLITS else "plain" if gap == "empty" else gap)
-                if gap == "plain":
-                    continue
                 if matched == len(OPENER):
                     if char in "+>-":
                         return True
