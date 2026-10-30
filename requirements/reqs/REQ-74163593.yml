@@ -20,8 +20,7 @@ acceptance_criteria:
   when: the corpus is validated
 assessed:
   REQ-10839190: o1M0SkcZ_uZgZfRMbopkf_K77sy_Tm7RFYxpvMQxIA8
-  REQ-31827606: 28dBCp4nAL4YDySH80XCG3XDH4TLDohOSKX9FK_fAMA
-  REQ-32273668: L9hJHW9UXgPYlbumtlrPa1LulsyV30YuWVS3Kn1J6Sw
+  REQ-31827606: ap7J9LObV7YYygxU4267H2OlTLv2x-v5vQKg7Ks-n2c
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
@@ -32,7 +31,6 @@ priority: medium
 relations:
   REQ-10839190: constrains
   REQ-31827606: constrains
-  REQ-32273668: constrains
 status: approved
 text: The product shall skip a superseded or deprecated [item](item) in each check
   of the quantities that an [item](item)'s prose states.

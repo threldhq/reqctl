@@ -11,7 +11,7 @@ acceptance_criteria:
     ships
   when: the corpus is validated
 assessed:
-  REQ-31827606: 28dBCp4nAL4YDySH80XCG3XDH4TLDohOSKX9FK_fAMA
+  REQ-31827606: ap7J9LObV7YYygxU4267H2OlTLv2x-v5vQKg7Ks-n2c
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:

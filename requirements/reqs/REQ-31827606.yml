@@ -14,6 +14,20 @@ acceptance_criteria:
 - given: two [items](item) whose prose states the same quantity in different units
   then: the product accepts the [items](item)
   when: the corpus is validated
+- given: a [data item](data_item) whose [entry](entry) holds a number as a [structured
+    value](structured_value), and a requirement whose text writes the same number
+    before credits
+  then: the product refuses the requirement and names the [structured value](structured_value)
+    as the one to reference
+  when: the corpus is validated
+- given: a parameter whose value is a number of seconds, and a term whose definition
+    writes the same number before seconds
+  then: the product refuses the term and names the parameter
+  when: the corpus is validated
+- given: a parameter whose value is a number of seconds, and an [entry](entry) whose
+    field the schema declares as prose writes the same number before seconds
+  then: the product refuses the [data item](data_item) holding the [entry](entry)
+  when: the corpus is validated
 - given: two [data items](data_item) whose [entries](entry) each hold the same number
     as a [structured value](structured_value)
   then: the product accepts both [data items](data_item)
@@ -33,7 +47,8 @@ citations:
 priority: medium
 relations: {}
 status: approved
-text: If the prose of more than one [item](item) states the same quantity in the same
-  unit, then the product shall refuse the [item](item).
+text: If an [item](item)'s prose states a quantity that the prose or a [structured
+  value](structured_value) of another [item](item) states in the same unit, then the
+  product shall refuse the [item](item) whose prose states it.
 type: functional
 verification: inspection
