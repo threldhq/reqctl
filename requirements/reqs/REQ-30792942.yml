@@ -19,7 +19,7 @@ citations:
 priority: medium
 relations:
   REQ-31827606: constrains
-status: approved
+status: deprecated
 text: Where the corpus holds a [data item](data_item) named value_types, the product
   shall exclude the quantity that an [entry](entry) of a [data item](data_item) states,
   where the [entry](entry) states a value type, from the check for a quantity that
