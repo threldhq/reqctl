@@ -1,0 +1,12 @@
+assessed: {}
+entries:
+  spawn_manifest:
+    aliases:
+    - spawn manifests
+    definition: The file a step of a run of the elucidate skill writes under the run's
+      workflow folder, listing each agent the step spawns with its prompt or the path
+      of its prompt, the path it writes its return to, and the model and effort it
+      runs on.
+    word: spawn manifest
+kind: term
+status: draft
