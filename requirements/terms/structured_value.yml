@@ -1,0 +1,13 @@
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+entries:
+  structured_value:
+    aliases:
+    - structured values
+    definition: A parameter's value, or the value of a field of an [entry](entry)
+      of a [data item](data_item) at any depth, other than the [entry](entry)'s definition
+      and other than a field the schema declares as prose.
+    word: structured value
+kind: term
+status: approved
