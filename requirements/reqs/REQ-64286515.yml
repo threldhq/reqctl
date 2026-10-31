@@ -7,7 +7,7 @@ acceptance_criteria:
   when: baseline --generate is run
 assessed: {}
 citations:
-  nb26v5: vOsSyA3SF93AgsMvvnQE85TNdOAVERiaPLkbpXf6OAg
+  nb26v5: 1NW_iFLvi-a32C8bMlyhUzEat0IBr4DkkKYgwu5PSG4
 priority: medium
 relations: {}
 status: approved

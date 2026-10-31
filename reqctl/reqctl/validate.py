@@ -740,12 +740,12 @@ def _stated_quantities(root, uid, data, units):
     own = own_quantities(root, uid, data)
     kind, name = corpus.kind_of(uid, own), corpus.name_of(uid, own) or uid
     prose = set(prose_paths(root, uid, own))
-    written, held, entry_held = [], {}, {}
+    written, held, entry_held = {}, {}, {}
     # @req> REQ-15854616@QqNmd3FR7cNC k6ksii
     for at, field, value in _leaves(own):
         entry = at[:2] if kind == "data" and at[:1] == ("entries",) else None
         if any(at[:depth] in prose for depth in range(len(at) + 1)):
-            written.append((entry, value))
+            written.setdefault(entry, []).append(value)
         elif entry:
             for quantity in _quantities(value, units):
                 held.setdefault(quantity, ".".join((name, *field[1:])))
@@ -757,13 +757,13 @@ def _stated_quantities(root, uid, data, units):
                 held.setdefault(quantity, name)
     # @req+ REQ-15854616@QqNmd3FR7cNC 7jvcuc
     stated = set()
-    for entry, value in written:
+    for entry, values in written.items():
         restated = entry_held.get(entry, set())
         numbers = {number for number, _ in restated}
-        restated_units = {unit for _, unit in restated if unit}
-        stated |= {(number, unit) for number, unit in _quantities(value, units)
-                   if number not in numbers
-                   or unit and unit not in restated_units}
+        restated_units = {unit for _, unit in restated}
+        stated |= {(number, unit)
+                   for number, unit in _quantities("\n".join(values), units)
+                   if number not in numbers or unit and unit not in restated_units}
     # @req- 7jvcuc
     return stated, held
 
