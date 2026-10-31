@@ -1,0 +1,45 @@
+acceptance_criteria:
+- given: a [data item](data_item) whose [entry](entry) holds a number and the unit
+    days as [structured values](structured_value) and whose definition writes that
+    number in figures before days, and a parameter whose value is that number of days
+  then: the product accepts both
+  when: the corpus is validated
+- given: a [data item](data_item) whose [entry](entry) holds a number and the unit
+    days as [structured values](structured_value) and whose definition writes a different
+    number in figures before days, and a parameter whose value is that different number
+    of days
+  then: the product refuses the [data item](data_item) and names the parameter
+  when: the corpus is validated
+- given: a [data item](data_item) whose [entry](entry) holds a number and the unit
+    days as [structured values](structured_value), and a requirement whose text writes
+    that number in figures before days
+  then: the product refuses the requirement and names the [structured value](structured_value)
+    as the one to reference
+  when: the corpus is validated
+- given: a [data item](data_item) whose [entry](entry) holds a number and the unit
+    hours as [structured values](structured_value) and whose definition writes that
+    number in figures before days, and a parameter whose value is that number of days
+  then: the product refuses the [data item](data_item) and names the parameter
+  when: the corpus is validated
+- given: two [data items](data_item) whose [entries](entry) each hold the same number
+    and the unit days as [structured values](structured_value) and whose definitions
+    each write that number in figures before days
+  then: the product accepts both [data items](data_item)
+  when: the corpus is validated
+assessed:
+  REQ-31827606: wZxuCl2JsAvYuXk9NG0Y09GxRaHpWhvHTioYJInfgL8
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  structured_value: tTfLkSJioxvcSgcD9KHefGCEmtbCxoNC9m6CdVTCZE8
+priority: medium
+relations:
+  REQ-31827606: constrains
+status: approved
+text: The product shall exclude, from each check of the quantities that an [item](item)'s
+  prose states, a quantity that the prose of a [data item](data_item)'s [entry](entry)
+  states where a [structured value](structured_value) of that same [entry](entry)
+  holds its number and either the quantity has no unit or a [structured value](structured_value)
+  of that same [entry](entry) holds its unit.
+type: functional
+verification: inspection
