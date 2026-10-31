@@ -32,6 +32,9 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   structured_value: tTfLkSJioxvcSgcD9KHefGCEmtbCxoNC9m6CdVTCZE8
+citations:
+  7jvcuc: VeH6cYYmNDWeEJkpsCcMdOKGjGy23mCyNpeeqTUSZwA
+  k6ksii: ZtazqORhpammrbpPn5-O6aiHWFRkkQ_GsPzDb7qXn3c
 priority: medium
 relations:
   REQ-31827606: constrains
