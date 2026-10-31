@@ -20,5 +20,5 @@ type: functional
 verification: inspection
 whole_file_citations:
   plugin/hooks/hooks.json:
-    digest: qS6qcvFrYb4RrcV2mB_XlokUMrePwjgFkcUnov8N-uQ
+    digest: p3-Ng_dCL_V9U0DxUO2RcHKXlS4qmG2zDGAgEg4gCM4
     pinned: JSYnloFEMvf_

@@ -9,3 +9,7 @@ text: The longest the host gives the requirements guard hook to judge a [tool ca
   before the hook is stopped
 unit: s
 value_type: duration
+whole_file_citations:
+  plugin/hooks/hooks.json:
+    digest: p3-Ng_dCL_V9U0DxUO2RcHKXlS4qmG2zDGAgEg4gCM4
+    pinned: d_QDx9x22RJ3

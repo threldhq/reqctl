@@ -23,3 +23,7 @@ text: If the ${plugin_components.requirements_guard_hook} cannot start, ends in 
   then the product shall refuse the [tool call](tool_call).
 type: functional
 verification: inspection
+whole_file_citations:
+  plugin/hooks/hooks.json:
+    digest: p3-Ng_dCL_V9U0DxUO2RcHKXlS4qmG2zDGAgEg4gCM4
+    pinned: mNXdLRbM0yrz
