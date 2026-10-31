@@ -308,6 +308,41 @@ ORIGIN_SILENT = (
     "Run it to see why, fix origin or the connection, then retry."
 )
 
+# @req> elucidate_agents@n9BNBtOe7I6g tu4atx
+ELUCIDATE_AGENTS = ("best_in_class", "coverage", "judge", "recall")
+PROMPT_READERS = ("judge", "recall")
+# @req> boundary_check_seconds@s8QJiqN1sFA5 jayff3
+BOUNDARY_CHECK_SECONDS = 10
+SPAWN_MANIFESTS = ".elucidate/*/workflow/*.json"
+AGENT_WRITES = ("Write", "Edit", "MultiEdit", "NotebookEdit")
+AGENT_READS = ("Read", "Grep", "Glob")
+AGENT_PATHS = ("file_path", "notebook_path", "path")
+OUTSIDE_MANIFESTS = (
+    "{tool} of {target} by {agent} blocked: no spawn manifest under "
+    ".elucidate/<run>/workflow/ states it as the {role} path of a {agent} agent.\n"
+    "{remedy}"
+)
+WRITE_REMEDY = "Write the return to the path your prompt names, and nothing else."
+READ_REMEDY = "Read the one file your prompt names, and nothing else."
+UNNAMED_AGENT_PATH = (
+    "{tool} by {agent} blocked: it names no path, so it cannot be judged against "
+    "the spawn manifests.\nName the file your prompt names."
+)
+AGENT_COMMAND = (
+    "{tool} by {agent} blocked: an elucidate agent runs no command, since a command's "
+    "writes cannot be judged against the spawn manifests.\n" + WRITE_REMEDY
+)
+BOUNDARY_LATE = (
+    "{tool} by {agent} blocked: judging it against the spawn manifests took over "
+    f"{BOUNDARY_CHECK_SECONDS} seconds.\n"
+    "Retry the call; if it repeats, remove the .elucidate folders of finished runs."
+)
+UNNAMED_PLUGIN = (
+    "{tool} by {agent} blocked: the plugin's own name could not be read from "
+    "{manifest}, so whether {agent} is an elucidate agent cannot be told.\n"
+    "Reinstall the reqctl plugin: claude plugin update reqctl@reqctl"
+)
+
 # @req+ REQ-75564975@kR-BIGM3krAM sjmzez
 MOVES_ORIGIN_HEAD = (
     "{what} blocked: it changes or deletes the local origin/HEAD other than by "
@@ -327,7 +362,7 @@ UNHELD_SCRIPT = (
 PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 FINGERPRINTS = frozenset({
     "30c46c0e38c7e9133ab2dcf354cf555c05840badb53db7ffd7c60959aba78d5a",
-    "3084e2cb98ccf6fd8200d1f72023b568ceb1ea3b21481ad3b739283d0b84836e",
+    "c671dae058214de45686166e5e64ef151030ec5616de033eca01205333fd68d8",
     "6d59b5fd67889bf8a3175754dd8b5b45ea2c0d733eab93e3f3b2ad38f26ca8da",
 })
 # @req- kbbyh4
@@ -2769,6 +2804,67 @@ def judge_citation_shell(raw):
         deny(NOT_A_READ.format(tool=words[0]))
 
 
+def elucidate_agent(agent_type, tool):
+    if not isinstance(agent_type, str):
+        return None
+    scope, _, name = agent_type.rpartition(":")
+    if name.replace("-", "_") not in ELUCIDATE_AGENTS:
+        return None
+    manifest = PLUGIN_ROOT / ".claude-plugin" / "plugin.json"
+    try:
+        plugin = json.loads(manifest.read_text()).get("name")
+    except (OSError, ValueError, AttributeError):
+        plugin = None
+    if not isinstance(plugin, str) or not plugin:
+        deny(UNNAMED_PLUGIN.format(tool=tool, agent=agent_type, manifest=manifest))
+    return name.replace("-", "_") if scope == plugin else None
+
+
+def stated_paths(roots, agent, field, deadline, late):
+    stated = set()
+    for root in roots:
+        for manifest in sorted(Path(root).glob(SPAWN_MANIFESTS)):
+            if time.monotonic() > deadline:
+                deny(late)
+            try:
+                prompts = json.loads(manifest.read_text()).get("prompts") if manifest.is_file() else None
+            except (OSError, ValueError, AttributeError):
+                prompts = None
+            for one in prompts if isinstance(prompts, list) else []:
+                if (isinstance(one, dict) and one.get("agent") == agent
+                        and isinstance(one.get(field), str) and one[field]):
+                    stated.add(os.path.realpath(os.path.join(root, one[field])))
+    return stated
+
+
+# @req> REQ-73144852@yU84_78bOmur mn7d2v
+# @req> REQ-85731550@GpdDXMWGeLgC lknm6q
+# @req> REQ-92276384@go4CPFwHsTvh 5a7i45
+def confine_agent(entry, agent, tool, args, cwd):
+    deadline = time.monotonic() + BOUNDARY_CHECK_SECONDS
+    late = BOUNDARY_LATE.format(tool=tool, agent=agent)
+    if named_paths(args, COMMAND_KEY):
+        deny(AGENT_COMMAND.format(tool=tool, agent=agent))
+    if tool in AGENT_WRITES:
+        field, role, remedy = "out", "return", WRITE_REMEDY
+    elif tool in AGENT_READS and entry in PROMPT_READERS:
+        field, role, remedy = "path", "prompt", READ_REMEDY
+    else:
+        return
+    targets = [args[key] for key in AGENT_PATHS if isinstance(args.get(key), str) and args[key]]
+    if not targets:
+        deny(UNNAMED_AGENT_PATH.format(tool=tool, agent=agent))
+    roots = dict.fromkeys(os.path.realpath(root) for root in (
+        cwd, os.environ.get("CLAUDE_PROJECT_DIR") or cwd))
+    stated = stated_paths(roots, agent, field, deadline, late)
+    for target in targets:
+        if os.path.realpath(os.path.join(cwd, target)) not in stated:
+            deny(OUTSIDE_MANIFESTS.format(tool=tool, target=target, agent=agent,
+                                          role=role, remedy=remedy))
+    if time.monotonic() > deadline:
+        deny(late)
+
+
 def decide(data: dict) -> "str | None":
     tool = str(data.get("tool_name") or "")
     args = data.get("tool_input")
@@ -2783,6 +2879,11 @@ def decide(data: dict) -> "str | None":
     if not isinstance(cwd, str) or not cwd:
         cwd = os.environ.get("CLAUDE_PROJECT_DIR") or "."
     cwd = os.path.abspath(cwd)
+
+    # @req> REQ-73144852@yU84_78bOmur rlbt24
+    # @req> REQ-85731550@GpdDXMWGeLgC ca7ecu
+    if entry := elucidate_agent(data.get("agent_type"), tool):
+        confine_agent(entry, data["agent_type"], tool, args, cwd)
 
     # @req> REQ-54260750@MTrWbA9_HZWY haai6c
     if tool not in READS_NO_URL:

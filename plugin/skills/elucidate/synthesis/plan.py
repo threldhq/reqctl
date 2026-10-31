@@ -300,9 +300,10 @@ def spawn(run, folder, name, label, shape, held):
             **held}
 
 
-def inline(label, prompt, shape, kind, held):
-    return {"label": label, "prompt": prompt, "schema": shape, "agent": kind,
-            **held}
+# @req> REQ-73144852@yU84_78bOmur 6ron7s
+def inline(label, prompt, out, shape, kind, held):
+    return {"label": label, "prompt": prompt, "out": str(out), "schema": shape,
+            "agent": kind, **held}
 
 
 # @req> REQ-99520421@EA982CV9V8L5 cucduq
@@ -1189,7 +1190,7 @@ def build(run, chars, items, lines=PROMPT_LINES):
     # @req> REQ-23060027@zeNeSryv-0-1 ukljdu
     # @req> REQ-99520421@EA982CV9V8L5 d5vvxj
     reading = manifest(run, "coverage", [inline(
-        "coverage", asked, shapes.COVERAGE, registered("coverage"),
+        "coverage", asked, run / FINDINGS, shapes.COVERAGE, registered("coverage"),
         agents["coverage"])])
     cleared(run)
     corpus.atomic_write(run / "export.md", exported_text)

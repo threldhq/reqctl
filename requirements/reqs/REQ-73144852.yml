@@ -18,6 +18,10 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   spawn_manifest: LeqZRL9C1nI_-1gFS7vV0swbkClsManYXpNbwBAobyM
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  6ron7s: HEZpDvtTFaFV2XVAMSxt5IbPtEJSTdC3jbrDYxBzWts
+  mn7d2v: Z5ttjQvcEYKaunBa8MZMj_1aHft1c6z1pibLfIWiXiQ
+  rlbt24: 1emLsI66TP5ka5QKeWzYv7UVmLVnwx4FT1XPLBC51L0
 priority: medium
 relations:
   REQ-29409340: derives_from
