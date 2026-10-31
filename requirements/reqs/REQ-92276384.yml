@@ -12,6 +12,8 @@ assessed:
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
   elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  5a7i45: heIETllHk9hPFiTncUyRjs_rnBw5fj0z8KH3xQZ5KX8
 priority: medium
 relations:
   REQ-36925311: depends_on

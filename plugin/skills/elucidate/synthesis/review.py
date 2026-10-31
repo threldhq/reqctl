@@ -176,7 +176,7 @@ def build(run, answered):
     # @req> REQ-23060027@zeNeSryv-0-1 zq3w3z
     # @req> REQ-99520421@EA982CV9V8L5 bumf3d
     spawning = plan.manifest(run, SPAWN, [plan.inline(
-        "review", prompt, shapes.REVIEW, plan.registered("best-in-class"),
+        "review", prompt, run / plan.REVIEWED, shapes.REVIEW, plan.registered("best-in-class"),
         plan.agent("best_in_class", crew))])
     print(field)
     # @req> REQ-61616834@ocFeB1JGP518 b2u3gj
