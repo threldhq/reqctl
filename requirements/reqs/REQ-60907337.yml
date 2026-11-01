@@ -1,0 +1,37 @@
+acceptance_criteria:
+- given: a session
+  then: the [tool call](tool_call) is refused
+  when: a [tool call](tool_call) runs git fetch naming its remote through a command
+    substitution
+- given: a session
+  then: the [tool call](tool_call) is refused
+  when: a [tool call](tool_call) runs git pull naming its remote through a variable
+- given: a session
+  then: the [tool call](tool_call) is not refused on that ground
+  when: a [tool call](tool_call) runs git fetch naming a remote by a literal URL
+- given: a checked-out branch with an upstream remote
+  then: the product judges it against the branch's upstream remote and does not refuse
+    it for naming none
+  when: a [tool call](tool_call) runs git fetch naming no remote
+- given: a checked-out branch with no upstream remote
+  then: the product judges it against origin and does not refuse it for naming none
+  when: a [tool call](tool_call) runs git pull naming no remote
+assessed:
+  REQ-30003727: hxeWJAbWlac7mXRlI7XQckKXoNRe_cGiSbU_otqc1eM
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-30003727: constrains
+  REQ-36925311: depends_on
+  REQ-38288492: depends_on
+  REQ-60211288: depends_on
+status: approved
+text: If a [tool call](tool_call) would run git fetch or git pull from a remote that
+  neither the command's own text nor the repository's git configuration determines
+  when the product judges the [tool call](tool_call), then the product shall refuse
+  the [tool call](tool_call).
+type: functional
+verification: inspection
