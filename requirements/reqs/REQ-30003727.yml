@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: a session on a branch other than the default
+  then: the [tool call](tool_call) is refused
+  when: a [tool call](tool_call) runs git update-ref on a remote-tracking ref of origin
+- given: a session
+  then: the [tool call](tool_call) is refused
+  when: a [tool call](tool_call) fetches from a remote other than origin into a remote-tracking
+    ref of origin
+- given: a session
+  then: the [tool call](tool_call) is refused
+  when: a [tool call](tool_call) runs git filter-branch whose state branch is a remote-tracking
+    ref of origin
+- given: a session
+  then: the [tool call](tool_call) is not refused on that ground
+  when: a [tool call](tool_call) runs git fetch origin
+- given: a session on a feature branch
+  then: the [tool call](tool_call) is not refused on that ground
+  when: a [tool call](tool_call) pushes that branch to origin
+- given: origin reporting main as its default branch
+  then: the [tool call](tool_call) is not refused on that ground
+  when: a [tool call](tool_call) runs git remote set-head origin main
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-60211288: depends_on
+status: approved
+text: If a [tool call](tool_call) would write a remote-tracking ref of origin other
+  than by fetching from origin, pushing to origin, or setting the local origin/HEAD
+  ref to the branch origin reports as its default branch, then the product shall refuse
+  the [tool call](tool_call).
+type: functional
+verification: inspection
