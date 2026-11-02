@@ -109,6 +109,7 @@ AWK_RUNS = re.compile(r"getline|system|[|@]")
 AWK_PROGRAM_FILE = ("-f", "-E", "-i", "-l", "--f", "--e", "--i", "--l")
 SED_QUIET = re.compile(r"-[nErusz]+|--(?:quiet|silent|regexp-extended|posix|null-data"
                        r"|unbuffered|separate)")
+SED_VALUED = re.compile(r"-[nErusz]*([efl])|--(expression|file|line-length)")
 _SED_ADDRESS = r"(?:\d+|\$|/(?:\\.|[^/\\\n])*/I?)"
 SED_SCRIPT = re.compile(
     rf"(?:\s*(?:{_SED_ADDRESS}(?:,{_SED_ADDRESS})?!?\s*)?"
@@ -2443,7 +2444,25 @@ def sed_addresses(text):
 
 def tokens_without_scripts(said):
     words = tokens_of(said)
-    return tokens_of(sed_addresses(said)) if words[:1] == ["sed"] and "{}" not in words else words
+    masked = words[:1] == ["sed"] and "{}" not in words and tokens_of(sed_addresses(said))
+    if not masked or len(masked) != len(words):
+        return words
+    scripts, operands, given, at = [], [], False, 1
+    while at < len(words):
+        word = words[at]
+        name, _, value = word.partition("=") if word.startswith("--") else (word, "", "")
+        valued = SED_VALUED.fullmatch(name)
+        if valued:
+            kind = (valued[1] or valued[2])[0]
+            given = given or kind in "ef"
+            scripts += [at if value else at + 1] if kind == "e" else []
+            at += not value
+        elif not word.startswith("-"):
+            operands.append(at)
+        at += 1
+    kept = scripts if given else operands[:1]
+    return [masked[at] if at in kept and set(masked[at]) == {"_"} else word
+            for at, word in enumerate(words)]
 
 
 def plainly_plugin(text, here):
