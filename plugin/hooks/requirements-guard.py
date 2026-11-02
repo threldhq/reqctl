@@ -343,6 +343,27 @@ MOVES_ORIGIN_HEAD = (
 ORIGIN_HEAD_FILE = re.compile(r"(?<![\w.-])(?:refs/+remotes/+origin/+HEAD|packed-refs)(?![\w.-])")
 # @req- sjmzez
 
+MOVES_ORIGIN_REF = (
+    "{what} blocked: it writes a remote-tracking ref of origin other than by fetching from "
+    "origin, pushing to origin, or setting origin/HEAD to origin's default branch.\n"
+    "  git fetch origin"
+)
+ORIGIN_REF_FILE = re.compile(
+    r"(?<![\w.-])refs/+remotes(?:/*(?=$|[\s'\";|&)<>])|/+origin(?![\w.-])|/+[^\s/]*[*?[])")
+UNRESOLVED_REMOTE = (
+    "{what} blocked: neither its text nor the repository's git configuration determines "
+    "the remote it fetches from.\nName the remote outright."
+)
+FETCH_VALUED = ("--depth", "--deepen", "--shallow-since", "--shallow-exclude", "--refmap", "-o",
+                "--push-option", "--recurse-submodules", "--repo", "-j", "--jobs",
+                "--upload-pack", "--negotiation-tip", "--server-option", "--filter",
+                "--submodule-prefix", "--recurse-submodules-default", "--receive-pack", "--exec")
+SUBMODULE_FLAGS = ("--recurse-submodules", "--no-recurse-submodules")
+MERGE_VALUED = ("-m", "-s", "--strategy", "-X", "--strategy-option", "-F", "--file",
+                "--into-name", "--cleanup", "--depth", "--deepen", "--shallow-since",
+                "--shallow-exclude", "--upload-pack", "-o", "--server-option",
+                "--negotiation-tip", "--refmap")
+
 # @req> REQ-75038049@hXyFNmxx-SWy g3ql3s
 UNHELD_SCRIPT = (
     "Running {file} blocked: it names the requirements corpus ({found}), and the "
@@ -1446,13 +1467,7 @@ def landings(subcommand, rest, place):
                                                       if name == "default" else []))]
         return fetched(remotes, [], flags, place)
     if subcommand in ("fetch", "push"):
-        flags, operands = options(rest, ("--depth", "--deepen", "--shallow-since",
-                                         "--shallow-exclude", "--refmap", "-o",
-                                         "--push-option", "--recurse-submodules", "--repo",
-                                         "-j", "--jobs", "--upload-pack", "--negotiation-tip",
-                                         "--server-option", "--filter", "--submodule-prefix",
-                                         "--recurse-submodules-default", "--receive-pack",
-                                         "--exec"))
+        flags, operands = options(rest, FETCH_VALUED)
         if subcommand == "fetch":
             every = not operands or flagged(flags, "--all", "--multiple")
             remotes = (git_reads(["remote"], place) or "").split() if every else operands[:1]
@@ -1467,11 +1482,7 @@ def landings(subcommand, rest, place):
                 for src, _, dst in (spec.partition(":") for spec in operands[1:])
                 if dst and src.removeprefix("+")]
     current = head_branch(place)
-    flags, operands = options(rest, ("-m", "-s", "--strategy", "-X", "--strategy-option",
-                                     "-F", "--file", "--into-name", "--cleanup", "--depth",
-                                     "--deepen", "--shallow-since", "--shallow-exclude",
-                                     "--upload-pack", "-o", "--server-option",
-                                     "--negotiation-tip", "--refmap"))
+    flags, operands = options(rest, MERGE_VALUED)
     if subcommand == "reset":
         after = rest[rest.index("--") + 1:] if "--" in rest else []
         if after or len(operands) != 1 or flagged(flags, "-p", "--patch"):
@@ -1616,13 +1627,13 @@ def refuse_moving_origin_head(words, here):
 
 
 # @req> REQ-75564975@kR-BIGM3krAM 2ospre
-def writes_origin_head(said, plain, here):
+def writes_origin_head(said, plain, here, pattern=ORIGIN_HEAD_FILE):
     if ">" not in said and (plain == "git" and not OUTPUT_FLAG.search(said)
                             and "-o" not in tokens_of(said) or READ.search(said)):
         return False
     paths = [os.path.normpath(os.path.join(here, os.path.expanduser(alt.lstrip("<>&|0123456789"))))
              for word in tokens_of(said) for alt in bounded(word)]
-    if ORIGIN_HEAD_FILE.search(flatten(said)) or any(map(ORIGIN_HEAD_FILE.search, paths)):
+    if pattern.search(flatten(said)) or any(map(pattern.search, paths)):
         return True
     if not any(set("*?[") & set(path) for path in paths):
         return False
@@ -1631,6 +1642,84 @@ def writes_origin_head(said, plain, here):
                for name in ("refs/remotes/origin/HEAD", "packed-refs")] if common else []
     return any(fnmatch.fnmatchcase(target, os.path.realpath(path))
                for target in targets for path in paths)
+
+
+# @req> REQ-30003727@hxeWJAbWlac7 zejfbq
+def writes_origin_refs(words, here):
+    subcommand, rest = git_subcommand(words)
+    if subcommand is None:
+        return False
+    flags, operands = options([word for word in rest if word not in SUBMODULE_FLAGS], {
+        "fetch": FETCH_VALUED, "push": FETCH_VALUED, "pull": (*FETCH_VALUED, *MERGE_VALUED),
+        "filter-branch": FILTER_VALUES, "branch": ()}.get(subcommand, ("-m",)))
+    place = located(words, here)
+
+    def into_origin(spec, suffixed=False):
+        dst = spec.rpartition(":")[2].removeprefix("+")
+        stem = dst.removeprefix("refs/").partition("*")[0]
+        return ":" in spec and ("remotes/origin/".startswith(stem) or stem.startswith(
+            "remotes/origin/") or suffixed and dst.startswith("origin/"))
+
+    def configured(remotes, specs):
+        return [spec for named in remotes if named != "origin"
+                for remote in [named, *(git_reads(["config", "--get-all", f"remotes.{named}"],
+                                                  place) or "").split()] if remote != "origin"
+                for spec in specs or (git_reads(["config", "--get-all", f"remote.{remote}.fetch"],
+                                                place) or "").split()]
+
+    if subcommand in ("fetch", "pull"):
+        branch = head_branch(place)
+        every = flagged(flags, "--all") or subcommand == "fetch" and flagged(flags, "--multiple")
+        remotes = (operands or (git_reads(["remote"], place) or "").split()) if every else (
+            operands[:1] or [(branch and git_reads(["config", f"branch.{branch}.remote"], place)
+                              or "origin").strip()])
+        refmaps = [value for name, value in flags if name == "--refmap"]
+        return any(map(into_origin, configured(
+            remotes, [] if every else [*operands[1:], *refmaps])))
+    if subcommand == "push":
+        repo = next((value for name, value in flags if name == "--repo"), None)
+        remote, named = (repo, operands) if repo else ((operands or [None])[0], operands[1:])
+        return pushes_here(remote, place) and any(into_origin(spec, True) for spec in named)
+    if any(map(into_origin, rest)):
+        return True
+    if subcommand == "update-ref":
+        return any(word.startswith("refs/remotes/origin/") for word in operands)
+    if subcommand == "symbolic-ref":
+        return operands[:1] != ["refs/remotes/origin/HEAD"] and any(
+            word.startswith("refs/remotes/origin/") for word in operands[:2])
+    if subcommand == "branch":
+        return flagged(flags, "-r", "--remotes") and flagged(
+            flags, "-d", "-D", "--delete", "-m", "-M", "--move", "-c", "-C", "--copy") and any(
+            word.startswith("origin/") for word in operands)
+    if subcommand == "remote":
+        if operands[:1] == ["add"]:
+            return flagged(flags, "-f", "--fetch") and flagged(
+                [flag for flag in flags if flag[1] != "push"], "--mirror")
+        if operands[:1] == ["update"]:
+            return any(map(into_origin, configured(
+                operands[1:] or (git_reads(["remote"], place) or "").split(), [])))
+        return operands[:1] == ["prune"] and "origin" in operands[1:]
+    if subcommand == "filter-branch":
+        revisions = [part for operand in operands for part in re.split(r"\.\.\.?", operand)
+                     if part and not part.startswith("^")]
+        return any(name == "--state-branch" and value.removeprefix("refs/").startswith(
+            "remotes/origin/") for name, value in flags) or any(
+            revision.startswith(("--remotes", "--glob")) or (git_reads(
+                ["rev-parse", "--symbolic-full-name", revision], place) or "").strip().startswith(
+                "refs/remotes/origin/") for revision in revisions)
+    return False
+
+
+# @req> REQ-60907337@VippyfXWAiv2 abs74f
+def refuse_unresolved_remote(words, here):
+    subcommand, rest = git_subcommand(words)
+    if subcommand not in ("fetch", "pull"):
+        return
+    flags, operands = options([word for word in rest if word not in SUBMODULE_FLAGS],
+                              (*FETCH_VALUED, *(MERGE_VALUED if subcommand == "pull" else ())))
+    named = operands if flagged(flags, "--multiple") else operands[:1]
+    if any(mark in word for word in named for mark in ("$", "`", "*", "?", "[", "<(", ">(")):
+        deny(UNRESOLVED_REMOTE.format(what=" ".join(words)))
 
 
 def repo_slug(url):
@@ -2121,6 +2210,11 @@ def judge_command(said, here, stdin=()):
         deny(MOVES_ORIGIN_HEAD.format(what=said.strip()))
     refuse_moving_origin_head(words, here)
     # @req- vreqvm
+    # @req> REQ-30003727@hxeWJAbWlac7 euswxj
+    if writes_origin_head(said, plain, here, ORIGIN_REF_FILE) or writes_origin_refs(words, here):
+        deny(MOVES_ORIGIN_REF.format(what=said.strip()))
+    # @req> REQ-60907337@VippyfXWAiv2 4oqzpv
+    refuse_unresolved_remote(words, here)
     refuse_commit_on_default(words, here)
     refuse_moving_default(words, here)
     refuse_push_to_default(words, here)
@@ -2900,8 +2994,12 @@ def decide(data: dict) -> "str | None":
     # @req> REQ-75564975@kR-BIGM3krAM cxtbyd
     if tool not in ("Bash", "Read", "Grep", "Glob"):
         for value in named_paths(args) + bare_paths(args):
-            if ORIGIN_HEAD_FILE.search(flatten(value.replace("\\", "/"))):
+            path = flatten(value.replace("\\", "/"))
+            if ORIGIN_HEAD_FILE.search(path):
                 deny(MOVES_ORIGIN_HEAD.format(what=f"{tool} of {value}"))
+            # @req> REQ-30003727@hxeWJAbWlac7 m6wld7
+            if ORIGIN_REF_FILE.search(path):
+                deny(MOVES_ORIGIN_REF.format(what=f"{tool} of {value}"))
 
     # @req> REQ-68392771@WJbbGhVR9pq9 vcozfz
     if tool == "Grep":
