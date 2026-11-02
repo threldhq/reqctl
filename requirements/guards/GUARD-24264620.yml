@@ -34,5 +34,5 @@ text: If a workflow or the session-start hook installs a Python package that req
   then the build shall refuse the change.
 whole_file_citations:
   reqctl/requirements-dev-lock.txt:
-    digest: MoB6VIIoMvlyd8RikCi6StexO5X4-iBYE_5XJql23SM
+    digest: TioRqFTMLFPPmxjtdnRwVK_g-F9HPK_Ii_v6DPY8QIg
     pinned: IECSQ_EeiXfC
