@@ -21,7 +21,7 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   2vz6iw: nDDKjykVxzfHqetnmaI1Aaw4lahDCWL-L6FoIxkAeJ0
-  5zrapb: iay97LeUOxnADr9mAu7AhnhHXmGQL2x-6qM9budKg5I
+  5zrapb: E0fY7dgJ4F3mmPRI6MKJoV82YD1984D3NyAAJatHnVE
 priority: medium
 relations:
   REQ-38288492: depends_on

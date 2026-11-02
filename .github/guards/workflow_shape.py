@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import re
 import sys
 from pathlib import Path
@@ -46,6 +45,9 @@ EGG = re.compile(r"[#&]egg=([^&]+)")
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
+RELEASE_CHECKOUTS = (Path(".reqctl"), Path("$RUNNER_TEMP/reqctl"))
+LOCKS = {DEV_LOCK, DEV_LOCK.with_name(RUNTIME),
+         *(checkout / DEV_LOCK.with_name(RUNTIME) for checkout in RELEASE_CHECKOUTS)}
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
 RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
@@ -403,9 +405,7 @@ def sources(text, where, dev):
         while pending:
             file = pending.pop()
             # @req> GUARD-24264620@IECSQ_EeiXfC 5zpm7c
-            if file in seen or file in (DEV_LOCK, DEV_LOCK.with_name(RUNTIME)) or (
-                    file.parent.name == PACKAGE and file.name in (DEV_LOCK.name, RUNTIME)
-                    and not os.path.isfile(file)):
+            if file in seen or file in LOCKS:
                 continue
             seen.add(file)
             held, fault = held_by(file)
