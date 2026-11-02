@@ -1651,7 +1651,7 @@ def writes_origin_refs(words, here):
         return False
     flags, operands = options([word for word in rest if word not in SUBMODULE_FLAGS], {
         "fetch": FETCH_VALUED, "push": FETCH_VALUED, "pull": (*FETCH_VALUED, *MERGE_VALUED),
-        "filter-branch": FILTER_VALUES}.get(subcommand, ("-m",)))
+        "filter-branch": FILTER_VALUES, "branch": ()}.get(subcommand, ("-m",)))
     place = located(words, here)
 
     def into_origin(spec, suffixed=False):
