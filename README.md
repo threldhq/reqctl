@@ -97,7 +97,7 @@ In a repository whose default branch is `main`:
    Releases are tagged `reqctl--v<version>`:
 
    ```bash
-   pip install https://github.com/threldhq/reqctl/releases/download/reqctl--v0.1.22/reqctl-0.1.22-py3-none-any.whl
+   pip install https://github.com/threldhq/reqctl/releases/download/reqctl--v0.1.23/reqctl-0.1.23-py3-none-any.whl
    ```
 
 2. **Plugin.** With `--scope project` both are declared in the repository rather
