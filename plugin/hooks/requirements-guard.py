@@ -2441,6 +2441,16 @@ def sed_addresses(text):
     return "".join(kept)
 
 
+def tokens_without_scripts(said, here):
+    words = tokens_of(said)
+    masked = words[:1] == ["sed"] and "{}" not in words and tokens_of(sed_addresses(said))
+    if not masked or len(masked) != len(words):
+        return words
+    literal = (os.path.realpath(os.path.join(here or "/", word)) for word in words)
+    return [word if set(hidden) != {"_"} else path if Path(path).is_relative_to(PLUGIN_ROOT) else hidden
+            for word, hidden, path in zip(words, masked, literal)]
+
+
 def plainly_plugin(text, here):
     return names_plugin(text) or bool(here) and any(
         reaches_plugin(word, here) for word in tokens_of(text) if not EXPANSION.search(word))
@@ -2457,7 +2467,7 @@ def writes_plugin(said, here, whole):
     if ((READ.search(said) or git and git.group("read"))
             and not OUTPUT_FLAG.search(said) and not READ_WRITES.search(said)):
         return False
-    words = tokens_of(said)
+    words = tokens_without_scripts(said, here)
     called = invoked(words)
     tool = runner(called[0]) if called else ""
     operands = [word for word in called[1:] if not word.startswith("-")]
@@ -2474,9 +2484,7 @@ def writes_plugin(said, here, whole):
     naming = [word for word in words if reaches_plugin(word, here)]
     if not naming and not names_plugin(said):
         return tool in WRITERS and (
-            any(EXPANSION.search(os.path.expandvars(word))
-                for word in invoked(tokens_of(sed_addresses(said) if words[:1] == ["sed"] and "{}" not in words
-                                              else said))[1:])
+            any(EXPANSION.search(os.path.expandvars(word)) for word in called[1:])
             or not here and any(not os.path.isabs(os.path.expanduser(word)) for word in operands))
     if tool in ("cd", "pushd"):
         return False
@@ -2534,8 +2542,8 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
                               any(plainly_plugin(target, here) for here in heres)))
     for pipeline, places_of in zip(pipelines, places):
         naming = [part for part, here in itertools.product(pipeline, places_of)
-                  if names_plugin(heading(part)) or any(reaches_plugin(word, here)
-                                                        for word in tokens_of(heading(part)))]
+                  if names_plugin(heading(part)) or any(
+                      reaches_plugin(word, here) for word in tokens_without_scripts(heading(part), here))]
         for part, here in itertools.product(pipeline, places_of):
             said = heading(part)
             if writes_plugin(said, here, unquoted) or naming and (running or part not in naming and not (
