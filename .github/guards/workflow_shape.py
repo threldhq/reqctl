@@ -45,8 +45,8 @@ EGG = re.compile(r"[#&]egg=([^&]+)")
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
-LOCKS = {DEV_LOCK, *(root / DEV_LOCK.with_name(RUNTIME)
-                     for root in (Path(), Path(".reqctl"), Path("$RUNNER_TEMP/reqctl")))}
+LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME))
+                     for root in ("", ".reqctl", "$RUNNER_TEMP/reqctl"))}
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
 RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
