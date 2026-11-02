@@ -109,7 +109,6 @@ AWK_RUNS = re.compile(r"getline|system|[|@]")
 AWK_PROGRAM_FILE = ("-f", "-E", "-i", "-l", "--f", "--e", "--i", "--l")
 SED_QUIET = re.compile(r"-[nErusz]+|--(?:quiet|silent|regexp-extended|posix|null-data"
                        r"|unbuffered|separate)")
-SED_VALUED = re.compile(r"-[nErusz]*([efl])|--(expression|file|line-length)")
 _SED_ADDRESS = r"(?:\d+|\$|/(?:\\.|[^/\\\n])*/I?)"
 SED_SCRIPT = re.compile(
     rf"(?:\s*(?:{_SED_ADDRESS}(?:,{_SED_ADDRESS})?!?\s*)?"
@@ -2442,27 +2441,14 @@ def sed_addresses(text):
     return "".join(kept)
 
 
-def tokens_without_scripts(said):
+def tokens_without_scripts(said, here):
     words = tokens_of(said)
     masked = words[:1] == ["sed"] and "{}" not in words and tokens_of(sed_addresses(said))
     if not masked or len(masked) != len(words):
         return words
-    scripts, operands, given, at = [], [], False, 1
-    while at < len(words):
-        word = words[at]
-        name, _, value = word.partition("=") if word.startswith("--") else (word, "", "")
-        valued = SED_VALUED.fullmatch(name)
-        if valued:
-            kind = (valued[1] or valued[2])[0]
-            given = given or kind in "ef"
-            scripts += [at if value else at + 1] if kind == "e" else []
-            at += not value
-        elif not word.startswith("-"):
-            operands.append(at)
-        at += 1
-    kept = scripts if given else operands[:1]
-    return [masked[at] if at in kept and set(masked[at]) == {"_"} else word
-            for at, word in enumerate(words)]
+    literal = (os.path.realpath(os.path.join(here or "/", word)) for word in words)
+    return [word if set(hidden) != {"_"} else path if Path(path).is_relative_to(PLUGIN_ROOT) else hidden
+            for word, hidden, path in zip(words, masked, literal)]
 
 
 def plainly_plugin(text, here):
@@ -2481,7 +2467,7 @@ def writes_plugin(said, here, whole):
     if ((READ.search(said) or git and git.group("read"))
             and not OUTPUT_FLAG.search(said) and not READ_WRITES.search(said)):
         return False
-    words = tokens_without_scripts(said)
+    words = tokens_without_scripts(said, here)
     called = invoked(words)
     tool = runner(called[0]) if called else ""
     operands = [word for word in called[1:] if not word.startswith("-")]
@@ -2557,7 +2543,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
     for pipeline, places_of in zip(pipelines, places):
         naming = [part for part, here in itertools.product(pipeline, places_of)
                   if names_plugin(heading(part)) or any(
-                      reaches_plugin(word, here) for word in tokens_without_scripts(heading(part)))]
+                      reaches_plugin(word, here) for word in tokens_without_scripts(heading(part), here))]
         for part, here in itertools.product(pipeline, places_of):
             said = heading(part)
             if writes_plugin(said, here, unquoted) or naming and (running or part not in naming and not (
