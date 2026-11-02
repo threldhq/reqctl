@@ -1467,7 +1467,8 @@ def landings(subcommand, rest, place):
                                                       if name == "default" else []))]
         return fetched(remotes, [], flags, place)
     if subcommand in ("fetch", "push"):
-        flags, operands = options(rest, FETCH_VALUED)
+        flags, operands = options([word for word in rest if word not in SUBMODULE_FLAGS],
+                                  FETCH_VALUED)
         if subcommand == "fetch":
             every = not operands or flagged(flags, "--all", "--multiple")
             remotes = (git_reads(["remote"], place) or "").split() if every else operands[:1]
