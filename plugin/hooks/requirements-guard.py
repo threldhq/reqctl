@@ -60,7 +60,7 @@ EXPANSION = re.compile(r"\$(?:\{[^{}]*\}|\((?:[^()]|\([^()]*\))*\)|\w+|[@*#?$!-]
 ANSI_C = re.compile(r"\\.|(\$*)('_*')")
 SED_PLAIN = re.compile(r"'(?:(?:(?:\d+|\$|/(?:\\[^']|[^/\\'])*/)(?:,(?:\d+|\$|/(?:\\[^']|[^/\\'])*/))?)?"
                        r"!?[pdlnNPDq=](?:;|(?=')))+'")
-SED_WRITE = re.compile(r"(?=[wW][ \t]*([^\n]+))")
+SED_WRITE = re.compile(r"(?=[wW][ \t]*([^\n]{1,4096}))")
 ANSI_ESCAPE = re.compile(
     r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
 STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
