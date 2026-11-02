@@ -24,6 +24,10 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  euswxj: J_U-ompWK0yV_CZm68Ieo7khOF6SRDFwv-loZxxtiD4
+  id35ya: m4J_6cpksBncKYHejDA_ty4LJFq8CN-BMB6OfJs-7uY
+  zejfbq: uhygPqPklXdBpEuXMjlhDAQ5zrlUMzb_ooNH2LqVnQ4
 priority: medium
 relations:
   REQ-36925311: depends_on

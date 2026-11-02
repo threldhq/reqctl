@@ -22,6 +22,9 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  4oqzpv: 52oAj0VrIX-fm54ezGLpgsB6zddrP5iGF7-bZ1Y6dLs
+  abs74f: ev6i_uIDuuXj9apfypAVkRzegNqCkOz4ICvEBNy_i6M
 priority: medium
 relations:
   REQ-30003727: constrains
