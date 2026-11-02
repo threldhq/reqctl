@@ -355,9 +355,10 @@ UNRESOLVED_REMOTE = (
     "the remote it fetches from.\nName the remote outright."
 )
 FETCH_VALUED = ("--depth", "--deepen", "--shallow-since", "--shallow-exclude", "--refmap", "-o",
-                "--push-option", "--repo", "-j", "--jobs",
+                "--push-option", "--recurse-submodules", "--repo", "-j", "--jobs",
                 "--upload-pack", "--negotiation-tip", "--server-option", "--filter",
-                "--submodule-prefix", "--receive-pack", "--exec")
+                "--submodule-prefix", "--recurse-submodules-default", "--receive-pack", "--exec")
+SUBMODULE_FLAGS = ("--recurse-submodules", "--no-recurse-submodules")
 MERGE_VALUED = ("-m", "-s", "--strategy", "-X", "--strategy-option", "-F", "--file",
                 "--into-name", "--cleanup", "--depth", "--deepen", "--shallow-since",
                 "--shallow-exclude", "--upload-pack", "-o", "--server-option",
@@ -1648,9 +1649,9 @@ def writes_origin_refs(words, here):
     subcommand, rest = git_subcommand(words)
     if subcommand is None:
         return False
-    flags, operands = options(rest, {"fetch": FETCH_VALUED, "push": FETCH_VALUED,
-                                     "pull": (*FETCH_VALUED, *MERGE_VALUED),
-                                     "filter-branch": FILTER_VALUES}.get(subcommand, ()))
+    flags, operands = options([word for word in rest if word not in SUBMODULE_FLAGS], {
+        "fetch": FETCH_VALUED, "push": FETCH_VALUED, "pull": (*FETCH_VALUED, *MERGE_VALUED),
+        "filter-branch": FILTER_VALUES}.get(subcommand, ("-m",)))
     place = located(words, here)
 
     def into_origin(spec, suffixed=False):
@@ -1668,7 +1669,7 @@ def writes_origin_refs(words, here):
 
     if subcommand in ("fetch", "pull"):
         branch = head_branch(place)
-        every = subcommand == "fetch" and flagged(flags, "--all", "--multiple")
+        every = flagged(flags, "--all") or subcommand == "fetch" and flagged(flags, "--multiple")
         remotes = (operands or (git_reads(["remote"], place) or "").split()) if every else (
             operands[:1] or [(branch and git_reads(["config", f"branch.{branch}.remote"], place)
                               or "origin").strip()])
@@ -1714,7 +1715,8 @@ def refuse_unresolved_remote(words, here):
     subcommand, rest = git_subcommand(words)
     if subcommand not in ("fetch", "pull"):
         return
-    flags, operands = options(rest, (*FETCH_VALUED, *(MERGE_VALUED if subcommand == "pull" else ())))
+    flags, operands = options([word for word in rest if word not in SUBMODULE_FLAGS],
+                              (*FETCH_VALUED, *(MERGE_VALUED if subcommand == "pull" else ())))
     named = operands if flagged(flags, "--multiple") else operands[:1]
     if any(mark in word for word in named for mark in ("$", "`", "*", "?", "[", "<(", ">(")):
         deny(UNRESOLVED_REMOTE.format(what=" ".join(words)))
