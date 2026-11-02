@@ -348,15 +348,16 @@ MOVES_ORIGIN_REF = (
     "origin, pushing to origin, or setting origin/HEAD to origin's default branch.\n"
     "  git fetch origin"
 )
-ORIGIN_REF_FILE = re.compile(r"(?<![\w.-])refs/+remotes/+origin/+[^\s/]")
+ORIGIN_REF_FILE = re.compile(
+    r"(?<![\w.-])refs/+remotes(?:/*(?=$|[\s'\";|&)<>])|/+origin(?![\w.-])|/+[^\s/]*[*?[])")
 UNRESOLVED_REMOTE = (
     "{what} blocked: neither its text nor the repository's git configuration determines "
     "the remote it fetches from.\nName the remote outright."
 )
 FETCH_VALUED = ("--depth", "--deepen", "--shallow-since", "--shallow-exclude", "--refmap", "-o",
-                "--push-option", "--recurse-submodules", "--repo", "-j", "--jobs",
+                "--push-option", "--repo", "-j", "--jobs",
                 "--upload-pack", "--negotiation-tip", "--server-option", "--filter",
-                "--submodule-prefix", "--recurse-submodules-default", "--receive-pack", "--exec")
+                "--submodule-prefix", "--receive-pack", "--exec")
 MERGE_VALUED = ("-m", "-s", "--strategy", "-X", "--strategy-option", "-F", "--file",
                 "--into-name", "--cleanup", "--depth", "--deepen", "--shallow-since",
                 "--shallow-exclude", "--upload-pack", "-o", "--server-option",
@@ -1647,36 +1648,64 @@ def writes_origin_refs(words, here):
     subcommand, rest = git_subcommand(words)
     if subcommand is None:
         return False
-    flags, operands = options(rest, (*FETCH_VALUED, "-m", "--state-branch"))
+    flags, operands = options(rest, {"fetch": FETCH_VALUED, "push": FETCH_VALUED,
+                                     "pull": (*FETCH_VALUED, *MERGE_VALUED),
+                                     "filter-branch": FILTER_VALUES}.get(subcommand, ()))
+    place = located(words, here)
+
+    def into_origin(spec, suffixed=False):
+        dst = spec.rpartition(":")[2].removeprefix("+")
+        stem = dst.removeprefix("refs/").partition("*")[0]
+        return ":" in spec and ("remotes/origin/".startswith(stem) or stem.startswith(
+            "remotes/origin/") or suffixed and dst.startswith("origin/"))
+
+    def configured(remotes, specs):
+        return [spec for named in remotes if named != "origin"
+                for remote in [named, *(git_reads(["config", "--get-all", f"remotes.{named}"],
+                                                  place) or "").split()] if remote != "origin"
+                for spec in specs or (git_reads(["config", "--get-all", f"remote.{remote}.fetch"],
+                                                place) or "").split()]
+
     if subcommand in ("fetch", "pull"):
-        place = located(words, here)
         branch = head_branch(place)
-        remote = operands[0] if operands else (
-            branch and git_reads(["config", f"branch.{branch}.remote"], place) or "origin").strip()
-        named = [] if remote == "origin" else [
-            *operands[1:], *(value for name, value in flags if name == "--refmap")]
-    elif subcommand == "push":
-        named = operands[1:] if operands[:1] == ["."] else []
-    else:
-        named = rest
-    if any(spec.rpartition(":")[2].removeprefix("+").startswith(("refs/remotes/origin/",
-                                                                 "remotes/origin/"))
-           for spec in named if ":" in spec):
+        every = subcommand == "fetch" and flagged(flags, "--all", "--multiple")
+        remotes = (operands or (git_reads(["remote"], place) or "").split()) if every else (
+            operands[:1] or [(branch and git_reads(["config", f"branch.{branch}.remote"], place)
+                              or "origin").strip()])
+        refmaps = [value for name, value in flags if name == "--refmap"]
+        return any(map(into_origin, configured(
+            remotes, [] if every else [*operands[1:], *refmaps])))
+    if subcommand == "push":
+        repo = next((value for name, value in flags if name == "--repo"), None)
+        remote, named = (repo, operands) if repo else ((operands or [None])[0], operands[1:])
+        return pushes_here(remote, place) and any(into_origin(spec, True) for spec in named)
+    if any(map(into_origin, rest)):
         return True
     if subcommand == "update-ref":
         return any(word.startswith("refs/remotes/origin/") for word in operands)
     if subcommand == "symbolic-ref":
         return operands[:1] != ["refs/remotes/origin/HEAD"] and any(
-            word.startswith("refs/remotes/origin/") for word in operands[:1])
+            word.startswith("refs/remotes/origin/") for word in operands[:2])
     if subcommand == "branch":
         return flagged(flags, "-r", "--remotes") and flagged(
             flags, "-d", "-D", "--delete", "-m", "-M", "--move", "-c", "-C", "--copy") and any(
             word.startswith("origin/") for word in operands)
     if subcommand == "remote":
+        if operands[:1] == ["add"]:
+            return flagged(flags, "-f", "--fetch") and flagged(
+                [flag for flag in flags if flag[1] != "push"], "--mirror")
+        if operands[:1] == ["update"]:
+            return any(map(into_origin, configured(
+                operands[1:] or (git_reads(["remote"], place) or "").split(), [])))
         return operands[:1] == ["prune"] and "origin" in operands[1:]
     if subcommand == "filter-branch":
+        revisions = [part for operand in operands for part in re.split(r"\.\.\.?", operand)
+                     if part and not part.startswith("^")]
         return any(name == "--state-branch" and value.removeprefix("refs/").startswith(
-            "remotes/origin/") for name, value in flags)
+            "remotes/origin/") for name, value in flags) or any(
+            revision.startswith(("--remotes", "--glob")) or (git_reads(
+                ["rev-parse", "--symbolic-full-name", revision], place) or "").strip().startswith(
+                "refs/remotes/origin/") for revision in revisions)
     return False
 
 
@@ -1685,9 +1714,9 @@ def refuse_unresolved_remote(words, here):
     subcommand, rest = git_subcommand(words)
     if subcommand not in ("fetch", "pull"):
         return
-    flags, operands = options(rest, FETCH_VALUED if subcommand == "fetch" else MERGE_VALUED)
+    flags, operands = options(rest, (*FETCH_VALUED, *(MERGE_VALUED if subcommand == "pull" else ())))
     named = operands if flagged(flags, "--multiple") else operands[:1]
-    if any("$" in word or "`" in word for word in named):
+    if any(mark in word for word in named for mark in ("$", "`", "*", "?", "[", "<(", ">(")):
         deny(UNRESOLVED_REMOTE.format(what=" ".join(words)))
 
 
@@ -2963,13 +2992,11 @@ def decide(data: dict) -> "str | None":
     # @req> REQ-75564975@kR-BIGM3krAM cxtbyd
     if tool not in ("Bash", "Read", "Grep", "Glob"):
         for value in named_paths(args) + bare_paths(args):
-            if ORIGIN_HEAD_FILE.search(flatten(value.replace("\\", "/"))):
+            path = flatten(value.replace("\\", "/"))
+            if ORIGIN_HEAD_FILE.search(path):
                 deny(MOVES_ORIGIN_HEAD.format(what=f"{tool} of {value}"))
-
-    # @req> REQ-30003727@hxeWJAbWlac7 id35ya
-    if tool not in ("Bash", "Read", "Grep", "Glob"):
-        for value in named_paths(args) + bare_paths(args):
-            if ORIGIN_REF_FILE.search(flatten(value.replace("\\", "/"))):
+            # @req> REQ-30003727@hxeWJAbWlac7 m6wld7
+            if ORIGIN_REF_FILE.search(path):
                 deny(MOVES_ORIGIN_REF.format(what=f"{tool} of {value}"))
 
     # @req> REQ-68392771@WJbbGhVR9pq9 vcozfz
