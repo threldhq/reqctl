@@ -40,10 +40,11 @@ DEV_LOCK = DEV_INPUTS.with_name("requirements-dev-lock.txt")
 HOOK = Path(".claude/hooks/session-start.sh")
 LISTED = re.compile(r"(?m)^\s*([A-Za-z0-9][\w.-]*)")
 NESTED = re.compile(r"(?m)^\s*(?:-r\s*|--requirement(?:\s+|=))(\S+)")
-ENTRY = re.compile(r"(?m)^\s*(?:-e\s*|--editable(?:\s+|=))?([^\s#-]\S*)")
+ENTRY = re.compile(r"(?m)^[ \t]*(-e[ \t]*|--editable(?:[ \t]+|=))?([^\s#-][^#\n]*)")
+SPECIFIER = re.compile(r"([A-Za-z0-9][\w.-]*)\s*(?:\[[\w,.\s-]*\])?\s*(?:(?:===|[<>=!~]=?)[^;]*)?(?:;.*)?")
 ARCHIVES = (".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2", ".tbz", ".tar.xz",
-            ".txz", ".tar")
-REMOTE = re.compile(r"://|^(?:git|hg|svn|bzr)\+", re.IGNORECASE)
+            ".txz", ".tar", ".tlz", ".tar.lz", ".tar.lzma")
+REMOTE = re.compile(r"^[a-z][a-z0-9+.-]*:|@", re.IGNORECASE)
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
@@ -383,29 +384,32 @@ def held_by(path):
     return text, None
 
 
-def names_of(word):
+def names_of(word, editable=False):
     if REMOTE.search(word):
         return None
-    base = re.split(r"[#?\[]", word)[0]
-    if base.lower().endswith(ARCHIVES):
-        parts = Path(base).name.split("-")
-        return {canonicalize_name("-".join(parts[:at])) for at in range(1, len(parts))}
-    if "/" in base or base.startswith((".", "~")) or Path(base).is_dir():
-        name = project_name(base)
-        return name and {canonicalize_name(name)}
-    first = NAMED.match(word)
-    return {canonicalize_name(first[0])} if first else set()
+    if word.lower().endswith(".whl"):
+        name = Path(word).name.partition("-")[0]
+        return {canonicalize_name(name)} if "-" in word and NAMED.fullmatch(name) else None
+    if word.lower().endswith(ARCHIVES):
+        return None
+    if editable or "/" in word or word.startswith((".", "~")):
+        name = project_name(word.partition("[")[0])
+        return {canonicalize_name(name)} if name else None
+    found = SPECIFIER.fullmatch(word)
+    return {canonicalize_name(found[1])} if found else None
 
 
 def project_name(base):
     folder = Path(next((base.removeprefix(f"{root}/") for root in CHECKOUTS
                         if base.startswith(f"{root}/")), base)).expanduser()
     try:
-        project = tomllib.loads((folder / "pyproject.toml").read_text()).get("project", {})
+        project = tomllib.loads((folder / "pyproject.toml").read_text()).get("project")
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
-        project = {}
-    if isinstance(project.get("name"), str) and "name" not in project.get("dynamic", []):
-        return project["name"]
+        project = None
+    if isinstance(project, dict):
+        name, dynamic = project.get("name"), project.get("dynamic", [])
+        return name if isinstance(name, str) and NAMED.fullmatch(name) and isinstance(
+            dynamic, list) and "name" not in dynamic else None
     config = configparser.ConfigParser()
     try:
         config.read_string((folder / "setup.cfg").read_text())
@@ -418,8 +422,9 @@ def project_name(base):
 def sources(text, where, dev):
     found = []
     for install in pip_installs(text):
-        for word in install.positional + install.editable:
-            names = names_of(word)
+        for word, editable in [(word, False) for word in install.positional] + [
+                (word, True) for word in install.editable]:
+            names = names_of(word, editable)
             if names is None:
                 found.append(f"{where}: installs {word}, a URL or a folder whose package name its "
                              "pyproject.toml or setup.cfg does not state -- install it from a "
@@ -437,7 +442,8 @@ def sources(text, where, dev):
             seen.add(file)
             held, fault = held_by(file)
             pending += [file.parent / nested for nested in NESTED.findall(held)]
-            named = [names_of(entry) for entry in ENTRY.findall(held)]
+            named = [names_of(entry.strip().removesuffix("\\").strip(), bool(flag))
+                     for flag, entry in ENTRY.findall(held)]
             if fault:
                 found.append(f"{where}: {fault}")
             elif None in named:

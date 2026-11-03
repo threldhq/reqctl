@@ -5,7 +5,7 @@ from .baseline import _default_ref, _git
 from .corpus import ReqctlError, loads, mapping
 
 SETTINGS = Path("requirements") / "settings.yml"
-PINNED = re.compile(r"claude-[a-z]+-(\d+)(?:-(\d+))?(-\d{8})?")
+PINNED = re.compile(r"claude-[a-z]+-([0-9]{1,2})(?:-([0-9]{1,2}))?(-[0-9]{8})?")
 DATELESS_FROM = (4, 6)
 AGENTS = "elucidate_agents"
 NESTED = ("nest each value under its data item, entry and field, as "
