@@ -388,7 +388,7 @@ def held_by(path):
 def names_of(word, editable=False):
     if REMOTE.search(word):
         return None
-    bare = re.split(r"[\[;]", word, maxsplit=1)[0].strip()
+    bare = re.sub(r"\[[^\]]+\]$", "", word.partition(";")[0].strip()).strip()
     if bare.lower().endswith(".whl"):
         name = Path(bare).name.partition("-")[0]
         return {canonicalize_name(name)} if "-" in bare and NAMED.fullmatch(name) else None
