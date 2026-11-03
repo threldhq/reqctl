@@ -27,9 +27,9 @@ assessed:
   awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
 citations:
   lmav5l: Sk_xIvUOvMB5qGPlXFzbSJpbHSyY-qv4n4Id0hppQLE
-  sri72v: nWtWPKjVx_psnwTOy632fgJ2KT5NVinYjUXnYHCIeUY
+  sri72v: ZoaXQI5VFtPobTkwUXjOptPv0nO1fpEWsIRBBOq5f2k
   sz4ty3: Q0LJ2NKrnrJ5e9W8pEmMevd7o4HKbg3iNHc54monRUM
-  td4i2r: _c2F_gmNn6Yv9rxFRyIYolzgkdsqopNNHVxvKMj50t4
+  td4i2r: ZPnrGYidZNAquk-XHmzpS6aZg3EQcTGkGuyR8o8v4jc
 priority: medium
 relations:
   REQ-23691260: depends_on

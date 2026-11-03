@@ -22,7 +22,7 @@ assessed:
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
   cf76cn: VWXtGZFmcKOQtzesMaRcajRwvw71Z-bl2q8O8tLGce8
-  snr2ig: rseyNaeEZFjWNzA0dDaJXRpuUxKgokr_sR9RlL2K9TE
+  snr2ig: lptwRwHotWQJVG4PrETazl8YAoKgtI3cuTxMaziX1mc
 priority: medium
 relations:
   REQ-15362279: depends_on
