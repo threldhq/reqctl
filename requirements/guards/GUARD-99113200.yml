@@ -18,10 +18,3 @@ status: approved
 text: If ruff or mypy, run under the configuration the repository states for it, reports
   a finding in a Python file under a path an [entry](entry) of ${linted_paths} states,
   then the build shall refuse the change.
-whole_file_citations:
-  reqctl/pyproject.toml:
-    digest: rwToqfz1ADRVFFY7LhmZ4iNcNluf_IU4y4yVmPOTUls
-    pinned: u605TKfh4fwm
-  ruff.toml:
-    digest: -cvigZ1Q6pkVjyhHuKuzKWH4toKhcAQBpB9db2dYouA
-    pinned: u605TKfh4fwm
