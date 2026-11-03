@@ -72,7 +72,6 @@ SED_NOT = re.compile(r"[ \t]*(?:![ \t]*)*")
 SED_NUMBER = re.compile(r"\d+(?:~\d+)?|\$|[+~]\d+")
 SED_REGEX_FLAGS = re.compile(r"[IM]*")
 SED_FLAGS = re.compile(r"[gpIiMme\d]*")
-SED_LABEL = re.compile(r"[^;\n]*")
 SED_WORD = re.compile(r"[ \t]*[^\s;]*")
 SED_COUNT = re.compile(r"[ \t]*\d*")
 ANSI_ESCAPE = re.compile(
@@ -403,7 +402,8 @@ PLUGIN_WRITE = (
 )
 SED_UNJUDGED = (
     "{what} blocked: the guard cannot tell what its sed script runs, because {why}.\n"
-    "Run the command itself, or give sed an inline script with no bare e command and no e flag on s."
+    "Run the command itself, or give sed an inline script whose e commands spell out their command "
+    "with no backslash, and no e flag on s."
 )
 # @req> REQ-59919160@eEBU6tuB77Dq z3p2ti
 PLUGIN_UNRESOLVED = (
@@ -2488,8 +2488,9 @@ def sed_runs(words, rest, here):
         if commands is None:
             deny(SED_UNJUDGED.format(what=what, why="its script does not parse"))
         if "" in commands:
-            deny(SED_UNJUDGED.format(what=what, why="an e command or the e flag of s runs a command "
-                                                    "built from the input"))
+            deny(SED_UNJUDGED.format(what=what, why="an e command with no text or with a backslash in "
+                                                    "it, or the e flag of s, runs a command the "
+                                                    "script does not spell out"))
         found += commands
     return found
 
@@ -2559,7 +2560,7 @@ def sed_commands(script):
         command, at = script[at], at + 1
         if command == "e":
             end = sed_line_end(script, at)
-            found.append(script[at:end].strip())
+            found.append("" if "\\" in script[at:end] else script[at:end].strip())
             at = end
         elif command in "sy":
             at = sed_delimited(script, at, (command == "s", False))
@@ -2575,9 +2576,7 @@ def sed_commands(script):
             at = end
         elif command in "rRwW#":
             at = sed_line_end(script, at)
-        elif command in "btT":
-            at = SED_LABEL.match(script, at).end()
-        elif command in ":v":
+        elif command in ":btTv":
             at = SED_WORD.match(script, at).end()
         elif command in "qQlL":
             at = SED_COUNT.match(script, at).end()
