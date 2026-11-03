@@ -30,14 +30,14 @@ assessed:
   origin_query_seconds.*: 6SmMhfL6f4iDThF0dJ4oM-iybfVP1cvIPM6GSKBF47I
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  2ospre: gFWxN_r_GAi8gR3THv-TtySAZcI6c3LUHplXL6tMtuo
+  2ospre: 1WiqSMkXQDp1bapExWxQJUUdaAdI3Sl7_0RfJ3TAeio
   b64jr6: Vb9UbH_DN7Haq-6wDyqIERjv5ZcbdpohLHMFfNJNZRw
-  cxtbyd: QLEG1RZsA4sp6HSyjGiwKPKVPuR3pn607ew7J2QmTyc
-  owo62a: aPdD-9J3SpYP09MVusFxrrEHAM3IJBMszsUUoZmfhnI
-  qnq6pl: flGq4EqmSd5DQbOqXPqyzUtyNabbId31oWwctZbETww
+  cxtbyd: zUnW3QsU9QxPIAiaPXzs_HR32OVN3X3ofXQynV3bZtc
+  owo62a: 7BUvUcs8rqlsv8PUg_DW_rsmKWDv83Lo_swjdK_VmrA
+  qnq6pl: 2Jok6dAC-BQMHKJro-3H4ZR9bwtK2o_PqndnRj3F9zw
   sjmzez: LJuGIkHQK_F3Kf6wD9IWoT_eY0IhGmAe4v16LSsVi24
-  soebre: lTec7aIpOoTFF5oa181u2jj2F-8Hy2xK7aaJ4qZ9AHQ
-  vreqvm: pNssEB1vY5Jp8lII9uV_Etd21VF-cziqEoDwQty-HGM
+  soebre: 3i6W54c2I2QdYN0fhEN0xPZYIa6zVNnPi3IaHeP_x7s
+  vreqvm: vXMVcsyxtKSqXu9cNEGJaDczhWBFptZ5sxkkzDH8BFY
 priority: medium
 relations:
   REQ-38288492: depends_on

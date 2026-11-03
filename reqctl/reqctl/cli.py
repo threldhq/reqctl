@@ -828,8 +828,8 @@ def cmd_validate(args):
 
 def cmd_trace(args):
     tree, root = corpus.load()
-    # @req> REQ-27097724@BlP6FCylGOKS htlxvr
-    data = graph.trace(tree, root, args.uid, args.base)
+    # @req> REQ-27097724@WuK_Hn1OEs1s htlxvr
+    data = graph.trace(tree, root, args.uid, args.base, args.record)
     if args.json:
         _emit(args, data, "")
     else:
@@ -1347,8 +1347,10 @@ def build_parser(root, fielded):
     s = _command(sub, "trace",
                  "map @req tags in code to the corpus; exit 1 on problems")
     s.add_argument("uid", nargs="?", help="limit the trace to one item")
-    # @req> REQ-27097724@BlP6FCylGOKS updzi2
+    # @req> REQ-27097724@WuK_Hn1OEs1s updzi2
     s.add_argument("--base")
+    # @req> REQ-21635723@CvxpeHCRTgGz rji7bg
+    s.add_argument("--record", action="store_true")
     s.set_defaults(func=cmd_trace)
 
     s = _command(sub, "tag",

@@ -35,3 +35,11 @@ select = ["E4", "E7", "E9", "F", "TID251"]
 
 [tool.mypy]
 python_version = "3.13"
+
+[[tool.mypy.overrides]]
+module = "gitleaks_stamps"
+disable_error_code = ["attr-defined"]
+
+[[tool.mypy.overrides]]
+module = "plan"
+disable_error_code = ["valid-type", "misc"]

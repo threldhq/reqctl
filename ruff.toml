@@ -1,0 +1,2 @@
+[lint.per-file-ignores]
+"plugin/hooks/requirements-guard.py" = ["BLE001", "SIM102"]

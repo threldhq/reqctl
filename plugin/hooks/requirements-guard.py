@@ -41,14 +41,14 @@ PARENT = re.compile(r"(^|/)(?!\.\./)[^/\s]+/\.\./")
 PATH_KEY = re.compile(
     r"(^|_|[a-z])(path|paths|pathname|file|files|filename|filenames|dest"
     r"|destination|dir|directory|folder|folders|target|output|src|dst|source"
-    r"|to|uri)$", re.I)
+    r"|to|uri)$", re.IGNORECASE)
 PATH_SHAPE = re.compile(r"[^\s'\"`$();|<>]+")
-FILE_URL = re.compile(r"file:[/\\]+\S*", re.I)
+FILE_URL = re.compile(r"file:[/\\]+\S*", re.IGNORECASE)
 AGENT_READS = ("Read", "Grep", "Glob")
 AGENT_WRITES = ("Write", "Edit", "MultiEdit", "NotebookEdit")
 READS_NO_URL = AGENT_READS + AGENT_WRITES
-COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.I)
-GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.I)
+COMMAND_KEY = re.compile(r"(^|_|[a-z])(command|cmd|script|shell)$", re.IGNORECASE)
+GLOB_KEY = re.compile(r"(^|_|[a-z])pattern$", re.IGNORECASE)
 GREP_GLOB_KEY = re.compile(r"^glob$")
 BRACE = re.compile(r"\{([^{},]*,[^{}]*)\}")
 SEQUENCE = re.compile(r"\{(?=[^{}]*\})[^{}]*\.\.")
@@ -161,9 +161,9 @@ COMPOUND = re.compile(
     rf"|case\s+{_WORD}+\s+in(?!\S)|(?:function\s+)?[^\s()]+\s*\(\s*\)|function\s+\S+"
     rf"|\(?\s*{_WORD}*(?:\s*\|\s*{_WORD}*)*\s*\)))*")
 CASE = re.compile(rf"(?<![^\s;&|(])(?:case(?=\s+{_WORD}+[\s;]+in(?![^\s;&|)]))|esac(?![^\s;&|)]))")
-QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re.S),
-             '"': re.compile(r'(?:\\.|[^"\\])*"', re.S)}
-TICKED = re.compile(r"(?:\\.|[^\\`])*`", re.S)
+QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re.DOTALL),
+             '"': re.compile(r'(?:\\.|[^"\\])*"', re.DOTALL)}
+TICKED = re.compile(r"(?:\\.|[^\\`])*`", re.DOTALL)
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
 PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
                          "--mirror", "--delete", "--prune")
@@ -440,11 +440,11 @@ METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE")
 HTTPIE = ("http", "https", "xh", "xhs")
 GITHUB_API = re.compile(
     r"(?<![\w.-])(?:https?:/+)?(?:[^/\s@'\"]*@)?api\.github\.com\.?(?::\d+)?(/\S*)?$",
-    re.I)
+    re.IGNORECASE)
 BRANCH_MUTATION = re.compile(r"\b(?:createCommitOnBranch|updateRefs?|deleteRef|mergeBranch)\b")
 CONNECTOR_WRITE = re.compile(
     r"github.*__\w*(?:create|update|upsert|push|delete|commit)\w*_(?:files?|commits?|refs?)$",
-    re.I)
+    re.IGNORECASE)
 RUNNERS = {"python": "c", "node": "ep", "perl": "eE", "ruby": "e", "source": "", ".": "",
            **dict.fromkeys((*SHELLS, "fish"), "cs")}
 RUN_VALUED = {"python": ("-W", "-X", "-m", "--check-hash-based-pycs"),
@@ -567,8 +567,13 @@ def deny(reason: str) -> None:
 
 
 def scan(cmd: str, joins=None) -> list[list[str]]:
-    commands, pipeline, buf, held, bodies, nest, pending = [], [], [], [], [], [], []
-    subscripts, loose = [], []
+    commands, pipeline, pending = [], [], []
+    buf: list[str] = []
+    held: list[str] = []
+    bodies: list[list[str]] = []
+    nest: list[str] = []
+    subscripts: list[list[int]] = []
+    loose: list[int] = []
     joins = [] if joins is None else joins
     quote = None
     lines = cmd.split("\n")
@@ -655,7 +660,8 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 deny(UNREADABLE.format(what="a << after a [ the guard cannot place"))
             if char == "<" and not shifting() and (heredoc := heredoc_at(line, i)):
                 delimiter, _, dash, end = heredoc
-                bodies.append(slot := [])
+                slot: list[str] = []
+                bodies.append(slot)
                 pending.append((delimiter, dash, slot, sum(entry != "(" for entry in nest)))
                 buf.append(line[i:end])
                 i = end
@@ -847,7 +853,7 @@ def groups(text, opened=()):
                 stack.append(text[i + 1])
         elif char == "\n" and pending:
             for delimiter, literal, dash in pending:
-                end = re.compile("\n" + "\t*" * dash + re.escape(delimiter) + "$", re.M).search(text, i)
+                end = re.compile("\n" + "\t*" * dash + re.escape(delimiter) + "$", re.MULTILINE).search(text, i)
                 if not literal and not starts:
                     found += groups(text[i + 1:end.start() if end else len(text)], ["<<"])
                 i = end.end() if end else len(text)
@@ -1127,7 +1133,7 @@ def message_words(cmd, m, at):
 def heredoc_body(cmd, m, doc):
     word, quoted, dash, end = doc
     begins = m.find("\n", end) + 1
-    closing = begins and m[begins - 2] != "\\" and re.compile("^" + "\t*" * dash + re.escape(word) + "$", re.M).search(cmd, begins)
+    closing = begins and m[begins - 2] != "\\" and re.compile("^" + "\t*" * dash + re.escape(word) + "$", re.MULTILINE).search(cmd, begins)
     if closing and (quoted or not any(c in cmd[begins:closing.start()] for c in "$`\\")):
         return begins, closing.start()
     return None
@@ -1208,7 +1214,7 @@ def git_reads(args, place, seconds=15):
         done = subprocess.run(
             ["git", "--no-optional-locks", "-C", here, *options, "-c", "core.fsmonitor=false",
              *args],
-            capture_output=True, text=True, timeout=min(seconds, left()),
+            capture_output=True, text=True, timeout=min(seconds, left()), check=False,
             env={**os.environ, **settings, "UNFILTERED": ""})
     except (OSError, subprocess.SubprocessError):
         return None
@@ -2116,7 +2122,7 @@ BARE_SWEEP = (*BARE_ROOTS, "*")
 
 def dotted(found):
     dots = [dot for dot in (".", "..") if expands_to(found[0], dot)]
-    return "{%s}" % ",".join([found[0], *dots]) if dots else found[0]
+    return "{" + ",".join([found[0], *dots]) + "}" if dots else found[0]
 
 
 def sweeping(targets, here, bare):
@@ -2987,7 +2993,7 @@ def judge_citation_edit(tool, args, cwd):
 def reqctl_json(args, here):
     try:
         done = subprocess.run(
-            ["reqctl", "--json", *args], cwd=here, capture_output=True,
+            ["reqctl", "--json", *args], cwd=here, capture_output=True, check=False,
             timeout=max(DEADLINE - time.monotonic(), 0.001),
             env={**os.environ, "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.fsmonitor",
                  "GIT_CONFIG_VALUE_0": "false"})
@@ -3149,6 +3155,7 @@ def decide(data: dict) -> "str | None":
     # @req+ REQ-18701923@7CvKXOjSI6Kb hyuozw
     if not isinstance(args, dict):
         deny(UNREADABLE.format(what="the tool input, which is not an object"))
+        return None
     for key in ("file_path", "notebook_path", "command"):
         if args.get(key) is not None and not isinstance(args[key], str):
             deny(UNREADABLE.format(what=f"the {key} field"))

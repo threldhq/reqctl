@@ -20,8 +20,8 @@ assessed:
   project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  2vz6iw: nDDKjykVxzfHqetnmaI1Aaw4lahDCWL-L6FoIxkAeJ0
-  5zrapb: rNaBi0Dcm5fqtKVckw-xukzYHrWkXE7IZSWDIC6HplE
+  2vz6iw: TfsJmDRj8EshIIkEhOVy-jzOiylu61pr6Pb3YtCTU-I
+  5zrapb: ffd22JgQQU1cLt39_FxQ1LfV7J1EMJCE5-a9xKyWMSo
 priority: medium
 relations:
   REQ-38288492: depends_on

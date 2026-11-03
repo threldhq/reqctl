@@ -89,8 +89,11 @@ def whole(tree, tags, root=None, uid=None):
     return problems
 
 
-def trace(tree, root, uid=None, base=None):
+def trace(tree, root, uid=None, base=None, record=False):
     citations, cited_problems = cite.read(root, digested=True, uid=uid)
+    # @req> REQ-21635723@CvxpeHCRTgGz qwvqiw
+    if record:
+        uncited.record(tree, root, citations)
     # @req+ REQ-19896380@lvCPXiVYZ6ud 6rtw6m
     shown = [c for c in citations if not corpus.is_test(c["path"])]
     tags = cite.cited(shown)

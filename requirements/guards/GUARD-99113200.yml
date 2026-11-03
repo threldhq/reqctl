@@ -10,8 +10,18 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   linted_paths: AqAbdCcroWX4olbZ8uMYdZpwKfncrRcqMQPffkrqG_8
   linted_paths.*: Og6DV_h-N5BWy7agNDjGSWECTCOyPvpQNv_IMFHSpj8
+citations:
+  464eon: cupeB9uEW-Dls8ODTHXB1rf23EOpjXcKsQA0EZb-lDc
+  c53mga: OD0QV01dR3EpRKZZTIV6YFq--4NdM7gUhKcvpN4mZyM
 relations: {}
 status: approved
 text: If ruff or mypy, run under the configuration the repository states for it, reports
   a finding in a Python file under a path an [entry](entry) of ${linted_paths} states,
   then the build shall refuse the change.
+whole_file_citations:
+  reqctl/pyproject.toml:
+    digest: rwToqfz1ADRVFFY7LhmZ4iNcNluf_IU4y4yVmPOTUls
+    pinned: u605TKfh4fwm
+  ruff.toml:
+    digest: -cvigZ1Q6pkVjyhHuKuzKWH4toKhcAQBpB9db2dYouA
+    pinned: u605TKfh4fwm
