@@ -96,7 +96,7 @@ GLOB_LIMIT = 4096
 YAML_TYPES = ("yaml", "crystal", "dockercompose", "all")
 CWD_LIMIT = 64
 DEADLINE = time.monotonic() + 30
-JUDGED = ("git", "rm", "patch", "find", "eval", "sed", *SHELLS)
+JUDGED = ("git", "rm", "patch", "find", "eval", *SHELLS)
 DASHED_GIT = re.compile(r"git-[A-Za-z0-9][\w-]*")
 BASH_SEQUENCE = re.compile(r"\{(?:[+-]?\d+\.\.[+-]?\d+|[A-Za-z]\.\.[A-Za-z])(?:\.\.[+-]?\d+)?\}")
 LONG_FLAGS = ("--force", "--hard", "--discard-changes", "--dry-run", "--staged",
@@ -2173,7 +2173,7 @@ def judge_command(said, here, stdin=()):
     # @req> REQ-60587913@64oissmU4Xo2 6qzcqn
     # @req> REQ-70178381@2GE_TPwGTZKU ivxbcb
     # @req> REQ-59919160@eEBU6tuB77Dq aypjvn
-    if (plain in ("git", "sed") or DASHED_GIT.fullmatch(plain or "")) and any(
+    if (plain == "git" or DASHED_GIT.fullmatch(plain or "") or sed_calls(words, called)) and any(
             map(expands, unquoted[len(words) - len(called) + 1:])):
         if sequenced := next((word for word in unquoted[len(words) - len(called) + 1:]
                               if BASH_SEQUENCE.search(word)), None):
@@ -2250,6 +2250,10 @@ def judge_command(said, here, stdin=()):
     refuse_discarding_work(words, here)
     for script in scripts_within(words, here):
         judge_shell(script, here, stdin)
+    # @req> REQ-59919160@eEBU6tuB77Dq fwdndw
+    for at in sed_calls(words, called):
+        for script in sed_runs(words, words[at + 1:], here):
+            judge_shell(script, here, stdin)
     if plain in SHELLS and not short_flagged(itertools.takewhile(
             lambda word: word != "--" and word.startswith(("-", "+")), operands), "c"):
         for script in stdin:
@@ -2267,9 +2271,6 @@ def scripts_within(words, here):
         return [] if at is None else [word for word in rest[at + 1:] if not word.startswith("-")]
     if tool == "eval":
         return [" ".join(rest)]
-    # @req> REQ-59919160@eEBU6tuB77Dq ujxnjo
-    if tool == "sed":
-        return sed_runs(words, rest, here)
     if tool == "find":
         return [" ".join(word if UNQUOTED_WORD.fullmatch(word) else shlex.quote(word)
                          for word in itertools.takewhile(lambda word: word not in (";", "+"),
@@ -2480,6 +2481,10 @@ def judged_words(said, here):
     literal = (os.path.realpath(os.path.join(here or "/", word)) for word in words)
     return [word if set(hidden) != {"_"} else path if Path(path).is_relative_to(PLUGIN_ROOT) else hidden
             for word, hidden, path in zip(words, masked, literal)] + written
+
+
+def sed_calls(words, called):
+    return [at for at, word in enumerate(words[:len(words) - len(called) + 1]) if os.path.basename(word) == "sed"]
 
 
 def sed_runs(words, rest, here):
