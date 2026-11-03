@@ -14,5 +14,5 @@ text: The build shall refuse a Claude Code plugin whose version differs from the
   of the [reqctl wheel](reqctl_wheel).
 whole_file_citations:
   reqctl/pyproject.toml:
-    digest: 6ImiuXmphVTYr2kkUOWc0DRBETlWxr4bRdb1N1yw8TE
+    digest: rwToqfz1ADRVFFY7LhmZ4iNcNluf_IU4y4yVmPOTUls
     pinned: xIKhRXKhnYS1

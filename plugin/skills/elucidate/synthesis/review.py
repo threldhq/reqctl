@@ -440,8 +440,8 @@ def summary(review, said, bound):
     practices = review["practices"]
     fields = sorted({practice["field"] for practice in practices})
     unstated = sum(not stated(practice, said) for practice in practices)
-    lines = [f"{len(practices)} practice(s) in {', '.join(fields) or 'no field'}"
-             f"; {unstated} the owner's words do not state"]
+    lines = [(f"{len(practices)} practice(s) in {', '.join(fields) or 'no field'}"
+             f"; {unstated} the owner's words do not state")]
     lines += [f"{number}. {practice['practice']} -- "
               f"{', '.join(practice['leaders'])}"
               for number, practice in enumerate(practices, 1)]
@@ -462,8 +462,8 @@ def table(review, said):
             for number, practice in enumerate(review["practices"], 1)
             if not stated(practice, said)]
     if not rows:
-        return ["The owner's words state every practice the review holds: no "
-                "table question."]
+        return [("The owner's words state every practice the review holds: no "
+                "table question.")]
     lines = ["| | Practice | Leaders | Sources | The review recommends |",
              "|---|---|---|---|---|"]
     lines += [f"| {number} | {cell(practice['practice'])} | "

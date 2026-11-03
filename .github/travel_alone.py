@@ -6,20 +6,21 @@ import sys
 
 import yaml
 
-from reqctl import corpus
+from reqctl import corpus, uncited
 
-# @req+ REQ-50816200@5wr7JJhod9Gm kzojze
+# @req+ REQ-50816200@iIRTs21PNJhn kzojze
 LISTED = (corpus.CITATION_LIST,)
 CARRIED = ("assessed",) + LISTED
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
+RECORD = uncited.RECORD.as_posix()
 COMPONENTS = f"{GOVERNED}{corpus.FOLDERS['data']}/plugin_components.yml"
 PLUGIN_FOLDERS = f"{GOVERNED}{corpus.FOLDERS['data']}/plugin_folders.yml"
 # @req- kzojze
 # @req> REQ-41600593@dauTiMee9rmb o3tsro
 STAMPED = re.compile(
     rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
-# @req+ REQ-50816200@5wr7JJhod9Gm dyii6c
+# @req+ REQ-50816200@iIRTs21PNJhn dyii6c
 ABSENT = object()
 
 
@@ -97,6 +98,15 @@ def moved_wholes(fork, governed):
             for cited in wholes(fork, path) ^ wholes("HEAD", path)}
 
 
+def lowered(fork):
+    was, now = without(fork, RECORD, ()), without("HEAD", RECORD, ())
+    if not isinstance(was, dict):
+        return False
+    return now is ABSENT or isinstance(now, dict) and all(
+        path in was and type(count) is int and type(was[path]) is int and count <= was[path]
+        for path, count in now.items())
+
+
 def without_stamps(ref, path):
     found = _git("show", f"{ref}:{path}")
     if found.returncode != 0:
@@ -119,7 +129,8 @@ def classify(base):
     fields = found.stdout.split("\0")
     textual = {path: header[1:7] == header[8:14]
                for header, path in zip(fields[::2], fields[1::2])}
-    changed = [path for path in textual if path != DERIVED]
+    changed = [path for path in textual if path != DERIVED
+               and not (path == RECORD and lowered(fork))]
     governed = [path for path in changed if path.startswith(GOVERNED)]
     other = [path for path in changed if not path.startswith(GOVERNED)]
     if not governed or not other:

@@ -313,8 +313,8 @@ def _line(label, part, whole, note=""):
 
 def report(rows, absent, unread, totals):
     # @req+ REQ-75438506@DQIXYiIoQ0eV cx4ygh
-    lines = [f"{'proposal':>8}  {'kind':<9}  {'recall':<7}{'named':<7}"
-             f"{'result':<32}outside the key"]
+    lines = [(f"{'proposal':>8}  {'kind':<9}  {'recall':<7}{'named':<7}"
+             f"{'result':<32}outside the key")]
     for row in rows:
         reach_at = (("yes" if row["recalled"] else "no",
                      "yes" if row["stated"] else "no")

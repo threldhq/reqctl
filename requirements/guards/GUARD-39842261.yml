@@ -19,7 +19,7 @@ text: If reqctl's pyproject.toml declares a runtime or build-system requirement 
   range, then the build shall refuse the change.
 whole_file_citations:
   reqctl/pyproject.toml:
-    digest: 6ImiuXmphVTYr2kkUOWc0DRBETlWxr4bRdb1N1yw8TE
+    digest: rwToqfz1ADRVFFY7LhmZ4iNcNluf_IU4y4yVmPOTUls
     pinned: bWyFMC8rM_YC
   reqctl/requirements-lock.txt:
     digest: _oC73G9YdGZz3_0iXpy024W8aBGUWim3DIKahbcU_Yg

@@ -40,7 +40,7 @@ PORTAL_TOKEN_PERMISSIONS = {
     "contents": {"access": "read"},
     "pull_requests": {"access": "read"},
 }
-# @req> uncited_code@9PEeh-VZLFNA ishqik
+# @req> uncited_code@unpaxg37rwqQ ishqik
 UNCITED_CODE = {
     "check": {"mode": "off"},
 }
@@ -49,7 +49,7 @@ SHIPPED = {"review_limits": REVIEW_LIMITS, "challenge_bounds": CHALLENGE_BOUNDS,
            "portal_token_permissions": PORTAL_TOKEN_PERMISSIONS,
            "uncited_code": UNCITED_CODE}
 # @req- 7yxrtp
-MODES = ("off", "all", "changed_lines")
+MODES = ("off", "all", "changed_lines", "ratchet")
 
 
 def path(root):
@@ -101,10 +101,10 @@ def faults(document):
             found.append(f"{key}: {value!r} is not of the YAML type of the "
                          f"{shipped!r} the product ships -- state a value of "
                          "that type, on the default branch")
-        # @req> REQ-96727029@6dPRzcJtt-s- hrxovc
+        # @req> REQ-96727029@rK6NcCslzP2S hrxovc
         elif at == ("uncited_code", "check", "mode") and value not in MODES:
-            found.append(f"{key}: {value!r} is not a mode -- state off, all or "
-                         "changed_lines")
+            found.append(f"{key}: {value!r} is not a mode -- state off, all, "
+                         "changed_lines or ratchet")
         # @req> REQ-21585959@QkioE_Ciddeh q7jgw2
         elif at[-1] == "quantity" and value < 1:
             # @req> REQ-30898926@Vu28eWaG_1mE c6k5gb

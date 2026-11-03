@@ -3,10 +3,12 @@ import difflib
 import io
 import re
 import tokenize
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 
 from . import cite, corpus, settings
 from .reach import Reach
+
+RECORD = PurePosixPath("requirements") / "uncited.yml"
 
 # @req> REQ-27534660@OcqGUyoB-NOR zu7qeg
 MODES = settings.MODES[1:]
@@ -127,7 +129,7 @@ def _moved(path, was, now):
             for at in range(first, last)}
 
 
-# @req> REQ-27097724@BlP6FCylGOKS a5rd75
+# @req> REQ-27097724@WuK_Hn1OEs1s a5rd75
 def _changed(root, base, texts):
     fork = cite._git(root, "merge-base", "HEAD", base).strip()
     named = cite._git(root, "-c", "core.quotePath=false", "diff", "--name-only",
@@ -160,11 +162,7 @@ def _remedy(path, first, last):
     return f"have the item governing it hold the whole file with reqctl tag {path} --req UID"
 
 
-# @req> REQ-27534660@OcqGUyoB-NOR tml2jy
-def problems(tree, root, citations, base=None):
-    mode = settings.table(settings.read(root)[1], "uncited_code")["check"]["mode"]
-    if mode not in MODES or (mode == "changed_lines" and not base):
-        return []
+def _uncited(tree, root, citations):
     texts = {path.replace("\\", "/"): text for path, text in cite._sources(root)}
     reach = Reach(texts)
     covered = {(citation["path"], line) for citation in citations
@@ -173,19 +171,73 @@ def problems(tree, root, citations, base=None):
         covered |= reach.reached(citation["path"], citation["lines"])
     whole = {path for item in corpus.items(tree)
              for path in corpus.mapping(item.data, corpus.WHOLE_FILES)}
-    # @req> REQ-27097724@BlP6FCylGOKS jo2uxv
+    return texts, {path: [line for line in code_lines(path, text) if (path, line) not in covered]
+                   for path, text in sorted(texts.items())
+                   if text is not None and path not in whole and not exempt(path)}
+
+
+def counts(tree, root, citations):
+    return {path: len(lines) for path, lines in _uncited(tree, root, citations)[1].items()
+            if lines}
+
+
+def recorded(root):
+    path = Path(root) / RECORD
+    if not path.exists():
+        return {}
+    held = corpus.read(path)
+    if held is None:
+        return {}
+    if not isinstance(held, dict) or not all(
+            isinstance(key, str) and type(count) is int and count > 0
+            for key, count in held.items()):
+        raise corpus.ReqctlError(f"{RECORD.as_posix()} is not a mapping of file paths to "
+                                 "counts of at least one -- record the uncited counts "
+                                 "with reqctl trace --record")
+    return held
+
+
+# @req> REQ-21635723@CvxpeHCRTgGz arkc4u
+def record(tree, root, citations):
+    corpus.write_all([(Path(root) / RECORD, corpus.dump(counts(tree, root, citations)))])
+
+
+def _ratchet(root, uncited):
+    held, found = recorded(root), []
+    # @req> REQ-91618546@X04wZs4bpj5D 7ckhhs
+    for path, lines in uncited.items():
+        if len(lines) > (was := held.get(path, 0)):
+            found.append(f"{path}: {len(lines)} uncited line(s), above the "
+                         f"{was} {RECORD.as_posix()} states -- cite them with "
+                         f"reqctl tag {path} --from N --to M --req UID, or delete them")
+    # @req> REQ-56849355@Ko7rmWqVFjxy vwtwkp
+    for path, count in sorted(held.items()):
+        if count > (now := len(uncited.get(path, ()))):
+            found.append(f"{path}: {RECORD.as_posix()} states {count} uncited line(s), above "
+                         f"the {now} the file holds -- record the "
+                         "uncited counts with reqctl trace --record")
+    return found
+
+
+# @req> REQ-27534660@OcqGUyoB-NOR tml2jy
+def problems(tree, root, citations, base=None):
+    mode = settings.table(settings.read(root)[1], "uncited_code")["check"]["mode"]
+    if mode not in MODES or (mode == "changed_lines" and not base):
+        return []
+    texts, uncited = _uncited(tree, root, citations)
+    # @req> REQ-91618546@X04wZs4bpj5D u5c2ay
+    # @req> REQ-56849355@Ko7rmWqVFjxy m4cztr
+    if mode == "ratchet":
+        return _ratchet(root, uncited)
+    # @req> REQ-27097724@WuK_Hn1OEs1s jo2uxv
     changed = _changed(root, base, texts) if mode == "changed_lines" else None
     found = []
-    for path, text in sorted(texts.items()):
-        if text is None or path in whole or exempt(path):
-            continue
-        lines = code_lines(path, text)
-        # @req> REQ-27097724@BlP6FCylGOKS x7jy55
+    for path, uncovered in uncited.items():
+        # @req> REQ-27097724@WuK_Hn1OEs1s x7jy55
         if changed is not None:
-            lines = [line for line in lines if line in changed.get(path, ())]
+            uncovered = [line for line in uncovered if line in changed.get(path, ())]
         # @req+ REQ-33946954@dE-TCnSywwn3 u54yfr
-        # @req+ REQ-46463201@OD-ZDKioCyPa aoss24
-        uncovered = [line for line in lines if (path, line) not in covered]
+        # @req+ REQ-46463201@KQkxvX2fdJ1W aoss24
         if uncovered and unknown_syntax(path):
             found.append(f"{path}: reqctl knows no comment syntax for this file -- have the "
                          f"item governing it hold the whole file with reqctl tag {path} "

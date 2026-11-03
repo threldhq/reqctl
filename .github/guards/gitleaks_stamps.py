@@ -159,15 +159,15 @@ def stamps():
 def named_faults(config):
     admits = admitting(config, uids()[0])
     if len(admits) != 1:
-        return [f"{CONFIG}: {len(admits)} {RULE} allowlist(s) admit the shape "
+        return [(f"{CONFIG}: {len(admits)} {RULE} allowlist(s) admit the shape "
                 "reqctl mints a uid with; one states it, and this check cannot "
-                "say which is it"]
+                "say which is it")]
     held = admits[0]
     written = held.get("regexes") or []
     if len(written) != 1:
-        return [f"{CONFIG}: the {RULE} uid allowlist states {len(written)} "
+        return [(f"{CONFIG}: the {RULE} uid allowlist states {len(written)} "
                 "regex(es); one states the uid shape and this check holds it to "
-                "what reqctl mints"]
+                "what reqctl mints")]
     found = []
     # @req+ REQ-91184727@qgpF6mhsmj-W fllahn
     if held.get("regextarget") != "secret":
@@ -219,17 +219,17 @@ def lowered(node):
 def faults(config):
     admits = admitting(config, stamps()[0])
     if len(admits) != 1:
-        return [f"{CONFIG}: {len(admits)} {RULE} allowlist(s) admit the shape "
+        return [(f"{CONFIG}: {len(admits)} {RULE} allowlist(s) admit the shape "
                 "reqctl stamps with; one states it, and this check cannot say "
-                "which is it"]
+                "which is it")]
     held = admits[0]
     found = named_faults(config)
     written = held.get("regexes") or []
     if len(written) != 1:
         return found + [
-            f"{CONFIG}: the {RULE} allowlist states {len(written)} regex(es); "
+            (f"{CONFIG}: the {RULE} allowlist states {len(written)} regex(es); "
             "one states the stamp shape and this check holds it to what "
-            "reqctl writes"]
+            "reqctl writes")]
     # @req> REQ-89759399@H6dJHl49GRYn os2qmc
     if held.get("condition") != "AND":
         found.append(

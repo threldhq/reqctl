@@ -201,14 +201,12 @@ jobs:
       - name: No write bypasses the journal
         run: python .github/guards/journal_writes.py
 
-      - name: Lint
-        run: ruff check reqctl
+      # @req> GUARD-99113200@u605TKfh4fwm 464eon
+      - name: Lint and types over linted_paths
+        run: python .github/guards/linted.py
 
       - name: Spelling
         run: typos
-
-      - name: Types
-        run: mypy --config-file reqctl/pyproject.toml reqctl/reqctl
 
       - name: The runtime lock holds what pyproject.toml requires
         run: python .github/guards/pyproject_lock.py
