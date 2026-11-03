@@ -73,6 +73,7 @@ SED_NUMBER = re.compile(r"\d+(?:~\d+)?|\$|[+~]\d+")
 SED_REGEX_FLAGS = re.compile(r"[IM]*")
 SED_FLAGS = re.compile(r"[gpIiMme\d]*")
 SED_LABEL = re.compile(r"[^;\n]*")
+SED_WORD = re.compile(r"[ \t]*[^\s;]*")
 SED_COUNT = re.compile(r"[ \t]*\d*")
 ANSI_ESCAPE = re.compile(
     r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
@@ -2477,12 +2478,12 @@ def judged_words(said, here):
 
 def sed_runs(words, rest, here):
     what = shlex.join(words)
-    sources = sed_sources(rest, any(word.startswith("POSIXLY_CORRECT=") for word in words))
-    if sources is None:
+    parses = [sed_sources(rest, posix) for posix in (False, True)]
+    if None in parses:
         deny(SED_UNJUDGED.format(what=what, why="its options do not parse"))
-    scripts, files = sources
+    files = {name for _, named in parses for name in named}
     found = [shlex.join(["sed", "-n", "-e", sed_script_file(name, here, what)]) for name in files]
-    for script in scripts:
+    for script in {script for scripts, _ in parses for script in scripts}:
         commands = sed_commands(script)
         if commands is None:
             deny(SED_UNJUDGED.format(what=what, why="its script does not parse"))
@@ -2532,12 +2533,12 @@ def sed_sources(words, posix):
 
 def sed_script_file(name, here, what):
     path = os.path.join(here or "", os.path.expanduser(name))
-    if name == "-" or not os.path.isabs(path) or not os.path.isfile(path):
-        deny(SED_UNJUDGED.format(what=what, why=f"its script file {name} cannot be read"))
     try:
-        return Path(path).read_text()
+        if name != "-" and os.path.isabs(path) and os.path.isfile(path):
+            return Path(path).read_text()
     except (OSError, UnicodeDecodeError):
-        deny(SED_UNJUDGED.format(what=what, why=f"its script file {name} cannot be read"))
+        pass
+    deny(SED_UNJUDGED.format(what=what, why=f"its script file {name} cannot be read"))
 
 
 def sed_commands(script):
@@ -2569,13 +2570,15 @@ def sed_commands(script):
                 found += [""] if "e" in flags[0] else []
                 at = sed_line_end(script, at) if script.startswith("w", flags.end()) else flags.end()
         elif command in "aic":
-            while (end := sed_line_end(script, at)) < len(script) and script[end - 1] == "\\":
+            while (end := sed_line_end(script, at)) < len(script) and (end - len(script[:end].rstrip("\\"))) % 2:
                 at = end + 1
             at = end
         elif command in "rRwW#":
             at = sed_line_end(script, at)
-        elif command in ":btTv":
+        elif command in "btT":
             at = SED_LABEL.match(script, at).end()
+        elif command in ":v":
+            at = SED_WORD.match(script, at).end()
         elif command in "qQlL":
             at = SED_COUNT.match(script, at).end()
         elif command not in "{}=dDgGhHnNpPxzF":
@@ -2586,7 +2589,7 @@ def sed_commands(script):
 def sed_address(script, at):
     if found := SED_NUMBER.match(script, at):
         return found.end()
-    if script.startswith("/", at) or script.startswith("\\", at):
+    if script.startswith(("/", "\\"), at):
         end = sed_delimited(script, at + script.startswith("\\", at), (True,))
         return end and SED_REGEX_FLAGS.match(script, end).end()
     return at
@@ -2618,7 +2621,7 @@ def sed_bracket(script, at):
     while at < len(script) and script[at] != "]":
         if script[at] == "\n":
             return None
-        if script[at] == "[" and script[at + 1:at + 2] in (":", ".", "="):
+        if script.startswith(("[:", "[.", "[="), at):
             end = script.find(script[at + 1] + "]", at + 2)
             at = at + 1 if end < 0 else end + 2
             continue
@@ -2627,8 +2630,7 @@ def sed_bracket(script, at):
 
 
 def sed_line_end(script, at):
-    end = script.find("\n", at)
-    return len(script) if end < 0 else end
+    return (script + "\n").find("\n", at)
 
 
 def plainly_plugin(text, here):
