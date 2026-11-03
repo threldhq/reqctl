@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+import configparser
 import re
 import sys
+import tomllib
 from pathlib import Path
 from typing import NamedTuple
 
@@ -38,15 +40,17 @@ DEV_LOCK = DEV_INPUTS.with_name("requirements-dev-lock.txt")
 HOOK = Path(".claude/hooks/session-start.sh")
 LISTED = re.compile(r"(?m)^\s*([A-Za-z0-9][\w.-]*)")
 NESTED = re.compile(r"(?m)^\s*(?:-r\s*|--requirement(?:\s+|=))(\S+)")
-ENTRY = re.compile(r"(?m)^\s*(?:-e\s*|--editable(?:\s+|=))?([^\s#-]\S*)")
+ENTRY = re.compile(r"(-e\s*|--editable(?:\s+|=))?([^\s-].*)")
+COMMENT = re.compile(r"(^|\s+)#.*$")
+SPECIFIER = re.compile(r"([A-Za-z0-9][\w.-]*)\s*(?:\[[\w,.\s-]*\])?\s*(?:(?:===|[<>=!~]=?)[^;]*)?(?:;.*)?")
 ARCHIVES = (".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2", ".tbz", ".tar.xz",
-            ".txz", ".tar")
-EGG = re.compile(r"[#&]egg=([^&]+)")
+            ".txz", ".tar", ".tlz", ".tar.lz", ".tar.lzma")
+REMOTE = re.compile(r"^[a-z][a-z0-9+.-]*:|@", re.IGNORECASE)
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
-LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME))
-                     for root in ("", ".reqctl", "$RUNNER_TEMP/reqctl"))}
+CHECKOUTS = (".reqctl", "$RUNNER_TEMP/reqctl")
+LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME)) for root in ("", *CHECKOUTS))}
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
 RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
@@ -381,22 +385,62 @@ def held_by(path):
     return text, None
 
 
-def names_of(word):
-    base = re.sub(r"(?<=\.git)@.*", "", re.split(r"[#?]", word)[0])
-    tail = re.split(r"[@\[]", Path(base).name)[0]
-    parts = tail.split("-")
-    stems = ({"-".join(parts[:at]) for at in range(1, len(parts))}
-             if tail.lower().endswith(ARCHIVES) else {tail.removesuffix(".git")})
-    egg, first = EGG.search(word), NAMED.match(word)
-    return {canonicalize_name(name) for name in
-            stems | {egg and egg[1], first and first[0]} if name}
+def names_of(word, editable=False):
+    if REMOTE.search(word):
+        return None
+    bare = re.sub(r"\[[^\]]+\]$", "", word.partition(";")[0].strip()).strip()
+    if bare.lower().endswith(".whl"):
+        name = Path(bare).name.partition("-")[0]
+        return {canonicalize_name(name)} if "-" in bare and NAMED.fullmatch(name) else None
+    if bare.lower().endswith(ARCHIVES):
+        return None
+    if editable or "/" in bare or bare.startswith((".", "~")):
+        name = project_name(bare)
+        return {canonicalize_name(name)} if name else None
+    found = SPECIFIER.fullmatch(word)
+    return {canonicalize_name(found[1])} if found else None
 
+
+def project_name(base):
+    try:
+        folder = Path(next((base.removeprefix(f"{root}/") for root in CHECKOUTS
+                            if base.startswith(f"{root}/")), base)).expanduser()
+        pyproject = folder / "pyproject.toml"
+        project = tomllib.loads(pyproject.read_text()).get("project") if pyproject.is_file() else None
+        if isinstance(project, dict):
+            name, dynamic = project.get("name"), project.get("dynamic", [])
+            return name if isinstance(name, str) and NAMED.fullmatch(name) and isinstance(
+                dynamic, list) and "name" not in dynamic else None
+        config = configparser.ConfigParser(interpolation=None)
+        config.read_string((folder / "setup.cfg").read_text())
+        name = config.get("metadata", "name", fallback=None)
+    except (OSError, ValueError, RecursionError, RuntimeError, configparser.Error):
+        return None
+    return name if name and NAMED.fullmatch(name) else None
+
+
+
+def requirement_lines(held):
+    joined, pending = [], []
+    for line in held.splitlines():
+        if not line.endswith("\\") or COMMENT.match(line):
+            joined.append("".join(pending) + (" " + line if COMMENT.match(line) else line))
+            pending = []
+        else:
+            pending.append(line.strip("\\"))
+    return [COMMENT.sub("", line).strip() for line in joined + ["".join(pending)] * bool(pending)]
 
 def sources(text, where, dev):
     found = []
     for install in pip_installs(text):
-        for word in install.positional + install.editable:
-            if names_of(word) & dev:
+        for word, editable in [(word, False) for word in install.positional] + [
+                (word, True) for word in install.editable]:
+            names = names_of(word, editable)
+            if names is None:
+                found.append(f"{where}: installs {word}, a URL or a folder whose package name its "
+                             "pyproject.toml or setup.cfg does not state -- install it from a "
+                             "lockfile, or from a local folder that states its name")
+            elif names & dev:
                 found.append(f"{where}: installs {word} by name, and "
                              f"{DEV_LOCK} holds it -- install it with "
                              f"-r {DEV_LOCK}")
@@ -409,9 +453,15 @@ def sources(text, where, dev):
             seen.add(file)
             held, fault = held_by(file)
             pending += [file.parent / nested for nested in NESTED.findall(held)]
+            lines = requirement_lines(held)
+            named = [names_of(entry[2], bool(entry[1])) for line in lines if (entry := ENTRY.fullmatch(line))]
             if fault:
                 found.append(f"{where}: {fault}")
-            elif shared := set().union(*map(names_of, ENTRY.findall(held))) & dev:
+            elif None in named:
+                found.append(f"{where}: {file} installs a URL or a folder whose package name "
+                             "its pyproject.toml or setup.cfg does not state -- name the "
+                             "package and pin it in a lockfile")
+            elif shared := set().union(*named) & dev:
                 found.append(f"{where}: installs {', '.join(sorted(shared))} "
                              f"from {file}, and {DEV_LOCK} holds them -- install "
                              f"them from {DEV_LOCK} or {PACKAGE}/{RUNTIME}")

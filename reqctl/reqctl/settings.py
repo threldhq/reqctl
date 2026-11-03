@@ -5,7 +5,8 @@ from .baseline import _default_ref, _git
 from .corpus import ReqctlError, loads, mapping
 
 SETTINGS = Path("requirements") / "settings.yml"
-PINNED = re.compile(r"claude-[a-z0-9.-]*[0-9][a-z0-9.-]*")
+PINNED = re.compile(r"claude-[a-z]+-([0-9]{1,2})(?:-([0-9]{1,2}))?(-[0-9]{8})?")
+DATELESS_FROM = (4, 6)
 AGENTS = "elucidate_agents"
 NESTED = ("nest each value under its data item, entry and field, as "
           "review_limits: {page_bytes: {quantity: 10485760}}")
@@ -53,6 +54,11 @@ MODES = ("off", "all", "changed_lines")
 
 def path(root):
     return Path(root) / SETTINGS
+
+
+def pinned(value):
+    found = PINNED.fullmatch(value)
+    return bool(found) and ((int(found[1]), int(found[2] or 0)) >= DATELESS_FROM) != bool(found[3])
 
 
 # @req> REQ-32331515@Nn3qX9jMrAU- bl2ps5
@@ -106,7 +112,7 @@ def faults(document):
                          "one -- state one, on the default branch")
         # @req> REQ-15362279@YwMnA4sMLpfF 5pi6tp
         # @req> REQ-82356895@juJepJj5Wt1K rtqqce
-        elif at[-1] == "model" and not PINNED.fullmatch(value):
+        elif at[-1] == "model" and not pinned(value):
             found.append(f"{key}: {value!r} is not a pinned model ID, such as "
                          "claude-opus-5-5")
     # @req+ REQ-59792666@dkbVbhN0Y4FS sspl2m
