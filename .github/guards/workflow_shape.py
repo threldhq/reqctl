@@ -40,7 +40,8 @@ DEV_LOCK = DEV_INPUTS.with_name("requirements-dev-lock.txt")
 HOOK = Path(".claude/hooks/session-start.sh")
 LISTED = re.compile(r"(?m)^\s*([A-Za-z0-9][\w.-]*)")
 NESTED = re.compile(r"(?m)^\s*(?:-r\s*|--requirement(?:\s+|=))(\S+)")
-ENTRY = re.compile(r"(?m)^[ \t]*(-e[ \t]*|--editable(?:[ \t]+|=))?([^\s#-][^#\n]*)")
+ENTRY = re.compile(r"(-e\s*|--editable(?:\s+|=))?([^\s-].*)")
+COMMENT = re.compile(r"(^|\s+)#.*$")
 SPECIFIER = re.compile(r"([A-Za-z0-9][\w.-]*)\s*(?:\[[\w,.\s-]*\])?\s*(?:(?:===|[<>=!~]=?)[^;]*)?(?:;.*)?")
 ARCHIVES = (".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2", ".tbz", ".tar.xz",
             ".txz", ".tar", ".tlz", ".tar.lz", ".tar.lzma")
@@ -442,8 +443,8 @@ def sources(text, where, dev):
             seen.add(file)
             held, fault = held_by(file)
             pending += [file.parent / nested for nested in NESTED.findall(held)]
-            named = [names_of(entry.strip().removesuffix("\\").strip(), bool(flag))
-                     for flag, entry in ENTRY.findall(held)]
+            lines = (COMMENT.sub("", line).strip() for line in re.sub(r"\\\r?\n", "", held).splitlines())
+            named = [names_of(entry[2], bool(entry[1])) for line in lines if (entry := ENTRY.fullmatch(line))]
             if fault:
                 found.append(f"{where}: {fault}")
             elif None in named:
