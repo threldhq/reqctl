@@ -890,6 +890,11 @@ def groups(text, opened=()):
     return found
 
 
+def unescaped(text):
+    hidden = masked(text)
+    return "".join(char for at, char in enumerate(text) if hidden[at] != "\\" or not ESCAPE.match(text, at))
+
+
 @functools.cache
 def nested(part):
     at = COMPOUND.match(masked(part)).end()
@@ -905,7 +910,7 @@ def tokens_of(part):
             buf.append(char)
             escaped, dollars = False, 0
             continue
-        if char == "\\" and quote != "'":
+        if char == "\\" and quote != "'" and (quote != '"' or part[i:i + 1] in ("$", "`", '"', "\\", "\n")):
             escaped = True
             continue
         if quote in (None, '"') and (char == "`" or part.startswith(("$(", "${"), i - 1)):
@@ -1162,7 +1167,7 @@ def messageless(cmd):
     judged = cmd
     for start, end, put in sorted(cuts, reverse=True):
         judged = judged[:start] + put + judged[end:]
-    before, after = (scan(AMP_REDIRECT.sub(" ", flatten(ESCAPE.sub("", text)))) for text in (cmd, judged))
+    before, after = (scan(AMP_REDIRECT.sub(" ", flatten(unescaped(text)))) for text in (cmd, judged))
     if list(map(len, before)) != list(map(len, after)) or any(
             old != new and not MESSAGE_HEAD.match(masked(old.lstrip()))
             for olds, news in zip(before, after) for old, new in zip(olds, news)):
@@ -2750,7 +2755,7 @@ def judge_shell(raw, cwd, stdin=()):
     # @req+ REQ-22704490@u7IClIQOfStA ak47k7
     if (spelled := ansi_c(raw)) != raw:
         judge_shell(spelled, cwd, stdin)
-    cmd = flatten(ESCAPE.sub("", raw))
+    cmd = flatten(unescaped(raw))
     joins = []
     pipelines = scan(AMP_REDIRECT.sub(" ", cmd), joins)
     places = cwds(pipelines, joins, cwd)
@@ -2763,7 +2768,7 @@ def judge_shell(raw, cwd, stdin=()):
                 for here in {cwd}.union(*places))), None)
     if redirect:
         deny(NOT_A_KNOWN_READ.format(target=unquoted[redirect.start():redirect.end()]))
-    written = scan(AMP_REDIRECT.sub(" ", ESCAPE.sub("", raw)))
+    written = scan(AMP_REDIRECT.sub(" ", unescaped(raw)))
     running = next((heading(part).strip() for pipeline in written for part in pipeline
                     for words in [tokens_of(heading(part))]
                     if lists_files(words) or sink_runs(words)), None)
@@ -3058,7 +3063,7 @@ def governing(tool, args, cwd):
 
 # @req> REQ-38099593@WZbBLy6bHv3j cebvfg
 def judge_citation_shell(raw):
-    cmd = ESCAPE.sub("", raw)
+    cmd = unescaped(raw)
     if not names_citation(cmd):
         return
     for part in (part for pipeline in scan(QUIET_REDIRECT.sub(" ", cmd))
