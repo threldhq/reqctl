@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+import configparser
 import re
 import sys
+import tomllib
 from pathlib import Path
 from typing import NamedTuple
 
@@ -41,12 +43,12 @@ NESTED = re.compile(r"(?m)^\s*(?:-r\s*|--requirement(?:\s+|=))(\S+)")
 ENTRY = re.compile(r"(?m)^\s*(?:-e\s*|--editable(?:\s+|=))?([^\s#-]\S*)")
 ARCHIVES = (".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2", ".tbz", ".tar.xz",
             ".txz", ".tar")
-EGG = re.compile(r"[#&]egg=([^&]+)")
+REMOTE = re.compile(r"://|^(?:git|hg|svn|bzr)\+", re.IGNORECASE)
 NAMED = re.compile(r"[A-Za-z0-9][\w.-]*")
 INSTALLERS = Path(".github")
 PACKAGE = DEV_INPUTS.parent.name
-LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME))
-                     for root in ("", ".reqctl", "$RUNNER_TEMP/reqctl"))}
+CHECKOUTS = (".reqctl", "$RUNNER_TEMP/reqctl")
+LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME)) for root in ("", *CHECKOUTS))}
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
 RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
@@ -382,21 +384,47 @@ def held_by(path):
 
 
 def names_of(word):
-    base = re.sub(r"(?<=\.git)@.*", "", re.split(r"[#?]", word)[0])
-    tail = re.split(r"[@\[]", Path(base).name)[0]
-    parts = tail.split("-")
-    stems = ({"-".join(parts[:at]) for at in range(1, len(parts))}
-             if tail.lower().endswith(ARCHIVES) else {tail.removesuffix(".git")})
-    egg, first = EGG.search(word), NAMED.match(word)
-    return {canonicalize_name(name) for name in
-            stems | {egg and egg[1], first and first[0]} if name}
+    if REMOTE.search(word):
+        return None
+    base = re.split(r"[#?\[]", word)[0]
+    if base.lower().endswith(ARCHIVES):
+        parts = Path(base).name.split("-")
+        return {canonicalize_name("-".join(parts[:at])) for at in range(1, len(parts))}
+    if "/" in base or base.startswith((".", "~")) or Path(base).is_dir():
+        name = project_name(base)
+        return name and {canonicalize_name(name)}
+    first = NAMED.match(word)
+    return {canonicalize_name(first[0])} if first else set()
+
+
+def project_name(base):
+    folder = Path(next((base.removeprefix(f"{root}/") for root in CHECKOUTS
+                        if base.startswith(f"{root}/")), base)).expanduser()
+    try:
+        project = tomllib.loads((folder / "pyproject.toml").read_text()).get("project", {})
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
+        project = {}
+    if isinstance(project.get("name"), str) and "name" not in project.get("dynamic", []):
+        return project["name"]
+    config = configparser.ConfigParser()
+    try:
+        config.read_string((folder / "setup.cfg").read_text())
+    except (OSError, UnicodeDecodeError, configparser.Error):
+        return None
+    name = config.get("metadata", "name", fallback=None)
+    return name if name and NAMED.fullmatch(name) else None
 
 
 def sources(text, where, dev):
     found = []
     for install in pip_installs(text):
         for word in install.positional + install.editable:
-            if names_of(word) & dev:
+            names = names_of(word)
+            if names is None:
+                found.append(f"{where}: installs {word}, a URL or a folder whose package name its "
+                             "pyproject.toml or setup.cfg does not state -- install it from a "
+                             "lockfile, or from a local folder that states its name")
+            elif names & dev:
                 found.append(f"{where}: installs {word} by name, and "
                              f"{DEV_LOCK} holds it -- install it with "
                              f"-r {DEV_LOCK}")
@@ -409,9 +437,14 @@ def sources(text, where, dev):
             seen.add(file)
             held, fault = held_by(file)
             pending += [file.parent / nested for nested in NESTED.findall(held)]
+            named = [names_of(entry) for entry in ENTRY.findall(held)]
             if fault:
                 found.append(f"{where}: {fault}")
-            elif shared := set().union(*map(names_of, ENTRY.findall(held))) & dev:
+            elif None in named:
+                found.append(f"{where}: {file} installs a URL or a folder whose package name "
+                             "its pyproject.toml or setup.cfg does not state -- name the "
+                             "package and pin it in a lockfile")
+            elif shared := set().union(*named) & dev:
                 found.append(f"{where}: installs {', '.join(sorted(shared))} "
                              f"from {file}, and {DEV_LOCK} holds them -- install "
                              f"them from {DEV_LOCK} or {PACKAGE}/{RUNTIME}")
