@@ -2474,7 +2474,8 @@ def sed_addresses(text):
 def judged_words(said, here):
     words = tokens_of(said)
     called = invoked(words)
-    written = [target for word in called[1:] for target in SED_WRITE.findall(word)] if called[:1] == ["sed"] else []
+    found = sed_calls(words, called)
+    written = [target for word in words[found[0] + 1:] for target in SED_WRITE.findall(word)] if found else []
     masked = words[:1] == ["sed"] and "{}" not in words and tokens_of(sed_addresses(said))
     if not masked or len(masked) != len(words):
         return words + written
