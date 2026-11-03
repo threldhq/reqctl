@@ -1,17 +1,19 @@
 acceptance_criteria:
 - given: a repository whose [settings file](settings_file) sets the uncited-code mode
-    to changed_lines, and a branch adding an uncited line to an [unknown-syntax file](unknown_syntax_file)
+    to changed_lines, and a branch adding an [uncited line](uncited_line) to an [unknown-syntax
+    file](unknown_syntax_file)
   then: the product reports the file once, stating that its comment syntax is unknown
     and naming both remedies
   when: trace is given a base branch
 assessed:
-  REQ-27097724: BlP6FCylGOKS6CSQXkt9Ye-Y7VHUMbpx44H772gdKz8
+  REQ-27097724: WuK_Hn1OEs1s_m_AQxFGudO16pcqblXg-Ue-pL1GA0A
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
-  uncited_code.check: hmjPFcO2GM800WgGRy9QzNMQG3YJmXN5QCCi8M6r-cU
+  uncited_code.check: o6QU6gxL5EBvcTmgkkZT89Br-TRckeAjIF_Gu_hQCYE
+  uncited_line: KK6lMRRqnEXYNkp7z4CdUGFt3cKssKqgAMUeKHnpILU
   unknown_syntax_file: gEcZshhwJdScPVZog-WdJ03SbLvkNT7Xis63qXJAL44
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 citations:

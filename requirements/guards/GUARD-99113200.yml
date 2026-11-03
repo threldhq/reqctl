@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a change adding a ruff finding to a Python file under plugin/
+  then: the build refuses the change and names the file and the finding
+  when: the build runs
+- given: a change adding a Python file under a path an [entry](entry) of the linted
+    paths states, in which mypy reports an error
+  then: the build refuses the change
+  when: the build runs
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  linted_paths: AqAbdCcroWX4olbZ8uMYdZpwKfncrRcqMQPffkrqG_8
+  linted_paths.*: Og6DV_h-N5BWy7agNDjGSWECTCOyPvpQNv_IMFHSpj8
+relations: {}
+status: approved
+text: If ruff or mypy, run under the configuration the repository states for it, reports
+  a finding in a Python file under a path an [entry](entry) of ${linted_paths} states,
+  then the build shall refuse the change.

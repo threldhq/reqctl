@@ -1,0 +1,36 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to ratchet, and an [uncited-count record](uncited_count_record) stating for a
+    file one more than its number of [uncited lines](uncited_line)
+  then: the product reports the file and both numbers, and names recording the uncited
+    counts as the remedy
+  when: trace is run
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to ratchet, and an [uncited-count record](uncited_count_record) stating a count
+    for a file the [code base](code_base) no longer holds
+  then: the product reports the file, zero and the count
+  when: trace is run
+assessed:
+  REQ-21635723: CvxpeHCRTgGzx1RXhGhVxCk6QI6wtYuIEr-V__OXgDc
+  REQ-58348893: GQ3L2sQGRlkWYuSQBNYBploS5pLF6smXPVr4ab0sTMY
+  REQ-97409889: RWCU92P-iWbpmu8wCmpP1ndrZvKVFL_Kc1ZMWSdzeus
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+  uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
+  uncited_code.check: o6QU6gxL5EBvcTmgkkZT89Br-TRckeAjIF_Gu_hQCYE
+  uncited_count_record: -bNpiRCinDsTIvHF98BrlgrgQmy3qoJ-gePQCv0xkf0
+  uncited_line: KK6lMRRqnEXYNkp7z4CdUGFt3cKssKqgAMUeKHnpILU
+priority: medium
+relations:
+  REQ-21635723: depends_on
+  REQ-58348893: depends_on
+  REQ-97409889: depends_on
+status: approved
+text: Where ${uncited_code.check.mode} is ratchet, when trace is run, the product
+  shall report as a problem each file for which the [uncited-count record](uncited_count_record)
+  states a count greater than the file's number of [uncited lines](uncited_line),
+  taking that number as zero for a file the product does not check for uncited code,
+  naming the file and both numbers, and naming recording the uncited counts as the
+  remedy.
+type: functional
+verification: inspection

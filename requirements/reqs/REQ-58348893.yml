@@ -23,7 +23,7 @@ acceptance_criteria:
     is taken as code
   when: the product checks the file for uncited code
 assessed:
-  REQ-27097724: BlP6FCylGOKS6CSQXkt9Ye-Y7VHUMbpx44H772gdKz8
+  REQ-27097724: WuK_Hn1OEs1s_m_AQxFGudO16pcqblXg-Ue-pL1GA0A
   REQ-27534660: OcqGUyoB-NORU6eCVbYC54QnZiOWTAQq5gWGC73tN7I
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
   front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
