@@ -1,0 +1,16 @@
+assessed:
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+entries:
+  uncited_line:
+    aliases:
+    - uncited lines
+    definition: A line of code in a file the product scans for [statement citations](statement_citation)
+      that no [statement citation](statement_citation) covers, that no [citation digest](citation_digest)
+      takes in, and that lies in no file an [item](item) holds a [whole-file citation](whole_file_citation)
+      of.
+    word: uncited line
+kind: term
+status: approved

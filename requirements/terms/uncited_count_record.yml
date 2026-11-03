@@ -1,0 +1,13 @@
+assessed:
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  uncited_line: KK6lMRRqnEXYNkp7z4CdUGFt3cKssKqgAMUeKHnpILU
+entries:
+  uncited_count_record:
+    definition: The YAML file uncited.yml in a repository's [corpus root](corpus_root),
+      holding no [item](item) of the corpus, that states for each file of the [code
+      base](code_base) it names the number of that file's [uncited lines](uncited_line).
+    word: uncited-count record
+kind: term
+status: approved

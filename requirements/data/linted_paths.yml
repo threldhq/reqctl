@@ -1,0 +1,28 @@
+assessed: {}
+entries:
+  baseline_number:
+    path: .github/baseline_number.py
+  citations:
+    path: .github/guards/citations.py
+  corpus_gates:
+    path: .github/corpus_gates.py
+  corpus_view:
+    path: .github/corpus_view.py
+  corpus_write:
+    path: .github/corpus_write.py
+  gitleaks_stamps:
+    path: .github/guards/gitleaks_stamps.py
+  plugin:
+    path: plugin/
+  reqctl_package:
+    path: reqctl/reqctl/
+  taxonomy:
+    path: .github/guards/taxonomy.py
+  travel_alone:
+    path: .github/travel_alone.py
+fields:
+- path
+kind: data
+name: linted_paths
+status: approved
+text: the paths whose Python files ruff and mypy check

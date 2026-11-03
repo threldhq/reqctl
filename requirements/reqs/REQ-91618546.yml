@@ -1,0 +1,45 @@
+acceptance_criteria:
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to ratchet, and an [uncited-count record](uncited_count_record) stating for a
+    file one fewer than its number of [uncited lines](uncited_line)
+  then: the product reports the file and both numbers
+  when: trace is run
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to ratchet, and a file holding [uncited lines](uncited_line) that the [uncited-count
+    record](uncited_count_record) does not state
+  then: the product reports the file, its number of [uncited lines](uncited_line)
+    and zero
+  when: trace is run
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to ratchet, and an [uncited-count record](uncited_count_record) stating for a
+    file exactly its number of [uncited lines](uncited_line)
+  then: the product reports no problem for that file
+  when: trace is run
+assessed:
+  REQ-17608335: ejFjhGoCg5c7xx31BmDLrVdrs9rLBqVkDgiXkKKHH7c
+  REQ-21635723: CvxpeHCRTgGzx1RXhGhVxCk6QI6wtYuIEr-V__OXgDc
+  REQ-27534660: OcqGUyoB-NORU6eCVbYC54QnZiOWTAQq5gWGC73tN7I
+  REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
+  REQ-58348893: GQ3L2sQGRlkWYuSQBNYBploS5pLF6smXPVr4ab0sTMY
+  REQ-97409889: RWCU92P-iWbpmu8wCmpP1ndrZvKVFL_Kc1ZMWSdzeus
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+  uncited_code: UJ5LGT9AxQmk8np7cLgHsp2A-ow8O6Nm77x28sYlr88
+  uncited_code.check: o6QU6gxL5EBvcTmgkkZT89Br-TRckeAjIF_Gu_hQCYE
+  uncited_count_record: -bNpiRCinDsTIvHF98BrlgrgQmy3qoJ-gePQCv0xkf0
+  uncited_line: KK6lMRRqnEXYNkp7z4CdUGFt3cKssKqgAMUeKHnpILU
+priority: medium
+relations:
+  REQ-17608335: depends_on
+  REQ-21635723: depends_on
+  REQ-27534660: derives_from
+  REQ-40478019: depends_on
+  REQ-58348893: depends_on
+  REQ-97409889: depends_on
+status: approved
+text: Where ${uncited_code.check.mode} is ratchet, when trace is run, the product
+  shall report as a problem each file it checks for uncited code whose number of [uncited
+  lines](uncited_line) exceeds the count the [uncited-count record](uncited_count_record)
+  states for it, or exceeds zero where the record states none, naming the file and
+  both numbers.
+type: functional
+verification: inspection

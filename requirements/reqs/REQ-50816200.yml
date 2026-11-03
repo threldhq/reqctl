@@ -52,7 +52,28 @@ acceptance_criteria:
     and to the file that path covers
   then: the product reports a problem
   when: the change is checked against its base branch
+- given: a change lowering a count in the [uncited-count record](uncited_count_record)
+    and adding a [statement citation](statement_citation) to a code file
+  then: the product reports no problem
+  when: the change is checked against its base branch
+- given: a change removing a file from the [uncited-count record](uncited_count_record)
+    and deleting that file
+  then: the product reports no problem
+  when: the change is checked against its base branch
+- given: a change raising a count in the [uncited-count record](uncited_count_record)
+    and adding a line to a code file
+  then: the product reports a problem and names the files on each side
+  when: the change is checked against its base branch
+- given: a change creating the [uncited-count record](uncited_count_record), or adding
+    a file to it, and changing a code file
+  then: the product reports a problem and names the files on each side
+  when: the change is checked against its base branch
+- given: a change lowering one count and raising another in the [uncited-count record](uncited_count_record),
+    and changing a code file
+  then: the product reports a problem and names the files on each side
+  when: the change is checked against its base branch
 assessed:
+  REQ-21635723: CvxpeHCRTgGzx1RXhGhVxCk6QI6wtYuIEr-V__OXgDc
   REQ-26876750: p5bO3gEKEYCbI2dpCZq5kyu2VQfTeMUGNu-MO-Pkodg
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-40478019: _dwqsOpSOQXApZibMHwg6RcRIjoNhjzsWbckDoVO2sI
@@ -70,12 +91,14 @@ assessed:
   plugin_components.*: nuKo6PX5_Bjyy195a9tJHQJTAqoGyNZhODg1Goy7Naw
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  uncited_count_record: -bNpiRCinDsTIvHF98BrlgrgQmy3qoJ-gePQCv0xkf0
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 citations:
   dyii6c: 9wtZoeLcs6NFhQivXfxLbpeUJ7IhqXn6OEf8ZEFqcIY
   kzojze: x9QAbR5QlXxJQF_k4oyykklLc6jgcDc9Iv99BwlsFJU
 priority: medium
 relations:
+  REQ-21635723: depends_on
   REQ-26876750: constrains
   REQ-38288492: depends_on
   REQ-40478019: depends_on
@@ -84,13 +107,14 @@ relations:
   REQ-75539229: depends_on
 status: approved
 text: If a change touches both a file under the [corpus root](corpus_root) other than
-  the baseline, in more than its [pins](pin), its [citation list](citation_list),
-  its [whole-file citations](whole_file_citation) and the [entries](entry) the change
-  adds to the ${plugin_components}, and a file outside the [corpus root](corpus_root)
-  that no path stated by an [entry](entry) the change adds to the ${plugin_components}
-  covers and that no [whole-file citation](whole_file_citation) the change adds or
-  removes covers, in more than the [stamps](stamp) its [statement citations](statement_citation)
-  name, then the product shall report a problem when the ${corpus_gates.travel_alone}
-  gate checks the change against its base branch.
+  the baseline and other than an [uncited-count record](uncited_count_record) the
+  change does no more to than lower or remove counts, in more than its [pins](pin),
+  its [citation list](citation_list), its [whole-file citations](whole_file_citation)
+  and the [entries](entry) the change adds to the ${plugin_components}, and a file
+  outside the [corpus root](corpus_root) that no path stated by an [entry](entry)
+  the change adds to the ${plugin_components} covers and that no [whole-file citation](whole_file_citation)
+  the change adds or removes covers, in more than the [stamps](stamp) its [statement
+  citations](statement_citation) name, then the product shall report a problem when
+  the ${corpus_gates.travel_alone} gate checks the change against its base branch.
 type: functional
 verification: inspection

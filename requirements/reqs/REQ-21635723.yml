@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a [code base](code_base) holding one checked file with 2 [uncited lines](uncited_line)
+    and one with none
+  then: the [uncited-count record](uncited_count_record) states 2 for the first file
+    and nothing for the second
+  when: trace is asked to record uncited counts
+- given: a repository whose [settings file](settings_file) sets the uncited-code mode
+    to off
+  then: the product writes the [uncited-count record](uncited_count_record)
+  when: trace is asked to record uncited counts
+assessed:
+  REQ-58348893: GQ3L2sQGRlkWYuSQBNYBploS5pLF6smXPVr4ab0sTMY
+  REQ-97409889: RWCU92P-iWbpmu8wCmpP1ndrZvKVFL_Kc1ZMWSdzeus
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+  uncited_count_record: -bNpiRCinDsTIvHF98BrlgrgQmy3qoJ-gePQCv0xkf0
+  uncited_line: KK6lMRRqnEXYNkp7z4CdUGFt3cKssKqgAMUeKHnpILU
+priority: medium
+relations:
+  REQ-58348893: depends_on
+  REQ-97409889: depends_on
+status: approved
+text: When trace is asked to record uncited counts, the product shall write the [uncited-count
+  record](uncited_count_record) stating, for each file it checks for uncited code
+  that holds an [uncited line](uncited_line), the number of its [uncited lines](uncited_line),
+  and stating no other file.
+type: functional
+verification: inspection
