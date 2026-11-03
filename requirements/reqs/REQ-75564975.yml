@@ -30,14 +30,14 @@ assessed:
   origin_query_seconds.*: 6SmMhfL6f4iDThF0dJ4oM-iybfVP1cvIPM6GSKBF47I
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  2ospre: foHu6EEmwdFFCGjmfPQ247MtkRzTbSg-2zIZbGGAD1M
+  2ospre: gFWxN_r_GAi8gR3THv-TtySAZcI6c3LUHplXL6tMtuo
   b64jr6: Vb9UbH_DN7Haq-6wDyqIERjv5ZcbdpohLHMFfNJNZRw
   cxtbyd: QLEG1RZsA4sp6HSyjGiwKPKVPuR3pn607ew7J2QmTyc
   owo62a: aPdD-9J3SpYP09MVusFxrrEHAM3IJBMszsUUoZmfhnI
   qnq6pl: flGq4EqmSd5DQbOqXPqyzUtyNabbId31oWwctZbETww
   sjmzez: LJuGIkHQK_F3Kf6wD9IWoT_eY0IhGmAe4v16LSsVi24
-  soebre: _slsSugSGDAcJi1SQpgwUG-GngHIr-njcZxfZTiZzP8
-  vreqvm: agym2BLYQKTd-KQivFa0H4JQVLk68d6CGMTyjYHdSdI
+  soebre: lTec7aIpOoTFF5oa181u2jj2F-8Hy2xK7aaJ4qZ9AHQ
+  vreqvm: pNssEB1vY5Jp8lII9uV_Etd21VF-cziqEoDwQty-HGM
 priority: medium
 relations:
   REQ-38288492: depends_on

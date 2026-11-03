@@ -61,6 +61,19 @@ ANSI_C = re.compile(r"\\.|(\$*)('_*')")
 SED_PLAIN = re.compile(r"'(?:(?:(?:\d+|\$|/(?:\\[^']|[^/\\'])*/)(?:,(?:\d+|\$|/(?:\\[^']|[^/\\'])*/))?)?"
                        r"!?[pdlnNPDq=](?:;|(?=')))+'")
 SED_WRITE = re.compile(r"(?=[wW][ \t]*([^\n]{1,4096}))")
+SED_SHORT = {**dict.fromkeys("bsnrzuE", ""), "e": "e", "f": "f", "l": "l", "i": "i"}
+SED_LONG = {**dict.fromkeys(("binary", "debug", "follow-symlinks", "help", "null-data", "posix", "quiet",
+                             "regexp-extended", "sandbox", "separate", "silent", "unbuffered",
+                             "version", "zero-terminated"), ""),
+            "expression": "e", "file": "f", "line-length": "l", "in-place": "i"}
+SED_SKIP = re.compile(r"[\s;]*")
+SED_BLANK = re.compile(r"[ \t]*")
+SED_NOT = re.compile(r"[ \t]*(?:![ \t]*)*")
+SED_NUMBER = re.compile(r"\d+(?:~\d+)?|\$|[+~]\d+")
+SED_REGEX_FLAGS = re.compile(r"[IM]*")
+SED_FLAGS = re.compile(r"(?:[ \t]*[gpIiMme\d])*")
+SED_WORD = re.compile(r"[ \t]*[^\s;]*")
+SED_COUNT = re.compile(r"[ \t]*\d*")
 ANSI_ESCAPE = re.compile(
     r"\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{1,4})|U([0-9A-Fa-f]{1,8}))|\\.")
 STDIN_ARGUMENTS = re.compile(r"\bxargs\b|--pathspec-f")
@@ -386,6 +399,11 @@ PLUGIN_WRITE = (
     "Changing the reqctl plugin's own folder blocked: {target}\n"
     "The plugin changes through a reqctl release: edit its sources in the reqctl "
     "repository, then `claude plugin update reqctl@reqctl`."
+)
+SED_UNJUDGED = (
+    "{what} blocked: the guard cannot tell what its sed script runs, because {why}.\n"
+    "Run the command itself, or give sed an inline script whose e commands spell out their command "
+    "with no backslash, and no e flag on s."
 )
 # @req> REQ-59919160@eEBU6tuB77Dq z3p2ti
 PLUGIN_UNRESOLVED = (
@@ -872,6 +890,11 @@ def groups(text, opened=()):
     return found
 
 
+def unescaped(text):
+    hidden = masked(text)
+    return "".join(char for at, char in enumerate(text) if hidden[at] != "\\" or not ESCAPE.match(text, at))
+
+
 @functools.cache
 def nested(part):
     at = COMPOUND.match(masked(part)).end()
@@ -887,7 +910,7 @@ def tokens_of(part):
             buf.append(char)
             escaped, dollars = False, 0
             continue
-        if char == "\\" and quote != "'":
+        if char == "\\" and quote != "'" and (quote != '"' or part[i:i + 1] in ("$", "`", '"', "\\", "\n")):
             escaped = True
             continue
         if quote in (None, '"') and (char == "`" or part.startswith(("$(", "${"), i - 1)):
@@ -1144,7 +1167,7 @@ def messageless(cmd):
     judged = cmd
     for start, end, put in sorted(cuts, reverse=True):
         judged = judged[:start] + put + judged[end:]
-    before, after = (scan(AMP_REDIRECT.sub(" ", flatten(ESCAPE.sub("", text)))) for text in (cmd, judged))
+    before, after = (scan(AMP_REDIRECT.sub(" ", flatten(unescaped(text)))) for text in (cmd, judged))
     if list(map(len, before)) != list(map(len, after)) or any(
             old != new and not MESSAGE_HEAD.match(masked(old.lstrip()))
             for olds, news in zip(before, after) for old, new in zip(olds, news)):
@@ -2149,7 +2172,8 @@ def judge_command(said, here, stdin=()):
     # @req> REQ-75564975@kR-BIGM3krAM soebre
     # @req> REQ-60587913@64oissmU4Xo2 6qzcqn
     # @req> REQ-70178381@2GE_TPwGTZKU ivxbcb
-    if (plain == "git" or DASHED_GIT.fullmatch(plain or "")) and any(
+    # @req> REQ-59919160@eEBU6tuB77Dq aypjvn
+    if (plain == "git" or DASHED_GIT.fullmatch(plain or "") or sed_calls(words, called)) and any(
             map(expands, unquoted[len(words) - len(called) + 1:])):
         if sequenced := next((word for word in unquoted[len(words) - len(called) + 1:]
                               if BASH_SEQUENCE.search(word)), None):
@@ -2226,6 +2250,10 @@ def judge_command(said, here, stdin=()):
     refuse_discarding_work(words, here)
     for script in scripts_within(words, here):
         judge_shell(script, here, stdin)
+    # @req> REQ-59919160@eEBU6tuB77Dq fwdndw
+    for at in sed_calls(words, called):
+        for script in sed_runs(words, words[at + 1:], here):
+            judge_shell(script, here, stdin)
     if plain in SHELLS and not short_flagged(itertools.takewhile(
             lambda word: word != "--" and word.startswith(("-", "+")), operands), "c"):
         for script in stdin:
@@ -2446,7 +2474,8 @@ def sed_addresses(text):
 def judged_words(said, here):
     words = tokens_of(said)
     called = invoked(words)
-    written = [target for word in called[1:] for target in SED_WRITE.findall(word)] if called[:1] == ["sed"] else []
+    found = sed_calls(words, called)
+    written = [target for word in words[found[0] + 1:] for target in SED_WRITE.findall(word)] if found else []
     masked = words[:1] == ["sed"] and "{}" not in words and tokens_of(sed_addresses(said))
     if not masked or len(masked) != len(words):
         return words + written
@@ -2455,13 +2484,173 @@ def judged_words(said, here):
             for word, hidden, path in zip(words, masked, literal)] + written
 
 
+def sed_calls(words, called):
+    return [at for at, word in enumerate(words[:len(words) - len(called) + 1]) if os.path.basename(word) == "sed"]
+
+
+def sed_runs(words, rest, here):
+    what = shlex.join(words)
+    parses = [sed_sources(rest, posix) for posix in (False, True)]
+    if None in parses:
+        deny(SED_UNJUDGED.format(what=what, why="its options do not parse"))
+    files = {name for _, named in parses for name in named}
+    found = [shlex.join(["sed", "-n", "-e", sed_script_file(name, here, what)]) for name in files]
+    for script in {script for scripts, _ in parses for script in scripts}:
+        commands = sed_commands(script)
+        if commands is None:
+            deny(SED_UNJUDGED.format(what=what, why="its script does not parse"))
+        if "" in commands:
+            deny(SED_UNJUDGED.format(what=what, why="an e command with no text or with a backslash in "
+                                                    "it, or the e flag of s, runs a command the "
+                                                    "script does not spell out"))
+        found += commands
+    return found
+
+
+def sed_sources(words, posix):
+    scripts, files, operands, rest = [], [], [], iter(words)
+    for word in rest:
+        if word == "--":
+            operands += rest
+            break
+        if word == "-" or not word.startswith("-"):
+            operands.append(word)
+            if posix:
+                operands += rest
+                break
+            continue
+        kind, value = "", ""
+        if word.startswith("--"):
+            name, eq, value = word[2:].partition("=")
+            matches = [full for full in SED_LONG if full.startswith(name)]
+            full = name if name in SED_LONG else matches[0] if len(matches) == 1 else None
+            if full is None:
+                return None
+            kind = SED_LONG[full]
+            if kind in ("e", "f", "l") and not eq:
+                value = next(rest, None)
+        else:
+            for at, letter in enumerate(word[1:], 1):
+                if letter not in SED_SHORT:
+                    return None
+                kind = SED_SHORT[letter]
+                if kind:
+                    value = word[at + 1:] or (next(rest, None) if kind != "i" else "")
+                    break
+        if value is None:
+            return None
+        scripts += [value] if kind == "e" else []
+        files += [value] if kind == "f" else []
+    return scripts or ([] if files else operands[:1]), files
+
+
+def sed_script_file(name, here, what):
+    path = os.path.join(here or "", os.path.expanduser(name))
+    try:
+        if name != "-" and os.path.isabs(path) and os.path.isfile(path):
+            return Path(path).read_text()
+    except (OSError, UnicodeDecodeError):
+        pass
+    deny(SED_UNJUDGED.format(what=what, why=f"its script file {name} cannot be read"))
+
+
+def sed_commands(script):
+    found, at = [], 0
+    while (at := SED_SKIP.match(script, at).end()) < len(script):
+        at = sed_address(script, at)
+        if at is None:
+            return None
+        at = SED_BLANK.match(script, at).end()
+        if script.startswith(",", at):
+            after = SED_BLANK.match(script, at + 1).end()
+            at = sed_address(script, after)
+            if at is None or at == after:
+                return None
+        at = SED_NOT.match(script, at).end()
+        if at >= len(script):
+            return None
+        command, at = script[at], at + 1
+        if command == "e":
+            end = sed_line_end(script, at)
+            found.append("" if "\\" in script[at:end] else script[at:end].strip())
+            at = end
+        elif command in "sy":
+            at = sed_delimited(script, at, (command == "s", False))
+            if at is None:
+                return None
+            flags = SED_FLAGS.match(script, at) if command == "s" else None
+            if flags:
+                found += [""] if "e" in flags[0] else []
+                at = sed_line_end(script, at) if script.startswith("w", flags.end()) else flags.end()
+        elif command in "aic":
+            while (end := sed_line_end(script, at)) < len(script) and (end - len(script[:end].rstrip("\\"))) % 2:
+                at = end + 1
+            at = end
+        elif command in "rRwW#":
+            at = sed_line_end(script, at)
+        elif command in ":btTv":
+            at = SED_WORD.match(script, at).end()
+        elif command in "qQlL":
+            at = SED_COUNT.match(script, at).end()
+        elif command not in "{}=dDgGhHnNpPxzF":
+            return None
+    return found
+
+
+def sed_address(script, at):
+    if found := SED_NUMBER.match(script, at):
+        return found.end()
+    if script.startswith(("/", "\\"), at):
+        end = sed_delimited(script, at + script.startswith("\\", at), (True,))
+        return end and SED_REGEX_FLAGS.match(script, end).end()
+    return at
+
+
+def sed_delimited(script, at, regexes):
+    if at >= len(script) or script[at] in "\\\n":
+        return None
+    mark, at = script[at], at + 1
+    for regex in regexes:
+        while at < len(script) and script[at] != mark:
+            if script[at] == "\n":
+                return None
+            if regex and script[at] == "[":
+                at = sed_bracket(script, at + 1)
+                if at is None:
+                    return None
+                continue
+            at += 2 if script[at] == "\\" else 1
+        if at >= len(script):
+            return None
+        at += 1
+    return at
+
+
+def sed_bracket(script, at):
+    at += script.startswith("^", at)
+    at += script.startswith("]", at)
+    while at < len(script) and script[at] != "]":
+        if script[at] == "\n":
+            return None
+        if script.startswith(("[:", "[.", "[="), at):
+            end = script.find(script[at + 1] + "]", at + 2)
+            at = at + 1 if end < 0 else end + 2
+            continue
+        at += 1
+    return at + 1 if at < len(script) else None
+
+
+def sed_line_end(script, at):
+    return (script + "\n").find("\n", at)
+
+
 def plainly_plugin(text, here):
     return names_plugin(text) or bool(here) and any(
         reaches_plugin(word, here) for word in tokens_of(text) if not EXPANSION.search(word))
 
 
 def names_plugin(text):
-    spelled = os.path.expandvars(text.replace("~", os.path.expanduser("~")))
+    spelled = os.path.expandvars(ESCAPE.sub("", text).replace("~", os.path.expanduser("~")))
     return any(root in spelled for root in PLUGIN_SPELLINGS)
 
 
@@ -2561,7 +2750,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
 
 
 def names_corpus(part, cwd):
-    if CORPUS_DIR.search(part):
+    if CORPUS_DIR.search(ESCAPE.sub("", part)):
         return True
     operands = [GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(heading(part)))]
     return any(CORPUS_DIR.search(word) or is_corpus_root(word)
@@ -2573,7 +2762,7 @@ def judge_shell(raw, cwd, stdin=()):
     # @req+ REQ-22704490@u7IClIQOfStA ak47k7
     if (spelled := ansi_c(raw)) != raw:
         judge_shell(spelled, cwd, stdin)
-    cmd = flatten(ESCAPE.sub("", raw))
+    cmd = flatten(unescaped(raw))
     joins = []
     pipelines = scan(AMP_REDIRECT.sub(" ", cmd), joins)
     places = cwds(pipelines, joins, cwd)
@@ -2586,7 +2775,7 @@ def judge_shell(raw, cwd, stdin=()):
                 for here in {cwd}.union(*places))), None)
     if redirect:
         deny(NOT_A_KNOWN_READ.format(target=unquoted[redirect.start():redirect.end()]))
-    written = scan(AMP_REDIRECT.sub(" ", ESCAPE.sub("", raw)))
+    written = scan(AMP_REDIRECT.sub(" ", unescaped(raw)))
     running = next((heading(part).strip() for pipeline in written for part in pipeline
                     for words in [tokens_of(heading(part))]
                     if lists_files(words) or sink_runs(words)), None)
@@ -2881,7 +3070,7 @@ def governing(tool, args, cwd):
 
 # @req> REQ-38099593@WZbBLy6bHv3j cebvfg
 def judge_citation_shell(raw):
-    cmd = ESCAPE.sub("", raw)
+    cmd = unescaped(raw)
     if not names_citation(cmd):
         return
     for part in (part for pipeline in scan(QUIET_REDIRECT.sub(" ", cmd))
