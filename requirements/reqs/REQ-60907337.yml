@@ -23,8 +23,8 @@ assessed:
   REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  4oqzpv: UWfQeitJ45JrZ8Z9JWL-viriKZYztwZXi1k7ji-5t5g
-  abs74f: OmmiFM-nyqrIjH6PgPo49U2iDDD47xb0Q7OFKJIUG-Q
+  4oqzpv: vfh4vLXD_HTtVoE5I7fRQI9rF6UdPTuV_6jda9DUgwk
+  abs74f: vDiLP6nRW6RNc4UW7U7jruUEjkPQ2Xmrx1Fcgw9A-5c
 priority: medium
 relations:
   REQ-30003727: constrains

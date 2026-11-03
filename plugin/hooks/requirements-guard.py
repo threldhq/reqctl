@@ -71,7 +71,7 @@ SED_BLANK = re.compile(r"[ \t]*")
 SED_NOT = re.compile(r"[ \t]*(?:![ \t]*)*")
 SED_NUMBER = re.compile(r"\d+(?:~\d+)?|\$|[+~]\d+")
 SED_REGEX_FLAGS = re.compile(r"[IM]*")
-SED_FLAGS = re.compile(r"[gpIiMme\d]*")
+SED_FLAGS = re.compile(r"(?:[ \t]*[gpIiMme\d])*")
 SED_WORD = re.compile(r"[ \t]*[^\s;]*")
 SED_COUNT = re.compile(r"[ \t]*\d*")
 ANSI_ESCAPE = re.compile(
@@ -96,7 +96,7 @@ GLOB_LIMIT = 4096
 YAML_TYPES = ("yaml", "crystal", "dockercompose", "all")
 CWD_LIMIT = 64
 DEADLINE = time.monotonic() + 30
-JUDGED = ("git", "rm", "patch", "find", "eval", *SHELLS)
+JUDGED = ("git", "rm", "patch", "find", "eval", "sed", *SHELLS)
 DASHED_GIT = re.compile(r"git-[A-Za-z0-9][\w-]*")
 BASH_SEQUENCE = re.compile(r"\{(?:[+-]?\d+\.\.[+-]?\d+|[A-Za-z]\.\.[A-Za-z])(?:\.\.[+-]?\d+)?\}")
 LONG_FLAGS = ("--force", "--hard", "--discard-changes", "--dry-run", "--staged",
@@ -2172,7 +2172,8 @@ def judge_command(said, here, stdin=()):
     # @req> REQ-75564975@kR-BIGM3krAM soebre
     # @req> REQ-60587913@64oissmU4Xo2 6qzcqn
     # @req> REQ-70178381@2GE_TPwGTZKU ivxbcb
-    if (plain == "git" or DASHED_GIT.fullmatch(plain or "")) and any(
+    # @req> REQ-59919160@eEBU6tuB77Dq aypjvn
+    if (plain in ("git", "sed") or DASHED_GIT.fullmatch(plain or "")) and any(
             map(expands, unquoted[len(words) - len(called) + 1:])):
         if sequenced := next((word for word in unquoted[len(words) - len(called) + 1:]
                               if BASH_SEQUENCE.search(word)), None):
@@ -2643,7 +2644,7 @@ def plainly_plugin(text, here):
 
 
 def names_plugin(text):
-    spelled = os.path.expandvars(text.replace("~", os.path.expanduser("~")))
+    spelled = os.path.expandvars(ESCAPE.sub("", text).replace("~", os.path.expanduser("~")))
     return any(root in spelled for root in PLUGIN_SPELLINGS)
 
 
@@ -2743,7 +2744,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
 
 
 def names_corpus(part, cwd):
-    if CORPUS_DIR.search(part):
+    if CORPUS_DIR.search(ESCAPE.sub("", part)):
         return True
     operands = [GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(heading(part)))]
     return any(CORPUS_DIR.search(word) or is_corpus_root(word)
