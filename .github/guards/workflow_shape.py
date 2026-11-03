@@ -419,6 +419,17 @@ def project_name(base):
     return name if name and NAMED.fullmatch(name) else None
 
 
+
+def requirement_lines(held):
+    joined, pending = [], []
+    for line in held.splitlines():
+        if not line.endswith("\\") or COMMENT.match(line):
+            joined.append("".join(pending) + (" " + line if COMMENT.match(line) else line))
+            pending = []
+        else:
+            pending.append(line.strip("\\"))
+    return [COMMENT.sub("", line).strip() for line in joined + ["".join(pending)] * bool(pending)]
+
 def sources(text, where, dev):
     found = []
     for install in pip_installs(text):
@@ -442,7 +453,7 @@ def sources(text, where, dev):
             seen.add(file)
             held, fault = held_by(file)
             pending += [file.parent / nested for nested in NESTED.findall(held)]
-            lines = (COMMENT.sub("", line).strip() for line in re.sub(r"\\\r?\n", "", held).splitlines())
+            lines = requirement_lines(held)
             named = [names_of(entry[2], bool(entry[1])) for line in lines if (entry := ENTRY.fullmatch(line))]
             if fault:
                 found.append(f"{where}: {fault}")
