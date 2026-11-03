@@ -388,35 +388,34 @@ def held_by(path):
 def names_of(word, editable=False):
     if REMOTE.search(word):
         return None
-    if word.lower().endswith(".whl"):
-        name = Path(word).name.partition("-")[0]
-        return {canonicalize_name(name)} if "-" in word and NAMED.fullmatch(name) else None
-    if word.lower().endswith(ARCHIVES):
+    bare = re.split(r"[\[;]", word, maxsplit=1)[0].strip()
+    if bare.lower().endswith(".whl"):
+        name = Path(bare).name.partition("-")[0]
+        return {canonicalize_name(name)} if "-" in bare and NAMED.fullmatch(name) else None
+    if bare.lower().endswith(ARCHIVES):
         return None
-    if editable or "/" in word or word.startswith((".", "~")):
-        name = project_name(word.partition("[")[0])
+    if editable or "/" in bare or bare.startswith((".", "~")):
+        name = project_name(bare)
         return {canonicalize_name(name)} if name else None
     found = SPECIFIER.fullmatch(word)
     return {canonicalize_name(found[1])} if found else None
 
 
 def project_name(base):
-    folder = Path(next((base.removeprefix(f"{root}/") for root in CHECKOUTS
-                        if base.startswith(f"{root}/")), base)).expanduser()
     try:
-        project = tomllib.loads((folder / "pyproject.toml").read_text()).get("project")
-    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
-        project = None
-    if isinstance(project, dict):
-        name, dynamic = project.get("name"), project.get("dynamic", [])
-        return name if isinstance(name, str) and NAMED.fullmatch(name) and isinstance(
-            dynamic, list) and "name" not in dynamic else None
-    config = configparser.ConfigParser()
-    try:
+        folder = Path(next((base.removeprefix(f"{root}/") for root in CHECKOUTS
+                            if base.startswith(f"{root}/")), base)).expanduser()
+        pyproject = folder / "pyproject.toml"
+        project = tomllib.loads(pyproject.read_text()).get("project") if pyproject.is_file() else None
+        if isinstance(project, dict):
+            name, dynamic = project.get("name"), project.get("dynamic", [])
+            return name if isinstance(name, str) and NAMED.fullmatch(name) and isinstance(
+                dynamic, list) and "name" not in dynamic else None
+        config = configparser.ConfigParser(interpolation=None)
         config.read_string((folder / "setup.cfg").read_text())
-    except (OSError, UnicodeDecodeError, configparser.Error):
+        name = config.get("metadata", "name", fallback=None)
+    except (OSError, ValueError, RecursionError, RuntimeError, configparser.Error):
         return None
-    name = config.get("metadata", "name", fallback=None)
     return name if name and NAMED.fullmatch(name) else None
 
 
