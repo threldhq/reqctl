@@ -14,6 +14,7 @@ from . import corpus
 from . import fields as _fields
 from . import history
 from . import settings as _settings
+from . import uncited as _uncited
 
 SCHEMAS = ("requirement", "guard", "dictionary", "baseline")
 # @req> REQ-20325022@eJ3lXlumh7tY m2dmcp
@@ -1762,7 +1763,7 @@ def _strays(root, paths):
     for held in sorted(corpus_dir.rglob("*.yml")) + sorted(corpus_dir.rglob("*.yaml")):
         # @req> REQ-61926693@GZyk9i4NErF6 snr2ig
         if held in claimed or held in (_baseline.path(root),
-                                       _settings.path(root)):
+                                       _settings.path(root), Path(root) / _uncited.RECORD):
             continue
         if any(skip in held.parents for skip in skipped):
             continue

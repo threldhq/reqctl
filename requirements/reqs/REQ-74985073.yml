@@ -4,7 +4,7 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
-  k3f324: bEzMTraED5rnCZ4oCGz5hyW1SQ3shbXe3PsRM-V5tic
+  k3f324: 5jPOzLPgwYZoh-bTiJ31r6pKvmBPyKCVFMAKM7FO-hQ
 priority: medium
 relations:
   REQ-59707978: depends_on
