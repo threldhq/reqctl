@@ -79,7 +79,12 @@ def faults(data, base):
 
 def main():
     # @req+ GUARD-12397751@ZZpZOVKQVB3u 7skmd6
-    found, behind = faults(read("trace"), os.environ.get("BASE_REF", ""))
+    # @req+ REQ-57367860@Ru8k-xWkVYxO xo2wve
+    # @req+ REQ-53246456@QyWuIwzUUElO uuksxj
+    base = os.environ.get("BASE_REF", "")
+    found, behind = faults(read("trace", *(["--base", f"origin/{base}"] if base else [])), base)
+    # @req- uuksxj
+    # @req- xo2wve
     # @req> REQ-53246456@QyWuIwzUUElO howxzn
     for row in behind:
         print("::notice::behind the corpus, here or in the pull request that "
