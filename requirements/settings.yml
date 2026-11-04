@@ -4,4 +4,4 @@ elucidate_agents:
     effort: high
 uncited_code:
   check:
-    mode: ratchet
+    mode: changed_lines
