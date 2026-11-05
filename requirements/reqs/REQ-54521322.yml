@@ -7,7 +7,7 @@ assessed:
   REQ-89946019: X4MY0OTFXbagJqUiFH9kXxwm4j0ZabWD1V98oIp8r3I
   REQ-91205530: FiUaykViw6dQBHW7EnBC6n0Z561dMImVZMcXtg1FxdA
   REQ-95557166: iVuq5MGUC4wDmKlCfukGnNNW-axWa8XknZhHbB-6Jmo
-  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
 priority: medium
 relations:
   REQ-20438611: depends_on

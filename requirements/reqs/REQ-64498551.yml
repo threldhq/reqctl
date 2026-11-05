@@ -5,7 +5,7 @@ assessed:
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
   citation_identity_length: WKEgsIEyjmmBJVoT1gi3cd8ohjsnKQ9GjkSKbY42pyE
   citation_identity_length.*: FUEB57ejjQTa7LsCgh7qNFb_DR36X0JAn8AmapMTMvs
-  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
 priority: medium
 relations:
   REQ-29452949: depends_on
