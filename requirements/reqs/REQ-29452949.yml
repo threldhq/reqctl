@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-44451070: derives_from
+status: approved
+text: The product shall ship the [kind schemas](kind_schema) for requirements and
+  guards admitting a [citation list](citation_list) as a mapping from each [citation
+  identity](citation_identity) to a [citation digest](citation_digest).
+type: functional
+verification: inspection

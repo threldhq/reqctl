@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-15824835: Yz8PdrMb9q2FatQiZiwiP6NcXQBUg1thrWkdG-pSbWs
+  REQ-54257918: 2pAThuxToYwUUfRfIUNwkgzjLq84kseoQjCJqb4KdTI
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-15824835: depends_on
+  REQ-54257918: depends_on
+status: approved
+text: The product shall ship the schema for baselines admitting as a key of its [items](item)
+  only a key shaped as a uid or as a [dictionary item](dictionary_item)'s name.
+type: functional
+verification: inspection

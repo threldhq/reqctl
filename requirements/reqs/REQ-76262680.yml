@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-33359142: u8vbxFMjrV6ZEjaoq9bwThPUP1_QAfMn21fCFwgd1Lc
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  REQ-70136689: kGycTrf0_sOPD2I23jnjTUUdjCfScfQVAO5OxOpS2H0
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-33359142: derives_from
+  REQ-44451070: constrains
+  REQ-70136689: depends_on
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for [dictionary items](dictionary_item)
+  refusing a parameter that states a ceiling or a list of fields.
+type: functional
+verification: inspection

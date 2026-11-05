@@ -7,5 +7,5 @@ entries:
   supersedes: {}
 kind: data
 name: relation_kinds
-status: draft
+status: approved
 text: each kind of relation a requirement or a guard records toward another

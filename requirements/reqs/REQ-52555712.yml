@@ -1,0 +1,23 @@
+acceptance_criteria: []
+assessed:
+  REQ-25589226: gN1zcZG8pbONw9f3JAbV1xW3Z9WQ9FTkD_wsGP8DOF4
+  REQ-33359142: u8vbxFMjrV6ZEjaoq9bwThPUP1_QAfMn21fCFwgd1Lc
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  REQ-70136689: kGycTrf0_sOPD2I23jnjTUUdjCfScfQVAO5OxOpS2H0
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+priority: medium
+relations:
+  REQ-25589226: derives_from
+  REQ-33359142: depends_on
+  REQ-44451070: depends_on
+  REQ-70136689: depends_on
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for [dictionary items](dictionary_item)
+  refusing a term that states, at its top level, a [citation list](citation_list),
+  a [whole-file citation](whole_file_citation), a name, a text, a value type, a unit,
+  a default, a ceiling, a list of fields or a rationale.
+type: functional
+verification: inspection

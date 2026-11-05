@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: The product shall ship the schema for baselines requiring supersedes as an integer
+  or null.
+type: functional
+verification: inspection

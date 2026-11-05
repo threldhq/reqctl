@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-56581795: ZHEasHzzTZLCW7EpcU2t9HLmUUSwKOGE6Q3rfqhT_9M
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations:
+  REQ-56581795: constrains
+status: approved
+text: The product shall derive a parameter's or a [data item](data_item)'s [stamp](stamp)
+  from its text, value type, unit and default, and from none of its [entries](entry)
+  and no other field it states.
+type: functional
+verification: inspection

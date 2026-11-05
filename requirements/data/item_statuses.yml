@@ -8,5 +8,5 @@ entries:
   superseded: {}
 kind: data
 name: item_statuses
-status: draft
+status: approved
 text: each status an [item](item) takes

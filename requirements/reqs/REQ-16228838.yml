@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: When a baseline is generated, the product shall record as its commit the commit
+  that HEAD names.
+type: functional
+verification: inspection

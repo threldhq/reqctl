@@ -6,5 +6,5 @@ entries:
   non_functional: {}
 kind: data
 name: requirement_types
-status: draft
+status: approved
 text: each type a requirement states

@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  REQ-94917590: 2yP1VjEjzn4-QYnaf6_2LW-F1vjIzDSpE-vV8yPzr7A
+  REQ-95242849: qtpUa2UbKM6Odb68iv2oUpP7UL5gow0hFQ1256APCfk
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-44451070: constrains
+  REQ-94917590: depends_on
+  REQ-95242849: depends_on
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for [dictionary items](dictionary_item)
+  marking the names an [item](item) carried as read-only.
+type: functional
+verification: inspection

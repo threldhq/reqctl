@@ -1,0 +1,20 @@
+acceptance_criteria: []
+assessed:
+  REQ-33359142: u8vbxFMjrV6ZEjaoq9bwThPUP1_QAfMn21fCFwgd1Lc
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  REQ-55732743: ELdWYlfmjgH0fCagVzxKCyP1ieyeUkBp6x0EoL8w_pU
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-33359142: depends_on
+  REQ-44451070: constrains
+  REQ-55732743: depends_on
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for [dictionary items](dictionary_item)
+  admitting as a field of an [entry](entry) a string, a number, true or false, a list
+  each of whose members is a string, a number, or true or false, or a mapping of [entries](entry)
+  each keyed by a string of at least one character.
+type: functional
+verification: inspection

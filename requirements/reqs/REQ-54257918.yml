@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-86940077: 84kSMsse1S0XOxO3VzbZLe0Lgk8LJa8_A06aQePPmYg
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations:
+  REQ-86940077: constrains
+status: approved
+text: The product shall ship the schema for baselines requiring [items](item) as a
+  mapping holding at least one key, each mapped to a [stamp](stamp) of at least one
+  character.
+type: functional
+verification: inspection

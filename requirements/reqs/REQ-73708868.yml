@@ -1,0 +1,10 @@
+acceptance_criteria: []
+assessed:
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+priority: medium
+relations: {}
+status: approved
+text: The product shall write each baseline to the baseline file under the [corpus
+  root](corpus_root), replacing any baseline that file held.
+type: functional
+verification: inspection

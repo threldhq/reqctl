@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-14368186: 0pLRg6eJoadPLrEn8G_8Au7P7KRPCkrwAk3E5rwSvG0
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+priority: medium
+relations:
+  REQ-14368186: constrains
+status: approved
+text: When a [dictionary item](dictionary_item) is renamed, the product shall rewrite
+  every reference and every link that names its former name to name its new name.
+type: functional
+verification: inspection

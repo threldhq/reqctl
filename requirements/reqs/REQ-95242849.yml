@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-15824835: Yz8PdrMb9q2FatQiZiwiP6NcXQBUg1thrWkdG-pSbWs
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-15824835: depends_on
+  REQ-44451070: depends_on
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for [dictionary items](dictionary_item)
+  admitting the names an [item](item) carried as a list of distinct names, each written
+  as a name is.
+type: functional
+verification: inspection

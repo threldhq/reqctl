@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-42335087: EHhmRZP7XeYWNAbWG3qnfiF_LYS39HqgjSTR9eE8hi8
+  REQ-83702299: kBGzIwAyKDHLaQr2uEZDpQDAHRtNn5Lkk6r0WFUdTvA
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations:
+  REQ-42335087: depends_on
+  REQ-83702299: constrains
+status: approved
+text: The product shall accept, without a link, the word or an alias of an approved
+  term in the field named name of an [entry](entry).
+type: functional
+verification: inspection

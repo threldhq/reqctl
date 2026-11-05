@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-64308807: iKbY25rf_BLR4Q70Yu4V1MIYfurJamQS27-heXXqo7s
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations:
+  REQ-64308807: constrains
+status: approved
+text: When a baseline is generated, the product shall state in it every approved [item](item)
+  with its [stamp](stamp), and no [item](item) that is not approved.
+type: functional
+verification: inspection

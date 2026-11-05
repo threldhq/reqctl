@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-48186295: E_K39S9hbhEz7d3T_nbxJUxCMQRTgp8Gi4rnPl1jdJg
+  REQ-56223366: zS6FN-Id9V3H-TuHVCQ6e6XY0HKhC6uTabPV_yM141k
+  REQ-57781505: 5YGB5n_NZmncxOWC7wpmTbruJnjSAWtazkiK6ZkcWC8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-48186295: constrains
+  REQ-56223366: depends_on
+  REQ-57781505: depends_on
+status: approved
+text: Where an [item](item)'s file is named for a uid, the product shall take the
+  [item](item)'s kind from the kind the uid's prefix names.
+type: functional
+verification: inspection

@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-14619822: tGPby0EQMjQzcA_0KY-Uk7LOSvpXei1s39FNUKEgSVk
+priority: medium
+relations:
+  REQ-14619822: depends_on
+status: approved
+text: When a baseline is generated, the product shall state as the number it supersedes
+  the number of the baseline the default branch carries, or null where the default
+  branch carries none.
+type: functional
+verification: inspection

@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
+priority: medium
+relations:
+  REQ-13148397: depends_on
+  REQ-44451070: depends_on
+status: approved
+text: When an [item](item) is [minted](mint) without a field for which the governing
+  [kind schema](kind_schema) states a default, the product shall record that default
+  in the field.
+type: functional
+verification: inspection

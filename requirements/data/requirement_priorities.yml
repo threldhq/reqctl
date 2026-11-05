@@ -6,5 +6,5 @@ entries:
   medium: {}
 kind: data
 name: requirement_priorities
-status: draft
+status: approved
 text: each priority a requirement states

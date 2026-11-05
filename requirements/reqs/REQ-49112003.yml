@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-15824835: Yz8PdrMb9q2FatQiZiwiP6NcXQBUg1thrWkdG-pSbWs
+  REQ-53177302: oSukBFyA3jXqDOQDBmlA51SQjzNbzGh51VVHA9EV_Kw
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-15824835: depends_on
+  REQ-53177302: depends_on
+status: approved
+text: The product shall name each [dictionary item](dictionary_item)'s file as the
+  name the [item](item) carries followed by .yml.
+type: functional
+verification: inspection
