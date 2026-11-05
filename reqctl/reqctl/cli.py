@@ -1132,6 +1132,7 @@ def cmd_baseline(args):
             f"baseline {number} written with {count} approved item(s).\n"
             "It states what is approved; it does not approve anything."
         )
+        # @req> REQ-28086776@7S0DPOiDLvSm dlppjs
         if claimed:
             stated = " and ".join(str(one) for one in sorted(set(claimed)))
             said = (
