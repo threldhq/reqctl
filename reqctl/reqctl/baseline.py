@@ -194,6 +194,7 @@ def _previous(root):
 
 
 def generate(tree, root):
+    # @req> REQ-86940077@84kSMsse1S0X l6ekio
     approved = derive(tree)
     # @req> REQ-35349268@UFojthZ7FMKX xfjprt
     if not approved:
@@ -240,12 +241,16 @@ def generate(tree, root):
     # @req> REQ-51424927@vQb-YtKja6pq n2tclj
     # @req+ REQ-28086776@7S0DPOiDLvSm dk6vzq
     # @req> REQ-43924642@SDx_e7a7A1XM bxobj4
+    # @req> REQ-16228838@AwqPpWdj7-35 bwglgo
+    # @req> REQ-21960639@DzQkjJjbuYa1 c5kvsx
+    # @req> REQ-58913096@FnqrGVG4gqHx v753bs
     manifest = {
         "baseline": (previous or 0) + 1,
         "commit": head_commit(root),
         "supersedes": previous,
         "items": approved,
     }
+    # @req> REQ-73708868@UVOWK-OX0AMJ lshf4m
     atomic_write(
         path(root),
         yaml.safe_dump(manifest, default_flow_style=False, sort_keys=True),

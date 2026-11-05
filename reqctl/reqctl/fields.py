@@ -203,11 +203,13 @@ def of(root, kind):
     properties, required = _merged(schema, kind)
     held = []
     for name, stated in properties.items():
+        # @req> REQ-54521322@g8kfVhS7XXWx 3acfqk
         if stated.get("readOnly") is True:
             continue
         if name == ENTRIES and stated.get("maxProperties") == 1:
             entry = _resolved(schema, stated.get("additionalProperties", {}))
             wanted = set(entry.get("required", ()))
+            # @req> REQ-54521322@g8kfVhS7XXWx rd4w24
             held += [_field(schema, key, _resolved(schema, value), key in wanted, True)
                      for key, value in (entry.get("properties") or {}).items()
                      if not _forbidden(schema, value)
@@ -229,6 +231,7 @@ def names(root, kind):
     return set(_merged(_schema(root, kind), kind)[0])
 
 
+# @req> REQ-41779958@i5ZjNQdrVe4B 4aox7m
 def defaults(root, kind):
     properties, _ = _merged(_schema(root, kind), kind)
     held = {name: copy.deepcopy(stated["default"])

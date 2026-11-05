@@ -4,6 +4,8 @@ assessed:
   REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  x3zziz: X1UTajUUGaYqMGwAkTLk0xRwMYGHmJiFm-LmDf1LS3g
 priority: medium
 relations:
   REQ-19756275: derives_from

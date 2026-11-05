@@ -4,6 +4,8 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  6mwqw2: jNSmmKxidQ4-sZgqmPh5brWJUGPYBeZWkWMoIoMJBUw
 priority: medium
 relations:
   REQ-44451070: constrains

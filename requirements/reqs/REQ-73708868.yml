@@ -1,6 +1,8 @@
 acceptance_criteria: []
 assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+citations:
+  lshf4m: APkA9Wa-3WlUKyBhvTPR09oMaguvyZqmSKywEzQQDg4
 priority: medium
 relations: {}
 status: approved

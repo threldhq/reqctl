@@ -6,6 +6,8 @@ assessed:
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  yyw6vd: Wwp1rAmf0grP271NngPO6kKhvoVz4260kQL-C4TPrMw
 priority: medium
 relations:
   REQ-44451070: constrains

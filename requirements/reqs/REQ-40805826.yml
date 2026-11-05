@@ -4,6 +4,9 @@ assessed:
   REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   REQ-95625116: kUyiwf6F3QNxl-4LrMVsNf7cETeLsRSleMYAFFMVfvA
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  5hswio: ZZsK_WKhhKMSLtE0LDebp3ZB4nErkWLi0t8h8fUo9Ag
+  utxx4z: ZZsK_WKhhKMSLtE0LDebp3ZB4nErkWLi0t8h8fUo9Ag
 priority: medium
 relations:
   REQ-41779958: depends_on

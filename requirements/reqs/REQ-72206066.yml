@@ -5,6 +5,11 @@ assessed:
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
   relation_kinds: bTOW4XZ6Utp6c5lN5WvqgC8w33gFOPQabTDrYhkxdko
   relation_kinds.*: bJV--MWRvQaNDzxi773ulOEEjD5Jk-GggWvbWGcU22U
+citations:
+  e7qjzi: obSAB2bXGce9KBWkqvoLgKs4iboTpvF65a1W0cN_Wts
+  oeehhz: qzxTKWNrLWXJpVlcBodd-zAPgCIzLAMTi_w4DuVU2jE
+  rebolx: OsM1C4fHU8hGmzs377QCM0oTSXh5WCUvrN-vHDMp3N4
+  rzaqpj: tNdjXhG-uoU6aPbvchnTKfX9tXfKE5gwL70RoU5vk4I
 priority: medium
 relations:
   REQ-44451070: constrains

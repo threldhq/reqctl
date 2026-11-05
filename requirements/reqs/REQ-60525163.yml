@@ -4,6 +4,9 @@ assessed:
   REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  3hchvm: H4d3twL8ffFMLmZAphMMaWHPh7uBuIHYN1i5JCm0ns0
+  k5clyz: H4d3twL8ffFMLmZAphMMaWHPh7uBuIHYN1i5JCm0ns0
 priority: medium
 relations:
   REQ-29452949: depends_on

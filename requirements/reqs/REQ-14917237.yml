@@ -4,6 +4,8 @@ assessed:
   REQ-56223366: zS6FN-Id9V3H-TuHVCQ6e6XY0HKhC6uTabPV_yM141k
   REQ-57781505: 5YGB5n_NZmncxOWC7wpmTbruJnjSAWtazkiK6ZkcWC8
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  7vs2op: 9zbcLczyfCiaKWOoQ8RGqQa6dmoj6F37Ga1dGTcUtik
 priority: medium
 relations:
   REQ-48186295: constrains

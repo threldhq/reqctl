@@ -3,6 +3,9 @@ assessed:
   REQ-41779958: i5ZjNQdrVe4Bup8MTwUACOlPbbu-9TJj-ztjb1rgbPE
   REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  c3ap4f: CGnq6A1ZKm50I3sE2_qKFNO8XP2K3BrUAxRt9gii8Lw
+  zexepm: CGnq6A1ZKm50I3sE2_qKFNO8XP2K3BrUAxRt9gii8Lw
 priority: medium
 relations:
   REQ-41779958: depends_on

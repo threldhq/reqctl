@@ -49,6 +49,7 @@ STATEMENT_STAMPED = ("text", "acceptance_criteria")
 ITEM_STAMPED = ("text", "value_type", "unit", "default")
 DATA_KEY = re.compile(r"^[a-z][a-z0-9_]*$")
 STATED_SKIP = ("aliases",)
+# @req> REQ-76787560@yx4uV-ApjJfe sfuabl
 POLICED_SKIP = ("aliases", "word", "name", "carried")
 # @req> REQ-68407569@9WdKt66SbMuQ bzk766
 POLICED_ITEM_SKIP = POLICED_SKIP + ("default", "unit")
@@ -125,6 +126,7 @@ def _for_prefix(uid, table):
                       "kinds; `reqctl list` names them")
 
 
+# @req> REQ-14917237@a9P7pldigUrg 7vs2op
 def kind_of(uid, data):
     return kind_for_uid(uid) or (data or {}).get("kind")
 
@@ -376,6 +378,7 @@ def items(store):
                 raise ReqctlError(f"{path.stem}: item file is not a mapping -- edit the "
                                   "file by hand so it holds a YAML mapping of fields")
             refuse_misshapen(path.relative_to(store.root), data)
+            # @req> REQ-56223366@zS6FN-Id9V3H wvbhnl
             loaded.append(Item(path.stem, path, data))
         store._items = loaded
     return store._items
@@ -724,7 +727,9 @@ def entry_stamp_of(uid, data, key):
     if fields is None:
         return None
     if kind_of(uid, data) == "term":
+        # @req> REQ-23281207@-EoSDW-v6e5y 5spkdj
         return _term_digest(uid, fields)
+    # @req> REQ-80106209@1V8R51ejNtrH hydltf
     return digest([uid, str(key), dict(fields)])
     # @req- nvrect
 
@@ -751,10 +756,13 @@ def covered(uid, data, entry_key=None):
     if entry_key is None:
         # @req> REQ-54851939@n6YOz94UUTn7 njypn2
         if uid.startswith(("REQ-", "GUARD-")):
+            # @req> REQ-38833983@N77mQ5lbSN4A ekeubm
             return {key: data.get(key) for key in STATEMENT_STAMPED}
         # @req+ REQ-56581795@ZHEasHzzTZLC ixanwu
         if kind_of(uid, data) == "term":
+            # @req> REQ-23281207@-EoSDW-v6e5y vnctjd
             return {"definition": term_fields(data).get("definition")}
+        # @req> REQ-15984677@POiZGBTxrqb6 ltlklp
         return {key: data.get(key) for key in ITEM_STAMPED}
         # @req- ixanwu
     if entry_key == MEMBERS:

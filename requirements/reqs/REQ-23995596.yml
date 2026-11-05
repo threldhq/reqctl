@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   REQ-14368186: 0pLRg6eJoadPLrEn8G_8Au7P7KRPCkrwAk3E5rwSvG0
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+citations:
+  fdfvpm: Dd5a-Q1T7f76xjXk-lz1pfthI5QZDydpvQCvgzZtIqk
 priority: medium
 relations:
   REQ-14368186: constrains

@@ -3,6 +3,11 @@ assessed:
   REQ-33359142: u8vbxFMjrV6ZEjaoq9bwThPUP1_QAfMn21fCFwgd1Lc
   REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  ho5alx: asvAHYdNXFm6idJDmQ92r9rdY__GLIcqTo9DSfxqv5Y
+  izj5r2: asvAHYdNXFm6idJDmQ92r9rdY__GLIcqTo9DSfxqv5Y
+  uuo4su: asvAHYdNXFm6idJDmQ92r9rdY__GLIcqTo9DSfxqv5Y
+  w3ligq: asvAHYdNXFm6idJDmQ92r9rdY__GLIcqTo9DSfxqv5Y
 priority: medium
 relations:
   REQ-33359142: derives_from

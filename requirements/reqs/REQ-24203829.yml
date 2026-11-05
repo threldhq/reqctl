@@ -4,6 +4,8 @@ assessed:
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
   requirement_priorities: wUSEKGzEz6og6OKmi1dJrcnByvPGMpATM25fuasBEQI
   requirement_priorities.medium: QD_6ltmGPnW6C3s4ljyIbrXb-GSrx0BcmQKs52F6bJ8
+citations:
+  oqje27: RxfMIzXLrhvBho5ju09nr5Cv2J_-LiaZ2XlZu7AgCc0
 priority: medium
 relations:
   REQ-44451070: constrains

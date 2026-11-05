@@ -6,6 +6,13 @@ assessed:
   item_statuses: xbImwnVNph8oDoVyL_WQNbefRBCZJAvzjKX8zLZAh44
   item_statuses.*: wHAiOMRe9za7ycHPqzLXjdL2FHAcTwf8KltruQ0NG4U
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  6txmwh: uSLI2KfNUxjjxgQ1LzZKTELv17P7mwB3k4Lz1PBOV_Q
+  d4xw2k: uSLI2KfNUxjjxgQ1LzZKTELv17P7mwB3k4Lz1PBOV_Q
+  r3skuz: qzxTKWNrLWXJpVlcBodd-zAPgCIzLAMTi_w4DuVU2jE
+  w7yc5t: obSAB2bXGce9KBWkqvoLgKs4iboTpvF65a1W0cN_Wts
+  whtum4: nGexEjAh-JBF44LFdTOYPLMLTbKH3PDStAKVqV52ESE
+  wtgfve: uSLI2KfNUxjjxgQ1LzZKTELv17P7mwB3k4Lz1PBOV_Q
 priority: medium
 relations:
   REQ-33359142: depends_on

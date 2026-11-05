@@ -5,6 +5,10 @@ assessed:
   item_statuses: xbImwnVNph8oDoVyL_WQNbefRBCZJAvzjKX8zLZAh44
   item_statuses.draft: 7XvRgGq_HW4_OUDb8NGyB0Ga8aNPnK5hcAc9yDFnH3I
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  bqeoev: dhA4-MHE5s8JLbLk5po5SaeNfqw36gNd_CpbvSRcFbs
+  j4mcvz: dhA4-MHE5s8JLbLk5po5SaeNfqw36gNd_CpbvSRcFbs
+  w2ix3u: dhA4-MHE5s8JLbLk5po5SaeNfqw36gNd_CpbvSRcFbs
 priority: medium
 relations:
   REQ-44451070: constrains

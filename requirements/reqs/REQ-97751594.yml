@@ -2,6 +2,11 @@ acceptance_criteria: []
 assessed:
   REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  2loty3: K7g3PAv8RXxGtmwTOjhWFPe-2GQGpwia4UE8d0o8lR4
+  5sbikq: K7g3PAv8RXxGtmwTOjhWFPe-2GQGpwia4UE8d0o8lR4
+  bw5pgk: K7g3PAv8RXxGtmwTOjhWFPe-2GQGpwia4UE8d0o8lR4
+  dlcdx3: K7g3PAv8RXxGtmwTOjhWFPe-2GQGpwia4UE8d0o8lR4
 priority: medium
 relations:
   REQ-44451070: constrains

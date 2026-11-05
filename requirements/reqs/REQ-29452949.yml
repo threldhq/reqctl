@@ -5,6 +5,9 @@ assessed:
   citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
   citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  c6uqqp: y1ik4BNcDtP4DqAX_dxFhBq4Ok0jy8O9lYpj14rp0z0
+  zkmdiw: y1ik4BNcDtP4DqAX_dxFhBq4Ok0jy8O9lYpj14rp0z0
 priority: medium
 relations:
   REQ-44451070: derives_from

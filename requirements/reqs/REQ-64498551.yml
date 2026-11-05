@@ -6,6 +6,9 @@ assessed:
   citation_identity_length: WKEgsIEyjmmBJVoT1gi3cd8ohjsnKQ9GjkSKbY42pyE
   citation_identity_length.*: FUEB57ejjQTa7LsCgh7qNFb_DR36X0JAn8AmapMTMvs
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  5sdhfc: ybAq523ZsFNU-yL49uvd05SF09vjgNjSlvxxJLBXiaw
+  yv3eko: ybAq523ZsFNU-yL49uvd05SF09vjgNjSlvxxJLBXiaw
 priority: medium
 relations:
   REQ-29452949: depends_on

@@ -820,6 +820,7 @@ def rename(store, uid, new_name):
 
     # @req+ REQ-97543346@Yc-UcdtSPtB3 jjk7ud
     before = {held.uid: held.data for held in corpus.items(store)}
+    # @req> REQ-23995596@-pejAoHYKY9L fdfvpm
     after = {held_uid: _readdressed_item(data, olds, new_name)
              for held_uid, data in before.items()}
     # @req- jjk7ud
@@ -844,6 +845,7 @@ def rename(store, uid, new_name):
         raise ReqctlError("\n".join(faults) + f"\n{item.uid} was not changed")
 
     paths = {held.uid: held.path for held in corpus.items(store)}
+    # @req> REQ-49112003@ntC6kZ4OX71X k66gqp
     moved = corpus.folder_for(store.root, kind) / f"{new_name}.yml"
     corpus.save(store, corpus.Item(new_name, moved, after[new_name]))
     if item.path != moved:
@@ -1083,6 +1085,7 @@ def mint(store, kind, name=None, placeholder=None):
     folder = corpus.folder_for(store.root, kind)
     if name is not None:
         _refuse_unusable_name(store, name)
+        # @req> REQ-49112003@ntC6kZ4OX71X gwr3km
         return name, folder / f"{name}.yml"
     prefix = KINDS[kind]
     # @req+ REQ-73115701@_3WJxxfhIo7L j3ijco
@@ -1131,6 +1134,7 @@ def prepare(store, kind, fields, placeholder=None):
                           "under the name it carries -- drop --uid")
     hidden = _blank_or_hidden(fields, own, kind)
 
+    # @req> REQ-41779958@i5ZjNQdrVe4B lxx4he
     data = _fields.defaults(store.root, kind)
     entries = next((field for field in own if field.name == "entries"), None)
     default = {field.name: fields.get(field.dest) for field in own}.get("default")

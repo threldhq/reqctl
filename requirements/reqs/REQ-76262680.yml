@@ -5,6 +5,9 @@ assessed:
   REQ-70136689: kGycTrf0_sOPD2I23jnjTUUdjCfScfQVAO5OxOpS2H0
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  ltndty: _TaOr_flD0pC9vBV8J-WEZ0GgDeLK80x87Enwe3PqDg
+  y4ql4s: k22ekYaSXuxZuN34Ddg1zjTpUVLKWKU0sYPx1zYIT0c
 priority: medium
 relations:
   REQ-33359142: derives_from
