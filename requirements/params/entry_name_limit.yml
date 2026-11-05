@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  '40': {}
+kind: parameter
+name: entry_name_limit
+status: draft
+text: The most characters the name an [entry](entry) states may hold
+value_type: count

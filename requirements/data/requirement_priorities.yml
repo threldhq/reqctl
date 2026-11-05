@@ -1,0 +1,10 @@
+assessed: {}
+default: medium
+entries:
+  high: {}
+  low: {}
+  medium: {}
+kind: data
+name: requirement_priorities
+status: draft
+text: each priority a requirement states

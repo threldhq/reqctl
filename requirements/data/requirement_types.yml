@@ -1,0 +1,10 @@
+assessed: {}
+default: functional
+entries:
+  constraint: {}
+  functional: {}
+  non_functional: {}
+kind: data
+name: requirement_types
+status: draft
+text: each type a requirement states
