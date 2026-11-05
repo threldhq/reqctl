@@ -7,6 +7,9 @@ assessed:
   item_kinds.parameter: udGKv-9OLUir1v8khfAEz4sZQx6Z-RSH5Ak49Z9TJcE
   item_kinds.term: EqOGsdo1PhLmozqn-mWLm1OZZM5PahRQk7gCRwAxuto
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  ga7747: j_AV8N3jV_y-lbk9-cYM_2zyBnuz3j-rlHd0OmBGDa4
+  y7gjxb: nGexEjAh-JBF44LFdTOYPLMLTbKH3PDStAKVqV52ESE
 priority: medium
 relations:
   REQ-44451070: constrains

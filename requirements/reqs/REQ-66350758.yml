@@ -4,6 +4,8 @@ assessed:
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  qttgzd: 0LuD05PXTtg-svYrvb3Xh_W4vitbTDT9z2aBzt2B3Js
 priority: medium
 relations:
   REQ-44451070: depends_on

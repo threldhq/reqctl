@@ -1,68 +1,51 @@
+# @req> REQ-97751594@BwWOFlFOjjyU bw5pgk
 $schema: "https://json-schema.org/draft/2020-12/schema"
+# @req> REQ-83218477@nthDaUhwd58l hvachr
 $id: "reqctl/dictionary.schema.yaml"
-title: Dictionary item
-description: >-
-  A TERM, PARAM or DATA item file: a dictionary of entries, the entry key its
-  identity. What prose may do with an entry is decided by its fields -- a
-  renderable value substitutes through ${...}, a definition annotates through
-  [...](...). Which fields each kind carries is stated by the branch for that
-  kind below. The rest are reqctl's checks: a term holds exactly one entry; a
-  parameter's keys parse as its value_type; a default names an existing entry;
-  an entry key may not shadow an item-level field name. A term states the word
-  it is known by, and its entry key is the handle that addresses it.
+# @req> REQ-52846482@4k8T0YLN4n97 w3ligq
 type: object
+# @req> REQ-20678879@c210nefD6kHQ 2j2acz
 additionalProperties: false
 
+# @req> REQ-70136689@kGycTrf0_sOP y7gjxb
+# @req> REQ-60231841@jePDPrjCGq74 whtum4
+# @req> REQ-55732743@ELdWYlfmjgH0 osucvy
 required: [kind, status, entries]
 
+# @req> REQ-20678879@c210nefD6kHQ wvisqw
 properties:
 
+  # @req> REQ-60231841@jePDPrjCGq74 6txmwh
   status:
     enum: [draft, approved, deprecated, superseded]
+    # @req> REQ-21532897@4mlJA_VkJWru w2ix3u
     default: draft
 
+  # @req> REQ-70136689@kGycTrf0_sOP ga7747
   kind:
     enum: [term, parameter, data]
+    # @req> REQ-95557166@iVuq5MGUC4wD glk266
     readOnly: true
-    description: >-
-      What the item is. A named item carries no prefix to say it, so the file
-      states it and the folder it sits in holds the statement to that: an item
-      in params/ that states data is refused, not judged as one. An item still
-      named for a UID is said by the prefix, which answers first. Not in the
-      item stamp: it selects which rules apply. A parameter that is a data
-      item is refiled with `reqctl refile`, which moves the file and the
-      statement together and drops the value_type the other kind does not
-      carry; the name is the identity, so nothing addressing it moves.
 
+  # @req> REQ-15824835@Yz8PdrMb9q2F 2or7iw
   name:
     type: string
     pattern: "^[a-z][a-z0-9_]*$"
     # @req> REQ-91205530@FiUaykViw6dQ b6cnwg
     # @req> REQ-71965656@F8ulVugEMpD- h5i2tk
     x-address: true
-    description: >-
-      The name the item answers to and the address prose carries: ${name} is
-      stored as it is written. It is the filename too, so renaming is `reqctl
-      rename`, which moves the file and rewrites every reference with it. The
-      field is not in the item stamp; the identity it forms is.
 
+  # @req> REQ-95242849@qtpUa2UbKM6O vfi7sv
   carried:
     type: array
     uniqueItems: true
+    # @req> REQ-38278436@G9G7n7d2Ke-7 yyw6vd
     readOnly: true
     items:
       type: string
       pattern: "^[a-z][a-z0-9_]*$"
-    description: >-
-      Every name this item answered to before the one it carries now, written
-      by `reqctl rename` and never by hand. A baseline states a named item by
-      its name, so a rename leaves every earlier baseline stating a name the
-      corpus no longer holds; this is what reads such a name back to the item
-      that wore it. A term carries the field too, its name being its sole entry
-      key. Not in the item stamp: what the item used to be called does not
-      change what it states, and stamping it would make every citation suspect
-      for a rename.
 
+  # @req> REQ-54705070@azHphsRsbfJl gmnzxo
   text:
     type: string
     minLength: 1
@@ -71,34 +54,22 @@ properties:
     # @req> REQ-59874866@fH6bFHN-Lwa8 7okmvn
     # @req> REQ-76604940@SEVyiDrbH-Ez vw3dbe
     x-prose: true
-    description: >-
-      What the item as a whole denotes, in one line, where the entries alone
-      do not say it. May link a term or reference a parameter, exactly as a
-      statement does. In the item stamp.
 
+  # @req> REQ-38954638@497pbk7J9sqk hpuute
   value_type:
     enum: [duration, size, count, ratio, percentage, currency, boolean, text]
     # @req> REQ-52544202@FdBPIIOU8f_v qyhuti
     x-entry-of: value_types
-    description: >-
-      Parameters only: the kind every entry key parses as. In the item stamp.
 
+  # @req> REQ-92926466@dhyvKSDWQfjw wc43aq
   unit:
     type: string
     minLength: 1
-    description: >-
-      Parameters only. Required for duration, size, percentage and currency;
-      forbidden for the rest. SI or ISO-4217 symbol. One unit for the whole
-      item, carried by every entry key: 5s in a set whose unit is ms is
-      written 5000. In the item stamp.
 
+  # @req> REQ-21045294@UE8gAjNCLsm8 6mwqw2
   default:
     type: string
     minLength: 1
-    description: >-
-      The entry ${name.default} selects. Must name an existing entry, and no
-      entry may be keyed default, so the flag cannot dangle. In the item
-      stamp.
 
   # @req> REQ-36099384@oqIHWa_e7CDN qukf5f
   ceiling:
@@ -111,10 +82,8 @@ properties:
     minItems: 1
     uniqueItems: true
     items: {type: string, minLength: 1}
-    description: >-
-      Data items only: the fields its entries hold beyond those this schema
-      declares for an entry by name. Excluded from the stamps.
 
+  # @req> REQ-12136510@Q7qxyHYKDLns mpjvzb
   rationale:
     type: string
     # @req> REQ-51326810@tZsTSo6pwmwE z5vxyy
@@ -122,41 +91,23 @@ properties:
     # @req> REQ-59874866@fH6bFHN-Lwa8 zf2lsy
     # @req> REQ-76604940@SEVyiDrbH-Ez bqzsae
     x-prose: true
-    description: >-
-      Where the item comes from -- a contract, a benchmark, an incident.
-      May link a term or reference a parameter, exactly as the text does.
-      Excluded from the stamps.
 
+  # @req> REQ-55732743@ELdWYlfmjgH0 lyffll
   entries:
     type: object
     minProperties: 1
-    description: >-
-      Identity to fields. reqctl writes every key as a string; propertyNames
-      carries type string because an unquoted YAML key arrives as a number
-      and would skip a bare check. A key may not shadow a name reqctl
-      reserves -- default, pinned, text, name --
-      reqctl's check. An entry's fields are in its entry stamp -- except a term's
-      word and aliases, which are display and policing, not meaning. A field
-      may hold a reference or a list of them: prose() walks entries, so
-      ${...} inside a field binds exactly as it does in a sentence. A field may
-      also hold entries of its own, addressed name.entry.field.key, for a
-      subject whose parts are entries rather than values -- the properties a
-      type carries. What a field may hold does not change with how deep it
-      sits.
     propertyNames:
       type: string
       minLength: 1
 
+  # @req> REQ-66350758@mhvWsKLsPGHC qttgzd
   assessed:
     type: object
+    # @req> REQ-20438611@e9DfaZdZU0eT zbz6r3
     readOnly: true
+    # @req> REQ-91894254@HA2Tpgi5MW9m qow7p3
     default: {}
-    description: >-
-      Pins, dependency address to the stamp it was assessed against. An
-      address is the name the item carries, or that name dot an entry key for
-      the entry's stamp; a term is pinned by its bare name, its sole entry
-      implied. Absent or stale means SUSPECT: reread both, then `reqctl revise
-      UID --ack`. Written by tooling, never by hand.
+    # @req> REQ-77349514@c5tXalbMeD2i g5owzj
     propertyNames:
       pattern: "^[a-z][a-z0-9_]*(\\..+)?$"
     additionalProperties:
@@ -166,12 +117,8 @@ properties:
   # @req> REQ-88203622@wlZ9orsr9c7q jez5bu
   citations:
     type: object
+    # @req> REQ-89946019@X4MY0OTFXbag wkgpw2
     readOnly: true
-    description: >-
-      The citation list: the citation identity of each statement citation
-      naming this parameter or data item, to the citation digest of the lines
-      it covers. Excluded from the stamps. Written by reqctl tag, repin, untag
-      and unlist, never by hand.
     propertyNames:
       pattern: "^[a-z2-7]{6}$"
     additionalProperties:
@@ -182,11 +129,6 @@ properties:
   whole_file_citations:
     type: object
     readOnly: true
-    description: >-
-      The whole-file citations this parameter or data item holds: the path of each file it is
-      cited against, to the tag stamp it was read
-      against and a digest of the entire file. Excluded from the stamp.
-      Written by reqctl tag, never by hand.
     propertyNames:
       minLength: 1
     additionalProperties:
@@ -201,8 +143,14 @@ properties:
           type: string
           pattern: "^[A-Za-z0-9_-]{43}$"
 
+# @req> REQ-52555712@ifLOKFIGhkgf j4awd6
+# @req> REQ-20003259@dUyU2uLqjsIF v56wyu
+# @req> REQ-76262680@k4Ti3hJfcZ14 ltndty
+# @req> REQ-12896387@jvS0Os1oYPbk z3j5vy
+# @req> REQ-49304907@NSnffmSJBDm1 umaqja
 allOf:
 
+  # @req> REQ-52555712@ifLOKFIGhkgf e5mj2f
   - if: {required: [kind], properties: {kind: {const: term}}}
     then:
       properties:
@@ -217,11 +165,14 @@ allOf:
         fields: {not: {}}
         rationale: {not: {}}
         entries:
+          # @req> REQ-79013939@LHWesLk8a6d7 2yhttw
           maxProperties: 1
           additionalProperties: {$ref: "#/$defs/term"}
 
+  # @req> REQ-76262680@k4Ti3hJfcZ14 y4ql4s
   - if: {required: [kind], properties: {kind: {const: parameter}}}
     then:
+      # @req> REQ-20003259@dUyU2uLqjsIF gbexkl
       required: [name, text, value_type]
       properties:
         ceiling: {not: {}}
@@ -230,8 +181,10 @@ allOf:
         # @req> REQ-71965656@F8ulVugEMpD- w2nm2t
         entries: {x-flag: value, additionalProperties: {$ref: "#/$defs/entry"}}
 
+  # @req> REQ-49304907@NSnffmSJBDm1 2ihvkk
   - if: {required: [kind], properties: {kind: {const: data}}}
     then:
+      # @req> REQ-12896387@jvS0Os1oYPbk crwhts
       required: [name]
       properties:
         value_type: {not: {}}
@@ -240,14 +193,17 @@ allOf:
         # @req> REQ-71965656@F8ulVugEMpD- zxdanu
         entries: {x-flag: entry, additionalProperties: {$ref: "#/$defs/entry"}}
 
+# @req> REQ-19756275@hGspvTpsKkDR xr244n
 $defs:
 
+  # @req> REQ-19756275@hGspvTpsKkDR pbyoly
   entry:
     type: object
     additionalProperties: {$ref: "#/$defs/field"}
     properties:
       # @req> REQ-52544202@FdBPIIOU8f_v mfnskt
       value_type: {$ref: "#/$defs/field", x-entry-of: value_types}
+      # @req> REQ-36712960@kffnEhw1AEbI f2vzxe
       definition:
         type: string
         minLength: 1
@@ -256,49 +212,41 @@ $defs:
         # @req> REQ-59874866@fH6bFHN-Lwa8 fappkf
         # @req> REQ-76604940@SEVyiDrbH-Ez qemprc
         x-prose: true
-        description: >-
-          What the entry means, in prose. May link a term or reference a
-          parameter; a chain of definitions may not circle back on itself.
-      aliases:
-        type: array
-        uniqueItems: true
-        items: {type: string, minLength: 1}
-        description: >-
-          Other wordings of a term's word, including plurals. Terms only.
-      unclaimed:
-        type: object
-        # @req> REQ-24370000@L3oFZSuyf_lZ xdlrrr
-        additionalProperties: {type: string, x-prose: true}
-        description: >-
-          Phrases holding the term's word or an alias that do not state the
-          term, each to its reason. Prose may state them unlinked. Terms only.
+      # @req> REQ-42019737@90sIiSl5qAyl 46pfik
+      aliases: {not: {}}
+      # @req> REQ-42147485@VsERY4C491hX g5qe2q
+      unclaimed: {not: {}}
+      # @req> REQ-42335087@EHhmRZP7XeYW g6kvgb
       name:
         type: string
         minLength: 1
         maxLength: 40
-        description: >-
-          The string the product shows for this entry. A designation, not
-          prose: the glossary does not police it, so a sentence written here
-          would carry a term past the link it owes. The bound is what stops
-          that -- the longest label the corpus holds is ten characters.
 
   term:
+    # @req> REQ-92166241@HTHjlgOGlMF7 6p6gqt
     required: [word, definition]
+    # @req> REQ-19756275@hGspvTpsKkDR kanmmn
     additionalProperties: {$ref: "#/$defs/field"}
     properties:
+      # @req> REQ-47317077@nmlbp2InoWXJ 5i5a5b
       word:
         type: string
         # @req> REQ-91205530@FiUaykViw6dQ jy2drg
         # @req> REQ-71965656@F8ulVugEMpD- ixutwk
         x-flag: term
-        description: >-
-          The word the term is known by, as prose states it.
+      # @req> REQ-36712960@kffnEhw1AEbI 46cyrm
       definition: {$ref: "#/$defs/entry/properties/definition"}
       # @req> REQ-91205530@FiUaykViw6dQ 4sfqcl
       # @req> REQ-71965656@F8ulVugEMpD- w3rrjk
-      aliases: {$ref: "#/$defs/entry/properties/aliases", x-flag: alias}
-      unclaimed: {$ref: "#/$defs/entry/properties/unclaimed"}
+      # @req> REQ-48736295@BEVQZyse_96M x3zziz
+      aliases: {type: array, uniqueItems: true, items: {type: string, minLength: 1}, x-flag: alias}
+      # @req> REQ-20106088@5vCa8KN82s2L jar5fh
+      unclaimed:
+        type: object
+        # @req> REQ-24370000@L3oFZSuyf_lZ jrazmf
+        additionalProperties: {type: string, x-prose: true}
 
+  # @req> REQ-19756275@hGspvTpsKkDR bb4ooz
   field:
     type: [string, number, boolean, array, object]
     items: {type: [string, number, boolean]}
@@ -306,6 +254,3 @@ $defs:
       type: string
       minLength: 1
     additionalProperties: {$ref: "#/$defs/entry"}
-    description: >-
-      A value, a list of values, or entries the field holds in its own right.
-      Which it is, is read from what is written: only an object is entries.

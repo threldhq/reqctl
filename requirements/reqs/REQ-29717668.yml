@@ -3,6 +3,11 @@ assessed:
   REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  7tsbiq: MUoagj-gngOwL0fCkziJ35qLQxndSvOnxCGiH0CM-JU
+  btnn3m: qzxTKWNrLWXJpVlcBodd-zAPgCIzLAMTi_w4DuVU2jE
+  d4na4n: obSAB2bXGce9KBWkqvoLgKs4iboTpvF65a1W0cN_Wts
+  hzpraj: CE7YncYIMOAiuuOAb59WTWzqTVqE-QA94T9GHaVX1pc
 priority: medium
 relations:
   REQ-44451070: constrains

@@ -5,6 +5,9 @@ assessed:
   REQ-92166241: HTHjlgOGlMF70z9Og9c7nG0dxtw2lMyiWy9ITZkGP0M
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  5spkdj: yxzvMbB2rpJrG0-lFZa1GfJrxoiRTsrjiDs4TY48NNU
+  vnctjd: XJ9Ql-Y2h6GW4-gCZAGZ3BqZfHoDxfYUQCB2mIx78cU
 priority: medium
 relations:
   REQ-56581795: constrains

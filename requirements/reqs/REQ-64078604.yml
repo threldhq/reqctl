@@ -4,6 +4,8 @@ assessed:
   REQ-54257918: 2pAThuxToYwUUfRfIUNwkgzjLq84kseoQjCJqb4KdTI
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  bwtwmt: TyEI4Zmc6L-cICPl4W7YAC_Cz_F1CKMhXSA5KRzLxOg
 priority: medium
 relations:
   REQ-15824835: depends_on

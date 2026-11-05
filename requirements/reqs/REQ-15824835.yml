@@ -3,6 +3,8 @@ assessed:
   REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  2or7iw: 0Lw8am4XRGAJfTZhcbOFQSQxc5mMD2s5MjIVLdZ2iuk
 priority: medium
 relations:
   REQ-44451070: constrains

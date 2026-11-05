@@ -5,6 +5,10 @@ assessed:
   REQ-66350758: mhvWsKLsPGHCuV-WhTVFh-yNpD6tB-UAr6H4gxWn7zE
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  hjvz6r: Wwp1rAmf0grP271NngPO6kKhvoVz4260kQL-C4TPrMw
+  xvebja: Wwp1rAmf0grP271NngPO6kKhvoVz4260kQL-C4TPrMw
+  zbz6r3: Wwp1rAmf0grP271NngPO6kKhvoVz4260kQL-C4TPrMw
 priority: medium
 relations:
   REQ-29717668: depends_on

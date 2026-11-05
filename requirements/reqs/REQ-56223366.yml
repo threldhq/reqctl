@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   REQ-17446443: 86KE0VfkVuKG9lUzl5LPGo423CZhjDrygNJeJGWL2Cw
   REQ-73115701: _3WJxxfhIo7LaXcAtSbUDoRMhIRAPHzQL3c2oOIEI8A
+citations:
+  wvbhnl: RcTBjNh68-bFeu0zWZ8n8aLx6Davjd9KoEr0Gwc5tF8
 priority: medium
 relations:
   REQ-17446443: constrains

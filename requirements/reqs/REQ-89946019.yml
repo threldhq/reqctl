@@ -6,6 +6,10 @@ assessed:
   citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  dqr3vu: Wwp1rAmf0grP271NngPO6kKhvoVz4260kQL-C4TPrMw
+  osv6l4: Wwp1rAmf0grP271NngPO6kKhvoVz4260kQL-C4TPrMw
+  wkgpw2: Wwp1rAmf0grP271NngPO6kKhvoVz4260kQL-C4TPrMw
 priority: medium
 relations:
   REQ-14895892: constrains

@@ -8,6 +8,9 @@ assessed:
   REQ-91205530: FiUaykViw6dQBHW7EnBC6n0Z561dMImVZMcXtg1FxdA
   REQ-95557166: iVuq5MGUC4wDmKlCfukGnNNW-axWa8XknZhHbB-6Jmo
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  3acfqk: bkZEL_pOybdq9wBQlmA7MZkbrfB4H1cSZKvJBXTEbgQ
+  rd4w24: ICyiiItZYqjADRSDFZGaKXfMquwlzYbqfUWpOMO3djw
 priority: medium
 relations:
   REQ-20438611: depends_on

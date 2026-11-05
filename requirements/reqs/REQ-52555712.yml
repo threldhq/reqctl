@@ -8,6 +8,9 @@ assessed:
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  e5mj2f: baWypMLvT8-dJ03IE8sPyXT7lalFVQcNZDm8E4m0rfY
+  j4awd6: _TaOr_flD0pC9vBV8J-WEZ0GgDeLK80x87Enwe3PqDg
 priority: medium
 relations:
   REQ-25589226: derives_from

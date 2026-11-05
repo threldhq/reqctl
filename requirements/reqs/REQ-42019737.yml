@@ -7,6 +7,8 @@ assessed:
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  46pfik: Z0LBL1ZqYoE2g_pIrT4Y9BoUDTn7uS9J3kXzQbBq478
 priority: medium
 relations:
   REQ-19756275: constrains

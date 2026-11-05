@@ -4,6 +4,9 @@ assessed:
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
   requirement_types: ZEpH6OVaY2UUl12iZsb8mveLsiSG3RtszjW3cgfCR5g
   requirement_types.*: Ps00wWuL7lXrmQGzWs1CFTGbebnN20txsijsRTlaWP8
+citations:
+  lq5h2w: qzxTKWNrLWXJpVlcBodd-zAPgCIzLAMTi_w4DuVU2jE
+  udnboc: D68Ifz8J1mf0uMn5ixE1Ziv6kH1ZkJX6ctQebHykK38
 priority: medium
 relations:
   REQ-44451070: constrains

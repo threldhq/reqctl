@@ -6,6 +6,11 @@ assessed:
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
+citations:
+  bb4ooz: vhqse9HJuy_23YSiV3Wkfdq3fuxN9WRZkzPHyHGvaxw
+  kanmmn: H1oARk_JkgQB_V8M8_VlT1i-GEroAMGIjJ5rXANQoVA
+  pbyoly: Ma0_ypy8OVBgrZs32-xbphcWMMz5u5wvW-Hph_1wCKI
+  xr244n: AlCuwm7aEcX1P5W4HghOOeBLpL730H2ub8nWBrNhq34
 priority: medium
 relations:
   REQ-33359142: depends_on

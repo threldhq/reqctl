@@ -4,6 +4,9 @@ assessed:
   REQ-53177302: oSukBFyA3jXqDOQDBmlA51SQjzNbzGh51VVHA9EV_Kw
   dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  gwr3km: WvrzoB4gXU4uXYdGdCUhFYITC0HkYgOQDSZxdS_AVq0
+  k66gqp: jVSgS51OIB60WCopfh-iKEjVHxQ7rq9oo0IFbniedbA
 priority: medium
 relations:
   REQ-15824835: depends_on

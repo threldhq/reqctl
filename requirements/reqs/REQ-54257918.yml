@@ -3,6 +3,9 @@ assessed:
   REQ-86940077: 84kSMsse1S0XOxO3VzbZLe0Lgk8LJa8_A06aQePPmYg
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  cpbxhm: rboqLrktxbZQpyDEj-ee63M6mpc0_lyxb-YDW0KZZ58
+  dvuoot: HzDLBvfTwXH9U0W474_lpGa5ULAd6vEHhImoR3cvorc
 priority: medium
 relations:
   REQ-86940077: constrains
