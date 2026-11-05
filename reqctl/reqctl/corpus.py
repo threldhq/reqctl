@@ -66,6 +66,7 @@ ADDRESS = re.compile(rf"^((?:{KINDS})-\d{{8}}|{NAME})(?:\.(.+))?$")
 
 # @req> REQ-10966072@RC1_0V_R-34U zikuq2
 # @req+ skipped_folders@EwHTRPcwGsLx p2lhya
+# @req> REQ-87066486@AtzPEAcAbJ1v m5r2gd
 SCAN_SKIP = {
     ".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__",
     ".mypy_cache", ".ruff_cache", ".pytest_cache", ".elucidate", ".reqctl",

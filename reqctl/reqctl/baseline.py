@@ -223,7 +223,8 @@ def generate(tree, root):
         )
     # @req- yvehmw
 
-    # @req+ REQ-28086776@7S0DPOiDLvSm thbrwa
+    # @req> REQ-43924642@SDx_e7a7A1XM mksxwc
+    # @req> REQ-28086776@7S0DPOiDLvSm ckkjqm
     previous, claimed = _previous(root)
     # @req+ REQ-73312524@Eij54nBVNhs0 mgwroy
     dirty = uncommitted(root)
@@ -237,6 +238,8 @@ def generate(tree, root):
 
     # @req+ REQ-87283234@HOs3YEHAJSD_ cc4ozn
     # @req> REQ-51424927@vQb-YtKja6pq n2tclj
+    # @req+ REQ-28086776@7S0DPOiDLvSm dk6vzq
+    # @req> REQ-43924642@SDx_e7a7A1XM bxobj4
     manifest = {
         "baseline": (previous or 0) + 1,
         "commit": head_commit(root),
@@ -249,7 +252,7 @@ def generate(tree, root):
     )
     # @req- cc4ozn
     return manifest["baseline"], path(root), len(approved), claimed
-    # @req- thbrwa
+    # @req- dk6vzq
 
 
 def _restated(recorded, tree):

@@ -145,6 +145,7 @@ SPLITS = "$`{}%"
 INPUT_LIMIT = 20_000
 # @req- 2x3zhi
 # @req> git_read_forms@5d0_Etfuv7Lx r2wro4
+# @req> REQ-87066486@AtzPEAcAbJ1v jotjhc
 GIT_READ = re.compile(
     r"^\s*git([ \t]+(-C[ \t]+[\w./~-]+|-[Pp]|--no-pager|--paginate))*"
     r"[ \t]+(?:(?P<read>log|show|diff|status|blame|ls-files)|add|commit)(?=[ \t\n]|$)"
@@ -294,6 +295,7 @@ INEXACT = (
 WHOLE_TREE: list[str] = []
 FORCE = ("-f", "--force", "--discard-changes")
 # @req> worktree_commands@EtNKXLNk8TvY 3qwrc6
+# @req> REQ-87066486@AtzPEAcAbJ1v tixovl
 RESTORES = ("checkout", "restore", "reset", "clean", "switch")
 JUDGED_GIT = ("push", "commit", "apply", "am", "remote", "symbolic-ref", "update-ref", "fetch",
               "branch", *NO_COMMIT, *RESTORES)
@@ -315,6 +317,7 @@ UNRESOLVED_WRITE = (
 # @req- rmhljp
 
 # @req> origin_query_seconds@QD8PvG3tkf2s lm2l7z
+# @req> REQ-87066486@AtzPEAcAbJ1v r5qzgs
 ORIGIN_QUERY_SECONDS = 10
 
 # @req> REQ-14590906@7HafgqX9CF9- 7r3vt3

@@ -61,10 +61,10 @@ def pinned(value):
     return bool(found) and ((int(found[1]), int(found[2] or 0)) >= DATELESS_FROM) != bool(found[3])
 
 
-# @req> REQ-32331515@Nn3qX9jMrAU- bl2ps5
 # @req> REQ-42769459@j_YdEMFBAA1J ipg3lp
 def _default(root):
     try:
+        # @req> REQ-32331515@Nn3qX9jMrAU- myaobz
         return _default_ref(root)
     except ReqctlError:
         return None
@@ -91,12 +91,12 @@ def faults(document):
     found = []
     for at, value, shipped in _leaves(document, SHIPPED, ()):
         key = ".".join(map(str, at))
+        # @req> REQ-99278123@vBQXVC8aZZp3 ck7iqy
         if isinstance(shipped, dict):
-            # @req> REQ-99278123@vBQXVC8aZZp3 qgpb6a
             found.append(f"{key} names no value a settings file may replace -- "
                          f"{NESTED}")
+        # @req> REQ-78887253@ZroFZuS_zv0q 33gi6b
         elif type(value) is not type(shipped):
-            # @req> REQ-78887253@ZroFZuS_zv0q yaohat
             # @req> REQ-30898926@Vu28eWaG_1mE aq4jso
             found.append(f"{key}: {value!r} is not of the YAML type of the "
                          f"{shipped!r} the product ships -- state a value of "
@@ -126,9 +126,9 @@ def faults(document):
     return found
 
 
-# @req> REQ-32331515@Nn3qX9jMrAU- m5bqyr
 # @req> REQ-34403718@OXYW6pAY1oxO 7tnuse
 def read(root):
+    # @req+ REQ-32331515@Nn3qX9jMrAU- 7jdohw
     ref = _default(root)
     # @req> REQ-42769459@j_YdEMFBAA1J mfrzc7
     if ref is None:
@@ -154,6 +154,7 @@ def read(root):
                           "restore the file on the default branch")
     # @req> REQ-29005932@BIHyox0VxBlI mgfbvw
     document = loads(shown.stdout, where)
+    # @req- 7jdohw
     found = faults(document)
     # @req> REQ-99278123@vBQXVC8aZZp3 lcnls5
     # @req> REQ-78887253@ZroFZuS_zv0q iywc46
