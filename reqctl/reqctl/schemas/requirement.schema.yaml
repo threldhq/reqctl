@@ -13,6 +13,10 @@ properties:
   text:
     type: string
     minLength: 1
+    # @req> REQ-51326810@tZsTSo6pwmwE herx2o
+    # @req> REQ-67358511@6v5ZhXIOqAkD scvw2e
+    # @req> REQ-59874866@fH6bFHN-Lwa8 bb4d4e
+    # @req> REQ-76604940@SEVyiDrbH-Ez 733htw
     x-prose: true
     description: >-
       The requirement statement. Atomic, verifiable, no rationale. Parameter
@@ -59,6 +63,8 @@ properties:
   acceptance_criteria:
     type: array
     default: []
+    # @req> REQ-91205530@FiUaykViw6dQ e3xspv
+    # @req> REQ-71965656@F8ulVugEMpD- q4nno6
     x-flag: criterion
     description: >-
       What satisfying this requirement means, as given, when and then. In the
@@ -70,8 +76,20 @@ properties:
       additionalProperties: false
       required: [given, when, then]
       properties:
+        # @req> REQ-51326810@tZsTSo6pwmwE vnflam
+        # @req> REQ-67358511@6v5ZhXIOqAkD f6o5gy
+        # @req> REQ-59874866@fH6bFHN-Lwa8 3jfz4j
+        # @req> REQ-76604940@SEVyiDrbH-Ez 6q22bn
         given: {type: string, minLength: 1, x-prose: true}
+        # @req> REQ-51326810@tZsTSo6pwmwE oaaz6i
+        # @req> REQ-67358511@6v5ZhXIOqAkD lfrvre
+        # @req> REQ-59874866@fH6bFHN-Lwa8 6z6dih
+        # @req> REQ-76604940@SEVyiDrbH-Ez yec3ne
         when: {type: string, minLength: 1, x-prose: true}
+        # @req> REQ-51326810@tZsTSo6pwmwE innu6u
+        # @req> REQ-67358511@6v5ZhXIOqAkD tihnkp
+        # @req> REQ-59874866@fH6bFHN-Lwa8 rgv7rq
+        # @req> REQ-76604940@SEVyiDrbH-Ez 5o7gi4
         then: {type: string, minLength: 1, x-prose: true}
 
   priority:
@@ -83,6 +101,10 @@ properties:
 
   rationale:
     type: string
+    # @req> REQ-51326810@tZsTSo6pwmwE w7r4bo
+    # @req> REQ-67358511@6v5ZhXIOqAkD myuvtx
+    # @req> REQ-59874866@fH6bFHN-Lwa8 gxhhuc
+    # @req> REQ-76604940@SEVyiDrbH-Ez ostref
     x-prose: true
     description: >-
       Why this requirement exists, where that is not evident from the statement.

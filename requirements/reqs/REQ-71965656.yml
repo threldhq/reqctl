@@ -15,6 +15,13 @@ assessed:
   kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
   f7bkcf: ej9hk4FtGja7TcyCM4dev_OaSQVvtbcG_nl0N-ZNMTY
+  fiorno: vekvNdQ4fclrM1D3ovG9Sh8uuJfKZ7RbOMbGCcdsArw
+  h5i2tk: YFbJJ6-A4GgAbFUeSaV39aYWJsq_mfcxnep56g6jbRQ
+  ixutwk: _hVik-xQlU4OKo9jsc30zDlpacFsCdxvBiLsgr_aDTA
+  q4nno6: vekvNdQ4fclrM1D3ovG9Sh8uuJfKZ7RbOMbGCcdsArw
+  w2nm2t: GdSxhFdh4uq15-s7WoW4-do8akIu1LiXcu4Ky34OsE4
+  w3rrjk: teGUsdVdLvW4pt3QeWHBfUXpUquAQ5ZcgWojMtFKwxA
+  zxdanu: sU47XohLj_GGmKSFUsfdkfS_EBadaIZ8SNzFSQVIzdc
 priority: medium
 relations:
   REQ-13148397: depends_on

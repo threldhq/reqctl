@@ -37,6 +37,8 @@ properties:
   name:
     type: string
     pattern: "^[a-z][a-z0-9_]*$"
+    # @req> REQ-91205530@FiUaykViw6dQ b6cnwg
+    # @req> REQ-71965656@F8ulVugEMpD- h5i2tk
     x-address: true
     description: >-
       The name the item answers to and the address prose carries: ${name} is
@@ -64,6 +66,10 @@ properties:
   text:
     type: string
     minLength: 1
+    # @req> REQ-51326810@tZsTSo6pwmwE 365hpf
+    # @req> REQ-67358511@6v5ZhXIOqAkD c2dajd
+    # @req> REQ-59874866@fH6bFHN-Lwa8 7okmvn
+    # @req> REQ-76604940@SEVyiDrbH-Ez vw3dbe
     x-prose: true
     description: >-
       What the item as a whole denotes, in one line, where the entries alone
@@ -111,6 +117,10 @@ properties:
 
   rationale:
     type: string
+    # @req> REQ-51326810@tZsTSo6pwmwE z5vxyy
+    # @req> REQ-67358511@6v5ZhXIOqAkD wi4wcd
+    # @req> REQ-59874866@fH6bFHN-Lwa8 zf2lsy
+    # @req> REQ-76604940@SEVyiDrbH-Ez bqzsae
     x-prose: true
     description: >-
       Where the item comes from -- a contract, a benchmark, an incident.
@@ -216,6 +226,8 @@ allOf:
       properties:
         ceiling: {not: {}}
         fields: {not: {}}
+        # @req> REQ-91205530@FiUaykViw6dQ shltxs
+        # @req> REQ-71965656@F8ulVugEMpD- w2nm2t
         entries: {x-flag: value, additionalProperties: {$ref: "#/$defs/entry"}}
 
   - if: {required: [kind], properties: {kind: {const: data}}}
@@ -224,6 +236,8 @@ allOf:
       properties:
         value_type: {not: {}}
         unit: {not: {}}
+        # @req> REQ-91205530@FiUaykViw6dQ dss2lp
+        # @req> REQ-71965656@F8ulVugEMpD- zxdanu
         entries: {x-flag: entry, additionalProperties: {$ref: "#/$defs/entry"}}
 
 $defs:
@@ -237,6 +251,10 @@ $defs:
       definition:
         type: string
         minLength: 1
+        # @req> REQ-51326810@tZsTSo6pwmwE wprnd5
+        # @req> REQ-67358511@6v5ZhXIOqAkD 54mfrx
+        # @req> REQ-59874866@fH6bFHN-Lwa8 fappkf
+        # @req> REQ-76604940@SEVyiDrbH-Ez qemprc
         x-prose: true
         description: >-
           What the entry means, in prose. May link a term or reference a
@@ -270,10 +288,14 @@ $defs:
     properties:
       word:
         type: string
+        # @req> REQ-91205530@FiUaykViw6dQ jy2drg
+        # @req> REQ-71965656@F8ulVugEMpD- ixutwk
         x-flag: term
         description: >-
           The word the term is known by, as prose states it.
       definition: {$ref: "#/$defs/entry/properties/definition"}
+      # @req> REQ-91205530@FiUaykViw6dQ 4sfqcl
+      # @req> REQ-71965656@F8ulVugEMpD- w3rrjk
       aliases: {$ref: "#/$defs/entry/properties/aliases", x-flag: alias}
       unclaimed: {$ref: "#/$defs/entry/properties/unclaimed"}
 

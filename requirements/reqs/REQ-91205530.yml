@@ -15,8 +15,15 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
 citations:
+  4sfqcl: teGUsdVdLvW4pt3QeWHBfUXpUquAQ5ZcgWojMtFKwxA
+  apmpds: vekvNdQ4fclrM1D3ovG9Sh8uuJfKZ7RbOMbGCcdsArw
+  b6cnwg: YFbJJ6-A4GgAbFUeSaV39aYWJsq_mfcxnep56g6jbRQ
   ctnzp2: 2YTL10cE3YPNG-rT5iVlKRS6hD9veZHo1F43YxP6PRk
+  dss2lp: sU47XohLj_GGmKSFUsfdkfS_EBadaIZ8SNzFSQVIzdc
+  e3xspv: vekvNdQ4fclrM1D3ovG9Sh8uuJfKZ7RbOMbGCcdsArw
   hc64tl: jKOFtuRJm0S41yg19yi8Z8s3F_odnjBAhFXHgtqZWhU
+  jy2drg: _hVik-xQlU4OKo9jsc30zDlpacFsCdxvBiLsgr_aDTA
+  shltxs: GdSxhFdh4uq15-s7WoW4-do8akIu1LiXcu4Ky34OsE4
 priority: medium
 relations:
   REQ-13148397: depends_on

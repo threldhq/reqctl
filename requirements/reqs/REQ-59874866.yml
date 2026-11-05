@@ -24,7 +24,20 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
+  3jfz4j: vDGv7tlm_L8jaH05fK49EECUwchHYPJ-bkjrpAoL0Hk
+  525gw6: E70bHWfGWmm8-bYA2ZERnrExHrCwHKULytJPoE29JBY
+  5p2alw: vDGv7tlm_L8jaH05fK49EECUwchHYPJ-bkjrpAoL0Hk
   6drjr2: o7a8sVEV4-RRC4QCFSmzokNH9ha42cvFD0EILFDU0ys
+  6z6dih: eb9bWTPW-4vMnimur9Z33562SEnZUK1GAcKXu2pkHXY
+  7okmvn: E70bHWfGWmm8-bYA2ZERnrExHrCwHKULytJPoE29JBY
+  bb4d4e: E70bHWfGWmm8-bYA2ZERnrExHrCwHKULytJPoE29JBY
+  fappkf: c-ePfvwPPpodRhzr5IuzrEohcjYBsW0HG-ZT6q6-bOE
+  gxhhuc: E70bHWfGWmm8-bYA2ZERnrExHrCwHKULytJPoE29JBY
+  py3hox: E70bHWfGWmm8-bYA2ZERnrExHrCwHKULytJPoE29JBY
+  rgv7rq: YPjHNFuiiBxA4qiUhdrH1d96e3JrN-FyuyCusKauWuQ
+  siwuzx: YPjHNFuiiBxA4qiUhdrH1d96e3JrN-FyuyCusKauWuQ
+  wsl2ie: eb9bWTPW-4vMnimur9Z33562SEnZUK1GAcKXu2pkHXY
+  zf2lsy: E70bHWfGWmm8-bYA2ZERnrExHrCwHKULytJPoE29JBY
 priority: medium
 relations:
   REQ-22770949: depends_on

@@ -1445,6 +1445,7 @@ def _fault(as_json, error):
     return EXIT_INVALID
 
 
+# @req> REQ-19913588@hBNJrpn4vtZe dsaqmg
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     # @req+ REQ-19913588@hBNJrpn4vtZe zh6xly
@@ -1490,7 +1491,3 @@ def main(argv=None):
     except (ReqctlError, OSError, UnicodeError) as error:
         return _fault(args.json, error)
     # @req- dw57fs
-
-
-if __name__ == "__main__":
-    sys.exit(main())
