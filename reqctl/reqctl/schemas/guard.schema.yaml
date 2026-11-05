@@ -23,6 +23,10 @@ properties:
   text:
     type: string
     minLength: 1
+    # @req> REQ-51326810@tZsTSo6pwmwE dcdmk5
+    # @req> REQ-67358511@6v5ZhXIOqAkD wn4rwf
+    # @req> REQ-59874866@fH6bFHN-Lwa8 525gw6
+    # @req> REQ-76604940@SEVyiDrbH-Ez tviwnj
     x-prose: true
     description: >-
       The rule the build obeys. Atomic, verifiable, no rationale.
@@ -50,6 +54,8 @@ properties:
   acceptance_criteria:
     type: array
     default: []
+    # @req> REQ-91205530@FiUaykViw6dQ apmpds
+    # @req> REQ-71965656@F8ulVugEMpD- fiorno
     x-flag: criterion
     description: >-
       What enforcing this guard means, as given, when and then. In the stamp:
@@ -61,12 +67,28 @@ properties:
       additionalProperties: false
       required: [given, when, then]
       properties:
+        # @req> REQ-51326810@tZsTSo6pwmwE ifmpy5
+        # @req> REQ-67358511@6v5ZhXIOqAkD 7b7u4g
+        # @req> REQ-59874866@fH6bFHN-Lwa8 5p2alw
+        # @req> REQ-76604940@SEVyiDrbH-Ez 5mnihj
         given: {type: string, minLength: 1, x-prose: true}
+        # @req> REQ-51326810@tZsTSo6pwmwE bvmam4
+        # @req> REQ-67358511@6v5ZhXIOqAkD rlimsw
+        # @req> REQ-59874866@fH6bFHN-Lwa8 wsl2ie
+        # @req> REQ-76604940@SEVyiDrbH-Ez uizjht
         when: {type: string, minLength: 1, x-prose: true}
+        # @req> REQ-51326810@tZsTSo6pwmwE 46mdi7
+        # @req> REQ-67358511@6v5ZhXIOqAkD yikagx
+        # @req> REQ-59874866@fH6bFHN-Lwa8 siwuzx
+        # @req> REQ-76604940@SEVyiDrbH-Ez 65k6m5
         then: {type: string, minLength: 1, x-prose: true}
 
   rationale:
     type: string
+    # @req> REQ-51326810@tZsTSo6pwmwE zhkpa6
+    # @req> REQ-67358511@6v5ZhXIOqAkD utmgyj
+    # @req> REQ-59874866@fH6bFHN-Lwa8 py3hox
+    # @req> REQ-76604940@SEVyiDrbH-Ez gtawtc
     x-prose: true
     description: >-
       Why this guard exists, where that is not evident from the statement.
