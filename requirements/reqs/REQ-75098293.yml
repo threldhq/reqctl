@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  requirement_types: ZEpH6OVaY2UUl12iZsb8mveLsiSG3RtszjW3cgfCR5g
+  requirement_types.*: Ps00wWuL7lXrmQGzWs1CFTGbebnN20txsijsRTlaWP8
+priority: medium
+relations:
+  REQ-44451070: constrains
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for requirements requiring
+  a type that is one of the ${requirement_types}.
+type: functional
+verification: inspection

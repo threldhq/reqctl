@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-17446443: 86KE0VfkVuKG9lUzl5LPGo423CZhjDrygNJeJGWL2Cw
+  REQ-73115701: _3WJxxfhIo7LaXcAtSbUDoRMhIRAPHzQL3c2oOIEI8A
+priority: medium
+relations:
+  REQ-17446443: constrains
+  REQ-73115701: constrains
+status: approved
+text: The product shall take a requirement's or a guard's uid from the name of its
+  file less the file's extension, and from no field the file holds.
+type: functional
+verification: inspection

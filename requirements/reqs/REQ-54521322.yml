@@ -1,0 +1,24 @@
+acceptance_criteria: []
+assessed:
+  REQ-20438611: e9DfaZdZU0eTm6SKzBe1uyQtwVKDGSXn88tkhC5c-I4
+  REQ-38278436: G9G7n7d2Ke-7YWxR97QhdGLx4wPWw8Xi0BRWRCX9K8c
+  REQ-65468432: 457yPXcCJ7jWSOz-06Ax2KN_GEojCrKPKuaI0B2PkzI
+  REQ-71965656: F8ulVugEMpD-KciC93Ppv6DJGlz_QdY_TQ7CH57K7hw
+  REQ-89946019: X4MY0OTFXbagJqUiFH9kXxwm4j0ZabWD1V98oIp8r3I
+  REQ-91205530: FiUaykViw6dQBHW7EnBC6n0Z561dMImVZMcXtg1FxdA
+  REQ-95557166: iVuq5MGUC4wDmKlCfukGnNNW-axWa8XknZhHbB-6Jmo
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-20438611: depends_on
+  REQ-38278436: depends_on
+  REQ-65468432: depends_on
+  REQ-71965656: constrains
+  REQ-89946019: depends_on
+  REQ-91205530: constrains
+  REQ-95557166: depends_on
+status: approved
+text: The product shall offer, in reqctl new and reqctl revise, no flag that sets
+  a field the [kind schema](kind_schema) marks read-only.
+type: functional
+verification: inspection

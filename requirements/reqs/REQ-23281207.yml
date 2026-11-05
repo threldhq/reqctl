@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-56581795: ZHEasHzzTZLCW7EpcU2t9HLmUUSwKOGE6Q3rfqhT_9M
+  REQ-79013939: LHWesLk8a6d7Nz6MIWvKECc-xqQW8pxjMo0bdCD2kkI
+  REQ-92166241: HTHjlgOGlMF70z9Og9c7nG0dxtw2lMyiWy9ITZkGP0M
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations:
+  REQ-56581795: constrains
+  REQ-79013939: depends_on
+  REQ-92166241: depends_on
+status: approved
+text: The product shall derive one [stamp](stamp) for a term and its [entry](entry)
+  from the definition the [entry](entry) states, and from nothing else the term states.
+type: functional
+verification: inspection

@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations: {}
+status: approved
+text: The product shall derive the [stamp](stamp) of an [entry](entry) of a parameter
+  or a [data item](data_item) from the [entry](entry)'s key and from every field the
+  [entry](entry) holds.
+type: functional
+verification: inspection

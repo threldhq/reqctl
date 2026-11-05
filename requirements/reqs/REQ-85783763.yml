@@ -1,0 +1,11 @@
+acceptance_criteria: []
+assessed:
+  REQ-16228838: AwqPpWdj7-350BbS2kXdjHhU2M0xVmafFK0NThPvCBY
+priority: medium
+relations:
+  REQ-16228838: constrains
+status: approved
+text: The product shall ship the schema for baselines requiring a commit written as
+  a SHA-1 object name in lowercase hexadecimal.
+type: functional
+verification: inspection

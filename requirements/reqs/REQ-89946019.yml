@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-14895892: JjrTwHoJqTReTo_OwA6ivi6bQq7h8Umt_go-kN2xY0s
+  REQ-29452949: uJo5VABUlYBe-WFGb5npexzFN5lMW9FPi5kIsXvDZqE
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-14895892: constrains
+  REQ-29452949: depends_on
+  REQ-44451070: constrains
+status: approved
+text: The product shall ship the [kind schemas](kind_schema) for requirements, guards
+  and [dictionary items](dictionary_item) marking the [citation list](citation_list)
+  as read-only.
+type: functional
+verification: inspection

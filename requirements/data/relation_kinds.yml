@@ -1,0 +1,11 @@
+assessed: {}
+entries:
+  conflicts_with: {}
+  constrains: {}
+  depends_on: {}
+  derives_from: {}
+  supersedes: {}
+kind: data
+name: relation_kinds
+status: approved
+text: each kind of relation a requirement or a guard records toward another

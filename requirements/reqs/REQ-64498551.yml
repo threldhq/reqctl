@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-29452949: uJo5VABUlYBe-WFGb5npexzFN5lMW9FPi5kIsXvDZqE
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
+  citation_identity_length: WKEgsIEyjmmBJVoT1gi3cd8ohjsnKQ9GjkSKbY42pyE
+  citation_identity_length.*: FUEB57ejjQTa7LsCgh7qNFb_DR36X0JAn8AmapMTMvs
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-29452949: depends_on
+  REQ-44451070: constrains
+status: approved
+text: The product shall ship the [kind schemas](kind_schema) for requirements and
+  guards admitting as a [citation identity](citation_identity) only ${citation_identity_length}
+  characters, each one of the letters a to z or the digits two to seven.
+type: functional
+verification: inspection

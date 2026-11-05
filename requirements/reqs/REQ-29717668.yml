@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations:
+  REQ-44451070: constrains
+status: approved
+text: The product shall ship the [kind schemas](kind_schema) for requirements and
+  guards requiring assessed as a mapping from each address to a [stamp](stamp) of
+  at least one character.
+type: functional
+verification: inspection

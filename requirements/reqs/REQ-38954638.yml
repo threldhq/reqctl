@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-41697188: IRR8A-_NbYw4xiaXIko8t3Az0DK_-7FneMoUXgnoFF0
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  dictionary_item: B5tvOTp5npbui4sMQw2Is_HVCwjzUmYG9dzqYM5TOD4
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+priority: medium
+relations:
+  REQ-41697188: depends_on
+  REQ-44451070: constrains
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for [dictionary items](dictionary_item)
+  admitting as a parameter's value type only a value type the product parses [entry](entry)
+  keys as.
+type: functional
+verification: inspection

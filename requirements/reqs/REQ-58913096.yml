@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-73708868: UVOWK-OX0AMJF10PI6TiRakJKIB6Ku2EiXXK0Wye8E0
+  REQ-86940077: 84kSMsse1S0XOxO3VzbZLe0Lgk8LJa8_A06aQePPmYg
+priority: medium
+relations:
+  REQ-73708868: constrains
+  REQ-86940077: constrains
+status: approved
+text: The product shall write into a baseline no date, no time and no identity of
+  a person or an account.
+type: functional
+verification: inspection

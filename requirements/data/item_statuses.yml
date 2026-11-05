@@ -1,0 +1,12 @@
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+default: draft
+entries:
+  approved: {}
+  deprecated: {}
+  draft: {}
+  superseded: {}
+kind: data
+name: item_statuses
+status: approved
+text: each status an [item](item) takes

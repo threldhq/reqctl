@@ -1,0 +1,9 @@
+assessed:
+  citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
+entries:
+  '6': {}
+kind: parameter
+name: citation_identity_length
+status: approved
+text: The characters a [citation identity](citation_identity) holds
+value_type: count

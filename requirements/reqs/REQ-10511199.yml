@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed: {}
+priority: medium
+relations: {}
+status: approved
+text: The product shall ship the schema for baselines requiring a baseline number
+  that is an integer of at least one.
+type: functional
+verification: inspection

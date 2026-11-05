@@ -1,0 +1,9 @@
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+entries:
+  '40': {}
+kind: parameter
+name: entry_name_limit
+status: approved
+text: The most characters the name an [entry](entry) states may hold
+value_type: count

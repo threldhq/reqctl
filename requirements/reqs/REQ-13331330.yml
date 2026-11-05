@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-44451070: AlFXBWPH1jnwmfrEWFB0cXPj7_d1IXpIPPg4BtYdYw8
+  REQ-67914848: cRb9rHls6z6cN4mp6peQrtdC3N9qpKGLMRNz2nkmjBs
+  REQ-75098293: uTbLO-CtERyfdkbjD8cu7dfVm9e-dmnaSHD8lowXVgw
+  kind_schema: mRfUCEnwP8qGEhGsibzDPkOVOjeZwx-6H57zPyjjPhw
+  requirement_types: ZEpH6OVaY2UUl12iZsb8mveLsiSG3RtszjW3cgfCR5g
+  requirement_types.functional: NoEYmOH8kdxZBb2BxnK145AvmyhM_JwdLDf7V5qHFdE
+priority: medium
+relations:
+  REQ-44451070: constrains
+  REQ-67914848: depends_on
+  REQ-75098293: depends_on
+status: approved
+text: The product shall ship the [kind schema](kind_schema) for requirements stating
+  ${requirement_types.default} as the default type.
+type: functional
+verification: inspection
