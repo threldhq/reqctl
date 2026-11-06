@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed:
+  GUARD-17042135: vQjU7Tanb64t1rs5vIxq8CE9vBmJSe5kmlAfmBKlKo0
+relations:
+  GUARD-17042135: constrains
+status: approved
+text: If a step's condition is other than one value compared by == or != with a string
+  in single quotes, then the build shall skip the step in .github/verify.py and state
+  the condition.

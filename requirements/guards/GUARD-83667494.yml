@@ -1,0 +1,10 @@
+acceptance_criteria: []
+assessed:
+  GUARD-10822746: 5q3_dsWRmBCDseEFPF2ksbl_95o5hULwFCkqFtokhl4
+  GUARD-22790982: C_rq6FF8Jpo2jaHt_rwMzDaGnPAOmHrC0cn1skc7ii8
+relations:
+  GUARD-10822746: constrains
+  GUARD-22790982: constrains
+status: approved
+text: If .github/workflows/ci.yml holds no step whose id is touched, then the build
+  shall stop .github/verify.py and state that it holds none.

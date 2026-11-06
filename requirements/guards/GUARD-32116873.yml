@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: When .github/verify.py runs a step, the build shall run the step's command under
+  bash, stopping at the first command in it that fails.

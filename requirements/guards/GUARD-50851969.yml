@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  GUARD-11120217: 4KaCRrOB_6-LHJGvjbDPecmUoIn18vUek2JY4QvUakE
+  GUARD-13736079: VPQ2CgYQfHvS9Qosy7nL8_TUINdDdY5ewgrIHJ_Xr14
+  GUARD-30060482: DgZdAWv14AwMZgeGzNTBvd-UUxNn4E58ys3VIjt7Bfo
+  GUARD-37227142: C2NMyItFzo8_gAmFnZgcZvHGOEMQ8SfsRqv6bA-H5pk
+  GUARD-70807721: hKTqJj264iEQ7nGY9XdfPzwN2GAUvHjAhuHfqnwsckM
+relations:
+  GUARD-11120217: depends_on
+  GUARD-13736079: depends_on
+  GUARD-30060482: depends_on
+  GUARD-37227142: derives_from
+  GUARD-70807721: constrains
+status: approved
+text: If the environment of a step other than the step of .github/workflows/ci.yml
+  whose id is touched names a value other than the base branch, the event, the reqctl
+  input and the outputs the step of .github/workflows/ci.yml whose id is touched writes,
+  then the build shall skip the step in .github/verify.py and name each such value.

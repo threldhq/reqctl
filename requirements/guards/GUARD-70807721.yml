@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  GUARD-11120217: 4KaCRrOB_6-LHJGvjbDPecmUoIn18vUek2JY4QvUakE
+  GUARD-13736079: VPQ2CgYQfHvS9Qosy7nL8_TUINdDdY5ewgrIHJ_Xr14
+  GUARD-83667494: M9oACj7Jx7N--ORtsqeRYAO6yHK7ECpDpb9G957aDSE
+relations:
+  GUARD-11120217: depends_on
+  GUARD-13736079: depends_on
+  GUARD-83667494: depends_on
+status: approved
+text: If the environment of the step of .github/workflows/ci.yml whose id is touched
+  names a value other than the base branch and the event, then the build shall stop
+  .github/verify.py and name each such value.

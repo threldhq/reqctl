@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed:
+  GUARD-32116873: b8Rc9YBATiqcGyeGV6cAx7yEHxiFJSlzYWsY6nNQkyA
+relations:
+  GUARD-32116873: depends_on
+status: approved
+text: If a step that .github/verify.py runs exits with the status a shell gives a
+  command it cannot find, then the build shall skip the step and name the command
+  the shell could not find.

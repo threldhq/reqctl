@@ -1,0 +1,8 @@
+assessed: {}
+entries:
+  '2': {}
+kind: parameter
+name: verify_least_steps
+status: approved
+text: The fewest steps .github/verify.py must run before its result counts
+value_type: count

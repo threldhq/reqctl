@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed:
+  GUARD-22790982: C_rq6FF8Jpo2jaHt_rwMzDaGnPAOmHrC0cn1skc7ii8
+relations:
+  GUARD-22790982: depends_on
+status: approved
+text: When .github/verify.py evaluates a later step's condition or environment, the
+  build shall read in it the outputs that the step of .github/workflows/ci.yml whose
+  id is touched wrote.

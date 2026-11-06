@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed:
+  GUARD-20035007: EUUCqO_GisrKWrpC8a5u5yxPfKLv-qOQ6qnYKEFYu2s
+relations:
+  GUARD-20035007: depends_on
+status: approved
+text: When .github/verify.py has taken every step, the build shall state how many
+  steps passed, how many failed and how many it skipped.

@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  GUARD-10822746: 5q3_dsWRmBCDseEFPF2ksbl_95o5hULwFCkqFtokhl4
+  GUARD-17042135: vQjU7Tanb64t1rs5vIxq8CE9vBmJSe5kmlAfmBKlKo0
+  GUARD-43143362: loXh8wpGI7bY8E4UOeSkC-EqaEpNqHrwIYUDzOHFiV0
+  GUARD-82603422: G-oWXFmFwF5yLjZbFfXwYihUjCKVy-N6toNKMIh9g2w
+relations:
+  GUARD-10822746: depends_on
+  GUARD-17042135: depends_on
+  GUARD-43143362: depends_on
+  GUARD-82603422: depends_on
+status: approved
+text: When .github/verify.py takes a step, the build shall state on one line whether
+  the step passed, failed or was skipped, with the reason for a skip.

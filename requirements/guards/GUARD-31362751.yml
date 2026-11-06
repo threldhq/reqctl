@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed:
+  GUARD-11120217: 4KaCRrOB_6-LHJGvjbDPecmUoIn18vUek2JY4QvUakE
+relations:
+  GUARD-11120217: depends_on
+status: approved
+text: When .github/verify.py runs a step whose environment states no GITHUB_EVENT_NAME,
+  the build shall set GITHUB_EVENT_NAME for the step to the event.

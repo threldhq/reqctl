@@ -1,0 +1,11 @@
+acceptance_criteria: []
+assessed:
+  GUARD-82603422: G-oWXFmFwF5yLjZbFfXwYihUjCKVy-N6toNKMIh9g2w
+  verify_failure_lines: G9SaYTI1_EBBGJjBYQ2MK4lcTpk8raWHQOIgNMV7a3I
+  verify_failure_lines.*: TXzipdh4SEye_2CETNK-L3YAR2Hqc7FZcndo1Xx3mkA
+relations:
+  GUARD-82603422: depends_on
+status: approved
+text: When .github/verify.py has run every step, the build shall state, for each step
+  it reported failed, the last ${verify_failure_lines} lines of the step's standard
+  output followed by its error output.

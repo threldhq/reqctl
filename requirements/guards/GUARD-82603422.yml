@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed:
+  GUARD-43143362: loXh8wpGI7bY8E4UOeSkC-EqaEpNqHrwIYUDzOHFiV0
+relations:
+  GUARD-43143362: depends_on
+status: approved
+text: If a step that .github/verify.py runs exits non-zero with a status other than
+  the one a shell gives a command it cannot find, then the build shall report the
+  step as failed with its exit status.
