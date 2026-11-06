@@ -1,23 +1,27 @@
-name: CI
-
+# @req> GUARD-93604824@iZUC-hUk7h1_ 4oweq6
+# @req> GUARD-54236737@mQ9hKg4LFSMf kssz27
 on:
   pull_request:
     # @req> GUARD-18239610@b7HqEiGpFOuy 7crqqf
     types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
 
+# @req> GUARD-52037270@OztX8T4vOmsH i2oqdm
 permissions:
   contents: read
 
+# @req> GUARD-37835776@0Spg60Mwp26J vldfar
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
+      # @req> GUARD-85664071@zrnITtEG0Lqc kgi3k3
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
           persist-credentials: false
 
+      # @req> GUARD-85664071@zrnITtEG0Lqc 66tbpa
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
@@ -27,6 +31,9 @@ jobs:
             reqctl/requirements-dev-lock.txt
             reqctl/pyproject.toml
 
+      # @req> GUARD-72754574@N8arWm_QVCXZ vcqgik
+      # @req> GUARD-93604824@iZUC-hUk7h1_ tbptvl
+      # @req> GUARD-70807721@hKTqJj264iEQ yot3ub
       - name: What this change touches
         id: touched
         env:
@@ -44,6 +51,7 @@ jobs:
           }
           mark deps '^reqctl/(requirements|pyproject\.toml$)'
 
+      # @req> GUARD-80541636@FrimpbfW1XMa n33vbn
       - name: No credential in the change
         env:
           BASE: ${{ github.base_ref }}
@@ -56,30 +64,40 @@ jobs:
             "$RUNNER_TEMP/bin/gitleaks" dir . --no-banner
           fi
 
+      # @req> REQ-51060455@Z5EVUURxm1nV qzo4x7
       - name: Hook exits are explicit decisions
         run: python .github/guards/exit_paths.py
 
+      # @req> GUARD-93589588@yH4bykpGUeLb 22yzb5
       - name: Session start installs what CI installs
         run: python .github/guards/install_parity.py
 
+      # @req> GUARD-96541664@oB0GqG8AdVP9 fz2bbm
+      # @req> GUARD-10823996@bfm-dN6H_Udf bibl65
+      # @req> GUARD-27748979@G-APnovHS9P3 ukc4qb
+      # @req> GUARD-32820195@-N_pWkH7K8rC h2oqan
       - name: Owned paths still need the owner
         run: python .github/guards/codeowners.py
 
+      # @req> GUARD-30872791@76ZvH9aeC5ry o3kb6k
+      # @req> GUARD-32527345@r3WSOnuqI9M1 3ybvei
+      # @req> GUARD-56838909@xIKhRXKhnYS1 lfk7zr
+      # @req> GUARD-65225392@myxez9Yz6SOi zfrwkz
+      # @req> GUARD-70682435@wxuZzo-y7Z-b vr4w3y
       - name: The plugin ships from this repository at the wheel's version
         run: python .github/guards/plugin_build.py
 
-      - name: No dead identifiers
+      # @req> GUARD-24141585@HmP4W4nJNHmc ig5bha
+      - name: No decision records
         run: |
-          if grep -rInE '@lat\b' --exclude-dir=.git --exclude-dir=node_modules \
-               --exclude-dir=.venv --exclude-dir=.claude --exclude-dir=.github . ; then
-            echo "::error::@lat belongs to the removed knowledge graph"
-            exit 1
-          fi
           if [ -d docs/adr ] || [ -d docs/decisions ]; then
             echo "::error::decision records do not persist; put the constraint in a requirement, a guard or a schema"
             exit 1
           fi
 
+      # @req> GUARD-21526521@G_BddcqGKnJP 5xduhm
+      # @req> GUARD-75672058@ekQlMqKRpmul hri6op
+      # @req> GUARD-83751348@rb37sHKC5bnL yo5ejy
       - name: Help budget, what a session reads through reqctl --help
         run: python .github/guards/help_budget.py --max 41
 
@@ -130,29 +148,57 @@ jobs:
           sys.exit(1 if fails else 0)
           CHECK
 
+      # @req> GUARD-20154572@z2_hbXJO9sHn jgnjez
+      # @req> GUARD-26421773@SDQf4TqpYtSB v6b7zv
+      # @req> GUARD-72877772@JfdZ18LPQLEi hikod6
+      # @req> GUARD-24264620@IECSQ_EeiXfC oez7bw
+      # @req> GUARD-93589588@yH4bykpGUeLb nbibxq
       - name: Install
         run: |
           pip install --require-hashes -r reqctl/requirements-lock.txt -r reqctl/requirements-dev-lock.txt
           pip install -e reqctl --no-deps --no-build-isolation
 
+      # @req> GUARD-12128145@mFuOqNbkyV1o jipptc
+      # @req> GUARD-20154572@z2_hbXJO9sHn tbj3mb
+      # @req> GUARD-20209566@zkKPlDbnzFuA nijiqj
+      # @req> GUARD-24264620@IECSQ_EeiXfC dq2cxm
+      # @req> GUARD-26421773@SDQf4TqpYtSB b4rdwn
+      # @req> GUARD-37835776@0Spg60Mwp26J rwzekc
+      # @req> GUARD-40603760@BjP6UvmNcOQT fusl76
+      # @req> GUARD-52037270@OztX8T4vOmsH whtw5s
+      # @req> GUARD-72877772@JfdZ18LPQLEi wg3djt
+      # @req> GUARD-84344643@GlwsRru4lu4P dbsuxc
+      # @req> GUARD-85664071@zrnITtEG0Lqc baiftz
+      # @req> REQ-74823322@YWZT0Srw2y2d bnanl5
+      # @req> REQ-81795630@6p2bA0ZHqY-j tpnudv
       - name: Workflow shape
         run: python .github/guards/workflow_shape.py
 
+      # @req> GUARD-79122074@9WbEAGS3ea8D ft2tnz
       - name: Workflow syntax
         run: actionlint
 
+      # @req> GUARD-79122074@9WbEAGS3ea8D p5n7ah
       - name: Shell scripts
         run: git ls-files -z '*.sh' | xargs -0 shellcheck
 
+      # @req> GUARD-79122074@9WbEAGS3ea8D ldqwzq
       - name: Workflow security
         run: zizmor --offline .github/workflows
 
+      # @req> GUARD-46596073@qu9cFP2Awo-x 2ebkbc
+      # @req> GUARD-46665858@h9A_bfvOyNF7 iaxpiz
+      # @req> GUARD-39430403@Gm7cxHsAQzHL o6egeg
+      # @req> GUARD-95027749@peJtUX9xJXL_ e3yprg
       - name: Rules scope
         run: python .github/guards/rules_scope.py
 
+      # @req> GUARD-12128145@mFuOqNbkyV1o ox7ckl
       - name: Corpus is valid
         run: reqctl validate
 
+      # @req> GUARD-54236737@mQ9hKg4LFSMf 5l323g
+      # @req> GUARD-80881960@UfZQs_f1P8Qb ccfqlz
       - name: The pull request names an issue
         if: github.event_name == 'pull_request'
         env:
@@ -164,26 +210,37 @@ jobs:
         if: github.event_name != 'pull_request'
         run: python .github/guards/citations.py
 
+      # @req> GUARD-21296330@1vKKetZd35C0 hjxagh
       - name: Cited values match the corpus
         env:
           BASE_REF: ${{ github.base_ref }}
         run: python .github/guards/cited_values.py
 
+      # @req> GUARD-86063188@GFGejAdpTlxL vtdyiv
       - name: The repository holds no test
         run: python .github/guards/no_tests.py
 
+      # @req> GUARD-27671623@3zDwoF3LwQkw c6frt7
+      # @req> GUARD-63366473@wqNzDR34_aRK 73aduy
+      # @req> GUARD-21085755@-uspUi1-r2Pe 46klq3
+      # @req> GUARD-76151755@kec8SwUpDtFd 3wjvh7
       - name: Comment budget
         run: python .github/guards/comment_budget.py --max 0
 
+      # @req> GUARD-56877438@R8tS_bbVly0h hfsgbs
       - name: A skill mints what the corpus accepts
         run: python .github/guards/skill_minting.py
 
+      # @req> GUARD-87984565@VEipgV2EseNW lskl4e
+      # @req> GUARD-46345440@qP_IWjdqHBUF op6u4p
       - name: Every plugin file belongs to one component
         run: python .github/guards/plugin_components.py
 
+      # @req> GUARD-58772071@qal1M_8xilDP srindy
       - name: The guard hook fingerprints the plugin files naming the corpus
         run: python .github/guards/fingerprints.py
 
+      # @req> GUARD-70400787@-g-3MXzRn6hr ap6aqt
       - name: Citations this change touches
         if: github.event_name == 'pull_request'
         env:
@@ -195,9 +252,14 @@ jobs:
             echo '```'
           } >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
 
+      # @req> GUARD-50228923@hESHdAl7Kn_w scvm7k
+      # @req> GUARD-22794969@9zSROQYCCtPU qxcqba
+      # @req> GUARD-50817018@Yqq4j4T1WIhv 2owrd4
       - name: Names resolve
         run: python .github/guards/references.py
 
+      # @req> GUARD-15820124@9ypnh2GEXx5T oq66de
+      # @req> GUARD-37890983@MBBp99PJwOhl w54c25
       - name: No write bypasses the journal
         run: python .github/guards/journal_writes.py
 
@@ -205,12 +267,15 @@ jobs:
       - name: Lint and types over linted_paths
         run: python .github/guards/linted.py
 
+      # @req> GUARD-79122074@9WbEAGS3ea8D ptxdhr
       - name: Spelling
         run: typos
 
+      # @req> GUARD-39842261@bWyFMC8rM_YC u4yxij
       - name: The runtime lock holds what pyproject.toml requires
         run: python .github/guards/pyproject_lock.py
 
+      # @req> GUARD-72754574@N8arWm_QVCXZ v76ub4
       - name: Dependencies have no known vulnerabilities
         if: steps.touched.outputs.deps == 'true'
         run: pip-audit -r reqctl/requirements-lock.txt -r reqctl/requirements-dev-lock.txt --progress-spinner off

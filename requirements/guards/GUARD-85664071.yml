@@ -10,9 +10,25 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
+  3js3af: fubklaxQEqqwKIihnXZwapl7sXmXrnNopgU-ahYUJXA
+  446dg3: pL9pP2qS4I6eJYSPIlvFH2yM7B56lLEwFZn0zaEw3HU
+  5qkf57: i1ogFO-JWFGmCRmvZGik_bt0xQctx082H7wBmAHe5CI
+  66tbpa: d1OfUu8_Rmai_-YOo6cD-TSwbO-RP-MSiDooKvZIev4
+  6asp4d: RJ3Ek-eqo8CHC4o0aVDI0U85ZgDlYs33ps9Krjwynds
+  6hs7vh: GKDNym9F2trYudJIpRTyzdLaCYdFkx5hwfUUPACDAUk
+  azwrhq: 2-pJjhX3ToePVerSz1CCMjLVpq_ejS85531YVVsEE3s
+  baiftz: jeUYa3GKomKolrIXweF93N8HMZiWp9SqB3xqmOWR01M
   e5ld6l: oyXp6q8I6g9yBzrj118YZlXnvIF75aVZH0e7HpoDT-c
+  f546ii: PIkcaLfkO0ItMMlC33MX0GPjEDcKru8Tr31fiyeGDg4
+  f6cwi6: PIkcaLfkO0ItMMlC33MX0GPjEDcKru8Tr31fiyeGDg4
+  hsiia2: pL9pP2qS4I6eJYSPIlvFH2yM7B56lLEwFZn0zaEw3HU
+  kgi3k3: fubklaxQEqqwKIihnXZwapl7sXmXrnNopgU-ahYUJXA
+  medqn7: 2-pJjhX3ToePVerSz1CCMjLVpq_ejS85531YVVsEE3s
+  t3vtxh: fubklaxQEqqwKIihnXZwapl7sXmXrnNopgU-ahYUJXA
   tmmpe7: 811sjoiQ6t6b-l1emoVX3Tdx9C12VYKD3x7qdjc4WTI
   yekzpu: X1kHN9t6BnGVJ-exJOnayGT8w6PmNbB6Wz62D_I8bvA
+  zd2ul3: Mf3XlYrB0Yw6U_1xBt07WWSp85EP712oarmrYEgC-Us
+  zq5gnn: UVi86D_3VnfKUc5QTMnoXBImLbaFPLTTJIjkc-Gvje8
 relations: {}
 status: approved
 text: If a workflow uses an action or a reusable workflow that is not pinned to a

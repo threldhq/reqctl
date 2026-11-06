@@ -1,6 +1,8 @@
 acceptance_criteria: []
 assessed:
   REQ-71344419: No0izFxAdVKWi2RA4WpKTM99R1YpXTfB-xHQ_uyRK2w
+citations:
+  77hzez: 68RzZhbDKowLmxHPIhA7-G7ttjy5IooZuw-QoIJJawA
 priority: medium
 relations:
   REQ-71344419: derives_from

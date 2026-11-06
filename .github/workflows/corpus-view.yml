@@ -1,5 +1,5 @@
-name: Corpus view
-
+# @req> REQ-71344419@No0izFxAdVKW knrefg
+# @req> REQ-81795630@6p2bA0ZHqY-j mezc3i
 on:
   push:
     branches: [main]
@@ -16,13 +16,16 @@ on:
       CORPUS_APP_PRIVATE_KEY:
         required: true
 
+# @req> GUARD-52037270@OztX8T4vOmsH cfvmff
 permissions:
   contents: read
 
+# @req> REQ-51143332@Mf4bIqJxqvPM 77hzez
 concurrency:
   group: corpus-view
   cancel-in-progress: true
 
+# @req> GUARD-37835776@0Spg60Mwp26J zqgwhm
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -51,6 +54,8 @@ jobs:
             fi
           fi
 
+      # @req> REQ-71344419@No0izFxAdVKW zejtog
+      # @req> GUARD-85664071@zrnITtEG0Lqc 6hs7vh
       - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510
         id: app-token
         with:
@@ -58,10 +63,14 @@ jobs:
           private-key: ${{ secrets.CORPUS_APP_PRIVATE_KEY }}
           permission-contents: write
 
+      # @req> REQ-71344419@No0izFxAdVKW sctliw
+      # @req> GUARD-85664071@zrnITtEG0Lqc f546ii
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with: # zizmor: ignore[artipacked]
           token: ${{ steps.app-token.outputs.token }}
 
+      # @req> REQ-71344419@No0izFxAdVKW 5zzevb
+      # @req> GUARD-85664071@zrnITtEG0Lqc hsiia2
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: threldhq/reqctl
@@ -69,18 +78,23 @@ jobs:
           path: .reqctl
           persist-credentials: false
 
+      # @req> GUARD-85664071@zrnITtEG0Lqc medqn7
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: .reqctl/reqctl/requirements-lock.txt
 
+      # @req> GUARD-20154572@z2_hbXJO9sHn dlnedu
+      # @req> GUARD-26421773@SDQf4TqpYtSB kiduae
+      # @req> GUARD-72877772@JfdZ18LPQLEi bosol2
       - name: Install reqctl at the release the caller pins
         run: |
           echo .reqctl/ >> .git/info/exclude
           pip install --require-hashes -r .reqctl/reqctl/requirements-lock.txt
           pip install -e .reqctl/reqctl --no-deps --no-build-isolation
 
+      # @req> REQ-71344419@No0izFxAdVKW ot3c3q
       - name: Publish the corpus where the portal reads it
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}

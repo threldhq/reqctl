@@ -1,5 +1,10 @@
 acceptance_criteria: []
 assessed: {}
+citations:
+  ft2tnz: NOtCfIkKktMi4hfT7pgUxWHuz5EJWtTRtFn80VO2qW4
+  ldqwzq: aKTrDCtZ2Z_xcNRTRpnezGu3TcMaXkqSzwHOUothQoY
+  p5n7ah: 2acCYG4a4zWEgYTmW-YWQinOYVZOOs3BS7xc0yFSXds
+  ptxdhr: 4rh03B9C-7kV8jv9ITlr2AeJIDQ4QQ9ikDZZY3c9Xtk
 relations: {}
 status: approved
 text: If actionlint or zizmor reports a finding in a workflow, shellcheck in a tracked

@@ -1,5 +1,7 @@
 acceptance_criteria: []
 assessed: {}
+citations:
+  ap6aqt: ukjnZIsPwWTPqxwIw8XWisLTAdP_jzYZd9c44KwIRk8
 relations: {}
 status: approved
 text: When the build checks a pull request, the build shall state in its run summary

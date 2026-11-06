@@ -1,5 +1,7 @@
 acceptance_criteria: []
 assessed: {}
+citations:
+  ig5bha: m5xd97Bgjvq7oYNIcuC7fUBwvCNmwJY9nH3JFtCCpgA
 relations: {}
 status: approved
 text: If a change leaves the repository holding a folder docs/adr or docs/decisions,

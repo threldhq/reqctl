@@ -16,9 +16,15 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
+  5um556: eE310aEuhqREd1IfYU0NEJkWTiqLUxJbcidLtP76WFM
+  b4rdwn: jeUYa3GKomKolrIXweF93N8HMZiWp9SqB3xqmOWR01M
+  kiduae: W_VBdSk5Xoz6C7h04Xfcv10PWmcODX0AtpeXQRWeVhw
   kt5es3: AFhiio1sqwgO4N8_foyQ-8FceOPEP8ThpRQTleG6fN4
   na6x2c: 811sjoiQ6t6b-l1emoVX3Tdx9C12VYKD3x7qdjc4WTI
+  so5v3x: W_VBdSk5Xoz6C7h04Xfcv10PWmcODX0AtpeXQRWeVhw
   t33smj: oyXp6q8I6g9yBzrj118YZlXnvIF75aVZH0e7HpoDT-c
+  v6b7zv: TPqUuURnBzou09c8txq1Y_RVBRWyRu_LXzrqKJGgRCw
+  ynywrk: MF6gXlwWu2l4V4-GWo8qKfzIzatNdjqkwb-fX5K442g
 relations: {}
 status: approved
 text: If a workflow installs from a lockfile without requiring hashes, then the build
