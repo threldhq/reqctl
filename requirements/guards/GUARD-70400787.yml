@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: When the build checks a pull request, the build shall state in its run summary
+  what reqctl compare, given the base branch, states the pull request touches.

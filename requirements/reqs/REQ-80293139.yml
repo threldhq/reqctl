@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: derives_from
+status: approved
+text: If the [portal](portal) sends a batch to a calling repository while another
+  batch to that repository is waiting or being applied, then the product shall apply
+  the batch after the other batch ends.
+type: functional
+verification: demonstration

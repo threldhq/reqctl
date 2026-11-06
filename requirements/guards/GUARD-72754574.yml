@@ -1,0 +1,7 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: If a change touches reqctl/pyproject.toml or a file under reqctl whose name
+  begins requirements, and pip-audit reports a known vulnerability in a package reqctl/requirements-lock.txt
+  or reqctl/requirements-dev-lock.txt holds, then the build shall refuse the change.

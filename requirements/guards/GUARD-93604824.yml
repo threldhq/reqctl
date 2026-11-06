@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed:
+  GUARD-72754574: N8arWm_QVCXZjH7Jc9BKkIYe4ThUfi6VB_8bjBAz7I0
+relations:
+  GUARD-72754574: constrains
+status: approved
+text: When CI is run by a workflow dispatch, the build shall take every file the repository
+  tracks as a file the change touches.

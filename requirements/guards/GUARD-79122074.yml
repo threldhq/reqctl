@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: If actionlint or zizmor reports a finding in a workflow, shellcheck in a tracked
+  shell script, or typos in a tracked file, then the build shall refuse the change.

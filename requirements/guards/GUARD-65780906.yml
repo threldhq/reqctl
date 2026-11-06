@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed:
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.*: nFwV7hNjaouDnNxZc8NeimOhYk6YoPo-Ntp3Z7w1Wfs
+relations: {}
+status: approved
+text: If a pull request of this repository fails any of the ${corpus_gates} as the
+  reqctl the pull request carries judges it, then the build shall refuse the pull
+  request.
