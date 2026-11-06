@@ -68,6 +68,9 @@ def resolve(text, context):
     return EXPRESSION.sub(swap, str(text)), unresolved
 
 
+# @req> GUARD-17042135@vQjU7Tanb64t i5t6nn
+# @req> GUARD-37227142@C2NMyItFzo8_ dfoc3s
+# @req> GUARD-25040771@FKlsQswXD4d2 eom5zx
 def condition_holds(expression, context):
     resolved, unresolved = resolve(expression, context)
     if unresolved:
@@ -79,6 +82,8 @@ def condition_holds(expression, context):
     return None, f"condition is not a form this runner evaluates: {resolved}"
 
 
+# @req> GUARD-70807721@hKTqJj264iEQ xji242
+# @req> GUARD-50851969@qJd_L0QWXKby kldhgm
 def environment(step, context):
     settings, unresolved = {}, []
     for key, value in (step.get("env") or {}).items():
@@ -88,6 +93,8 @@ def environment(step, context):
     return settings, unresolved
 
 
+# @req> GUARD-32116873@b8Rc9YBATiqc ktyqch
+# @req> GUARD-35429063@85cSzafV3AYM koamhn
 def run(command, settings, cwd=ROOT):
     env = dict(os.environ)
     env["PATH"] = f"{VENV}{os.pathsep}{env.get('PATH', '')}"
@@ -96,6 +103,11 @@ def run(command, settings, cwd=ROOT):
                           capture_output=True, text=True)
 
 
+# @req> GUARD-22790982@C_rq6FF8Jpo2 bhdeig
+# @req> GUARD-30060482@DgZdAWv14AwM w62x7s
+# @req> GUARD-83667494@M9oACj7Jx7N- dj3zxa
+# @req> GUARD-70807721@hKTqJj264iEQ lli7h5
+# @req> GUARD-63780217@XDEsTlbWUWib nxiqug
 def touched_outputs(doc, context):
     for _, step in steps_of(doc):
         if step.get("id") != "touched":
@@ -120,11 +132,29 @@ def touched_outputs(doc, context):
     return {}, "no step with id 'touched'"
 
 
+# @req> GUARD-20035007@EUUCqO_GisrK ujjzel
 def report(state, name, note):
     tail = f"  ({note})" if note else ""
     print(f"  {state:<4}  {name}{tail}")
 
 
+# @req> GUARD-10822746@5q3_dsWRmBCD ptxves
+# @req> GUARD-11120217@4KaCRrOB_6-L ew6je4
+# @req> GUARD-13736079@VPQ2CgYQfHvS bkpdjy
+# @req> GUARD-17042135@vQjU7Tanb64t chava2
+# @req> GUARD-37227142@C2NMyItFzo8_ qta3if
+# @req> GUARD-25040771@FKlsQswXD4d2 uub6fm
+# @req> GUARD-50851969@qJd_L0QWXKby p5jgij
+# @req> GUARD-69135696@SiwUNCQBSY6Y k7h2k2
+# @req> GUARD-43143362@loXh8wpGI7bY x6req7
+# @req> GUARD-82603422@G-oWXFmFwF5y uelz7u
+# @req> GUARD-61050843@spBS97MzI2uA rhq23g
+# @req> GUARD-99256924@_UL344Vx8fwB 6reuag
+# @req> GUARD-99517521@WVqMoWW75tr_ mcmyxk
+# @req> GUARD-96835839@8aAJKGCsRpfI ihtrik
+# @req> GUARD-51812681@d0J0sbapRL01 3gfiyl
+# @req> GUARD-31362751@_U8NAPJBxtsf nqlfvv
+# @req> GUARD-15686102@QkQ-CEAbWBgS v3mvrz
 def main(argv=None):
     parsed = argparse.ArgumentParser()
     parsed.add_argument("--base", default="main", metavar="REF")
@@ -213,5 +243,6 @@ def main(argv=None):
     return 1 if counts[FAIL] else 0
 
 
+# @req> GUARD-10822746@5q3_dsWRmBCD erdmt6
 if __name__ == "__main__":
     sys.exit(main())

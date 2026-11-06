@@ -44,6 +44,7 @@ def published(text, env):
     return f"published the corpus at {env['GITHUB_SHA']}"
 
 
+# @req> REQ-71344419@No0izFxAdVKW neuvup
 def main():
     env = os.environ
     try:
@@ -61,5 +62,6 @@ def main():
     return 0
 
 
+# @req> REQ-71344419@No0izFxAdVKW lw6wcd
 if __name__ == "__main__":
     sys.exit(main())

@@ -7,6 +7,8 @@ acceptance_criteria:
   when: the build checks it
 assessed: {}
 citations:
+  36ojnr: OeyVWGBBQhdJ9dyqShnFFMlmC_m11suVRMGZ5QKIuUg
+  jaom4f: nBTpbPHB6qTT-vAV8cQZG55ARq7xDN0cSncupmao-7A
   r44fy4: zhNIys80w6lFybjSNulLSmWEV0nL3FRAbEaHvn-Ptf0
 relations: {}
 status: approved

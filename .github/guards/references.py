@@ -137,6 +137,9 @@ def survey():
     return faults
 
 
+# @req> GUARD-50228923@hESHdAl7Kn_w dou2eu
+# @req> GUARD-22794969@9zSROQYCCtPU 6xedtr
+# @req> GUARD-50817018@Yqq4j4T1WIhv pjlkkl
 def main():
     faults = survey()
     for path, line, why in faults:
@@ -145,6 +148,9 @@ def main():
     return 1 if faults else 0
 
 
+# @req> GUARD-50228923@hESHdAl7Kn_w o5ifb2
+# @req> GUARD-22794969@9zSROQYCCtPU 4ssf6m
+# @req> GUARD-50817018@Yqq4j4T1WIhv 6clhhw
 if __name__ == "__main__":
     argparse.ArgumentParser().parse_args()
     sys.exit(main())

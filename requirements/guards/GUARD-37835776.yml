@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed: {}
 citations:
   ayey6b: V7npzMeu9xoQIb57OQKRutZCoUoXijg3WgqXN7wW-EI
+  j3mi7a: 811sjoiQ6t6b-l1emoVX3Tdx9C12VYKD3x7qdjc4WTI
+  pezyya: oyXp6q8I6g9yBzrj118YZlXnvIF75aVZH0e7HpoDT-c
 relations: {}
 status: approved
 text: If a workflow holds other than one job, then the build shall refuse the change.

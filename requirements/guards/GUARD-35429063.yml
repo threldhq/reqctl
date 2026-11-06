@@ -1,5 +1,7 @@
 acceptance_criteria: []
 assessed: {}
+citations:
+  koamhn: DJPqcSHb8v4PAAqWV3odF0zddi15dLJznt4KkmponG8
 relations: {}
 status: approved
 text: When .github/verify.py runs a step, the build shall put the folder .venv/bin

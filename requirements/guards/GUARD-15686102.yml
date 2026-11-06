@@ -5,6 +5,8 @@ assessed:
   GUARD-13736079: VPQ2CgYQfHvS9Qosy7nL8_TUINdDdY5ewgrIHJ_Xr14
   GUARD-22790982: C_rq6FF8Jpo2jaHt_rwMzDaGnPAOmHrC0cn1skc7ii8
   GUARD-30060482: DgZdAWv14AwMZgeGzNTBvd-UUxNn4E58ys3VIjt7Bfo
+citations:
+  v3mvrz: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
 relations:
   GUARD-10822746: depends_on
   GUARD-11120217: depends_on

@@ -5,6 +5,8 @@ acceptance_criteria:
 assessed:
   GUARD-46665858: h9A_bfvOyNF798rZcGrXlTytNuqPfcYKBwZJph4bO58
 citations:
+  27xeuy: _vtMj7L7OE1954n-TF6ZjMCGWDjnqvPaKzzIHV1UQqQ
+  kt3w37: 2I2mQPSsk7-qBhbT1RbjX2ipBBM4VhyPKMymxrIejvQ
   yvynus: 6hPQKvtFJinPwjSInGBXZC578GariVPdXpE6W55fflE
 relations:
   GUARD-46665858: depends_on

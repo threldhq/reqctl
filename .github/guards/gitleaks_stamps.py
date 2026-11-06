@@ -307,6 +307,10 @@ def faults(config):
     return found
 
 
+# @req> REQ-89759399@H6dJHl49GRYn ajrgsy
+# @req> REQ-90593907@77_4Pvs9T0Oa xww4ul
+# @req> REQ-91184727@qgpF6mhsmj-W owuui5
+# @req> REQ-14101215@QDD9quPR25YJ xci7jl
 def main():
     # @req+ GUARD-83168738@zhoOQpGgBd9R sfnyhq
     try:
@@ -330,5 +334,9 @@ def main():
     return 1 if found else 0
 
 
+# @req> REQ-89759399@H6dJHl49GRYn imxhta
+# @req> REQ-90593907@77_4Pvs9T0Oa isfno4
+# @req> REQ-91184727@qgpF6mhsmj-W j5cd3s
+# @req> REQ-14101215@QDD9quPR25YJ 5tfg5x
 if __name__ == "__main__":
     sys.exit(main())

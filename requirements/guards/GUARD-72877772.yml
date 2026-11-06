@@ -5,6 +5,8 @@ acceptance_criteria:
 assessed: {}
 citations:
   bbo2z6: OstAzsCGam4njF2_bK7Kc1y_0DpRf4wh-U_nBRPndAI
+  sgih6j: 811sjoiQ6t6b-l1emoVX3Tdx9C12VYKD3x7qdjc4WTI
+  t6sycv: oyXp6q8I6g9yBzrj118YZlXnvIF75aVZH0e7HpoDT-c
 relations: {}
 status: approved
 text: If a workflow makes an editable install with build isolation, then the build

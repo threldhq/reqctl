@@ -91,6 +91,7 @@ def faults(citations, entries):
     return found
 
 
+# @req> GUARD-21296330@1vKKetZd35C0 yggkzf
 def main():
     trace = read("trace")
     if not isinstance(trace, dict) or "citations" not in trace:
@@ -118,6 +119,7 @@ def main():
     return 1 if found else 0
 
 
+# @req> GUARD-21296330@1vKKetZd35C0 6aeg2s
 if __name__ == "__main__":
     argparse.ArgumentParser().parse_args()
     sys.exit(main())

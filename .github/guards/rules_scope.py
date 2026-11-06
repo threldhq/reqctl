@@ -97,6 +97,10 @@ def faults(text, where, files):
     return found
 
 
+# @req> GUARD-46596073@qu9cFP2Awo-x vdkcgm
+# @req> GUARD-46665858@h9A_bfvOyNF7 v5n2o4
+# @req> GUARD-39430403@Gm7cxHsAQzHL 27xeuy
+# @req> GUARD-95027749@peJtUX9xJXL_ 4meb6u
 def main():
     # @req+ GUARD-46596073@qu9cFP2Awo-x bgj4ii
     if not RULES.is_dir():
@@ -120,5 +124,9 @@ def main():
     return 1 if found else 0
 
 
+# @req> GUARD-46596073@qu9cFP2Awo-x yywv5u
+# @req> GUARD-46665858@h9A_bfvOyNF7 gmzf2s
+# @req> GUARD-39430403@Gm7cxHsAQzHL kt3w37
+# @req> GUARD-95027749@peJtUX9xJXL_ zzivzf
 if __name__ == "__main__":
     sys.exit(main())

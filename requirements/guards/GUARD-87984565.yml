@@ -30,8 +30,10 @@ assessed:
   plugin_folders.root: eN5D4LXA4EmtVGaOyOOV7Bmt9EjUOJZ_skI4uWathwI
 citations:
   7jy76s: S4lc9oDmBHQVvwNXb52HNJQhqjV5Gd-HMt8GeAQqZBM
+  hbujfh: M5qSFKF26og-YkDN1Bmv_lCrICL42Vb7Wt0CeWX3IKs
   jp53yq: LKQnMLxZJ_IdFH1sOxPO_tQocSQrCCKm2BxLxlNHHmk
   m7ltuf: TqZmhCNsMmrWgR5dK-dUZ2APFk7eYVCpnE12iy8uo6E
+  ta4bu4: Yal9JZHNlA4Mk7l-bwFWWCKZSPAEDEYGridXSSLSE5k
 relations:
   GUARD-65225392: depends_on
 status: approved

@@ -52,6 +52,7 @@ def locked():
     return pins
 
 
+# @req> GUARD-39842261@bWyFMC8rM_YC eu56d6
 def main():
     wanted, pins = declared(), locked()
     if not wanted or not pins:
@@ -79,5 +80,6 @@ def main():
     return 1 if found else 0
 
 
+# @req> GUARD-39842261@bWyFMC8rM_YC lkwots
 if __name__ == "__main__":
     sys.exit(main())

@@ -5,6 +5,9 @@ assessed:
   GUARD-30060482: DgZdAWv14AwMZgeGzNTBvd-UUxNn4E58ys3VIjt7Bfo
   GUARD-37227142: C2NMyItFzo8_gAmFnZgcZvHGOEMQ8SfsRqv6bA-H5pk
   GUARD-70807721: hKTqJj264iEQ7nGY9XdfPzwN2GAUvHjAhuHfqnwsckM
+citations:
+  kldhgm: CORohgj2cHDGIbDCDCgZYtVQ2zPozNRabWRc6CvAbd8
+  p5jgij: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
 relations:
   GUARD-11120217: depends_on
   GUARD-13736079: depends_on

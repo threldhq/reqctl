@@ -156,6 +156,9 @@ def survey(paths):
     return counted, refused
 
 
+# @req> GUARD-83751348@rb37sHKC5bnL kjdpxk
+# @req> GUARD-21526521@G_BddcqGKnJP sfutaq
+# @req> GUARD-75672058@ekQlMqKRpmul v4agwu
 def main(ceiling):
     counted, refused = survey(scanned())
     for path, line, why in refused:
@@ -175,6 +178,9 @@ def main(ceiling):
     return 0
 
 
+# @req> GUARD-83751348@rb37sHKC5bnL memu5j
+# @req> GUARD-21526521@G_BddcqGKnJP 336wog
+# @req> GUARD-75672058@ekQlMqKRpmul xy4oxv
 if __name__ == "__main__":
     stated = argparse.ArgumentParser()
     stated.add_argument("--max", type=int, required=True)

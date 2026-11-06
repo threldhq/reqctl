@@ -481,6 +481,19 @@ def runs_of(text):
                      if isinstance(step, dict))
 
 
+# @req> GUARD-52037270@OztX8T4vOmsH z3qmtw
+# @req> GUARD-24264620@IECSQ_EeiXfC c2mpcx
+# @req> GUARD-12128145@mFuOqNbkyV1o 6xrg3i
+# @req> GUARD-84344643@GlwsRru4lu4P yklz3x
+# @req> GUARD-20209566@zkKPlDbnzFuA iyj7q3
+# @req> GUARD-20154572@z2_hbXJO9sHn 6lheox
+# @req> REQ-74823322@YWZT0Srw2y2d q2omdp
+# @req> REQ-81795630@6p2bA0ZHqY-j higkti
+# @req> GUARD-37835776@0Spg60Mwp26J pezyya
+# @req> GUARD-85664071@zrnITtEG0Lqc e5ld6l
+# @req> GUARD-40603760@BjP6UvmNcOQT t7wupp
+# @req> GUARD-26421773@SDQf4TqpYtSB t33smj
+# @req> GUARD-72877772@JfdZ18LPQLEi t6sycv
 def main():
     paths = sorted(WORKFLOWS.glob("*.yml")) + sorted(WORKFLOWS.glob("*.yaml"))
     found = [] if paths else [f"{WORKFLOWS}: holds no workflow"]
@@ -529,5 +542,18 @@ def main():
     return 1 if found else 0
 
 
+# @req> GUARD-52037270@OztX8T4vOmsH azlptq
+# @req> GUARD-24264620@IECSQ_EeiXfC p5qlkx
+# @req> GUARD-12128145@mFuOqNbkyV1o 2oldcn
+# @req> GUARD-84344643@GlwsRru4lu4P cackjz
+# @req> GUARD-20209566@zkKPlDbnzFuA qanxgx
+# @req> GUARD-20154572@z2_hbXJO9sHn 33y44j
+# @req> REQ-74823322@YWZT0Srw2y2d j2aed6
+# @req> REQ-81795630@6p2bA0ZHqY-j 6efdzk
+# @req> GUARD-37835776@0Spg60Mwp26J j3mi7a
+# @req> GUARD-85664071@zrnITtEG0Lqc tmmpe7
+# @req> GUARD-40603760@BjP6UvmNcOQT 7xc6r6
+# @req> GUARD-26421773@SDQf4TqpYtSB na6x2c
+# @req> GUARD-72877772@JfdZ18LPQLEi sgih6j
 if __name__ == "__main__":
     sys.exit(main())

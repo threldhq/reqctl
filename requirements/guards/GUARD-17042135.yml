@@ -3,6 +3,9 @@ assessed:
   GUARD-11120217: 4KaCRrOB_6-LHJGvjbDPecmUoIn18vUek2JY4QvUakE
   GUARD-13736079: VPQ2CgYQfHvS9Qosy7nL8_TUINdDdY5ewgrIHJ_Xr14
   GUARD-30060482: DgZdAWv14AwMZgeGzNTBvd-UUxNn4E58ys3VIjt7Bfo
+citations:
+  chava2: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
+  i5t6nn: tce7VhRItmEQ0LEmNzyT_8FmlbcEcCQA4Mq_9H_IGKM
 relations:
   GUARD-11120217: depends_on
   GUARD-13736079: depends_on

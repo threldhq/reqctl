@@ -1,6 +1,8 @@
 acceptance_criteria: []
 assessed:
   GUARD-11120217: 4KaCRrOB_6-LHJGvjbDPecmUoIn18vUek2JY4QvUakE
+citations:
+  nqlfvv: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
 relations:
   GUARD-11120217: depends_on
 status: approved

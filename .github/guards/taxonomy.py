@@ -44,6 +44,7 @@ def faults(root):
     return sorted(found)
 
 
+# @req> REQ-40026456@tmXkAn-osOnn jxpoga
 def main():
     found = faults(Path("."))
     for fault in found:
@@ -51,5 +52,6 @@ def main():
     return 1 if found else 0
 
 
+# @req> REQ-40026456@tmXkAn-osOnn os6win
 if __name__ == "__main__":
     sys.exit(main())

@@ -19,7 +19,9 @@ acceptance_criteria:
 assessed:
   GUARD-40603760: BjP6UvmNcOQTrpltSyfoTMvDlG8JDaJHQC63C2HKP_c
 citations:
+  cackjz: 811sjoiQ6t6b-l1emoVX3Tdx9C12VYKD3x7qdjc4WTI
   sfx7sh: 4YMxGjmIRSbEtq3CmVS7QcCtq_ykB_EwsPRIsZGDEUs
+  yklz3x: oyXp6q8I6g9yBzrj118YZlXnvIF75aVZH0e7HpoDT-c
 relations:
   GUARD-40603760: constrains
 status: approved

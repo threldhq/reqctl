@@ -166,6 +166,8 @@ def drift(root):
                     for member in sorted(known - stated))
 
 
+# @req> GUARD-15820124@9ypnh2GEXx5T esi27r
+# @req> GUARD-37890983@MBBp99PJwOhl q3bz2v
 def main():
     found = [f"::error::{fault}" for fault in drift(Path("."))]
     paths = references.tracked(*(f"{root}/*.py" for root in SOURCES))
@@ -183,6 +185,8 @@ def main():
 # @req- 4squcr
 
 
+# @req> GUARD-15820124@9ypnh2GEXx5T i732lm
+# @req> GUARD-37890983@MBBp99PJwOhl b5xgoe
 if __name__ == "__main__":
     try:
         sys.exit(main())

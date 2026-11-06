@@ -86,6 +86,8 @@ def attach(repo, tag, commit):
         return f"attached {wheel.name} to the release for {tag}"
 
 
+# @req> GUARD-14769016@T01UILpAY633 jbc37v
+# @req> GUARD-60575106@cyDaQHsIDZhK liioj5
 def main(before, after):
     repo = os.environ["GITHUB_REPOSITORY"]
     try:
@@ -109,6 +111,8 @@ def main(before, after):
     return 0
 
 
+# @req> GUARD-14769016@T01UILpAY633 7jpjuz
+# @req> GUARD-60575106@cyDaQHsIDZhK fbgjwt
 def cli(argv):
     if len(argv) != 3:
         print("usage: release_tag.py BEFORE AFTER", file=sys.stderr)
@@ -116,5 +120,7 @@ def cli(argv):
     return main(argv[1], argv[2])
 
 
+# @req> GUARD-14769016@T01UILpAY633 66daiq
+# @req> GUARD-60575106@cyDaQHsIDZhK xx4o4g
 if __name__ == "__main__":
     sys.exit(cli(sys.argv))

@@ -10,6 +10,8 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
+  e5ld6l: oyXp6q8I6g9yBzrj118YZlXnvIF75aVZH0e7HpoDT-c
+  tmmpe7: 811sjoiQ6t6b-l1emoVX3Tdx9C12VYKD3x7qdjc4WTI
   yekzpu: X1kHN9t6BnGVJ-exJOnayGT8w6PmNbB6Wz62D_I8bvA
 relations: {}
 status: approved

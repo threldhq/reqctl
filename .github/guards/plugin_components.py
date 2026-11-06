@@ -89,6 +89,8 @@ def faults(root, owned, files):
     return found
 
 
+# @req> GUARD-87984565@VEipgV2EseNW ta4bu4
+# @req> GUARD-46345440@qP_IWjdqHBUF bakz7r
 def main():
     top, root, owned = stated()
     found = faults(root, owned, tracked(top))
@@ -97,5 +99,7 @@ def main():
     return 1 if found else 0
 
 
+# @req> GUARD-87984565@VEipgV2EseNW hbujfh
+# @req> GUARD-46345440@qP_IWjdqHBUF ajb2iw
 if __name__ == "__main__":
     sys.exit(main())

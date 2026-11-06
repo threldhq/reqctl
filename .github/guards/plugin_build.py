@@ -94,6 +94,11 @@ def faults(root):
             for url, at_tag, at_file in named if {at_tag, at_file} != {version}]
 
 
+# @req> GUARD-32527345@r3WSOnuqI9M1 culkjw
+# @req> GUARD-56838909@xIKhRXKhnYS1 whtn3h
+# @req> GUARD-65225392@myxez9Yz6SOi fjaxdt
+# @req> GUARD-30872791@76ZvH9aeC5ry akf4nh
+# @req> GUARD-70682435@wxuZzo-y7Z-b xlhjzr
 def main():
     found = faults(Path("."))
     for fault in found:
@@ -101,5 +106,10 @@ def main():
     return 1 if found else 0
 
 
+# @req> GUARD-32527345@r3WSOnuqI9M1 o7e4dj
+# @req> GUARD-56838909@xIKhRXKhnYS1 w6qlu6
+# @req> GUARD-65225392@myxez9Yz6SOi zmu6s4
+# @req> GUARD-30872791@76ZvH9aeC5ry efnsmy
+# @req> GUARD-70682435@wxuZzo-y7Z-b os5sz5
 if __name__ == "__main__":
     sys.exit(main())
