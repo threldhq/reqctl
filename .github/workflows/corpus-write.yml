@@ -1,5 +1,5 @@
-name: Corpus write
-
+# @req> REQ-57492239@hvqdee0u96s6 fqydrg
+# @req> REQ-81795630@6p2bA0ZHqY-j sdrgzt
 on:
   workflow_dispatch:
     inputs:
@@ -29,6 +29,7 @@ on:
       CORPUS_APP_PRIVATE_KEY:
         required: true
 
+# @req> GUARD-52037270@OztX8T4vOmsH cyucoj
 permissions:
   contents: read
 
@@ -36,6 +37,7 @@ concurrency:
   group: corpus-write
   cancel-in-progress: false
 
+# @req> GUARD-37835776@0Spg60Mwp26J fdedx4
 jobs:
   write:
     runs-on: ubuntu-latest
@@ -64,6 +66,8 @@ jobs:
             fi
           fi
 
+      # @req> REQ-57492239@hvqdee0u96s6 5vu6hn
+      # @req> GUARD-85664071@zrnITtEG0Lqc 5qkf57
       - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510
         id: app-token
         with:
@@ -72,10 +76,14 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
 
+      # @req> REQ-57492239@hvqdee0u96s6 zgqjuu
+      # @req> GUARD-85664071@zrnITtEG0Lqc f6cwi6
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with: # zizmor: ignore[artipacked]
           token: ${{ steps.app-token.outputs.token }}
 
+      # @req> REQ-57492239@hvqdee0u96s6 xbt7h4
+      # @req> GUARD-85664071@zrnITtEG0Lqc 446dg3
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: threldhq/reqctl
@@ -83,18 +91,23 @@ jobs:
           path: .reqctl
           persist-credentials: false
 
+      # @req> GUARD-85664071@zrnITtEG0Lqc azwrhq
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: .reqctl/reqctl/requirements-lock.txt
 
+      # @req> GUARD-20154572@z2_hbXJO9sHn zppty7
+      # @req> GUARD-26421773@SDQf4TqpYtSB so5v3x
+      # @req> GUARD-72877772@JfdZ18LPQLEi xallbe
       - name: Install reqctl at the release the caller pins
         run: |
           echo .reqctl/ >> .git/info/exclude
           pip install --require-hashes -r .reqctl/reqctl/requirements-lock.txt
           pip install -e .reqctl/reqctl --no-deps --no-build-isolation
 
+      # @req> REQ-57492239@hvqdee0u96s6 dpsem7
       - name: Apply the steps and open the pull request
         env:
           CORPUS_CHANGE: ${{ inputs.change }}

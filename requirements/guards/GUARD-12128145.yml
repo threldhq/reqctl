@@ -15,6 +15,8 @@ citations:
   2oldcn: 811sjoiQ6t6b-l1emoVX3Tdx9C12VYKD3x7qdjc4WTI
   3a5aqb: Dj8HRjtVDi-aCOGxm-iIPiMvzEhzdPo105OSrsupoz8
   6xrg3i: oyXp6q8I6g9yBzrj118YZlXnvIF75aVZH0e7HpoDT-c
+  jipptc: jeUYa3GKomKolrIXweF93N8HMZiWp9SqB3xqmOWR01M
+  ox7ckl: yMejRFoDNwCMJzZsUQp-8tgYutOpjTWf1gw7fZrRfpI
 relations: {}
 status: approved
 text: If a workflow runs a step that reads the corpus before the step that runs reqctl

@@ -7,6 +7,7 @@ citations:
   32oezj: eFhjivsGLRihJuf0SEEgl0_QwrfOigwc_wPIRxMTWfs
   6tq54b: eXgnKRDC4B-F9yfX9EE7lb-xvI-hIbAe6MpI-5QZ2Zw
   g6lvyw: WzOKBMCcmf3XfDBUf9_7QxJtj80I0vidHF7MCbOXhS4
+  h2oqan: P7n5Z_9YJzSCcwnbYsQ45zRyQJRK1eHqAa5Cofh0cmM
 relations: {}
 status: approved
 text: If a rule in the CODEOWNERS file names no owner, then the build shall refuse

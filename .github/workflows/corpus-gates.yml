@@ -1,5 +1,5 @@
-name: Corpus gates
-
+# @req> REQ-26876750@p5bO3gEKEYCb soy6d6
+# @req> GUARD-65780906@WCXJvnrfqCp0 wwgmuo
 on:
   pull_request:
   workflow_call:
@@ -9,18 +9,24 @@ on:
         required: true
         type: string
 
+# @req> GUARD-52037270@OztX8T4vOmsH roebyf
 permissions:
   contents: read
 
+# @req> GUARD-37835776@0Spg60Mwp26J h6n4uo
 jobs:
   gates:
     runs-on: ubuntu-latest
     steps:
+      # @req> GUARD-85664071@zrnITtEG0Lqc 3js3af
+      # @req> REQ-26876750@p5bO3gEKEYCb sf6ooe
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
           persist-credentials: false
 
+      # @req> GUARD-85664071@zrnITtEG0Lqc 6asp4d
+      # @req> REQ-26876750@p5bO3gEKEYCb l73jcs
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         if: inputs.reqctl != ''
         with:
@@ -29,6 +35,7 @@ jobs:
           path: .reqctl
           persist-credentials: false
 
+      # @req> GUARD-85664071@zrnITtEG0Lqc zd2ul3
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
@@ -37,12 +44,20 @@ jobs:
             ${{ inputs.reqctl && '.reqctl/' }}reqctl/requirements-lock.txt
             ${{ inputs.reqctl && '.reqctl/' }}reqctl/pyproject.toml
 
+      # @req> GUARD-20154572@z2_hbXJO9sHn yzou3i
+      # @req> GUARD-26421773@SDQf4TqpYtSB ynywrk
+      # @req> GUARD-72877772@JfdZ18LPQLEi 5isq27
+      # @req> GUARD-65780906@WCXJvnrfqCp0 fg2ssg
       - name: Install reqctl
         if: inputs.reqctl == ''
         run: |
           pip install --require-hashes -r reqctl/requirements-lock.txt
           pip install -e reqctl --no-deps --no-build-isolation
 
+      # @req> GUARD-20154572@z2_hbXJO9sHn q4zuzf
+      # @req> GUARD-26421773@SDQf4TqpYtSB 5um556
+      # @req> GUARD-72877772@JfdZ18LPQLEi s2jgzb
+      # @req> REQ-26876750@p5bO3gEKEYCb azeyd6
       - name: Install reqctl at the release the caller pins
         if: inputs.reqctl != ''
         run: |
@@ -50,12 +65,14 @@ jobs:
           pip install --require-hashes -r "$RUNNER_TEMP/reqctl/reqctl/requirements-lock.txt"
           pip install -e "$RUNNER_TEMP/reqctl/reqctl" --no-deps --no-build-isolation
 
+      # @req> GUARD-65780906@WCXJvnrfqCp0 ihygjd
       - name: The corpus passes every gate
         if: inputs.reqctl == ''
         env:
           BASE_REF: ${{ github.base_ref }}
         run: python .github/corpus_gates.py
 
+      # @req> REQ-26876750@p5bO3gEKEYCb afr55g
       - name: The corpus passes every gate at the release the caller pins
         if: inputs.reqctl != ''
         env:

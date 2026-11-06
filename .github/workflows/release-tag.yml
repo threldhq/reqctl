@@ -1,27 +1,35 @@
-name: Release tag
-
+# @req> GUARD-20209566@zkKPlDbnzFuA ltm563
 on:
   push:
     branches: [main]
 
+# @req> GUARD-52037270@OztX8T4vOmsH mluwis
 permissions:
   contents: read
 
+# @req> GUARD-37835776@0Spg60Mwp26J b7hrzj
 jobs:
   tag:
     runs-on: ubuntu-latest
+    # @req> GUARD-52037270@OztX8T4vOmsH e5x4kz
     permissions:
       contents: write
     steps:
+      # @req> GUARD-85664071@zrnITtEG0Lqc t3vtxh
+      # @req> GUARD-60575106@cyDaQHsIDZhK dgxdy4
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
           persist-credentials: false
 
+      # @req> GUARD-85664071@zrnITtEG0Lqc zq5gnn
+      # @req> GUARD-14769016@T01UILpAY633 szwngx
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
 
+      # @req> GUARD-60575106@cyDaQHsIDZhK csdio5
+      # @req> GUARD-14769016@T01UILpAY633 dcuk6f
       - name: Push the release tag the change first pins the plugin to, and attach the reqctl wheel to its release
         env:
           BEFORE: ${{ github.event.before }}

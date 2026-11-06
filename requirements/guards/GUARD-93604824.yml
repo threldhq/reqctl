@@ -1,6 +1,9 @@
 acceptance_criteria: []
 assessed:
   GUARD-72754574: N8arWm_QVCXZjH7Jc9BKkIYe4ThUfi6VB_8bjBAz7I0
+citations:
+  4oweq6: fexeDAE2-wksLfDu0GlBmMXta9T1Hxja_NiBb1SAzuk
+  tbptvl: X5dYNRGbxZwa2QjT6sBJxFJIaIFwUQuQAr5yKNSV_GE
 relations:
   GUARD-72754574: constrains
 status: approved

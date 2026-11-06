@@ -1,5 +1,8 @@
 acceptance_criteria: []
 assessed: {}
+citations:
+  v76ub4: 39plz_1Lnw5iJYHRgqGGZPy5uR8PDXcT0Q18VWUAbJE
+  vcqgik: X5dYNRGbxZwa2QjT6sBJxFJIaIFwUQuQAr5yKNSV_GE
 relations: {}
 status: approved
 text: If a change touches reqctl/pyproject.toml or a file under reqctl whose name
