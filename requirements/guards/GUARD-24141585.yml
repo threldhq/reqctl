@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: If a change leaves the repository holding a folder docs/adr or docs/decisions,
+  then the build shall refuse the change.

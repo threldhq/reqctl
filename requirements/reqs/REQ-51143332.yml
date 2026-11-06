@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-71344419: No0izFxAdVKWi2RA4WpKTM99R1YpXTfB-xHQ_uyRK2w
+priority: medium
+relations:
+  REQ-71344419: derives_from
+status: approved
+text: When a push is made to the default branch of a calling repository while the
+  product is publishing the corpus of an earlier push, the product shall cancel the
+  publish of the earlier push.
+type: functional
+verification: demonstration

@@ -1,0 +1,7 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: If the commits a pull request adds to its base branch, or the tracked files
+  of a change that is not a pull request, hold a secret gitleaks reports, then the
+  build shall refuse the change.
