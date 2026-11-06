@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed:
+  GUARD-82603422: G-oWXFmFwF5yLjZbFfXwYihUjCKVy-N6toNKMIh9g2w
+relations:
+  GUARD-82603422: depends_on
+status: approved
+text: If a step that .github/verify.py runs is reported failed, then the build shall
+  end .github/verify.py with a non-zero exit status.

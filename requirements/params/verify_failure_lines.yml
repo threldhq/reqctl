@@ -3,6 +3,6 @@ entries:
   '25': {}
 kind: parameter
 name: verify_failure_lines
-status: draft
+status: approved
 text: The most lines of a failed step's output that .github/verify.py shows
 value_type: count

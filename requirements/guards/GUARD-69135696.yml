@@ -1,0 +1,11 @@
+acceptance_criteria: []
+assessed:
+  GUARD-10822746: 5q3_dsWRmBCDseEFPF2ksbl_95o5hULwFCkqFtokhl4
+  GUARD-20035007: EUUCqO_GisrKWrpC8a5u5yxPfKLv-qOQ6qnYKEFYu2s
+relations:
+  GUARD-10822746: constrains
+  GUARD-20035007: depends_on
+status: approved
+text: Where a step's run command holds pip install or names the gitleaks installer,
+  the build shall skip the step in .github/verify.py and state that it provisions
+  the environment.

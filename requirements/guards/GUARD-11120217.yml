@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: When .github/verify.py runs, the build shall take the event as the one --event
+  names, or pull_request where none is named.

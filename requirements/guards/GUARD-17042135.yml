@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  GUARD-11120217: 4KaCRrOB_6-LHJGvjbDPecmUoIn18vUek2JY4QvUakE
+  GUARD-13736079: VPQ2CgYQfHvS9Qosy7nL8_TUINdDdY5ewgrIHJ_Xr14
+  GUARD-30060482: DgZdAWv14AwMZgeGzNTBvd-UUxNn4E58ys3VIjt7Bfo
+relations:
+  GUARD-11120217: depends_on
+  GUARD-13736079: depends_on
+  GUARD-30060482: depends_on
+status: approved
+text: If a step's condition is one .github/verify.py can read and, read with the base
+  branch, the event, the reqctl input and the outputs the step of .github/workflows/ci.yml
+  whose id is touched writes, does not hold, then the build shall skip the step and
+  state that CI would not run it.

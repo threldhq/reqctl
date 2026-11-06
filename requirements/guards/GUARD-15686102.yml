@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  GUARD-10822746: 5q3_dsWRmBCDseEFPF2ksbl_95o5hULwFCkqFtokhl4
+  GUARD-11120217: 4KaCRrOB_6-LHJGvjbDPecmUoIn18vUek2JY4QvUakE
+  GUARD-13736079: VPQ2CgYQfHvS9Qosy7nL8_TUINdDdY5ewgrIHJ_Xr14
+  GUARD-22790982: C_rq6FF8Jpo2jaHt_rwMzDaGnPAOmHrC0cn1skc7ii8
+  GUARD-30060482: DgZdAWv14AwMZgeGzNTBvd-UUxNn4E58ys3VIjt7Bfo
+relations:
+  GUARD-10822746: depends_on
+  GUARD-11120217: depends_on
+  GUARD-13736079: depends_on
+  GUARD-22790982: depends_on
+  GUARD-30060482: depends_on
+status: approved
+text: When .github/verify.py has run the step of .github/workflows/ci.yml whose id
+  is touched, the build shall state, before it takes any other step, the workflow
+  files it reads, the base branch, the event, and each output of that step that is
+  true.

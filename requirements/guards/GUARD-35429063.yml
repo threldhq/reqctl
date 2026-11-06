@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: When .github/verify.py runs a step, the build shall put the folder .venv/bin
+  of the repository ahead of every other folder on the step's PATH.

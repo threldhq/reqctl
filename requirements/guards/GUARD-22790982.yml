@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: When .github/verify.py runs, the build shall run the step of .github/workflows/ci.yml
+  whose id is touched before any other step.
