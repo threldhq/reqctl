@@ -12,7 +12,9 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
+  2oldcn: 811sjoiQ6t6b-l1emoVX3Tdx9C12VYKD3x7qdjc4WTI
   3a5aqb: Dj8HRjtVDi-aCOGxm-iIPiMvzEhzdPo105OSrsupoz8
+  6xrg3i: oyXp6q8I6g9yBzrj118YZlXnvIF75aVZH0e7HpoDT-c
 relations: {}
 status: approved
 text: If a workflow runs a step that reads the corpus before the step that runs reqctl

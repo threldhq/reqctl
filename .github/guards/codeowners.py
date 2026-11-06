@@ -52,6 +52,10 @@ def faults(text):
     return found
 
 
+# @req> GUARD-10823996@bfm-dN6H_Udf vtknph
+# @req> GUARD-32820195@-N_pWkH7K8rC g6lvyw
+# @req> GUARD-27748979@G-APnovHS9P3 hmzzyn
+# @req> GUARD-96541664@oB0GqG8AdVP9 3xkxis
 def main():
     # @req+ GUARD-83168738@zhoOQpGgBd9R jakglm
     try:
@@ -66,5 +70,9 @@ def main():
     return 1 if found else 0
 
 
+# @req> GUARD-10823996@bfm-dN6H_Udf o5pd55
+# @req> GUARD-32820195@-N_pWkH7K8rC 6tq54b
+# @req> GUARD-27748979@G-APnovHS9P3 gqhip2
+# @req> GUARD-96541664@oB0GqG8AdVP9 jrqqes
 if __name__ == "__main__":
     sys.exit(main())

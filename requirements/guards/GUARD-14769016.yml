@@ -16,7 +16,10 @@ assessed:
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
   reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
 citations:
+  66daiq: dbqy2r3pJGlV55YZJ4ifltQq4PMxkG-FsMHhd5IH41I
+  7jpjuz: 57JrAPUaCgCnELw-rcvAtk5NniK6WpgN5_DwZI3PKvE
   huv5w6: fJECgU2WikKYT9xEzznnXBkRC0MJ6JXe3CGVvvOoHIo
+  jbc37v: lfDoZm-6PieggUL5d5Xx1clFMnL0CkHMIUKS3b_RSmw
   z2onys: L3yYeFt9igOkUbHMbAaJ7ggrLXQdAj9Em-hAGhA4088
 relations:
   GUARD-60575106: depends_on

@@ -5,7 +5,9 @@ acceptance_criteria:
   when: the build runs
 assessed: {}
 citations:
+  fjaxdt: cssRfXGw2YcZqWp1bN6OgUUKddb6c4VCuVj7NG34VhM
   ziceo7: ud3jBCWTmRYik-xB3c2fUQnh8aMUw_hYRAsfZrewDiQ
+  zmu6s4: lQJ2N2ObleAv0wN1zp-jJkQCvzVrKlRIWaiYs_WJPiE
 relations: {}
 status: approved
 text: The build shall keep the sources of the Claude Code plugin in the repository

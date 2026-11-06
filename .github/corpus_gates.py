@@ -7,6 +7,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 
 
+# @req> REQ-26876750@p5bO3gEKEYCb xt3vc6
 def main():
     base = os.environ.get("BASE_REF", "")
     python, against, pulled = sys.executable, f"origin/{base}", bool(base)
@@ -37,5 +38,6 @@ def main():
     return 0
 
 
+# @req> REQ-26876750@p5bO3gEKEYCb wvlapz
 if __name__ == "__main__":
     sys.exit(main())

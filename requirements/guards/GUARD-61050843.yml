@@ -3,6 +3,8 @@ assessed:
   GUARD-82603422: G-oWXFmFwF5yLjZbFfXwYihUjCKVy-N6toNKMIh9g2w
   verify_failure_lines: G9SaYTI1_EBBGJjBYQ2MK4lcTpk8raWHQOIgNMV7a3I
   verify_failure_lines.*: TXzipdh4SEye_2CETNK-L3YAR2Hqc7FZcndo1Xx3mkA
+citations:
+  rhq23g: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
 relations:
   GUARD-82603422: depends_on
 status: approved

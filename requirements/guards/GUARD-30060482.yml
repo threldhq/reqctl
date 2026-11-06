@@ -1,6 +1,8 @@
 acceptance_criteria: []
 assessed:
   GUARD-22790982: C_rq6FF8Jpo2jaHt_rwMzDaGnPAOmHrC0cn1skc7ii8
+citations:
+  w62x7s: _97s6wqgXPFziHe620OjvPY4iiPuDZikbjjT7Cub6I8
 relations:
   GUARD-22790982: depends_on
 status: approved

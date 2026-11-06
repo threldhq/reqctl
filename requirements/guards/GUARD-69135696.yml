@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   GUARD-10822746: 5q3_dsWRmBCDseEFPF2ksbl_95o5hULwFCkqFtokhl4
   GUARD-20035007: EUUCqO_GisrKWrpC8a5u5yxPfKLv-qOQ6qnYKEFYu2s
+citations:
+  k7h2k2: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
 relations:
   GUARD-10822746: constrains
   GUARD-20035007: depends_on

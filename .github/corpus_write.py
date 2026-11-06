@@ -163,6 +163,7 @@ def proposed(raw, env):
                "--title", title, "--body", BODY.format(raw)).stdout.strip()
 
 
+# @req> REQ-57492239@hvqdee0u96s6 acesoo
 def main():
     raw = os.environ.get(PAYLOAD)
     # @req+ REQ-48601729@IX7_y_xH1FkV oxn6if
@@ -193,5 +194,6 @@ def main():
     return 0
 
 
+# @req> REQ-57492239@hvqdee0u96s6 o7qtm5
 if __name__ == "__main__":
     sys.exit(main())

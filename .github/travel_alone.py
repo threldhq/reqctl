@@ -154,6 +154,7 @@ def classify(base):
             [path for path in other if path not in pinned], pinned)
 
 
+# @req> REQ-50816200@iIRTs21PNJhn c4g6iy
 def main(base):
     content, other, pinned = classify(base)
     for path in pinned:
@@ -171,6 +172,7 @@ def main(base):
 # @req- dyii6c
 
 
+# @req> REQ-50816200@iIRTs21PNJhn j3lrnn
 def cli(argv):
     if len(argv) != 2:
         print("usage: travel_alone.py BASE_REF", file=sys.stderr)
@@ -178,5 +180,6 @@ def cli(argv):
     return main(argv[1])
 
 
+# @req> REQ-50816200@iIRTs21PNJhn 6kff5o
 if __name__ == "__main__":
     sys.exit(cli(sys.argv))

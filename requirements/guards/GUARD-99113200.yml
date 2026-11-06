@@ -13,6 +13,7 @@ assessed:
 citations:
   464eon: cupeB9uEW-Dls8ODTHXB1rf23EOpjXcKsQA0EZb-lDc
   c53mga: OD0QV01dR3EpRKZZTIV6YFq--4NdM7gUhKcvpN4mZyM
+  riza3g: LRdWRO5vQE5tGvm0E4We5HoNNEElB4vKhF8cqnBzcQc
 relations: {}
 status: approved
 text: If ruff or mypy, run under the configuration the repository states for it, reports

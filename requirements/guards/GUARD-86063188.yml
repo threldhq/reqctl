@@ -11,7 +11,9 @@ acceptance_criteria:
 assessed:
   test: ahE2ORpXCyyNh7vSyyyMOKJhyOweEAn6nIurSokevgY
 citations:
+  cb5sqx: dkirDhuvNaZn_g_LgpStV7K5oz0FeAMVLWVjEgX-NJk
   gcor4z: x1Jw_jPB568pcEQgcchLImxhhsowYC-PXqeof3m0AKM
+  hkohbq: 2x6C-gt6CmK9uzcWq-nEFSgR0ULPafXSuv1kKNt5CjM
 relations: {}
 status: approved
 text: If a change leaves the repository that holds the sources of reqctl holding a

@@ -7,6 +7,8 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
 citations:
   7skmd6: DVh56jAaycnHwalRxV1ZXav1pD4vYb2ZOdVXzlcBE9k
+  csp7db: 7w7JuuzXZWHV1GeAb7xTIUyE_qys0cYv-FG0-6LGMiI
+  yee4sd: -3ltp2-u9vV_LXkTGswhbVT6HKyVfrBPG58opU3sJbI
 relations: {}
 status: approved
 text: If reqctl trace reports a problem, then the build shall refuse the change.

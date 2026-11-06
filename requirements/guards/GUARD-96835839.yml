@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   verify_least_steps: AQElkykfg_hEkvmgMP0Ef8ZPWGn841CM79g23x5cNhA
   verify_least_steps.*: EW9yNmmM0yefndFKmJzAZ44VNdXGwUwwn2KbXERQH2w
+citations:
+  ihtrik: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
 relations: {}
 status: approved
 text: If fewer than ${verify_least_steps} of the steps .github/verify.py takes ran

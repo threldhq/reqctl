@@ -14,6 +14,7 @@ REFUSED = TERMINATORS | {"error", "parse_args", "parse_known_args",
 NAMED = EXITS | VALUES | REFUSED
 
 faults, scanned, admitted = [], 0, 0
+# @req> REQ-51060455@Z5EVUURxm1nV ecs2zc
 for path in sorted(HOOKS.rglob("*.py")):
     scanned += 1
     # @req+ GUARD-83168738@zhoOQpGgBd9R 4kckqu
@@ -80,10 +81,13 @@ for path in sorted(HOOKS.rglob("*.py")):
                           "decision cannot be written")
     # @req- qrn3wi
 
+# @req> REQ-51060455@Z5EVUURxm1nV o4g26j
 if not scanned:
     faults.append(f"no hook script found under {HOOKS}; a check that scanned "
                   "nothing has not passed")
 
+# @req> REQ-51060455@Z5EVUURxm1nV nk3ahu
 for fault in faults:
     print(fault)
+# @req> REQ-51060455@Z5EVUURxm1nV edejx6
 sys.exit(1 if faults else 0)

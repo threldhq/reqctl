@@ -3,6 +3,9 @@ assessed:
   GUARD-11120217: 4KaCRrOB_6-LHJGvjbDPecmUoIn18vUek2JY4QvUakE
   GUARD-13736079: VPQ2CgYQfHvS9Qosy7nL8_TUINdDdY5ewgrIHJ_Xr14
   GUARD-83667494: M9oACj7Jx7N--ORtsqeRYAO6yHK7ECpDpb9G957aDSE
+citations:
+  lli7h5: _97s6wqgXPFziHe620OjvPY4iiPuDZikbjjT7Cub6I8
+  xji242: CORohgj2cHDGIbDCDCgZYtVQ2zPozNRabWRc6CvAbd8
 relations:
   GUARD-11120217: depends_on
   GUARD-13736079: depends_on

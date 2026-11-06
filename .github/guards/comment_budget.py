@@ -385,6 +385,9 @@ def survey(paths, allowed=ALLOWED):
 
 
 # @req> GUARD-27671623@3zDwoF3LwQkw hvzjkq
+# @req> GUARD-21085755@-uspUi1-r2Pe ucctgh
+# @req> GUARD-63366473@wqNzDR34_aRK ngmlqi
+# @req> GUARD-76151755@kec8SwUpDtFd apxkpa
 def main(ceiling):
     counted, refused = survey(scanned())
     for path, line, why, body in refused:
@@ -402,6 +405,10 @@ def main(ceiling):
     return 0
 
 
+# @req> GUARD-27671623@3zDwoF3LwQkw rzcpuk
+# @req> GUARD-21085755@-uspUi1-r2Pe ki3ueb
+# @req> GUARD-63366473@wqNzDR34_aRK vn6ccd
+# @req> GUARD-76151755@kec8SwUpDtFd 32cxjl
 if __name__ == "__main__":
     parsed = argparse.ArgumentParser()
     parsed.add_argument("--max", type=int, required=True)

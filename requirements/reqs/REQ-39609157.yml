@@ -20,6 +20,9 @@ assessed:
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.baseline_numbering: ATiWO51GU0WqKs1hKWHG4J6MBrjuM6meiHzxG3u9ovk
 citations:
+  6rrwpo: GhzD74agaFcC2p2vs-iPb42LmrkFQqxBQAxSwrgejt8
+  jgv74l: DpO9rW52KAOYqRloXtosuAbphTFPCQ2YtCuRZt696MI
+  jyeo3x: THJhxEA1vtnyGAE-6heWxHsSOuBdyr6agVIxX2CUlwg
   tycvj6: 9ICHtlJL5DieXsKCV9MxQdBembCTw21lUInnR-mEOiM
 priority: medium
 relations: {}

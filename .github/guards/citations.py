@@ -77,6 +77,7 @@ def faults(data, base):
     return found + problems, behind
 
 
+# @req> GUARD-12397751@ZZpZOVKQVB3u csp7db
 def main():
     # @req+ GUARD-12397751@ZZpZOVKQVB3u 7skmd6
     # @req+ REQ-57367860@Ru8k-xWkVYxO xo2wve
@@ -95,6 +96,7 @@ def main():
     # @req- 7skmd6
 
 
+# @req> GUARD-12397751@ZZpZOVKQVB3u yee4sd
 if __name__ == "__main__":
     argparse.ArgumentParser().parse_args()
     sys.exit(main())

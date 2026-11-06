@@ -2,6 +2,9 @@ acceptance_criteria: []
 assessed:
   GUARD-17042135: vQjU7Tanb64t1rs5vIxq8CE9vBmJSe5kmlAfmBKlKo0
   GUARD-22790982: C_rq6FF8Jpo2jaHt_rwMzDaGnPAOmHrC0cn1skc7ii8
+citations:
+  erdmt6: TXbq3YfqPI1i2mbxM1QA7n97tuTU-yj4hkwlYtx_IUc
+  ptxves: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
 relations:
   GUARD-17042135: depends_on
   GUARD-22790982: depends_on

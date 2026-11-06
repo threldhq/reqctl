@@ -29,6 +29,7 @@ def stated(ref):
     return found.stdout, held
 
 
+# @req> REQ-39609157@gIkaMkxCsl9Z jyeo3x
 def main(base):
     was, before = stated(base)
     now, after = stated("HEAD")
@@ -54,6 +55,7 @@ def main(base):
     # @req- tycvj6
 
 
+# @req> REQ-39609157@gIkaMkxCsl9Z 6rrwpo
 def cli(argv):
     if len(argv) != 2:
         print("usage: baseline_number.py BASE_REF", file=sys.stderr)
@@ -61,5 +63,6 @@ def cli(argv):
     return main(argv[1])
 
 
+# @req> REQ-39609157@gIkaMkxCsl9Z jgv74l
 if __name__ == "__main__":
     sys.exit(cli(sys.argv))

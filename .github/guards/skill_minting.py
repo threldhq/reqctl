@@ -89,12 +89,16 @@ def checked(path):
 
 
 found = sorted(SKILLS.rglob("SKILL.md"))
+# @req> GUARD-56877438@R8tS_bbVly0h jwqg6d
 if not found:
     print(f"::error::{SKILLS}: no SKILL.md to check")
     sys.exit(1)
+# @req> GUARD-56877438@R8tS_bbVly0h o7pchp
 for path in found:
     faults += checked(path)
 
+# @req> GUARD-56877438@R8tS_bbVly0h 2ffk35
 for fault in faults:
     print(f"::error::{fault}")
+# @req> GUARD-56877438@R8tS_bbVly0h i3i2gm
 sys.exit(1 if faults else 0)

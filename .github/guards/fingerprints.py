@@ -16,6 +16,7 @@ def names_corpus(guard, data):
     return bool(guard.CORPUS_DIR.search(text) or guard.ROOT_QUOTED.search(text))
 
 
+# @req> GUARD-58772071@qal1M_8xilDP l4poyr
 def main():
     top, root, owned = stated()
     paths = owned.get(HOOK)
@@ -44,5 +45,6 @@ def main():
     # @req- cezbrd
 
 
+# @req> GUARD-58772071@qal1M_8xilDP fdtphu
 if __name__ == "__main__":
     sys.exit(main())

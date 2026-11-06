@@ -19,6 +19,7 @@ def tracked():
     return held
 
 
+# @req> GUARD-86063188@GFGejAdpTlxL hkohbq
 def main():
     # @req+ GUARD-86063188@GFGejAdpTlxL gcor4z
     held = [path for path in tracked() if corpus.is_test(path)]
@@ -28,5 +29,6 @@ def main():
     # @req- gcor4z
 
 
+# @req> GUARD-86063188@GFGejAdpTlxL cb5sqx
 if __name__ == "__main__":
     sys.exit(main())

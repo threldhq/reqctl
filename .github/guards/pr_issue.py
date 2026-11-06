@@ -55,6 +55,8 @@ def unnamed(repository, number, token):
     return None
 
 
+# @req> GUARD-80881960@UfZQs_f1P8Qb tviorh
+# @req> GUARD-54236737@mQ9hKg4LFSMf jaom4f
 def main():
     try:
         event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
@@ -83,5 +85,7 @@ def main():
     # @req- r44fy4
 
 
+# @req> GUARD-80881960@UfZQs_f1P8Qb 63cqtg
+# @req> GUARD-54236737@mQ9hKg4LFSMf 36ojnr
 if __name__ == "__main__":
     sys.exit(main())
