@@ -1,0 +1,15 @@
+assessed: {}
+entries:
+  domain_modeling:
+    definition: the skill that writes a glossary or a decision record into the repository
+    skill: mattpocock-skills:domain-modeling
+  research:
+    definition: the skill that writes a research record into the repository
+    skill: mattpocock-skills:research
+fields:
+- skill
+- definition
+kind: data
+name: denied_skills
+status: draft
+text: the skills this repository's Claude Code settings deny

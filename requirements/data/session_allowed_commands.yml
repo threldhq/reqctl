@@ -1,0 +1,34 @@
+assessed: {}
+entries:
+  claude_mcp:
+    rule: Bash(claude mcp:*)
+  claude_plugin:
+    rule: Bash(claude plugin:*)
+  git_add:
+    rule: Bash(git add:*)
+  git_branch:
+    rule: Bash(git branch:*)
+  git_commit:
+    rule: Bash(git commit:*)
+  git_diff:
+    rule: Bash(git diff:*)
+  git_log:
+    rule: Bash(git log:*)
+  git_show:
+    rule: Bash(git show:*)
+  git_status:
+    rule: Bash(git status:*)
+  mypy:
+    rule: Bash(mypy:*)
+  pip_audit:
+    rule: Bash(pip-audit:*)
+  reqctl:
+    rule: Bash(reqctl:*)
+  ruff_check:
+    rule: Bash(ruff check:*)
+fields:
+- rule
+kind: data
+name: session_allowed_commands
+status: draft
+text: the commands this repository's Claude Code settings pre-approve
