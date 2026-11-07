@@ -1,0 +1,10 @@
+acceptance_criteria: []
+assessed:
+  GUARD-21104547: JEmmBQUD-r4ChotAz3-l-6kcsqpNRHKvdeY54XAiZN0
+relations:
+  GUARD-21104547: constrains
+status: approved
+text: If the tracked files, the untracked files that are not ignored and the local
+  reference to origin's default branch are unchanged since the last session start,
+  then the build shall state that start's report again in place of running reqctl
+  validate, reqctl baseline --check, the citations guard and the lists.

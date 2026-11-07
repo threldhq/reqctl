@@ -50,6 +50,6 @@ fields:
 - marketplace
 kind: data
 name: session_plugins
-status: draft
+status: approved
 text: the plugins this repository's Claude Code settings enable, each with the marketplace
   it comes from

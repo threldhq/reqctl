@@ -1,0 +1,7 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: When a session starts, the build shall create the virtual environment .venv
+  of the repository on the Python version CI installs with, where it is absent or
+  on another version, and put its bin folder first on the session's PATH.

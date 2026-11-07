@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: The build shall configure, in this repository's .mcp.json, the Playwright MCP
+  server at an exact version that file states.

@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: The build shall install gitleaks only at the version .github/install-gitleaks.sh
+  states, and only once the archive's SHA-256 matches the digest that file states.

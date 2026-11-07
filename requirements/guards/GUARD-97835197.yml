@@ -1,0 +1,6 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: When a session starts, the build shall set the local reference to origin's default
+  branch from what origin reports.

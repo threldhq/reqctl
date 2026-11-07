@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: The build shall hold in .github/pull_request_template.md a pull request template
+  whose sections are Issue, Scope, Goal, On merge, What changed, What was checked
+  and Not changed here, with What was checked holding Statements read against, Pre-PR
+  pass and Gates.

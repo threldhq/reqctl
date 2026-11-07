@@ -30,5 +30,5 @@ fields:
 - rule
 kind: data
 name: session_allowed_commands
-status: draft
+status: approved
 text: the commands this repository's Claude Code settings pre-approve

@@ -11,5 +11,5 @@ fields:
 - definition
 kind: data
 name: denied_skills
-status: draft
+status: approved
 text: the skills this repository's Claude Code settings deny

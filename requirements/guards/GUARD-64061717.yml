@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  session_plugins: wvLZHvYCyjLKxNbZDa-gxGdKGlr0jQ5catcG00Evzik
+  session_plugins.*: k5IEMD5qU-x-BMAmU_gaWDf7x1ZACU_TEy0dGlmRWPw
+relations: {}
+status: approved
+text: The build shall enable in this repository's Claude Code settings exactly the
+  plugins of ${session_plugins}, each from the marketplace its [entry](entry) names.
