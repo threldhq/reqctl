@@ -24,3 +24,7 @@ relations:
 status: approved
 text: If a rule in the CODEOWNERS file that names none of the ${owned_paths} follows
   the first rule that names one, then the build shall refuse the change.
+whole_file_citations:
+  .github/CODEOWNERS:
+    digest: 6AzL3lcTajiD4k4PJTLpZM2xz_1-d_HggbT8jdCBagg
+    pinned: G-APnovHS9P3

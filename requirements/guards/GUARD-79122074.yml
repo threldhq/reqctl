@@ -9,3 +9,7 @@ relations: {}
 status: approved
 text: If actionlint or zizmor reports a finding in a workflow, shellcheck in a tracked
   shell script, or typos in a tracked file, then the build shall refuse the change.
+whole_file_citations:
+  _typos.toml:
+    digest: mtbFy3_d-zwDAjgFLgMpc8GNB7uzc08ZggdBjht7kfU
+    pinned: 9WbEAGS3ea8D

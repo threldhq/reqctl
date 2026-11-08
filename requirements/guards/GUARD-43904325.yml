@@ -6,3 +6,7 @@ text: The build shall hold in .github/pull_request_template.md a pull request te
   whose sections are Issue, Scope, Goal, On merge, What changed, What was checked
   and Not changed here, with What was checked holding Statements read against, Pre-PR
   pass and Gates.
+whole_file_citations:
+  .github/pull_request_template.md:
+    digest: EnZR9aL7KTdN2SKk1BaZrtHR8EafAjrFU9qwvexYwxw
+    pinned: F96TWpqcFpnV

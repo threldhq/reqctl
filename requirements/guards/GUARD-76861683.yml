@@ -6,3 +6,7 @@ relations: {}
 status: approved
 text: The build shall deny, in this repository's Claude Code settings, each skill
   of ${denied_skills}.
+whole_file_citations:
+  .claude/settings.json:
+    digest: 0rHFb3FvgBhyZ7TABZZGB3e2fXEWMc90xmquMjKzlpM
+    pinned: 44fcQXDHJtd3

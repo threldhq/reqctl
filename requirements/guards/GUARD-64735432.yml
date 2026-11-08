@@ -4,3 +4,7 @@ relations: {}
 status: approved
 text: The build shall configure, in this repository's .mcp.json, the Playwright MCP
   server at an exact version that file states.
+whole_file_citations:
+  .mcp.json:
+    digest: 1uXcixajg53Ks4eabzPiQgFG1ggTpk-AHP98xb862Ik
+    pinned: O9lRCGxl4dLI
