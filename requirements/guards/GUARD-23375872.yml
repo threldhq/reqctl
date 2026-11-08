@@ -6,3 +6,7 @@ status: approved
 text: The build shall deny, in this repository's Claude Code settings, the Read and
   Edit tools on the file of every corpus [item](item), whatever its kind, and on the
   baseline.
+whole_file_citations:
+  .claude/settings.json:
+    digest: 0rHFb3FvgBhyZ7TABZZGB3e2fXEWMc90xmquMjKzlpM
+    pinned: X3qoZ5e3xCge

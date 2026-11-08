@@ -16,3 +16,7 @@ relations: {}
 status: approved
 text: If the body of a pull request that dependabot did not open names no issue of
   this repository, then the build shall refuse the pull request.
+whole_file_citations:
+  .github/pull_request_template.md:
+    digest: EnZR9aL7KTdN2SKk1BaZrtHR8EafAjrFU9qwvexYwxw
+    pinned: mQ9hKg4LFSMf

@@ -5,3 +5,7 @@ status: approved
 text: The build shall propose monthly updates of reqctl's Python dependencies and
   of the actions the workflows use, grouping minor and patch updates into one pull
   request per ecosystem.
+whole_file_citations:
+  .github/dependabot.yml:
+    digest: dEZQuS5bEDX6Trfj9RQry0ezmiw4t85dZ5PdFyueppg
+    pinned: oNQwuwT5J7xM

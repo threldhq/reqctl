@@ -7,3 +7,10 @@ status: approved
 text: If the commits a pull request adds to its base branch, or the tracked files
   of a change that is not a pull request, hold a secret gitleaks reports, then the
   build shall refuse the change.
+whole_file_citations:
+  .github/install-gitleaks.sh:
+    digest: jFkRlbVSaznnQGVTyoSZW0rPQoGI5rMxJOjN0srt0Cs
+    pinned: FrimpbfW1XMa
+  .gitleaks.toml:
+    digest: BOITj8Q8i8uQxY_Stc4c-XZCV9nun0MStgtk2t3KSBY
+    pinned: FrimpbfW1XMa

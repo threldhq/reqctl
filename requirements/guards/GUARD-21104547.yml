@@ -7,3 +7,7 @@ text: When a session starts, the build shall state what reqctl validate, reqctl 
   --check and the citations guard report, list the corpus's terms, parameters and
   [data items](data_item), and state how many requirements and guards it does not
   list.
+whole_file_citations:
+  .claude/hooks/session-start.sh:
+    digest: _eJlhzz_KZIhPxdM4ged5NPt_14SFYo2VtFYhvIo4Ho
+    pinned: JEmmBQUD-r4C

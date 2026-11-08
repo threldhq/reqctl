@@ -7,3 +7,7 @@ relations: {}
 status: approved
 text: The build shall enable in this repository's Claude Code settings exactly the
   plugins of ${session_plugins}, each from the marketplace its [entry](entry) names.
+whole_file_citations:
+  .claude/settings.json:
+    digest: 0rHFb3FvgBhyZ7TABZZGB3e2fXEWMc90xmquMjKzlpM
+    pinned: tX5vtLlRVYic

@@ -12,3 +12,7 @@ relations: {}
 status: approved
 text: If a rule in the CODEOWNERS file names no owner, then the build shall refuse
   the change.
+whole_file_citations:
+  .github/CODEOWNERS:
+    digest: 6AzL3lcTajiD4k4PJTLpZM2xz_1-d_HggbT8jdCBagg
+    pinned: -N_pWkH7K8rC

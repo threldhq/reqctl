@@ -6,3 +6,7 @@ relations: {}
 status: approved
 text: The build shall pre-approve in this repository's Claude Code settings exactly
   the commands of ${session_allowed_commands}.
+whole_file_citations:
+  .claude/settings.json:
+    digest: 0rHFb3FvgBhyZ7TABZZGB3e2fXEWMc90xmquMjKzlpM
+    pinned: fSefDDH5af4r

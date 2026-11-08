@@ -26,3 +26,7 @@ text: If the repository's secret scan would report a uid as a secret, then the p
   shall report a problem when the ${corpus_gates.stamp_admission} gate runs.
 type: functional
 verification: inspection
+whole_file_citations:
+  .gitleaks.toml:
+    digest: BOITj8Q8i8uQxY_Stc4c-XZCV9nun0MStgtk2t3KSBY
+    pinned: qgpF6mhsmj-W
