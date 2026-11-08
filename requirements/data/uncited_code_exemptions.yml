@@ -6,6 +6,8 @@ entries:
     files: any file named CLAUDE.md in any folder
   claude_rules:
     files: every file under a .claude/rules folder
+  gitignore:
+    files: any file named .gitignore in any folder
   license:
     files: any file whose name begins LICENSE in any folder
   readme:

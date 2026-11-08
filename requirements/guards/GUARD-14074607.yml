@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed:
+  session_allowed_commands: GkrmFUmZ1tXMAkidpxG4xXsDeRiU-xFpNNjLs7Q8Ixc
+  session_allowed_commands.*: vxWAIhKFNTQ65v5eHIYnFNFxSY09Mccmh8DzAyrI2Fg
+relations: {}
+status: approved
+text: The build shall pre-approve in this repository's Claude Code settings exactly
+  the commands of ${session_allowed_commands}.

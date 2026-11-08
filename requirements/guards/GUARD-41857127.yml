@@ -1,0 +1,5 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: When a session starts, the build shall install gitleaks at the version CI installs.

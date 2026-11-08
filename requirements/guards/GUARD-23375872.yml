@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+relations: {}
+status: approved
+text: The build shall deny, in this repository's Claude Code settings, the Read and
+  Edit tools on the file of every corpus [item](item), whatever its kind, and on the
+  baseline.

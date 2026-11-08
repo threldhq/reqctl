@@ -1,0 +1,5 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: The build shall disable auto memory in this repository's Claude Code settings.

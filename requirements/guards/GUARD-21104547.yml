@@ -1,0 +1,9 @@
+acceptance_criteria: []
+assessed:
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+relations: {}
+status: approved
+text: When a session starts, the build shall state what reqctl validate, reqctl baseline
+  --check and the citations guard report, list the corpus's terms, parameters and
+  [data items](data_item), and state how many requirements and guards it does not
+  list.

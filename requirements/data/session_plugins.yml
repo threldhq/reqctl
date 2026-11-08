@@ -1,0 +1,55 @@
+assessed: {}
+entries:
+  context7:
+    marketplace: anthropics/claude-plugins-official
+    plugin: context7@claude-plugins-official
+  frontend_design:
+    marketplace: anthropics/claude-plugins-official
+    plugin: frontend-design@claude-plugins-official
+  goal_prompt:
+    marketplace: trailofbits/skills
+    plugin: goal-prompt@trailofbits
+  mattpocock_skills:
+    marketplace: anthropics/claude-plugins-official
+    plugin: mattpocock-skills@claude-plugins-official
+  modern_web_guidance:
+    marketplace: anthropics/claude-plugins-official
+    plugin: modern-web-guidance@claude-plugins-official
+  mutation_testing:
+    marketplace: trailofbits/skills
+    plugin: mutation-testing@trailofbits
+  plugin_dev:
+    marketplace: anthropics/claude-plugins-official
+    plugin: plugin-dev@claude-plugins-official
+  pr_review_toolkit:
+    marketplace: anthropics/claude-plugins-official
+    plugin: pr-review-toolkit@claude-plugins-official
+  property_based_testing:
+    marketplace: trailofbits/skills
+    plugin: property-based-testing@trailofbits
+  pyright_lsp:
+    marketplace: anthropics/claude-plugins-official
+    plugin: pyright-lsp@claude-plugins-official
+  reqctl:
+    marketplace: threldhq/reqctl
+    plugin: reqctl@reqctl
+  security_guidance:
+    marketplace: anthropics/claude-plugins-official
+    plugin: security-guidance@claude-plugins-official
+  skill_creator:
+    marketplace: anthropics/claude-plugins-official
+    plugin: skill-creator@claude-plugins-official
+  spec_to_code_compliance:
+    marketplace: trailofbits/skills
+    plugin: spec-to-code-compliance@trailofbits
+  static_analysis:
+    marketplace: trailofbits/skills
+    plugin: static-analysis@trailofbits
+fields:
+- plugin
+- marketplace
+kind: data
+name: session_plugins
+status: approved
+text: the plugins this repository's Claude Code settings enable, each with the marketplace
+  it comes from

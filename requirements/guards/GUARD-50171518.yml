@@ -1,0 +1,7 @@
+acceptance_criteria: []
+assessed: {}
+relations: {}
+status: approved
+text: The build shall propose monthly updates of reqctl's Python dependencies and
+  of the actions the workflows use, grouping minor and patch updates into one pull
+  request per ecosystem.

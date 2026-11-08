@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed:
+  denied_skills: YpFOt7KtsTI-Rp5vIKtPWO7zYZRaR3EjdeNwmIvpZaQ
+  denied_skills.*: mlZP6X1IhvnnKs-J24DH1KpXTfJ3UEZVi5ArO487IGI
+relations: {}
+status: approved
+text: The build shall deny, in this repository's Claude Code settings, each skill
+  of ${denied_skills}.
