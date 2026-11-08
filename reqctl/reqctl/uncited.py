@@ -12,16 +12,18 @@ RECORD = PurePosixPath("requirements") / "uncited.yml"
 
 # @req> REQ-27534660@OcqGUyoB-NOR zu7qeg
 MODES = settings.MODES[1:]
-# @req> uncited_code_exemptions@zlVU6_sD_Cmy 7z5oma
+# @req> uncited_code_exemptions@UTuKr6P-FxU0 7z5oma
 EXEMPTIONS = {
     "claude_md": {"files": "any file named CLAUDE.md in any folder"},
     "claude_rules": {"files": "every file under a .claude/rules folder"},
+    "gitignore": {"files": "any file named .gitignore in any folder"},
     "license": {"files": "any file whose name begins LICENSE in any folder"},
     "readme": {"files": "any file named README or README.* in any folder"},
 }
 EXEMPT_FILES = {
     "claude_md": re.compile(r"(?:^|/)CLAUDE\.md$"),
     "claude_rules": re.compile(r"(?:^|/)\.claude/rules/"),
+    "gitignore": re.compile(r"(?:^|/)\.gitignore$"),
     "license": re.compile(r"(?:^|/)LICENSE[^/]*$"),
     "readme": re.compile(r"(?:^|/)README(?:\.[^/]*)?$"),
 }
