@@ -1,6 +1,9 @@
 acceptance_criteria: []
 assessed:
   REQ-54257918: 2pAThuxToYwUUfRfIUNwkgzjLq84kseoQjCJqb4KdTI
+citations:
+  cmyqd3: D2USwsI5JaxBXZ3NInnnUi_aOjdLSzqAKnVYf0jLkaI
+  ny5db2: AU9z2Hjxg2_46desnVjyVDcIKTS_ft4ikAHp6chTiBk
 priority: medium
 relations:
   REQ-54257918: depends_on

@@ -98,6 +98,7 @@ REMOTE = "origin"
 
 
 def _default_ref(root):
+    # @req+ REQ-24681230@wxRn3BbY54kT 6zi4mx
     listed = _git(root, "remote")
     if listed.returncode:
         # @req> REQ-30898926@Vu28eWaG_1mE zjwepm
@@ -106,8 +107,10 @@ def _default_ref(root):
             "baseline cannot be told apart from there being none -- repair "
             "the remote configuration (`git remote -v` shows it), then retry"
         )
+    # @req- 6zi4mx
     if REMOTE not in listed.stdout.split():
         return None
+    # @req+ REQ-24681230@wxRn3BbY54kT k6tk6l
     named = _git(root, "symbolic-ref", "-q", DEFAULT_HEAD)
     if named.returncode:
         # @req> REQ-30898926@Vu28eWaG_1mE kkoqo5
@@ -122,10 +125,12 @@ def _default_ref(root):
             f"{ref} names no commit here, so the baseline the default branch "
             "states cannot be read -- fetch it"
         )
+    # @req- k6tk6l
     return ref
 
 
 def _carried(root, ref):
+    # @req+ REQ-24681230@wxRn3BbY54kT qgk6xq
     where = path(root).relative_to(root).as_posix()
     listed = _git(root, "ls-tree", ref, "--", where)
     if listed.returncode:
@@ -135,9 +140,11 @@ def _carried(root, ref):
             f"baseline cannot be told: {listed.stderr.strip()} -- run `git "
             "fetch origin`, then retry"
         )
+    # @req- qgk6xq
     # @req> REQ-51424927@vQb-YtKja6pq zi26im
     if not listed.stdout.strip():
         return None
+    # @req+ REQ-24681230@wxRn3BbY54kT g7nmjj
     found = _git(root, "show", f"{ref}:{where}")
     if found.returncode:
         # @req> REQ-30898926@Vu28eWaG_1mE 7oljfr
@@ -155,6 +162,7 @@ def _carried(root, ref):
             "branch, by pull request, set `baseline` in that file to an "
             "integer by hand, then run `git fetch origin`"
         )
+    # @req- g7nmjj
     return held["baseline"]
 
 
@@ -295,6 +303,7 @@ def check(tree, root):
     # @req- njzhlf
     # @req- w27scf
 
+    # @req+ REQ-56595801@iNW4JGFmdxOc cmyqd3
     manifest = read(path(root))
     if not isinstance(manifest, dict):
         # @req> REQ-30898926@Vu28eWaG_1mE 5hz7xx
@@ -314,6 +323,7 @@ def check(tree, root):
             "baseline --generate`, after setting `baseline` to an integer by "
             "hand if it is not one"
         )
+    # @req- cmyqd3
 
     # @req> REQ-60457693@ttVu9qsRnPG9 43d4hx
     if type(number) is int:
@@ -326,6 +336,7 @@ def check(tree, root):
                 "run `reqctl baseline --generate` on the corrected corpus"
             )
 
+    # @req+ REQ-56595801@iNW4JGFmdxOc ny5db2
     recorded = manifest.get("items")
     if not isinstance(recorded, dict):
         # @req> REQ-30898926@Vu28eWaG_1mE klxvpe
@@ -333,6 +344,7 @@ def check(tree, root):
             f"{head}: items is not a mapping -- run `reqctl baseline "
             "--generate`"
         ]
+    # @req- ny5db2
 
     # @req+ REQ-44642786@f_tuj97sj5Zn rfw24o
     current = derive(tree)
