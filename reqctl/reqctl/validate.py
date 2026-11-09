@@ -1078,7 +1078,7 @@ def _entry_selection(records, root):
             existing = corpus.entries(held)
             key, *steps = rest.split(".")
             # @req+ REQ-15211173@2tindbOlAUEJ sggzwh
-            # @req+ REQ-11930677@zW9EYrOae8-u xxvuas
+            # @req+ REQ-11930677@dH7Pu7k4K4YI xxvuas
             block = corpus.held_blocks(root, canonical.get(target, target), held).get(key)
             if block is not None:
                 if not steps:
@@ -1091,7 +1091,8 @@ def _entry_selection(records, root):
                     problems.append(f"{uid}: selects {address} but {steps[0]} of {key} of "
                                     f"{target} holds no fields of its own -- "
                                     f"reword {uid} to select a member of {key} "
-                                    "that holds fields")
+                                    f"that holds fields, or state {steps[0]} of "
+                                    f"{target} as a record of fields")
                     continue
                 fields = block
                 for step in steps:
