@@ -56,6 +56,9 @@ SCRIPT = re.compile(GATE.pattern
 RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
 FAILS = re.compile(r"\bexit\s+[1-9]|\bsys\.exit\(")
 SWALLOWED = re.compile(r"\|\|\s*(?:true|:)(?![\w-])")
+LISTED = re.compile(r"(\|\||&&|;|\||\n)")
+STOPPING = re.compile(r"\s*(?:exit\s+[1-9]|false\b)")
+SUCCEEDS = re.compile(r"\s*(?:true|:)\s*$")
 UNSTOPPED = re.compile(r"\bset\s+(?:\+\w*e|\+o\s+errexit)")
 SHELLS = {"bash", "sh", "dash", "ksh", "zsh"}
 STOPS = re.compile(r"-\w*e\w*")
@@ -173,10 +176,24 @@ def unstopped(shell):
     return not stops
 
 
+def masked(run, tools):
+    parts = LISTED.split(run)
+    segments, joins = parts[0::2], parts[1::2] + [""]
+    for segment, join, after in zip(segments, joins, segments[1:] + [""]):
+        if not (SCRIPT.search(segment) or RUNS.search(segment)
+                or IMPORTS.search(segment) or tools.search(segment)):
+            continue
+        if (segment.lstrip().startswith("!")
+                or join == "||" and not STOPPING.match(after)
+                or join == ";" and SUCCEEDS.match(after)):
+            return True
+    return False
+
+
 def swallowed(name, job, steps, where, shell, tools):
     gating = [step for step in steps if gated(step, tools)]
     found = []
-    # @req+ GUARD-84344643@GlwsRru4lu4P sfx7sh
+    # @req+ GUARD-84344643@6ZlLWYpfxwzP sfx7sh
     if gating and job.get("continue-on-error"):
         found.append(f"{where}: job {name} runs a gate and continues on error "
                      "-- remove continue-on-error")
@@ -189,6 +206,10 @@ def swallowed(name, job, steps, where, shell, tools):
         if SWALLOWED.search(run):
             found.append(f"{where}: step {named!r} runs a gate and discards its "
                          "failure with || true or || : -- remove it")
+        if masked(run, tools):
+            found.append(f"{where}: step {named!r} runs a gate whose failure "
+                         "can still end in success -- remove the ! before the "
+                         "gate, or the || or ; true after it")
         if UNSTOPPED.search(run) or unstopped(step.get("shell", shell)):
             found.append(f"{where}: step {named!r} runs a gate in a shell that "
                          "does not stop on a failing command -- remove set +e, "
@@ -484,7 +505,7 @@ def runs_of(text):
 # @req> GUARD-52037270@OztX8T4vOmsH z3qmtw
 # @req> GUARD-24264620@IECSQ_EeiXfC c2mpcx
 # @req> GUARD-12128145@mFuOqNbkyV1o 6xrg3i
-# @req> GUARD-84344643@GlwsRru4lu4P yklz3x
+# @req> GUARD-84344643@6ZlLWYpfxwzP yklz3x
 # @req> GUARD-20209566@zkKPlDbnzFuA iyj7q3
 # @req> GUARD-20154572@z2_hbXJO9sHn 6lheox
 # @req> REQ-74823322@YWZT0Srw2y2d q2omdp
@@ -545,7 +566,7 @@ def main():
 # @req> GUARD-52037270@OztX8T4vOmsH azlptq
 # @req> GUARD-24264620@IECSQ_EeiXfC p5qlkx
 # @req> GUARD-12128145@mFuOqNbkyV1o 2oldcn
-# @req> GUARD-84344643@GlwsRru4lu4P cackjz
+# @req> GUARD-84344643@6ZlLWYpfxwzP cackjz
 # @req> GUARD-20209566@zkKPlDbnzFuA qanxgx
 # @req> GUARD-20154572@z2_hbXJO9sHn 33y44j
 # @req> REQ-74823322@YWZT0Srw2y2d j2aed6

@@ -370,7 +370,7 @@ def dimensions(root, records):
     for name in corpus.binding_dimensions(root):
         uid, data = named_item(records, name)
         # @req+ REQ-29846444@V-kcyDuwiOZS zjcgv2
-        # @req> REQ-11930677@zW9EYrOae8-u rbec5m
+        # @req> REQ-11930677@dH7Pu7k4K4YI rbec5m
         members = set(corpus.entries(data) or {}) | block_members(root, uid, data)
         if not members:
             raise SystemExit(
@@ -393,7 +393,7 @@ def named_member(rest, blocks):
 
 
 # @req> REQ-54045696@m7842dVOG3jf fi3f7l
-# @req> REQ-11930677@zW9EYrOae8-u rzbuud
+# @req> REQ-11930677@dH7Pu7k4K4YI rzbuud
 def bound(name, uid, statement, blocks):
     held = {named_member(found.group(2), blocks)
             for found in corpus.PARAM_REF.finditer(statement)
@@ -405,7 +405,7 @@ def bound(name, uid, statement, blocks):
     return held
 
 
-# @req> REQ-11930677@zW9EYrOae8-u rkree6
+# @req> REQ-11930677@dH7Pu7k4K4YI rkree6
 def unresolved(records, statement, root):
     # @req> REQ-77623729@vjmOfyXPn_43 elfpax
     held = {str(data.get("name")): set(corpus.entries(data) or {})
