@@ -6,3 +6,7 @@ assessed: {}
 relations: {}
 status: approved
 text: When a session starts, the build shall fetch origin's default branch.
+whole_file_citations:
+  .claude/hooks/session-start.sh:
+    digest: xDxzdnXE014yYiYn7_JCLby6gRPkb8U9iPkOu-jnt1U
+    pinned: -4-3BY4YBXGa

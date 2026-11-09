@@ -31,6 +31,10 @@ fi
 git remote set-head origin --auto \
   || echo "session-start: cannot read origin's default branch" >&2
 
+default=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD) \
+  && git fetch --quiet origin "${default#origin/}" \
+  || echo "session-start: cannot fetch origin's default branch" >&2
+
 state=$({ git ls-files -s
           git diff HEAD
           git ls-files -z --others --exclude-standard | xargs -0 -r git hash-object --
