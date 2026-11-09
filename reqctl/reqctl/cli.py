@@ -228,6 +228,16 @@ def _render(fields, order=None):
 
 def cmd_revise(args):
     tree, _ = corpus.load()
+    # @req+ REQ-94401451@EZFY5LjHcj9g pc3x5s
+    if len(args.uid) > 1:
+        changes = _write.revise_together(tree, args.uid, vars(args))
+        _emit(args, {"changed": changes},
+              "\n".join(f"{uid}: " + (", ".join(sorted(changed)) or "already held")
+                        for uid, changed in changes.items())
+              + "\n  proposed as approved -- approved when this merges to main")
+        return EXIT_OK
+    args.uid = args.uid[0]
+    # @req- pc3x5s
     changed = _write.revise(tree, args.uid, vars(args))
     if not changed:
         _emit(args, {"uid": args.uid, "changed": {}, "already_held": True},
@@ -1248,7 +1258,8 @@ def build_parser(root, fielded):
     s = _command(sub, "revise",
                  "change an item's fields, pin its links with --ack, or edit "
                  "a data entry")
-    s.add_argument("uid")
+    # @req> REQ-94401451@EZFY5LjHcj9g znwuir
+    s.add_argument("uid", nargs="+")
     # @req> REQ-91205530@FiUaykViw6dQ ctnzp2
     _field_arguments(s, flags + clears, _write.OPERATIONS)
     s.add_argument("--ack", dest="ack", action="append",
