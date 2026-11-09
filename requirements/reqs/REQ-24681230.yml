@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-21960639: DzQkjJjbuYa1vdy-Z8HwO8EFMRNxQjEKnB5TYIXdLIo
+  REQ-43924642: SDx_e7a7A1XMQPML3XbBx3zHEK_udtWgckeshRvI3qU
+priority: medium
+relations:
+  REQ-21960639: constrains
+  REQ-43924642: constrains
+status: approved
+text: If a baseline would be generated while the product cannot read the baseline
+  the default branch carries, or that baseline states no number, then the product
+  shall refuse the generation.
+type: functional
+verification: demonstration
