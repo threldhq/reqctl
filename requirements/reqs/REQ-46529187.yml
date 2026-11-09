@@ -3,6 +3,9 @@ assessed:
   REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  5vveoe: oDEri_c_CmRCVShbJhVVT_E297IBtd2m8MzBcJCl5Hw
+  faz7v6: Yh4ZRZhhLLNVz1oK3TWzxMyup1AoiRN0OQSAokWXNeE
 priority: medium
 relations:
   REQ-87847146: depends_on

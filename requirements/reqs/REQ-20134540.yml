@@ -4,6 +4,16 @@ assessed:
   REQ-81220228: DAytEkvTUdTOSKwLhWLXUcmAT1qx8v69DaYegSTHcPc
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  225qqr: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
+  2dixf5: v51FoPrDtvFD4fzqKMahZqJQjgj8R66HS8FNQFV6hfg
+  e64kgr: a8o1Ixb4FcySSJn3rFezt6ba2GG5WonYMQb4hcwApRU
+  hj65ee: Zp7dej9ioBR-cEZkLX0MftchJGZLJx4xn8UGgDz5qdQ
+  q4bylm: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
+  uj6tab: sq48t08PROhB1Pdxv9rmgsE-xdqwaEvaoqlohbD9jnY
+  ujknid: 9b8TM3sWGB5PYaLE1KQV4n8dppAgmDkqMJAp1vpvwQM
+  wmcojq: CG9btPi4vcmeg6CoSS6iLn3E_ixDTDYYJoRIdtgyDBY
+  x2py7h: yd4w3Eo50RM_GMVENfhbzU8KXf9uwSp-nxR4DhhSb9o
 priority: medium
 relations:
   REQ-80416166: constrains

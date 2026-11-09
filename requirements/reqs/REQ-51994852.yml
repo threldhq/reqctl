@@ -7,6 +7,10 @@ assessed:
   REQ-94410924: VNuUThWMV1NeaQ_S8WiWDLfBtdXAdejzTxZeJI_4Vj0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  36u2ht: jfJThK9qQizczmUZ5V15vhFQohUpYss99XFYIuVp_jY
+  o6bnhc: fWXdIIslYZuyxywgrchDxN4r0dFsGWlt7aqBnhWT01M
+  vko7hf: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
 priority: medium
 relations:
   REQ-22950334: depends_on

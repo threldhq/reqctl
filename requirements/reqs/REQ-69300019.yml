@@ -3,6 +3,10 @@ assessed:
   REQ-54076552: G1Ej0m1RlGGSKCSE5Q0eAJxh32oiiOT1433jplkj7hY
   REQ-67358511: 6v5ZhXIOqAkDsf0W_KJzRCkG3Te5NM3pCY0p1mTKl98
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  gr6trq: zbj7dnMegFcE-1gsfQMSNaEiSfqlSRGCKClcN7iY1Qc
+  nuxeei: a8o1Ixb4FcySSJn3rFezt6ba2GG5WonYMQb4hcwApRU
+  plnzrv: MG_XgiWg3Ko-rpzxwQyqDk7Oa6NNBZfEFg7bCwPLaes
 priority: medium
 relations:
   REQ-54076552: depends_on

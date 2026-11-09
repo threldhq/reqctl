@@ -2,6 +2,13 @@ acceptance_criteria: []
 assessed:
   REQ-76958744: G6gCTCrSsHetq9vT1YIKvzH3gHNoOAOHzVGm3Q5fam8
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  h3nmbz: G0Cn6LL8mDG_bMTjaN8Gxy-9HuLVapLsEXmJShlkZ18
+  lfsv3a: ivCZyFraNR7KVa3oO_zIlVk28IKD1-yIvWMZIEH72Gw
+  m75p4r: rkqtiaKaeaTXtGHSrJgRckbrUjtaOovRSG6iZYapryw
+  oikknz: DlpffOYho2KFWOeLtD9pq9LZAbWq9b_MNP-G5tkvq-0
+  rvfhlf: 0z9MlVmFjTqNQI9_6VWbzZ2FgAh-5OZKnf2s_TH2SOE
+  zktztf: INS56DDLbOS68TtlSx4ZnW9hQhGobXIxhlUlx-O0lDk
 priority: medium
 relations:
   REQ-76958744: depends_on

@@ -7,6 +7,9 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  i35p6w: GQnm8BFdmvO0Xa-S7IPAyYBclUJQC52-tXYh44873vg
+  tyghs2: cPu3mCF_T7hq7o9V33-VPNclscukYzjjgYw5sCEvus0
 priority: medium
 relations:
   REQ-21513166: depends_on

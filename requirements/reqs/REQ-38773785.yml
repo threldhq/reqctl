@@ -3,6 +3,8 @@ assessed:
   REQ-37024518: N98xbJLgeCP0-9iPvN9rbN2CzGeAGTnlpIVHgGrwRNQ
   REQ-84641100: hkDOGJ16SKpM5fCywkz30LPS84rr2AtuWMKLXKPU3Sw
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  g4geco: Pjj7zuDGkVWVUJ_EaK2h9gvNpJxZ25a13CEkAh972Go
 priority: medium
 relations:
   REQ-37024518: depends_on

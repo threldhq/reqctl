@@ -4,6 +4,9 @@ assessed:
   REQ-49900441: vzcVI-Jl7ucPguw3zI6p_jKa3dZUriV62-utFzoi7H8
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  3u5ilh: gIw2pXRcO96xADvIsnkLhLBtXu8LjYKudYSUW71xjdI
+  nc6dvv: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
 priority: medium
 relations:
   REQ-42771008: depends_on

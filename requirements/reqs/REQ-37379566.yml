@@ -2,6 +2,18 @@ acceptance_criteria: []
 assessed:
   REQ-35173659: 6-uptMskrE4LsifMIh_xbJxOqRVtmNdscohlwUULl6c
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  4uts4c: O2iHyEYw2E0uzevTe6h44K-By9R2XqQ80buZi-Ij6Bg
+  efswro: SQepqVXmszvppegkx5Uix-8-J8lO-uQ7JFhr7Y88Q2U
+  gww2ip: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
+  krjsg5: RnN4ZOhMCzRq6VKSl3ShQSud3ZPc76yP8_WxjJvcHFY
+  lduzym: -Q6krx1QqqC3dBr2m6j8xjSIeqZ-lgWcNn0tegMpnls
+  qcw3p4: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
+  s4rzud: jXvpUQZvyiN-guecyb8nmtTUG5ZpKFD1JAjtsJN9za8
+  sw53tv: AOIzu2R1eRvaL_-x3EvcsYeHF63YKUIuFzQTk07jRiY
+  tg66iu: CQwiR1oVetsUV_yS77JHKZuNxstjTZARkn-TG3yCq3k
+  vxbgig: KRjhLAOnsB5uJRtMZkDfTX0pcnLWoQ1nQZBseHgwuTA
+  wrattp: VNydDRaVOF3JKQlfVNsAf137ksf02E-cpuzdkxeZH94
 priority: medium
 relations:
   REQ-35173659: depends_on

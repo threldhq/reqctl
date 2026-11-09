@@ -3,6 +3,14 @@ assessed:
   REQ-45797944: wXgeXQtMt7tGU0o1V6OBy9A7UNR6ClXdzuWA8sS5rEs
   REQ-51994852: TKuebjB9MeY23B7lIsFScBDw3gxhtebAf1cY2tBOmRg
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  44xjly: CG9btPi4vcmeg6CoSS6iLn3E_ixDTDYYJoRIdtgyDBY
+  axnadk: yd4w3Eo50RM_GMVENfhbzU8KXf9uwSp-nxR4DhhSb9o
+  bvvw6s: Zp7dej9ioBR-cEZkLX0MftchJGZLJx4xn8UGgDz5qdQ
+  dcsotu: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
+  hiauof: 9b8TM3sWGB5PYaLE1KQV4n8dppAgmDkqMJAp1vpvwQM
+  lltj4h: v51FoPrDtvFD4fzqKMahZqJQjgj8R66HS8FNQFV6hfg
+  sh6kkb: a8o1Ixb4FcySSJn3rFezt6ba2GG5WonYMQb4hcwApRU
 priority: medium
 relations:
   REQ-45797944: depends_on

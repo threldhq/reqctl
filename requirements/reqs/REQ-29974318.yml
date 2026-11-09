@@ -3,6 +3,8 @@ assessed:
   REQ-11203679: LKGrEB6ZNVCvZklziblKCr0r428o-EXF5MJxIao_2HA
   REQ-59774469: 2L7AroyhuVFMuyujUAOcw2o2JjK80m_5adp8d69TUMY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  eaes3o: ErBGOqZOYVrEZ-g54AMrhdgUSdvwKQ5aIZ-x_JKgHAI
 priority: medium
 relations:
   REQ-11203679: depends_on

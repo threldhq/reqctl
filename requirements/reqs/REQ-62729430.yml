@@ -2,6 +2,12 @@ acceptance_criteria: []
 assessed:
   REQ-94065353: 13TDTQioAe4KD2Mm0KJwM0SW3yBGFNe5zHpYWOZAl50
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  4kotn3: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
+  5u3aky: 0z9MlVmFjTqNQI9_6VWbzZ2FgAh-5OZKnf2s_TH2SOE
+  62vyej: fWXdIIslYZuyxywgrchDxN4r0dFsGWlt7aqBnhWT01M
+  fce4yu: q8BnhXoaQvH9o0ircCrv30wv-oDVzxE1e33JoIEjmFc
+  w2fvhl: INS56DDLbOS68TtlSx4ZnW9hQhGobXIxhlUlx-O0lDk
 priority: medium
 relations:
   REQ-94065353: depends_on

@@ -3,6 +3,12 @@ assessed:
   REQ-59399209: DMSM7UOh_uQ4g_vowdVg9K1is1HSfUnLXJH8d9PCoKc
   REQ-62729430: uBypjG0c4OWO8ELk6TV3-rcMDmndzSkd8z4GJY1oXvg
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  3fp2af: 75GYz3ix37M44Ia8JbcAdzJithvD5Aqffs6Sk2L1tsg
+  5odkld: aMb1jfH0Gn4N-Pq0UXBIUBkY5ChP6VDIVE_vD5zZPac
+  tjyb43: 6VgqV39Xzzv1SZ2vH6C9a-sQoI4ffBxAE0poiN1Pl-s
+  txb5oo: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
+  ukotq7: v7JIaY_O9HlGLjhZ1dopFriiu_xl8GMv8TK2kSKv4cM
 priority: medium
 relations:
   REQ-59399209: depends_on

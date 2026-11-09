@@ -4,6 +4,9 @@ assessed:
   REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  75zy5s: fWXdIIslYZuyxywgrchDxN4r0dFsGWlt7aqBnhWT01M
+  jdk4fj: jfJThK9qQizczmUZ5V15vhFQohUpYss99XFYIuVp_jY
 priority: medium
 relations:
   REQ-13671144: depends_on

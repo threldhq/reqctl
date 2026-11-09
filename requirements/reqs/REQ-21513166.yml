@@ -6,6 +6,12 @@ assessed:
   REQ-91205530: FiUaykViw6dQBHW7EnBC6n0Z561dMImVZMcXtg1FxdA
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  45zzp6: roCDszQ0LT_SlgsSr5TsPotMGlhED9no1D1FA-9yk9I
+  4siht6: H26caxiAmuMDzOYrxpcYSdPskGEbcR7-qJHHAk5wcVM
+  fep7un: f5hgdgsMEBgVD6nlzbgAeOhdlyPYiON2JyTfnG5KOhY
+  jgxbh7: WAUlNCEvNYyfHlpTtMssjgHBx7qMX7XbOTqPK2iWeE4
+  riddjp: 8YLEjH-r22kAaMp2G9V3J_DOuXow62hcgb-2HfsKWwM
 priority: medium
 relations:
   REQ-14679866: constrains

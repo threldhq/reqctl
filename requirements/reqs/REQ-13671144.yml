@@ -4,6 +4,9 @@ assessed:
   REQ-51482370: IStKF1PWs6B-LMG0WQTsnO1GMsIsUDYr7dHr5Jpu19E
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  vnfdvv: jfJThK9qQizczmUZ5V15vhFQohUpYss99XFYIuVp_jY
+  x4yeo7: fWXdIIslYZuyxywgrchDxN4r0dFsGWlt7aqBnhWT01M
 priority: medium
 relations:
   REQ-42771008: depends_on

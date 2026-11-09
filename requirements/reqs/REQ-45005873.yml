@@ -5,7 +5,14 @@ acceptance_criteria:
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
 citations:
+  3zy5fv: INS56DDLbOS68TtlSx4ZnW9hQhGobXIxhlUlx-O0lDk
+  6ucjoj: DlpffOYho2KFWOeLtD9pq9LZAbWq9b_MNP-G5tkvq-0
+  b5ynwh: G0Cn6LL8mDG_bMTjaN8Gxy-9HuLVapLsEXmJShlkZ18
+  gc3t5j: B-QEuykkOvgTYP5EAjL74K_H2VZskNK4PPIsoL6gkTg
+  phnvew: ivCZyFraNR7KVa3oO_zIlVk28IKD1-yIvWMZIEH72Gw
   poosiz: eOdMno-1CTNEiMa1M9K9yRU6sgFIyDjpk9eUYjQkIhI
+  rojbbp: rkqtiaKaeaTXtGHSrJgRckbrUjtaOovRSG6iZYapryw
+  rze4ij: lbNW7WFGGGex-JTCYBIL4V9l8Xq_C5d8rg03ITj7DYE
 priority: medium
 relations:
   REQ-38789214: depends_on

@@ -3,6 +3,8 @@ assessed:
   REQ-42335087: EHhmRZP7XeYWNAbWG3qnfiF_LYS39HqgjSTR9eE8hi8
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  hiu7iq: dnUzXpiyfYm8A3k-64_J84S2gUHCyYQpEXCH4Guezdk
 priority: medium
 relations:
   REQ-42335087: depends_on

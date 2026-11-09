@@ -3,6 +3,10 @@ assessed:
   REQ-64005208: VjZ0V0VbMEZROkmxMks0k2r31pxgjBVgbcrGVaTYWdY
   REQ-64610303: tFQ0fV9lxwXYm6UyNUo2j4mkXDgj0ICNsH7RKD8-1HU
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  5uimbj: nVnOO2uH9IZ5q0ye1cALOR2GG0PXQtqLbjBGfr4xnlE
+  o2w2jj: nVnOO2uH9IZ5q0ye1cALOR2GG0PXQtqLbjBGfr4xnlE
+  ose27n: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
 priority: medium
 relations:
   REQ-64005208: depends_on
