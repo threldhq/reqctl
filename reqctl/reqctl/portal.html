@@ -1543,6 +1543,8 @@ function openFamily() {
     if (!one || one.dataset.uid === chosen) return;
     event.stopPropagation();
     chosen = one.dataset.uid;
+    <!-- @req> REQ-58928387@e-BYRqijg-8x j366nt -->
+    kind = byUid[chosen].kind;
     draw();
     paint();
     <!-- @req- s6qmbk -->
