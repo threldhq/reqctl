@@ -9,5 +9,5 @@ text: When a session starts, the build shall state what reqctl validate, reqctl 
   list.
 whole_file_citations:
   .claude/hooks/session-start.sh:
-    digest: _eJlhzz_KZIhPxdM4ged5NPt_14SFYo2VtFYhvIo4Ho
+    digest: xDxzdnXE014yYiYn7_JCLby6gRPkb8U9iPkOu-jnt1U
     pinned: JEmmBQUD-r4C
