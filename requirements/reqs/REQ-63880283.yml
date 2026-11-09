@@ -8,6 +8,6 @@ relations:
   REQ-39359341: depends_on
 status: approved
 text: While no [item](item) is selected in the [portal](portal), the product shall
-  state in the detail that no [item](item) is selected.
+  ask in the detail for an [item](item) to be selected.
 type: functional
 verification: demonstration

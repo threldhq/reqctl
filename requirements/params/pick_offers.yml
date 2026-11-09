@@ -1,0 +1,11 @@
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+entries:
+  '8': {}
+kind: parameter
+name: pick_offers
+status: approved
+text: The most terms, aliases and [items](item) the [portal](portal)'s slash picker
+  offers at once
+value_type: count
