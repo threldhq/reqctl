@@ -5,5 +5,5 @@ status: approved
 text: When a session starts, the build shall install gitleaks at the version CI installs.
 whole_file_citations:
   .claude/hooks/session-start.sh:
-    digest: xDxzdnXE014yYiYn7_JCLby6gRPkb8U9iPkOu-jnt1U
+    digest: _eJlhzz_KZIhPxdM4ged5NPt_14SFYo2VtFYhvIo4Ho
     pinned: SRoJyWFq-NQD
