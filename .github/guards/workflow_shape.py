@@ -56,7 +56,7 @@ SCRIPT = re.compile(GATE.pattern
 RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
 FAILS = re.compile(r"\bexit\s+[1-9]|\bsys\.exit\(")
 SWALLOWED = re.compile(r"\|\|\s*(?:true|:)(?![\w-])")
-LISTED = re.compile(r"(\|\||&&|;|\||\n)")
+JOINS = re.compile(r"(\|\||&&|;|\||\n)")
 STOPPING = re.compile(r"\s*(?:exit\s+[1-9]|false\b)")
 SUCCEEDS = re.compile(r"\s*(?:true|:)\s*$")
 UNSTOPPED = re.compile(r"\bset\s+(?:\+\w*e|\+o\s+errexit)")
@@ -177,7 +177,7 @@ def unstopped(shell):
 
 
 def masked(run, tools):
-    parts = LISTED.split(run)
+    parts = JOINS.split(run)
     segments, joins = parts[0::2], parts[1::2] + [""]
     for segment, join, after in zip(segments, joins, segments[1:] + [""]):
         if not (SCRIPT.search(segment) or RUNS.search(segment)
