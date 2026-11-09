@@ -13,7 +13,7 @@ acceptance_criteria:
   when: reqctl revise names a key of that field as the [entry](entry) to change, add
     or drop
 assessed:
-  REQ-11930677: zW9EYrOae8-u8KwxL5w05JEgFmsILH44ca3s1_IFSls
+  REQ-11930677: dH7Pu7k4K4YI7dYDS8fx5y_ijNiUxyAfIcLXM3sw8LE
   REQ-42390302: QOC4GhS7SkFgNUySBJec_QcZkx_27rINTsnxqVsDklQ
   REQ-62329029: wjRs5FRIhJ3CvH2pvvOVXfuJpTzBWxXbyJ_vUhcQebI
   addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs

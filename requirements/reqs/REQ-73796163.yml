@@ -4,7 +4,7 @@ acceptance_criteria:
   then: the committer date and time of that commit stand as the date of its last update
   when: reqctl context, export or list shows the [data item](data_item)
 assessed:
-  REQ-11930677: zW9EYrOae8-u8KwxL5w05JEgFmsILH44ca3s1_IFSls
+  REQ-11930677: dH7Pu7k4K4YI7dYDS8fx5y_ijNiUxyAfIcLXM3sw8LE
   REQ-82027237: R-XinrGfTNzLE1-PxO9SeWnxAkNShomWm9kGaZ8zE-Y
   addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
   block_member: pnK2LnQcIC7Fb2GdpY_qJ0gmifdRLURXuAFAW31S-Bg
