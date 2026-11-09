@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-54257918: 2pAThuxToYwUUfRfIUNwkgzjLq84kseoQjCJqb4KdTI
+priority: medium
+relations:
+  REQ-54257918: depends_on
+status: approved
+text: If the baseline file does not fit the baseline schema, then the product shall
+  report each way it does not fit, naming where in the file it does not fit, when
+  the baseline is checked.
+type: functional
+verification: demonstration
