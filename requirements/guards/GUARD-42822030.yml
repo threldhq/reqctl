@@ -10,5 +10,5 @@ text: If the tracked files, the untracked files that are not ignored and the loc
   validate, reqctl baseline --check, the citations guard and the lists.
 whole_file_citations:
   .claude/hooks/session-start.sh:
-    digest: _eJlhzz_KZIhPxdM4ged5NPt_14SFYo2VtFYhvIo4Ho
+    digest: xDxzdnXE014yYiYn7_JCLby6gRPkb8U9iPkOu-jnt1U
     pinned: JongnEvVdYZA

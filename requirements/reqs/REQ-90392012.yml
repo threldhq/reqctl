@@ -15,8 +15,9 @@ relations:
   REQ-38789214: constrains
   REQ-84459416: depends_on
 status: approved
-text: If the [portal](portal)'s setup screen is submitted with no token typed, or
-  only spaces, and none remembered, then the product shall show the setup screen again
-  stating that the token is needed, remembering nothing.
+text: If the [portal](portal)'s setup screen is submitted with a repository written
+  as owner/repo but with no token typed, or only spaces, and none remembered, then
+  the product shall show the setup screen again stating that the token is needed,
+  remembering nothing.
 type: functional
 verification: demonstration
