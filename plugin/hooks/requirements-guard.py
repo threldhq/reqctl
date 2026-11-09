@@ -2307,8 +2307,8 @@ def scripts_within(words, here):
     # @req> REQ-76235768@1l5tlNlByWT6 2j3niw
     if split and split[2] == "filter-branch":
         # @req+ REQ-83496373@HRzSsUNslyHh clsc3e
-        scripted = next((word.split("=", 1)[0] for word in split[3]
-                         if word.split("=", 1)[0] in FILTER_SCRIPTS), None)
+        scripted = next((name for name in (word.partition("=")[0] for word in split[3])
+                         if name in FILTER_SCRIPTS), None)
         if scripted:
             deny(FILTER_SCRIPTED.format(flag=scripted))
         # @req- clsc3e
