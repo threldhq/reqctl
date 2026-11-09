@@ -57,8 +57,8 @@ RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
 FAILS = re.compile(r"\bexit\s+[1-9]|\bsys\.exit\(")
 SWALLOWED = re.compile(r"\|\|\s*(?:true|:)(?![\w-])")
 JOINS = re.compile(r"(\|\||&&|;|\||\n)")
-STOPPING = re.compile(r"\s*(?:exit\s+[1-9]|false\b)")
-SUCCEEDS = re.compile(r"\s*(?:true|:)\s*$")
+STOPPING = re.compile(r"\s*(?:exit\s+(?:[1-9]|\$\?)|false\b)")
+SUCCEEDS = re.compile(r"\s*(?:true|:|exit\s+0)\s*$")
 UNSTOPPED = re.compile(r"\bset\s+(?:\+\w*e|\+o\s+errexit)")
 SHELLS = {"bash", "sh", "dash", "ksh", "zsh"}
 STOPS = re.compile(r"-\w*e\w*")
@@ -185,7 +185,7 @@ def masked(run, tools):
             continue
         if (segment.lstrip().startswith("!")
                 or join == "||" and not STOPPING.match(after)
-                or join == ";" and SUCCEEDS.match(after)):
+                or join in (";", "\n") and SUCCEEDS.match(after)):
             return True
     return False
 
