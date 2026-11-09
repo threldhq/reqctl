@@ -2106,7 +2106,8 @@ async function start(said = "") {
   <!-- @req+ REQ-38893754@LAv4UgvQ-csC g4b5r5 -->
   try {
     const waiting = JSON.parse(localStorage.getItem(BATCH) || "[]");
-    batch = Array.isArray(waiting) ? waiting : [];
+    if (!Array.isArray(waiting)) throw new SyntaxError("it held no list");
+    batch = waiting;
   } catch (broken) {
     batch = [];
     notice = broken instanceof SyntaxError
