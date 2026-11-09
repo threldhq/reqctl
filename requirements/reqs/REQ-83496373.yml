@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a [tool call](tool_call) running git filter-branch --tree-filter with any
+    script
+  then: the product refuses it
+  when: the [tool call](tool_call) is judged
+- given: a [tool call](tool_call) running git filter-branch with --index-filter, --env-filter,
+    --msg-filter, --commit-filter, --parent-filter or --tag-name-filter
+  then: the product refuses it
+  when: the [tool call](tool_call) is judged
+assessed:
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-60211288: depends_on
+status: approved
+text: If a [tool call](tool_call) would run git filter-branch with an option whose
+  argument git filter-branch runs as a shell command, then the product shall refuse
+  the [tool call](tool_call).
+type: functional
+verification: inspection

@@ -16,6 +16,17 @@ acceptance_criteria:
     running true
   then: the build does not refuse the change on that ground
   when: the build runs
+- given: a step running a gate whose command discards its failure through an or-list
+    running exit with a success status
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate whose command runs true as the next command of a list
+    after the gate
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate whose command negates the gate with !
+  then: the build refuses the change
+  when: the build runs
 assessed:
   GUARD-40603760: BjP6UvmNcOQTrpltSyfoTMvDlG8JDaJHQC63C2HKP_c
 citations:
@@ -26,7 +37,5 @@ citations:
 relations:
   GUARD-40603760: constrains
 status: approved
-text: If a workflow step that runs a gate can fail without failing its job, through
-  continue-on-error, a command whose failure is discarded by || true or || :, a shell
-  that does not stop on a failing command, or a condition that is always false, then
-  the build shall refuse the change.
+text: If a workflow step that runs a gate could end in success after the gate fails,
+  or could fail without failing its job, then the build shall refuse the change.

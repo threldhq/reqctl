@@ -1303,6 +1303,11 @@ def _placed(uid, blocks, prospective, flag, named):
                           "addressable")
     place = block if dot else "entries"
     held = prospective.get(place)
+    if dot and held is not None and not isinstance(held, dict):
+        # @req> REQ-30898926@Vu28eWaG_1mE o3ymh7
+        raise ReqctlError(f"{flag} {named}: {block} of {uid} holds no members "
+                          f"under keys -- rewrite {block} as a mapping of its "
+                          "members, then retry")
     prospective[place] = held = dict(held) if isinstance(held, dict) else {}
     return held, key if dot else named
 
