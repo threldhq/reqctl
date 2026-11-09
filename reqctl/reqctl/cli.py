@@ -229,7 +229,7 @@ def _render(fields, order=None):
 def cmd_revise(args):
     tree, _ = corpus.load()
     # @req+ REQ-94401451@EZFY5LjHcj9g pc3x5s
-    if len(args.uid) > 1:
+    if len(set(args.uid)) > 1:
         changes = _write.revise_together(tree, args.uid, vars(args))
         _emit(args, {"changed": changes},
               "\n".join(f"{uid}: " + (", ".join(sorted(changed)) or "already held")
