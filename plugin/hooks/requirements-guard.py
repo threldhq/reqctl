@@ -187,6 +187,14 @@ UNREADABLE = (
     "no guard. Tell the owner if this repeats."
 )
 
+FILTER_SCRIPTED = (
+    "git filter-branch {flag} runs its argument as a shell command -- rewrite "
+    "history without a filter option that runs a command, or ask the owner to "
+    "run it"
+)
+
+NOT_UTF8 = "{file} is not valid UTF-8 -- save it as UTF-8, then retry the edit"
+
 USE_REQCTL = (
     "Requirements are reached through reqctl, never by editing files.\n"
     "  reqctl new requirement | reqctl context UID\n"
@@ -2298,9 +2306,13 @@ def scripts_within(words, here):
     split = git_split(words)
     # @req> REQ-76235768@1l5tlNlByWT6 2j3niw
     if split and split[2] == "filter-branch":
-        scripts = [value for flag, value in itertools.pairwise(split[3]) if flag in FILTER_SCRIPTS]
-        top = scripts and git_sees(["rev-parse", "--show-toplevel"], located(words, here)).strip()
-        return [f"cd {shlex.quote(top)} && {script}" for script in scripts]
+        # @req+ REQ-83496373@HRzSsUNslyHh clsc3e
+        scripted = next((name for name in (word.partition("=")[0] for word in split[3])
+                         if name in FILTER_SCRIPTS), None)
+        if scripted:
+            deny(FILTER_SCRIPTED.format(flag=scripted))
+        # @req- clsc3e
+        return []
     if not split or any(split[2] in git_commands(kinds) for kinds in ("builtins", "main,others")):
         return []
     prefix, options, subcommand, args = split
@@ -2934,7 +2946,10 @@ def edited(tool, args, cwd):
     target = Path(cwd, os.path.expanduser(args.get("file_path") or ""))
     try:
         before = target.read_bytes().decode().replace("\r\n", "\n") if target.is_file() else ""
-    except (OSError, UnicodeError):
+    # @req> REQ-34113285@aeOOSSS1PQ72 wrpd34
+    except UnicodeError:
+        deny(NOT_UTF8.format(file=target))
+    except OSError:
         deny(UNREADABLE.format(what=f"the file {target}"))
     if tool == "Write":
         return before, args.get("content", "")
