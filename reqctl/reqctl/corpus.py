@@ -36,7 +36,7 @@ UID_IN_PROSE = re.compile(rf"\b(?:{KINDS})-\d{{8}}\b")
 PARAM_REF = re.compile(rf"\$\{{({NAME})((?:\.[^}}\s]+)?)\}}")
 PARAM_NEAR = re.compile(r"\$\{?(?:param|data)[-_]\d+(?:\.[\w.-]+)?\}?", re.IGNORECASE)
 NAME_FORM = "${name}"
-# @req> REQ-11930677@zW9EYrOae8-u lzcna6
+# @req> REQ-11930677@dH7Pu7k4K4YI lzcna6
 CONCEPT_TARGET = re.compile(rf"{NAME}(?:\.{NAME}){{0,2}}")
 CONCEPT_LINK = re.compile(rf"\[([^\]\n]+)\]\(({CONCEPT_TARGET.pattern})\)")
 TERM_NEAR = re.compile(r"\bterm[-_]\d+\b", re.IGNORECASE)
@@ -700,7 +700,7 @@ def entry_at(data, key):
     if not isinstance(key, str):
         return None
     steps = key.split(".")
-    # @req+ REQ-11930677@zW9EYrOae8-u 2nario
+    # @req+ REQ-11930677@dH7Pu7k4K4YI 2nario
     block = held_block(data, steps[0])
     if block is not None and len(steps) > 1:
         held, steps = block, steps[1:]
@@ -773,7 +773,7 @@ def covered(uid, data, entry_key=None):
     fields = entry_at(data, entry_key)
     if kind_of(uid, data) == "term":
         return {"definition": (fields or {}).get("definition")}
-    # @req+ REQ-11930677@zW9EYrOae8-u a7a4eb
+    # @req+ REQ-11930677@dH7Pu7k4K4YI a7a4eb
     block, _, member = str(entry_key).partition(".")
     if member and held_block(data, block) is not None:
         return {block: {member: fields}}
@@ -817,7 +817,7 @@ def cited_entries(item):
 def cited_item(store, address):
     named, entry = split_address(address)
     item = find(store, named)
-    # @req> REQ-11930677@zW9EYrOae8-u bwqnk4
+    # @req> REQ-11930677@dH7Pu7k4K4YI bwqnk4
     if entry is not None and entry not in cited_entries(item):
         # @req> REQ-30898926@Vu28eWaG_1mE lxj56m
         raise ReqctlError(f"{address}: {named} is not a data item holding "
@@ -941,7 +941,7 @@ def expand_address(lookup, address):
         if member is not None:
             wanted.add(f"{uid}.{member}")
     else:
-        # @req+ REQ-11930677@zW9EYrOae8-u ujoctz
+        # @req+ REQ-11930677@dH7Pu7k4K4YI ujoctz
         head, _, tail = rest.partition(".")
         member = tail.partition(".")[0]
         wanted.add(f"{uid}.{head}.{member}" if member and held_block(target, head) is not None
@@ -998,7 +998,7 @@ def concept_at(root, uid, data, rest):
     if data is None:
         return None
     if rest is not None:
-        # @req+ REQ-11930677@zW9EYrOae8-u krnbz5
+        # @req+ REQ-11930677@dH7Pu7k4K4YI krnbz5
         head, dot, _ = rest.partition(".")
         held = None if dot and head not in held_blocks(root, uid, data) else entry_at(data, rest)
         # @req- krnbz5

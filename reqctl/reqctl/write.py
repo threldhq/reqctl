@@ -337,7 +337,7 @@ def _addresses_match(store, address, ack):
             return False
     if wanted_rest is None:
         return True
-    # @req+ REQ-11930677@zW9EYrOae8-u wgpma6
+    # @req+ REQ-11930677@dH7Pu7k4K4YI wgpma6
     lookup = corpus.data_lookup(store)
     asked = corpus.expand_address(lookup, f"{held}.{wanted_rest}") - {held}
     if "." in wanted_rest and f"{held}.{wanted_rest}" not in asked:
@@ -744,7 +744,7 @@ def _readdressed_item(data, olds, new):
     held = {key: value if key in ("assessed", "relations")
             else _readdressed(value, olds, new)
             for key, value in data.items()}
-    # @req+ REQ-11930677@zW9EYrOae8-u yycc7l
+    # @req+ REQ-11930677@dH7Pu7k4K4YI yycc7l
     pins = data.get("assessed")
     if isinstance(pins, dict):
         moved = {}
@@ -1511,7 +1511,7 @@ def _revision(store, uid, fields):
                 fields.get("unset") or [], key)
             prospective["entries"] = held
     elif kind == "data":
-        # @req+ REQ-11930677@zW9EYrOae8-u ra2sb2
+        # @req+ REQ-11930677@dH7Pu7k4K4YI ra2sb2
         blocks = corpus.addressable_blocks(store.root, uid, before)
         if fields.get("new_entry") is not None:
             named = str(fields["new_entry"]).strip()

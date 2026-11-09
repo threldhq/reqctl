@@ -358,7 +358,7 @@ def _resolved(text, store):
             shown = f"{member} {unit}" if unit else str(member)
         else:
             entry, _, field = rest.partition(".")
-            # @req+ REQ-11930677@zW9EYrOae8-u ne5nva
+            # @req+ REQ-11930677@dH7Pu7k4K4YI ne5nva
             block = corpus.held_blocks(store.root, item.uid, fields).get(entry)
             if block is not None:
                 held, unit = block, None
@@ -599,7 +599,7 @@ def _context(store, item, dependents, tags, past):
         # @req+ REQ-49042671@vhxkl2dsMRfs pgeszq
         held = corpus.flagged(fields, rest) if fields is not None else None
         addresses_item = rest in (None, "default", corpus.MEMBERS) or held is not None
-        # @req> REQ-11930677@zW9EYrOae8-u h6snkl
+        # @req> REQ-11930677@dH7Pu7k4K4YI h6snkl
         named = (None if fields is None or addresses_item
                  else _named_fields(fields, rest, corpus.held_blocks(
                      store.root, target, fields)))
