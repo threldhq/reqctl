@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-45797944: wXgeXQtMt7tGU0o1V6OBy9A7UNR6ClXdzuWA8sS5rEs
+  REQ-51994852: TKuebjB9MeY23B7lIsFScBDw3gxhtebAf1cY2tBOmRg
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-45797944: depends_on
+  REQ-51994852: depends_on
+status: approved
+text: The product shall state, in the [portal](portal)'s forms for Deprecate, Drop
+  relation, Delete, Acknowledge and Drop member, what the action removes from the
+  corpus and what it keeps.
+type: functional
+verification: demonstration

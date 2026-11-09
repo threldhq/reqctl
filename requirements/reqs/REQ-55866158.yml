@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-59399209: DMSM7UOh_uQ4g_vowdVg9K1is1HSfUnLXJH8d9PCoKc
+  REQ-62729430: uBypjG0c4OWO8ELk6TV3-rcMDmndzSkd8z4GJY1oXvg
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-59399209: depends_on
+  REQ-62729430: depends_on
+status: approved
+text: While the [portal](portal)'s family view draws the other relations, the product
+  shall state how many relations other than derives_from join a requirement of the
+  family to a requirement outside it, where any do.
+type: functional
+verification: demonstration

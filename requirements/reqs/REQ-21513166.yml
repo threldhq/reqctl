@@ -1,0 +1,20 @@
+acceptance_criteria: []
+assessed:
+  REQ-14679866: V0QsDEPmgOq3TQKmYRg-F_lQUMmkDQCHxL1i5ocfAKE
+  REQ-22950334: CvELqCF22whmOlYnkigPkLrrGGHbNXBYUjSbvO-oNCA
+  REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
+  REQ-91205530: FiUaykViw6dQBHW7EnBC6n0Z561dMImVZMcXtg1FxdA
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-14679866: constrains
+  REQ-22950334: depends_on
+  REQ-87847146: depends_on
+  REQ-91205530: depends_on
+status: approved
+text: When a form of the [portal](portal) that revises an [item](item) is composed,
+  the product shall name in its revise step only the fields whose text the form changed
+  from what the [item](item) holds.
+type: functional
+verification: demonstration

@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-49576265: pFihs7WdIwGSo9e5kkPdFZLxtJJRQIRHfXC3rdxNwAs
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-49576265: depends_on
+status: approved
+text: The product shall show the [portal](portal) in the light or dark colour scheme
+  that the viewer's browser reports as preferred.
+type: functional
+verification: demonstration

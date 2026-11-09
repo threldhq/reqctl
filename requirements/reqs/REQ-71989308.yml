@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-51994852: TKuebjB9MeY23B7lIsFScBDw3gxhtebAf1cY2tBOmRg
+  REQ-83033927: K3q-IpHctnCpJ6FKkQ5V1TVnL4wCHL1W_vTwTPnAeaY
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-51994852: constrains
+  REQ-83033927: constrains
+status: approved
+text: The product shall open each form of the [portal](portal) as a modal dialog with
+  focus in the form.
+type: functional
+verification: demonstration

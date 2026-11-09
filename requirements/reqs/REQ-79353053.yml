@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-88874370: H8CRzlKTmNrtBRM2EXRMjSneyIhxrm1CKvVuUXIju_M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: depends_on
+  REQ-88874370: depends_on
+status: approved
+text: If sending a change from the [portal](portal) fails, or the run applying it
+  ends without success or without opening a pull request, then the product shall enable
+  again the control that sent it.
+type: functional
+verification: demonstration

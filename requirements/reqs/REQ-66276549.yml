@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-25363659: x2KAEtIScy4mp6C4Z1iGyaLrEXfLgSg2vz6DAJc6PUM
+  REQ-44810466: bLJV-4isqQ5j_BpyzbbHU0IME06-hsitnk3pv1MbJGo
+  REQ-81313171: 7j0AmKa_kopiVm-Tipo5BlSpSNzCDXY2Q-H7P4APxZk
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-25363659: depends_on
+  REQ-44810466: depends_on
+  REQ-81313171: depends_on
+status: approved
+text: If a form of the [portal](portal) that creates an [item](item) gives the status
+  approved, then the product shall follow the step that creates the [item](item) with
+  a revise step setting the status approved on the [item](item) that step [mints](mint).
+type: functional
+verification: demonstration

@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+  REQ-84459416: ZlrZpYNBUh8Qcc4SEVYaHeNwpPUdCLDbXn3kTSczv58
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-38789214: constrains
+  REQ-84459416: depends_on
+status: approved
+text: If the [portal](portal)'s setup screen is submitted with no token typed, or
+  only spaces, and none remembered, then the product shall show the setup screen again
+  stating that the token is needed, remembering nothing.
+type: functional
+verification: demonstration

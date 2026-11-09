@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-21522236: jupFEITq3NmshFFQh4JS2_Z-l-n8NuFSqudDu7xMQIo
+  REQ-83033927: K3q-IpHctnCpJ6FKkQ5V1TVnL4wCHL1W_vTwTPnAeaY
+  REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-21522236: depends_on
+  REQ-83033927: depends_on
+  REQ-87847146: depends_on
+status: approved
+text: When another kind is chosen in the [portal](portal)'s form for a new [item](item),
+  the product shall replace the form's fields with the fields of that kind.
+type: functional
+verification: demonstration

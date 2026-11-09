@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-54076552: G1Ej0m1RlGGSKCSE5Q0eAJxh32oiiOT1433jplkj7hY
+  REQ-67358511: 6v5ZhXIOqAkDsf0W_KJzRCkG3Te5NM3pCY0p1mTKl98
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-54076552: depends_on
+  REQ-67358511: depends_on
+status: approved
+text: When the [portal](portal)'s Revise form is composed with text in a box for replacing
+  a word, the product shall add to the form's revise step a reword of that word to
+  the box's text.
+type: functional
+verification: demonstration

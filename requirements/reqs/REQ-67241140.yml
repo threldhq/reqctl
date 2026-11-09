@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-35173659: 6-uptMskrE4LsifMIh_xbJxOqRVtmNdscohlwUULl6c
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-64005208: VjZ0V0VbMEZROkmxMks0k2r31pxgjBVgbcrGVaTYWdY
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-35173659: constrains
+  REQ-57492239: depends_on
+  REQ-64005208: depends_on
+status: approved
+text: When the queued changes the [portal](portal) sent open a pull request, the product
+  shall drop every queued change.
+type: functional
+verification: demonstration

@@ -1,0 +1,24 @@
+acceptance_criteria: []
+assessed:
+  REQ-11466654: hJPYOKZDTuvqy_YJHuq11E5x3A1akHyPUkp2sOU2PfE
+  REQ-30898926: Vu28eWaG_1mEOkNDj-6x3uKFNaUwFedOiL2MhrAGpR4
+  REQ-50159837: eYoI-qFNXpXNzygC5Qi2yY5GOGoDSvjFvDjJKvcHMc8
+  REQ-65499760: Kmwfnj7-rVbiZPjc47iAnRetoX_dYI2xs2YZ05waEk0
+  REQ-84269679: uQ500_HZ6_7eb1G2BGio_rxedxROBc1erzCS-tSaSzI
+  REQ-89218328: 0_EQrNIm_cPAP0Jr46-l51VhBkyd3BFNr9uzyY78yQI
+  REQ-91036410: EFhAQqWmHFZP2Q6O9XURDN7sEjwE2GpQn4YU8nVhUDs
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-11466654: constrains
+  REQ-30898926: derives_from
+  REQ-50159837: constrains
+  REQ-65499760: constrains
+  REQ-84269679: constrains
+  REQ-89218328: constrains
+  REQ-91036410: constrains
+status: approved
+text: The product shall word the statement of each fault for which the [portal](portal)
+  refuses a form as what the person must change to clear it.
+type: functional
+verification: demonstration

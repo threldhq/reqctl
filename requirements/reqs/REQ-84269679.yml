@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-25363659: x2KAEtIScy4mp6C4Z1iGyaLrEXfLgSg2vz6DAJc6PUM
+  REQ-79353110: BkH49V7f27UxSnkfmkQ0rqMMcziH5XEBwLFOUL0SdCw
+  REQ-94065353: 13TDTQioAe4KD2Mm0KJwM0SW3yBGFNe5zHpYWOZAl50
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-25363659: depends_on
+  REQ-79353110: derives_from
+  REQ-94065353: depends_on
+status: approved
+text: If the target given in the [portal](portal)'s Relate form is not the uid of
+  a requirement, then the product shall refuse the form and state that the target
+  must be a requirement.
+type: functional
+verification: demonstration

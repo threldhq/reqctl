@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-42335087: EHhmRZP7XeYWNAbWG3qnfiF_LYS39HqgjSTR9eE8hi8
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-42335087: depends_on
+status: approved
+text: If the [portal](portal)'s form for adding an [entry](entry) gives the [entry](entry)
+  no name, then the product shall refuse the form and state that the [entry](entry)
+  needs a name.
+type: functional
+verification: demonstration

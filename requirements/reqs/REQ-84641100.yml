@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-44733670: C8Ng3PpXQx7jqYohztnywiVDQ8-IfnYvWWWcFrbNwOw
+  REQ-44900066: qaXVLJO6m5rPNCh83xwnryTIoHIrAteqeJP5sUa00dg
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-44733670: constrains
+  REQ-44900066: constrains
+  REQ-57492239: depends_on
+status: approved
+text: If sending a change from the [portal](portal) fails, or the run applying it
+  ends without success or without opening a pull request, then the product shall state
+  the fault beside the control that sent it.
+type: functional
+verification: demonstration

@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-37024518: N98xbJLgeCP0-9iPvN9rbN2CzGeAGTnlpIVHgGrwRNQ
+  REQ-84641100: hkDOGJ16SKpM5fCywkz30LPS84rr2AtuWMKLXKPU3Sw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-37024518: depends_on
+  REQ-84641100: constrains
+status: approved
+text: If GitHub answers a request of the [portal](portal) with any other status that
+  is not a success, then the product shall fail the request, stating the request's
+  path and the status.
+type: functional
+verification: demonstration

@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-21522236: jupFEITq3NmshFFQh4JS2_Z-l-n8NuFSqudDu7xMQIo
+  REQ-36903196: Qp4pMTYCC1T07KrlIx3CGJguO4MlGhXJuQTOG69_DnM
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-21522236: constrains
+  REQ-36903196: depends_on
+status: approved
+text: The product shall offer, beside each word the [portal](portal)'s Revise form
+  lists as shown by links to the [item](item), a box in which to write a word to replace
+  it.
+type: functional
+verification: demonstration

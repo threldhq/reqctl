@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
+  REQ-45207510: UCnNHap8pwx6_vTCpjBQb9XaYTJ_xpzVIKVtoHBkqc8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-42771008: depends_on
+  REQ-45207510: depends_on
+status: approved
+text: While the [portal](portal) holds a queued change, the product shall list above
+  the list of [items](item) the title of each queued change, in the order they were
+  queued.
+type: functional
+verification: demonstration

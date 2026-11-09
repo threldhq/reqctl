@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-25363659: x2KAEtIScy4mp6C4Z1iGyaLrEXfLgSg2vz6DAJc6PUM
+  REQ-71965656: F8ulVugEMpD-KciC93Ppv6DJGlz_QdY_TQ7CH57K7hw
+  REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-25363659: depends_on
+  REQ-71965656: depends_on
+  REQ-87847146: depends_on
+status: approved
+text: When a form of the [portal](portal) that creates an [item](item) is composed,
+  the product shall name in its new step, as options, each field given a value other
+  than the status.
+type: functional
+verification: demonstration

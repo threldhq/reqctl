@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-54076552: G1Ej0m1RlGGSKCSE5Q0eAJxh32oiiOT1433jplkj7hY
+  REQ-69300019: zmqcHuaUXUjeBAnWAiG309OkxVdvxC0RVxby8tNymd8
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-54076552: depends_on
+  REQ-69300019: depends_on
+status: approved
+text: If a word given a replacement in the [portal](portal)'s Revise form holds an
+  equals sign, then the product shall refuse the form and name the word.
+type: functional
+verification: demonstration

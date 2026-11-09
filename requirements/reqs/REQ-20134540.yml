@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-80416166: fZFXqf9ggCT8pE_ny432QxGJ0xVrC0I8nCO8dDG4_MA
+  REQ-81220228: DAytEkvTUdTOSKwLhWLXUcmAT1qx8v69DaYegSTHcPc
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-80416166: constrains
+  REQ-81220228: depends_on
+status: approved
+text: The product shall offer, in the [portal](portal)'s form for adding or editing
+  an [entry](entry), a control that adds an empty pair and, beside each pair, a control
+  that drops it.
+type: functional
+verification: demonstration

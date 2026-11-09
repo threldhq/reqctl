@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations: {}
+status: approved
+text: While an [item](item) is selected in the [portal](portal), the product shall
+  show at the head of its detail the [item](item)'s uid, its status, the start of
+  its [stamp](stamp) and its text.
+type: functional
+verification: demonstration

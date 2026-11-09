@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-41307666: x3Cru_vnJl9Tos6Di0VyW-E62yTzI4LfgS6hG57x80Q
+  REQ-51994852: TKuebjB9MeY23B7lIsFScBDw3gxhtebAf1cY2tBOmRg
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-41307666: depends_on
+  REQ-51994852: depends_on
+status: approved
+text: When Close is used, or Escape is pressed, in a form of the [portal](portal),
+  the product shall close the form, keeping nothing composed in it.
+type: functional
+verification: demonstration
