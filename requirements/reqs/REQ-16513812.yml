@@ -17,7 +17,6 @@ relations:
   REQ-51994852: depends_on
 status: approved
 text: The product shall state, in the [portal](portal)'s forms for Deprecate, Drop
-  relation, Delete, Acknowledge and Drop member, what the action removes from the
-  corpus and what it keeps.
+  relation, Delete, Acknowledge and Drop member, what the action changes in the corpus.
 type: functional
 verification: demonstration
