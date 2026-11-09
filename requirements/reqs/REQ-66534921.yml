@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a [data item](data_item) with a schema named for it, and a statement referencing
+    a member of one of its blocks
+  then: the schema carries the new name, validate passes and the reference resolves
+  when: the [data item](data_item) is renamed
+assessed:
+  REQ-23995596: -pejAoHYKY9LtUnRXvdfGWM8noQfgjOAG2eXhY3MBrA
+  REQ-48136849: EXeydTy0CfsX6zjCydxxEATF_0fiFyxbZ-TNvFTdjkQ
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+priority: medium
+relations:
+  REQ-23995596: constrains
+  REQ-48136849: depends_on
+status: approved
+text: When a [data item](data_item) that a schema is named for is renamed, the product
+  shall rename that schema to the [data item](data_item)'s new name.
+type: functional
+verification: inspection

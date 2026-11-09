@@ -1,0 +1,8 @@
+acceptance_criteria:
+- given: a session starting in a clone whose origin/main is behind origin
+  then: origin/main matches origin's main
+  when: the session-start hook runs
+assessed: {}
+relations: {}
+status: approved
+text: When a session starts, the build shall fetch origin's default branch.

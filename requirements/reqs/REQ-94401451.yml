@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: two draft [items](item) related in both directions
+  then: both are approved
+  when: reqctl revise A B --status approved runs
+- given: two named [items](item), one of which would be refused for a fault other
+    than another named [item](item)'s status
+  then: the product refuses the revision and changes neither
+  when: reqctl revise A B --status approved runs
+assessed:
+  REQ-42068162: TlRyGA-UJLlqIgKcMAE--oU8SsXrd7tZsGjsnxwCJ5k
+  REQ-53480164: 5yFhCLJmuTBtpbWyc8P_5wTl2v3MmC8sDkuq5Wri6NA
+  REQ-77022154: -t-5C3fYQMS3aRMST82_tiZlD-Cp631mInGLUmwxCog
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-42068162: constrains
+  REQ-53480164: constrains
+  REQ-77022154: constrains
+status: approved
+text: When reqctl revise is given more than one [item](item) with --status approved,
+  the product shall judge each [item](item) given as though every [item](item) given
+  were approved.
+type: functional
+verification: inspection

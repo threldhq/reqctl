@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a file holding no citation that is not valid UTF-8
+  then: the product refuses it, stating that the file is not valid UTF-8 and naming
+    saving it as UTF-8 as the fix
+  when: an Edit of it is judged
+assessed:
+  REQ-60211288: pREpt1tBYPFJbqe7SPNIYqmg7tNtJfoexy-x99eZFF0
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-60211288: depends_on
+status: approved
+text: If a file that a [tool call](tool_call) would edit is not valid UTF-8, then
+  the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

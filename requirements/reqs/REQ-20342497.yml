@@ -14,7 +14,7 @@ acceptance_criteria:
   then: the product refuses the rename, naming the key, and changes nothing
   when: reqctl rename gives the [data item](data_item) that name
 assessed:
-  REQ-11930677: zW9EYrOae8-u8KwxL5w05JEgFmsILH44ca3s1_IFSls
+  REQ-11930677: dH7Pu7k4K4YI7dYDS8fx5y_ijNiUxyAfIcLXM3sw8LE
   addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0

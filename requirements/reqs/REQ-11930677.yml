@@ -48,6 +48,12 @@ acceptance_criteria:
 - given: lines of code
   then: the product refuses, as it refuses an address naming no [entry](entry)
   when: reqctl tag is asked to cite a [block member](block_member)
+- given: 'an [addressable block](addressable_block) whose [block member](block_member)
+    holds a plain value such as gold: 5'
+  then: the product refuses the reference and names stating the [block member](block_member)
+    as a record of fields as the fix
+  when: a statement referencing the [block member](block_member) is written or the
+    corpus is validated
 assessed:
   REQ-44791607: 6FX5SSp9MG3BrMXFTObcLLmHuMfwj51H-fvEu_Gf1fw
   REQ-62329029: wjRs5FRIhJ3CvH2pvvOVXfuJpTzBWxXbyJ_vUhcQebI

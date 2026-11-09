@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: uv python find 3.9
+  then: the product takes no word of it as a file to run
+  when: the [tool call](tool_call) is judged
+- given: python script.py
+  then: the product takes script.py as the file to run
+  when: the [tool call](tool_call) is judged
+assessed:
+  REQ-75038049: hXyFNmxx-SWySt9u7ITdv6t6cQTH7MLACKtVXuTufk0
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-75038049: constrains
+status: approved
+text: When the product judges which file a shell command in a [tool call](tool_call)
+  would run, the product shall take a word as that file only where the program the
+  command runs reads that word as a script to run.
+type: functional
+verification: inspection
