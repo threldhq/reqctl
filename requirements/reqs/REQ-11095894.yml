@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-64610303: tFQ0fV9lxwXYm6UyNUo2j4mkXDgj0ICNsH7RKD8-1HU
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: depends_on
+  REQ-64610303: depends_on
+status: approved
+text: When the run applying a change the [portal](portal) sent opens a pull request,
+  the product shall show beside the control that sent it a link to that pull request.
+type: functional
+verification: demonstration

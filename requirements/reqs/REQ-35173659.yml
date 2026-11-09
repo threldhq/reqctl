@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-45207510: UCnNHap8pwx6_vTCpjBQb9XaYTJ_xpzVIKVtoHBkqc8
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-45207510: depends_on
+status: approved
+text: When the [portal](portal)'s queued changes change, the product shall keep them
+  in the browser's storage.
+type: functional
+verification: demonstration

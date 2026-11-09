@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-51994852: TKuebjB9MeY23B7lIsFScBDw3gxhtebAf1cY2tBOmRg
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-83033927: K3q-IpHctnCpJ6FKkQ5V1TVnL4wCHL1W_vTwTPnAeaY
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-51994852: depends_on
+  REQ-57492239: constrains
+  REQ-83033927: depends_on
+status: approved
+text: The product shall prefill the pull request title of each form of the [portal](portal)
+  with a conventional commit message naming the form's action, scoped to the uid of
+  the [item](item) it concerns or, for a new [item](item), to corpus.
+type: functional
+verification: demonstration

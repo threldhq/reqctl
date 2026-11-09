@@ -1,0 +1,10 @@
+acceptance_criteria: []
+assessed:
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations: {}
+status: approved
+text: While a requirement is selected in the [portal](portal), the product shall offer
+  Relate and Family on it.
+type: functional
+verification: demonstration

@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-87847146: depends_on
+status: approved
+text: When a term, alias or named [item](item) the [portal](portal) offers in a multi-line
+  box is chosen, the product shall replace the slash and the text after it with a
+  link to the term, or a reference to the named [item](item), and put the caret after
+  it.
+type: functional
+verification: demonstration

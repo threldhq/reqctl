@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-20643668: eOsy33VzidrRxjgca4uKzpFe-HnKAwldQA_MNp5Kli4
+  REQ-76787560: yx4uV-ApjJfeDYpZWt6aImUPiJCZFZFXuWeQjLPq_OM
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-20643668: constrains
+  REQ-76787560: depends_on
+status: approved
+text: Where an [item](item) other than a requirement holds a name, a term or an [entry](entry),
+  the product shall lead its text in the [portal](portal)'s list, and head its detail,
+  with its name, else its term, else the name of its first [entry](entry).
+type: functional
+verification: demonstration

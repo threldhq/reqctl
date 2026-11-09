@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-16910419: bcXxnTl6FuGyYjsi2S1cjPM1hbtXZ_UOj0eVuDiF7zk
+  REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-16910419: depends_on
+  REQ-38789214: depends_on
+status: approved
+text: When the [portal](portal)'s setup screen is submitted with a repository and
+  a token, the product shall load the corpus.
+type: functional
+verification: demonstration

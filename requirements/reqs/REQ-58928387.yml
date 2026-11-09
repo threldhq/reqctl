@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-13671144: gYp6g1_8U5dALlLZyyr1HitIIJIKAoyv3oz6BTrZAqY
+  REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-13671144: depends_on
+  REQ-42771008: depends_on
+status: approved
+text: When an [item](item) of a kind other than the kind chosen above the [portal](portal)'s
+  list is selected, the product shall make the [item](item)'s kind the chosen kind.
+type: functional
+verification: demonstration

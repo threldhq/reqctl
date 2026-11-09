@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-11203679: LKGrEB6ZNVCvZklziblKCr0r428o-EXF5MJxIao_2HA
+  REQ-35173659: 6-uptMskrE4LsifMIh_xbJxOqRVtmNdscohlwUULl6c
+  REQ-59774469: 2L7AroyhuVFMuyujUAOcw2o2JjK80m_5adp8d69TUMY
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-11203679: constrains
+  REQ-35173659: depends_on
+  REQ-59774469: constrains
+status: approved
+text: If the queued changes in the browser's storage cannot be read when the [portal](portal)
+  loads the corpus, then the product shall start with no queued change, remove them
+  from the storage, and state the reason.
+type: functional
+verification: demonstration

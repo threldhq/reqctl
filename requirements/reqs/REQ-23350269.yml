@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-16910419: bcXxnTl6FuGyYjsi2S1cjPM1hbtXZ_UOj0eVuDiF7zk
+  REQ-80115998: 5Q31K4gVM_b7814S0s7RqdPwYFiAEpqF6SqJLiWlcJU
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-16910419: depends_on
+  REQ-80115998: depends_on
+status: approved
+text: If the [portal](portal) cannot read or parse the corpus, then the product shall
+  show the setup screen stating the fault.
+type: functional
+verification: demonstration

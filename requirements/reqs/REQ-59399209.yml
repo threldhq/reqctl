@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-58911635: cSn29GquJ0YAI222TowGbABGkr8hnMXE76KR9QJW3pI
+  REQ-62729430: uBypjG0c4OWO8ELk6TV3-rcMDmndzSkd8z4GJY1oXvg
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-58911635: depends_on
+  REQ-62729430: depends_on
+status: approved
+text: When the control for other relations is used in the [portal](portal)'s family
+  view, the product shall start or stop drawing each relation other than derives_from
+  that joins two requirements of the family.
+type: functional
+verification: demonstration

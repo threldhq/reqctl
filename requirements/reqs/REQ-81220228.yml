@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-19183794: dRHS3YJCEEPVk75ZaMxU1OSXR0W_RvY4ZgtcLnoWiTU
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-19183794: depends_on
+status: approved
+text: When the [portal](portal)'s form for adding or editing an [entry](entry) is
+  opened, the product shall offer each field of the [entry](entry) as a pair of a
+  field name and a value, and one empty pair where the [entry](entry) holds no field.
+type: functional
+verification: demonstration

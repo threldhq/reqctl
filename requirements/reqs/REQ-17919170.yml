@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-13671144: gYp6g1_8U5dALlLZyyr1HitIIJIKAoyv3oz6BTrZAqY
+  REQ-62729430: uBypjG0c4OWO8ELk6TV3-rcMDmndzSkd8z4GJY1oXvg
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-13671144: derives_from
+  REQ-62729430: depends_on
+status: approved
+text: When a requirement other than the selected one is chosen in the [portal](portal)'s
+  family view, the product shall select it and show its family in the view.
+type: functional
+verification: demonstration

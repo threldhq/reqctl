@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-42771008: depends_on
+status: approved
+text: While an [item](item) is selected in the [portal](portal), the product shall
+  offer Revise and Deprecate on it.
+type: functional
+verification: demonstration

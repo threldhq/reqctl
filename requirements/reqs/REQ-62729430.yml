@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-94065353: 13TDTQioAe4KD2Mm0KJwM0SW3yBGFNe5zHpYWOZAl50
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-94065353: depends_on
+status: approved
+text: When Family is used on a requirement in the [portal](portal), the product shall
+  show in a dialog every requirement joined to it through derives_from relations followed
+  in either direction, to any depth.
+type: functional
+verification: demonstration

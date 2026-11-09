@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-76958744: G6gCTCrSsHetq9vT1YIKvzH3gHNoOAOHzVGm3Q5fam8
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-76958744: depends_on
+status: approved
+text: When Discard is used in the [portal](portal), the product shall drop every queued
+  change.
+type: functional
+verification: demonstration

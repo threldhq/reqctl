@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-45207510: UCnNHap8pwx6_vTCpjBQb9XaYTJ_xpzVIKVtoHBkqc8
+  REQ-51361575: NQI9dJRNPz0Ts1hBuYiDrDu9bQMj7MMEOwgCZL4OFqI
+  REQ-64610303: tFQ0fV9lxwXYm6UyNUo2j4mkXDgj0ICNsH7RKD8-1HU
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-45207510: constrains
+  REQ-51361575: depends_on
+  REQ-64610303: constrains
+status: approved
+text: If the pull request title of a form of the [portal](portal) is empty when the
+  form's change is sent or queued, then the product shall title the change with the
+  prefilled title.
+type: functional
+verification: demonstration

@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-62729430: uBypjG0c4OWO8ELk6TV3-rcMDmndzSkd8z4GJY1oXvg
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-62729430: depends_on
+status: approved
+text: The product shall place each requirement of a family the [portal](portal) shows
+  on the row below the lowest requirement of the family it derives from, and a requirement
+  of the family that derives from none of them on the first row.
+type: functional
+verification: demonstration

@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations: {}
+status: approved
+text: While an [item](item) is selected in the [portal](portal), the product shall
+  show in its detail, each under a label naming it, every one of the [item](item)'s
+  rationale, acceptance criteria, [entries](entry), outgoing relations, incoming relations,
+  concepts, parameters, implementing files, references and other fields that is not
+  empty.
+type: functional
+verification: demonstration

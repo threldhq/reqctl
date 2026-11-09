@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-46529187: 6VkOhD1CUEjS79DaTwpqGS6JnibRWPNALjKRp-OJkco
+  REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-46529187: constrains
+  REQ-87847146: depends_on
+status: approved
+text: While the text before the caret in a multi-line box of a form of the [portal](portal)
+  ends with a slash followed by letters, digits, underscores, spaces or hyphens, the
+  product shall offer the terms, the aliases of terms and the named [items](item)
+  whose word or name holds the text after the slash, ignoring case.
+type: functional
+verification: demonstration

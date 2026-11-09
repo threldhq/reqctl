@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
+  REQ-49576265: pFihs7WdIwGSo9e5kkPdFZLxtJJRQIRHfXC3rdxNwAs
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-42771008: depends_on
+  REQ-49576265: depends_on
+status: approved
+text: The product shall show the detail of the selected [item](item) beside the [portal](portal)'s
+  list of [items](item) where the window is wide, and below the list where it is narrow.
+type: functional
+verification: demonstration

@@ -1,0 +1,21 @@
+acceptance_criteria: []
+assessed:
+  REQ-21513166: zjiX-rVW8oFKQB2BAEn4B8qDlOB-UtugLC_1XUkUD6Y
+  REQ-80416166: fZFXqf9ggCT8pE_ny432QxGJ0xVrC0I8nCO8dDG4_MA
+  REQ-96926927: JrkNpeQqNUl0xEc-53FbIzo-f7NVZXPUr52LZFZ_wCQ
+  REQ-98666936: TeGjonYXb0EMnh03H6MEpobkb79wt32isg73HDq6i2g
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-21513166: depends_on
+  REQ-80416166: depends_on
+  REQ-96926927: derives_from
+  REQ-98666936: derives_from
+status: approved
+text: If a form of the [portal](portal) that revises an [item](item) or an [entry](entry)
+  changes nothing, then the product shall refuse the form and state that nothing was
+  changed.
+type: functional
+verification: demonstration
