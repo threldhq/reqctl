@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-44791607: 6FX5SSp9MG3BrMXFTObcLLmHuMfwj51H-fvEu_Gf1fw
+  REQ-62329029: wjRs5FRIhJ3CvH2pvvOVXfuJpTzBWxXbyJ_vUhcQebI
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-44791607: depends_on
+  REQ-62329029: depends_on
+status: approved
+text: Where text the [portal](portal) shows holds a word written as a link to an [item](item)
+  or to an [entry](entry) of one, the product shall show the word as a link that selects
+  that [item](item).
+type: functional
+verification: demonstration

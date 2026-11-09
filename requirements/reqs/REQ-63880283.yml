@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-39359341: uRF-58MwVPtQpAesP_5kV3u1zlb0KsFXy30ypkxNMCE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-39359341: depends_on
+status: approved
+text: While no [item](item) is selected in the [portal](portal), the product shall
+  state in the detail that no [item](item) is selected.
+type: functional
+verification: demonstration

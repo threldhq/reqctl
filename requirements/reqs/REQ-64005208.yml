@@ -1,0 +1,20 @@
+acceptance_criteria: []
+assessed:
+  REQ-45207510: UCnNHap8pwx6_vTCpjBQb9XaYTJ_xpzVIKVtoHBkqc8
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  REQ-71407357: EUXcMYpw10y-KXnNSCX7ihDQHmpHHqfcFGM5YWY-f2s
+  REQ-76958744: G6gCTCrSsHetq9vT1YIKvzH3gHNoOAOHzVGm3Q5fam8
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-45207510: depends_on
+  REQ-57492239: derives_from
+  REQ-71407357: depends_on
+  REQ-76958744: depends_on
+status: approved
+text: When Open one pull request is used in the [portal](portal), the product shall
+  send the queued changes as one batch, in the order they were queued, titled with
+  the title of the change where one is queued and otherwise with a title counting
+  them.
+type: functional
+verification: demonstration

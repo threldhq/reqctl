@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-45207510: UCnNHap8pwx6_vTCpjBQb9XaYTJ_xpzVIKVtoHBkqc8
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-45207510: depends_on
+status: approved
+text: While the [portal](portal) holds a queued change, the product shall offer Open
+  one pull request and Discard.
+type: functional
+verification: demonstration

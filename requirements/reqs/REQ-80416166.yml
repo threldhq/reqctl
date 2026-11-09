@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-21513166: zjiX-rVW8oFKQB2BAEn4B8qDlOB-UtugLC_1XUkUD6Y
+  REQ-25363659: x2KAEtIScy4mp6C4Z1iGyaLrEXfLgSg2vz6DAJc6PUM
+  REQ-81220228: DAytEkvTUdTOSKwLhWLXUcmAT1qx8v69DaYegSTHcPc
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-21513166: derives_from
+  REQ-25363659: depends_on
+  REQ-81220228: depends_on
+status: approved
+text: When a form of the [portal](portal) that adds or edits an [entry](entry) is
+  composed, the product shall set each field whose name the [entry](entry) does not
+  hold or whose text differs from the [entry](entry)'s, and unset each field the [entry](entry)
+  holds that the form no longer lists.
+type: functional
+verification: demonstration

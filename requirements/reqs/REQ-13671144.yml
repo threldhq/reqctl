@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
+  REQ-51482370: IStKF1PWs6B-LMG0WQTsnO1GMsIsUDYr7dHr5Jpu19E
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-42771008: depends_on
+  REQ-51482370: depends_on
+status: approved
+text: When a row of the [portal](portal)'s list, or a uid or linked word the [portal](portal)
+  shows, is chosen, the product shall select the [item](item) it names, a name holding
+  a full stop naming the [item](item) before the full stop, and show that [item](item)'s
+  detail.
+type: functional
+verification: demonstration

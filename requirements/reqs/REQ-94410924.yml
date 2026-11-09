@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-42065260: tSlWvFBjE0qfpzFgfr2u3uWle8JUvjQjsYQUlqE__gs
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-42065260: depends_on
+status: approved
+text: While an [item](item) whose status is draft is selected in the [portal](portal),
+  the product shall offer Delete on it.
+type: functional
+verification: demonstration

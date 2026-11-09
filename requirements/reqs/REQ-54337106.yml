@@ -1,0 +1,24 @@
+acceptance_criteria: []
+assessed:
+  REQ-11203679: LKGrEB6ZNVCvZklziblKCr0r428o-EXF5MJxIao_2HA
+  REQ-23281207: -EoSDW-v6e5yS9EuewEKS-EXc_HMS2RONtjh9DBrY8k
+  REQ-45207510: UCnNHap8pwx6_vTCpjBQb9XaYTJ_xpzVIKVtoHBkqc8
+  REQ-59774469: 2L7AroyhuVFMuyujUAOcw2o2JjK80m_5adp8d69TUMY
+  REQ-64005208: VjZ0V0VbMEZROkmxMks0k2r31pxgjBVgbcrGVaTYWdY
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+  stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+priority: medium
+relations:
+  REQ-11203679: depends_on
+  REQ-23281207: depends_on
+  REQ-45207510: depends_on
+  REQ-59774469: depends_on
+  REQ-64005208: constrains
+status: approved
+text: If an [item](item) that a queued change concerns carries, in the corpus the
+  [portal](portal) last loaded, a [stamp](stamp) other than the one it carried when
+  the change was queued, or is no longer held, then the product shall send none of
+  the queued changes and name every such [item](item).
+type: functional
+verification: demonstration

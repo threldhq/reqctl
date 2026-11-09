@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-45797944: wXgeXQtMt7tGU0o1V6OBy9A7UNR6ClXdzuWA8sS5rEs
+  REQ-51994852: TKuebjB9MeY23B7lIsFScBDw3gxhtebAf1cY2tBOmRg
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-45797944: depends_on
+  REQ-51994852: depends_on
+status: approved
+text: While the [portal](portal) shows a relation that the selected [item](item) records
+  toward another [item](item), the product shall offer Drop beside the relation.
+type: functional
+verification: demonstration

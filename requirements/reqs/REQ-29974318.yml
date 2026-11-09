@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-11203679: LKGrEB6ZNVCvZklziblKCr0r428o-EXF5MJxIao_2HA
+  REQ-59774469: 2L7AroyhuVFMuyujUAOcw2o2JjK80m_5adp8d69TUMY
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-11203679: depends_on
+  REQ-59774469: depends_on
+status: approved
+text: While the [portal](portal) loads the corpus, the product shall show in place
+  of the page a statement that it is loading.
+type: functional
+verification: demonstration

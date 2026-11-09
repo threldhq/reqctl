@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-57492239: depends_on
+status: approved
+text: The product shall offer in every form of the [portal](portal) the controls Close,
+  Add to batch and Open a pull request.
+type: functional
+verification: demonstration

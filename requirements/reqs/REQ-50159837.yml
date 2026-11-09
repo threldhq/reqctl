@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-48998966: TUTQjlZtGDUPmOuzgttxUk2zU4NGhkKexRvQ2qPSnmQ
+  REQ-69283350: vYYldulaXQvcEUAywcmyFqL2JODMTJn1tatxCyKl0bc
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-48998966: derives_from
+  REQ-69283350: depends_on
+status: approved
+text: If a form of the [portal](portal) that creates an [item](item) leaves empty
+  a field its kind requires, then the product shall refuse the form and name each
+  field left empty.
+type: functional
+verification: demonstration

@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-28090849: CJNtdzigrsx0tKToCex2jYthRjyjqnmsnvJmbpyoT-8
+  REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
+  REQ-72352942: q7_Ju8MGy5CFWQW53WLngT7Pm2-CgVYUZrK7czD9jK0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-28090849: depends_on
+  REQ-42771008: depends_on
+  REQ-72352942: depends_on
+status: approved
+text: When text is typed in the [portal](portal)'s search box, the product shall list
+  only the [items](item) of the kind chosen above the list whose uid, leading name,
+  text or status holds the typed text, ignoring case.
+type: functional
+verification: demonstration

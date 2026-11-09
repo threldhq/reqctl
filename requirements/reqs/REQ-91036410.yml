@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-81220228: DAytEkvTUdTOSKwLhWLXUcmAT1qx8v69DaYegSTHcPc
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-81220228: depends_on
+status: approved
+text: If a form of the [portal](portal) for an [entry](entry) lists one field name
+  twice, then the product shall refuse the form and name the field.
+type: functional
+verification: demonstration

@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-25363659: x2KAEtIScy4mp6C4Z1iGyaLrEXfLgSg2vz6DAJc6PUM
+  REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-25363659: depends_on
+  REQ-57492239: depends_on
+status: approved
+text: 'When the [portal](portal)''s form for Deprecate, Drop relation, Delete, Acknowledge,
+  Drop member or Relate is composed, the product shall compose one step: revise setting
+  the status deprecated, unrelate, delete, revise acknowledging the concept or parameter,
+  revise dropping the [entry](entry), or relate, respectively.'
+type: functional
+verification: demonstration

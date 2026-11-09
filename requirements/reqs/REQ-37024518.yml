@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-84459416: ZlrZpYNBUh8Qcc4SEVYaHeNwpPUdCLDbXn3kTSczv58
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-84459416: depends_on
+status: approved
+text: If GitHub answers a request of the [portal](portal) as unauthorised or forbidden,
+  then the product shall fail the request, stating the status and that the token's
+  scopes and expiry need checking.
+type: functional
+verification: demonstration

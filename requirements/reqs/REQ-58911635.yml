@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-62729430: uBypjG0c4OWO8ELk6TV3-rcMDmndzSkd8z4GJY1oXvg
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-62729430: depends_on
+status: approved
+text: The product shall draw, in a family the [portal](portal) shows, a line from
+  each requirement to each requirement of the family it derives from.
+type: functional
+verification: demonstration

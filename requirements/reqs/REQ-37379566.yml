@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-35173659: 6-uptMskrE4LsifMIh_xbJxOqRVtmNdscohlwUULl6c
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-35173659: depends_on
+status: approved
+text: If the browser refuses to store the [portal](portal)'s queued changes, then
+  the product shall state the browser's reason and that a reload will not show the
+  queued changes as they now stand.
+type: functional
+verification: demonstration

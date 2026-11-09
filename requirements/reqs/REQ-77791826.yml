@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
+  REQ-49900441: vzcVI-Jl7ucPguw3zI6p_jKa3dZUriV62-utFzoi7H8
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-42771008: depends_on
+  REQ-49900441: depends_on
+status: approved
+text: If no [item](item) of the kind chosen above the [portal](portal)'s list matches
+  the search box, then the product shall state in the list that nothing matches.
+type: functional
+verification: demonstration

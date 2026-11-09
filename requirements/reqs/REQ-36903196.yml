@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-22950334: CvELqCF22whmOlYnkigPkLrrGGHbNXBYUjSbvO-oNCA
+  REQ-51482370: IStKF1PWs6B-LMG0WQTsnO1GMsIsUDYr7dHr5Jpu19E
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-22950334: depends_on
+  REQ-51482370: depends_on
+status: approved
+text: When the [portal](portal)'s Revise form is opened, the product shall list each
+  word, other than the [item](item)'s term and the term with its first letter capitalised,
+  that a link to the [item](item) shows in the text, definition, rationale, acceptance
+  criteria or [entries](entry) of any [item](item), with the number of links that
+  show it.
+type: functional
+verification: demonstration

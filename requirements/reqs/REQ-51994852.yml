@@ -1,0 +1,22 @@
+acceptance_criteria: []
+assessed:
+  REQ-22950334: CvELqCF22whmOlYnkigPkLrrGGHbNXBYUjSbvO-oNCA
+  REQ-67532924: r8wZQAAKL9Yey4dmbAVz1ix8jLYB5N_V3TqS68AA-wg
+  REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
+  REQ-94065353: 13TDTQioAe4KD2Mm0KJwM0SW3yBGFNe5zHpYWOZAl50
+  REQ-94410924: VNuUThWMV1NeaQ_S8WiWDLfBtdXAdejzTxZeJI_4Vj0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-22950334: depends_on
+  REQ-67532924: depends_on
+  REQ-87847146: depends_on
+  REQ-94065353: depends_on
+  REQ-94410924: depends_on
+status: approved
+text: When an action the [portal](portal) offers on the selected [item](item) is used,
+  the product shall open the form of that action, headed with the action's name and
+  showing the uid of the [item](item) it concerns.
+type: functional
+verification: demonstration

@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-28090849: CJNtdzigrsx0tKToCex2jYthRjyjqnmsnvJmbpyoT-8
+  REQ-87847146: 3MkrB9EtSIEFTaY7Dq_jz4tK-tuklpxW-HorG_O2efE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-28090849: depends_on
+  REQ-87847146: depends_on
+status: approved
+text: When New is used in the [portal](portal), the product shall open the form for
+  a new [item](item) of the kind chosen above the list.
+type: functional
+verification: demonstration

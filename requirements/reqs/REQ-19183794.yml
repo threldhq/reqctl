@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-51994852: TKuebjB9MeY23B7lIsFScBDw3gxhtebAf1cY2tBOmRg
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+priority: medium
+relations:
+  REQ-51994852: depends_on
+status: approved
+text: While the [portal](portal) shows the [entries](entry) of the selected [item](item),
+  the product shall offer Edit and Drop beside each [entry](entry) and Add a member
+  beneath them.
+type: functional
+verification: demonstration
