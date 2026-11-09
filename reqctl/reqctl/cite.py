@@ -686,10 +686,19 @@ def named(root, identity, nests=True):
 # @req- yqdz42
 
 
+def _decoded(target, path):
+    try:
+        return target.read_bytes().decode()
+    except UnicodeDecodeError as error:
+        # @req> REQ-30898926@Vu28eWaG_1mE jfdla5
+        raise ReqctlError(f"cannot read {path}: not valid UTF-8 -- save the "
+                          "file as UTF-8") from error
+
+
 def _lines(root, citation):
     target = Path(root) / citation["path"]
     # @req+ REQ-36103991@1sBO1pub0_IK zibglc
-    text = target.read_bytes().decode()
+    text = _decoded(target, citation["path"])
     held = text.removeprefix(BOM)
     return target, text[:len(text) - len(held)], _feed_lines(held)
     # @req- zibglc
