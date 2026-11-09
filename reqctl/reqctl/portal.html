@@ -612,7 +612,7 @@ function payloadFor(act, uid, read, held) {
   }
   if (act === "relate") {
     const target = read("field-target").trim();
-    if (!/^REQ-\d+$/.test(target)) throw new Error("only a requirement carries relations");
+    if (!/^REQ-\d+$/.test(target)) throw new Error("the target must be a requirement");
     return { steps: [{ command: "relate", args: [uid, read("field-relation"), target] }] };
   }
   const kind = act === "new" ? read("kind") : kindOf(uid);
