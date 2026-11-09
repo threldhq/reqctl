@@ -2,6 +2,11 @@ acceptance_criteria: []
 assessed:
   REQ-21960639: DzQkjJjbuYa1vdy-Z8HwO8EFMRNxQjEKnB5TYIXdLIo
   REQ-43924642: SDx_e7a7A1XMQPML3XbBx3zHEK_udtWgckeshRvI3qU
+citations:
+  6zi4mx: FWsyNCN0fu9aG_L4YMKlfZREBUBo7Q7QrtCA4WakrgM
+  g7nmjj: ZV_0HZKtaNGKZx3zmSpLI5CRGrkcYcC0YCHSEU7-ar0
+  k6tk6l: zvW5F2yO4yKVzwLvzm7wercOdAYshLxV48SraNx4Xs4
+  qgk6xq: jbJEoOkxVXnZDdVIBgc0MEy8ySmS3n9uwX8K_p3mGXY
 priority: medium
 relations:
   REQ-21960639: constrains
