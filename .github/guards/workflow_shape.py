@@ -58,7 +58,7 @@ FAILS = re.compile(r"\bexit\s+[1-9]|\bsys\.exit\(")
 SWALLOWED = re.compile(r"\|\|\s*(?:true|:)(?![\w-])")
 JOINS = re.compile(r"(\|\||&&|;|\||\n)")
 STOPPING = re.compile(r"\s*(?:exit\s+(?:[1-9]|\$\?)|false\b)")
-SUCCEEDS = re.compile(r"\s*(?:true|:|exit\s+0)\s*$")
+SUCCEEDS = re.compile(r"\s*(?:true|:|exit\s+0)\s*(?:#.*)?$")
 UNSTOPPED = re.compile(r"\bset\s+(?:\+\w*e|\+o\s+errexit)")
 SHELLS = {"bash", "sh", "dash", "ksh", "zsh"}
 STOPS = re.compile(r"-\w*e\w*")
@@ -179,13 +179,17 @@ def unstopped(shell):
 def masked(run, tools):
     parts = JOINS.split(run)
     segments, joins = parts[0::2], parts[1::2] + [""]
-    for segment, join, after in zip(segments, joins, segments[1:] + [""]):
+    for at, segment in enumerate(segments):
         if not (SCRIPT.search(segment) or RUNS.search(segment)
                 or IMPORTS.search(segment) or tools.search(segment)):
             continue
-        if (segment.lstrip().startswith("!")
-                or join == "||" and not STOPPING.match(after)
-                or join in (";", "\n") and SUCCEEDS.match(after)):
+        if segment.lstrip().startswith("!"):
+            return True
+        while joins[at] == "&&":
+            at += 1
+        after = next((one for one in segments[at + 1:] if one.strip()), "")
+        if (joins[at] == "||" and not STOPPING.match(after)
+                or joins[at] in (";", "\n") and SUCCEEDS.match(after)):
             return True
     return False
 
