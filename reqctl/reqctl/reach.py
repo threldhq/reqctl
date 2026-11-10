@@ -6,7 +6,7 @@ import tokenize
 
 from . import corpus
 
-# @req+ REQ-59827868@bWN38P4cOthQ 4pmkcf
+# @req+ REQ-59827868@n8ncPHxU3mWA 4pmkcf
 DEFINED = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
 ASSIGNED = (ast.Assign, ast.AnnAssign)
 NESTED = (ast.If, ast.Try, ast.TryStar)
