@@ -11,7 +11,14 @@ acceptance_criteria:
     written over the function, since the [citation digest](citation_digest) takes
     it in
   when: a skill of the plugin cites the [item](item)
-- given: a JavaScript function the code deciding a clause calls
+- given: a JavaScript function declared at the top level of the same file that the
+    code deciding a clause calls
+  then: no further [statement citation](statement_citation) of the [item](item) is
+    written over the function, since the [citation digest](citation_digest) takes
+    it in
+  when: a skill of the plugin cites the [item](item)
+- given: a JavaScript function declared in another file that the code deciding a clause
+    calls
   then: a [statement citation](statement_citation) of the [item](item) covers the
     function
   when: a skill of the plugin cites the [item](item)
@@ -26,7 +33,7 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-41552912: G_9UzXwu1WULxz5ME-VT-ehmIqGopOqbIZlOQDskX7s
   REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
-  REQ-59827868: bWN38P4cOthQ3DLGYdEsIa5aVYbA0UrXVvMuAzgyR-0
+  REQ-59827868: n8ncPHxU3mWABbZl4W9tqziG7C7SasAc39SoHj0dQZQ
   REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   REQ-73495055: cPNC8izAHGTlO-pV3PMxG7rA_QlzF3Mw2rayt2wDKVs
   REQ-87066486: AtzPEAcAbJ1vtpLCqCZnXdrS-wd-THi3TvLIgx4VcF0
