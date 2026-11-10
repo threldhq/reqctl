@@ -5,9 +5,9 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  dl7f7h: rfEyYaVsRrXpNmCuIm3i_q-3qlzJGVOhdBVRNyAKi9w
-  vkgozd: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
-  w2xjya: xJAmD-_KvUK60fmFCBfIbd9RuyLbAndCxCXBNRevkTM
+  dl7f7h: Xu79DLCH2ezG3hbtDcyVWO9ZTeXPhJO0e7I-LVsZIXs
+  vkgozd: D2rACOkbaFUud3s9qVX3NbO9v-_IqEZMlOG1FT6vY3E
+  w2xjya: lwpRw1C6PiVq9VtnRhcl8DHyWqIISZxHYh5TwKA01_Y
 priority: medium
 relations:
   REQ-45797944: depends_on

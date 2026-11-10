@@ -23,8 +23,10 @@ against the statement that now stands, re-pin a stale citation with
 Cover the code that satisfies a clause and every line that code names, directly
 or through what those lines name, that no citation digest takes in. A Python
 citation's digest takes in each function, class and constant of the code base its
-lines name, and what those name in turn, so those get no citation of their own;
-code in any other language that the lines name is cited too. A region that moved is untagged and
+lines name, and a JavaScript citation's each function and const, let or var
+binding declared at the top level of the same file, and what those name in turn,
+so those get no citation of their own; JavaScript in another file, and code in
+any other language, that the lines name is cited too. A region that moved is untagged and
 cited again. A statement citation is the only form `reqctl trace` accepts.
 
 Verify code by reading it against the statement it cites: `reqctl compare` names

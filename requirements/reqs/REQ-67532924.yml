@@ -4,12 +4,12 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  67a2sq: KRjhLAOnsB5uJRtMZkDfTX0pcnLWoQ1nQZBseHgwuTA
-  ab6fto: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
-  dnfi6k: FGxUDY25H5GfYIDd8jtsRluBqxx9uTgGVyJwsPEYvyk
-  eoxln7: L7bzMxqol7XuQp21wkP0q2j3I48ik11rMEoRs7are6E
-  i2ebgo: r757fqPKDS2ej4JKrbTZom-HIdXgGiKGE6QiK6OOFho
-  qsgumw: _3qNVhF2vN7x3H_uhjooiqa2hgOOP1-HpO6RP0lAeP0
+  67a2sq: LGJS2jq_YiunUTZrZ2wPhrpffrCOMpCsMFVrv7mupjc
+  ab6fto: D2rACOkbaFUud3s9qVX3NbO9v-_IqEZMlOG1FT6vY3E
+  dnfi6k: ssRkcY589s_082Q4-fsFtTB-UnoG6gKLdYUxBYBdQM8
+  eoxln7: TSWbQeH6nRHMJde0JcrmTqDS6xymKfCgv1F6rXVMvps
+  i2ebgo: EKKqDicJusxd0gJNyIbYXZyoa1RvqV7cZHzoRaxo_gk
+  qsgumw: 50cKy-37JCy2yY2nWroOJMM35HYGb3V6u7PxdzlCkng
 priority: medium
 relations:
   REQ-43631070: depends_on
