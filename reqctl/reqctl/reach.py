@@ -21,8 +21,9 @@ LEXED = re.compile(r""""(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
 PATTERN_AFTER = set("(,=:[!&|?{};+-*%<>~^")
 PATTERN_WORDS = {"return", "typeof", "case", "do", "else", "in", "of", "new", "delete", "void",
                  "throw", "yield", "await", "instanceof"}
-PIECE = re.compile(r"[A-Za-z_$][\w$]*|[{}()\[\];,.*]")
+PIECE = re.compile(r"[A-Za-z_$][\w$]*|\d[\w.]*|\.\.\.|[-+*/%&|^!<>=?:~]+|[{}()\[\];,.]")
 IDENTIFIER = re.compile(r"[A-Za-z_$][\w$]*\Z")
+CONTINUING = re.compile(r"[-+*/%&|^!<>=?:~]+\Z|[(\[,.]\Z|\.\.\.\Z")
 OPENS, CLOSES = "{([", "})]"
 BINDINGS = ("const", "let", "var")
 
@@ -288,12 +289,15 @@ def _lexed(text, at, end, code, bare, closing):
                 return at
         elif found["tick"] is not None:
             at = _template(text, at, end, code, bare)
+            code[start] = "0"
         elif found["pattern"] is not None and not _opens_pattern(text, start):
             at = start + 1
         else:
             _blanked(code, start, at)
             if found["remark"] is not None:
                 _blanked(bare, start, at)
+            else:
+                code[start] = "0"
     return end
 
 
@@ -345,34 +349,45 @@ def _declared(pieces, at):
         opened = False
         while at < len(pieces):
             line, piece = pieces[at]
+            opened = opened or (piece == "{" and depth == 0)
             depth += (piece in OPENS) - (piece in CLOSES)
-            opened = opened or piece == "{"
             at += 1
             if opened and depth == 0:
                 return names, line, at
         return names, pieces[-1][0], at
-    expecting = True
+    expecting, patterned = True, False
     while at < len(pieces):
         line, piece = pieces[at]
-        if depth == 0 and piece in BINDINGS:
+        if depth == 0 and (piece in BINDINGS or piece == "function" and _starts(pieces, at)):
             return names, pieces[at - 1][0], at
         at += 1
+        opening = depth == 0 and expecting and piece in ("{", "[")
+        if IDENTIFIER.match(piece) and (depth == 0 and expecting or patterned):
+            names.append(piece)
         if depth == 0:
-            if expecting and IDENTIFIER.match(piece):
-                names.append(piece)
             expecting = piece == ","
             if piece == ";":
                 return names, line, at
         depth += (piece in OPENS) - (piece in CLOSES)
+        patterned = (patterned or opening) and depth > 0
     return names, pieces[-1][0], at
+
+
+def _starts(pieces, at):
+    if at == 0:
+        return True
+    line, before = pieces[at - 1]
+    if before == "async":
+        return _starts(pieces, at - 1)
+    return before in (";", "}") or (line < pieces[at][0] and not CONTINUING.match(before))
 
 
 def _declarations(pieces):
     table, depth, at = {}, 0, 0
     while at < len(pieces):
         line, piece = pieces[at]
-        if depth == 0 and piece in ("function", *BINDINGS) and (
-                at == 0 or pieces[at - 1][1] != "."):
+        if depth == 0 and (piece in BINDINGS and (at == 0 or pieces[at - 1][1] != ".")
+                           or piece == "function" and _starts(pieces, at)):
             first = (pieces[at - 1][0] if piece == "function" and at
                      and pieces[at - 1][1] == "async" else line)
             names, last, at = _declared(pieces, at)
