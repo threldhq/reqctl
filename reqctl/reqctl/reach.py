@@ -23,7 +23,7 @@ PATTERN_WORDS = {"return", "typeof", "case", "do", "else", "in", "of", "new", "d
                  "throw", "yield", "await", "instanceof"}
 PIECE = re.compile(r"[A-Za-z_$][\w$]*|\d[\w.]*|\.\.\.|[-+*/%&|^!<>=?:~]+|[{}()\[\];,.]")
 IDENTIFIER = re.compile(r"[A-Za-z_$][\w$]*\Z")
-CONTINUING = re.compile(r"[-+*/%&|^!<>=?:~]+\Z|[(\[,.]\Z|\.\.\.\Z")
+CONTINUING = re.compile(r"(?!\+\+\Z|--\Z)[-+*/%&|^!<>=?:~]+\Z|[(\[,.]\Z|\.\.\.\Z")
 OPENS, CLOSES = "{([", "})]"
 BINDINGS = ("const", "let", "var")
 
@@ -377,7 +377,7 @@ def _starts(pieces, at):
     if at == 0:
         return True
     line, before = pieces[at - 1]
-    if before == "async":
+    if before in ("async", "export", "default"):
         return _starts(pieces, at - 1)
     return before in (";", "}") or (line < pieces[at][0] and not CONTINUING.match(before))
 
