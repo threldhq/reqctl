@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: an .html file holding a citation comment inside a style element
+  then: the product reports the citation as a problem
+  when: trace is run
+assessed:
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  REQ-64570886: Zckz3LzHUzXnXX8nOFZu7k0edXRCoE_euhNcePLWQI0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-42668747: depends_on
+  REQ-52925332: depends_on
+  REQ-64570886: constrains
+status: approved
+text: When trace is run, the product shall report as a problem each [statement citation](statement_citation)
+  carried by a comment that lies inside an HTML style element or inside a JavaScript
+  template literal.
+type: functional
+verification: inspection
