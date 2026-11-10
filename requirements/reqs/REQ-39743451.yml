@@ -18,6 +18,8 @@ assessed:
   REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  pyint2: K0dfUwB4aifjjV-JudE4pZJFWr-aZlU6GoKt3Wwt9KM
 priority: medium
 relations:
   REQ-30898926: depends_on

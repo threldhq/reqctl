@@ -1030,7 +1030,7 @@ def cmd_untag(args):
     if args.req:
         return _unwhole(tree, root, args)
     # @req> REQ-51709712@D0x4hZmSHgiW j65lln
-    citation = cite.named(root, args.id, nests=False)
+    citation = cite.named(root, args.id, placed=False)
     changes = [cite.untagged(root, citation)]
     # @req> REQ-13298390@Pum5hwaVAaJo utmfsc
     # @req> REQ-81275367@2q0tIHQCM4br olrtj5
