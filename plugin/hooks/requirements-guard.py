@@ -2050,8 +2050,12 @@ def refuse_api_write(words, here, said, expanded=False):
 # @req> REQ-75038049@hXyFNmxx-SWy rvzbno
 def refuse_unheld_script(words, here):
     start = len(words) - len(invoked(words))
-    if start and runner(words[start - 1]) in RUNNERS:
+    # @req+ REQ-38681394@yRU1nDICx55I 7ojhwq
+    head = invoked(words[:start - 1]) if start else []
+    if (start and runner(words[start - 1]) in RUNNERS
+            and not (head and head[0] in LAUNCHERS and "run" not in head)):
         start -= 1
+    # @req- 7ojhwq
     called = words[start:]
     launcher = os.path.basename(called[0]) if called else ""
     if launcher == "uvx" or launcher in LAUNCHERS and "run" in called[1:]:
