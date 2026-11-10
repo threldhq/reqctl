@@ -263,14 +263,14 @@ def _bodies(path, text):
     return held
 
 
-def _opens_pattern(text, at, start):
+def _opens_pattern(text, at):
     back = at - 1
-    while back >= start and text[back].isspace():
+    while back >= 0 and text[back].isspace():
         back -= 1
-    if back < start or text[back] in PATTERN_AFTER:
+    if back < 0 or text[back] in PATTERN_AFTER:
         return True
     word = back
-    while word >= start and (text[word].isalnum() or text[word] in "_$"):
+    while word >= 0 and (text[word].isalnum() or text[word] in "_$"):
         word -= 1
     return text[word + 1:back + 1] in PATTERN_WORDS
 
@@ -288,7 +288,7 @@ def _lexed(text, at, end, code, bare, closing):
                 return at
         elif found["tick"] is not None:
             at = _template(text, at, end, code, bare)
-        elif found["pattern"] is not None and not _opens_pattern(text, start, 0):
+        elif found["pattern"] is not None and not _opens_pattern(text, start):
             at = start + 1
         else:
             _blanked(code, start, at)
@@ -317,13 +317,11 @@ def _template(text, at, end, code, bare):
 
 def _script(path, text):
     code, bare, at = list(text), list(text), 0
-    for start, end in _bodies(path, text):
-        _blanked(code, at, start)
-        _blanked(bare, at, start)
+    for start, end in [*_bodies(path, text), (len(text), len(text))]:
+        for chars in (code, bare):
+            _blanked(chars, at, start)
         _lexed(text, start, end, code, bare, closing=False)
         at = end
-    _blanked(code, at, len(text))
-    _blanked(bare, at, len(text))
     pieces, line, last = [], 1, 0
     joined = "".join(code)
     for found in PIECE.finditer(joined):

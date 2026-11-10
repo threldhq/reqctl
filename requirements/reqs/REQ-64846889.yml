@@ -19,8 +19,8 @@ assessed:
   citation_list: 0aL8T-FXTYFlquZUA5HPfzr0kP6Rv2bhea_JoNlaEWY
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  6vgx2i: a2jz8K31NO6WDas0PYMWgvW3kqPaUd3JiVKgsA1V5qI
-  7dhw4d: 5vrwLACQtcH9Ohiz2fHTnjQU1LDUdhTC459CTQQmq5I
+  6vgx2i: 2XD6RWoEPCBl-iv1jY2L3vkO6mg0Uvip09x0hLlUn1g
+  7dhw4d: a8fuwwpBIbx8R8xoK9B-yTc_v3V3h5L_q9bdQ3ZYRhk
 priority: medium
 relations:
   REQ-15770866: depends_on
