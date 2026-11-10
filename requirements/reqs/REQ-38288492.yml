@@ -34,5 +34,5 @@ type: functional
 verification: inspection
 whole_file_citations:
   plugin/.claude-plugin/plugin.json:
-    digest: kFc6_20ygAuadkTWaJ0H3nFg7l92PHuYWndzIDlJN2w
+    digest: IMtp-MFAYlt6bsSbhbZz_o84hR5M337Ivi1xPLZYiuE
     pinned: 4l6tMNjp19tH
