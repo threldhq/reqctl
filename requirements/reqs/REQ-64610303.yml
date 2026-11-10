@@ -4,9 +4,9 @@ assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  55sayd: V2ejl-V4mW2AbflQpdIZaZkTmD1ir3BTSFMgCrwWqSM
+  55sayd: BvsZ4fXNliSfHHZce22Pi5eefz958K5EPhRATlvT9Ks
   6ibyne: Bugw20BLhd13QcdJUna_CkAn1Pq9VpdyVd_2TTTm0l4
-  7i23d4: RMZbIBZGyU1YmBUYTCH8-uZJPf_vyqmPVKrhng3cqmw
+  7i23d4: 7rvoD9r7rnY4nfVH9fr9MFuhGoyZosui_x5iSIE4K6c
   7rwv53: gLRwsgZRsViUdLKR5HCYj5BGkIFp96Xesyv4OGAfCZI
   b4vzei: zltF0ZGeGDRD8EA4Rjqrcne0gtAW4Mj3CdaEsI2SK5c
   clwkn3: JiTEo1OR0-hgUWqyfJXDXWz34K_1y6QbGQRKjAluKbk
@@ -17,7 +17,7 @@ citations:
   kwyjbq: DUvYNqz4cgjbySUqdKIvo83zGLxlfTk8XhCGucYOliw
   md4w5w: YlrFwSmwZcT7V6-1P-2NBAEIKzTi5siuWb82L1Y1olk
   qxhzlu: Y0kHfdyScAFkQgkDYQX105ICdbplvO0uYutxQX2ZoaM
-  shighj: pIxuy_BdsrgyX6aIOLyJC9PHuuRorGZDplWwc3Agvms
+  shighj: N9iuHcJ6hSDPKaPXHljoPMkrbi-20F1b87f3sAcDMFc
 priority: medium
 relations:
   REQ-41307666: depends_on

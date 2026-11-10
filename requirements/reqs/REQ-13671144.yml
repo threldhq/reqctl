@@ -5,8 +5,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  vnfdvv: LAmA1h_t0607sc5TLf9fSTGtLJmSiDFwa5YfA8R8t_c
-  x4yeo7: QX80D7kEIQ8x1enKdvAAEWJUX8j5qk7CDap0Ic-xYn8
+  vnfdvv: vb_1w4w_VKW59HgmUio9B6JHnGrpelRgacE0hCZZyKY
+  x4yeo7: qGVcgHLc58AvBFjTmLU5rtS8Vy6yG2bxfcJTrABQBhU
 priority: medium
 relations:
   REQ-42771008: depends_on

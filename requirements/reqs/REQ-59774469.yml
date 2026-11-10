@@ -4,12 +4,12 @@ assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  gfjspv: XEBFbEfpLv8S9GJqyrtEkqI_h5EmgbhSTn8FND7aWGA
-  kjszsz: BxD467_ZfMHhN-LcE19CZwwwpKV-wW4iwodLKOtX9gY
+  gfjspv: OSwFczJfN9Z02SstStFj2KQfmTYEjvt3tlmprRVHFF8
+  kjszsz: FKZBxe1ykmk-73gQmq9wFV7r6RTFUU8fnNT8xpxTIsI
   lgwexf: SMcAn6i09Q_i_qSu9aozVyQiuEkl6hazJ03ffOIsaQE
-  ociwwz: gtMcIzEMBSmHckVvIl3vZRSH3kwb-8UPFsz0FDnwGTk
-  tf2r7a: _vLizmkZqn5-BwFSRmvquta94juVUrFF78h1BYoG5D4
-  wpmovn: eEYwj1tTMRQO6QQf-dM-Tmo3h7M6lJVgpofFFDp7cag
+  ociwwz: RMI6kNcNVNzffsS-K3N3YannYas0SFetBXMmSk4Fq88
+  tf2r7a: 8klmrKeZfkhUnXQZvPqu8GulWSqDq2ttX1O78dOB_qw
+  wpmovn: t-I_R0Zr93qcqqDd0dhAaRO5odpQN4-XHtVozUUJGh4
 priority: medium
 relations:
   REQ-16910419: derives_from
