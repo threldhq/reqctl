@@ -838,6 +838,12 @@ def rename(store, uid, new_name):
     # @req> REQ-81815730@fForAOZqtxKN k27etl
     faults = [fault for fault in _validate.dictionary_rules(new_name, after[new_name])
               if fault not in _validate.dictionary_rules(new_name, item.data)]
+    # @req+ REQ-66534921@BYEU0L2sI9q_ 2dp56x
+    schema = corpus.schema_path(store.root, old_name) if kind == "data" and old_name else None
+    if schema and old_name != new_name and schema.is_file():
+        corpus.atomic_write(corpus.schema_path(store.root, new_name), schema.read_bytes())
+        corpus.remove(schema)
+    # @req- 2dp56x
     found = _validate.coherence(after, store.root)
     stood = _validate.coherence(before, store.root) if found else []
     faults += [fault for fault in found if fault not in stood]
@@ -1317,7 +1323,7 @@ def revisable_fields(own, kind):
             or kind == "parameter" and field.dest not in OPERATIONS]
 
 
-def _revision(store, uid, fields):
+def _revision(store, uid, fields, together=None):
     item = corpus.find(store, uid)
     kind = corpus.kind_of(uid, item.data)
     if kind not in KINDS:
@@ -1568,7 +1574,8 @@ def _revision(store, uid, fields):
     pinning = not words and _pins_only(before, prospective)
     # @req+ REQ-53480164@5yFhCLJmuTBt xpj5go
     # @req+ REQ-62819035@SRb6tL8xEERF qgjwmq
-    stranded = [] if pinning else _new_corpus_faults(store, {uid: prospective})
+    # @req> REQ-94401451@EZFY5LjHcj9g bzixh3
+    stranded = [] if pinning else _new_corpus_faults(store, {**(together or {}), uid: prospective})
     if stranded:
         raise ReqctlError("\n".join(stranded))
     # @req- qgjwmq
@@ -1671,6 +1678,37 @@ def revise(store, uid, fields):
     for held in written:
         corpus.save(store, held)
     return changed
+
+
+# @req> REQ-94401451@EZFY5LjHcj9g sg7dvf
+def revise_together(store, uids, fields):
+    held = [corpus.find(store, uid) for uid in dict.fromkeys(uids)]
+    named = ", ".join(item.uid for item in held)
+    if fields.get("status") != "approved":
+        # @req> REQ-30898926@Vu28eWaG_1mE ro5ub2
+        raise ReqctlError(f"{named}: several items are revised together only to "
+                          "approve them -- pass --status approved, or revise each "
+                          "item on its own; none was changed")
+    together = {item.uid: {**item.data, "status": "approved"} for item in held}
+    changes, writing = {}, []
+    for item in held:
+        try:
+            changed, written = _revision(store, item.uid, fields, together)
+        except ReqctlError as error:
+            joint = "\n" if "\n" in str(error) else "; "
+            # @req> REQ-98666936@TeGjonYXb0EM ojozgh
+            raise ReqctlError(f"{error}{joint}none of {named} was changed") from None
+        if set(changed) - {"status"}:
+            # @req> REQ-30898926@Vu28eWaG_1mE kgrdys
+            raise ReqctlError(f"{item.uid}: --status approved is the only change made "
+                              f"to several items together -- revise each item on its "
+                              f"own for {', '.join(sorted(set(changed) - {'status'}))}; "
+                              f"none of {named} was changed")
+        changes[item.uid] = changed
+        writing += written
+    for one in writing:
+        corpus.save(store, one)
+    return changes
 
 
 def _relations_map(item):

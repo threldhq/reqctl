@@ -11,6 +11,11 @@ assessed:
   REQ-53480164: 5yFhCLJmuTBtpbWyc8P_5wTl2v3MmC8sDkuq5Wri6NA
   REQ-77022154: -t-5C3fYQMS3aRMST82_tiZlD-Cp631mInGLUmwxCog
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  bzixh3: tmF4hJeIZY1Uw-6lHNQyKY5R_O9M9ZohvkH-Jthce3g
+  pc3x5s: zXFg8KmCoFUnlgTNadcy6rH2BigXurgtRadim2BvSkM
+  sg7dvf: xKWnMqb-PPKDuvxjtWZDuMYaKIiTdDkraLXfDtB1ey0
+  znwuir: 4YLTl66QibjHOsvSAW7PSDQVUktpqwpEfGXrrkt_Hkw
 priority: medium
 relations:
   REQ-42068162: constrains
