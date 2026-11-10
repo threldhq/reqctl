@@ -1,0 +1,33 @@
+acceptance_criteria:
+- given: an .html file whose style element holds CSS rules
+  then: the product refuses and names placing the citation outside the style element
+    as the fix
+  when: reqctl tag cites lines so that a citation comment would fall inside the style
+    element
+- given: an .html file whose style element holds CSS rules
+  then: the product writes the citation
+  when: reqctl tag cites lines whose citation comments fall before the style element
+    opens and after it closes
+- given: a .js file or a script element holding a template literal
+  then: the product refuses and names placing the citation outside the template literal
+    as the fix
+  when: reqctl tag cites lines so that a citation comment would fall inside the template
+    literal
+assessed:
+  REQ-30898926: Vu28eWaG_1mEOkNDj-6x3uKFNaUwFedOiL2MhrAGpR4
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  xasn2j: Y55idlP0kKK52JeKKxt32rkw0kl6ANOC1MQK3FvRx9c
+priority: medium
+relations:
+  REQ-30898926: depends_on
+  REQ-60346603: constrains
+  REQ-89706423: constrains
+status: approved
+text: If reqctl tag would write a comment carrying a [statement citation](statement_citation)
+  inside an HTML style element or inside a JavaScript template literal, then the product
+  shall refuse the [citation](statement_citation).
+type: functional
+verification: inspection
