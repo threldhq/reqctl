@@ -271,7 +271,7 @@ def read(root, digested=False, uid=None):
     # @req> REQ-32191310@aZkvQ6hvIwPv yjp5s6
     if digested:
         texts = dict(sources)
-        # @req> REQ-59827868@bWN38P4cOthQ tsczoy
+        # @req> REQ-59827868@n8ncPHxU3mWA tsczoy
         reach = Reach(texts)
         for citation in citations:
             citation["digest"] = digest(citation["path"], texts[citation["path"]],
@@ -699,7 +699,7 @@ def tagged(root, path, asked, exclusive=False):
         # @req> REQ-30898926@Vu28eWaG_1mE c7h3c7
         raise ReqctlError("\n".join(problems))
     # @req- zkxsxx
-    # @req+ REQ-59827868@bWN38P4cOthQ entyuu
+    # @req+ REQ-59827868@n8ncPHxU3mWA entyuu
     relative = target.resolve().relative_to(base).as_posix()
     reach = Reach({**dict(sources), relative: written})
     # @req- entyuu
@@ -712,7 +712,7 @@ def tagged(root, path, asked, exclusive=False):
 # @req> REQ-64846889@TSG5uy3nM0nk 6vgx2i
 def standing(root, citation):
     text = (Path(root) / citation["path"]).read_bytes().decode().removeprefix(BOM)
-    # @req> REQ-59827868@bWN38P4cOthQ 47poz3
+    # @req> REQ-59827868@n8ncPHxU3mWA 47poz3
     return digest(citation["path"], text, citation["lines"], Reach(dict(_sources(root))))
 
 
@@ -851,7 +851,7 @@ def digest(path, text, lines, reach=None):
             held = _tokens(text, wanted)
         except (tokenize.TokenError, IndentationError, SyntaxError):
             held = None
-        # @req+ REQ-59827868@bWN38P4cOthQ kwj4mx
+        # @req+ REQ-59827868@n8ncPHxU3mWA kwj4mx
         taken = reach.taken(path, wanted) if held is not None and reach else []
         if taken:
             held = [held, taken]
@@ -983,7 +983,7 @@ def _carried(root, commit):
         yield relative, _git(root, "show", f"{commit}:{relative}").removeprefix(BOM)
 
 
-# @req> REQ-59827868@bWN38P4cOthQ jwvhp4
+# @req> REQ-59827868@n8ncPHxU3mWA jwvhp4
 def _python_at(root, commit):
     blobs = [line.split("\t", 1)[1] for line in
              _git(root, "ls-tree", "-r", "-z", commit).split("\0")
@@ -1010,7 +1010,7 @@ def compare(root, ref):
     before = {c["id"]: c for c in was}
     after = {c["id"]: c for c in now}
     # @req- a5i7lc
-    # @req> REQ-59827868@bWN38P4cOthQ 5swpuo
+    # @req> REQ-59827868@n8ncPHxU3mWA 5swpuo
     was_reach, now_reach = Reach(_python_at(root, commit)), Reach(dict(_sources(root)))
     rows = []
     for identity in sorted(set(before) | set(after)):
