@@ -4,6 +4,11 @@ assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   REQ-64005208: VjZ0V0VbMEZROkmxMks0k2r31pxgjBVgbcrGVaTYWdY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  3qebzl: 2_VU5BD2spwKpdmKZfOnbvTbJatj47GJQwu4SZMo5bE
+  btpmsw: Pb8Nq6wGnYbxeqDdp20dWRzE_bgWBbUbdZjfVcOhkz8
+  f2e4lc: AOIzu2R1eRvaL_-x3EvcsYeHF63YKUIuFzQTk07jRiY
+  mnsek2: vgSDyFQ8owiMywHG-q5Dr7RuLD_XGnpJfmS5HPc6lDI
 priority: medium
 relations:
   REQ-35173659: constrains

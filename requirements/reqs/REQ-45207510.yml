@@ -5,6 +5,13 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  2s4m6u: rkqtiaKaeaTXtGHSrJgRckbrUjtaOovRSG6iZYapryw
+  7j6coj: bRc86dd43BXgsdJJiq-anf3OvpATru2Hhq0cCvpNHVU
+  bw7cv5: DlpffOYho2KFWOeLtD9pq9LZAbWq9b_MNP-G5tkvq-0
+  cmqcmy: ivCZyFraNR7KVa3oO_zIlVk28IKD1-yIvWMZIEH72Gw
+  gukinx: 0z9MlVmFjTqNQI9_6VWbzZ2FgAh-5OZKnf2s_TH2SOE
+  pcdkio: G0Cn6LL8mDG_bMTjaN8Gxy-9HuLVapLsEXmJShlkZ18
 priority: medium
 relations:
   REQ-41307666: depends_on

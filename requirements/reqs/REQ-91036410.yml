@@ -3,6 +3,8 @@ assessed:
   REQ-81220228: DAytEkvTUdTOSKwLhWLXUcmAT1qx8v69DaYegSTHcPc
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  twk5vc: eytOXqH8AbOGKOXJqMVsro-TMcRn9rdoquZY7B3z-8U
 priority: medium
 relations:
   REQ-81220228: depends_on

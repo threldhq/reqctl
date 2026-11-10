@@ -4,6 +4,9 @@ assessed:
   REQ-71344419: No0izFxAdVKWi2RA4WpKTM99R1YpXTfB-xHQ_uyRK2w
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  lfamqq: rfEyYaVsRrXpNmCuIm3i_q-3qlzJGVOhdBVRNyAKi9w
+  x7ws4p: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
 priority: medium
 relations:
   REQ-16308184: depends_on

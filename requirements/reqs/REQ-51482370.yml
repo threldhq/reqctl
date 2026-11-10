@@ -5,6 +5,11 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  iy3usc: KRjhLAOnsB5uJRtMZkDfTX0pcnLWoQ1nQZBseHgwuTA
+  ldbwk5: a8o1Ixb4FcySSJn3rFezt6ba2GG5WonYMQb4hcwApRU
+  pfx5in: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
+  q3lvpr: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
 priority: medium
 relations:
   REQ-44791607: depends_on

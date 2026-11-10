@@ -6,6 +6,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  mx4ill: Xf0gbW6AvKHeIDeFcLYn5wzWk5UL6LhLMvBzab6QPVQ
 priority: medium
 relations:
   REQ-25363659: depends_on

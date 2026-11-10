@@ -4,6 +4,10 @@ assessed:
   REQ-42771008: O9ZIKWRPqITtpSluLzVXdqFtLgepGuIT3J1eYpfdk-k
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  75zy5s: TpbtFLle6UGbupbCBM6h6MxqS4mfBYBf4Axtdb2TuIs
+  j366nt: 8u2PGvxT3lSOMskHHB6gqTxUEuE-81Z1CkuhicmmjO8
+  jdk4fj: T_PbWSDma753RxNbYBsFFemvSWxjMEh31ZCFJq7olZ0
 priority: medium
 relations:
   REQ-13671144: depends_on

@@ -6,6 +6,13 @@ assessed:
   pick_offers: IjGGD5VcFpJ5Jj2dRL2ZLee3228w6r83RkHi2zf0Ug8
   pick_offers.*: 8ufOtbLfl56bf0k0Ybx99YP4KledQS2n4386vbOlEeI
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  3ylmlk: a8o1Ixb4FcySSJn3rFezt6ba2GG5WonYMQb4hcwApRU
+  d3mwig: DshZhXBP4SyM61FDlfbsx4-0rD5ppKd6RwieaQNHbpA
+  gde6nt: 0bls7DhXj9If-ozcn0MVt54wQzyUw1OgtO9K_y98N6Q
+  gmhnff: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
+  hudo2y: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
+  omiq2k: aMb1jfH0Gn4N-Pq0UXBIUBkY5ChP6VDIVE_vD5zZPac
 priority: medium
 relations:
   REQ-46529187: constrains

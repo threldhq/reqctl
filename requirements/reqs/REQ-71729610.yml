@@ -6,6 +6,10 @@ assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
 citations:
   duwcld: n_fUTBUolUIupcmZgS5Lb69DTQhH95_iCIn1aoewfzE
+  fdpr2r: paeL9RBtuMqaqI-QfYmkkxcrb62-TAWIUxGgfT-w7w8
+  jz7diw: MHkJUy3lwTDPtOc8f6iBPVZWn-Je34qdLt-JDECwzqo
+  n4zrm6: rkXSGPLnrXAbNIl5kYt-WNj1oXJzCnNZ-zEMqyP8nNY
+  xttpau: yVVHIKYN8QpNOySKuESct_md9gADzso2AabjoxKiKrk
 priority: medium
 relations:
   REQ-38789214: depends_on

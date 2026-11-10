@@ -4,6 +4,20 @@ assessed:
   REQ-44900066: qaXVLJO6m5rPNCh83xwnryTIoHIrAteqeJP5sUa00dg
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  7emiwr: tXBVTpuZxrnZHuznd2E17EQNmbA6zwQlPB-egtghxJY
+  fp5r6w: OzXLTugOIUhmSBthcXVojzZJWYQoe4cOuHcExAGFiTQ
+  hoajjx: 4rmSfZEKq3hQTXyvN8shkcSFtHOmODhb73UxzvxXtp4
+  i7bu3e: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
+  khjstk: -Q6krx1QqqC3dBr2m6j8xjSIeqZ-lgWcNn0tegMpnls
+  kjh7h3: iQjLEdEOOZl6GEDcsbzhlCcoujCQOFUBStI4bV3ObEY
+  m4kxk4: NEaAT_K0SLrLJvk3ZclgwtSm_gC2ZPyM_xkSI85cs4U
+  stynhm: yVVHIKYN8QpNOySKuESct_md9gADzso2AabjoxKiKrk
+  tboibr: _sIffIe8Wy6Yuvwaf1pXhvSzZ5fCfvFjdQw5rmfe-18
+  tvcyhl: 2_VU5BD2spwKpdmKZfOnbvTbJatj47GJQwu4SZMo5bE
+  xishzb: OzXLTugOIUhmSBthcXVojzZJWYQoe4cOuHcExAGFiTQ
+  xr7aha: Al8YC7GSK9UX0agbtwfSCcAf6lQG1xl0cjOTB14TbfY
+  yu5qjl: sqCB824BDn6zXthMeWWXuam2f0LuC3CT1vLR8z1-zIo
 priority: medium
 relations:
   REQ-44733670: constrains

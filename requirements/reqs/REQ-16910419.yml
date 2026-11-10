@@ -9,8 +9,16 @@ assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
+  26bdnm: 0z9MlVmFjTqNQI9_6VWbzZ2FgAh-5OZKnf2s_TH2SOE
+  26gvrn: jqemi6JKvrPmisEWvyRiOxsKSFYOvsJ4ydQrgGxz044
   2luwj6: lvYxPB6ngR5TjqfqQWPja-6899CSFTW0MVUBci86S60
+  33y4sp: rkqtiaKaeaTXtGHSrJgRckbrUjtaOovRSG6iZYapryw
+  43m7de: ivCZyFraNR7KVa3oO_zIlVk28IKD1-yIvWMZIEH72Gw
+  54yzc7: G0Cn6LL8mDG_bMTjaN8Gxy-9HuLVapLsEXmJShlkZ18
+  fmspgt: DlpffOYho2KFWOeLtD9pq9LZAbWq9b_MNP-G5tkvq-0
   lobaq4: -b4j4oLLJkRKuZBX8cHZjgXFzm0dvNQlFo0XFGclIXk
+  o62avc: Tr6u763lct9rTUlygOjwK0Dj8oRGR3FehCnuGuBxZlY
+  tfa6za: FwSIq3yj7R0L0i_qPsZZ3XI8mimDzAyRrWgLa6LL5jc
 priority: medium
 relations:
   REQ-38789214: depends_on

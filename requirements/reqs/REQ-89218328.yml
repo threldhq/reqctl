@@ -3,6 +3,9 @@ assessed:
   REQ-54076552: G1Ej0m1RlGGSKCSE5Q0eAJxh32oiiOT1433jplkj7hY
   REQ-69300019: zmqcHuaUXUjeBAnWAiG309OkxVdvxC0RVxby8tNymd8
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  5v5cpw: DJlzykJGtqUJcAWO_zXRtdRA9W86a-lbrUQ2B2P8Df4
+  camr4j: a8o1Ixb4FcySSJn3rFezt6ba2GG5WonYMQb4hcwApRU
 priority: medium
 relations:
   REQ-54076552: depends_on

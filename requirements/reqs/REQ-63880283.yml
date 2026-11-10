@@ -3,6 +3,11 @@ assessed:
   REQ-39359341: uRF-58MwVPtQpAesP_5kV3u1zlb0KsFXy30ypkxNMCE
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  co634p: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
+  l3otzi: DEYu_C9eKsJXw_riK5Y5RQnRIlrUBBl96eBu2A9iCf0
+  qg6n5b: mA6gG1iTcK19xEtH2xVtHmXUtNsfVdsSxNZoihybtWE
+  xkbevh: CBpXgs7TNajlutzmr5pkdgS-4KhJqTUmgBumdNGwdrs
 priority: medium
 relations:
   REQ-39359341: depends_on

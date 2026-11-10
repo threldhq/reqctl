@@ -5,6 +5,10 @@ assessed:
   REQ-63880283: cB0-6eSJUN4B4RzNia0PsR87-oJb2G1uy18W72qkXv4
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  g4mdwf: mA6gG1iTcK19xEtH2xVtHmXUtNsfVdsSxNZoihybtWE
+  s6cidu: DEYu_C9eKsJXw_riK5Y5RQnRIlrUBBl96eBu2A9iCf0
+  xfyl4a: 3mmR2vAZZ7mKeo8oEbrQJP9-Bo4x-RqsPmaX6uTt3f4
 priority: medium
 relations:
   REQ-11203679: depends_on

@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   REQ-84459416: ZlrZpYNBUh8Qcc4SEVYaHeNwpPUdCLDbXn3kTSczv58
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  wnvnry: mk7RgylhzTIXQnrg_LdeUl5x-J_dd7b2QoJ155F69bY
 priority: medium
 relations:
   REQ-84459416: depends_on

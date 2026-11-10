@@ -8,6 +8,10 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
+citations:
+  3dvxho: -b8_-h6hO1fRb4rWuiJnKfCMNmKtG79gqOx9x4cC6ZU
+  pl74bo: 2_VU5BD2spwKpdmKZfOnbvTbJatj47GJQwu4SZMo5bE
+  xoppim: DEYu_C9eKsJXw_riK5Y5RQnRIlrUBBl96eBu2A9iCf0
 priority: medium
 relations:
   REQ-11203679: depends_on

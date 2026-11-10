@@ -5,6 +5,17 @@ assessed:
   REQ-71407357: EUXcMYpw10y-KXnNSCX7ihDQHmpHHqfcFGM5YWY-f2s
   REQ-76958744: G6gCTCrSsHetq9vT1YIKvzH3gHNoOAOHzVGm3Q5fam8
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  cat6ir: qCKGcksK6I6_o7iwAU8DSgIFYn46zShgC-AWaSgpUi8
+  igma3y: JaC_shpRA7BtjWZj-4WVtdwDF2UZknvygAfDwpH5bRI
+  np2pp3: NzF3I5OHzJjl56impz5WuAjMHnhKtNePrJydTc48Wnk
+  p6oc3j: 2_VU5BD2spwKpdmKZfOnbvTbJatj47GJQwu4SZMo5bE
+  qrpj4k: rkXSGPLnrXAbNIl5kYt-WNj1oXJzCnNZ-zEMqyP8nNY
+  rg7wqa: Al8YC7GSK9UX0agbtwfSCcAf6lQG1xl0cjOTB14TbfY
+  v7h4os: paeL9RBtuMqaqI-QfYmkkxcrb62-TAWIUxGgfT-w7w8
+  vw64dq: MHkJUy3lwTDPtOc8f6iBPVZWn-Je34qdLt-JDECwzqo
+  w4oace: n_fUTBUolUIupcmZgS5Lb69DTQhH95_iCIn1aoewfzE
+  yevwgz: yVVHIKYN8QpNOySKuESct_md9gADzso2AabjoxKiKrk
 priority: medium
 relations:
   REQ-45207510: depends_on

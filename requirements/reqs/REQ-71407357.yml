@@ -11,7 +11,14 @@ assessed:
   REQ-81313171: 7j0AmKa_kopiVm-Tipo5BlSpSNzCDXY2Q-H7P4APxZk
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
+  4ntfss: MHkJUy3lwTDPtOc8f6iBPVZWn-Je34qdLt-JDECwzqo
+  5duekv: 2_VU5BD2spwKpdmKZfOnbvTbJatj47GJQwu4SZMo5bE
+  7boad5: n_fUTBUolUIupcmZgS5Lb69DTQhH95_iCIn1aoewfzE
+  clcnoo: qCKGcksK6I6_o7iwAU8DSgIFYn46zShgC-AWaSgpUi8
   nodqc4: JaC_shpRA7BtjWZj-4WVtdwDF2UZknvygAfDwpH5bRI
+  o4rzai: paeL9RBtuMqaqI-QfYmkkxcrb62-TAWIUxGgfT-w7w8
+  wocuxf: rkXSGPLnrXAbNIl5kYt-WNj1oXJzCnNZ-zEMqyP8nNY
+  x6miqm: yVVHIKYN8QpNOySKuESct_md9gADzso2AabjoxKiKrk
 priority: medium
 relations:
   REQ-81313171: depends_on

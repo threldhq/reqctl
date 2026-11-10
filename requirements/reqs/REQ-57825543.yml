@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   REQ-49576265: pFihs7WdIwGSo9e5kkPdFZLxtJJRQIRHfXC3rdxNwAs
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  trs27c: Ma7JZAIbPF_AXGL-MN-ziqLOvbM8s8K4zYtqlg2Axk0
 priority: medium
 relations:
   REQ-49576265: depends_on

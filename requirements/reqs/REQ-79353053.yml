@@ -3,6 +3,9 @@ assessed:
   REQ-57492239: hvqdee0u96s6zLZkqSsCpkoXuMy7nzQq2DMmkGnTYLw
   REQ-88874370: H8CRzlKTmNrtBRM2EXRMjSneyIhxrm1CKvVuUXIju_M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  5cnbia: UpgSNaI2vdtRsr7rWzi1eiLe0smtdP30kTNU4y8pcp4
+  p55jfo: UpgSNaI2vdtRsr7rWzi1eiLe0smtdP30kTNU4y8pcp4
 priority: medium
 relations:
   REQ-57492239: depends_on

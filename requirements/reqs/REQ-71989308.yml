@@ -3,6 +3,9 @@ assessed:
   REQ-51994852: TKuebjB9MeY23B7lIsFScBDw3gxhtebAf1cY2tBOmRg
   REQ-83033927: K3q-IpHctnCpJ6FKkQ5V1TVnL4wCHL1W_vTwTPnAeaY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  4tlpr5: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
+  atmwzs: pMwNlGclKaMKg6k--ja-1qyEECrfOLr1381De0KjhQU
 priority: medium
 relations:
   REQ-51994852: constrains
