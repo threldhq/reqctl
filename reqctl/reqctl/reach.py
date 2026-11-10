@@ -2,9 +2,30 @@ import ast
 import io
 import keyword
 import posixpath
+import re
 import tokenize
 
 from . import corpus
+
+SCRIPTED = (".js", ".html")
+CLASSIC = re.compile(r"<script(?=[\s/>])(?P<attrs>[^>]*)>(?P<body>[\s\S]*?)"
+                     r"(?:</script(?=[\s/>])|\Z)", re.IGNORECASE)
+TYPED = re.compile(r"""\btype\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))""", re.IGNORECASE)
+JAVASCRIPT = {"", "text/javascript", "application/javascript", "text/ecmascript",
+              "application/ecmascript"}
+LEXED = re.compile(r""""(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
+                   r"|(?P<tick>`)|(?P<brace>[{}])"
+                   r"|(?P<remark>//[^\n]*|/\*[\s\S]*?(?:\*/|\Z)|<!--[^\n]*|^[ \t]*-->[^\n]*)"
+                   r"|(?P<pattern>/(?![*/])(?:\\.|\[(?:\\.|[^\]\\\n])*\]|[^/\\\n\[])+/[A-Za-z]*)",
+                   re.MULTILINE)
+PATTERN_AFTER = set("(,=:[!&|?{};+-*%<>~^")
+PATTERN_WORDS = {"return", "typeof", "case", "do", "else", "in", "of", "new", "delete", "void",
+                 "throw", "yield", "await", "instanceof"}
+PIECE = re.compile(r"[A-Za-z_$][\w$]*|\d[\w.]*|\.\.\.|[-+*/%&|^!<>=?:~]+|[{}()\[\];,.]")
+IDENTIFIER = re.compile(r"[A-Za-z_$][\w$]*\Z")
+CONTINUING = re.compile(r"(?!\+\+\Z|--\Z)[-+*/%&|^!<>=?:~]+\Z|[(\[,.]\Z|\.\.\.\Z")
+OPENS, CLOSES = "{([", "})]"
+BINDINGS = ("const", "let", "var")
 
 # @req+ REQ-59827868@n8ncPHxU3mWA 4pmkcf
 DEFINED = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
@@ -39,13 +60,21 @@ def _span(node):
 
 class Reach:
     def __init__(self, texts):
+        # @req> REQ-22608177@cdmX9Aqh6XXC 2ap6ns
         self.texts = {path.replace("\\", "/"): text for path, text in texts.items()
-                      if text is not None and path.endswith(".py")}
+                      if text is not None and path.endswith((".py", *SCRIPTED))}
         packages = {posixpath.dirname(path) for path in self.texts
                     if posixpath.basename(path) == "__init__.py"}
         self.roots = [".", *sorted({posixpath.dirname(folder) or "." for folder in packages
                                     if posixpath.dirname(folder) not in packages})]
         self.tables, self.streams, self.edges, self.digests = {}, {}, {}, {}
+        self.scripts = {}
+
+    # @req> REQ-22608177@cdmX9Aqh6XXC upntcv
+    def _scripted(self, path):
+        if path not in self.scripts:
+            self.scripts[path] = _script(path, self.texts[path])
+        return self.scripts[path]
 
     def _module(self, base):
         base = posixpath.normpath(base)
@@ -69,6 +98,10 @@ class Reach:
 
     def _table(self, path):
         if path in self.tables:
+            return self.tables[path]
+        # @req> REQ-22608177@cdmX9Aqh6XXC wgjme7
+        if path.endswith(SCRIPTED):
+            self.tables[path] = _declarations(self._scripted(path)[0])
             return self.tables[path]
         table = self.tables[path] = {}
         try:
@@ -161,10 +194,21 @@ class Reach:
                 for line in range(span[0], span[1] + 1)}
 
     def _calls(self, path, lines):
+        # @req> REQ-22608177@cdmX9Aqh6XXC um45e2
+        if path.endswith(SCRIPTED):
+            pieces, table = self._scripted(path)[0], self._table(path)
+            return [(path, name) for name in dict.fromkeys(
+                piece for at, (line, piece) in enumerate(pieces)
+                if line in lines and piece in table and (at == 0 or pieces[at - 1][1] != "."))]
         return [found for chain in dict.fromkeys(self._chains(path, lines))
                 for found in self._resolve(path, chain)]
 
     def _digest(self, key):
+        # @req> REQ-22608177@cdmX9Aqh6XXC g2mzok
+        if key not in self.digests and key[0].endswith(SCRIPTED):
+            said, remarks = self.texts[key[0]].split("\n"), self._scripted(key[0])[1]
+            self.digests[key] = corpus.digest([said[n - 1].rstrip() for n in sorted(self._lines(key))
+                                               if n not in remarks])
         if key not in self.digests:
             lines = self._lines(key)
             held, first = [], None
@@ -200,3 +244,156 @@ class Reach:
         return {(key[0], line) for key in self._closure(path, lines)
                 for line in self._lines(key)}
 # @req- 4pmkcf
+
+
+def _blanked(chars, start, end):
+    for at in range(start, end):
+        if chars[at] != "\n":
+            chars[at] = " "
+
+
+def _bodies(path, text):
+    if path.endswith(".js"):
+        return [(0, len(text))]
+    held = []
+    for script in CLASSIC.finditer(text):
+        typed = TYPED.search(script["attrs"])
+        kind = next((one for one in typed.groups() if one is not None), "") if typed else ""
+        if kind.strip().lower() in JAVASCRIPT:
+            held.append(script.span("body"))
+    return held
+
+
+def _opens_pattern(text, at):
+    back = at - 1
+    while back >= 0 and text[back].isspace():
+        back -= 1
+    if back < 0 or text[back] in PATTERN_AFTER:
+        return True
+    word = back
+    while word >= 0 and (text[word].isalnum() or text[word] in "_$"):
+        word -= 1
+    return text[word + 1:back + 1] in PATTERN_WORDS
+
+
+def _lexed(text, at, end, code, bare, closing):
+    depth = 0
+    while (found := LEXED.search(text, at, end)) is not None:
+        start, at = found.start(), found.end()
+        if found["brace"] is not None:
+            if closing and found[0] == "{":
+                depth += 1
+            elif closing and depth:
+                depth -= 1
+            elif closing:
+                return at
+        elif found["tick"] is not None:
+            at = _template(text, at, end, code, bare)
+            code[start] = "0"
+        elif found["pattern"] is not None and not _opens_pattern(text, start):
+            at = start + 1
+        else:
+            _blanked(code, start, at)
+            if found["remark"] is not None:
+                _blanked(bare, start, at)
+            else:
+                code[start] = "0"
+    return end
+
+
+def _template(text, at, end, code, bare):
+    start = at - 1
+    while at < end:
+        if text[at] == "\\":
+            at += 2
+        elif text[at] == "`":
+            _blanked(code, start, at + 1)
+            return at + 1
+        elif text.startswith("${", at):
+            _blanked(code, start, at + 2)
+            at = _lexed(text, at + 2, end, code, bare, closing=True)
+            start = at - 1
+        else:
+            at += 1
+    _blanked(code, start, end)
+    return end
+
+
+def _script(path, text):
+    code, bare, at = list(text), list(text), 0
+    for start, end in [*_bodies(path, text), (len(text), len(text))]:
+        for chars in (code, bare):
+            _blanked(chars, at, start)
+        _lexed(text, start, end, code, bare, closing=False)
+        at = end
+    pieces, line, last = [], 1, 0
+    joined = "".join(code)
+    for found in PIECE.finditer(joined):
+        line += joined.count("\n", last, found.start())
+        last = found.start()
+        pieces.append((line, found[0]))
+    remarks = {number for number, (said, kept) in
+               enumerate(zip(text.split("\n"), "".join(bare).split("\n")), start=1)
+               if said.strip() and not kept.strip()}
+    return pieces, remarks
+
+
+def _declared(pieces, at):
+    names, depth, kind = [], 0, pieces[at][1]
+    at += 1
+    if kind == "function":
+        while at < len(pieces) and pieces[at][1] == "*":
+            at += 1
+        if at < len(pieces) and IDENTIFIER.match(pieces[at][1]):
+            names.append(pieces[at][1])
+        opened = False
+        while at < len(pieces):
+            line, piece = pieces[at]
+            opened = opened or (piece == "{" and depth == 0)
+            depth += (piece in OPENS) - (piece in CLOSES)
+            at += 1
+            if opened and depth == 0:
+                return names, line, at
+        return names, pieces[-1][0], at
+    expecting, patterned = True, False
+    while at < len(pieces):
+        line, piece = pieces[at]
+        if depth == 0 and (piece in BINDINGS or piece == "function" and _starts(pieces, at)):
+            return names, pieces[at - 1][0], at
+        at += 1
+        opening = depth == 0 and expecting and piece in ("{", "[")
+        if IDENTIFIER.match(piece) and (depth == 0 and expecting or patterned):
+            names.append(piece)
+        if depth == 0:
+            expecting = piece == ","
+            if piece == ";":
+                return names, line, at
+        depth += (piece in OPENS) - (piece in CLOSES)
+        patterned = (patterned or opening) and depth > 0
+    return names, pieces[-1][0], at
+
+
+def _starts(pieces, at):
+    if at == 0:
+        return True
+    line, before = pieces[at - 1]
+    if before in ("async", "export", "default") and (at < 2 or pieces[at - 2][1] != "."):
+        return _starts(pieces, at - 1)
+    return before in (";", "}") or (line < pieces[at][0] and not CONTINUING.match(before))
+
+
+def _declarations(pieces):
+    table, depth, at = {}, 0, 0
+    while at < len(pieces):
+        line, piece = pieces[at]
+        if depth == 0 and (piece in BINDINGS and (at == 0 or pieces[at - 1][1] != ".")
+                           or piece == "function" and _starts(pieces, at)):
+            first = (pieces[at - 1][0] if piece == "function" and at
+                     and pieces[at - 1][1] == "async" else line)
+            names, last, at = _declared(pieces, at)
+            for name in names:
+                table.setdefault(name, []).append(("def", (first, last)))
+            continue
+        depth += (piece in OPENS) - (piece in CLOSES)
+        at += 1
+    return table

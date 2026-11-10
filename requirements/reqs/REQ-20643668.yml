@@ -5,12 +5,12 @@ assessed:
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
   bn2cye: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
-  chucux: ivCZyFraNR7KVa3oO_zIlVk28IKD1-yIvWMZIEH72Gw
-  mvwfuj: 0z9MlVmFjTqNQI9_6VWbzZ2FgAh-5OZKnf2s_TH2SOE
-  p7ztzv: bRc86dd43BXgsdJJiq-anf3OvpATru2Hhq0cCvpNHVU
-  qpynsl: DlpffOYho2KFWOeLtD9pq9LZAbWq9b_MNP-G5tkvq-0
-  wbec45: G0Cn6LL8mDG_bMTjaN8Gxy-9HuLVapLsEXmJShlkZ18
-  xuun3q: rkqtiaKaeaTXtGHSrJgRckbrUjtaOovRSG6iZYapryw
+  chucux: SMcAn6i09Q_i_qSu9aozVyQiuEkl6hazJ03ffOIsaQE
+  mvwfuj: 8klmrKeZfkhUnXQZvPqu8GulWSqDq2ttX1O78dOB_qw
+  p7ztzv: RMI6kNcNVNzffsS-K3N3YannYas0SFetBXMmSk4Fq88
+  qpynsl: OSwFczJfN9Z02SstStFj2KQfmTYEjvt3tlmprRVHFF8
+  wbec45: FKZBxe1ykmk-73gQmq9wFV7r6RTFUU8fnNT8xpxTIsI
+  xuun3q: t-I_R0Zr93qcqqDd0dhAaRO5odpQN4-XHtVozUUJGh4
 priority: medium
 relations:
   REQ-42771008: depends_on

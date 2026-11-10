@@ -14,7 +14,7 @@ import yaml
 
 from . import corpus
 from .corpus import ReqctlError
-from .reach import Reach
+from .reach import SCRIPTED, Reach
 
 OPEN, CLOSE, SINGLE = "+", "-", ">"
 EVERY = object()
@@ -861,6 +861,11 @@ def digest(path, text, lines, reach=None):
         split = [line.rstrip("\r\n") for line in _feed_lines(text)]
         held = [split[n - 1] for n in sorted(wanted)]
         # @req- soehrs
+        # @req+ REQ-22608177@cdmX9Aqh6XXC louba3
+        taken = reach.taken(path, wanted) if reach and Path(path).suffix in SCRIPTED else []
+        if taken:
+            held = [held, taken]
+        # @req- louba3
     return corpus.digest(held)
 
 
@@ -984,13 +989,14 @@ def _carried(root, commit):
 
 
 # @req> REQ-59827868@n8ncPHxU3mWA jwvhp4
-def _python_at(root, commit):
+def _reached_at(root, commit):
     blobs = [line.split("\t", 1)[1] for line in
              _git(root, "ls-tree", "-r", "-z", commit).split("\0")
              if "\t" in line and line.split()[1] == "blob"]
     base = Path(root)
+    # @req> REQ-22608177@cdmX9Aqh6XXC s4aizn
     return {path: _git(root, "show", f"{commit}:{path}").removeprefix(BOM)
-            for path in blobs if path.endswith(".py") and not any(
+            for path in blobs if path.endswith((".py", *SCRIPTED)) and not any(
                 corpus.skipped(base, base / folder) for folder in Path(path).parents[:-1])}
 
 
@@ -1011,7 +1017,7 @@ def compare(root, ref):
     after = {c["id"]: c for c in now}
     # @req- a5i7lc
     # @req> REQ-59827868@n8ncPHxU3mWA 5swpuo
-    was_reach, now_reach = Reach(_python_at(root, commit)), Reach(dict(_sources(root)))
+    was_reach, now_reach = Reach(_reached_at(root, commit)), Reach(dict(_sources(root)))
     rows = []
     for identity in sorted(set(before) | set(after)):
         old, new = before.get(identity), after.get(identity)

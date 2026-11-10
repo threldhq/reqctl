@@ -4,12 +4,12 @@ assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  gfjspv: DlpffOYho2KFWOeLtD9pq9LZAbWq9b_MNP-G5tkvq-0
-  kjszsz: G0Cn6LL8mDG_bMTjaN8Gxy-9HuLVapLsEXmJShlkZ18
-  lgwexf: ivCZyFraNR7KVa3oO_zIlVk28IKD1-yIvWMZIEH72Gw
-  ociwwz: bRc86dd43BXgsdJJiq-anf3OvpATru2Hhq0cCvpNHVU
-  tf2r7a: 0z9MlVmFjTqNQI9_6VWbzZ2FgAh-5OZKnf2s_TH2SOE
-  wpmovn: rkqtiaKaeaTXtGHSrJgRckbrUjtaOovRSG6iZYapryw
+  gfjspv: OSwFczJfN9Z02SstStFj2KQfmTYEjvt3tlmprRVHFF8
+  kjszsz: FKZBxe1ykmk-73gQmq9wFV7r6RTFUU8fnNT8xpxTIsI
+  lgwexf: SMcAn6i09Q_i_qSu9aozVyQiuEkl6hazJ03ffOIsaQE
+  ociwwz: RMI6kNcNVNzffsS-K3N3YannYas0SFetBXMmSk4Fq88
+  tf2r7a: 8klmrKeZfkhUnXQZvPqu8GulWSqDq2ttX1O78dOB_qw
+  wpmovn: t-I_R0Zr93qcqqDd0dhAaRO5odpQN4-XHtVozUUJGh4
 priority: medium
 relations:
   REQ-16910419: derives_from
