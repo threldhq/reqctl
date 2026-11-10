@@ -474,20 +474,27 @@ def following(path, text, number, viewed=None):
 def covered(citations):
     # @req> REQ-73495055@cPNC8izAHGTl lihjvk
     marks = {(c["path"], line) for c in citations for line in c["marks"]}
+    # @req+ REQ-33202540@Y-kVcYdmW6zT r4lu24
+    # @req+ REQ-97852648@9PG_RRu-Iv2o cl74rk
+    exclusive = {}
+    for held in citations:
+        if held["exclusive"]:
+            exclusive.setdefault(held["path"], []).append(held)
+    # @req- cl74rk
+    # @req- r4lu24
     for citation in citations:
         lines = []
         for line in range(citation["first"], citation["last"] + 1):
             # @req> REQ-73495055@cPNC8izAHGTl jtgzg5
             if (citation["path"], line) in marks:
                 continue
-            spanning = [c for c in citations if c["path"] == citation["path"]
-                        and c["first"] <= line <= c["last"]]
             # @req+ REQ-33202540@Y-kVcYdmW6zT 6o76zm
             # @req+ REQ-97852648@9PG_RRu-Iv2o fto5gh
-            claimed = [c for c in spanning if c["exclusive"]]
+            claimed = [c for c in exclusive.get(citation["path"], [])
+                       if c["first"] <= line <= c["last"]]
             # @req> REQ-17608335@ejFjhGoCg5c7 4makw7
             owners = ([max(claimed, key=lambda c: c["open"])] if claimed
-                      else spanning)
+                      else [citation])
             # @req- fto5gh
             # @req- 6o76zm
             if citation in owners:
