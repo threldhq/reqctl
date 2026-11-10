@@ -1,0 +1,48 @@
+acceptance_criteria:
+- given: a .js file with a [statement citation](statement_citation) over a line calling
+    a function declared at its top level
+  then: the product reports the [citation](statement_citation) as a problem
+  when: the body of that function changes and trace is run
+- given: an .html file with a [statement citation](statement_citation) in one classic
+    script element over a line calling a function declared at the top level of another
+    classic script element of the same file
+  then: the product reports the [citation](statement_citation) as a problem
+  when: the body of that function changes and trace is run
+- given: a JavaScript [statement citation](statement_citation) over a line calling
+    a top-level function that calls a second top-level function
+  then: the product reports the [citation](statement_citation) as a problem
+  when: the body of the second function changes and trace is run
+- given: a JavaScript [statement citation](statement_citation) over a line reading
+    a top-level const binding
+  then: the product reports the [citation](statement_citation) as a problem
+  when: the value the binding is given changes and trace is run
+- given: a .js file with a [statement citation](statement_citation) over a line calling
+    a function declared only in another .js file
+  then: the product reports no problem for the [citation](statement_citation)
+  when: that function changes and trace is run
+assessed:
+  REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
+  REQ-31471659: hKmNhTkU9xOAFkZt4GkdGC-Prnfl7nQD1cBEFSp2-so
+  REQ-34984028: 9K2_3Vg-ud_iZNwzAUXpTSLSwmyrHa5p11K_W-D_buQ
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
+  REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
+  REQ-59827868: n8ncPHxU3mWABbZl4W9tqziG7C7SasAc39SoHj0dQZQ
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-15770866: constrains
+  REQ-31471659: constrains
+  REQ-34984028: constrains
+  REQ-42668747: depends_on
+  REQ-52925332: depends_on
+  REQ-59827868: derives_from
+status: approved
+text: Where the lines a [statement citation](statement_citation) covers are JavaScript,
+  the product shall take into the [citation digest](citation_digest), as it takes
+  the covered lines, each function and each const, let or var binding declared at
+  the top level of the JavaScript the same file holds to which a name in those lines
+  resolves without running the code, and each one to which a name in those declarations
+  resolves in turn.
+type: functional
+verification: inspection

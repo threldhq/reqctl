@@ -101,7 +101,7 @@ Write each statement citation with `reqctl tag PATH --from N --to M --req UID`
 and never by hand: it covers whole code statements, and no stamp is composed.
 <!-- @req- vuyexu -->
 
-<!-- @req+ REQ-34984028@TZ0U0-vLTqkz vc4i2s -->
+<!-- @req+ REQ-34984028@9K2_3Vg-ud_i vc4i2s -->
 Cover the code that decides a clause or acceptance criterion of the item
 cited, or, for a parameter, a data item or one of its entries, the code stating
 its value -- where a data item's entries are stated in one place and read in
