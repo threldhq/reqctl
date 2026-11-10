@@ -154,9 +154,12 @@ For each item that matters to the proposal, return one finding: covered_whole
 part of the proposal; say which part in reason), conflict (the proposal
 contradicts it), derives_from, depends_on, constrains, supersedes (the edge
 the proposal should carry toward it), or near (close but none of the above;
-say why not). Copy the item's decisive clause verbatim into clause. Judge by
-meaning, not wording. Never report a finding for a shared noun alone. Cite
-only identifiers stated below. Set proposal to {number} and group to {group}.
+say why not). Copy the item's decisive clause verbatim into clause, in at most
+{clause_length} characters, the clause length the shape below allows; where the
+decisive clause is longer, copy only the words of it that decide the finding.
+Judge by meaning, not wording. Never report a finding for a shared noun alone.
+Cite only identifiers stated below.
+Set proposal to {number} and group to {group}.
 
 {write}
 
@@ -1408,9 +1411,12 @@ def grouped(names, bound_at, group):
 def group_prompt(run, number, spec, at, names, named, state_held, text,
                  dictionary_text, records):
     out = run / "returns" / "judge" / f"{number}-g{at}.json"
+    # @req> REQ-11403762@DHO9tybNlGFY 7gze7m
     return GROUP.format(
         number=number, statement=spec["statement"], binding=binding_text(spec),
         group=at, write=written(out, shapes.GROUP),
+        clause_length=shapes.GROUP["properties"]["findings"]["items"][
+            "properties"]["clause"]["maxLength"],
         dictionary=DICTIONARY.format(dictionary=dictionary_text),
         items=stated_items(state_held, text, names, named, records))
 
