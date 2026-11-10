@@ -186,8 +186,8 @@ def hollow(path, text, first, last):
 # @req- jflstj
 
 
-RAW = re.compile(r"<!--[\s\S]*?(?:-->|\Z)"
-                 r"|<style(?=[\s/>])[^>]*>(?P<style>[\s\S]*?)(?:</style(?=[\s/>])|\Z)"
+RAW = re.compile(REMARKS[".html"].pattern
+                 + r"|<style(?=[\s/>])[^>]*>(?P<style>[\s\S]*?)(?:</style(?=[\s/>])|\Z)"
                  r"|<script(?=[\s/>])[^>]*>(?P<script>[\s\S]*?)(?:</script(?=[\s/>])|\Z)",
                  re.IGNORECASE)
 
@@ -661,34 +661,23 @@ def tagged(root, path, asked, exclusive=False):
     written = _inserted(lines, before, after)
     # @req- k2lzwu
     # @req- kmbhnk
-    # @req+ REQ-39743451@3H-M6CvTxyI0 pyint2
-    embedded = _embedded(target.suffix, written)
-    holding = {parsed["id"]: embedded[number]
-               for number, _, parsed in markers(written, target.suffix)
-               if parsed and number in embedded}
-    misplaced = [f"{path}: lines {first}-{last}: a comment carrying the citation would "
-                 f"fall inside a {holding[identity]}, where it is not read as a comment "
-                 f"-- place the citation outside the {holding[identity]}: cite lines "
-                 "whose comments fall before it opens or after it closes"
-                 for identity, (first, last, _, _) in zip(minted, asked)
-                 if identity in holding]
-    if misplaced:
-        # @req> REQ-30898926@Vu28eWaG_1mE jp7bxt
-        raise ReqctlError("\n".join(misplaced))
-    # @req- pyint2
     # @req+ REQ-69161009@gmE3x-nnaEYM n5z4vo
     alone = _alone(path, written)
-    falling = {parsed["id"] for number, _, parsed in markers(written, target.suffix)
-               if parsed and number not in alone}
+    # @req+ REQ-39743451@3H-M6CvTxyI0 xasn2j
+    embedded = _embedded(target.suffix, written)
+    falling = {parsed["id"]: embedded.get(number, "multiline comment or string")
+               for number, _, parsed in markers(written, target.suffix)
+               if parsed and (number in embedded or number not in alone)}
     # @req> REQ-30898926@Vu28eWaG_1mE 6tukfm
     inside = [f"{path}: lines {first}-{last}: a comment carrying the citation would "
-              "fall inside a multiline comment or string -- choose lines "
-              "outside it"
+              f"fall inside a {falling[identity]} -- choose lines outside the "
+              f"{falling[identity]}"
               for identity, (first, last, _, _) in zip(minted, asked)
               if identity in falling]
     if inside:
         # @req> REQ-30898926@Vu28eWaG_1mE dlokdg
         raise ReqctlError("\n".join(inside))
+    # @req- xasn2j
     # @req- n5z4vo
     found, dropped = parse([(path, written)])
     new = [c for identity in minted for c in found if c["id"] == identity]
