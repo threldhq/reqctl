@@ -186,6 +186,42 @@ def hollow(path, text, first, last):
 # @req- jflstj
 
 
+RAW = re.compile(REMARKS[".html"].pattern
+                 + r"|<style(?=[\s/>])[^>]*>(?P<style>[\s\S]*?)(?:</style(?=[\s/>])|\Z)"
+                 r"|<script(?=[\s/>])[^>]*>(?P<script>[\s\S]*?)(?:</script(?=[\s/>])|\Z)",
+                 re.IGNORECASE)
+
+
+def _row(text, offset):
+    return text.count("\n", 0, offset) + 1
+
+
+def _between(text, start, end, kind):
+    return dict.fromkeys(range(_row(text, start) + 1, _row(text, end)), kind)
+
+
+def _literals(text, start, end):
+    return {number: kind for found in REMARKS[".js"].finditer(text, start, end)
+            if (found["kept"] or "").startswith("`")
+            for number, kind in _between(text, found.start(), found.end() - 1,
+                                         "template literal").items()}
+
+
+@functools.cache
+def _embedded(suffix, text):
+    if suffix == ".js":
+        return _literals(text, 0, len(text))
+    if suffix != ".html":
+        return {}
+    held = {}
+    for found in RAW.finditer(text):
+        if found["style"] is not None:
+            held |= _between(text, found.start("style"), found.end("style"), "style element")
+        elif found["script"] is not None:
+            held |= _literals(text, found.start("script"), found.end("script"))
+    return held
+
+
 # @req+ REQ-12235023@uEMBe2x_2uwp njbuvc
 @functools.cache
 def _scalars(text):
@@ -278,7 +314,7 @@ def parse(sources):
     return citations, [fault for _, fault in faults]
 
 
-def _parse(sources, nests=True):
+def _parse(sources, placed=True):
     opened, faults, seen = [], [], {}
     for relative, text in sources:
         # @req> REQ-35805881@37XtC4gyD98k 5h3hpr
@@ -308,11 +344,24 @@ def _parse(sources, nests=True):
             continue
         # @req> REQ-12235023@uEMBe2x_2uwp 4s3qrw
         alone = _alone(relative, text)
+        # @req> REQ-78286717@Lol93VZlA61p ltsm7v
+        embedded = _embedded(Path(relative).suffix, text)
         live, spans, singles = {}, [], []
         # @req+ REQ-73349683@BNT8xnMPL2bn gqpqj6
         for number, body, parsed in found:
+            # @req+ REQ-78286717@Lol93VZlA61p eynr4h
+            kind = embedded.get(number)
+            if kind and placed:
+                # @req> REQ-30898926@Vu28eWaG_1mE 2ezs26
+                faults.append((parsed and parsed["id"],
+                               f"{relative}:{number}: holds a citation marker inside a "
+                               f"{kind}, where it is not read as a comment -- reqctl "
+                               f"untag its citation, then reqctl tag lines outside the "
+                               f"{kind}"))
+                continue
+            # @req- eynr4h
             # @req> REQ-12235023@uEMBe2x_2uwp sbc4do
-            if number not in alone:
+            if not kind and number not in alone:
                 # @req> REQ-30898926@Vu28eWaG_1mE nmx3xd
                 faults.append((None, f"{relative}:{number}: holds a citation marker "
                                      "and more than white space and one single-line "
@@ -381,7 +430,7 @@ def _parse(sources, nests=True):
             opened.append(_citation(held, relative, number, span[1], *span,
                                     [number]))
         # @req> REQ-51709712@D0x4hZmSHgiW l3wdgx
-        faults += cut(relative, text, spans if nests else [])
+        faults += cut(relative, text, spans if placed else [])
     return covered(opened), faults
 
 
@@ -614,17 +663,21 @@ def tagged(root, path, asked, exclusive=False):
     # @req- kmbhnk
     # @req+ REQ-69161009@gmE3x-nnaEYM n5z4vo
     alone = _alone(path, written)
-    falling = {parsed["id"] for number, _, parsed in markers(written, target.suffix)
-               if parsed and number not in alone}
+    # @req+ REQ-39743451@3H-M6CvTxyI0 xasn2j
+    embedded = _embedded(target.suffix, written)
+    falling = {parsed["id"]: embedded.get(number, "multiline comment or string")
+               for number, _, parsed in markers(written, target.suffix)
+               if parsed and (number in embedded or number not in alone)}
     # @req> REQ-30898926@Vu28eWaG_1mE 6tukfm
     inside = [f"{path}: lines {first}-{last}: a comment carrying the citation would "
-              "fall inside a multiline comment or string -- choose lines "
-              "outside it"
+              f"fall inside a {falling[identity]} -- choose lines outside the "
+              f"{falling[identity]}"
               for identity, (first, last, _, _) in zip(minted, asked)
               if identity in falling]
     if inside:
         # @req> REQ-30898926@Vu28eWaG_1mE dlokdg
         raise ReqctlError("\n".join(inside))
+    # @req- xasn2j
     # @req- n5z4vo
     found, dropped = parse([(path, written)])
     new = [c for identity in minted for c in found if c["id"] == identity]
@@ -664,8 +717,8 @@ def standing(root, citation):
 
 
 # @req+ REQ-62685242@nMlCr6nshoNZ yqdz42
-def readable(root, identity=EVERY, nests=True):
-    held, faults = _parse(_sources(root), nests)
+def readable(root, identity=EVERY, placed=True):
+    held, faults = _parse(_sources(root), placed)
     found = [citation for citation in held if identity in (EVERY, citation["id"])]
     files = () if identity is EVERY else [citation["path"] for citation in found]
     against = [fault for about, fault in faults if about in (identity, EVERY, *files)]
@@ -675,8 +728,8 @@ def readable(root, identity=EVERY, nests=True):
     return found
 
 
-def named(root, identity, nests=True):
-    for citation in readable(root, identity, nests):
+def named(root, identity, placed=True):
+    for citation in readable(root, identity, placed):
         return citation
     # @req> REQ-51778557@2aIQFI4KxvJ3 2j6t3u
     # @req> REQ-41024637@JaitgDKH7S2S cdi6vq
