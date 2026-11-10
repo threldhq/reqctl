@@ -5,9 +5,9 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  75zy5s: TpbtFLle6UGbupbCBM6h6MxqS4mfBYBf4Axtdb2TuIs
-  j366nt: 8u2PGvxT3lSOMskHHB6gqTxUEuE-81Z1CkuhicmmjO8
-  jdk4fj: T_PbWSDma753RxNbYBsFFemvSWxjMEh31ZCFJq7olZ0
+  75zy5s: QX80D7kEIQ8x1enKdvAAEWJUX8j5qk7CDap0Ic-xYn8
+  j366nt: Iprcfk48LQiFyni5CXFnn-Cs-HIamZijWslL6bTiEwQ
+  jdk4fj: LAmA1h_t0607sc5TLf9fSTGtLJmSiDFwa5YfA8R8t_c
 priority: medium
 relations:
   REQ-13671144: depends_on

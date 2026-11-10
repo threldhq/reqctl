@@ -5,11 +5,11 @@ acceptance_criteria:
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
 citations:
-  duwcld: n_fUTBUolUIupcmZgS5Lb69DTQhH95_iCIn1aoewfzE
-  fdpr2r: paeL9RBtuMqaqI-QfYmkkxcrb62-TAWIUxGgfT-w7w8
-  jz7diw: MHkJUy3lwTDPtOc8f6iBPVZWn-Je34qdLt-JDECwzqo
-  n4zrm6: rkXSGPLnrXAbNIl5kYt-WNj1oXJzCnNZ-zEMqyP8nNY
-  xttpau: yVVHIKYN8QpNOySKuESct_md9gADzso2AabjoxKiKrk
+  duwcld: AAVRyfcybSwkcoD5IzAqPeXJYMGnTf-GmC72PxpBvrY
+  fdpr2r: kWpauUDs3n6xszZs-f9Rpg80kUhkU9Y3i5SaGj94gRA
+  jz7diw: Bugw20BLhd13QcdJUna_CkAn1Pq9VpdyVd_2TTTm0l4
+  n4zrm6: JiTEo1OR0-hgUWqyfJXDXWz34K_1y6QbGQRKjAluKbk
+  xttpau: V2ejl-V4mW2AbflQpdIZaZkTmD1ir3BTSFMgCrwWqSM
 priority: medium
 relations:
   REQ-38789214: depends_on

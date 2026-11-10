@@ -5,12 +5,12 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  6kyqm5: oovrdTCv3bSAwoRFxmscDFjjjS4LD4uu8tjFhIzUIPU
+  6kyqm5: XNU0A0FhTFV_Dy3LP0z3Qka3Qm82HVyApLjpywsFqeI
   6qcrzv: r7W-FnnEbA6_PibTc2wY7hetduPmFWbP-Lc9-RbuMk0
-  6w5zit: mA6gG1iTcK19xEtH2xVtHmXUtNsfVdsSxNZoihybtWE
-  da45vj: OvkpARISNSR1gEkQG5D4idF4gsop0pDEWpab4_fcd8o
-  qoga4z: FGxUDY25H5GfYIDd8jtsRluBqxx9uTgGVyJwsPEYvyk
-  qwnyvn: KRjhLAOnsB5uJRtMZkDfTX0pcnLWoQ1nQZBseHgwuTA
+  6w5zit: uZwxkyP7KfikWFuWyfc0V0UcXz0m-vMtRKZl-PgB7Vw
+  da45vj: D2rACOkbaFUud3s9qVX3NbO9v-_IqEZMlOG1FT6vY3E
+  qoga4z: ssRkcY589s_082Q4-fsFtTB-UnoG6gKLdYUxBYBdQM8
+  qwnyvn: LGJS2jq_YiunUTZrZ2wPhrpffrCOMpCsMFVrv7mupjc
 priority: medium
 relations:
   REQ-16308184: depends_on

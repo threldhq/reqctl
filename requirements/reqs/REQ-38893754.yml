@@ -5,9 +5,9 @@ assessed:
   REQ-59774469: 2L7AroyhuVFMuyujUAOcw2o2JjK80m_5adp8d69TUMY
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  4x347z: qL87BUUqBIsHcs-Xdodxd5ZmN1NQspDAd6bci9GgnpQ
-  g4b5r5: Ta11rbeiZi1Wo-huPV7VY8Ij4svF1mUDmv1Ol4AgzjU
-  ituxi7: vgSDyFQ8owiMywHG-q5Dr7RuLD_XGnpJfmS5HPc6lDI
+  4x347z: xkmA52z9oA_h-76DHusKUGqT6eVfpgcao98CEpo0U7M
+  g4b5r5: IhKE0L_6qiY6PvjyS80avPSie40wMl3x6TgQNTOM1kM
+  ituxi7: wY01fxlyySTRe_SvAMiNUsS5PWGQCKAZ_CDjbC5oMtA
 priority: medium
 relations:
   REQ-11203679: constrains

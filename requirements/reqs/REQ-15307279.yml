@@ -3,12 +3,12 @@ assessed:
   REQ-76958744: G6gCTCrSsHetq9vT1YIKvzH3gHNoOAOHzVGm3Q5fam8
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
 citations:
-  h3nmbz: G0Cn6LL8mDG_bMTjaN8Gxy-9HuLVapLsEXmJShlkZ18
-  lfsv3a: ivCZyFraNR7KVa3oO_zIlVk28IKD1-yIvWMZIEH72Gw
-  m75p4r: rkqtiaKaeaTXtGHSrJgRckbrUjtaOovRSG6iZYapryw
-  oikknz: DlpffOYho2KFWOeLtD9pq9LZAbWq9b_MNP-G5tkvq-0
-  rvfhlf: 0z9MlVmFjTqNQI9_6VWbzZ2FgAh-5OZKnf2s_TH2SOE
-  zktztf: bRc86dd43BXgsdJJiq-anf3OvpATru2Hhq0cCvpNHVU
+  h3nmbz: BxD467_ZfMHhN-LcE19CZwwwpKV-wW4iwodLKOtX9gY
+  lfsv3a: SMcAn6i09Q_i_qSu9aozVyQiuEkl6hazJ03ffOIsaQE
+  m75p4r: eEYwj1tTMRQO6QQf-dM-Tmo3h7M6lJVgpofFFDp7cag
+  oikknz: XEBFbEfpLv8S9GJqyrtEkqI_h5EmgbhSTn8FND7aWGA
+  rvfhlf: _vLizmkZqn5-BwFSRmvquta94juVUrFF78h1BYoG5D4
+  zktztf: gtMcIzEMBSmHckVvIl3vZRSH3kwb-8UPFsz0FDnwGTk
 priority: medium
 relations:
   REQ-76958744: depends_on

@@ -4,8 +4,8 @@ acceptance_criteria:
   when: the agents are spawned
 assessed: {}
 citations:
-  awfsja: HTUktxMy8LQ7fO6yo7QpvRE3qWM45gde6X30tuj_Jpo
-  o7zxou: EFmh6nTYmYwigc0GUK6dibUZK234VpbtMso3kzbGaV0
+  awfsja: BXGcr1etd51G7p_6_u9GmykyqjRFgIX9cmBK-Sn6PzI
+  o7zxou: R9n04gPhwx4PPN5daZuMtHlw5dfDx93O9c-jfy7-BYc
 priority: medium
 relations: {}
 status: approved
