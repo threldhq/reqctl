@@ -377,7 +377,7 @@ def _starts(pieces, at):
     if at == 0:
         return True
     line, before = pieces[at - 1]
-    if before in ("async", "export", "default"):
+    if before in ("async", "export", "default") and (at < 2 or pieces[at - 2][1] != "."):
         return _starts(pieces, at - 1)
     return before in (";", "}") or (line < pieces[at][0] and not CONTINUING.match(before))
 
