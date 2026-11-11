@@ -7,5 +7,5 @@ text: When a session starts, the build shall create the virtual environment .ven
   on another version, and put its bin folder first on the session's PATH.
 whole_file_citations:
   .claude/hooks/session-start.sh:
-    digest: xDxzdnXE014yYiYn7_JCLby6gRPkb8U9iPkOu-jnt1U
+    digest: zejok6ObY7NsbcV2cksQsIS0ewoGQVq6hcWWkV0wyvs
     pinned: 9ij8-AYoZ4We
