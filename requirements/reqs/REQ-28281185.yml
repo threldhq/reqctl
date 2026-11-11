@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a group holding an [item](item) whose statement links a term
+  then: the prompt states the link's words in that statement, and neither the link's
+    brackets nor its address
+  when: the group prompt is built
+- given: a group holding a [proposal](proposal) whose statement links a term
+  then: the prompt states the link's words in that statement, and neither the link's
+    brackets nor its address
+  when: the group prompt is built
+assessed:
+  REQ-30631052: IFJ5WPh_dCD4cpqrKvq5nMGkFgQgp59riv09LHTz3eE
+  REQ-48762557: jm9fn2mpwhmlR3rOqfNUCUB2pspY7Gy1WkktVhDxj1k
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+priority: medium
+relations:
+  REQ-30631052: constrains
+  REQ-48762557: depends_on
+status: approved
+text: When a group prompt is built, the product shall state each link in the prose
+  of an [item](item) or a [proposal](proposal) the group holds as the link's words
+  alone.
+type: functional
+verification: inspection
