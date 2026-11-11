@@ -730,9 +730,8 @@ def pinning(root, identities):
     # @req+ REQ-64846889@TSG5uy3nM0nk wbaon5
     # @req+ REQ-59827868@n8ncPHxU3mWA unauut
     reach = Reach(sources)
-    return [(found[identity], digest(found[identity]["path"], sources[found[identity]["path"]],
-                                     found[identity]["lines"], reach))
-            for identity in identities]
+    return [(citation, digest(citation["path"], sources[citation["path"]], citation["lines"], reach))
+            for citation in (found[identity] for identity in identities)]
     # @req- unauut
     # @req- wbaon5
 
@@ -742,9 +741,8 @@ def _read(sources, identities, placed):
     held, faults = _parse(sources, placed)
     found = [citation for citation in held
              if identities is EVERY or citation["id"] in identities]
-    files = () if identities is EVERY else [citation["path"] for citation in found]
-    against = [fault for about, fault in faults if about is EVERY or about in files
-               or (identities is not EVERY and about in identities)]
+    named = () if identities is EVERY else (*identities, *(c["path"] for c in found))
+    against = [fault for about, fault in faults if about is EVERY or about in named]
     # @req> REQ-30898926@Vu28eWaG_1mE z3j7ql
     if against:
         raise ReqctlError("the code's citations do not read:\n" + "\n".join(against))
@@ -791,8 +789,7 @@ def repinned(root, pins):
         at = citation["open"] - 1
         pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['address'])})(?:@\S*)?")
         # @req> REQ-18833394@iNDqEsjKcVn- gvfbsp
-        lines[at] = pinned.sub(lambda found, stamp=stamp: f"{found.group(1)}@{stamp}",
-                               lines[at], count=1)
+        lines[at] = pinned.sub(rf"\g<1>@{stamp}", lines[at], count=1)
     # @req> REQ-36103991@1sBO1pub0_IK wu6oxx
     return target, (mark + "".join(lines)).encode()
     # @req- cnpmsp
