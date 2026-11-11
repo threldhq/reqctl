@@ -716,23 +716,43 @@ def tagged(root, path, asked, exclusive=False):
              for c in new])
 
 
-# @req> REQ-64846889@TSG5uy3nM0nk 6vgx2i
-def standing(root, citation):
-    text = (Path(root) / citation["path"]).read_bytes().decode().removeprefix(BOM)
-    # @req> REQ-59827868@n8ncPHxU3mWA 47poz3
-    return digest(citation["path"], text, citation["lines"], Reach(dict(_sources(root))))
+# @req> REQ-96580262@hSRVhY3ybYl9 nevicm
+def pinning(root, identities):
+    sources = dict(_sources(root))
+    found = {citation["id"]: citation for citation in _read(sources.items(), identities, True)}
+    missing = [identity for identity in identities if identity not in found]
+    # @req> REQ-41024637@JaitgDKH7S2S 2usjww
+    # @req> REQ-30898926@Vu28eWaG_1mE 3vmsym
+    if missing:
+        raise ReqctlError(f"no statement citation names {', '.join(missing)} -- reqctl "
+                          "trace UID lists the identities an item is cited by; nothing "
+                          "was re-pinned")
+    # @req+ REQ-64846889@TSG5uy3nM0nk wbaon5
+    # @req+ REQ-59827868@n8ncPHxU3mWA unauut
+    reach = Reach(sources)
+    return [(found[identity], digest(found[identity]["path"], sources[found[identity]["path"]],
+                                     found[identity]["lines"], reach))
+            for identity in identities]
+    # @req- unauut
+    # @req- wbaon5
 
 
 # @req+ REQ-62685242@nMlCr6nshoNZ yqdz42
-def readable(root, identity=EVERY, placed=True):
-    held, faults = _parse(_sources(root), placed)
-    found = [citation for citation in held if identity in (EVERY, citation["id"])]
-    files = () if identity is EVERY else [citation["path"] for citation in found]
-    against = [fault for about, fault in faults if about in (identity, EVERY, *files)]
+def _read(sources, identities, placed):
+    held, faults = _parse(sources, placed)
+    found = [citation for citation in held
+             if identities is EVERY or citation["id"] in identities]
+    files = () if identities is EVERY else [citation["path"] for citation in found]
+    against = [fault for about, fault in faults if about is EVERY or about in files
+               or (identities is not EVERY and about in identities)]
+    # @req> REQ-30898926@Vu28eWaG_1mE z3j7ql
     if against:
-        # @req> REQ-30898926@Vu28eWaG_1mE z4stql
         raise ReqctlError("the code's citations do not read:\n" + "\n".join(against))
     return found
+
+
+def readable(root, identity=EVERY, placed=True):
+    return _read(_sources(root), identity if identity is EVERY else (identity,), placed)
 
 
 def named(root, identity, placed=True):
@@ -764,16 +784,18 @@ def _lines(root, citation):
     # @req- zibglc
 
 
-def repinned(root, citation, stamp):
-    # @req+ REQ-17757558@XeiCnIpn4RLV lqd5pz
-    target, mark, lines = _lines(root, citation)
-    at = citation["open"] - 1
-    pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['address'])})(?:@\S*)?")
-    # @req> REQ-18833394@iNDqEsjKcVn- 62bkhg
-    lines[at] = pinned.sub(lambda found: f"{found.group(1)}@{stamp}", lines[at], count=1)
-    # @req> REQ-36103991@1sBO1pub0_IK y7m44o
+def repinned(root, pins):
+    # @req+ REQ-17757558@XeiCnIpn4RLV cnpmsp
+    target, mark, lines = _lines(root, pins[0][0])
+    for citation, stamp in pins:
+        at = citation["open"] - 1
+        pinned = re.compile(rf"(@req[{OPEN}{SINGLE}]\s+{re.escape(citation['address'])})(?:@\S*)?")
+        # @req> REQ-18833394@iNDqEsjKcVn- gvfbsp
+        lines[at] = pinned.sub(lambda found, stamp=stamp: f"{found.group(1)}@{stamp}",
+                               lines[at], count=1)
+    # @req> REQ-36103991@1sBO1pub0_IK wu6oxx
     return target, (mark + "".join(lines)).encode()
-    # @req- lqd5pz
+    # @req- cnpmsp
 
 
 def every(root):
