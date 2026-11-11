@@ -1,0 +1,32 @@
+acceptance_criteria:
+- given: three stale [statement citations](statement_citation) in two files
+  then: the product re-pins all three in that command
+  when: reqctl repin is given their three [citation identities](citation_identity)
+- given: reqctl repin given two [citation identities](citation_identity), one that
+    no [statement citation](statement_citation) the [code base](code_base) holds names
+  then: the product refuses it and re-pins neither
+  when: the command is run
+assessed:
+  REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
+  REQ-41024637: JaitgDKH7S2SXpXO5pxdRuDdWqWYkqc7GsrBadlUpBQ
+  REQ-44424329: FMmHjrkfDEYRCx1n2GhkH0m-aUQg4OZL4rv5u7T2iVw
+  REQ-65668011: WuPZe9UcmiaP9jx2HyRcgGxL8Qmm9m67DAYfT-S-shQ
+  REQ-65738797: 3jHtqzLVQUalTgYGOsv_qwVA9BZMdCdF3gDduMyWsqA
+  REQ-78685242: 0TbO1Puhk4VDZv6kE9Wjo6dcpp4nnATfTFuz78Hfcxo
+  citation_identity: RINnQXjJScvXXo8mtw5cWiDwAd87BnK7gey07-t8OcQ
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-18833394: derives_from
+  REQ-41024637: depends_on
+  REQ-44424329: depends_on
+  REQ-65668011: depends_on
+  REQ-65738797: depends_on
+  REQ-78685242: constrains
+status: approved
+text: When reqctl repin is given several [citation identities](citation_identity),
+  the product shall re-pin the [statement citation](statement_citation) naming each
+  of them in that one command, reading the [code base](code_base) once.
+type: functional
+verification: inspection
