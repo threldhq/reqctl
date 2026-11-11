@@ -8,5 +8,5 @@ status: approved
 text: When a session starts, the build shall fetch origin's default branch.
 whole_file_citations:
   .claude/hooks/session-start.sh:
-    digest: zejok6ObY7NsbcV2cksQsIS0ewoGQVq6hcWWkV0wyvs
+    digest: A-UiNJZOEgKi917RRd6LqV8Iv-k0MF7Ab2wbo3Oh5ec
     pinned: -4-3BY4YBXGa

@@ -38,7 +38,7 @@ text: If a workflow or the session-start hook installs a Python package that req
   then the build shall refuse the change.
 whole_file_citations:
   .claude/hooks/session-start.sh:
-    digest: zejok6ObY7NsbcV2cksQsIS0ewoGQVq6hcWWkV0wyvs
+    digest: A-UiNJZOEgKi917RRd6LqV8Iv-k0MF7Ab2wbo3Oh5ec
     pinned: IECSQ_EeiXfC
   reqctl/requirements-dev-lock.txt:
     digest: TioRqFTMLFPPmxjtdnRwVK_g-F9HPK_Ii_v6DPY8QIg

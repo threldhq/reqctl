@@ -63,7 +63,7 @@ held=$(mktemp)
     echo "$(wc -l <<<"$reqs") requirements and $(wc -l <<<"$guards") guards are not listed here: search with" \
          "reqctl list requirement or reqctl list guard, read one with reqctl context UID"
   else
-    echo "${guards:-$reqs}"
+    echo "${guards-$reqs}"
   fi
 } | tee "$held"
 rm -rf "$replays"
