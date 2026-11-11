@@ -965,27 +965,37 @@ def cmd_tag(args):
     return EXIT_OK
 
 
+# @req> REQ-96580262@hSRVhY3ybYl9 r4nj25
 def cmd_repin(args):
     tree, root = corpus.load()
-    citation = cite.named(root, args.id)
-    # @req+ REQ-57688239@Pv7jzOAUDd-O 4yael4
-    item, entry = corpus.cited_item(tree, citation["address"])
-    # @req> REQ-70626698@nJ3cW5CgMJtE dhjmro
-    if corpus.raw(item).get("status") == "deprecated":
-        # @req> REQ-30898926@Vu28eWaG_1mE 3yexoh
-        raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
-                          f"is removed, not re-pinned: `reqctl untag {args.id}`")
-    # @req> REQ-41600593@dauTiMee9rmb rsw2w2
-    stamp = corpus.cited_stamp(item, entry)
-    # @req- 4yael4
-    changes = [cite.repinned(root, citation, stamp)]
-    # @req> REQ-64846889@TSG5uy3nM0nk 7dhw4d
-    # @req> REQ-17757558@XeiCnIpn4RLV tevb2p
-    changes += _listed(tree, citation["uid"], {args.id: cite.standing(root, citation)})
-    # @req> REQ-65668011@WuPZe9UcmiaP 34djjj
+    files, listed, rows = {}, {}, []
+    # @req+ REQ-65738797@3jHtqzLVQUal g4qwzc
+    for citation, standing in cite.pinning(root, list(dict.fromkeys(args.id))):
+        # @req> REQ-57688239@Pv7jzOAUDd-O rmkf77
+        item, entry = corpus.cited_item(tree, citation["address"])
+        # @req> REQ-70626698@nJ3cW5CgMJtE s45utm
+        if corpus.raw(item).get("status") == "deprecated":
+            # @req> REQ-30898926@Vu28eWaG_1mE jhlw6y
+            raise ReqctlError(f"{citation['uid']} is deprecated -- a citation of it "
+                              f"is removed, not re-pinned: `reqctl untag {citation['id']}`; "
+                              "nothing was re-pinned")
+        # @req> REQ-57688239@Pv7jzOAUDd-O btnwzg
+        # @req> REQ-41600593@dauTiMee9rmb pu2zgs
+        stamp = corpus.cited_stamp(item, entry)
+        files.setdefault(citation["path"], []).append((citation, stamp))
+        # @req> REQ-64846889@TSG5uy3nM0nk 77re7v
+        listed.setdefault(citation["uid"], {})[citation["id"]] = standing
+        rows.append({"id": citation["id"], "path": citation["path"], "stamp": stamp})
+    # @req+ REQ-17757558@XeiCnIpn4RLV nkxtiu
+    changes = [cite.repinned(root, pins) for pins in files.values()]
+    for uid, entries in listed.items():
+        changes += _listed(tree, uid, entries)
+    # @req- nkxtiu
+    # @req> REQ-65668011@WuPZe9UcmiaP nmk2ra
     corpus.write_all(changes)
-    _emit(args, {"id": args.id, "path": citation["path"], "stamp": stamp},
-          f"{args.id} in {citation['path']} pinned @{stamp}")
+    # @req- g4qwzc
+    _emit(args, rows[0] if len(rows) == 1 else rows,
+          "\n".join(f"{row['id']} in {row['path']} pinned @{row['stamp']}" for row in rows))
     return EXIT_OK
 
 
@@ -1385,9 +1395,9 @@ def build_parser(root, fielded):
     s.set_defaults(func=cmd_tag)
 
     s = _command(sub, "repin",
-                 "re-pin a citation to the stamp its item carries now, "
+                 "re-pin citations to the stamp their items carry now, "
                  "once the code is read against the statement that stands")
-    s.add_argument("id")
+    s.add_argument("id", nargs="+")
     s.set_defaults(func=cmd_repin)
 
     s = _command(sub, "untag",
