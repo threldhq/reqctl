@@ -48,20 +48,23 @@ fi
 
 held=$(mktemp)
 {
-  "$venv/bin/reqctl" validate
+  "$venv/bin/reqctl" validate 2>&1 || true
 
   "$venv/bin/reqctl" baseline --check 2>&1 || true
 
   PATH="$venv/bin:$PATH" "$venv/bin/python" .github/guards/citations.py 2>&1 || true
 
-  "$venv/bin/reqctl" list term
-  "$venv/bin/reqctl" list parameter
-  "$venv/bin/reqctl" list data
+  "$venv/bin/reqctl" list term 2>&1 || true
+  "$venv/bin/reqctl" list parameter 2>&1 || true
+  "$venv/bin/reqctl" list data 2>&1 || true
 
-  reqs=$("$venv/bin/reqctl" list requirement | wc -l)
-  guards=$("$venv/bin/reqctl" list guard | wc -l)
-  echo "$reqs requirements and $guards guards are not listed here: search with" \
-       "reqctl list requirement or reqctl list guard, read one with reqctl context UID"
+  if reqs=$("$venv/bin/reqctl" list requirement 2>&1) \
+     && guards=$("$venv/bin/reqctl" list guard 2>&1); then
+    echo "$(wc -l <<<"$reqs") requirements and $(wc -l <<<"$guards") guards are not listed here: search with" \
+         "reqctl list requirement or reqctl list guard, read one with reqctl context UID"
+  else
+    echo "${guards-$reqs}"
+  fi
 } | tee "$held"
 rm -rf "$replays"
 mkdir -p "$replays"
