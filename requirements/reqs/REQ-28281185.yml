@@ -12,6 +12,8 @@ assessed:
   REQ-48762557: jm9fn2mpwhmlR3rOqfNUCUB2pspY7Gy1WkktVhDxj1k
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  cwj6la: 16t9Nu_kf59kKTieLrTU0WUdVuW6oRaKc2WmOZbOAAE
 priority: medium
 relations:
   REQ-30631052: constrains

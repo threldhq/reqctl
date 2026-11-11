@@ -400,7 +400,7 @@ UNHELD_SCRIPT = (
 PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 FINGERPRINTS = frozenset({
     "49675e82799aeb18f2052d459ea2f225bd6acb490eb6f52b567b59cff927086d",
-    "938907df324856e51c2b34174f71ae6cc58083e9806a40b96f4b882cb9127b0a",
+    "1e0fb1ccfa26bb4cdd7d8d07140104e66bbed210807ed59322a01aa213b64b81",
     "6d59b5fd67889bf8a3175754dd8b5b45ea2c0d733eab93e3f3b2ad38f26ca8da",
 })
 # @req- kbbyh4

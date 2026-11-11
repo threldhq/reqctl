@@ -1408,17 +1408,22 @@ def grouped(names, bound_at, group):
     # @req- 5f3ye7
 
 
+def link_words(text):
+    return write.ANY_LINK.sub(r"\1", write.WIKI_LINK.sub(r"\1", text))
+
+
 def group_prompt(run, number, spec, at, names, named, state_held, text,
                  dictionary_text, records):
     out = run / "returns" / "judge" / f"{number}-g{at}.json"
     # @req> REQ-11403762@DHO9tybNlGFY 7gze7m
+    # @req> REQ-28281185@syDWpskOmr1u cwj6la
     return GROUP.format(
         number=number, statement=spec["statement"], binding=binding_text(spec),
         group=at, write=written(out, shapes.GROUP),
         clause_length=shapes.GROUP["properties"]["findings"]["items"][
             "properties"]["clause"]["maxLength"],
         dictionary=DICTIONARY.format(dictionary=dictionary_text),
-        items=stated_items(state_held, text, names, named, records))
+        items=link_words(stated_items(state_held, text, names, named, records)))
 
 
 def judge(run):
