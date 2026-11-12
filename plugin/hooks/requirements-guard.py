@@ -12,6 +12,7 @@ import shlex
 import subprocess
 import sys
 import time
+import unicodedata
 from collections import Counter
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -34,8 +35,8 @@ CORPUS_DIR = re.compile(
     r"|\bcd\s+requirements(?![\w.-])"
 )
 CORPUS_ROOT_NAME = "requirements"
-REDIRECT = re.compile(rf">>?&?\s*[^\s>]*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
-REDIRECT_TARGET = re.compile(r">>?&?[ \t]*([^\s<>;&|()]+)")
+REDIRECT = re.compile(rf">[>|]?&?\s*[^\s>]*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
+REDIRECT_TARGET = re.compile(r">[>|]?&?[ \t]*((?:\$\((?:[^()]|\([^()]*\))*\)|`[^`]*`|[^\s<>;&|()`])+)")
 REDUNDANT = re.compile(r"/(?:\./)+|//+")
 PARENT = re.compile(r"(^|/)(?!\.\./)[^/\s]+/\.\./")
 PATH_KEY = re.compile(
@@ -170,8 +171,19 @@ PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
                          "--mirror", "--delete", "--prune")
 GLUED_OPTION = re.compile(r"^-+[A-Za-z0-9]*?(?=requirements)")
 ESCAPE = re.compile(r"\\(?=[A-Za-z0-9/])")
-QUOTED_REDIRECT = re.compile(r"""(>>?\s*)(['"])([^'"]*)\2""")
+QUOTED_REDIRECT = re.compile(r"""(>[>|]?\s*)(['"])([^'"]*)\2""")
 GLOB_CHAR = re.compile(r"[*?\[\]{}]")
+BRACKET = re.compile(r"\[!?\]?(?:\[:\w+:\]|[^\]])*\]")
+POSIX_CLASS = re.compile(r"\[:(\w+):\]")
+CLASSES = {"alnum": str.isalnum, "alpha": str.isalpha, "ascii": str.isascii,
+           "blank": lambda char: char == "\t" or unicodedata.category(char) == "Zs",
+           "cntrl": lambda char: unicodedata.category(char) == "Cc", "digit": str.isdigit,
+           "graph": lambda char: char.isprintable() and not char.isspace(),
+           "lower": str.islower, "print": str.isprintable,
+           "punct": lambda char: char.isprintable() and not char.isalnum() and not char.isspace(),
+           "space": str.isspace, "upper": str.isupper,
+           "word": lambda char: char.isalnum() or char == "_",
+           "xdigit": lambda char: char in "0123456789abcdefABCDEF"}
 LITERAL_CHAR = re.compile(r"[^*?\[\]{}]")
 
 UNQUOTED = str.maketrans("", "", "'\"\\")
@@ -458,6 +470,8 @@ CONNECTOR_WRITE = re.compile(
     re.IGNORECASE)
 RUNNERS = {"python": "c", "node": "ep", "perl": "eE", "ruby": "e", "source": "", ".": "",
            **dict.fromkeys((*SHELLS, "fish"), "cs")}
+PROGRAMS = tuple(tool for tool, inline in RUNNERS.items() if inline and tool not in SHELLS)
+PROGRAM_WORD = re.compile(r"[^\s'\"`();|&<>]+")
 RUN_VALUED = {"python": ("-W", "-X", "-m", "--check-hash-based-pycs"),
               "node": ("-r", "--require", "--import", "--loader"),
               **dict.fromkeys((*SHELLS, "fish"), ("-o", "-O", "--rcfile", "--init-file"))}
@@ -538,12 +552,12 @@ def bare_paths(value):
     return [found for v in items for found in bare_paths(v)]
 
 
-def flatten(text: str) -> str:
+def flatten(text: str, parents=True) -> str:
     previous = None
     while previous != text:
         previous = text
         text = REDUNDANT.sub("/", text)
-        text = PARENT.sub(r"\1", text)
+        text = PARENT.sub(r"\1", text) if parents else text
     return text
 
 
@@ -708,7 +722,7 @@ def scan(cmd: str, joins=None) -> list[list[str]]:
                 continue
             if char == "|" and line[i:i + 2] != "||":
                 cut_segment()
-                i += 1
+                i += 2 if line[i:i + 2] == "|&" else 1
                 continue
             if char in ";&|":
                 join = char * 2 if line[i + 1:i + 2] == char else char
@@ -2225,18 +2239,27 @@ def judge_command(said, here, stdin=()):
         deny(UNREADABLE.format(what=f"which command or repository {hidden} leads to"))
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@u7IClIQOfStA 6cxbfo
-    if (plain == "rm" or posed) and any(
-            (len(w) > 2 and "--recursive".startswith(w))
-            or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
-            for w in operands):
+    if removes_recursively(called):
+        fed = "xargs" in map(os.path.basename, words[:len(words) - len(called)])
+        # @req> REQ-51296881@8h-e1bOYkZtT mo2oby
+        if fed and not stdin:
+            deny(f"{posing_as(plain, 'rm')} -r fed by xargs blocked: the paths it deletes arrive on "
+                 "standard input, where the guard cannot see them. Name the paths to delete"
+                 f"{'' if plain == 'rm' else ', and the command outright'}.")
         # @req> REQ-51296881@8h-e1bOYkZtT 7sfcit
-        if swept := sweeping(operands, here, BARE_SWEEP):
+        if swept := sweeping([*operands, *(word for text in stdin if fed for word in text.split())],
+                             here, BARE_SWEEP):
             deny(f"{posing_as(plain, 'rm')} -r of '{swept}' blocked: it sweeps the requirements "
                  "corpus along with everything else. Name the paths to delete"
                  f"{'' if plain == 'rm' else ', and the command outright'}.")
     # @req> REQ-91051324@ljHcdWSG-nys vdn4ok
     # @req> REQ-22704490@u7IClIQOfStA mrkvmj
-    if (plain == "find" or posed) and any("-delete" in bounded(w) for w in operands):
+    # @req> REQ-21901290@fc_rdI5ms5IC jpcmtc
+    if (plain == "find" or posed) and (
+            (deleting := any("-delete" in bounded(w) for w in operands))
+            or any(removes_recursively(invoked(list(itertools.takewhile(
+                lambda word: word not in (";", "+"), operands[at + 1:]))))
+                for at, word in enumerate(operands) if word in FIND_RUNS)):
         at = 0
         while at < len(operands) and (operands[at] in ("-H", "-L", "-P", "-D", "--")
                                       or operands[at].startswith("-O")):
@@ -2246,7 +2269,8 @@ def judge_command(said, here, stdin=()):
             operands[at:])) or ["."]
         # @req> REQ-51296881@8h-e1bOYkZtT 4k6mvu
         if swept := sweeping(points, here, BARE_ROOTS):
-            deny(f"{posing_as(plain, 'find')} -delete from '{swept}' blocked: it could reach the "
+            deny(f"{posing_as(plain, 'find')} {'-delete' if deleting else 'running rm -r'} from "
+                 f"'{swept}' blocked: it could reach the "
                  "project root, a folder above it, or the requirements corpus. Start find "
                  "from the folder that holds what it should delete"
                  f"{'' if plain == 'find' else ', and name the command outright'}.")
@@ -2279,6 +2303,14 @@ def judge_command(said, here, stdin=()):
             lambda word: word != "--" and word.startswith(("-", "+")), operands), "c"):
         for script in stdin:
             judge_shell(script, here)
+
+
+def removes_recursively(called):
+    plain = called[0] if called else None
+    return (plain == "rm" or plain is not None and EXPANSION.search(plain) is not None) and any(
+        (len(w) > 2 and "--recursive".startswith(w))
+        or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
+        for w in called[1:])
 
 
 def posing_as(plain, tool):
@@ -2332,18 +2364,47 @@ def scripts_within(words, here):
 
 
 def braced(word, room=256):
-    found = room and BRACE.search(word)
+    found = room and min(filter(None, (BRACE.search(word), BASH_SEQUENCE.search(word))),
+                         key=re.Match.start, default=None)
     if not found:
         yield word
         return
-    for choice in (choices := found.group(1).split(",")):
+    choices = (found.group(1).split(",") if found.re is BRACE
+               else list(itertools.islice(sequence(found.group()[1:-1]), room + 1)))
+    for choice in choices:
         yield from braced(word[:found.start()] + choice + word[found.end():], room // len(choices))
+
+
+def sequence(spec):
+    first, last, *step = spec.split("..")
+    stride = abs(int(step[0])) if step and int(step[0]) else 1
+    if first.isalpha():
+        start, end = ord(first), ord(last)
+        return map(chr, range(start, end + (end >= start or -1), stride if end >= start else -stride))
+    start, end = int(first), int(last)
+    width = max(len(first), len(last)) if any(re.match(r"[+-]?0\d", n) for n in (first, last)) else 1
+    return (f"{n:0{width}d}" for n in range(start, end + (end >= start or -1),
+                                            stride if end >= start else -stride))
 
 
 def expands_to(pattern, path):
     wanted, held = pattern.split("/"), path.split("/")
     return pattern == path or len(wanted) == len(held) and all(
-        fnmatch.fnmatchcase(name, glob.replace("[^", "[!")) for glob, name in zip(wanted, held))
+        globbed(name, glob) for glob, name in zip(wanted, held))
+
+
+def globbed(name, glob):
+    glob, kinds = glob.replace("[^", "[!"), []
+    if "[:" not in glob:
+        return fnmatch.fnmatchcase(name, glob)
+    mark = next(chr(code) for code in itertools.count(0xE000) if chr(code) not in glob)
+    glob = BRACKET.sub(lambda bracket: POSIX_CLASS.sub(
+        lambda found: kinds.append(found[1]) or mark, bracket[0]), glob)
+    pattern = fnmatch.translate(glob)
+    for kind in kinds:
+        held = "".join(char for char in dict.fromkeys(name) if kind in CLASSES and CLASSES[kind](char))
+        pattern = pattern.replace(mark, re.escape(held) or "/", 1)
+    return re.fullmatch(pattern, name, re.DOTALL) is not None
 
 
 def glob_alternatives(segment):
@@ -2355,11 +2416,11 @@ def glob_alternatives(segment):
 # @req> REQ-22704490@u7IClIQOfStA 3r7rae
 # @req> REQ-54260750@MTrWbA9_HZWY pokpqc
 def is_corpus_root(word):
-    for value in {word, word.rpartition("=")[2]}:
+    for value in {spelled for whole in {word, word.rpartition("=")[2]} for spelled in bounded(whole)}:
         trimmed = os.path.normpath(EXPANSION.sub("", value)).rstrip("/")
         if trimmed and (trimmed.rsplit("/", 1)[-1] == CORPUS_ROOT_NAME or any(
                 GLOB_CHAR.search(segment) and LITERAL_CHAR.search(segment)
-                and any(fnmatch.fnmatchcase(CORPUS_ROOT_NAME, alt)
+                and any(globbed(CORPUS_ROOT_NAME, alt)
                         for alt in glob_alternatives(segment))
                 for segment in trimmed.split("/"))):
             return True
@@ -2471,10 +2532,31 @@ def reached(path, root):
 
 @functools.lru_cache(maxsize=4096)
 def reaches_corpus(word, cwd, root=False):
-    paths = (os.path.normpath(os.path.join(cwd, alt))
-             for value in {word, word.rpartition("=")[2]}
-             if value for alt in bounded(os.path.expanduser(EXPANSION.sub("*", value))))
+    paths = (form for value in {word, word.rpartition("=")[2]}
+             if value for alt in bounded(os.path.expanduser(EXPANSION.sub("*", value)))
+             for joined in [os.path.join(cwd, alt)]
+             for form in {os.path.normpath(joined), os.path.realpath(joined), *starred(joined)})
     return any(os.path.isabs(path) and reached(path, root) for path in paths)
+
+
+def starred(path):
+    parts = path.split("/")
+    if "**" not in parts:
+        return []
+    at = parts.index("**")
+    rest = "/".join(parts[at + 1:])
+    return [found for base in matches("/".join(parts[:at]) or "/") for folder in below(base)
+            for found in (starred(f"{folder}/{rest}") if "**" in parts[at + 1:]
+                          else matches(f"{folder}/{rest}"))]
+
+
+def below(base):
+    folders = [base]
+    for folder in folders:
+        folders += [path for name in sorted(listing(folder)) if not name.startswith(".")
+                    for path in [os.path.join(folder, name)]
+                    if os.path.isdir(path) and not os.path.islink(path)]
+    return folders
 
 
 @functools.lru_cache(maxsize=4096)
@@ -2485,7 +2567,7 @@ def reaches_plugin(word, cwd):
     return any(Path(os.path.realpath(found)).is_relative_to(PLUGIN_ROOT)
                for path in paths
                for found in (path, *fnmatch.filter([str(PLUGIN_ROOT)], path),
-                             *(matches(path) if GLOB_CHAR.search(path) else ())))
+                             *(matches(path) if GLOB_CHAR.search(path) else ()), *starred(path)))
 
 
 def sed_addresses(text):
@@ -2689,15 +2771,9 @@ def writes_plugin(said, here, whole):
     called = invoked(words)
     tool = runner(called[0]) if called else ""
     operands = [word for word in called[1:] if not word.startswith("-")]
-    plain = [word for previous, word in itertools.pairwise(["", *called])
-             if not REDIRECTION.match(word) and not REDIRECTION.fullmatch(previous)]
-    script = next((word for previous, word in itertools.pairwise(plain)
-                   if not word.startswith("-") and previous not in RUN_VALUED.get(tool, ())), "")
-    inline = any(letter in flag for flag in itertools.takewhile(lambda word: word.startswith("-"), plain[1:])
-                 for letter in RUNNERS.get(tool, ""))
-    from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
-        ("dev/", "proc/"))
-    if tool in RUNNERS and (inline or from_stdin) and names_plugin(whole):
+    script, inline, from_stdin = program(called, here)
+    if tool in RUNNERS and (inline or from_stdin) and (names_plugin(whole) or tool in PROGRAMS and any(
+            reaches_plugin(word, here) for word in PROGRAM_WORD.findall(whole if from_stdin else said))):
         return True
     naming = [word for word in words if reaches_plugin(word, here)]
     if not naming and not names_plugin(said):
@@ -2712,6 +2788,27 @@ def writes_plugin(said, here, whole):
         return (not operands or reaches_plugin(operands[-1], here)
                 or any(word.startswith(("-t", "--target")) for word in called))
     return True
+
+
+def program(called, here):
+    tool = runner(called[0]) if called else ""
+    plain = [word for previous, word in itertools.pairwise(["", *called])
+             if not REDIRECTION.match(word) and not REDIRECTION.fullmatch(previous)]
+    script = next((word for previous, word in itertools.pairwise(plain)
+                   if not word.startswith("-") and previous not in RUN_VALUED.get(tool, ())), "")
+    inline = any(letter in flag for flag in itertools.takewhile(lambda word: word.startswith("-"), plain[1:])
+                 for letter in RUNNERS.get(tool, ""))
+    from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
+        ("dev/", "proc/"))
+    return script, inline, from_stdin
+
+
+def program_words(part, here):
+    called = invoked(argv(heading(part))[0])
+    tool = runner(called[0]) if called else ""
+    if tool == "awk" and sink_runs(called) or tool in PROGRAMS and any(program(called, here)[1:]):
+        return PROGRAM_WORD.findall(part)
+    return []
 
 
 def expands(word):
@@ -2779,15 +2876,17 @@ def names_corpus(part, cwd):
         return True
     operands = [GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(heading(part)))]
     return any(CORPUS_DIR.search(word) or is_corpus_root(word)
-               or reaches_corpus(word, cwd) for word in operands)
+               or reaches_corpus(word, cwd) for word in [*operands, *program_words(part, cwd)])
 
 
 @functools.cache
-def judge_shell(raw, cwd, stdin=()):
+def judge_shell(raw, cwd, stdin=(), parents=True):
     # @req+ REQ-22704490@u7IClIQOfStA ak47k7
     if (spelled := ansi_c(raw)) != raw:
         judge_shell(spelled, cwd, stdin)
-    cmd = flatten(unescaped(raw))
+    if parents and PARENT.search(unescaped(raw)):
+        judge_shell(raw, cwd, stdin, False)
+    cmd = flatten(unescaped(raw), parents)
     joins = []
     pipelines = scan(AMP_REDIRECT.sub(" ", cmd), joins)
     places = cwds(pipelines, joins, cwd)
@@ -2932,9 +3031,10 @@ def moved(pipeline, heres, certain, places):
     if tool == "popd" or folder is None:
         return heres.union(*places)
     target = os.path.expanduser(folder)
-    there = {os.path.normpath(joined) if os.path.isabs(joined) and target != "-"
+    there = {form if os.path.isabs(joined) and target != "-"
              and "$" not in target and "`" not in target else ""
-             for joined in (os.path.join(here, target) for here in heres)}
+             for spelled in bounded(target) for joined in (os.path.join(here, spelled) for here in heres)
+             for form in {os.path.normpath(joined), os.path.realpath(joined)}}
     return there if certain and tool == "cd" and all(map(os.path.isdir, there)) else heres | there
 
 
@@ -3201,9 +3301,10 @@ def decide(data: dict) -> "str | None":
 
     # @req> REQ-22704490@u7IClIQOfStA qfasw3
     if tool not in ("Bash", "Read", "Grep", "Glob"):
+        fields = {spelled for found in named_paths(args) for spelled in (found, unquote(found))}
         for value in dict.fromkeys(spelled for found in named_paths(args) + bare_paths(args)
                                    for spelled in (found, unquote(found))):
-            named = flatten(value.replace("\\", "/"))
+            named, slashed = flatten(value.replace("\\", "/")), value.replace("\\", "/")
             if ITEM.search(named):
                 deny(f"Direct write of a requirement item blocked: {value}\n{USE_REQCTL}")
             if BASELINE.search(named):
@@ -3212,7 +3313,8 @@ def decide(data: dict) -> "str | None":
                     "Use `reqctl baseline --generate`; approval is the owner's, "
                     "on a pull request."
                 )
-            if CORPUS_DIR.search(named) or reaches_corpus(named, cwd):
+            if CORPUS_DIR.search(named) or reaches_corpus(slashed, cwd) or value in fields and (
+                    is_corpus_root(named) or reaches_corpus(slashed, cwd, True)):
                 deny(f"Direct write into the requirements corpus blocked: {value}\n"
                      f"{USE_REQCTL}")
 
@@ -3243,7 +3345,7 @@ def decide(data: dict) -> "str | None":
         for value in values:
             named = flatten(value.replace("\\", "/"))
             if (CORPUS_DIR.search(named) or is_corpus_root(named)
-                    or value in paths and reaches_corpus(named, cwd)):
+                    or value in paths and reaches_corpus(value.replace("\\", "/"), cwd)):
                 deny(DIRECT_READ.format(target=value))
         if tool == "Grep" and (root := searched_corpus(args, cwd)):
             deny(SEARCHES_CORPUS.format(base=args.get("path") or cwd, root=root))
