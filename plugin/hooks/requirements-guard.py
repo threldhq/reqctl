@@ -173,8 +173,8 @@ GLUED_OPTION = re.compile(r"^-+[A-Za-z0-9]*?(?=requirements)")
 ESCAPE = re.compile(r"\\(?=[A-Za-z0-9/])")
 QUOTED_REDIRECT = re.compile(r"""(>[>|]?\s*)(['"])([^'"]*)\2""")
 GLOB_CHAR = re.compile(r"[*?\[\]{}]")
-BRACKET = re.compile(r"\[!?\]?(?:\[:\w+:\]|[^\]])*\]")
-POSIX_CLASS = re.compile(r"\[:(\w+):\]")
+BRACKET = re.compile(r"\[!?\]?(?:\[([:=.]).+?\1\]|[^\]])*\]")
+POSIX_CLASS = re.compile(r"\[([:=.])(.+?)\1\]")
 CLASSES = {"alnum": str.isalnum, "alpha": str.isalpha, "ascii": str.isascii,
            "blank": lambda char: char == "\t" or unicodedata.category(char) == "Zs",
            "cntrl": lambda char: unicodedata.category(char) == "Cc", "digit": str.isdigit,
@@ -2240,15 +2240,13 @@ def judge_command(said, here, stdin=()):
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@u7IClIQOfStA 6cxbfo
     if removes_recursively(called):
-        fed = "xargs" in map(os.path.basename, words[:-len(called)])
         # @req> REQ-51296881@8h-e1bOYkZtT mo2oby
-        if fed and not stdin:
+        if "xargs" in map(os.path.basename, words[:-len(called)]):
             deny(f"{posing_as(plain, 'rm')} -r fed by xargs blocked: the paths it deletes arrive on "
                  "standard input, where the guard cannot see them. Name the paths to delete"
                  f"{'' if plain == 'rm' else ', and the command outright'}.")
         # @req> REQ-51296881@8h-e1bOYkZtT 7sfcit
-        if swept := sweeping([*operands, *(word for text in stdin if fed for word in text.split())],
-                             here, BARE_SWEEP):
+        if swept := sweeping(operands, here, BARE_SWEEP):
             deny(f"{posing_as(plain, 'rm')} -r of '{swept}' blocked: it sweeps the requirements "
                  "corpus along with everything else. Name the paths to delete"
                  f"{'' if plain == 'rm' else ', and the command outright'}.")
@@ -2394,14 +2392,18 @@ def expands_to(pattern, path):
 
 def globbed(name, glob):
     glob, kinds = glob.replace("[^", "[!"), []
-    if "[:" not in glob:
+    if not POSIX_CLASS.search(glob):
         return fnmatch.fnmatchcase(name, glob)
     mark = next(chr(code) for code in itertools.count(0xE000) if chr(code) not in glob)
     glob = BRACKET.sub(lambda bracket: "[" + POSIX_CLASS.sub(
-        lambda found: kinds.append(found[1]) or mark, bracket[0][1:-1]) + "]", glob)
+        lambda found: kinds.append(found) or mark, bracket[0][1:-1]) + "]", glob)
     pattern = fnmatch.translate(glob)
-    for kind in kinds:
-        held = "".join(char for char in dict.fromkeys(name) if kind in CLASSES and CLASSES[kind](char))
+    for found in kinds:
+        if found[1] != ":" and len(found[2]) != 1:
+            deny(UNREADABLE.format(what=f"which characters {found[0]} stands for"))
+        held = "".join(char for char in dict.fromkeys(name) if (
+            found[2] in CLASSES and CLASSES[found[2]](char) if found[1] == ":"
+            else unicodedata.normalize("NFD", char)[0] == unicodedata.normalize("NFD", found[2])[0]))
         pattern = pattern.replace(mark, re.escape(held) or "/", 1)
     return re.fullmatch(pattern, name, re.DOTALL) is not None
 
@@ -2496,7 +2498,7 @@ def matches(pattern):
     found = ["/"]
     for segment in pattern.split("/")[1:]:
         if segment == "**":
-            found = [folder for base in found for folder in below(base)]
+            found = list(dict.fromkeys(folder for base in found for folder in below(base)))
             continue
         if not GLOB_CHAR.search(segment):
             found = [os.path.join(base, segment) for base in found]
@@ -2545,6 +2547,7 @@ def reaches_corpus(word, cwd, root=False):
 def below(base):
     folders = [base]
     for folder in folders:
+        left()
         folders += [path for name in sorted(listing(folder)) if not name.startswith(".")
                     and os.path.isdir(path := os.path.join(folder, name)) and not os.path.islink(path)]
     return folders
@@ -2787,7 +2790,7 @@ def program(called, here):
              if not REDIRECTION.match(word) and not REDIRECTION.fullmatch(previous)]
     script = next((word for previous, word in itertools.pairwise(plain)
                    if not word.startswith("-") and previous not in RUN_VALUED.get(tool, ())), "")
-    inline = any(letter in flag for flag in itertools.takewhile(lambda word: word.startswith("-"), plain[1:])
+    inline = any(letter in flag for flag in plain[1:] if flag.startswith("-")
                  for letter in RUNNERS.get(tool, ""))
     from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
         ("dev/", "proc/"))
@@ -2841,7 +2844,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
         target = unquoted[found.start(1):found.end(1)]
         if "&" in found.group() and re.fullmatch(r"[0-9]+-?|-", target):
             continue
-        if (names_plugin(target) or EXPANSION.search(os.path.expandvars(target))
+        if (names_plugin(target) or "$" in os.path.expandvars(target) or "`" in target
                 or "" in heres and not os.path.isabs(os.path.expanduser(target.strip()))
                 or any(reaches_plugin(word, here) for word in tokens_of(target) for here in heres)):
             offenders.append((unquoted[found.start():found.end()],
