@@ -150,11 +150,11 @@ PATTERN_ESCAPE = re.compile(r"\\(?:x\{([0-9A-Fa-f]+)\}|x([0-9A-Fa-f]{1,2})|u([0-
                             r"|o([0-7]{1,3})|d([0-9]{3})|([0-7]{1,3})|([pP](?:\{[^{}]*\}|[A-Za-z])|[A-Za-z])|(.))",
                             re.DOTALL)
 ESCAPE_BASES = (16, 16, 16, 16, 8, 10, 8)
-ESCAPE_CLASSES = {"w": frozenset(char for char in WILDCARD if char.isalnum()), "p": WILDCARD}
+ESCAPE_CLASSES = {"w": frozenset(OPENER[1:]), "p": WILDCARD}
 PATTERN_BRACKET = re.compile(r"\[([\^!]?)(\]?(?:\[([:=.])[^\]]{1,32}?\3\]|[^\]])*)\]")
 PATTERN_CLASS = re.compile(r"\[([:=.])([^\]]{1,32}?)\1\]")
 QUANTIFIER = re.compile(r"\\?[?*{]")
-GROUPING = ("(?:", "(", ")", "'", '"')
+GROUPING = re.compile(r"\(\?:|[()'\"]")
 CITED_NAMES = re.compile(r"@req[+>-][ \t]+(?:[^\s@]+@([\w-]+)[ \t]+)?([\w-]+)")
 NAME = re.compile(r"[\w-]+")
 # @req> guard_input_limit@v87jyIhQeygI vjlbgl
@@ -1168,18 +1168,18 @@ def names_citation(cmd):
 def pattern_atoms(cmd):
     at, closing = 0, cmd.rfind("]")
     while at < len(cmd):
-        if grouping := next((mark for mark in GROUPING if cmd.startswith(mark, at)), None):
-            at += len(grouping)
+        if grouping := GROUPING.match(cmd, at):
+            at = grouping.end()
             continue
         char, split = cmd[at], cmd[at] in SPLITS
         if at < closing and (bracket := PATTERN_BRACKET.match(cmd, at)):
             admits = bracket_admits(*bracket.group(1, 2))
-            word = not admits & set(SIGNS)
+            word = admits.isdisjoint(SIGNS)
             at = bracket.end()
         elif escape := PATTERN_ESCAPE.match(cmd, at):
-            admits, word, split, at = escaped_admits(escape), False, False, escape.end()
+            admits, word, split, at = escaped_admits(escape), False, escape[9] in set(SPLITS), escape.end()
         else:
-            admits = WILDCARD if char == "." else frozenset(char) & WILDCARD
+            admits = WILDCARD if char == "." else char
             word, at = char.isalnum() or char == "_", at + 1
         yield admits, word and not QUANTIFIER.match(cmd, at), split
 
@@ -1187,10 +1187,10 @@ def pattern_atoms(cmd):
 def escaped_admits(escape):
     code = next((int(digits, base) for digits, base in zip(escape.groups(), ESCAPE_BASES) if digits), None)
     if code is not None:
-        return frozenset(chr(code)) & WILDCARD if code <= sys.maxunicode else WILDCARD
+        return chr(code) if code <= sys.maxunicode else WILDCARD
     if letter := escape[8]:
-        return ESCAPE_CLASSES.get(letter[0], WILDCARD if letter[0].isupper() else frozenset())
-    return frozenset(escape[9]) & WILDCARD
+        return ESCAPE_CLASSES.get(letter[0], WILDCARD if letter[0].isupper() else letter[0])
+    return escape[9]
 
 
 def bracket_admits(negated, body):
@@ -3426,9 +3426,8 @@ def judge_citation_shell(raw, cwd):
         held = held_citation_names(cwd) & set(NAME.findall(cmd.translate(UNQUOTED)))
         if not held:
             return
-    pipelines = scan(QUIET_REDIRECT.sub(" ", cmd))
-    for part in (part for pipeline in pipelines for part in pipeline if not held or held & set(
-            NAME.findall(" ".join(pipeline).translate(UNQUOTED)))):
+    for part in (part for pipeline in scan(QUIET_REDIRECT.sub(" ", cmd)) if not held or held & set(
+            NAME.findall(" ".join(pipeline).translate(UNQUOTED))) for part in pipeline):
         found = unreadable(part)
         if found:
             deny(UNREAD_COMMAND.format(found=found))
