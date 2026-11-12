@@ -15,6 +15,10 @@ assessed:
   REQ-60833823: pdX0Xr4bVNDtl9aib-VHzOBkyw6gL8mQ6UalOOZdKso
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  ad2sq3: 0Y4n2t7VYQdQeWFw3IKIWMhGkHDQyATRnXqgaUZ_GUc
+  egzrhu: 3TsJu_ec6gVUtNHEG9GRC6Tqdn6og9s4Pei920WHfMU
+  u54ghq: zerRWQiaNl_FF-FnuDKuRpWrRRzNUPAQolW3uwr8kaA
 priority: medium
 relations:
   REQ-15770866: constrains

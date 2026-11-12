@@ -7,6 +7,10 @@ assessed:
   REQ-45330509: y34lW04HzVzyYKP1_Eeg3_Kd22BRh8xyjClqvCqzORc
   REQ-60833823: pdX0Xr4bVNDtl9aib-VHzOBkyw6gL8mQ6UalOOZdKso
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+citations:
+  eci2zb: 0Y4n2t7VYQdQeWFw3IKIWMhGkHDQyATRnXqgaUZ_GUc
+  oyqqn7: vZbW7-nhAOW5awVTxU_bzT4P0kTN-rWpGfk9oEjgh1Y
+  v46n7n: 7Lq_VxbSIOgl2_G5lgOHcQUJFbF8cSuenOXEe2S3A3I
 priority: medium
 relations:
   REQ-45330509: constrains

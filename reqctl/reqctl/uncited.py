@@ -5,7 +5,7 @@ import re
 import tokenize
 from pathlib import Path, PurePosixPath
 
-from . import cite, corpus, settings
+from . import cite, corpus, settings, typescript
 from .reach import Reach
 
 RECORD = PurePosixPath("requirements") / "uncited.yml"
@@ -99,6 +99,10 @@ def code_lines(path, text):
         quiet |= _python(text)
     elif suffix == ".js":
         quiet |= _script(text)
+    elif suffix in typescript.SUFFIXES:
+        quiet |= typescript.read(suffix, text).imports | cite.remarks(suffix, text)
+    elif suffix == ".sql":
+        quiet |= cite.remarks(suffix, text)
     elif suffix in (".md", ".html"):
         quiet |= _fenced(text, MARKUP, False)
         close = cite._front(text)

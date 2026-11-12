@@ -187,7 +187,7 @@ CLASSES = {"alnum": str.isalnum, "alpha": str.isalpha, "ascii": str.isascii,
 LITERAL_CHAR = re.compile(r"[^*?\[\]{}]")
 
 UNQUOTED = str.maketrans("", "", "'\"\\")
-CITATION_LINE = re.compile(r"^\s*(?:(?:#+|<!--|//)\s*)?@req[+>-](?:\s|$)")
+CITATION_LINE = re.compile(r"^\s*(?:(?:#+|<!--|//|--)\s*)?@req[+>-](?:\s|$)")
 
 # @req+ REQ-51296881@8h-e1bOYkZtT etn3fq
 # @req+ REQ-67599992@TMfnHY-C4hOv jzjikg
@@ -411,7 +411,7 @@ UNHELD_SCRIPT = (
 # @req+ REQ-75038049@hXyFNmxx-SWy kbbyh4
 PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 FINGERPRINTS = frozenset({
-    "49675e82799aeb18f2052d459ea2f225bd6acb490eb6f52b567b59cff927086d",
+    "956d657e9d16f55064156ce6c470dd51f4589ad5689924f0ad7d45c316b6e776",
     "1e0fb1ccfa26bb4cdd7d8d07140104e66bbed210807ed59322a01aa213b64b81",
     "6d59b5fd67889bf8a3175754dd8b5b45ea2c0d733eab93e3f3b2ad38f26ca8da",
 })

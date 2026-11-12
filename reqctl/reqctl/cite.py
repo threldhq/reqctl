@@ -12,9 +12,9 @@ from pathlib import Path
 
 import yaml
 
-from . import corpus
+from . import corpus, typescript
 from .corpus import ReqctlError
-from .reach import SCRIPTED, Reach
+from .reach import SCRIPTED, Reach, remarked
 
 OPEN, CLOSE, SINGLE = "+", "-", ">"
 EVERY = object()
@@ -29,13 +29,19 @@ MARKER = re.compile(
 FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
 # @req+ REQ-52925332@8dtaEN9KH9jO tup4w2
 MARKUP = re.compile(r"\A\s*<!--\s*|\s*-->\s*\Z")
+# @req> REQ-38033048@mKGzPYjyS_wD nvsgih
+# @req> REQ-21225852@RMA1Qtug7rzF kjbkap
 DELIMITERS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"\A\s*#+\s*")),
-              ".js": re.compile(r"\A\s*//\s*")}
+              **dict.fromkeys((".js", *typescript.SUFFIXES), re.compile(r"\A\s*//\s*")),
+              ".sql": re.compile(r"\A\s*--\s*")}
 # @req- tup4w2
 ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
 # @req> REQ-60346603@FI4Rjvk1iDNp ulk4ve
+# @req> REQ-38033048@mKGzPYjyS_wD 4ei5xf
+# @req> REQ-21225852@RMA1Qtug7rzF e7bycn
 COMMENTS = {**dict.fromkeys((".py", ".yml", ".yaml"), ("# ", "")),
-            ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->"), ".js": ("// ", "")}
+            ".md": ("<!-- ", " -->"), ".html": ("<!-- ", " -->"),
+            **dict.fromkeys((".js", *typescript.SUFFIXES), ("// ", "")), ".sql": ("-- ", "")}
 BOM = "\ufeff"
 
 
@@ -140,6 +146,16 @@ def cut(path, text, spans):
         if not spans:
             return problems
         suffix, text = ".yml", _matter(text)
+    # @req+ REQ-60833823@pdX0Xr4bVNDt afaqnn
+    # @req+ REQ-20885376@eU3vxq0uOnB- dzfzmi
+    row = (typescript.read(suffix, typescript.blanked(text, _marked(text))).broken
+           if suffix in typescript.SUFFIXES else _sql(text)[1] if suffix == ".sql" else None)
+    if row:
+        # @req> REQ-30898926@Vu28eWaG_1mE ryp2vk
+        return [(path, f"{path}: cannot read it past line {row}, so no citation in it can "
+                       "be checked -- fix the file so it parses, then retry")]
+    # @req- dzfzmi
+    # @req- afaqnn
     read = NESTS.get(suffix)
     if read is None:
         return []
@@ -169,6 +185,77 @@ def cut(path, text, spans):
     return problems
 
 
+# @req+ REQ-20885376@eU3vxq0uOnB- t3wbhh
+# @req+ REQ-69161009@gmE3x-nnaEYM awdr2c
+SQL_OPENS = re.compile(r"--|/\*|(?<![\w$])[Ee]'|'|\"|(?<![\w$])\$(?:[^\W\d]\w*)?\$")
+
+
+def _closed(text, at, quote, escaping):
+    while at < len(text):
+        if escaping and text[at] == "\\":
+            at += 2
+        elif text.startswith(quote * 2, at):
+            at += 2
+        elif text[at] == quote:
+            return at + 1
+        else:
+            at += 1
+    return None
+
+
+def _nested(text, at):
+    depth = 1
+    while depth and at < len(text):
+        step = text[at:at + 2]
+        depth += (step == "/*") - (step == "*/")
+        at += 2 if step in ("/*", "*/") else 1
+    return None if depth else at
+
+
+def _sql(text):
+    spans, at, unclosed = [], 0, None
+    while (found := SQL_OPENS.search(text, at)) is not None:
+        opener = found[0]
+        if opener == "--":
+            end = text.find("\n", found.start())
+            end = len(text) if end < 0 else end
+        elif opener == "/*":
+            end = _nested(text, found.end())
+        elif opener.startswith("$"):
+            close = text.find(opener, found.end())
+            end = None if close < 0 else close + len(opener)
+        else:
+            end = _closed(text, found.end(), opener[-1], opener[0] in "Ee")
+        if end is None:
+            unclosed, end = text.count("\n", 0, found.start()) + 1, len(text)
+        spans.append((found.start(), end, opener not in ("--", "/*")))
+        at = end
+    return spans, unclosed
+# @req- awdr2c
+# @req- t3wbhh
+
+
+def _spans(suffix, text):
+    if suffix == ".sql":
+        return _sql(text)[0]
+    if suffix in typescript.SUFFIXES:
+        return typescript.read(suffix, text).spans
+    return [(found.start(), found.end(), found.groupdict().get("kept") is not None)
+            for found in REMARKS[suffix].finditer(text)]
+
+
+def _remarked(suffix, text, spoken):
+    held, at = [], 0
+    for start, end, kept in _spans(suffix, text):
+        held += [text[at:start], spoken(text[start:end], kept)]
+        at = end
+    return "".join(held) + text[at:]
+
+
+def remarks(suffix, text):
+    return remarked(text, _spans(suffix, text))
+
+
 # @req+ REQ-82335572@EEu579sUxCO2 jflstj
 # @req+ REQ-79989567@oaSFUA9o3D48 6fth2x
 REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
@@ -179,8 +266,7 @@ REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
 
 def hollow(path, text, first, last):
     suffix, text = _view(Path(path).suffix, text, first)
-    bare = REMARKS[suffix].sub(
-        lambda found: found.groupdict().get("kept") or "\n" * found[0].count("\n"), text)
+    bare = _remarked(suffix, text, lambda said, kept: said if kept else "\n" * said.count("\n"))
     return not "".join(_feed_lines(bare)[first - 1:last]).strip()
 # @req- 6fth2x
 # @req- jflstj
@@ -207,10 +293,17 @@ def _literals(text, start, end):
                                          "template literal").items()}
 
 
+def _marked(text):
+    return {number for number, line in enumerate(_feed_lines(text), start=1)
+            if SIGN.search(line)}
+
+
 @functools.cache
 def _embedded(suffix, text):
     if suffix == ".js":
         return _literals(text, 0, len(text))
+    if suffix in typescript.SUFFIXES:
+        return typescript.embedded(suffix, text, _marked(text))
     if suffix != ".html":
         return {}
     held = {}
@@ -248,8 +341,7 @@ def _lone(suffix, text):
                   else _scalars(text) if suffix in (".yml", ".yaml") else {})
     except (tokenize.TokenError, IndentationError, SyntaxError, yaml.YAMLError):
         spoken = {}
-    bare = REMARKS[suffix].sub(lambda found: found[0] if "\n" in found[0]
-                               or found.groupdict().get("kept") else "\0", text)
+    bare = _remarked(suffix, text, lambda said, kept: said if "\n" in said or kept else "\0")
     return {number for number, line in enumerate(_feed_lines(bare), start=1)
             if number not in spoken and line.strip() == "\0"}
 # @req- njbuvc
@@ -271,7 +363,7 @@ def read(root, digested=False, uid=None):
     # @req> REQ-32191310@aZkvQ6hvIwPv yjp5s6
     if digested:
         texts = dict(sources)
-        # @req> REQ-59827868@n8ncPHxU3mWA tsczoy
+        # @req> REQ-59827868@eeHZvhZPFhD3 tsczoy
         reach = Reach(texts)
         for citation in citations:
             citation["digest"] = digest(citation["path"], texts[citation["path"]],
@@ -345,11 +437,13 @@ def _parse(sources, placed=True):
         # @req> REQ-12235023@uEMBe2x_2uwp 4s3qrw
         alone = _alone(relative, text)
         # @req> REQ-78286717@Lol93VZlA61p ltsm7v
+        # @req> REQ-29782682@vNwe2DOIu-N0 zuqhai
         embedded = _embedded(Path(relative).suffix, text)
         live, spans, singles = {}, [], []
         # @req+ REQ-73349683@BNT8xnMPL2bn gqpqj6
         for number, body, parsed in found:
             # @req+ REQ-78286717@Lol93VZlA61p eynr4h
+            # @req+ REQ-29782682@vNwe2DOIu-N0 67wjjk
             kind = embedded.get(number)
             if kind and placed:
                 # @req> REQ-30898926@Vu28eWaG_1mE 2ezs26
@@ -359,6 +453,7 @@ def _parse(sources, placed=True):
                                f"untag its citation, then reqctl tag lines outside the "
                                f"{kind}"))
                 continue
+            # @req- 67wjjk
             # @req- eynr4h
             # @req> REQ-12235023@uEMBe2x_2uwp sbc4do
             if not kind and number not in alone:
@@ -669,8 +764,10 @@ def tagged(root, path, asked, exclusive=False):
     # @req- k2lzwu
     # @req- kmbhnk
     # @req+ REQ-69161009@gmE3x-nnaEYM n5z4vo
+    # @req+ REQ-20885376@eU3vxq0uOnB- 4wwahn
     alone = _alone(path, written)
     # @req+ REQ-39743451@3H-M6CvTxyI0 xasn2j
+    # @req+ REQ-62110789@XlGrbQnAd80g hczsn5
     embedded = _embedded(target.suffix, written)
     falling = {parsed["id"]: embedded.get(number, "multiline comment or string")
                for number, _, parsed in markers(written, target.suffix)
@@ -684,7 +781,9 @@ def tagged(root, path, asked, exclusive=False):
     if inside:
         # @req> REQ-30898926@Vu28eWaG_1mE dlokdg
         raise ReqctlError("\n".join(inside))
+    # @req- hczsn5
     # @req- xasn2j
+    # @req- 4wwahn
     # @req- n5z4vo
     found, dropped = parse([(path, written)])
     new = [c for identity in minted for c in found if c["id"] == identity]
@@ -706,7 +805,7 @@ def tagged(root, path, asked, exclusive=False):
         # @req> REQ-30898926@Vu28eWaG_1mE c7h3c7
         raise ReqctlError("\n".join(problems))
     # @req- zkxsxx
-    # @req+ REQ-59827868@n8ncPHxU3mWA entyuu
+    # @req+ REQ-59827868@eeHZvhZPFhD3 entyuu
     relative = target.resolve().relative_to(base).as_posix()
     reach = Reach({**dict(sources), relative: written})
     # @req- entyuu
@@ -728,7 +827,7 @@ def pinning(root, identities):
                           "trace UID lists the identities an item is cited by; nothing "
                           "was re-pinned")
     # @req+ REQ-64846889@TSG5uy3nM0nk wbaon5
-    # @req+ REQ-59827868@n8ncPHxU3mWA unauut
+    # @req+ REQ-59827868@eeHZvhZPFhD3 unauut
     reach = Reach(sources)
     return [(citation, digest(citation["path"], sources[citation["path"]], citation["lines"], reach))
             for citation in (found[identity] for identity in identities)]
@@ -877,7 +976,7 @@ def digest(path, text, lines, reach=None):
             held = _tokens(text, wanted)
         except (tokenize.TokenError, IndentationError, SyntaxError):
             held = None
-        # @req+ REQ-59827868@n8ncPHxU3mWA kwj4mx
+        # @req+ REQ-59827868@eeHZvhZPFhD3 kwj4mx
         taken = reach.taken(path, wanted) if held is not None and reach else []
         if taken:
             held = [held, taken]
@@ -1014,7 +1113,7 @@ def _carried(root, commit):
         yield relative, _git(root, "show", f"{commit}:{relative}").removeprefix(BOM)
 
 
-# @req> REQ-59827868@n8ncPHxU3mWA jwvhp4
+# @req> REQ-59827868@eeHZvhZPFhD3 jwvhp4
 def _reached_at(root, commit):
     blobs = [line.split("\t", 1)[1] for line in
              _git(root, "ls-tree", "-r", "-z", commit).split("\0")
@@ -1042,7 +1141,7 @@ def compare(root, ref):
     before = {c["id"]: c for c in was}
     after = {c["id"]: c for c in now}
     # @req- a5i7lc
-    # @req> REQ-59827868@n8ncPHxU3mWA 5swpuo
+    # @req> REQ-59827868@eeHZvhZPFhD3 5swpuo
     was_reach, now_reach = Reach(_reached_at(root, commit)), Reach(dict(_sources(root)))
     rows = []
     for identity in sorted(set(before) | set(after)):
