@@ -2240,7 +2240,7 @@ def judge_command(said, here, stdin=()):
     # @req> REQ-21901290@fc_rdI5ms5IC 2vz6iw
     # @req> REQ-22704490@u7IClIQOfStA 6cxbfo
     if removes_recursively(called):
-        fed = "xargs" in map(os.path.basename, words[:len(words) - len(called)])
+        fed = "xargs" in map(os.path.basename, words[:-len(called)])
         # @req> REQ-51296881@8h-e1bOYkZtT mo2oby
         if fed and not stdin:
             deny(f"{posing_as(plain, 'rm')} -r fed by xargs blocked: the paths it deletes arrive on "
@@ -2306,8 +2306,7 @@ def judge_command(said, here, stdin=()):
 
 
 def removes_recursively(called):
-    plain = called[0] if called else None
-    return (plain == "rm" or plain is not None and EXPANSION.search(plain) is not None) and any(
+    return (called[:1] == ["rm"] or any(map(EXPANSION.search, called[:1]))) and any(
         (len(w) > 2 and "--recursive".startswith(w))
         or (w.startswith("-") and not w.startswith("--") and "r" in w.lower())
         for w in called[1:])
@@ -2554,8 +2553,7 @@ def below(base):
     folders = [base]
     for folder in folders:
         folders += [path for name in sorted(listing(folder)) if not name.startswith(".")
-                    for path in [os.path.join(folder, name)]
-                    if os.path.isdir(path) and not os.path.islink(path)]
+                    and os.path.isdir(path := os.path.join(folder, name)) and not os.path.islink(path)]
     return folders
 
 
@@ -3304,7 +3302,8 @@ def decide(data: dict) -> "str | None":
         fields = {spelled for found in named_paths(args) for spelled in (found, unquote(found))}
         for value in dict.fromkeys(spelled for found in named_paths(args) + bare_paths(args)
                                    for spelled in (found, unquote(found))):
-            named, slashed = flatten(value.replace("\\", "/")), value.replace("\\", "/")
+            slashed = value.replace("\\", "/")
+            named = flatten(slashed)
             if ITEM.search(named):
                 deny(f"Direct write of a requirement item blocked: {value}\n{USE_REQCTL}")
             if BASELINE.search(named):
