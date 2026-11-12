@@ -1245,14 +1245,15 @@ def refuse_configured_force(words, here):
     place = located(words, here)
     remote = operands[0] if operands else next(
         (value for name, value in flags if name == "--repo"), None)
+    keys = git_sees(["config", "--name-only", "--list"], place).splitlines()
     for kind, typed in (("mirror", ["--type=bool"]), ("push", [])):
-        listed = git_reads(["config", *typed, "--get-regexp", rf"^remote\..*\.{kind}$"], place)
-        for key, _, value in (line.partition(" ") for line in (listed or "").splitlines()):
+        for key in dict.fromkeys(key for key in keys if re.fullmatch(rf"remote\..*\.{kind}", key)):
             name = key.removeprefix("remote.").removesuffix(f".{kind}")
-            if remote in (None, name) and (value == "true" if kind == "mirror" else
-                                           not operands[1:] and value.startswith(("+", ":"))):
-                deny(f"Push with {key}={value} blocked: it rewrites or deletes remote "
-                     "history. Ask the owner if that is really wanted.")
+            for value in git_sees(["config", *typed, "--get-all", key], place).splitlines():
+                if remote in (None, name) and (value == "true" if kind == "mirror" else
+                                               not operands[1:] and value.startswith(("+", ":"))):
+                    deny(f"Push with {key}={value} blocked: it rewrites or deletes remote "
+                         "history. Ask the owner if that is really wanted.")
     if found := config_named(words):
         deny(CONFIGURED_IN_CALL.format(found=found.group()))
 
@@ -1274,7 +1275,7 @@ def config_named(words):
 def own_config(words):
     prefix, options = git_split(words)[:2]
     said = [[word] for word in prefix if word.startswith(COMMAND_CONFIG)]
-    said += [["-c", value] for flag, value in zip(options, options[1:]) if flag == "-c"]
+    said += [["-c", value] for flag, value in itertools.pairwise(options) if flag == "-c"]
     return [each for each in said if all(map(UNQUOTED_WORD.fullmatch, each))
             and "include" not in " ".join(each).lower()]
 
