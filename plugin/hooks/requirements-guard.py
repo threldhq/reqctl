@@ -450,11 +450,10 @@ READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|-
                          r"|\s--(?:pre|pager|hostname-bin)\b")
 
 PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo", "--recurse-submodules")
-PUSH_CONFIG = re.compile(r"mirror|\bremote\.\S*\.push\b|\bpush\s*=", re.IGNORECASE)
-CLEAN_CONFIG = re.compile(r"requireforce", re.IGNORECASE)
+CONFIG_NAMED = re.compile(r"\b(?:git)?config\b|mirror|include|requireforce", re.IGNORECASE)
 CONFIGURED_IN_CALL = (
-    "git {subcommand} blocked: the same call names {found}, so the guard cannot read the config "
-    "git {subcommand} runs with.\nChange the config in a call of its own, then run git {subcommand}."
+    "git push blocked: the same call names {found}, so the guard cannot read the config "
+    "git push runs with.\nChange the config in a call of its own, then run git push."
 )
 CALL_TEXT = {"said": ""}
 GH_VALUED = ("-X", "--method", "-f", "--raw-field", "-F", "--field", "--input", "-H",
@@ -1230,7 +1229,7 @@ def refuse_destructive_push(said):
                  "history. Ask the owner if that is really wanted.")
     if found := next(filter(expands, leftover), None):
         deny(UNREADABLE.format(what="the braces of " + found))
-    if found := next((word for word in rest if EXPANSION.search(word)), None):
+    if found := next(filter(EXPANSION.search, rest), None):
         deny(UNREADABLE.format(what=f"which words {found} hands git push"))
     # @req- 4aiv2n
 
@@ -1252,8 +1251,8 @@ def refuse_configured_force(words, here):
                                            not operands[1:] and value.startswith(("+", ":"))):
                 deny(f"Push with {key}={value} blocked: it rewrites or deletes remote "
                      "history. Ask the owner if that is really wanted.")
-    if found := PUSH_CONFIG.search(CALL_TEXT["said"]):
-        deny(CONFIGURED_IN_CALL.format(subcommand=subcommand, found=found.group()))
+    if found := CONFIG_NAMED.search(CALL_TEXT["said"]):
+        deny(CONFIGURED_IN_CALL.format(found=found.group()))
 
 
 def left():
@@ -1335,8 +1334,7 @@ def discarded(subcommand, rest, place, unread):
     if unread and subcommand != "clean":
         return WHOLE_TREE, False, False
     if subcommand == "reset":
-        return (WHOLE_TREE, False, False) if {"--hard", "--merge"} & set(flags) else (
-            None, False, False)
+        return WHOLE_TREE if {"--hard", "--merge"} & set(flags) else None, False, False
     if subcommand == "clean":
         if not forced or any(not f.startswith("--") and "n" in f[1:].split("e", 1)[0]
                                 for f in flags) or "--dry-run" in flags:
@@ -1365,7 +1363,7 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
-    if subcommand == "clean" and (CLEAN_CONFIG.search(CALL_TEXT["said"]) or git_reads(
+    if subcommand == "clean" and (CONFIG_NAMED.search(CALL_TEXT["said"]) or git_reads(
             ["config", "--type=bool", "--default", "true", "--get", "clean.requireForce"],
             place) == "false\n"):
         rest = ["-f", *rest]
@@ -1917,7 +1915,7 @@ def api_targets(url, method, body, said):
         parts = ["repos", "{owner}", "{repo}", *parts[2:]]
     if parts == ["graphql"]:
         return None, [None] if body is None or None in body.values() or BRANCH_MUTATION.search(
-            said) or BRANCH_MUTATION.search(json.dumps(body)) else []
+            " ".join([said, *map(str, body.values())])) else []
     if parts[:1] != ["repos"] or len(parts) < 4:
         return None, []
     slug, rest = "/".join(parts[1:3]), parts[3:]
@@ -3400,7 +3398,8 @@ def decide(data: dict) -> "str | None":
                                       for judged in commands)
     # @req> REQ-60587913@64oissmU4Xo2 5qdzrp
     # @req> REQ-36282702@sK_P4PZZM9_w o2rpyz
-    CALL_TEXT["said"] = "\n".join(commands)
+    CALL_TEXT["said"] = "\n".join(re.sub(r"[\\'\"]", "", ansi_c(judged).replace("\\\n", ""))
+                                  for judged in commands)
     for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
