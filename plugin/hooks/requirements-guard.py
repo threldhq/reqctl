@@ -2338,6 +2338,9 @@ def judge_command(said, here, stdin=()):
     # @req> REQ-59919160@eEBU6tuB77Dq fwdndw
     for at in sed_calls(words, called):
         for script in sed_runs(words, words[at + 1:], here):
+            # @req> REQ-60587913@64oissmU4Xo2 qminys
+            # @req> REQ-36282702@sK_P4PZZM9_w lfqoxd
+            CALL_TEXT["said"] += "\n" + script
             judge_shell(script, here, stdin)
     if plain in SHELLS and not short_flagged(itertools.takewhile(
             lambda word: word != "--" and word.startswith(("-", "+")), operands), "c"):
