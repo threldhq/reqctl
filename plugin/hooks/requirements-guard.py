@@ -2398,6 +2398,8 @@ def globbed(name, glob):
     glob = BRACKET.sub(lambda bracket: "[" + POSIX_CLASS.sub(
         lambda found: kinds.append(found) or mark, bracket[0][1:-1]) + "]", glob)
     pattern = fnmatch.translate(glob)
+    if pattern.count(mark) != len(kinds):
+        deny(UNREADABLE.format(what=f"which characters {glob} matches"))
     for found in kinds:
         if found[1] != ":" and len(found[2]) != 1:
             deny(UNREADABLE.format(what=f"which characters {found[0]} stands for"))
