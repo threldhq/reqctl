@@ -22,11 +22,17 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  4aiv2n: slDnN8Q5AtG2Hk43gbCaRDNfJcuSLW7FRCXxzo2bTxs
+  4aiv2n: EtCGsVhua8nHTDrbEkLp3rQMLCregcEJB7xQtN3Xs1Y
   4qdiqf: 5RewTJxlzwmyXCYT7hShazFLHPtM1CaybNHcIGnvzfE
-  6qzcqn: dRaYm5BYisEJHevMIKCJf0L8kpmdTChrEY59nU4juLA
+  5qdzrp: 7WLtBJCl5kHG1inFhPgdDIfRZhBKrLL47Yg1JWwFfw0
+  6qzcqn: gUO_rlahznNnIF3EZiOWVV3rgLoeDTi9zJImPtiqfRs
   ckab7k: Vb9UbH_DN7Haq-6wDyqIERjv5ZcbdpohLHMFfNJNZRw
+  fgboux: 2EhcNBAhUq5Q9ioZ3B3yn-bXTVV7w2QRLeGCthcpbqA
+  j3bx6n: Ma0Id_-LRP2aPEO1TDRftW0hz3yUieoSD8xGSHV6-po
   lj6sn6: 2Jok6dAC-BQMHKJro-3H4ZR9bwtK2o_PqndnRj3F9zw
+  pdjvkn: uWqQpRm5v8aypOiGz3zGlOP_lqbSVQ12FYkEzMvd_NY
+  tfgxej: FYmOg6ocGT-NM9tT3CILyTP_W27iqy-UTc8v2CEv2u4
+  zccpka: 3KaZcqzCpyYtgh2s3DQO3KnxK6mIjVET_pw2aeZ9y0U
 priority: medium
 relations:
   REQ-38288492: depends_on

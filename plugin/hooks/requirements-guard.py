@@ -100,7 +100,7 @@ DEADLINE = time.monotonic() + 30
 JUDGED = ("git", "rm", "patch", "find", "eval", *SHELLS)
 DASHED_GIT = re.compile(r"git-[A-Za-z0-9][\w-]*")
 BASH_SEQUENCE = re.compile(r"\{(?:[+-]?\d+\.\.[+-]?\d+|[A-Za-z]\.\.[A-Za-z])(?:\.\.[+-]?\d+)?\}")
-LONG_FLAGS = ("--force", "--hard", "--discard-changes", "--dry-run", "--staged",
+LONG_FLAGS = ("--force", "--hard", "--merge", "--discard-changes", "--dry-run", "--staged",
               "--worktree")
 NO_COMMIT = {"merge": ("--ff-only", "--no-commit", "--squash", "--abort", "--quit"),
              "cherry-pick": ("-n", "--no-commit", "--abort", "--quit", "--skip"),
@@ -449,7 +449,14 @@ WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", 
 READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|--(?:log|LOG)-[fF]|--compile)"
                          r"|\s--(?:pre|pager|hostname-bin)\b")
 
-PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo")
+PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo", "--recurse-submodules")
+CONFIG_NAMED = re.compile(r"config|mirror|--mi|include|requireforce|(?<![\w.-])\.git\b",
+                          re.IGNORECASE)
+CONFIGURED_IN_CALL = (
+    "git push blocked: the same call names {found}, so the guard cannot read the config "
+    "git push runs with.\nChange the config in a call of its own, then run git push."
+)
+CALL_TEXT = {"said": ""}
 GH_VALUED = ("-X", "--method", "-f", "--raw-field", "-F", "--field", "--input", "-H",
              "--header", "-q", "--jq", "-t", "--template", "--hostname", "--cache",
              "-p", "--preview")
@@ -1223,7 +1230,34 @@ def refuse_destructive_push(said):
                  "history. Ask the owner if that is really wanted.")
     if found := next(filter(expands, leftover), None):
         deny(UNREADABLE.format(what="the braces of " + found))
+    if found := next(filter(EXPANSION.search, rest), None):
+        deny(UNREADABLE.format(what=f"which words {found} hands git push"))
     # @req- 4aiv2n
+
+
+# @req> REQ-60587913@64oissmU4Xo2 pdjvkn
+def refuse_configured_force(words, here):
+    subcommand, rest = git_subcommand(words)
+    if subcommand != "push":
+        return
+    flags, operands = options(rest, PUSH_VALUED)
+    place = located(words, here)
+    remote = operands[0] if operands else next(
+        (value for name, value in flags if name == "--repo"), None)
+    for kind, typed in (("mirror", ["--type=bool"]), ("push", [])):
+        listed = git_reads(["config", *typed, "--get-regexp", rf"^remote\..*\.{kind}$"], place)
+        for key, _, value in (line.partition(" ") for line in (listed or "").splitlines()):
+            name = key.removeprefix("remote.").removesuffix(f".{kind}")
+            if remote in (None, name) and (value == "true" if kind == "mirror" else
+                                           not operands[1:] and value.startswith(("+", ":"))):
+                deny(f"Push with {key}={value} blocked: it rewrites or deletes remote "
+                     "history. Ask the owner if that is really wanted.")
+    if found := config_named():
+        deny(CONFIGURED_IN_CALL.format(found=found.group()))
+
+
+def config_named():
+    return CONFIG_NAMED.search(re.sub(r"[\\'\"]", "", ansi_c(CALL_TEXT["said"]).replace("\\\n", "")))
 
 
 def left():
@@ -1305,7 +1339,7 @@ def discarded(subcommand, rest, place, unread):
     if unread and subcommand != "clean":
         return WHOLE_TREE, False, False
     if subcommand == "reset":
-        return (WHOLE_TREE, False, False) if "--hard" in flags else (None, False, False)
+        return WHOLE_TREE if {"--hard", "--merge"} & set(flags) else None, False, False
     if subcommand == "clean":
         if not forced or any(not f.startswith("--") and "n" in f[1:].split("e", 1)[0]
                                 for f in flags) or "--dry-run" in flags:
@@ -1334,6 +1368,10 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
+    if subcommand == "clean" and (config_named() or git_reads(
+            ["config", "--type=bool", "--default", "true", "--get", "clean.requireForce"],
+            place) != "true\n"):
+        rest = ["-f", *rest]
     written = rest
     rest = [alt for word in rest for alt in bounded(word)]
     if found := next(filter(expands, rest), None):
@@ -1855,7 +1893,7 @@ def refuse_push_to_default(words, here):
     configured = git_reads(["config", "--get-all", f"remote.{remote}.push"], place)
     if operands[1:]:
         targets = [destination(alt, place) for spec in operands[1:] for alt in bounded(spec)]
-    elif {"--all", "--branches"} & set(named) or (
+    elif flagged(flags, "--all", "--branches") or (
             git_reads(["config", "push.default"], place) or "").strip() == "matching":
         targets = ["*"]
     elif configured:
@@ -1882,7 +1920,7 @@ def api_targets(url, method, body, said):
         parts = ["repos", "{owner}", "{repo}", *parts[2:]]
     if parts == ["graphql"]:
         return None, [None] if body is None or None in body.values() or BRANCH_MUTATION.search(
-            said) else []
+            " ".join([said, *map(str, body.values())])) else []
     if parts[:1] != ["repos"] or len(parts) < 4:
         return None, []
     slug, rest = "/".join(parts[1:3]), parts[3:]
@@ -2288,6 +2326,8 @@ def judge_command(said, here, stdin=()):
     refuse_commit_on_default(words, here)
     refuse_moving_default(words, here)
     refuse_push_to_default(words, here)
+    # @req> REQ-60587913@64oissmU4Xo2 j3bx6n
+    refuse_configured_force(words, here)
     refuse_api_write(words, here, said)
     refuse_unheld_script(words, here)
     refuse_discarding_work(words, here)
@@ -2878,6 +2918,9 @@ def names_corpus(part, cwd):
 @functools.cache
 def judge_shell(raw, cwd, stdin=(), parents=True):
     # @req+ REQ-22704490@u7IClIQOfStA ak47k7
+    # @req> REQ-60587913@64oissmU4Xo2 tfgxej
+    # @req> REQ-36282702@sK_P4PZZM9_w qf6nfk
+    CALL_TEXT["said"] += "\n" + raw
     if (spelled := ansi_c(raw)) != raw:
         judge_shell(spelled, cwd, stdin)
     if parents and PARENT.search(unescaped(raw)):
@@ -3361,9 +3404,21 @@ def decide(data: dict) -> "str | None":
     CALL["changes_environment"] = any(
         ENV_CHANGE.search(re.sub(r"[\\'\"]", "", ansi_c(judged).replace("\\\n", "")))
                                       for judged in commands)
+    # @req> REQ-60587913@64oissmU4Xo2 5qdzrp
+    # @req> REQ-36282702@sK_P4PZZM9_w o2rpyz
+    CALL_TEXT["said"] = "\n".join(commands)
+    # @req> REQ-60587913@64oissmU4Xo2 fgboux
+    # @req> REQ-36282702@sK_P4PZZM9_w qegb32
+    named = config_named()
     for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
+    # @req> REQ-60587913@64oissmU4Xo2 zccpka
+    # @req> REQ-36282702@sK_P4PZZM9_w u2r5gj
+    if config_named() and not named:
+        judge_shell.cache_clear()
+        for judged in commands:
+            judge_shell(judged, cwd)
     return shown
 
 
