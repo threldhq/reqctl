@@ -3073,9 +3073,11 @@ def bindings(pipelines, joins, inherited):
         sure = not opened and before in (";", "&") and after != "&" and len(pipeline) == 1
         for part in pipeline:
             said = heading(part)
+            mask = masked(said)
+            prefix = COMPOUND.match(mask).end()
             words = tokens_of(said)
             plain = words[1:] if words[:1] in (["export"], ["local"]) else words
-            header = FOR_HEADER.fullmatch(masked(said))
+            header = FOR_HEADER.fullmatch(mask)
             for name in USED.findall(part):
                 uses.setdefault(name, at)
             if plain and len(pipeline) == 1 and all(map(ASSIGNMENT.match, plain)):
@@ -3085,7 +3087,7 @@ def bindings(pipelines, joins, inherited):
                     (header[1], "$")]
             else:
                 given = []
-                called = invoked(argv(said[COMPOUND.match(masked(said)).end():])[0])
+                called = invoked(argv(said[prefix:])[0])
                 tool = called[0] if called else ""
                 setter = tool in NAME_SETTERS or tool in SETTING_FLAGS and any(
                     word.startswith(SETTING_FLAGS[tool]) for word in called[1:])
@@ -3103,7 +3105,7 @@ def bindings(pipelines, joins, inherited):
                     first.setdefault(name, (at, sure))
                 else:
                     unknown.add(name)
-        opened = opened or any(COMPOUND.match(masked(heading(part))).end() for part in pipeline)
+            opened = opened or bool(prefix)
     settled = {name: held for name, held in values.items() if name not in unknown
                and first[name][1] and uses.get(name, len(pipelines)) > first[name][0]}
     kept, hidden, blind = inherited or ((), frozenset(), False)
@@ -3123,10 +3125,10 @@ def spellings(target, bound):
         return [target]
     spelled = [target]
     for name in pinned:
+        if len(spelled) * len(settled[name]) > 256:
+            deny(UNREADABLE.format(what=f"{target}, past 256 assigned values"))
         named = re.compile(rf"\$(?:\{{{name}\}}|{name}(?!\w))")
         spelled = [named.sub(lambda _, value=value: value, text) for text in spelled for value in settled[name]]
-        if len(spelled) > 256:
-            deny(UNREADABLE.format(what=f"{target}, past 256 assigned values"))
     return spelled
 
 
