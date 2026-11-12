@@ -35,6 +35,8 @@ CORPUS_DIR = re.compile(
     r"|\bcd\s+requirements(?![\w.-])"
 )
 CORPUS_ROOT_NAME = "requirements"
+CORPUS_FOLDERS = (*ITEM_FOLDERS, "baselines")
+CORPUS_FILE = re.compile(rf"{_ROOT}/(?:({_ITEMS})/({_UIDS})-\d{{8}}|baselines/BASELINE-[^/]*)\.ya?ml$")
 REDIRECT = re.compile(rf">[>|]?&?\s*[^\s>]*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
 REDIRECT_TARGET = re.compile(r">[>|]?&?[ \t]*((?:\$\((?:[^()]|\([^()]*\))*\)|`[^`]*`|[^\s<>;&|()`])+)")
 REDUNDANT = re.compile(r"/(?:\./)+|//+")
@@ -500,6 +502,17 @@ EXCLUDED_BY = ("--exclude", "--exclude-dir")
 GLOBBED_BY = ("-g", "--glob", "--iglob")
 SETTERS = ("export", "declare", "typeset", "local", "readonly")
 ASSIGNMENT = re.compile(r"[A-Za-z_]\w*=")
+ASSIGNED = re.compile(r"(?<![\w$])([A-Za-z_]\w*)\s*(?:\[[^]]*\])?\s*(?:[-+*/%&|^]|<<|>>)?=(?!=)"
+                      r"|(?<![\w$])([A-Za-z_]\w*)\s*(?:\+\+|--)|(?:\+\+|--)\s*([A-Za-z_]\w*)"
+                      r"|\$\{([A-Za-z_]\w*)(?:\[[^]]*\])?:=")
+NAME_SETTERS = (*SETTERS, "read", "getopts", "unset", "coproc", "let")
+SETTING_FLAGS = {"printf": "-v", "wait": "-p"}
+CODE_RUNNERS = ("eval", "source", ".", "trap", "builtin", "enable", "fc", "mapfile", "readarray",
+                "alias", "bind", "complete")
+FOR_HEADER = re.compile(r"\s*for\s+([A-Za-z_]\w*)\s+in(?:\s.*)?")
+LOOP_NAME = re.compile(r"(?<![\w-])(?:for|select)\s+([A-Za-z_]\w*)")
+USED = re.compile(r"\$\{?([A-Za-z_]\w*)")
+LITERAL_VALUE = re.compile(r"[^\s$`*?\[\]{}~()\\'\"]*")
 REBASE_VALUED = ("--onto", "-s", "--strategy", "-X", "--strategy-option", "-x", "--exec",
                  "--whitespace", "-C", "--empty", "--trailer")
 ROOT_QUOTED = re.compile(rf"""(['"`])(?:\./)?{CORPUS_ROOT_NAME}/?\1""")
@@ -2605,12 +2618,23 @@ def reached(path, root):
 
 @functools.lru_cache(maxsize=4096)
 def reaches_corpus(word, cwd, root=False):
-    paths = (form for value in {word, word.rpartition("=")[2]}
-             if value for alt in bounded(os.path.expanduser(EXPANSION.sub("*", value)))
-             for joined in [os.path.join(cwd, alt)]
+    alts = [alt for value in {word, word.rpartition("=")[2]}
+            if value for alt in bounded(os.path.expanduser(EXPANSION.sub("*", value)))]
+    paths = (form for alt in alts for joined in [os.path.join(cwd, alt)]
              for form in {os.path.normpath(joined), os.path.realpath(joined),
                           *(matches(joined) if "**" in alt else ())})
-    return any(os.path.isabs(path) and reached(path, root) for path in paths)
+    return any(os.path.isabs(path) and reached(path, root) for path in paths) or not cwd and any(
+        reached_unplaced(alt) for alt in alts if not os.path.isabs(alt))
+
+
+def reached_unplaced(alt):
+    for folder in ("", *CORPUS_FOLDERS):
+        base = os.path.join(CORPUS_ROOT_NAME, folder)
+        path = os.path.normpath(os.path.join(base, alt))
+        within = folder and path.startswith(base + "/")
+        if path == CORPUS_ROOT_NAME or (CORPUS_FILE if within else CORPUS_DIR).search(path):
+            return True
+    return False
 
 
 def below(base):
@@ -2906,25 +2930,28 @@ def search_operands(words):
 
 
 # @req> REQ-59919160@eEBU6tuB77Dq wxfbic
-def judge_plugin_writes(pipelines, places, unquoted, cwd, running):
+def judge_plugin_writes(pipelines, places, unquoted, cwd, running, bound):
     heres = {cwd}.union(*places)
     offenders = []
     for found in REDIRECT_TARGET.finditer(masked(unquoted)):
         target = unquoted[found.start(1):found.end(1)]
         if "&" in found.group() and re.fullmatch(r"[0-9]+-?|-", target):
             continue
-        if (names_plugin(target) or "$" in os.path.expandvars(target) or "`" in target
-                or "" in heres and not os.path.isabs(os.path.expanduser(target.strip()))
-                or any(reaches_plugin(word, here) for word in tokens_of(target) for here in heres)):
+        spelled = spellings(target, bound)
+        if spelled is None or any(
+                names_plugin(alt) or "$" in os.path.expandvars(alt) or "`" in alt
+                or "" in heres and not os.path.isabs(os.path.expanduser(alt.strip()))
+                or any(reaches_plugin(word, here) for word in tokens_of(alt) for here in heres)
+                for alt in spelled):
             offenders.append((unquoted[found.start():found.end()],
-                              any(plainly_plugin(target, here) for here in heres)))
+                              any(plainly_plugin(alt, here) for alt in spelled or [target] for here in heres)))
     for pipeline, places_of in zip(pipelines, places):
         naming = [part for part, here in itertools.product(pipeline, places_of)
                   if names_plugin(heading(part)) or any(
                       reaches_plugin(word, here) for word in judged_words(heading(part), here))]
         for part, here in itertools.product(pipeline, places_of):
             said = heading(part)
-            if writes_plugin(said, here, unquoted) or naming and (running or part not in naming and not (
+            if writes_plugin(said[COMPOUND.match(masked(said)).end():], here, unquoted) or naming and (running or part not in naming and not (
                     READ.search(said) or GIT_READ.search(said)
                     or SINK.search(said) and not SINK_WRITES.search(said))):
                 offenders.append((said.strip(), any(plainly_plugin(heading(other), place) for other, place
@@ -2943,25 +2970,30 @@ def names_corpus(part, cwd):
 
 
 @functools.cache
-def judge_shell(raw, cwd, stdin=(), parents=True):
+def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None):
     # @req+ REQ-22704490@u7IClIQOfStA ak47k7
     # @req> REQ-60587913@64oissmU4Xo2 tfgxej
     # @req> REQ-36282702@sK_P4PZZM9_w qf6nfk
     CALL_TEXT["said"].setdefault(raw)
     if (spelled := ansi_c(raw)) != raw:
-        judge_shell(spelled, cwd, stdin)
+        judge_shell(spelled, cwd, stdin, True, inherited)
     if parents and PARENT.search(unescaped(raw)):
-        judge_shell(raw, cwd, stdin, False)
+        judge_shell(raw, cwd, stdin, False, inherited)
     cmd = flatten(unescaped(raw), parents)
     joins = []
     pipelines = scan(AMP_REDIRECT.sub(" ", cmd), joins)
     places = cwds(pipelines, joins, cwd)
     assigned = assignments(pipelines)
-    unquoted = QUOTED_REDIRECT.sub(r"\1\3", cmd.replace("\\\n", ""))
+    spliced = cmd.replace("\\\n", "")
+    unquoted = QUOTED_REDIRECT.sub(r"\1\3", spliced)
+    bound = (*bindings(pipelines, joins, inherited),
+             {found[3] for found in QUOTED_REDIRECT.finditer(spliced) if found[2] == "'"})
     redirect = REDIRECT.search(masked(unquoted)) or next(
         (found for found in REDIRECT_TARGET.finditer(masked(unquoted))
          if any(CORPUS_DIR.search(word) or reaches_corpus(word, here)
-                for word in tokens_of(unquoted[found.start(1):found.end(1)])
+                for target in [unquoted[found.start(1):found.end(1)]]
+                for spelled in [target, *(spellings(target, bound) or ())]
+                for word in tokens_of(spelled)
                 for here in {cwd}.union(*places))), None)
     if redirect:
         deny(NOT_A_KNOWN_READ.format(target=unquoted[redirect.start():redirect.end()]))
@@ -2971,7 +3003,7 @@ def judge_shell(raw, cwd, stdin=(), parents=True):
                     if lists_files(words) or sink_runs(words)), None)
     if list(map(len, written)) != list(map(len, pipelines)):
         running = running or heading(raw).strip()
-    judge_plugin_writes(pipelines, places, unquoted, cwd, running)
+    judge_plugin_writes(pipelines, places, unquoted, cwd, running, bound)
     for pipeline, heres in zip(pipelines, places):
         for (at, part), here in itertools.product(enumerate(pipeline), heres):
             left()
@@ -3010,7 +3042,7 @@ def judge_shell(raw, cwd, stdin=(), parents=True):
         for (at, part), here in itertools.product(enumerate(pipeline), heres):
             for script in nested(part):
                 left()
-                judge_shell(script, here, piped(stdin, pipeline, at))
+                judge_shell(script, here, piped(stdin, pipeline, at), True, bound[:3])
     # @req- ak47k7
 
 
@@ -3033,6 +3065,71 @@ def resolved(invocation, assigned):
             for value in values:
                 for spelled in (shlex.quote(value), value):
                     yield named.sub(spelled.replace("\\", "\\\\"), invocation)
+
+
+def bindings(pipelines, joins, inherited):
+    values, unknown, first, uses, opened = {}, set(), {}, {}, False
+    for at, (pipeline, before, after) in enumerate(zip(pipelines, [";", *joins], joins)):
+        sure = not opened and before in (";", "&") and after != "&" and len(pipeline) == 1
+        for part in pipeline:
+            said = heading(part)
+            mask = masked(said)
+            prefix = COMPOUND.match(mask).end()
+            words = tokens_of(said)
+            plain = words[1:] if words[:1] in (["export"], ["local"]) else words
+            header = FOR_HEADER.fullmatch(mask)
+            for name in USED.findall(part):
+                uses.setdefault(name, at)
+            if plain and len(pipeline) == 1 and all(map(ASSIGNMENT.match, plain)):
+                given = [tuple(word.split("=", 1)) for word in plain]
+            elif header:
+                given = [(header[1], word) for word in tokens_of(said[header.end(1):])[1:]] or [
+                    (header[1], "$")]
+            else:
+                given = []
+                called = invoked(argv(said[prefix:])[0])
+                tool = called[0] if called else ""
+                setter = tool in NAME_SETTERS or tool in SETTING_FLAGS and any(
+                    word.startswith(SETTING_FLAGS[tool]) for word in called[1:])
+                if tool in CODE_RUNNERS or setter and (
+                        any("$" in word or "`" in word for word in called[1:])
+                        or tool in SETTERS and any(word.startswith("-") and "n" in word for word in called)):
+                    return (), frozenset(), True
+                if setter:
+                    unknown.update(re.findall(r"[A-Za-z_]\w*", " ".join(called[1:])))
+                unknown.update(name for found in ASSIGNED.finditer(part) for name in found.groups() if name)
+                unknown.update(LOOP_NAME.findall(masked(part)))
+            for name, value in given:
+                if LITERAL_VALUE.fullmatch(value) and name != name.upper():
+                    values.setdefault(name, set()).add(value)
+                    first.setdefault(name, (at, sure))
+                else:
+                    unknown.add(name)
+            opened = opened or bool(prefix)
+    settled = {name: held for name, held in values.items() if name not in unknown
+               and first[name][1] and uses.get(name, len(pipelines)) > first[name][0]}
+    kept, hidden, blind = inherited or ((), frozenset(), False)
+    unknown |= hidden | (values.keys() - settled.keys())
+    return tuple((name, tuple(sorted(held))) for name, held in sorted({**dict(kept), **settled}.items())
+                 if name not in unknown), frozenset(unknown), blind
+
+
+def spellings(target, bound):
+    held, unknown, opaque, singled = bound
+    settled = dict(held)
+    names = set(USED.findall(target))
+    if names and opaque or names & unknown:
+        return None
+    pinned = sorted(names & settled.keys())
+    if not pinned or "'" in target or "\\" in target or target in singled:
+        return [target]
+    spelled = [target]
+    for name in pinned:
+        if len(spelled) * len(settled[name]) > 256:
+            deny(UNREADABLE.format(what=f"{target}, past 256 assigned values"))
+        named = re.compile(rf"\$(?:\{{{name}\}}|{name}(?!\w))")
+        spelled = [named.sub(lambda _, value=value: value, text) for text in spelled for value in settled[name]]
+    return spelled
 
 
 def ansi_c(raw):
@@ -3071,37 +3168,43 @@ def feeds(part):
 
 
 def cwds(pipelines, joins, cwd):
-    places, heres, start = [], {cwd}, {cwd}
+    places, heres, start, anywhere = [], {cwd}, {cwd}, {cwd}
     for pipeline, before, after in zip(pipelines, [";", *joins], joins):
         certain = before not in ("&&", "||")
         start = heres if certain else start
         places.append(sorted(heres))
-        heres = start if after == "&" else moved(pipeline, heres, certain, places)
+        there, changed = moved(pipeline, heres, places)
+        if after == "&":
+            heres = start
+        elif after == "&&":
+            heres = there if changed and before != "||" else heres | there
+        else:
+            heres = there if changed and certain and all(map(os.path.isdir, there)) else anywhere | heres | there
+        anywhere = anywhere | heres if after == "&&" else heres
         if len(heres) > CWD_LIMIT:
             deny(UNREADABLE.format(what=f"where the command runs, past {CWD_LIMIT} folders"))
     return places
 
 
-def moved(pipeline, heres, certain, places):
+def moved(pipeline, heres, places):
     said = heading(pipeline[-1])
     at = COMPOUND.match(masked(said)).end()
-    certain = certain and not at and len(pipeline) == 1
     called = invoked(argv(said[at:])[0])
     if called[:1] == ["eval"]:
         called = invoked(argv(" ".join(called[1:]))[0])
     tool, *rest = called or [""]
     if tool not in ("cd", "pushd", "popd"):
-        return heres
+        return heres, False
     folder = next((word for word in rest if word == "-" or not word.startswith(
         "-" if tool == "cd" else ("-", "+"))), "~" if tool == "cd" else None)
     if tool == "popd" or folder is None:
-        return heres.union(*places)
+        return heres.union(*places), False
     target = os.path.expanduser(folder)
     there = {form if os.path.isabs(joined) and target != "-"
              and "$" not in target and "`" not in target else ""
              for spelled in bounded(target) for joined in (os.path.join(here, spelled) for here in heres)
              for form in {os.path.normpath(joined), os.path.realpath(joined)}}
-    return there if certain and tool == "cd" and all(map(os.path.isdir, there)) else heres | there
+    return there, not at and len(pipeline) == 1 and tool == "cd"
 
 
 def citations(text):
