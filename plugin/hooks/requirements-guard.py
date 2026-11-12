@@ -143,18 +143,18 @@ WRITES_NOTHING = tuple(verb for verb in READ_VERBS
     "tr", "tac", "rev", "od", "paste", "fold", "fmt", "cd")
 SORT_WRITES = re.compile(r"-[A-Za-z]*o|--o|--co")
 OPENER = "@req"
-SPLITS = "$`{}%"
+SPLITS = "$`{}%?*+|"
 SIGNS = "+>-"
-WILDCARD = frozenset(OPENER + SIGNS)
+WILDCARD = frozenset(OPENER + OPENER.upper() + SIGNS)
 PATTERN_ESCAPE = re.compile(r"\\(?:x\{([0-9A-Fa-f]+)\}|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{4})|U([0-9A-Fa-f]{8})"
                             r"|o([0-7]{1,3})|d([0-9]{3})|([0-7]{1,3})|([pP](?:\{[^{}]*\}|[A-Za-z])|[A-Za-z])|(.))",
                             re.DOTALL)
 ESCAPE_BASES = (16, 16, 16, 16, 8, 10, 8)
-ESCAPE_CLASSES = {"w": frozenset(OPENER[1:]), "p": WILDCARD}
+ESCAPE_CLASSES = {"w": frozenset(OPENER[1:] + OPENER[1:].upper()), "p": WILDCARD}
 PATTERN_BRACKET = re.compile(r"\[([\^!]?)(\]?(?:\[([:=.])[^\]]{1,32}?\3\]|[^\]])*)\]")
 PATTERN_CLASS = re.compile(r"\[([:=.])([^\]]{1,32}?)\1\]")
 QUANTIFIER = re.compile(r"\\?[?*{]")
-GROUPING = re.compile(r"\(\?:|[()'\"]")
+GROUPING = re.compile(r"\(\?:|\\[QE]|[()'\"]")
 CITED_NAMES = re.compile(r"@req[+>-][ \t]+(?:[^\s@]+@([\w-]+)[ \t]+)?([\w-]+)")
 NAME = re.compile(r"[\w-]+")
 # @req> guard_input_limit@v87jyIhQeygI vjlbgl
@@ -1159,7 +1159,7 @@ def names_citation(cmd):
         for matched, gaps in enumerate(reach[:-1]):
             for gap in gaps - {"plain"}:
                 step[matched].add("split" if split else "plain" if gap == "empty" else gap)
-                if OPENER[matched] in admits:
+                if OPENER[matched] in admits or OPENER[matched].upper() in admits:
                     step[matched + 1].add("empty")
         reach = step
     return bool(reach[-1])
@@ -3449,11 +3449,12 @@ def held_citation_names(cwd):
         done = subprocess.run(
             ["git", "--no-optional-locks", "-C", cwd, "-c", "core.fsmonitor=false", "grep", "-h", "-I",
              "--untracked", "--no-color", "-E", "-e", "@req[+>-]", "--", ":/"],
-            capture_output=True, text=True, timeout=min(15, left()), check=False)
+            capture_output=True, text=True, errors="replace", timeout=min(15, left()), check=False,
+            env={**os.environ, "LC_ALL": "C"})
     except (OSError, subprocess.SubprocessError):
         done = None
     if done is None or done.returncode not in (0, 1):
-        if git_reads(["rev-parse", "--git-dir"], (cwd, [], {})) is None:
+        if done and done.returncode == 128 and "not a git repository" in done.stderr:
             return set()
         deny(UNREADABLE.format(what=f"the statement citations held under {cwd}"))
     return {name for line in done.stdout.splitlines() if CITATION_LINE.match(line)
