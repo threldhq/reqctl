@@ -2495,6 +2495,9 @@ def matches(pattern):
     left()
     found = ["/"]
     for segment in pattern.split("/")[1:]:
+        if segment == "**":
+            found = [folder for base in found for folder in below(base)]
+            continue
         if not GLOB_CHAR.search(segment):
             found = [os.path.join(base, segment) for base in found]
             continue
@@ -2534,19 +2537,9 @@ def reaches_corpus(word, cwd, root=False):
     paths = (form for value in {word, word.rpartition("=")[2]}
              if value for alt in bounded(os.path.expanduser(EXPANSION.sub("*", value)))
              for joined in [os.path.join(cwd, alt)]
-             for form in {os.path.normpath(joined), os.path.realpath(joined), *starred(joined)})
+             for form in {os.path.normpath(joined), os.path.realpath(joined),
+                          *(matches(joined) if "**" in alt else ())})
     return any(os.path.isabs(path) and reached(path, root) for path in paths)
-
-
-def starred(path):
-    parts = path.split("/")
-    if "**" not in parts:
-        return []
-    at = parts.index("**")
-    rest = "/".join(parts[at + 1:])
-    return [found for base in matches("/".join(parts[:at]) or "/") for folder in below(base)
-            for found in (starred(f"{folder}/{rest}") if "**" in parts[at + 1:]
-                          else matches(f"{folder}/{rest}"))]
 
 
 def below(base):
@@ -2565,7 +2558,7 @@ def reaches_plugin(word, cwd):
     return any(Path(os.path.realpath(found)).is_relative_to(PLUGIN_ROOT)
                for path in paths
                for found in (path, *fnmatch.filter([str(PLUGIN_ROOT)], path),
-                             *(matches(path) if GLOB_CHAR.search(path) else ()), *starred(path)))
+                             *(matches(path) if GLOB_CHAR.search(path) else ())))
 
 
 def sed_addresses(text):

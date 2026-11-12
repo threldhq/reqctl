@@ -31,13 +31,13 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  37auve: a8m39iJr7-xctHJ_qVZr4oDF1hKfJYJUTeHOMtnDvec
+  37auve: LOFPhKzP70BNBBmma8vhsGp539TLGuTTdXrCr6aAYRI
   5wgwq2: _p1fXZHRhv0HczazhW6K22VUgHtR38vFvKc3XmXexHU
-  haai6c: cJvaqbxBqzWjsncMiVa_zK3Pjtiba1MPvmSJDQM-2JI
+  haai6c: sx7oTWHcl_I6IJxDlEjLHcEe9gYyzfyEebxL1XcsWqI
   hcy6rk: 2klDvTFh81ovHEAbVyG96YAY5WqymBZdsxhN3BCQ1T8
   pokpqc: Ud-CY-EzRN9k8vfi0hcW3vIH8SRGfl236IRiFFqeoMc
   qrdgnw: lTtkiRb6Bu3QvEtX-t5IFlNi9dj9gvK9M8-0DGRtMjs
-  xkcay3: f1giOz_BlAzK_KFKKtxlafUgFU7GPUzpOqpx_7ejKT4
+  xkcay3: iBUr5OzJ25DLfbkqB1DUc3OC47fXLwtMTi2-ixWOns8
 priority: medium
 relations:
   REQ-38288492: depends_on
