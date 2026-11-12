@@ -144,6 +144,19 @@ WRITES_NOTHING = tuple(verb for verb in READ_VERBS
 SORT_WRITES = re.compile(r"-[A-Za-z]*o|--o|--co")
 OPENER = "@req"
 SPLITS = "$`{}%"
+SIGNS = "+>-"
+WILDCARD = frozenset(OPENER + SIGNS)
+PATTERN_ESCAPE = re.compile(r"\\(?:x\{([0-9A-Fa-f]+)\}|x([0-9A-Fa-f]{1,2})|u([0-9A-Fa-f]{4})|U([0-9A-Fa-f]{8})"
+                            r"|o([0-7]{1,3})|d([0-9]{3})|([0-7]{1,3})|([pP](?:\{[^{}]*\}|[A-Za-z])|[A-Za-z])|(.))",
+                            re.DOTALL)
+ESCAPE_BASES = (16, 16, 16, 16, 8, 10, 8)
+ESCAPE_CLASSES = {"w": frozenset(char for char in WILDCARD if char.isalnum()), "p": WILDCARD}
+PATTERN_BRACKET = re.compile(r"\[([\^!]?)(\]?(?:\[([:=.])[^\]]{1,32}?\3\]|[^\]])*)\]")
+PATTERN_CLASS = re.compile(r"\[([:=.])([^\]]{1,32}?)\1\]")
+QUANTIFIER = re.compile(r"\\?[?*{]")
+GROUPING = ("(?:", "(", ")", "'", '"')
+CITED_NAMES = re.compile(r"@req[+>-][ \t]+(?:[^\s@]+@([\w-]+)[ \t]+)?([\w-]+)")
+NAME = re.compile(r"[\w-]+")
 # @req> guard_input_limit@v87jyIhQeygI vjlbgl
 INPUT_LIMIT = 20_000
 # @req- 2x3zhi
@@ -1139,18 +1152,58 @@ def sink_runs(words):
 # @req> REQ-38099593@WZbBLy6bHv3j 4h5lnn
 def names_citation(cmd):
     reach = [{"split"}] + [set() for _ in OPENER]
-    for char in cmd.replace("\\\n", "").translate(UNQUOTED):
+    for admits, word, split in pattern_atoms(cmd.replace("\\\n", "")):
+        if reach[-1] and not word:
+            return True
         step = [set() for _ in reach]
-        for matched, gaps in enumerate(reach):
+        for matched, gaps in enumerate(reach[:-1]):
             for gap in gaps - {"plain"}:
-                step[matched].add("split" if char in SPLITS else "plain" if gap == "empty" else gap)
-                if matched == len(OPENER):
-                    if char in "+>-":
-                        return True
-                elif char == OPENER[matched]:
+                step[matched].add("split" if split else "plain" if gap == "empty" else gap)
+                if OPENER[matched] in admits:
                     step[matched + 1].add("empty")
         reach = step
-    return False
+    return bool(reach[-1])
+
+
+def pattern_atoms(cmd):
+    at, closing = 0, cmd.rfind("]")
+    while at < len(cmd):
+        if grouping := next((mark for mark in GROUPING if cmd.startswith(mark, at)), None):
+            at += len(grouping)
+            continue
+        char, split = cmd[at], cmd[at] in SPLITS
+        if at < closing and (bracket := PATTERN_BRACKET.match(cmd, at)):
+            admits = bracket_admits(*bracket.group(1, 2))
+            word = not admits & set(SIGNS)
+            at = bracket.end()
+        elif escape := PATTERN_ESCAPE.match(cmd, at):
+            admits, word, split, at = escaped_admits(escape), False, False, escape.end()
+        else:
+            admits = WILDCARD if char == "." else frozenset(char) & WILDCARD
+            word, at = char.isalnum() or char == "_", at + 1
+        yield admits, word and not QUANTIFIER.match(cmd, at), split
+
+
+def escaped_admits(escape):
+    code = next((int(digits, base) for digits, base in zip(escape.groups(), ESCAPE_BASES) if digits), None)
+    if code is not None:
+        return frozenset(chr(code)) & WILDCARD if code <= sys.maxunicode else WILDCARD
+    if letter := escape[8]:
+        return ESCAPE_CLASSES.get(letter[0], WILDCARD if letter[0].isupper() else frozenset())
+    return frozenset(escape[9]) & WILDCARD
+
+
+def bracket_admits(negated, body):
+    if negated or "\\" in body:
+        return WILDCARD
+    named = list(PATTERN_CLASS.finditer(body))
+    if any(found[1] == ":" and found[2] not in CLASSES for found in named):
+        return WILDCARD
+    rest = PATTERN_CLASS.sub("", body)
+    ranges = [(rest[at], rest[at + 2]) for at in range(len(rest) - 2) if rest[at + 1] == "-"]
+    return frozenset(char for char in WILDCARD if char in rest or any(
+        low <= char <= high for low, high in ranges) or any(
+        CLASSES[found[2]](char) if found[1] == ":" else found[2] == char for found in named))
 
 
 MESSAGE_HEAD = re.compile(
@@ -3366,12 +3419,16 @@ def governing(tool, args, cwd):
 
 
 # @req> REQ-38099593@WZbBLy6bHv3j cebvfg
-def judge_citation_shell(raw):
+def judge_citation_shell(raw, cwd):
     cmd = unescaped(raw)
+    held = set()
     if not names_citation(cmd):
-        return
-    for part in (part for pipeline in scan(QUIET_REDIRECT.sub(" ", cmd))
-                 for part in pipeline):
+        held = held_citation_names(cwd) & set(NAME.findall(cmd.translate(UNQUOTED)))
+        if not held:
+            return
+    pipelines = scan(QUIET_REDIRECT.sub(" ", cmd))
+    for part in (part for pipeline in pipelines for part in pipeline if not held or held & set(
+            NAME.findall(" ".join(pipeline).translate(UNQUOTED)))):
         found = unreadable(part)
         if found:
             deny(UNREAD_COMMAND.format(found=found))
@@ -3386,6 +3443,22 @@ def judge_citation_shell(raw):
         if tool or (git and git["read"]) or only_reads(words):
             continue
         deny(NOT_A_READ.format(tool=words[0]))
+
+
+def held_citation_names(cwd):
+    try:
+        done = subprocess.run(
+            ["git", "--no-optional-locks", "-C", cwd, "-c", "core.fsmonitor=false", "grep", "-h", "-I",
+             "--untracked", "--no-color", "-E", "-e", "@req[+>-]", "--", ":/"],
+            capture_output=True, text=True, timeout=min(15, left()), check=False)
+    except (OSError, subprocess.SubprocessError):
+        done = None
+    if done is None or done.returncode not in (0, 1):
+        if git_reads(["rev-parse", "--git-dir"], (cwd, [], {})) is None:
+            return set()
+        deny(UNREADABLE.format(what=f"the statement citations held under {cwd}"))
+    return {name for line in done.stdout.splitlines() if CITATION_LINE.match(line)
+            for found in CITED_NAMES.finditer(line) for name in found.groups() if name}
 
 
 def elucidate_agent(agent_type):
@@ -3543,7 +3616,7 @@ def decide(data: dict) -> "str | None":
         for part in pipeline for words in [argv(heading(part))[0]] if sets_identity(words)}
     for judged in commands:
         judge_shell(judged, cwd)
-        judge_citation_shell(judged)
+        judge_citation_shell(judged, cwd)
     # @req> REQ-60587913@64oissmU4Xo2 zccpka
     # @req> REQ-36282702@sK_P4PZZM9_w u2r5gj
     if any(CONFIG_NAMED.search(spoken(text)) for text in CALL_TEXT["said"] if text not in commands):

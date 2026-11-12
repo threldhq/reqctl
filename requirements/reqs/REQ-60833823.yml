@@ -15,7 +15,7 @@ type: functional
 verification: inspection
 whole_file_citations:
   reqctl/pyproject.toml:
-    digest: 3CB-0mERUDNrLkc0BHxRBFUOAYbHpfSsTddZAhG9zlw
+    digest: TJKHT2mDFaqjYaQhTXo5WA0KttrgLrI0aSV_2hC0bIk
     pinned: pdX0Xr4bVNDt
   reqctl/requirements-lock.txt:
     digest: aFrK6SeiIkmsFmwst1oB4nNxfqgIdeEbc_8xiXpWIok
