@@ -21,7 +21,8 @@ assessed:
   multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  n5z4vo: EbFF3petNlrczkX1aKlFfgURGBO-73cETyn2ljvSEik
+  awdr2c: yf7zGTM9Y5PqVm0M9qu2hcTW-grW7FEz7JVfH4ivxVw
+  n5z4vo: MTMHg9i9RgHXJ0ttbgsQU4tJwBmJHiJsPqXIACRGZqg
 priority: medium
 relations:
   REQ-60346603: constrains

@@ -4,6 +4,10 @@ assessed:
   REQ-64570886: Zckz3LzHUzXnXX8nOFZu7k0edXRCoE_euhNcePLWQI0
   citation_marker: PIwiVw0PtA6YbmzdHivRCKCzPw-Rq-JX6IIehV5RfU0
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  67wjjk: sA_OGXO4yaopnqvjxSQTj0wFmAngxAKMOpPNPiH4hdc
+  ckfd4o: MPJkCPvcfGv8N9WK5i1pRfgRvx0e4gaNbJKjnvwwkjA
+  zuqhai: nhVfcS2nHWT8ihEB-LtOJCKyWTKNSNfiHWyJqt7tPa8
 priority: medium
 relations:
   REQ-60833823: depends_on

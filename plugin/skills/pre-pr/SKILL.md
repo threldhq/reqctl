@@ -65,10 +65,11 @@ its value -- where a data item's entries are stated in one place and read in
 another, the place stating them -- and every line that code names, directly or
 through what those lines name, that no citation digest takes in. A Python
 citation's digest takes in each function, class and constant of the code base its
-lines name, and a JavaScript citation's each function and const, let or var
-binding declared at the top level of the same file, and what those name in turn,
-so those get no citation of their own; JavaScript in another file, and code in
-any other language, that the lines name is cited too.
+lines name, a JavaScript citation's each function and const, let or var binding
+declared at the top level of the same file, and a TypeScript citation's those and
+each enum declared there, and what those name in turn, so those get no citation
+of their own; JavaScript or TypeScript in another file, and code in any other
+language, that the lines name is cited too.
 <!-- @req- j6i32e -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->

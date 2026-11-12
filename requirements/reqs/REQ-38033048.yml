@@ -5,6 +5,9 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   single_line_comment: Jus2ZEVegmdWsrD-TXdgIGqqNN_fpp6pgjgcwGu3oPw
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  4ei5xf: 3HCKOOCigkyrtIGxajtfNhvG8_ilbXFJvA2ExbYWMzU
+  nvsgih: WVAlYPwt3uwI7d0g0_SB2ma3nQWDmly1OQTkKNbFte8
 priority: medium
 relations:
   REQ-60346603: derives_from

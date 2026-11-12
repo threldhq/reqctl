@@ -5,9 +5,9 @@ import posixpath
 import re
 import tokenize
 
-from . import corpus
+from . import corpus, typescript
 
-SCRIPTED = (".js", ".html")
+SCRIPTED = (".js", ".html", *typescript.SUFFIXES)
 CLASSIC = re.compile(r"<script(?=[\s/>])(?P<attrs>[^>]*)>(?P<body>[\s\S]*?)"
                      r"(?:</script(?=[\s/>])|\Z)", re.IGNORECASE)
 TYPED = re.compile(r"""\btype\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))""", re.IGNORECASE)
@@ -27,7 +27,7 @@ CONTINUING = re.compile(r"(?!\+\+\Z|--\Z)[-+*/%&|^!<>=?:~]+\Z|[(\[,.]\Z|\.\.\.\Z
 OPENS, CLOSES = "{([", "})]"
 BINDINGS = ("const", "let", "var")
 
-# @req+ REQ-59827868@n8ncPHxU3mWA 4pmkcf
+# @req+ REQ-59827868@eeHZvhZPFhD3 4pmkcf
 DEFINED = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
 ASSIGNED = (ast.Assign, ast.AnnAssign)
 NESTED = (ast.If, ast.Try, ast.TryStar)
@@ -71,9 +71,12 @@ class Reach:
         self.scripts = {}
 
     # @req> REQ-22608177@cdmX9Aqh6XXC upntcv
+    # @req> REQ-45330509@y34lW04HzVzy ad2sq3
+    # @req> REQ-71419978@R9LaJT-ldfB9 eci2zb
     def _scripted(self, path):
         if path not in self.scripts:
-            self.scripts[path] = _script(path, self.texts[path])
+            self.scripts[path] = (_typed(path, self.texts[path]) if path.endswith(typescript.SUFFIXES)
+                                  else _script(path, self.texts[path]))
         return self.scripts[path]
 
     def _module(self, base):
@@ -100,8 +103,11 @@ class Reach:
         if path in self.tables:
             return self.tables[path]
         # @req> REQ-22608177@cdmX9Aqh6XXC wgjme7
+        # @req> REQ-45330509@y34lW04HzVzy egzrhu
         if path.endswith(SCRIPTED):
-            self.tables[path] = _declarations(self._scripted(path)[0])
+            self.tables[path] = (_reading(path, self.texts[path]).table
+                                 if path.endswith(typescript.SUFFIXES)
+                                 else _declarations(self._scripted(path)[0]))
             return self.tables[path]
         table = self.tables[path] = {}
         try:
@@ -195,6 +201,7 @@ class Reach:
 
     def _calls(self, path, lines):
         # @req> REQ-22608177@cdmX9Aqh6XXC um45e2
+        # @req> REQ-71419978@R9LaJT-ldfB9 oyqqn7
         if path.endswith(SCRIPTED):
             pieces, table = self._scripted(path)[0], self._table(path)
             return [(path, name) for name in dict.fromkeys(
@@ -244,6 +251,25 @@ class Reach:
         return {(key[0], line) for key in self._closure(path, lines)
                 for line in self._lines(key)}
 # @req- 4pmkcf
+
+
+def _reading(path, text):
+    return typescript.read(posixpath.splitext(path)[1], text)
+
+
+def remarked(text, spans):
+    chars = list(text)
+    for start, end, kept in spans:
+        if not kept:
+            _blanked(chars, start, end)
+    return {number for number, (said, kept) in
+            enumerate(zip(text.split("\n"), "".join(chars).split("\n")), start=1)
+            if said.strip() and not kept.strip()}
+
+
+def _typed(path, text):
+    reading = _reading(path, text)
+    return reading.names, remarked(text, reading.spans)
 
 
 def _blanked(chars, start, end):
