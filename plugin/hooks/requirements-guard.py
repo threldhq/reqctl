@@ -450,7 +450,8 @@ READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|-
                          r"|\s--(?:pre|pager|hostname-bin)\b")
 
 PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo", "--recurse-submodules")
-CONFIG_NAMED = re.compile(r"config|mirror|include|requireforce|(?<![\w.-])\.git\b", re.IGNORECASE)
+CONFIG_NAMED = re.compile(r"config|mirror|--mi|include|requireforce|(?<![\w.-])\.git\b",
+                          re.IGNORECASE)
 CONFIGURED_IN_CALL = (
     "git push blocked: the same call names {found}, so the guard cannot read the config "
     "git push runs with.\nChange the config in a call of its own, then run git push."
@@ -2331,16 +2332,10 @@ def judge_command(said, here, stdin=()):
     refuse_unheld_script(words, here)
     refuse_discarding_work(words, here)
     for script in scripts_within(words, here):
-        # @req> REQ-60587913@64oissmU4Xo2 pvalg5
-        # @req> REQ-36282702@sK_P4PZZM9_w gubaet
-        CALL_TEXT["said"] += "\n" + script
         judge_shell(script, here, stdin)
     # @req> REQ-59919160@eEBU6tuB77Dq fwdndw
     for at in sed_calls(words, called):
         for script in sed_runs(words, words[at + 1:], here):
-            # @req> REQ-60587913@64oissmU4Xo2 qminys
-            # @req> REQ-36282702@sK_P4PZZM9_w lfqoxd
-            CALL_TEXT["said"] += "\n" + script
             judge_shell(script, here, stdin)
     if plain in SHELLS and not short_flagged(itertools.takewhile(
             lambda word: word != "--" and word.startswith(("-", "+")), operands), "c"):
@@ -2923,6 +2918,9 @@ def names_corpus(part, cwd):
 @functools.cache
 def judge_shell(raw, cwd, stdin=(), parents=True):
     # @req+ REQ-22704490@u7IClIQOfStA ak47k7
+    # @req> REQ-60587913@64oissmU4Xo2 tfgxej
+    # @req> REQ-36282702@sK_P4PZZM9_w qf6nfk
+    CALL_TEXT["said"] += "\n" + raw
     if (spelled := ansi_c(raw)) != raw:
         judge_shell(spelled, cwd, stdin)
     if parents and PARENT.search(unescaped(raw)):
