@@ -21,7 +21,7 @@ acceptance_criteria:
   then: the [citation digest](citation_digest) is unchanged
   when: the library changes
 - given: a [statement citation](statement_citation) over lines of a file that is neither
-    Python nor JavaScript
+    Python, JavaScript nor TypeScript
   then: the [citation digest](citation_digest) takes in the covered lines and no other
   when: trace is run
 - given: a Python [statement citation](statement_citation) over a line naming a class

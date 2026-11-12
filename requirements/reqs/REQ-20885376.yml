@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-21225852: RMA1Qtug7rzFGSvnOUl9m8-djmeP-s0q9f1b8Jfi8N0
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-21225852: constrains
+  REQ-60346603: constrains
+  REQ-89706423: constrains
+status: approved
+text: If reqctl tag would write a comment carrying a [statement citation](statement_citation)
+  inside a dollar-quoted string of a .sql file, then the product shall refuse the
+  [citation](statement_citation).
+type: functional
+verification: inspection

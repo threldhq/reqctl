@@ -1,0 +1,26 @@
+acceptance_criteria:
+- given: a .tsx file whose JSX element holds children
+  then: the product refuses and names placing the citation outside the JSX element
+    as the fix
+  when: reqctl tag cites lines so that a citation comment would fall among those children
+- given: a .tsx file whose JSX element embeds an expression spanning lines
+  then: the product writes the citation
+  when: reqctl tag cites lines whose citation comments fall inside that expression
+assessed:
+  REQ-38033048: mKGzPYjyS_wD12VEdEMbKD4NnI38uamwThWcBuP2BUQ
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-60833823: pdX0Xr4bVNDtl9aib-VHzOBkyw6gL8mQ6UalOOZdKso
+  REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-38033048: depends_on
+  REQ-60346603: constrains
+  REQ-60833823: depends_on
+  REQ-89706423: constrains
+status: approved
+text: If reqctl tag would write a comment carrying a [statement citation](statement_citation)
+  among the children of a JSX element or fragment in a .tsx file, outside any expression
+  the element embeds, then the product shall refuse the [citation](statement_citation).
+type: functional
+verification: inspection
