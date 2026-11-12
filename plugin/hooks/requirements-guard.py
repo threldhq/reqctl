@@ -456,7 +456,8 @@ CONFIGURED_IN_CALL = (
     "git push blocked: the same call names {found}, so the guard cannot read the config "
     "git push runs with.\nChange the config in a call of its own, then run git push."
 )
-CALL_TEXT = {"said": ""}
+CALL_TEXT: dict = {"said": {}, "identity": set()}
+IDENTITY_SECTIONS = ("user", "author", "committer")
 GH_VALUED = ("-X", "--method", "-f", "--raw-field", "-F", "--field", "--input", "-H",
              "--header", "-q", "--jq", "-t", "--template", "--hostname", "--cache",
              "-p", "--preview")
@@ -1252,12 +1253,37 @@ def refuse_configured_force(words, here):
                                            not operands[1:] and value.startswith(("+", ":"))):
                 deny(f"Push with {key}={value} blocked: it rewrites or deletes remote "
                      "history. Ask the owner if that is really wanted.")
-    if found := config_named():
+    if found := config_named(words):
         deny(CONFIGURED_IN_CALL.format(found=found.group()))
 
 
-def config_named():
-    return CONFIG_NAMED.search(re.sub(r"[\\'\"]", "", ansi_c(CALL_TEXT["said"]).replace("\\\n", "")))
+def spoken(text):
+    return re.sub(r"[\\'\"]", "", ansi_c(text).replace("\\\n", ""))
+
+
+def config_named(words):
+    text = spoken("\n".join(CALL_TEXT["said"]))
+    for said in CALL_TEXT["identity"]:
+        text = re.sub(r"(?m)(?:^|(?<=[;&|(]))[ \t]*" + r"[ \t]+".join(map(re.escape, said))
+                      + r"[ \t]*(?=$|[;&|)])", " ", text)
+    for said in own_config(words):
+        text = re.sub(r"(?<!\S)" + r"[ \t]+".join(map(re.escape, said)) + r"(?!\S)", " ", text)
+    return CONFIG_NAMED.search(text)
+
+
+def own_config(words):
+    prefix, options = git_split(words)[:2]
+    said = [[word] for word in prefix if word.startswith(COMMAND_CONFIG)]
+    said += [["-c", value] for flag, value in zip(options, options[1:]) if flag == "-c"]
+    return [each for each in said if all(map(UNQUOTED_WORD.fullmatch, each))
+            and "include" not in " ".join(each).lower()]
+
+
+def sets_identity(words):
+    split = git_split(words)
+    return bool(split) and not any(split[:2]) and split[2] == "config" and len(split[3]) == 2 and (
+        split[3][0].lower().rpartition(".")[0] in IDENTITY_SECTIONS) and not any(
+        word.startswith("-") or not UNQUOTED_WORD.fullmatch(word) for word in split[3])
 
 
 def left():
@@ -1368,7 +1394,7 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
-    if subcommand == "clean" and (config_named() or git_reads(
+    if subcommand == "clean" and (config_named(words) or git_reads(
             ["config", "--type=bool", "--default", "true", "--get", "clean.requireForce"],
             place) != "true\n"):
         rest = ["-f", *rest]
@@ -2920,7 +2946,7 @@ def judge_shell(raw, cwd, stdin=(), parents=True):
     # @req+ REQ-22704490@u7IClIQOfStA ak47k7
     # @req> REQ-60587913@64oissmU4Xo2 tfgxej
     # @req> REQ-36282702@sK_P4PZZM9_w qf6nfk
-    CALL_TEXT["said"] += "\n" + raw
+    CALL_TEXT["said"].setdefault(raw)
     if (spelled := ansi_c(raw)) != raw:
         judge_shell(spelled, cwd, stdin)
     if parents and PARENT.search(unescaped(raw)):
@@ -3401,21 +3427,22 @@ def decide(data: dict) -> "str | None":
     shown = governing(tool, args, cwd)
     commands = [messageless(value) for value in named_paths(args, COMMAND_KEY)]
     # @req> REQ-75038049@hXyFNmxx-SWy hwgp36
-    CALL["changes_environment"] = any(
-        ENV_CHANGE.search(re.sub(r"[\\'\"]", "", ansi_c(judged).replace("\\\n", "")))
-                                      for judged in commands)
+    CALL["changes_environment"] = any(ENV_CHANGE.search(spoken(judged)) for judged in commands)
     # @req> REQ-60587913@64oissmU4Xo2 5qdzrp
     # @req> REQ-36282702@sK_P4PZZM9_w o2rpyz
-    CALL_TEXT["said"] = "\n".join(commands)
+    CALL_TEXT["said"] = dict.fromkeys(commands)
     # @req> REQ-60587913@64oissmU4Xo2 fgboux
     # @req> REQ-36282702@sK_P4PZZM9_w qegb32
-    named = config_named()
+    CALL_TEXT["identity"] = {
+        tuple(words) for judged in commands
+        for pipeline in scan(AMP_REDIRECT.sub(" ", flatten(unescaped(judged))))
+        for part in pipeline for words in [argv(heading(part))[0]] if sets_identity(words)}
     for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
     # @req> REQ-60587913@64oissmU4Xo2 zccpka
     # @req> REQ-36282702@sK_P4PZZM9_w u2r5gj
-    if config_named() and not named:
+    if any(CONFIG_NAMED.search(spoken(text)) for text in CALL_TEXT["said"] if text not in commands):
         judge_shell.cache_clear()
         for judged in commands:
             judge_shell(judged, cwd)
