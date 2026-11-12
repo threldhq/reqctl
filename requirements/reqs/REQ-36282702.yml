@@ -27,9 +27,10 @@ assessed:
 citations:
   7quncd: Vb9UbH_DN7Haq-6wDyqIERjv5ZcbdpohLHMFfNJNZRw
   j72czn: 2Jok6dAC-BQMHKJro-3H4ZR9bwtK2o_PqndnRj3F9zw
+  o2rpyz: 7WLtBJCl5kHG1inFhPgdDIfRZhBKrLL47Yg1JWwFfw0
   pojxpe: nue_cHTPA6sVgGMCJQeEyOxKLrZei8qoxS4sxtpQL5g
-  qwtlue: dRaYm5BYisEJHevMIKCJf0L8kpmdTChrEY59nU4juLA
-  uivqls: GCjowxCSIlmmjsKBSPS8MKyRmJhhrFEGeOzKg_jAzRw
+  qwtlue: GQEEARayeFYREW0lSpjlUORIi0Qt9Jmdd16832E1RQg
+  uivqls: H7GW6ZTNwKOQkvybQFY7jP9tzptZd_xFw8ejYlP6jjw
 priority: medium
 relations:
   REQ-38288492: depends_on
