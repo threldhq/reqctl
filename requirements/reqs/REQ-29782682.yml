@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-60833823: pdX0Xr4bVNDtl9aib-VHzOBkyw6gL8mQ6UalOOZdKso
+  REQ-64570886: Zckz3LzHUzXnXX8nOFZu7k0edXRCoE_euhNcePLWQI0
+  citation_marker: PIwiVw0PtA6YbmzdHivRCKCzPw-Rq-JX6IIehV5RfU0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-60833823: depends_on
+  REQ-64570886: constrains
+status: approved
+text: When trace is run, the product shall report as a problem each [statement citation](statement_citation)
+  whose [citation marker](citation_marker) lies among the children of a JSX element
+  or fragment in a .tsx file, outside any expression the element embeds.
+type: functional
+verification: inspection

@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a .ts file whose covered lines name, in a type annotation or a type argument,
+    a const declared at the top level of the file
+  then: the [citation digest](citation_digest) takes in no declaration for that name
+  when: the product takes the [citation digest](citation_digest)
+assessed:
+  REQ-45330509: y34lW04HzVzyYKP1_Eeg3_Kd22BRh8xyjClqvCqzORc
+  REQ-60833823: pdX0Xr4bVNDtl9aib-VHzOBkyw6gL8mQ6UalOOZdKso
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+priority: medium
+relations:
+  REQ-45330509: constrains
+  REQ-60833823: depends_on
+status: approved
+text: When the product resolves the names in the lines of a .ts or a .tsx file for
+  a [citation digest](citation_digest), the product shall take as a name only an identifier
+  that the grammar it reads the file by reads as referring to a value.
+type: functional
+verification: inspection

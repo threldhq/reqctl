@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  single_line_comment: Jus2ZEVegmdWsrD-TXdgIGqqNN_fpp6pgjgcwGu3oPw
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-60346603: derives_from
+  REQ-89706423: constrains
+status: approved
+text: When the product cites an [item](item) at lines of a TypeScript file, whether
+  .ts or .tsx, the product shall write each comment carrying the [statement citation](statement_citation)
+  as a [single-line comment](single_line_comment) opened by //.
+type: functional
+verification: inspection

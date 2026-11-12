@@ -1,0 +1,33 @@
+acceptance_criteria:
+- given: a .tsx file whose covered lines render a JSX element named as a function
+    declared at the top level of the file
+  then: the [citation digest](citation_digest) takes in that function
+  when: the product takes the [citation digest](citation_digest)
+- given: a .ts file whose covered lines name an enum declared at the top level of
+    the file
+  then: the [citation digest](citation_digest) takes in that enum
+  when: the product takes the [citation digest](citation_digest)
+assessed:
+  REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
+  REQ-22608177: cdmX9Aqh6XXCn-yojTpE3O5D-_-28vBGF_suMdZV-YM
+  REQ-31471659: hKmNhTkU9xOAFkZt4GkdGC-Prnfl7nQD1cBEFSp2-so
+  REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
+  REQ-60833823: pdX0Xr4bVNDtl9aib-VHzOBkyw6gL8mQ6UalOOZdKso
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-15770866: constrains
+  REQ-22608177: derives_from
+  REQ-31471659: constrains
+  REQ-42668747: depends_on
+  REQ-60833823: depends_on
+status: approved
+text: Where the lines a [statement citation](statement_citation) covers are TypeScript,
+  in a .ts or a .tsx file, the product shall take into the [citation digest](citation_digest),
+  as it takes the covered lines, each function, each const, let or var binding and
+  each enum declared at the top level of the same file to which a name in those lines
+  resolves without running the code, and each one to which a name in those declarations
+  resolves in turn.
+type: functional
+verification: inspection
