@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
+priority: medium
+relations:
+  REQ-15770866: constrains
+status: approved
+text: When the product reads the code a .ts or a .tsx file holds, the product shall
+  read a .ts file by a grammar of TypeScript and a .tsx file by a separate grammar
+  of TSX.
+type: functional
+verification: inspection
