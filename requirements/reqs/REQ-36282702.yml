@@ -26,11 +26,12 @@ assessed:
   worktree_commands.*: EiAhLq9p9eimxUhOO9ezdNB_wt99GSc_rRj2fmIFYiY
 citations:
   7quncd: Vb9UbH_DN7Haq-6wDyqIERjv5ZcbdpohLHMFfNJNZRw
+  gubaet: boAlZPEghe98ndxN7_WDgGC8AUqG6xLXNw1mekeHcRI
   j72czn: 2Jok6dAC-BQMHKJro-3H4ZR9bwtK2o_PqndnRj3F9zw
-  o2rpyz: zqKV58UmAXlUU5G_0tw6Gko8-KxeX-xvaJioygef0HA
+  o2rpyz: 7WLtBJCl5kHG1inFhPgdDIfRZhBKrLL47Yg1JWwFfw0
   pojxpe: nue_cHTPA6sVgGMCJQeEyOxKLrZei8qoxS4sxtpQL5g
-  qwtlue: 4JEuadUFTp2M_mhAcz_UuIWPep57twhw2vZnZcx3qpY
-  uivqls: SLI0kzcDYuDbMOvW1-4hPOKHQ0j_KRt7NHdvT3ipM5s
+  qwtlue: kPpAVONxIY-2Ox8pcQWxxSaexGapHY1LchkEel8G8_Q
+  uivqls: Ttos--HupqKKIqglKKfSQxEg3C4yht3dmdXeZmI9QGY
 priority: medium
 relations:
   REQ-38288492: depends_on

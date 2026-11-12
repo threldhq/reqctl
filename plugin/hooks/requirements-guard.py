@@ -450,7 +450,7 @@ READ_WRITES = re.compile(r"^\s*(?:tree|less|file)\s(?:.*\s)?(?:-[A-Za-z]*[oOC]|-
                          r"|\s--(?:pre|pager|hostname-bin)\b")
 
 PUSH_VALUED = ("-o", "--push-option", "--receive-pack", "--exec", "--repo", "--recurse-submodules")
-CONFIG_NAMED = re.compile(r"\b(?:git)?config\b|mirror|include|requireforce", re.IGNORECASE)
+CONFIG_NAMED = re.compile(r"config|mirror|include|requireforce|(?<![\w.-])\.git\b", re.IGNORECASE)
 CONFIGURED_IN_CALL = (
     "git push blocked: the same call names {found}, so the guard cannot read the config "
     "git push runs with.\nChange the config in a call of its own, then run git push."
@@ -1251,8 +1251,12 @@ def refuse_configured_force(words, here):
                                            not operands[1:] and value.startswith(("+", ":"))):
                 deny(f"Push with {key}={value} blocked: it rewrites or deletes remote "
                      "history. Ask the owner if that is really wanted.")
-    if found := CONFIG_NAMED.search(CALL_TEXT["said"]):
+    if found := config_named():
         deny(CONFIGURED_IN_CALL.format(found=found.group()))
+
+
+def config_named():
+    return CONFIG_NAMED.search(re.sub(r"[\\'\"]", "", ansi_c(CALL_TEXT["said"]).replace("\\\n", "")))
 
 
 def left():
@@ -1363,9 +1367,9 @@ def refuse_discarding_work(words, here):
         return
     place = located(words, here)
     git_sees(["rev-parse", "--git-dir"], place)
-    if subcommand == "clean" and (CONFIG_NAMED.search(CALL_TEXT["said"]) or git_reads(
+    if subcommand == "clean" and (config_named() or git_reads(
             ["config", "--type=bool", "--default", "true", "--get", "clean.requireForce"],
-            place) == "false\n"):
+            place) != "true\n"):
         rest = ["-f", *rest]
     written = rest
     rest = [alt for word in rest for alt in bounded(word)]
@@ -2327,6 +2331,9 @@ def judge_command(said, here, stdin=()):
     refuse_unheld_script(words, here)
     refuse_discarding_work(words, here)
     for script in scripts_within(words, here):
+        # @req> REQ-60587913@64oissmU4Xo2 pvalg5
+        # @req> REQ-36282702@sK_P4PZZM9_w gubaet
+        CALL_TEXT["said"] += "\n" + script
         judge_shell(script, here, stdin)
     # @req> REQ-59919160@eEBU6tuB77Dq fwdndw
     for at in sed_calls(words, called):
@@ -3398,8 +3405,7 @@ def decide(data: dict) -> "str | None":
                                       for judged in commands)
     # @req> REQ-60587913@64oissmU4Xo2 5qdzrp
     # @req> REQ-36282702@sK_P4PZZM9_w o2rpyz
-    CALL_TEXT["said"] = "\n".join(re.sub(r"[\\'\"]", "", ansi_c(judged).replace("\\\n", ""))
-                                  for judged in commands)
+    CALL_TEXT["said"] = "\n".join(commands)
     for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
