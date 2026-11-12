@@ -106,11 +106,12 @@ over a single code statement and a pair of comments over more, pinned to the
 statement as it stands, so no stamp is ever composed or pasted. Cover the code
 that satisfies a clause and every line that code names, directly or through what
 those lines name, that no citation digest takes in. A Python citation's digest
-takes in each function, class and constant of the code base its lines name, and a
+takes in each function, class and constant of the code base its lines name, a
 JavaScript citation's each function and const, let or var binding declared at the
-top level of the same file, and what those name in turn, so those get no citation
-of their own; JavaScript in another file, and code in any other language, that
-the lines name is cited too. A stale citation is re-pinned by reading the code against the
+top level of the same file, and a TypeScript citation's those and each enum
+declared there, and what those name in turn, so those get no citation of their
+own; JavaScript or TypeScript in another file, and code in any other language,
+that the lines name is cited too. A stale citation is re-pinned by reading the code against the
 statement that now stands, then `reqctl repin ID`; one that no longer governs
 goes with `reqctl untag ID`, and a region that moved is untagged and cited again.
 The hook refuses an edit, or a shell command naming a citation, that adds,
