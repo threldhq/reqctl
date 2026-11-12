@@ -3407,9 +3407,18 @@ def decide(data: dict) -> "str | None":
     # @req> REQ-60587913@64oissmU4Xo2 5qdzrp
     # @req> REQ-36282702@sK_P4PZZM9_w o2rpyz
     CALL_TEXT["said"] = "\n".join(commands)
+    # @req> REQ-60587913@64oissmU4Xo2 fgboux
+    # @req> REQ-36282702@sK_P4PZZM9_w qegb32
+    named = config_named()
     for judged in commands:
         judge_shell(judged, cwd)
         judge_citation_shell(judged)
+    # @req> REQ-60587913@64oissmU4Xo2 zccpka
+    # @req> REQ-36282702@sK_P4PZZM9_w u2r5gj
+    if config_named() and not named:
+        judge_shell.cache_clear()
+        for judged in commands:
+            judge_shell(judged, cwd)
     return shown
 
 
