@@ -20,9 +20,9 @@ assessed:
   project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  2vz6iw: 1bQku0gu1o3-dELGrjOJs7SChssiDhCx_vjTZmW5lUQ
-  5zrapb: LytBKc1LgIkKPu_2ba_SKAy189aixQPd3bHMv4g05rw
-  jpcmtc: NvPwlAzvgvxiXmQRPsYmIt9O1dIWl7h45DLRUt8q5wQ
+  2vz6iw: 5aqiM9MGA04mMD9p9opyAPcrgzMONCObNduk0N3oUx8
+  5zrapb: CSaKfkFIMWgNw59vC1J0UPvOgfkSLkw_gxafXUc1xdg
+  jpcmtc: lMsWy7_vSChI9uKHjsfqysHBK6m7kJmrxw_zFDDtCVc
 priority: medium
 relations:
   REQ-38288492: depends_on
