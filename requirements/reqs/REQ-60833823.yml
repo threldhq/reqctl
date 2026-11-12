@@ -10,3 +10,10 @@ text: When the product reads the code a .ts or a .tsx file holds, the product sh
   of TSX.
 type: functional
 verification: inspection
+whole_file_citations:
+  reqctl/pyproject.toml:
+    digest: PPxWXsyVSNOk2cnHvQpEgwPdJ0YZ4fcW-sh5wvh2Xao
+    pinned: pdX0Xr4bVNDt
+  reqctl/requirements-lock.txt:
+    digest: aFrK6SeiIkmsFmwst1oB4nNxfqgIdeEbc_8xiXpWIok
+    pinned: pdX0Xr4bVNDt
