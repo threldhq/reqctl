@@ -2398,8 +2398,8 @@ def globbed(name, glob):
     if "[:" not in glob:
         return fnmatch.fnmatchcase(name, glob)
     mark = next(chr(code) for code in itertools.count(0xE000) if chr(code) not in glob)
-    glob = BRACKET.sub(lambda bracket: POSIX_CLASS.sub(
-        lambda found: kinds.append(found[1]) or mark, bracket[0]), glob)
+    glob = BRACKET.sub(lambda bracket: "[" + POSIX_CLASS.sub(
+        lambda found: kinds.append(found[1]) or mark, bracket[0][1:-1]) + "]", glob)
     pattern = fnmatch.translate(glob)
     for kind in kinds:
         held = "".join(char for char in dict.fromkeys(name) if kind in CLASSES and CLASSES[kind](char))
