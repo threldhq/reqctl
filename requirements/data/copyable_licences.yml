@@ -17,4 +17,5 @@ entries:
 kind: data
 name: copyable_licences
 status: approved
-text: the licences under which the implement skill may copy an example's code
+text: the licences under which the implement skill may copy an example's code or add
+  a dependency

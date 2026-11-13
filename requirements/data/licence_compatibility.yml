@@ -1,0 +1,32 @@
+assessed:
+  copyable_licences: DEbCisObbtDRW8rf0vPIxbudFeeBtKEQVc9kQZRqU3w
+  copyable_licences.apache_2_0: 5zF9OFNgypQYO8hHuD9mVJUpphEWH1PzS_ncMvZpRls
+  copyable_licences.bsd_2_clause: Az8sRw6ljHn49kEv-_57a38Sys0jqPu91HIf303_NeE
+  copyable_licences.bsd_3_clause: WTGKp1euMKSzAeurSDayopkyQLflcL1dlxsCS-RKRjI
+  copyable_licences.isc: WlluLD-EdJgusylLYlrGRvf1gMpcbJD_q866Y9ZAY30
+  copyable_licences.mit: d2t9MZMsOLGZxe08CNmv6rrliPoQYIj2s6kl_IFbwOE
+  copyable_licences.zero_bsd: qbheQljQcYR9E49p1YL2OvTg_1L3JZyhJDSGrfsvIiQ
+entries:
+  apache_2_0:
+    definition: Code under ${copyable_licences.apache_2_0} may be copied into a repository
+      under ${copyable_licences.apache_2_0}
+  bsd_2_clause:
+    definition: Code under ${copyable_licences.bsd_2_clause} may be copied into a
+      repository under ${copyable_licences.bsd_2_clause} or ${copyable_licences.apache_2_0}
+  bsd_3_clause:
+    definition: Code under ${copyable_licences.bsd_3_clause} may be copied into a
+      repository under ${copyable_licences.bsd_3_clause} or ${copyable_licences.apache_2_0}
+  isc:
+    definition: Code under ${copyable_licences.isc} may be copied into a repository
+      under ${copyable_licences.isc} or ${copyable_licences.apache_2_0}
+  mit:
+    definition: Code under ${copyable_licences.mit} may be copied into a repository
+      under ${copyable_licences.mit} or ${copyable_licences.apache_2_0}
+  zero_bsd:
+    definition: Code under ${copyable_licences.zero_bsd} may be copied into a repository
+      under ${copyable_licences.zero_bsd} or ${copyable_licences.apache_2_0}
+kind: data
+name: licence_compatibility
+status: approved
+text: for each of the copyable licences, the licences of a receiving repository its
+  code may be copied into
