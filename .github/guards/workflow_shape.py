@@ -300,7 +300,7 @@ def pip_lines(text):
         words, reaches, end, start = segment.split(), False, None, len(found)
         for at in reversed(range(len(words))):
             if reaches and (PIP.search(words[at]) or words[at] == "tool"
-                            and at and UV.search(words[at - 1])):
+                            and any(map(UV.search, words[:at]))):
                 found.insert(start, " ".join(words[at:end]))
                 end = at
             reaches = words[at] == "install" or reaches and (
