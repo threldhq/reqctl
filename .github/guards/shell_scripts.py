@@ -15,7 +15,7 @@ def tracked():
 # @req> GUARD-79122074@9WbEAGS3ea8D igdxho
 def main():
     scripts = tracked()
-    return subprocess.run(["shellcheck", *scripts], check=False).returncode if scripts else 0
+    return subprocess.run(["shellcheck", "--", *scripts], check=False).returncode if scripts else 0
 
 
 # @req> GUARD-79122074@9WbEAGS3ea8D njx4m6

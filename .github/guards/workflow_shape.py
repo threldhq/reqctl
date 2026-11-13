@@ -56,8 +56,9 @@ SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
 JUDGES = {"validate", "baseline", "trace"}
 OPERATORS = "|&;()"
-KEYWORDS = {"!", "if", "while", "until", "for", "case", "{", "[[", "time",
-            "exec", "eval", "xargs"}
+JUDGED = re.compile(r"(?<![\w.-])reqctl\s+(?:-\S+\s+)*(?:validate|baseline|trace)\b"
+                    r"|-m\s*reqctl\b")
+INTERPRETERS = {"python", "python3"}
 SHELLS = {None, "bash", "sh"}
 CONTEXT = re.compile(r"[A-Za-z_][\w-]*\s*[.(\[]")
 ALWAYS = re.compile(r"\$\{\{\s*true\s*\}\}|true", re.I)
@@ -137,34 +138,43 @@ def checkers(inputs=DEV_INPUTS, folder=INSTALLERS):
 def words_of(run):
     lexer = shlex.shlex(CONTINUED.sub(" ", run), posix=True,
                         punctuation_chars=OPERATORS)
-    lexer.wordchars += "$`{}[]!=*?,~^@%+:/.-"
+    lexer.commenters = ""
+    lexer.wordchars += "$`{}[]!=*?,~^@%+:/.-#"
     return list(lexer)
 
 
 def gate_at(words, at, tools):
-    word, after = words[at], words[at + 1] if at + 1 < len(words) else ""
-    return bool(SCRIPT.search(word) or tools.fullmatch(Path(word).name)
-                or word == PACKAGE and after in JUDGES)
+    named = Path(words[at]).name
+    if named == PACKAGE or at and words[at - 1] == "-m" and named.partition(".")[0] == PACKAGE:
+        rest = [word for word in words[at + 1:] if not word.startswith("-")]
+        return bool(rest) and rest[0] in JUDGES
+    return bool(SCRIPT.search(words[at]) or tools.fullmatch(named))
+
+
+def invokes(text, tools):
+    try:
+        words = words_of(text)
+    except ValueError:
+        return bool(SCRIPT.search(text) or tools.search(text) or JUDGED.search(text))
+    return any(gate_at(words, at, tools) or " " in word and invokes(word, tools)
+               for at, word in enumerate(words))
 
 
 def gated(step, tools):
     run = str(step.get("run") or "")
-    if str(step.get("uses") or "").startswith(".") or IMPORTS.search(run):
-        return True
-    try:
-        words = words_of(run)
-    except ValueError:
-        return bool(SCRIPT.search(run) or tools.search(run))
-    return any(gate_at(words, at, tools) for at in range(len(words)))
+    return bool(str(step.get("uses") or "").startswith(".") or IMPORTS.search(run)
+                or invokes(run, tools))
 
 
-def alone(run):
+def alone(run, tools):
     held = CONTINUED.sub(" ", run).strip()
     try:
         words = words_of(held)
     except ValueError:
         return False
-    return ("\n" not in held and bool(words) and words[0] not in KEYWORDS
+    head = (1 + (words[1:2] == ["-m"])
+            if words and Path(words[0]).name in INTERPRETERS else 0)
+    return ("\n" not in held and head < len(words) and gate_at(words, head, tools)
             and not any(set(word) & set(OPERATORS + "`") for word in words))
 
 
@@ -194,7 +204,7 @@ def swallowed(name, job, steps, where, shell, tools):
     for step in gating:
         run = str(step.get("run") or "")
         named = step.get("name")
-        if run and not alone(run):
+        if run and not alone(run, tools):
             found.append(f"{where}: step {named!r} runs something besides its "
                          "gate -- give the step one line running the gate "
                          "alone, and move the rest to a step of its own")
