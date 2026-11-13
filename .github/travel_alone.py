@@ -8,9 +8,8 @@ import yaml
 
 from reqctl import corpus, uncited
 
-# @req+ REQ-50816200@iIRTs21PNJhn kzojze
-LISTED = (corpus.CITATION_LIST,)
-CARRIED = ("assessed",) + LISTED
+# @req+ REQ-50816200@bSNoIFAba5Ns kzojze
+CARRIED = ("assessed", corpus.CITATION_LIST, corpus.WHOLE_FILES)
 GOVERNED = "requirements/"
 DERIVED = GOVERNED + "baseline.yml"
 RECORD = uncited.RECORD.as_posix()
@@ -20,7 +19,7 @@ PLUGIN_FOLDERS = f"{GOVERNED}{corpus.FOLDERS['data']}/plugin_folders.yml"
 # @req> REQ-41600593@dauTiMee9rmb o3tsro
 STAMPED = re.compile(
     rf"(@req[+>]\s+[^\s@]+)@[A-Za-z0-9_-]{{{corpus.TAG_STAMP}}}")
-# @req+ REQ-50816200@iIRTs21PNJhn dyii6c
+# @req+ REQ-50816200@bSNoIFAba5Ns dyii6c
 ABSENT = object()
 
 
@@ -31,7 +30,7 @@ def _git(*args):
     return done
 
 
-def without(ref, path, keys, digests=False, dropped=()):
+def without(ref, path, keys, dropped=()):
     found = _git("show", f"{ref}:{path}")
     if found.returncode != 0:
         return ABSENT
@@ -42,13 +41,6 @@ def without(ref, path, keys, digests=False, dropped=()):
     if not isinstance(held, dict):
         return found.stdout
     kept = {key: value for key, value in held.items() if key not in keys}
-    whole = kept.get(corpus.WHOLE_FILES)
-    if digests and isinstance(whole, dict):
-        kept[corpus.WHOLE_FILES] = {
-            cited: ({field: value for field, value in fields.items()
-                     if field not in ("digest", "pinned")}
-                    if isinstance(fields, dict) else fields)
-            for cited, fields in whole.items()}
     held_entries = corpus.entries(kept)
     if dropped and held_entries is not None:
         kept["entries"] = {name: fields for name, fields in held_entries.items()
@@ -56,9 +48,9 @@ def without(ref, path, keys, digests=False, dropped=()):
     return kept
 
 
-def only(base, path, keys, digests=False, dropped=()):
-    return (without(base, path, keys, digests, dropped)
-            == without("HEAD", path, keys, digests, dropped))
+def only(base, path, keys, dropped=()):
+    return (without(base, path, keys, dropped)
+            == without("HEAD", path, keys, dropped))
 
 
 def entries_at(ref, path):
@@ -78,24 +70,13 @@ def added_paths(fork):
              if name not in was}
     root = (entries_at(fork, PLUGIN_FOLDERS).get("root") or {}).get("path")
     if not isinstance(root, str) or not root.endswith("/"):
-        return added, [], []
-    return added, stated_paths(root, added), stated_paths(root, was)
+        return added, []
+    return added, stated_paths(root, added)
 
 
 def covered(paths, file):
     return any(file.startswith(path) if path.endswith("/") else file == path
                for path in paths)
-
-
-def wholes(ref, path):
-    held = without(ref, path, ())
-    found = held.get(corpus.WHOLE_FILES) if isinstance(held, dict) else None
-    return set(found) if isinstance(found, dict) else set()
-
-
-def moved_wholes(fork, governed):
-    return {cited for path in governed
-            for cited in wholes(fork, path) ^ wholes("HEAD", path)}
 
 
 def lowered(fork):
@@ -135,26 +116,20 @@ def classify(base):
     other = [path for path in changed if not path.startswith(GOVERNED)]
     if not governed or not other:
         return [], other, []
-    pinned = ([path for path in governed
-               if only(fork, path, CARRIED, digests=True)]
+    pinned = ([path for path in governed if only(fork, path, CARRIED)]
               + [path for path in other
                  if textual[path] and repins_only(fork, path)])
-    added, paths, held = added_paths(fork) if COMPONENTS in governed else ({}, [], [])
-    carriers = [path for path in governed if path not in pinned
-                and only(fork, path, CARRIED + (corpus.WHOLE_FILES,))]
-    moved = moved_wholes(fork, carriers)
-    if paths and only(fork, COMPONENTS, CARRIED, digests=True, dropped=added):
-        carriers.append(COMPONENTS)
-    loose = [path for path in other if path not in pinned]
-    if carriers and loose and all(
-            path in moved or (covered(paths, path) and not covered(held, path))
-            for path in loose):
-        pinned += [*carriers, *loose]
+    if COMPONENTS in governed and COMPONENTS not in pinned:
+        added, paths = added_paths(fork)
+        if (only(fork, COMPONENTS, CARRIED, dropped=added)
+                and all(covered(paths, path) for path in other
+                        if path not in pinned)):
+            pinned.append(COMPONENTS)
     return ([path for path in governed if path not in pinned],
             [path for path in other if path not in pinned], pinned)
 
 
-# @req> REQ-50816200@iIRTs21PNJhn c4g6iy
+# @req> REQ-50816200@bSNoIFAba5Ns c4g6iy
 def main(base):
     content, other, pinned = classify(base)
     for path in pinned:
@@ -172,7 +147,7 @@ def main(base):
 # @req- dyii6c
 
 
-# @req> REQ-50816200@iIRTs21PNJhn j3lrnn
+# @req> REQ-50816200@bSNoIFAba5Ns j3lrnn
 def cli(argv):
     if len(argv) != 2:
         print("usage: travel_alone.py BASE_REF", file=sys.stderr)
@@ -180,6 +155,6 @@ def cli(argv):
     return main(argv[1])
 
 
-# @req> REQ-50816200@iIRTs21PNJhn 6kff5o
+# @req> REQ-50816200@bSNoIFAba5Ns 6kff5o
 if __name__ == "__main__":
     sys.exit(cli(sys.argv))
