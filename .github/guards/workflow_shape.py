@@ -13,7 +13,8 @@ from packaging.utils import canonicalize_name
 WORKFLOWS = Path(".github/workflows")
 GUARDS = Path(".github/guards")
 PINNED = re.compile(r"@[0-9a-f]{40}$")
-PIP = re.compile(r"\bpip[\d.]*$")
+PIP = re.compile(r"\bpipx?[\d.]*$")
+UV = re.compile(r"\buv$")
 EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
 REQUIREMENT = re.compile(r"--requirement(=.*)?|-[qvUI]*r.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
@@ -298,7 +299,8 @@ def pip_lines(text):
                             CONTINUED.sub(" ", re.sub(r"[\"']", "", text))):
         words, reaches, end, start = segment.split(), False, None, len(found)
         for at in reversed(range(len(words))):
-            if reaches and PIP.search(words[at]):
+            if reaches and (PIP.search(words[at]) or words[at] == "tool"
+                            and at and UV.search(words[at - 1])):
                 found.insert(start, " ".join(words[at:end]))
                 end = at
             reaches = words[at] == "install" or reaches and (
