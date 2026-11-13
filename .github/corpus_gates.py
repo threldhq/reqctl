@@ -12,11 +12,12 @@ def main():
     base = os.environ.get("BASE_REF", "")
     python, against, pulled = sys.executable, f"origin/{base}", bool(base)
     # @req+ REQ-26876750@p5bO3gEKEYCb x2zlt2
-    # @req> corpus_gates@n4HXR5o4Jh70 vfrphp
+    # @req> corpus_gates@OdL88-lUnUJE vfrphp
     gates = (
         ("travel_alone", [python, HERE / "travel_alone.py", against], pulled),
         ("baseline_numbering", [python, HERE / "baseline_number.py", against],
          pulled),
+        ("dependency_licence", [python, HERE / "dependency_licence.py"], pulled),
         ("corpus_validity", ["reqctl", "validate"], True),
         ("baseline_match", ["reqctl", "baseline", "--check"], True),
         ("traceability", [python, HERE / "guards" / "citations.py"], True),

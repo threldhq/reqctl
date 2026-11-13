@@ -4,6 +4,9 @@ assessed:
   copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+citations:
+  4ilqgs: ixH8oXUM5hwUbSaM1YMvGp3HL0Mt8gjrl-oGup1IhVE
+  h27djc: II6P49j02KF6pkl8DhQWcxYz_QA_Zzy4BCsCvA20qek
 priority: medium
 relations: {}
 status: approved

@@ -70,6 +70,8 @@ jobs:
         if: inputs.reqctl == ''
         env:
           BASE_REF: ${{ github.base_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GH_TOKEN: ${{ github.token }}
         run: python .github/corpus_gates.py
 
       # @req> REQ-26876750@p5bO3gEKEYCb afr55g
@@ -77,4 +79,6 @@ jobs:
         if: inputs.reqctl != ''
         env:
           BASE_REF: ${{ github.base_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GH_TOKEN: ${{ github.token }}
         run: python "$RUNNER_TEMP/reqctl/.github/corpus_gates.py"
