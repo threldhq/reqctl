@@ -3,12 +3,20 @@ import argparse
 import ast
 import json
 import os
+import re
 import sys
+from collections import Counter
 from pathlib import Path
+from re import _constants as sre, _parser
 
 from citations import read, touched
 
 ROOT = Path(__file__).resolve().parents[2]
+SPAN = re.compile(r"`([^`]+)`")
+QUOTED = re.compile(r"\"([^\"]*)\"|'([^']*)'")
+LISTED = re.compile(r"[^\s,]+(?:\s*,\s*[^\s,]+)+")
+FIELD = re.compile(r"\s*([\w-]+):\s*(.*?)\s*")
+ZERO_WIDTH = (sre.AT, sre.ASSERT, sre.ASSERT_NOT)
 
 
 def carried(node):
@@ -28,10 +36,8 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, default=repr)
 
 
-def compared(where, entry, fields, stated):
-    # @req> GUARD-21296330@1vKKetZd35C0 3fxisb
-    for field, node in keyed(fields).items():
-        value = carried(node)
+def compared(where, entry, held, stated):
+    for field, value in held.items():
         if isinstance(value, ast.AST):
             yield (f"{where} carries {entry}.{field} as "
                    f"{ast.unparse(value)!r}, which the build cannot compare "
@@ -44,51 +50,234 @@ def compared(where, entry, fields, stated):
                    f"states {stated[field]!r}")
 
 
-def faults(citations, entries):
-    trees, found = {}, []
-    for citation in citations:
-        stated = entries.get(citation["uid"])
-        path = citation["path"]
-        if stated is None or not path.endswith(".py"):
-            continue
-        if path not in trees:
-            # @req+ GUARD-83168738@zhoOQpGgBd9R yhsbhh
-            try:
-                trees[path] = ast.parse((ROOT / path).read_text())
-            except (OSError, UnicodeDecodeError, SyntaxError) as error:
-                found.append(f"{path}: cannot parse: {error}")
-                trees[path] = None
-            # @req- yhsbhh
-        if trees[path] is None:
-            continue
-        # @req+ GUARD-21296330@1vKKetZd35C0 jlm6mf
-        where = (f"citation {citation['id']} of {citation['address']} in "
-                 f"{path}:{citation['first']}-{citation['last']}")
-        entry = citation["entry"]
-        for node in ast.walk(trees[path]):
-            if not (isinstance(node, ast.Dict)
-                    and citation["first"] <= node.lineno
-                    and node.end_lineno <= citation["last"]):
-                continue
-            held = keyed(node)
-            if entry:
-                if entry in stated and held.keys() & stated[entry].keys():
-                    found.extend(compared(where, entry, node, stated[entry]))
-                continue
-            if not held.keys() & stated.keys():
-                continue
+def spellings(name, fields):
+    found = {name}
+    for value in fields.values():
+        for part in value if isinstance(value, list) else [value]:
+            if isinstance(part, str):
+                found.add(part)
+                found.update(word.rstrip(",;.") for word in part.split())
+    return found
+
+
+def spelled(sub):
+    found = [""]
+    for op, av in sub.data:
+        if op == sre.LITERAL:
+            parts = [chr(av)]
+        elif op == sre.IN and all(kind == sre.LITERAL for kind, _ in av):
+            parts = [chr(code) for _, code in av]
+        elif op == sre.SUBPATTERN:
+            parts = spelled(av[-1])
+        elif op == sre.BRANCH:
+            parts = alternatives(av[1])
+        elif op in ZERO_WIDTH:
+            parts = [""]
+        else:
+            return None
+        if parts is None:
+            return None
+        found = [head + tail for head in found for tail in parts]
+    return found
+
+
+def alternatives(branches):
+    found = []
+    for branch in branches:
+        parts = spelled(branch)
+        if parts is None:
+            return None
+        found.extend(parts)
+    return found
+
+
+def branched(sub, lists):
+    prefix = ""
+    for op, av in sub.data:
+        if op == sre.BRANCH:
+            members = []
+            for branch in av[1]:
+                parts = spelled(branch)
+                if parts is None:
+                    members.append((None, "an alternative of no fixed spelling"))
+                    branched(branch, lists)
+                else:
+                    members.extend((prefix + part, repr(prefix + part))
+                                   for part in parts)
+            lists.append(("members", members))
+        else:
+            for held in av if isinstance(av, (tuple, list)) else [av]:
+                if isinstance(held, _parser.SubPattern):
+                    branched(held, lists)
+        prefix = prefix + chr(av) if op == sre.LITERAL else ""
+
+
+def literal(node):
+    return isinstance(node, ast.Constant) and isinstance(node.value, str)
+
+
+def member(node):
+    return ((node.value, repr(node.value)) if literal(node)
+            else (None, ast.unparse(node)))
+
+
+def gathered(node, first, last, carriers):
+    inside = (getattr(node, "lineno", None) is not None
+              and first <= node.lineno and node.end_lineno <= last)
+    if inside and isinstance(node, ast.Dict):
+        carriers.append(("dict", keyed(node)))
+    elif inside and isinstance(node, (ast.Set, ast.Tuple, ast.List)):
+        members = []
+        for element in node.elts:
+            if (isinstance(element, (ast.Tuple, ast.List)) and element.elts
+                    and literal(element.elts[0])):
+                members.append(member(element.elts[0]))
+                for rest in element.elts[1:]:
+                    gathered(rest, first, last, carriers)
+            else:
+                members.append(member(element))
+        carriers.append(("members", members))
+    elif (inside and isinstance(node, ast.Call)
+          and isinstance(node.func, ast.Attribute)
+          and isinstance(node.func.value, ast.Name) and node.func.value.id == "re"
+          and node.args and literal(node.args[0])):
+        branched(_parser.parse(node.args[0].value), carriers)
+        for rest in node.args[1:] + [keyword.value for keyword in node.keywords]:
+            gathered(rest, first, last, carriers)
+    elif inside and literal(node):
+        carriers.append(("members", [member(node)]))
+    else:
+        for child in ast.iter_child_nodes(node):
+            gathered(child, first, last, carriers)
+
+
+def written(text, path, numbers):
+    front = set()
+    if text and text[0].strip() == "---" and path.endswith(".md"):
+        end = next((index for index, line in enumerate(text[1:], 2)
+                    if line.strip() == "---"), 1)
+        front = set(range(2, end))
+    carriers = []
+    for number in numbers:
+        line = text[number - 1]
+        body = line.strip().rstrip(";.")
+        if number in front:
+            field = FIELD.fullmatch(line)
+            if field:
+                carriers.append(("fields", {field[1]: field[2]}))
+        elif path.endswith(".md") and SPAN.search(line):
+            carriers.append(("members", [(span, f"`{span}`")
+                                         for span in SPAN.findall(line)]))
+        elif path.endswith(".md") and LISTED.fullmatch(body):
+            carriers.append(("members", [(part.strip(), repr(part.strip()))
+                                         for part in body.split(",")]))
+        elif not path.endswith(".md") and QUOTED.search(line):
+            carriers.append(("members", [
+                (found[1] if found[1] is not None else found[2],
+                 found[0]) for found in QUOTED.finditer(line)]))
+    return carriers
+
+
+# @req> GUARD-21296330@1vKKetZd35C0 gcjdgm
+def judged(where, uid, entry, stated, carriers):
+    if entry and entry not in stated:
+        return [f"{where} names {entry}, an entry the corpus does not state "
+                f"for {uid}"]
+    named = {name: spellings(name, fields) for name, fields in stated.items()}
+    counts, fielded, found = Counter(), set(), []
+    for kind, held in carriers:
+        if kind == "fields" and entry is None:
+            found.append(f"{where} cites the whole of {uid} over front matter "
+                         "-- cite the entry whose fields it carries")
+        elif kind == "fields":
+            fielded.add(entry)
+            found.extend(compared(where, entry, {
+                field: [part.strip() for part in text.split(",")]
+                if isinstance(stated[entry].get(field), list) else text
+                for field, text in held.items()}, stated[entry]))
+        elif kind == "dict" and not held.keys() & stated.keys():
+            if entry and held.keys() & stated[entry].keys():
+                fielded.add(entry)
+                found.extend(compared(where, entry, {
+                    field: carried(node) for field, node in held.items()},
+                    stated[entry]))
+        elif kind == "dict":
             for name, fields in held.items():
                 if name not in stated:
                     found.append(f"{where} carries {name!r}, an entry the "
-                                 f"corpus does not state for {citation['uid']}")
-                elif isinstance(fields, ast.Dict):
-                    found.extend(compared(where, name, fields, stated[name]))
+                                 f"corpus does not state for {uid}")
+                    continue
+                counts[name] += 1
+                if isinstance(fields, ast.Dict):
+                    found.extend(compared(where, name, {
+                        field: carried(node)
+                        for field, node in keyed(fields).items()}, stated[name]))
                 else:
                     found.append(f"{where} carries {name} as "
                                  f"{ast.unparse(fields)!r} -- write its "
                                  "fields as a dict the build can compare")
-        # @req- jlm6mf
+        else:
+            owners = [None if text is None
+                      else [name for name, said in named.items() if text in said]
+                      for text, _ in held]
+            if not any(owners):
+                continue
+            for (text, shown), names in zip(held, owners):
+                if names is None:
+                    found.append(f"{where} carries {shown}, which the build "
+                                 "cannot compare with the corpus -- write the "
+                                 "value itself")
+                elif not names:
+                    found.append(f"{where} carries {shown}, which the corpus "
+                                 f"does not state for {uid}")
+                counts.update(names or [])
+    if entry is None or stated[entry] or counts or fielded:
+        found.extend(f"{where} does not carry {name}, an entry the corpus "
+                     f"states for {uid}"
+                     for name in ([entry] if entry else sorted(stated))
+                     if name not in counts and name not in fielded)
+    found.extend(f"{where} carries {name} {count} times -- carry it once"
+                 for name, count in sorted(counts.items()) if count > 1)
     return found
+
+
+def faults(citations, entries):
+    texts, found, checked = {}, [], 0
+    for citation in citations:
+        stated = entries.get(citation["uid"])
+        path = citation["path"]
+        if stated is None:
+            continue
+        if path not in texts:
+            # @req+ GUARD-83168738@zhoOQpGgBd9R 45c7wu
+            try:
+                text = (ROOT / path).read_text()
+                texts[path] = (ast.parse(text) if path.endswith(".py")
+                               else text.splitlines())
+            except (OSError, UnicodeDecodeError, SyntaxError) as error:
+                found.append(f"{path}: cannot parse: {error}")
+                texts[path] = None
+            # @req- 45c7wu
+        if texts[path] is None:
+            continue
+        where = (f"citation {citation['id']} of {citation['address']} in "
+                 f"{path}:{citation['first']}-{citation['last']}")
+        carriers = []
+        # @req+ GUARD-83168738@zhoOQpGgBd9R jc5ad4
+        try:
+            if path.endswith(".py"):
+                gathered(texts[path], citation["first"], citation["last"],
+                         carriers)
+            else:
+                carriers = written(texts[path], path, citation["lines"])
+        except re.error as error:
+            found.append(f"{where} carries a pattern that cannot parse: {error}")
+            continue
+        # @req- jc5ad4
+        checked += 1
+        found.extend(judged(where, citation["uid"], citation["entry"], stated,
+                            carriers))
+    return found, checked
 
 
 # @req> GUARD-21296330@1vKKetZd35C0 yggkzf
@@ -113,9 +302,11 @@ def main():
     contexts = read("context", *cited) if cited else []
     if not isinstance(contexts, list):
         raise SystemExit(f"cannot read context: {contexts}")
-    found = faults(citations, {item["uid"]: item["entries"] for item in contexts})
+    found, checked = faults(citations,
+                            {item["uid"]: item["entries"] for item in contexts})
     for fault in found:
         print(f"::error::{fault}")
+    print(f"compared {checked} data-item citation(s) with the corpus")
     return 1 if found else 0
 
 
