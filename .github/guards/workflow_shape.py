@@ -60,8 +60,8 @@ SCRIPTED = re.compile(r"(?:^|/)(?:" + SCRIPT.pattern + r")$")
 ASSIGNED = re.compile(r"\w+=.*")
 PYTHON = re.compile(r"python[\d.]*")
 PUNCTUATION = re.compile(r"[;&|()<>]+")
-REDIRECTION = re.compile(r"[<>]{1,3}&?|&>{1,2}|<>")
-FAILING = re.compile(r"\b(?:failure|cancelled)\s*\(")
+REDIRECTION = re.compile(r"[<>]{1,3}&?|&>{1,2}")
+FAILING = re.compile(r"\b(?:failure|cancelled)\b", re.I)
 SUBSTITUTED = re.compile(r"`|\$\(")
 READABLE = {"bash", "sh"}
 STOPPING = re.compile(r"[-+][euxvo]+|pipefail|errexit|nounset|xtrace"
@@ -193,8 +193,8 @@ def skips(condition):
     if condition is None or condition is True:
         return False
     text = str(condition).strip()
-    return (bool(FAILING.search(text))
-            or not CONTEXT.search(text) and not ALWAYS.fullmatch(text))
+    return FAILING.search(text) or not (CONTEXT.search(text)
+                                        or ALWAYS.fullmatch(text))
 
 
 def swallowed(name, job, steps, where, shell, tools):
