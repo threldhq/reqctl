@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a file stating no SPDX licence identifier in a folder below a licence file
+    other than the repository's root licence file
+  then: it resolves the file's licence from that nearer licence file
+  when: the session would copy it
+assessed:
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations: {}
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session resolves the licence of each file it would copy from the SPDX licence identifier
+  the file states, else from the licence file in the nearest folder above the file
+  that holds one.
+type: functional
+verification: inspection

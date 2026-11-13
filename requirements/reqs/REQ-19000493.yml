@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-83654288: zCIRC3g5z-mwD2GXDwkBw8VmavPjDugWRDiFCWNB4ic
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-83654288: supersedes
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session, before writing new code rather than extending code that already cites the
+  requirement, has a [best-in-class check](best_in_class_check) made of the third-party
+  code that can be reused for it.
+type: functional
+verification: inspection

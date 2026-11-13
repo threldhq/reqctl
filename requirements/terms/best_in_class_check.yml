@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  best_in_class_check:
+    definition: The check the implement skill has made, before code is written, of
+      the third-party libraries and examples that can be reused for that code, each
+      weighed against the selection criteria.
+    word: best-in-class check
+kind: term
+status: approved

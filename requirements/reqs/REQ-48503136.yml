@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-49761714: PmbDdeKBVbZFcfSXUK6GNMq5OQErSL7tbDWLsBge2ug
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+  transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+priority: medium
+relations:
+  REQ-49761714: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session writes no code for which a [best-in-class check](best_in_class_check) is
+  required until the product has passed that check, or, where every fault over which
+  the product refuses that check is a [transient failure](transient_failure), until
+  the owner has answered that the code be written without a passed check.
+type: functional
+verification: inspection

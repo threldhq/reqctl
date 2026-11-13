@@ -20,7 +20,7 @@ acceptance_criteria:
   when: the session would copy an example's code
 assessed:
   REQ-83654288: zCIRC3g5z-mwD2GXDwkBw8VmavPjDugWRDiFCWNB4ic
-  copyable_licences: 2z8od0kKJ3tpyS7cDuBXiocxaTnrmOSTAcqaD5VDR1Q
+  copyable_licences: DEbCisObbtDRW8rf0vPIxbudFeeBtKEQVc9kQZRqU3w
   copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
@@ -29,7 +29,7 @@ citations:
 priority: medium
 relations:
   REQ-83654288: depends_on
-status: approved
+status: superseded
 text: The product shall state, in the ${plugin_components.implement_skill}, that the
   session copies a best-in-class example's code, unchanged or adapted, only where
   the licence of the repository holding the example resolves to the SPDX identifier

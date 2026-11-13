@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: an implement run that changes code already citing the requirement without
+    adding a behaviour
+  then: no [best-in-class check](best_in_class_check) is required of it
+  when: the run proceeds
+assessed:
+  REQ-91999340: aXqzmdm7TRCaTLHra4nodALhyLePft6miLdAPhlQDe8
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-91999340: constrains
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session, before extending code that already cites the requirement with a behaviour
+  that code does not have, has a [best-in-class check](best_in_class_check) made of
+  the third-party code that can be reused for that behaviour.
+type: functional
+verification: inspection

@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  copyable_licences: DEbCisObbtDRW8rf0vPIxbudFeeBtKEQVc9kQZRqU3w
+  copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+priority: medium
+relations: {}
+status: approved
+text: If a pull request adds a dependency whose licence resolves to the SPDX identifier
+  of none of the ${copyable_licences}, then the product shall refuse the pull request
+  when the ${corpus_gates.dependency_licence} gate runs.
+type: functional
+verification: inspection
