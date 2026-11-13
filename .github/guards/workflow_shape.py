@@ -54,12 +54,18 @@ CHECKOUTS = (".reqctl", "$RUNNER_TEMP/reqctl")
 LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME)) for root in ("", *CHECKOUTS))}
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
-JUDGES = {"validate", "baseline", "trace"}
-OPERATORS = "|&;()"
-JUDGED = re.compile(r"(?<![\w.-])reqctl\s+(?:-\S+\s+)*(?:validate|baseline|trace)\b"
-                    r"|-m\s*reqctl\b")
-INTERPRETERS = {"python", "python3"}
-SHELLS = {None, "bash", "sh"}
+RUNS = re.compile(r"(?<![^\s;&|(){}!`'\"/])reqctl[\"']?[ \t]+(?:-\S+[ \t]+)*[a-z]"
+                  r"|-m[ \t]*reqctl\b")
+SCRIPTED = re.compile(r"(?:^|/)(?:" + SCRIPT.pattern + r")$")
+ASSIGNED = re.compile(r"\w+=.*")
+PYTHON = re.compile(r"python[\d.]*")
+PUNCTUATION = re.compile(r"[;&|()<>]+")
+REDIRECTION = re.compile(r"[<>]{1,3}&?|&>{1,2}")
+FAILING = re.compile(r"\b(?:failure|cancelled)\b", re.I)
+SUBSTITUTED = re.compile(r"`|\$\(")
+READABLE = {"bash", "sh"}
+STOPPING = re.compile(r"[-+][euxvo]+|pipefail|errexit|nounset|xtrace"
+                      r"|--noprofile|--norc")
 CONTEXT = re.compile(r"[A-Za-z_][\w-]*\s*[.(\[]")
 ALWAYS = re.compile(r"\$\{\{\s*true\s*\}\}|true", re.I)
 
@@ -163,20 +169,44 @@ def invokes(text, tools):
 
 def gated(step, tools):
     run = str(step.get("run") or "")
-    return bool(str(step.get("uses") or "").startswith(".") or IMPORTS.search(run)
-                or invokes(run, tools))
+    return bool(SCRIPT.search(run) or RUNS.search(run) or tools.search(run)
+                or str(step.get("uses") or "").startswith("."))
+
+
+def commanded(words, tools):
+    while words and ASSIGNED.fullmatch(words[0]):
+        words = words[1:]
+    if not words:
+        return False
+    name, rest = Path(words[0]).name, words[1:]
+    if PYTHON.fullmatch(name):
+        named = next((word for word in rest if not word.startswith("-")), "")
+        return rest[:2] == ["-m", PACKAGE] or bool(SCRIPTED.search(named))
+    return (name == PACKAGE or bool(tools.fullmatch(name))
+            or bool(SCRIPTED.search(words[0])))
 
 
 def alone(run, tools):
-    held = CONTINUED.sub(" ", run).strip()
+    text = CONTINUED.sub(" ", run).strip()
+    if "\n" in text or SUBSTITUTED.search(text):
+        return False
+    lexer = shlex.shlex(text, posix=True, punctuation_chars=True)
+    lexer.commenters = ""
     try:
-        words = words_of(held)
+        words = list(lexer)
     except ValueError:
         return False
-    head = (1 + (words[1:2] == ["-m"])
-            if words and Path(words[0]).name in INTERPRETERS else 0)
-    return ("\n" not in held and head < len(words) and gate_at(words, head, tools)
-            and not any(set(word) & set(OPERATORS + "`") for word in words))
+    return commanded(words, tools) and not any(
+        PUNCTUATION.fullmatch(word) and not REDIRECTION.fullmatch(word)
+        for word in words)
+
+
+def readable(shell):
+    words = str(shell or "bash").split()
+    if words[-1:] == ["{0}"]:
+        words = words[:-1]
+    return (bool(words) and words[0] in READABLE
+            and all(STOPPING.fullmatch(word) for word in words[1:]))
 
 
 def shell_of(node, inherited):
@@ -185,38 +215,41 @@ def shell_of(node, inherited):
     return run.get("shell", inherited) if isinstance(run, dict) else inherited
 
 
-def always_false(condition):
+def skips(condition):
     if condition is None or condition is True:
         return False
     text = str(condition).strip()
-    return not CONTEXT.search(text) and not ALWAYS.fullmatch(text)
+    return FAILING.search(text) or not (CONTEXT.search(text)
+                                        or ALWAYS.fullmatch(text))
 
 
 def swallowed(name, job, steps, where, shell, tools):
+    # @req+ GUARD-84344643@C0RxmQgbeF_W sfx7sh
     gating = [step for step in steps if gated(step, tools)]
     found = []
-    # @req+ GUARD-84344643@C0RxmQgbeF_W sfx7sh
     if gating and job.get("continue-on-error"):
         found.append(f"{where}: job {name} runs a gate and continues on error "
                      "-- remove continue-on-error")
-    if gating and always_false(job.get("if")):
-        found.append(f"{where}: job {name} runs a gate under a constant "
-                     "condition other than true -- remove the condition")
+    if gating and skips(job.get("if")):
+        found.append(f"{where}: job {name} runs a gate under a condition that "
+                     "skips it while the run passes -- remove the condition")
     for step in gating:
-        run = str(step.get("run") or "")
         named = step.get("name")
-        if run and not alone(run, tools):
-            found.append(f"{where}: step {named!r} runs something besides its "
-                         "gate -- give the step one line running the gate "
-                         "alone, and move the rest to a step of its own")
-        if step.get("shell", shell) not in SHELLS:
-            found.append(f"{where}: step {named!r} runs a gate under shell "
-                         f"{step.get('shell', shell)!r} -- run it under bash "
-                         "or sh, or name no shell")
-        if always_false(step.get("if")):
+        if "run" in step:
+            if not alone(str(step["run"] or ""), tools):
+                found.append(f"{where}: step {named!r} runs a gate together "
+                             "with another command -- give the gate a step of "
+                             "its own that runs the gate and its arguments "
+                             "alone")
+            stepped = step.get("shell", shell)
+            if not readable(stepped):
+                found.append(f"{where}: step {named!r} runs a gate under shell "
+                             f"{stepped!r}, which the build cannot read -- run "
+                             "it under bash or sh")
+        if skips(step.get("if")):
             found.append(f"{where}: step {named!r} runs a gate under a "
-                         "constant condition other than true -- remove the "
-                         "condition")
+                         "condition that skips it while the run passes -- "
+                         "remove the condition")
     # @req- sfx7sh
     return found
 

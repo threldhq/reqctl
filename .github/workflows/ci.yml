@@ -51,20 +51,22 @@ jobs:
           }
           mark deps '^reqctl/(requirements|pyproject\.toml$)'
 
-      # @req+ GUARD-80541636@FrimpbfW1XMa 645kyy
+      # @req+ GUARD-80541636@FrimpbfW1XMa 37lpdi
       - name: Install gitleaks
         run: .github/install-gitleaks.sh "$RUNNER_TEMP/bin"
 
-      - name: No credential in the commits the pull request adds
+      - name: No credential in the commits this pull request adds
         if: github.event_name == 'pull_request'
         env:
           BASE: ${{ github.base_ref }}
-        run: '"$RUNNER_TEMP/bin/gitleaks" git . --no-banner --log-opts="origin/$BASE..HEAD"'
+        run: >-
+          "$RUNNER_TEMP/bin/gitleaks" git . --no-banner
+          --log-opts="origin/$BASE..HEAD"
 
       - name: No credential in the tracked files
         if: github.event_name != 'pull_request'
         run: '"$RUNNER_TEMP/bin/gitleaks" dir . --no-banner'
-      # @req- 645kyy
+      # @req- 37lpdi
 
       # @req> REQ-51060455@Z5EVUURxm1nV qzo4x7
       - name: Hook exits are explicit decisions
@@ -242,17 +244,23 @@ jobs:
       - name: The guard hook fingerprints the plugin files naming the corpus
         run: python .github/guards/fingerprints.py
 
-      # @req> GUARD-70400787@-g-3MXzRn6hr ap6aqt
+      # @req+ GUARD-70400787@-g-3MXzRn6hr mjgxqo
+      - name: Open the block of citations this change touches
+        if: github.event_name == 'pull_request'
+        run: echo '```' >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+
       - name: Citations this change touches
         if: github.event_name == 'pull_request'
         env:
           BASE_REF: ${{ github.base_ref }}
-        run: |
-          {
-            echo '```'
-            reqctl compare --base "origin/$BASE_REF"
-            echo '```'
-          } >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+        run: >-
+          reqctl compare --base "origin/$BASE_REF"
+          >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+
+      - name: Close the block of citations this change touches
+        if: github.event_name == 'pull_request'
+        run: echo '```' >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+      # @req- mjgxqo
 
       # @req> GUARD-50228923@hESHdAl7Kn_w scvm7k
       # @req> GUARD-22794969@9zSROQYCCtPU qxcqba
