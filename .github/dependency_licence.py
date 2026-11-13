@@ -22,9 +22,11 @@ def added(repository, base, head, token):
         with urllib.request.urlopen(request, timeout=SECONDS) as answer:
             held, pending = json.load(answer), answer.headers.get(UNPROCESSED)
     except (OSError, http.client.HTTPException, ValueError) as broken:
+        said = getattr(broken, "read", bytes)().decode(errors="replace").strip()
         raise SystemExit(f"::error::cannot read the dependencies {base}...{head} adds "
-                         f"in {repository}: {broken} -- run the gate again once "
-                         "GitHub's dependency review answers") from broken
+                         f"in {repository}: {broken} {said} -- enable the "
+                         "repository's dependency graph, or run the gate again "
+                         "once GitHub's dependency review answers") from broken
     if not isinstance(held, list) or not all(isinstance(one, dict) for one in held):
         raise SystemExit("::error::GitHub's dependency review answered no list of "
                          "changes -- run the gate again")
