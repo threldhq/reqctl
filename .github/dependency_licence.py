@@ -28,7 +28,7 @@ def added(repository, base, head, token):
     if not isinstance(held, list) or not all(isinstance(one, dict) for one in held):
         raise SystemExit("::error::GitHub's dependency review answered no list of "
                          "changes -- run the gate again")
-    if pending:
+    if pending is not None:
         raise SystemExit("::error::GitHub's dependency graph has not processed "
                          f"{base}...{head} yet -- run the gate again")
     return [one for one in held if one.get("change_type") == "added"]
@@ -42,7 +42,8 @@ def fault(dependency):
         return (f"{named} adds a dependency whose licence cannot be detected -- "
                 f"remove it, or add one under {', '.join(COPYABLE)}")
     words = licence.replace("(", " ").replace(")", " ").split()
-    if {"AND", "WITH"} & {word.upper() for word in words} or not set(words) & set(COPYABLE):
+    if (len(words) % 2 == 0 or any(word.upper() != "OR" for word in words[1::2])
+            or not set(words[0::2]) & set(COPYABLE)):
         return (f"{named} adds a dependency under {licence} -- remove it, or add "
                 f"one under {', '.join(COPYABLE)}")
     return None
