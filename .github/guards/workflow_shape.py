@@ -54,15 +54,19 @@ CHECKOUTS = (".reqctl", "$RUNNER_TEMP/reqctl")
 LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME)) for root in ("", *CHECKOUTS))}
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
-CALLED = (r"(?m)(?:^|[;&|(!{`]|\$\(|\b(?:then|do|else|elif|if|while|until"
-          r"|time|exec|env|xargs)\s)\s*(?:\w+=\S*\s+)*(?:\S*/)?")
-RUNS = re.compile(CALLED + r"reqctl\s+[\w-]|-m\s*reqctl\b")
+RUNS = re.compile(r"(?<![^\s;&|(){}!`'\"/])reqctl[\"']?[ \t]+(?:--json[ \t]+)?[a-z]"
+                  r"|-m[ \t]*reqctl\b")
+SCRIPTED = re.compile(r"(?:^|/)(?:" + SCRIPT.pattern + r")$")
+ASSIGNED = re.compile(r"\w+=.*")
+PYTHON = re.compile(r"python[\d.]*")
 OPERATORS = re.compile(r"[;&|()]+")
 SUBSTITUTED = re.compile(r"`|\$\(")
 KEYWORDS = {"!", "{", "}", "[[", "if", "then", "elif", "else", "fi", "case",
             "esac", "for", "select", "while", "until", "do", "done", "time",
             "function", "coproc"}
 READABLE = {"bash", "sh"}
+STOPPING = re.compile(r"[-+][euxvo]+|pipefail|errexit|nounset|xtrace"
+                      r"|--noprofile|--norc")
 CONTEXT = re.compile(r"[A-Za-z_][\w-]*\s*[.(\[]")
 ALWAYS = re.compile(r"\$\{\{\s*true\s*\}\}|true", re.I)
 
@@ -140,30 +144,43 @@ def checkers(inputs=DEV_INPUTS, folder=INSTALLERS):
 
 def gated(step, tools):
     run = str(step.get("run") or "")
-    called = re.compile(CALLED + tools.pattern)
-    return bool(SCRIPT.search(run) or RUNS.search(run) or called.search(run)
+    return bool(SCRIPT.search(run) or RUNS.search(run) or tools.search(run)
                 or str(step.get("uses") or "").startswith("."))
 
 
-def alone(run):
+def commanded(words, tools):
+    while words and ASSIGNED.fullmatch(words[0]):
+        words = words[1:]
+    if not words:
+        return False
+    name, rest = Path(words[0]).name, words[1:]
+    if PYTHON.fullmatch(name):
+        named = next((word for word in rest if not word.startswith("-")), "")
+        return rest[:2] == ["-m", PACKAGE] or bool(SCRIPTED.search(named))
+    return (name == PACKAGE or bool(tools.fullmatch(name))
+            or bool(SCRIPTED.search(words[0])))
+
+
+def alone(run, tools):
     text = CONTINUED.sub(" ", run).strip()
     if "\n" in text or SUBSTITUTED.search(text):
         return False
+    lexer = shlex.shlex(text, posix=True, punctuation_chars=True)
+    lexer.commenters = ""
     try:
-        words = list(shlex.shlex(text, posix=True, punctuation_chars=True))
+        words = list(lexer)
     except ValueError:
         return False
-    return bool(words) and words[0] not in KEYWORDS and not any(
-        OPERATORS.fullmatch(word) for word in words)
+    return (commanded(words, tools) and words[0] not in KEYWORDS
+            and not any(OPERATORS.fullmatch(word) for word in words))
 
 
 def readable(shell):
-    words = re.sub(r"[\"']", "", str(shell or "bash")).split()
-    if "{0}" in words:
-        words = words[:words.index("{0}")]
-    if words and Path(words[0]).name == "env":
-        words = words[1:]
-    return bool(words) and Path(words[0]).name in READABLE
+    words = str(shell or "bash").split()
+    if words[-1:] == ["{0}"]:
+        words = words[:-1]
+    return (bool(words) and words[0] in READABLE
+            and all(STOPPING.fullmatch(word) for word in words[1:]))
 
 
 def shell_of(node, inherited):
@@ -191,7 +208,7 @@ def swallowed(name, job, steps, where, shell, tools):
                      "condition other than true -- remove the condition")
     for step in gating:
         named = step.get("name")
-        if "run" in step and not alone(str(step.get("run") or "")):
+        if "run" in step and not alone(str(step.get("run") or ""), tools):
             found.append(f"{where}: step {named!r} runs a gate together with "
                          "another command -- give the gate a step of its own "
                          "that runs the gate and its arguments alone")

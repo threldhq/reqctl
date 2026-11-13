@@ -184,7 +184,7 @@ jobs:
 
       # @req> GUARD-79122074@9WbEAGS3ea8D p5n7ah
       - name: Shell scripts
-        run: git ls-files -z '*.sh' | xargs -0 shellcheck
+        run: python .github/guards/shell_scripts.py
 
       # @req> GUARD-79122074@9WbEAGS3ea8D ldqwzq
       - name: Workflow security
