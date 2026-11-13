@@ -112,14 +112,14 @@ REVIEW = _object(["practices"], {
 
 
 def check(criteria):
-    return _object(["library", "weighed"], {
-        "library": {"anyOf": [LABEL, {"type": "null"}]},
-        "weighed": _list(_object(["name", "kind", "sources", "standing"], {
+    return _object(["weighed"], {
+        "weighed": _list(_object(["name", "kind", "sources", "standing", "use"], {
             "name": LABEL,
             "kind": {"type": "string", "enum": ["library", "example"]},
             "sources": SOURCES,
             "standing": _object(list(criteria),
                                 {one: REASON for one in criteria}),
+            "use": {"type": "boolean"},
         })),
     })
 
