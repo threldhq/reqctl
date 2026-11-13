@@ -1,9 +1,30 @@
 acceptance_criteria:
-- given: a step running a gate whose command discards its failure through an or-list
-    running true
+- given: a step running a gate whose command pipes the gate into another command
   then: the build refuses the change
   when: the build runs
-- given: a step running a gate whose script begins with set +e
+- given: a step running a gate whose command joins the gate to another command with
+    &&
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate whose command separates the gate from another command
+    with ;
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate as the condition of a shell if
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate whose script holds a second line, such as an install
+    before the gate
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate whose command discards its failure through an or-list
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate whose command negates the gate with !
+  then: the build refuses the change
+  when: the build runs
+- given: a step running a gate under a shell other than bash or sh, such as python
+    or pwsh
   then: the build refuses the change
   when: the build runs
 - given: 'a step running a gate under if: false'
@@ -12,20 +33,17 @@ acceptance_criteria:
 - given: a step running a gate in a job that sets continue-on-error
   then: the build refuses the change
   when: the build runs
+- given: a step whose script runs a gate alone, with its arguments, under bash, sh
+    or no shell named
+  then: the build does not refuse the change on that ground
+  when: the build runs
 - given: a step running no gate whose command discards its failure through an or-list
     running true
   then: the build does not refuse the change on that ground
   when: the build runs
-- given: a step running a gate whose command discards its failure through an or-list
-    running exit with a success status
-  then: the build refuses the change
-  when: the build runs
-- given: a step running a gate whose command runs true as the next command of a list
-    after the gate
-  then: the build refuses the change
-  when: the build runs
-- given: a step running a gate whose command negates the gate with !
-  then: the build refuses the change
+- given: a step whose own script checks a condition across several lines and exits
+    non-zero, calling no gate
+  then: the build does not refuse the change on that ground
   when: the build runs
 assessed:
   GUARD-40603760: BjP6UvmNcOQTrpltSyfoTMvDlG8JDaJHQC63C2HKP_c
@@ -37,5 +55,5 @@ citations:
 relations:
   GUARD-40603760: constrains
 status: approved
-text: If a workflow step that runs a gate could end in success after the gate fails,
-  or could fail without failing its job, then the build shall refuse the change.
+text: If a workflow step that runs a gate runs anything besides the gate, or could
+  let its job succeed where the gate fails, then the build shall refuse the change.
