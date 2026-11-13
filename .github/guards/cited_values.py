@@ -6,7 +6,7 @@ import os
 import re
 import sys
 from collections import Counter
-from itertools import takewhile
+from itertools import groupby
 from pathlib import Path
 from re import _constants as sre, _parser
 
@@ -63,7 +63,7 @@ def spellings(name, fields):
 
 def spelled(sub):
     found = [""]
-    for op, av in sub.data:
+    for op, av in sub:
         if op == sre.LITERAL:
             parts = [chr(av)]
         elif op == sre.IN and all(kind == sre.LITERAL for kind, _ in av):
@@ -84,33 +84,43 @@ def spelled(sub):
 
 
 def branched(sub, lists, prefix="", suffix=""):
-    for index, (op, av) in enumerate(sub.data):
-        after = list(takewhile(lambda item: item[0] == sre.LITERAL,
-                               sub.data[index + 1:]))
-        tail = "".join(chr(code) for _, code in after) + (
-            suffix if index + 1 + len(after) == len(sub.data) else "")
-        if op == sre.BRANCH:
-            members = []
-            for branch in av[1]:
-                parts = spelled(branch)
-                if parts is None:
-                    members.append((None, "an alternative of no fixed spelling"))
-                    branched(branch, lists)
-                else:
-                    members.extend((prefix + part + tail,
-                                    repr(prefix + part + tail)) for part in parts)
-            lists.append(("members", members))
-        elif op == sre.IN and all(kind == sre.LITERAL for kind, _ in av):
-            lists.append(("members", [(prefix + chr(code) + tail,
-                                       repr(prefix + chr(code) + tail))
-                                      for _, code in av]))
-        elif op == sre.SUBPATTERN:
-            branched(av[-1], lists, prefix, tail)
-        else:
-            for held in av if isinstance(av, (tuple, list)) else [av]:
-                if isinstance(held, _parser.SubPattern):
-                    branched(held, lists)
-        prefix = prefix + chr(av) if op == sre.LITERAL else ""
+    runs = [list(run) for _, run in
+            groupby(sub, lambda item: spelled([item]) is not None)]
+    texts = [spelled(run) for run in runs]
+    edges = [(prefix if index == 0 else "", suffix if index == len(runs) - 1 else "")
+             for index in range(len(runs))]
+    for index, (run, parts) in enumerate(zip(runs, texts)):
+        before, after = edges[index]
+        if parts is not None:
+            if len(parts) > 1:
+                lists.append(("members", [(before + part + after,
+                                           repr(before + part + after))
+                                          for part in parts]))
+            continue
+        lead = (before if index == 0 else edges[index - 1][0] + texts[index - 1][0]
+                if len(texts[index - 1]) == 1 else "")
+        trail = (after if index == len(runs) - 1 else texts[index + 1][0] + edges[index + 1][1]
+                 if len(texts[index + 1]) == 1 else "")
+        for place, (op, av) in enumerate(run):
+            head = lead if place == 0 else ""
+            tail = trail if place == len(run) - 1 else ""
+            if op == sre.BRANCH:
+                members = []
+                for branch in av[1]:
+                    alternative = spelled(branch)
+                    if alternative is None:
+                        members.append((None, "an alternative of no fixed spelling"))
+                        branched(branch, lists)
+                    else:
+                        members.extend((head + part + tail, repr(head + part + tail))
+                                       for part in alternative)
+                lists.append(("members", members))
+            elif op == sre.SUBPATTERN:
+                branched(av[-1], lists, head, tail)
+            else:
+                for held in av if isinstance(av, (tuple, list)) else [av]:
+                    if isinstance(held, _parser.SubPattern):
+                        branched(held, lists)
 
 
 def literal(node):
