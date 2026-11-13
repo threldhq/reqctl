@@ -141,32 +141,6 @@ def checkers(inputs=DEV_INPUTS, folder=INSTALLERS):
     return re.compile(r"(?<![\w-])(?:" + "|".join(spelled) + r")(?![\w-])")
 
 
-def words_of(run):
-    lexer = shlex.shlex(CONTINUED.sub(" ", run), posix=True,
-                        punctuation_chars=OPERATORS)
-    lexer.commenters = ""
-    lexer.wordchars += "$`{}[]!=*?,~^@%+:/.-#"
-    return list(lexer)
-
-
-def gate_at(words, at, tools):
-    named = Path(words[at]).name
-    moduled = named.startswith("-") or at and words[at - 1] == "-m"
-    if (re.sub(r"^-\w*m", "", named).partition(".")[0] if moduled else named) == PACKAGE:
-        rest = [word for word in words[at + 1:] if not word.startswith("-")]
-        return bool(rest) and rest[0] in JUDGES
-    return bool(SCRIPT.search(words[at]) or tools.fullmatch(named))
-
-
-def invokes(text, tools):
-    try:
-        words = words_of(text)
-    except ValueError:
-        return bool(SCRIPT.search(text) or tools.search(text) or JUDGED.search(text))
-    return any(gate_at(words, at, tools) or " " in word and invokes(word, tools)
-               for at, word in enumerate(words))
-
-
 def gated(step, tools):
     run = str(step.get("run") or "")
     return bool(SCRIPT.search(run) or RUNS.search(run) or tools.search(run)
