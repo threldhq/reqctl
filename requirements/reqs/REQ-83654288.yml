@@ -21,7 +21,7 @@ priority: medium
 relations:
   REQ-26967281: supersedes
   REQ-91999340: depends_on
-status: superseded
+status: deprecated
 text: The product shall state, in the ${plugin_components.implement_skill}, that the
   session, before writing new code rather than extending code that already cites the
   requirement, researches the code of products solving the same kind of problem, in

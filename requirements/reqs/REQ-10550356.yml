@@ -29,7 +29,7 @@ citations:
 priority: medium
 relations:
   REQ-83654288: depends_on
-status: superseded
+status: deprecated
 text: The product shall state, in the ${plugin_components.implement_skill}, that the
   session copies a best-in-class example's code, unchanged or adapted, only where
   the licence of the repository holding the example resolves to the SPDX identifier
