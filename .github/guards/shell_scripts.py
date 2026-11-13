@@ -12,8 +12,8 @@ def scripts():
     return sorted(path for path in found.stdout.split("\0") if path)
 
 
+# @req+ GUARD-79122074@9WbEAGS3ea8D ottz22
 def main():
-    # @req+ GUARD-79122074@9WbEAGS3ea8D j3u5fl
     held = scripts()
     if not held:
         return 0
@@ -22,8 +22,9 @@ def main():
               "-- fix each one")
         return 1
     return 0
-    # @req- j3u5fl
+# @req- ottz22
 
 
+# @req> GUARD-79122074@9WbEAGS3ea8D mwk6y4
 if __name__ == "__main__":
     sys.exit(main())
