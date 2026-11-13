@@ -16,7 +16,6 @@ SPAN = re.compile(r"`([^`]+)`")
 QUOTED = re.compile(r"\"([^\"]*)\"|'([^']*)'")
 LISTED = re.compile(r"[^\s,]+(?:\s*,\s*[^\s,]+)+")
 FIELD = re.compile(r"\s*([\w-]+):\s*(.*?)\s*")
-ZERO_WIDTH = (sre.AT, sre.ASSERT, sre.ASSERT_NOT)
 
 
 def carried(node):
@@ -37,7 +36,8 @@ def canonical(value):
 
 
 def compared(where, entry, held, stated):
-    for field, value in held.items():
+    for field, node in held.items():
+        value = carried(node)
         if isinstance(value, ast.AST):
             yield (f"{where} carries {entry}.{field} as "
                    f"{ast.unparse(value)!r}, which the build cannot compare "
@@ -70,24 +70,15 @@ def spelled(sub):
         elif op == sre.SUBPATTERN:
             parts = spelled(av[-1])
         elif op == sre.BRANCH:
-            parts = alternatives(av[1])
-        elif op in ZERO_WIDTH:
+            subs = [spelled(branch) for branch in av[1]]
+            parts = None if None in subs else [tail for sub in subs for tail in sub]
+        elif op in (sre.AT, sre.ASSERT, sre.ASSERT_NOT):
             parts = [""]
         else:
             return None
         if parts is None:
             return None
         found = [head + tail for head in found for tail in parts]
-    return found
-
-
-def alternatives(branches):
-    found = []
-    for branch in branches:
-        parts = spelled(branch)
-        if parts is None:
-            return None
-        found.extend(parts)
     return found
 
 
@@ -152,11 +143,11 @@ def gathered(node, first, last, carriers):
 
 
 def written(text, path, numbers):
-    front = set()
+    front = ()
     if text and text[0].strip() == "---" and path.endswith(".md"):
         end = next((index for index, line in enumerate(text[1:], 2)
                     if line.strip() == "---"), 1)
-        front = set(range(2, end))
+        front = range(2, end)
     carriers = []
     for number in numbers:
         line = text[number - 1]
@@ -173,8 +164,8 @@ def written(text, path, numbers):
                                          for part in body.split(",")]))
         elif not path.endswith(".md") and QUOTED.search(line):
             carriers.append(("members", [
-                (found[1] if found[1] is not None else found[2],
-                 found[0]) for found in QUOTED.finditer(line)]))
+                (found[found.lastindex], found[0])
+                for found in QUOTED.finditer(line)]))
     return carriers
 
 
@@ -192,15 +183,14 @@ def judged(where, uid, entry, stated, carriers):
         elif kind == "fields":
             fielded.add(entry)
             found.extend(compared(where, entry, {
-                field: [part.strip() for part in text.split(",")]
-                if isinstance(stated[entry].get(field), list) else text
+                field: ast.Constant([part.strip() for part in text.split(",")]
+                                    if isinstance(stated[entry].get(field), list)
+                                    else text)
                 for field, text in held.items()}, stated[entry]))
         elif kind == "dict" and not held.keys() & stated.keys():
             if entry and held.keys() & stated[entry].keys():
                 fielded.add(entry)
-                found.extend(compared(where, entry, {
-                    field: carried(node) for field, node in held.items()},
-                    stated[entry]))
+                found.extend(compared(where, entry, held, stated[entry]))
         elif kind == "dict":
             for name, fields in held.items():
                 if name not in stated:
@@ -209,9 +199,8 @@ def judged(where, uid, entry, stated, carriers):
                     continue
                 counts[name] += 1
                 if isinstance(fields, ast.Dict):
-                    found.extend(compared(where, name, {
-                        field: carried(node)
-                        for field, node in keyed(fields).items()}, stated[name]))
+                    found.extend(compared(where, name, keyed(fields),
+                                          stated[name]))
                 else:
                     found.append(f"{where} carries {name} as "
                                  f"{ast.unparse(fields)!r} -- write its "
