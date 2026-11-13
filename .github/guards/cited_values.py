@@ -145,6 +145,8 @@ def gathered(node, first, last, carriers):
                     gathered(rest, first, last, carriers)
             else:
                 members.append(member(element))
+                if not literal(element):
+                    gathered(element, first, last, carriers)
         carriers.append(("members", members))
     elif (inside and isinstance(node, ast.Call)
           and isinstance(node.func, ast.Attribute)
