@@ -2,7 +2,7 @@
 # @req+ REQ-38288492@4l6tMNjp19tH 7hamkf
 # @req> REQ-56117965@u0WCTiiKPKcy bk3ja2
 name: recall
-# @req> REQ-20016686@FStfO5nFlti9 tmyab3
+# @req> REQ-20016686@dh1GpJgCJg38 tmyab3
 description: Names, from one shard of the corpus, the items bearing on a run's proposals. Spawned only by the elucidate skill's step 2; not for general work.
 # @req> REQ-29981224@X6wmVnpxwiio xjqq7j
 # @req> elucidate_agents.recall@ei2HybpgEh9b mj3icf
