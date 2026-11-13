@@ -51,18 +51,15 @@ that item is deprecated, ask nothing, and remove the citation with
 `reqctl untag ID`.
 <!-- @req- hr6rvl -->
 
-<!-- @req+ REQ-83654288@zCIRC3g5z-mw sesbd4 -->
 Before writing new code rather than extending code that already cites the
 requirement, research the code of products solving the same kind of problem,
 in any field, for a best-in-class example of that code. The pull request body
 names the sources read and the example chosen, or states that none could be
 read.
-<!-- @req- sesbd4 -->
 
-<!-- @req+ REQ-10550356@x68qj9sz8bcL xtehwt -->
 Copy an example's code, unchanged or adapted, only where three things hold: the
 licence of the repository holding it resolves to one of these SPDX identifiers,
-<!-- @req> copyable_licences@uFytX5GuhrRB kagdws -->
+<!-- @req> copyable_licences@ns-krxMVBL57 kagdws -->
 MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC, 0BSD;
 the licence of the repository receiving it resolves to an SPDX identifier; and
 the first licence is compatible with the second. Then meet the first licence's
@@ -70,7 +67,6 @@ conditions in the third-party notices file. Where the example's repository
 states no licence, either licence resolves to no SPDX identifier, the example's
 licence is copyleft, weak copyleft included, or whether the two are compatible
 cannot be told, copy none of it and write the code from the idea.
-<!-- @req- xtehwt -->
 
 <!-- @req+ REQ-36108971@NoDvOdAAqqbz xr4cbg -->
 Record each copy in `THIRD_PARTY_NOTICES.md` at the repository's root, creating

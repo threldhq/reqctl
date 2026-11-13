@@ -1,7 +1,7 @@
 ---
 # @req+ REQ-38288492@4l6tMNjp19tH ioxe55
 name: coverage
-# @req> REQ-20016686@FStfO5nFlti9 4du72q
+# @req> REQ-20016686@dh1GpJgCJg38 4du72q
 description: Reads the owner's words against a run's proposed statements and its declined list, and names what neither accounts for. Spawned only by the elucidate skill's step 2; not for general work.
 # @req> REQ-29981224@X6wmVnpxwiio lwwpzc
 # @req> elucidate_agents.coverage@8238gDg7YRN9 vgvsh2

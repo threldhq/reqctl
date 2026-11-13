@@ -1,8 +1,8 @@
 ---
 # @req+ REQ-38288492@4l6tMNjp19tH ptkrb7
 name: best-in-class
-# @req> REQ-20016686@FStfO5nFlti9 ookqxt
-description: Makes the best-in-class review of a run's owner's words -- what best in class in each idea's field does, and what market leaders do in fields similar to the governed software -- every practice resting on a page it read. Spawned only by the elucidate skill's step 1; not for general work.
+# @req> REQ-20016686@dh1GpJgCJg38 ookqxt
+description: Makes the best-in-class review of a run's owner's words -- what best in class in each idea's field does, and what market leaders do in fields similar to the governed software -- every practice resting on a page it read. Spawned only by the elucidate skill's step 1 and the implement skill; not for general work.
 # @req> REQ-29981224@X6wmVnpxwiio ynjmyj
 # @req> elucidate_agents.best_in_class@VbNPoQFWiNwE ptgh24
 tools: WebSearch, WebFetch, Write

@@ -2,7 +2,7 @@
 # @req+ REQ-38288492@4l6tMNjp19tH cartup
 # @req> REQ-56117965@u0WCTiiKPKcy mgqpfl
 name: judge
-# @req> REQ-20016686@FStfO5nFlti9 f7rxlw
+# @req> REQ-20016686@dh1GpJgCJg38 f7rxlw
 description: Judges one of a run's proposals against the corpus, as a judge, a group judge or a final judge. Spawned only by the elucidate skill's step 2; not for general work.
 # @req> REQ-29981224@X6wmVnpxwiio zkbkk5
 # @req> elucidate_agents.judge@XykGj36UGqYO 764rvw

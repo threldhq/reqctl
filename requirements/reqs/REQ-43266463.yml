@@ -2,6 +2,9 @@ acceptance_criteria: []
 assessed:
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+citations:
+  4vx66w: EfN0yNspeHa7X6IRe9-cf4fW8qfDRIhlTf6I9Zv1ufw
+  r6hgpy: qqiDCxjrc9CXB5eN_BESjRfqeKmOqOwyNUv5BDQos3s
 priority: medium
 relations: {}
 status: approved
