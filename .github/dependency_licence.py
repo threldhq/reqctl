@@ -31,7 +31,7 @@ def added(repository, base, head, token):
     if not isinstance(held, list) or not all(isinstance(one, dict) for one in held):
         raise SystemExit("::error::GitHub's dependency review answered no list of "
                          "changes -- run the gate again")
-    if pending is not None:
+    if pending and pending.strip():
         try:
             said = base64.b64decode(pending).decode(errors="replace").strip()
         except ValueError:
