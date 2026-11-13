@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
+import http.client
 import json
 import os
 import sys
-import urllib.error
 import urllib.request
 
 COMPARE = "https://api.github.com/repos/{}/dependency-graph/compare/{}...{}"
@@ -10,6 +10,7 @@ SECONDS = 30
 # @req> copyable_licences@ns-krxMVBL57 r3cf6d
 COPYABLE = ("Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MIT", "0BSD")
 UNDETECTED = ("NOASSERTION", "LicenseRef-")
+UNPROCESSED = "x-github-dependency-graph-snapshot-warnings"
 
 
 def added(repository, base, head, token):
@@ -19,14 +20,17 @@ def added(repository, base, head, token):
                  **({"Authorization": f"Bearer {token}"} if token else {})})
     try:
         with urllib.request.urlopen(request, timeout=SECONDS) as answer:
-            held = json.load(answer)
-    except (urllib.error.URLError, TimeoutError, ValueError) as broken:
+            held, pending = json.load(answer), answer.headers.get(UNPROCESSED)
+    except (OSError, http.client.HTTPException, ValueError) as broken:
         raise SystemExit(f"::error::cannot read the dependencies {base}...{head} adds "
                          f"in {repository}: {broken} -- run the gate again once "
                          "GitHub's dependency review answers") from broken
     if not isinstance(held, list) or not all(isinstance(one, dict) for one in held):
         raise SystemExit("::error::GitHub's dependency review answered no list of "
                          "changes -- run the gate again")
+    if pending:
+        raise SystemExit("::error::GitHub's dependency graph has not processed "
+                         f"{base}...{head} yet -- run the gate again")
     return [one for one in held if one.get("change_type") == "added"]
 
 
@@ -37,7 +41,8 @@ def fault(dependency):
     if not isinstance(licence, str) or not licence.strip() or licence.startswith(UNDETECTED):
         return (f"{named} adds a dependency whose licence cannot be detected -- "
                 f"remove it, or add one under {', '.join(COPYABLE)}")
-    if not any(choice.strip(" ()") in COPYABLE for choice in licence.split(" OR ")):
+    words = licence.replace("(", " ").replace(")", " ").split()
+    if {"AND", "WITH"} & {word.upper() for word in words} or not set(words) & set(COPYABLE):
         return (f"{named} adds a dependency under {licence} -- remove it, or add "
                 f"one under {', '.join(COPYABLE)}")
     return None
