@@ -5,6 +5,8 @@ assessed:
   copyable_licences.apache_2_0: 5zF9OFNgypQYO8hHuD9mVJUpphEWH1PzS_ncMvZpRls
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  a2jztj: 9m1ewL8tpG3o3lJ1HV9x3GuqkX4CmlfMdmd7FhVGf6c
 priority: medium
 relations:
   REQ-36108971: constrains

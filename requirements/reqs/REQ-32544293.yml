@@ -8,6 +8,8 @@ assessed:
   best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  khjpxx: ribmHLrmab_131Dy8QtPfqAKsonMeAlrjA8PziAD2IA
 priority: medium
 relations:
   REQ-91999340: constrains

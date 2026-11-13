@@ -2,6 +2,8 @@ assessed:
   best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
   maintenance_window: zq-3krXKtoYNqRR-h4dV_FAWCOEWezlKG0uDcdAx3Kk
   maintenance_window.*: aDsN12Tz_bnDObfdmviGEUEbZtfqz4LTCtacHfRw9Fk
+citations:
+  fkrz2o: uT4QCGQPc7dnEhwjdc56FNnh_Dwy1u4mb0VO1q_vHNg
 entries:
   adoption:
     definition: Significant use of the library or of the product holding the example

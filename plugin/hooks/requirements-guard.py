@@ -428,7 +428,7 @@ PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 FINGERPRINTS = frozenset({
     "956d657e9d16f55064156ce6c470dd51f4589ad5689924f0ad7d45c316b6e776",
     "1e0fb1ccfa26bb4cdd7d8d07140104e66bbed210807ed59322a01aa213b64b81",
-    "6d59b5fd67889bf8a3175754dd8b5b45ea2c0d733eab93e3f3b2ad38f26ca8da",
+    "79d54b566f287c803da493ba4d47d610d49904bceb900b643a1204a33a8d3222",
 })
 # @req- kbbyh4
 PLUGIN_SPELLINGS = {str(PLUGIN_ROOT), os.path.abspath(Path(__file__).parent.parent)}

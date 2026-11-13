@@ -5,6 +5,8 @@ assessed:
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
   selection_criteria: bPSGqe3d9rCc17StyTRYrnxBhrfzLhA8FRCdEwjXznM
   selection_criteria.*: i8HJ-6tZA1ckBAFKcgkXAZ65KM3b96i9vSIVK8fg55o
+citations:
+  ze536s: qU-oCmr6iLURlvYOWbCapX6PKyPCGuxTNhFmYv2rBRg
 priority: medium
 relations: {}
 status: approved
