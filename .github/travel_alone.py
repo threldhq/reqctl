@@ -121,9 +121,8 @@ def classify(base):
                  if textual[path] and repins_only(fork, path)])
     if COMPONENTS in governed and COMPONENTS not in pinned:
         added, paths = added_paths(fork)
-        if (only(fork, COMPONENTS, CARRIED, dropped=added)
-                and all(covered(paths, path) for path in other
-                        if path not in pinned)):
+        if (all(covered(paths, path) for path in other if path not in pinned)
+                and only(fork, COMPONENTS, CARRIED, dropped=added)):
             pinned.append(COMPONENTS)
     return ([path for path in governed if path not in pinned],
             [path for path in other if path not in pinned], pinned)
