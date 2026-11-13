@@ -51,18 +51,22 @@ jobs:
           }
           mark deps '^reqctl/(requirements|pyproject\.toml$)'
 
-      # @req> GUARD-80541636@FrimpbfW1XMa n33vbn
-      - name: No credential in the change
+      # @req+ GUARD-80541636@FrimpbfW1XMa 37lpdi
+      - name: Install gitleaks
+        run: .github/install-gitleaks.sh "$RUNNER_TEMP/bin"
+
+      - name: No credential in the commits this pull request adds
+        if: github.event_name == 'pull_request'
         env:
           BASE: ${{ github.base_ref }}
-        run: |
-          .github/install-gitleaks.sh "$RUNNER_TEMP/bin"
-          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
-            "$RUNNER_TEMP/bin/gitleaks" git . --no-banner \
-              --log-opts="origin/$BASE..HEAD"
-          else
-            "$RUNNER_TEMP/bin/gitleaks" dir . --no-banner
-          fi
+        run: >-
+          "$RUNNER_TEMP/bin/gitleaks" git . --no-banner
+          --log-opts="origin/$BASE..HEAD"
+
+      - name: No credential in the tracked files
+        if: github.event_name != 'pull_request'
+        run: '"$RUNNER_TEMP/bin/gitleaks" dir . --no-banner'
+      # @req- 37lpdi
 
       # @req> REQ-51060455@Z5EVUURxm1nV qzo4x7
       - name: Hook exits are explicit decisions
@@ -167,7 +171,7 @@ jobs:
       # @req> GUARD-40603760@BjP6UvmNcOQT fusl76
       # @req> GUARD-52037270@OztX8T4vOmsH whtw5s
       # @req> GUARD-72877772@JfdZ18LPQLEi wg3djt
-      # @req> GUARD-84344643@6ZlLWYpfxwzP dbsuxc
+      # @req> GUARD-84344643@C0RxmQgbeF_W dbsuxc
       # @req> GUARD-85664071@zrnITtEG0Lqc baiftz
       # @req> REQ-74823322@YWZT0Srw2y2d bnanl5
       # @req> REQ-81795630@6p2bA0ZHqY-j tpnudv
@@ -180,7 +184,7 @@ jobs:
 
       # @req> GUARD-79122074@9WbEAGS3ea8D p5n7ah
       - name: Shell scripts
-        run: git ls-files -z '*.sh' | xargs -0 shellcheck
+        run: python .github/guards/shell_scripts.py
 
       # @req> GUARD-79122074@9WbEAGS3ea8D ldqwzq
       - name: Workflow security
@@ -240,17 +244,23 @@ jobs:
       - name: The guard hook fingerprints the plugin files naming the corpus
         run: python .github/guards/fingerprints.py
 
-      # @req> GUARD-70400787@-g-3MXzRn6hr ap6aqt
+      # @req+ GUARD-70400787@-g-3MXzRn6hr mjgxqo
+      - name: Open the block of citations this change touches
+        if: github.event_name == 'pull_request'
+        run: echo '```' >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+
       - name: Citations this change touches
         if: github.event_name == 'pull_request'
         env:
           BASE_REF: ${{ github.base_ref }}
-        run: |
-          {
-            echo '```'
-            reqctl compare --base "origin/$BASE_REF"
-            echo '```'
-          } >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+        run: >-
+          reqctl compare --base "origin/$BASE_REF"
+          >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+
+      - name: Close the block of citations this change touches
+        if: github.event_name == 'pull_request'
+        run: echo '```' >> "${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+      # @req- mjgxqo
 
       # @req> GUARD-50228923@hESHdAl7Kn_w scvm7k
       # @req> GUARD-22794969@9zSROQYCCtPU qxcqba

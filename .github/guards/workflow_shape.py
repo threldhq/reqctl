@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import configparser
 import re
+import shlex
 import sys
 import tomllib
 from pathlib import Path
@@ -53,16 +54,18 @@ CHECKOUTS = (".reqctl", "$RUNNER_TEMP/reqctl")
 LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME)) for root in ("", *CHECKOUTS))}
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
-RUNS = re.compile(r"(?<![\w.-])reqctl\s+[\w-]|-m\s*reqctl\b")
-FAILS = re.compile(r"\bexit\s+[1-9]|\bsys\.exit\(")
-SWALLOWED = re.compile(r"\|\|\s*(?:true|:)(?![\w-])")
-JOINS = re.compile(r"(\|\||&&|;|\||\n)")
-STOPPING = re.compile(r"\s*(?:exit\s+(?:[1-9]|\$\?)|false\b)")
-SUCCEEDS = re.compile(r"\s*(?:true|:|exit\s+0)\s*(?:#.*)?$")
-UNSTOPPED = re.compile(r"\bset\s+(?:\+\w*e|\+o\s+errexit)")
-SHELLS = {"bash", "sh", "dash", "ksh", "zsh"}
-STOPS = re.compile(r"-\w*e\w*")
-RESUMES = re.compile(r"\+\w*e\w*")
+RUNS = re.compile(r"(?<![^\s;&|(){}!`'\"/])reqctl[\"']?[ \t]+(?:-\S+[ \t]+)*[a-z]"
+                  r"|-m[ \t]*reqctl\b")
+SCRIPTED = re.compile(r"(?:^|/)(?:" + SCRIPT.pattern + r")$")
+ASSIGNED = re.compile(r"\w+=.*")
+PYTHON = re.compile(r"python[\d.]*")
+PUNCTUATION = re.compile(r"[;&|()<>]+")
+REDIRECTION = re.compile(r"[<>]{1,3}&?|&>{1,2}")
+FAILING = re.compile(r"\b(?:failure|cancelled)\b", re.I)
+SUBSTITUTED = re.compile(r"`|\$\(")
+READABLE = {"bash", "sh"}
+STOPPING = re.compile(r"[-+][euxvo]+|pipefail|errexit|nounset|xtrace"
+                      r"|--noprofile|--norc")
 CONTEXT = re.compile(r"[A-Za-z_][\w-]*\s*[.(\[]")
 ALWAYS = re.compile(r"\$\{\{\s*true\s*\}\}|true", re.I)
 
@@ -140,9 +143,44 @@ def checkers(inputs=DEV_INPUTS, folder=INSTALLERS):
 
 def gated(step, tools):
     run = str(step.get("run") or "")
-    return bool(SCRIPT.search(run) or RUNS.search(run) or IMPORTS.search(run)
-                or FAILS.search(run) or tools.search(run)
+    return bool(SCRIPT.search(run) or RUNS.search(run) or tools.search(run)
                 or str(step.get("uses") or "").startswith("."))
+
+
+def commanded(words, tools):
+    while words and ASSIGNED.fullmatch(words[0]):
+        words = words[1:]
+    if not words:
+        return False
+    name, rest = Path(words[0]).name, words[1:]
+    if PYTHON.fullmatch(name):
+        named = next((word for word in rest if not word.startswith("-")), "")
+        return rest[:2] == ["-m", PACKAGE] or bool(SCRIPTED.search(named))
+    return (name == PACKAGE or bool(tools.fullmatch(name))
+            or bool(SCRIPTED.search(words[0])))
+
+
+def alone(run, tools):
+    text = CONTINUED.sub(" ", run).strip()
+    if "\n" in text or SUBSTITUTED.search(text):
+        return False
+    lexer = shlex.shlex(text, posix=True, punctuation_chars=True)
+    lexer.commenters = ""
+    try:
+        words = list(lexer)
+    except ValueError:
+        return False
+    return commanded(words, tools) and not any(
+        PUNCTUATION.fullmatch(word) and not REDIRECTION.fullmatch(word)
+        for word in words)
+
+
+def readable(shell):
+    words = str(shell or "bash").split()
+    if words[-1:] == ["{0}"]:
+        words = words[:-1]
+    return (bool(words) and words[0] in READABLE
+            and all(STOPPING.fullmatch(word) for word in words[1:]))
 
 
 def shell_of(node, inherited):
@@ -151,77 +189,41 @@ def shell_of(node, inherited):
     return run.get("shell", inherited) if isinstance(run, dict) else inherited
 
 
-def always_false(condition):
+def skips(condition):
     if condition is None or condition is True:
         return False
     text = str(condition).strip()
-    return not CONTEXT.search(text) and not ALWAYS.fullmatch(text)
-
-
-def unstopped(shell):
-    words = re.sub(r"[\"']", "", str(shell or "")).split()
-    if "{0}" not in words:
-        return False
-    words = words[:words.index("{0}")]
-    if words and Path(words[0]).name == "env":
-        words = words[1:]
-    if not words or Path(words[0]).name not in SHELLS:
-        return False
-    stops = False
-    for word, after in zip(words[1:], words[2:] + [""]):
-        if STOPS.fullmatch(word) or (word == "-o" and after == "errexit"):
-            stops = True
-        elif RESUMES.fullmatch(word) or (word == "+o" and after == "errexit"):
-            stops = False
-    return not stops
-
-
-def masked(run, tools):
-    parts = JOINS.split(run)
-    segments, joins = parts[0::2], parts[1::2] + [""]
-    for at, segment in enumerate(segments):
-        if not (SCRIPT.search(segment) or RUNS.search(segment)
-                or IMPORTS.search(segment) or tools.search(segment)):
-            continue
-        if segment.lstrip().startswith("!"):
-            return True
-        while joins[at] == "&&":
-            at += 1
-        after = next((one for one in segments[at + 1:] if one.strip()), "")
-        if (joins[at] == "||" and not STOPPING.match(after)
-                or joins[at] in (";", "\n") and SUCCEEDS.match(after)):
-            return True
-    return False
+    return FAILING.search(text) or not (CONTEXT.search(text)
+                                        or ALWAYS.fullmatch(text))
 
 
 def swallowed(name, job, steps, where, shell, tools):
+    # @req+ GUARD-84344643@C0RxmQgbeF_W sfx7sh
     gating = [step for step in steps if gated(step, tools)]
     found = []
-    # @req+ GUARD-84344643@6ZlLWYpfxwzP sfx7sh
     if gating and job.get("continue-on-error"):
         found.append(f"{where}: job {name} runs a gate and continues on error "
                      "-- remove continue-on-error")
-    if gating and always_false(job.get("if")):
-        found.append(f"{where}: job {name} runs a gate under a constant "
-                     "condition other than true -- remove the condition")
+    if gating and skips(job.get("if")):
+        found.append(f"{where}: job {name} runs a gate under a condition that "
+                     "skips it while the run passes -- remove the condition")
     for step in gating:
-        run = CONTINUED.sub(" ", str(step.get("run") or ""))
         named = step.get("name")
-        if SWALLOWED.search(run):
-            found.append(f"{where}: step {named!r} runs a gate and discards its "
-                         "failure with || true or || : -- remove it")
-        if masked(run, tools):
-            found.append(f"{where}: step {named!r} runs a gate whose failure "
-                         "can still end in success -- remove the ! before the "
-                         "gate, or the || or ; true after it")
-        if UNSTOPPED.search(run) or unstopped(step.get("shell", shell)):
-            found.append(f"{where}: step {named!r} runs a gate in a shell that "
-                         "does not stop on a failing command -- remove set +e, "
-                         "or give the shell -e")
-        if always_false(step.get("if")):
+        if "run" in step:
+            if not alone(str(step["run"] or ""), tools):
+                found.append(f"{where}: step {named!r} runs a gate together "
+                             "with another command -- give the gate a step of "
+                             "its own that runs the gate and its arguments "
+                             "alone")
+            stepped = step.get("shell", shell)
+            if not readable(stepped):
+                found.append(f"{where}: step {named!r} runs a gate under shell "
+                             f"{stepped!r}, which the build cannot read -- run "
+                             "it under bash or sh")
+        if skips(step.get("if")):
             found.append(f"{where}: step {named!r} runs a gate under a "
-                         "constant condition other than true -- remove the "
-                         "condition")
+                         "condition that skips it while the run passes -- "
+                         "remove the condition")
     # @req- sfx7sh
     return found
 
@@ -509,7 +511,7 @@ def runs_of(text):
 # @req> GUARD-52037270@OztX8T4vOmsH z3qmtw
 # @req> GUARD-24264620@IECSQ_EeiXfC c2mpcx
 # @req> GUARD-12128145@mFuOqNbkyV1o 6xrg3i
-# @req> GUARD-84344643@6ZlLWYpfxwzP yklz3x
+# @req> GUARD-84344643@C0RxmQgbeF_W yklz3x
 # @req> GUARD-20209566@zkKPlDbnzFuA iyj7q3
 # @req> GUARD-20154572@z2_hbXJO9sHn 6lheox
 # @req> REQ-74823322@YWZT0Srw2y2d q2omdp
@@ -570,7 +572,7 @@ def main():
 # @req> GUARD-52037270@OztX8T4vOmsH azlptq
 # @req> GUARD-24264620@IECSQ_EeiXfC p5qlkx
 # @req> GUARD-12128145@mFuOqNbkyV1o 2oldcn
-# @req> GUARD-84344643@6ZlLWYpfxwzP cackjz
+# @req> GUARD-84344643@C0RxmQgbeF_W cackjz
 # @req> GUARD-20209566@zkKPlDbnzFuA qanxgx
 # @req> GUARD-20154572@z2_hbXJO9sHn 33y44j
 # @req> REQ-74823322@YWZT0Srw2y2d j2aed6
