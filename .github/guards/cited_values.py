@@ -96,6 +96,9 @@ def branched(sub, lists):
                     members.extend((prefix + part, repr(prefix + part))
                                    for part in parts)
             lists.append(("members", members))
+        elif op == sre.IN and all(kind == sre.LITERAL for kind, _ in av):
+            lists.append(("members", [(prefix + chr(code), repr(prefix + chr(code)))
+                                      for _, code in av]))
         else:
             for held in av if isinstance(av, (tuple, list)) else [av]:
                 if isinstance(held, _parser.SubPattern):
@@ -219,7 +222,12 @@ def judged(where, uid, entry, stated, carriers):
                 elif not names:
                     found.append(f"{where} carries {shown}, which the corpus "
                                  f"does not state for {uid}")
-                counts.update(names or [])
+                elif len(names) > 1:
+                    found.append(f"{where} carries {shown}, which spells "
+                                 f"{', '.join(names)} at once -- write the "
+                                 "value of one entry")
+                else:
+                    counts.update(names)
     if entry is None or stated[entry] or counts or fielded:
         found.extend(f"{where} does not carry {name}, an entry the corpus "
                      f"states for {uid}"
@@ -291,6 +299,9 @@ def main():
     contexts = read("context", *cited) if cited else []
     if not isinstance(contexts, list):
         raise SystemExit(f"cannot read context: {contexts}")
+    if sorted(item["uid"] for item in contexts) != cited:
+        raise SystemExit(f"cannot read context: asked for {cited}, read "
+                         f"{sorted(item['uid'] for item in contexts)}")
     found, checked = faults(citations,
                             {item["uid"]: item["entries"] for item in contexts})
     for fault in found:
