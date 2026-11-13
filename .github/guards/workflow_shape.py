@@ -145,7 +145,8 @@ def words_of(run):
 
 def gate_at(words, at, tools):
     named = Path(words[at]).name
-    if named == PACKAGE or at and words[at - 1] == "-m" and named.partition(".")[0] == PACKAGE:
+    moduled = named.startswith("-") or at and words[at - 1] == "-m"
+    if (re.sub(r"^-\w*m", "", named).partition(".")[0] if moduled else named) == PACKAGE:
         rest = [word for word in words[at + 1:] if not word.startswith("-")]
         return bool(rest) and rest[0] in JUDGES
     return bool(SCRIPT.search(words[at]) or tools.fullmatch(named))
