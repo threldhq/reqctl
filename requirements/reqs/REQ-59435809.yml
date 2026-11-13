@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations: {}
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  [best-in-class check](best_in_class_check) states whether an existing library should
+  be used instead of writing the code.
+type: functional
+verification: inspection

@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.best_in_class_agent: u1uaiUuYFzYo5iFrDTEntEfYwc19prv4BbSVmvAHnvM
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+  selection_criteria: bPSGqe3d9rCc17StyTRYrnxBhrfzLhA8FRCdEwjXznM
+  selection_criteria.*: i8HJ-6tZA1ckBAFKcgkXAZ65KM3b96i9vSIVK8fg55o
+priority: medium
+relations: {}
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session spawns the ${plugin_components.best_in_class_agent}, with a prompt naming
+  each of the ${selection_criteria}, to make the [best-in-class check](best_in_class_check).
+type: functional
+verification: inspection

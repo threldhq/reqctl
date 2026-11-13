@@ -8,6 +8,7 @@ entries:
   baseline_match: {}
   baseline_numbering: {}
   corpus_validity: {}
+  dependency_licence: {}
   stamp_admission: {}
   taxonomy: {}
   traceability: {}

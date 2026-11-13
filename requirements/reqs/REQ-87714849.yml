@@ -1,0 +1,17 @@
+acceptance_criteria: []
+assessed:
+  REQ-36108971: NoDvOdAAqqbzW_auasomNw0OzPtYxNnWIUFH_xY1zl8
+  copyable_licences: DEbCisObbtDRW8rf0vPIxbudFeeBtKEQVc9kQZRqU3w
+  copyable_licences.apache_2_0: 5zF9OFNgypQYO8hHuD9mVJUpphEWH1PzS_ncMvZpRls
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-36108971: constrains
+status: approved
+text: Where a copied file's licence is ${copyable_licences.apache_2_0} and the repository
+  holding the file holds a NOTICE file, the product shall state, in the ${plugin_components.implement_skill},
+  that the session carries the attribution notices of that NOTICE file into the third-party
+  notices file.
+type: functional
+verification: inspection

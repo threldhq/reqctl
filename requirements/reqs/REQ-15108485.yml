@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  copyable_licences: DEbCisObbtDRW8rf0vPIxbudFeeBtKEQVc9kQZRqU3w
+  copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations: {}
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session adds a dependency only where the dependency's licence resolves to the SPDX
+  identifier of one of the ${copyable_licences}.
+type: functional
+verification: inspection

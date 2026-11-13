@@ -1,6 +1,11 @@
 acceptance_criteria:
-- given: the [front matter](front_matter) of each agent named in elucidate_agents
+- given: the [front matter](front_matter) of an agent named in elucidate_agents other
+    than the best-in-class agent
   then: it states, in whatever words, that only the elucidate skill spawns the agent
+  when: its description field is read
+- given: the [front matter](front_matter) of the best-in-class agent
+  then: it states, in whatever words, that only the elucidate skill and the implement
+    skill spawn the agent
   when: its description field is read
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
@@ -8,6 +13,9 @@ assessed:
   elucidate_agents: y2Sr2QodpAyI8vbYZQU7o4XzYpU4fUprt5dPxAV7ccE
   elucidate_agents.*: pPPDqP4DWFzJR2_R8b053n0dw-vUsMwzdhs7I61ub2U
   front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.best_in_class_agent: u1uaiUuYFzYo5iFrDTEntEfYwc19prv4BbSVmvAHnvM
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
 citations:
   4du72q: ISaHzFn5Tytylf7bKRzCrQTLYBCRwNP7YUtOA38oTSA
   f7rxlw: Avt-mkHz1k4NG1ktXs7S3d3HRZDhNPTZDB0-ZM7QOyc
@@ -18,8 +26,9 @@ relations:
   REQ-38288492: depends_on
   REQ-56117965: depends_on
 status: approved
-text: The product shall state, in the description field of the [front matter](front_matter)
-  of each agent named in ${elucidate_agents}, that only the elucidate skill spawns
-  the agent.
+text: 'The product shall state, in the description field of the [front matter](front_matter)
+  of each agent named in ${elucidate_agents}, the skills that spawn the agent: the
+  elucidate skill alone, or, for the ${plugin_components.best_in_class_agent}, the
+  elucidate skill and the ${plugin_components.implement_skill}.'
 type: functional
 verification: inspection

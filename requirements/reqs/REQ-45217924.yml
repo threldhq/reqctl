@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-59435809: bHuMKX1_pkbzTqgkCFG5ERD-ccCuQy4j7iNOgRGzMws
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-59435809: depends_on
+status: approved
+text: Where the [best-in-class check](best_in_class_check) states that an existing
+  library should be used, the product shall state, in the ${plugin_components.implement_skill},
+  that the session adds that library as a dependency rather than writing the code.
+type: functional
+verification: inspection
