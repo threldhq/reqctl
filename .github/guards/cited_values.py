@@ -73,7 +73,9 @@ def spelled(sub):
         elif op == sre.BRANCH:
             subs = [spelled(branch) for branch in av[1]]
             parts = None if None in subs else [tail for sub in subs for tail in sub]
-        elif op in (sre.AT, sre.ASSERT, sre.ASSERT_NOT):
+        elif op == sre.ATOMIC_GROUP:
+            parts = spelled(av)
+        elif op == sre.AT:
             parts = [""]
         else:
             return None
@@ -84,23 +86,19 @@ def spelled(sub):
 
 
 def branched(sub, lists, prefix="", suffix=""):
+    sub = ([(sre.LITERAL, ord(char)) for char in prefix] + list(sub)
+           + [(sre.LITERAL, ord(char)) for char in suffix])
     runs = [list(run) for _, run in
             groupby(sub, lambda item: spelled([item]) is not None)]
     texts = [spelled(run) for run in runs]
-    edges = [(prefix if index == 0 else "", suffix if index == len(runs) - 1 else "")
-             for index in range(len(runs))]
     for index, (run, parts) in enumerate(zip(runs, texts)):
-        before, after = edges[index]
         if parts is not None:
             if len(parts) > 1:
-                lists.append(("members", [(before + part + after,
-                                           repr(before + part + after))
-                                          for part in parts]))
+                lists.append(("members", [(text, repr(text)) for text in parts]))
             continue
-        lead = (before if index == 0 else edges[index - 1][0] + texts[index - 1][0]
-                if len(texts[index - 1]) == 1 else "")
-        trail = (after if index == len(runs) - 1 else texts[index + 1][0] + edges[index + 1][1]
-                 if len(texts[index + 1]) == 1 else "")
+        lead = texts[index - 1][0] if index and len(texts[index - 1]) == 1 else ""
+        trail = (texts[index + 1][0]
+                 if index + 1 < len(runs) and len(texts[index + 1]) == 1 else "")
         for place, (op, av) in enumerate(run):
             head = lead if place == 0 else ""
             tail = trail if place == len(run) - 1 else ""
@@ -110,7 +108,7 @@ def branched(sub, lists, prefix="", suffix=""):
                     alternative = spelled(branch)
                     if alternative is None:
                         members.append((None, "an alternative of no fixed spelling"))
-                        branched(branch, lists)
+                        branched(branch, lists, head, tail)
                     else:
                         members.extend((head + part + tail, repr(head + part + tail))
                                        for part in alternative)
