@@ -54,12 +54,14 @@ CHECKOUTS = (".reqctl", "$RUNNER_TEMP/reqctl")
 LOCKS = {DEV_LOCK, *(Path(root, DEV_LOCK.with_name(RUNTIME)) for root in ("", *CHECKOUTS))}
 SCRIPT = re.compile(GATE.pattern
                     + r"|\.github/(?:corpus_gates|travel_alone|baseline_number)\.py")
-RUNS = re.compile(r"(?<![^\s;&|(){}!`'\"/])reqctl[\"']?[ \t]+(?:--json[ \t]+)?[a-z]"
+RUNS = re.compile(r"(?<![^\s;&|(){}!`'\"/])reqctl[\"']?[ \t]+(?:-\S+[ \t]+)*[a-z]"
                   r"|-m[ \t]*reqctl\b")
 SCRIPTED = re.compile(r"(?:^|/)(?:" + SCRIPT.pattern + r")$")
 ASSIGNED = re.compile(r"\w+=.*")
 PYTHON = re.compile(r"python[\d.]*")
-OPERATORS = re.compile(r"[;&|()]+")
+PUNCTUATION = re.compile(r"[;&|()<>]+")
+REDIRECTION = re.compile(r"[<>]{1,3}&?|&>{1,2}|<>")
+FAILING = re.compile(r"\b(?:failure|cancelled)\s*\(")
 SUBSTITUTED = re.compile(r"`|\$\(")
 READABLE = {"bash", "sh"}
 STOPPING = re.compile(r"[-+][euxvo]+|pipefail|errexit|nounset|xtrace"
@@ -169,7 +171,8 @@ def alone(run, tools):
     except ValueError:
         return False
     return commanded(words, tools) and not any(
-        OPERATORS.fullmatch(word) for word in words)
+        PUNCTUATION.fullmatch(word) and not REDIRECTION.fullmatch(word)
+        for word in words)
 
 
 def readable(shell):
@@ -186,11 +189,12 @@ def shell_of(node, inherited):
     return run.get("shell", inherited) if isinstance(run, dict) else inherited
 
 
-def always_false(condition):
+def skips(condition):
     if condition is None or condition is True:
         return False
     text = str(condition).strip()
-    return not CONTEXT.search(text) and not ALWAYS.fullmatch(text)
+    return (bool(FAILING.search(text))
+            or not CONTEXT.search(text) and not ALWAYS.fullmatch(text))
 
 
 def swallowed(name, job, steps, where, shell, tools):
@@ -200,9 +204,9 @@ def swallowed(name, job, steps, where, shell, tools):
     if gating and job.get("continue-on-error"):
         found.append(f"{where}: job {name} runs a gate and continues on error "
                      "-- remove continue-on-error")
-    if gating and always_false(job.get("if")):
-        found.append(f"{where}: job {name} runs a gate under a constant "
-                     "condition other than true -- remove the condition")
+    if gating and skips(job.get("if")):
+        found.append(f"{where}: job {name} runs a gate under a condition that "
+                     "skips it while the run passes -- remove the condition")
     for step in gating:
         named = step.get("name")
         if "run" in step:
@@ -216,10 +220,10 @@ def swallowed(name, job, steps, where, shell, tools):
                 found.append(f"{where}: step {named!r} runs a gate under shell "
                              f"{stepped!r}, which the build cannot read -- run "
                              "it under bash or sh")
-        if always_false(step.get("if")):
+        if skips(step.get("if")):
             found.append(f"{where}: step {named!r} runs a gate under a "
-                         "constant condition other than true -- remove the "
-                         "condition")
+                         "condition that skips it while the run passes -- "
+                         "remove the condition")
     # @req- sfx7sh
     return found
 

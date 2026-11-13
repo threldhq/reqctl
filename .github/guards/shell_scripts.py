@@ -7,7 +7,7 @@ from references import tracked
 
 # @req> GUARD-79122074@9WbEAGS3ea8D mryak2
 def main():
-    held = tracked("*.sh")
+    held = tracked(":(top)*.sh")
     if held and subprocess.run(["shellcheck", "--", *held],
                                check=False).returncode:
         print("::error::shellcheck reports findings in tracked shell scripts "
