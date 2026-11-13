@@ -61,9 +61,6 @@ ASSIGNED = re.compile(r"\w+=.*")
 PYTHON = re.compile(r"python[\d.]*")
 OPERATORS = re.compile(r"[;&|()]+")
 SUBSTITUTED = re.compile(r"`|\$\(")
-KEYWORDS = {"!", "{", "}", "[[", "if", "then", "elif", "else", "fi", "case",
-            "esac", "for", "select", "while", "until", "do", "done", "time",
-            "function", "coproc"}
 READABLE = {"bash", "sh"}
 STOPPING = re.compile(r"[-+][euxvo]+|pipefail|errexit|nounset|xtrace"
                       r"|--noprofile|--norc")
@@ -171,8 +168,8 @@ def alone(run, tools):
         words = list(lexer)
     except ValueError:
         return False
-    return (commanded(words, tools) and words[0] not in KEYWORDS
-            and not any(OPERATORS.fullmatch(word) for word in words))
+    return commanded(words, tools) and not any(
+        OPERATORS.fullmatch(word) for word in words)
 
 
 def readable(shell):
@@ -208,15 +205,17 @@ def swallowed(name, job, steps, where, shell, tools):
                      "condition other than true -- remove the condition")
     for step in gating:
         named = step.get("name")
-        if "run" in step and not alone(str(step.get("run") or ""), tools):
-            found.append(f"{where}: step {named!r} runs a gate together with "
-                         "another command -- give the gate a step of its own "
-                         "that runs the gate and its arguments alone")
-        stepped = step.get("shell", shell)
-        if "run" in step and not readable(stepped):
-            found.append(f"{where}: step {named!r} runs a gate under shell "
-                         f"{stepped!r}, which the build cannot read -- run it "
-                         "under bash or sh")
+        if "run" in step:
+            if not alone(str(step["run"] or ""), tools):
+                found.append(f"{where}: step {named!r} runs a gate together "
+                             "with another command -- give the gate a step of "
+                             "its own that runs the gate and its arguments "
+                             "alone")
+            stepped = step.get("shell", shell)
+            if not readable(stepped):
+                found.append(f"{where}: step {named!r} runs a gate under shell "
+                             f"{stepped!r}, which the build cannot read -- run "
+                             "it under bash or sh")
         if always_false(step.get("if")):
             found.append(f"{where}: step {named!r} runs a gate under a "
                          "constant condition other than true -- remove the "
