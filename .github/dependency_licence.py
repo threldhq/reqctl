@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import base64
 import http.client
 import json
 import os
@@ -31,8 +32,12 @@ def added(repository, base, head, token):
         raise SystemExit("::error::GitHub's dependency review answered no list of "
                          "changes -- run the gate again")
     if pending is not None:
+        try:
+            said = base64.b64decode(pending).decode(errors="replace").strip()
+        except ValueError:
+            said = pending
         raise SystemExit("::error::GitHub's dependency graph has not processed "
-                         f"{base}...{head} yet -- run the gate again")
+                         f"{base}...{head} yet: {said} -- run the gate again")
     return [one for one in held if one.get("change_type") == "added"]
 
 
