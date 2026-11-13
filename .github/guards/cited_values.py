@@ -6,6 +6,7 @@ import os
 import re
 import sys
 from collections import Counter
+from itertools import takewhile
 from pathlib import Path
 from re import _constants as sre, _parser
 
@@ -82,9 +83,12 @@ def spelled(sub):
     return found
 
 
-def branched(sub, lists):
-    prefix = ""
-    for op, av in sub.data:
+def branched(sub, lists, prefix="", suffix=""):
+    for index, (op, av) in enumerate(sub.data):
+        after = list(takewhile(lambda item: item[0] == sre.LITERAL,
+                               sub.data[index + 1:]))
+        tail = "".join(chr(code) for _, code in after) + (
+            suffix if index + 1 + len(after) == len(sub.data) else "")
         if op == sre.BRANCH:
             members = []
             for branch in av[1]:
@@ -93,12 +97,15 @@ def branched(sub, lists):
                     members.append((None, "an alternative of no fixed spelling"))
                     branched(branch, lists)
                 else:
-                    members.extend((prefix + part, repr(prefix + part))
-                                   for part in parts)
+                    members.extend((prefix + part + tail,
+                                    repr(prefix + part + tail)) for part in parts)
             lists.append(("members", members))
         elif op == sre.IN and all(kind == sre.LITERAL for kind, _ in av):
-            lists.append(("members", [(prefix + chr(code), repr(prefix + chr(code)))
+            lists.append(("members", [(prefix + chr(code) + tail,
+                                       repr(prefix + chr(code) + tail))
                                       for _, code in av]))
+        elif op == sre.SUBPATTERN:
+            branched(av[-1], lists, prefix, tail)
         else:
             for held in av if isinstance(av, (tuple, list)) else [av]:
                 if isinstance(held, _parser.SubPattern):
