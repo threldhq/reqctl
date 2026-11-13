@@ -6,6 +6,9 @@ assessed:
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
   selection_criteria: bPSGqe3d9rCc17StyTRYrnxBhrfzLhA8FRCdEwjXznM
   selection_criteria.*: i8HJ-6tZA1ckBAFKcgkXAZ65KM3b96i9vSIVK8fg55o
+citations:
+  axory4: wCM26c460TP15MQ0Cn9QXhIPbNu_zlw4fvujeR1MppQ
+  tmeapy: 0zZH4eRKmgepHqrwwhegYLAA6js6gnA5seWLVB0B0Zs
 priority: medium
 relations: {}
 status: approved

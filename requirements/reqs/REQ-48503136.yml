@@ -5,6 +5,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+citations:
+  bwg3gk: NIxOVzKohLMPQs3WkfMOgYLfO8FOu6uIxX_2on8OeUw
 priority: medium
 relations:
   REQ-49761714: depends_on

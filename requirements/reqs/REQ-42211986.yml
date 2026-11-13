@@ -20,6 +20,8 @@ assessed:
   licence_compatibility.*: H-5p1oUmw1KLIbFpkdJr4aXAb0t277C0nWAy3cSX70Y
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  mgrqlm: oo91WpcGtlu0LJGtPgAcnItZ9o2CAof46deWIqHucU8
 priority: medium
 relations:
   REQ-10550356: supersedes

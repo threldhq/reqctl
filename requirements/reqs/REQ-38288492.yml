@@ -11,14 +11,14 @@ citations:
   46mvef: l64nxfmcFw3GZP0xxtN7wDegEfN5AD_z6OsYvZI_ZgE
   6mjij4: A7nO8slj06tyseZYpirGOQAdTBWg9_Evems3MymA47U
   7hamkf: NmWFCIln4hHAQPwnXuE3ze7YV4OtGncIlAYZ8SyUxcY
-  bhnqhd: vSlSGNToNH7i54XXg2hQrNCfZMTFmlDdbLgGZb_qINQ
+  bhnqhd: 1AC5URPw6BlnBVH7AmissSkVldkdW17DWW-pw0Tx8Dg
   btqw4r: 2wbcje80ohuR0XSvV0rsFtUYicvh7_1-1GeIuZd4k4w
   cartup: TKSp9jBe7fTdj_BsAUAno5AS9caFTnOVD1hoLFobRro
   gqyp6i: K1AmWguMbSdXyw4lLDUCJ9P2yJpArHzQMnmVqRKJ2gg
   ioxe55: V6DJxhRlVN8vHVx7Z5q-oHXgZvzaYvV4m0CskTNAOm4
   myhqkt: 3C_HZVL03y7VA6pUhDdnDgXpu79MHDzCOwmreTv_gX4
   ptkrb7: lEyeuzKECS_C7V7uQnGW_9uu9nOq4ETO2IUm9MHuaFw
-  pygxmx: jOFjlv983AwAJHrIMiSkIaAR0AA910e4vL1vTesupnQ
+  pygxmx: 7uKB8uIeUSkX18G9e52hIQfxzIgjl_Hnte1Snj-Pj3s
   qtmeg3: L_OWckpWelHUUTKqNrobSIZO3_mfMlMB9GvnRFhfsgU
   s4a54e: RjLkVwKyHp_0xLJnvOGir3qssvfJgsohub4r2LaD_1g
   twgacs: YL3DTO8hbO8pdl5x8txU6JG1TLs5HlVm7z-DzBfZp9s
@@ -34,5 +34,5 @@ type: functional
 verification: inspection
 whole_file_citations:
   plugin/.claude-plugin/plugin.json:
-    digest: SZtlm4SdqWgwddYMehMY9zIaVNzbh-Y-KIafZkTkQ8A
+    digest: NnpGNWeET3tHcVn2imW5yuyH2J227QiydKqT_MRblaQ
     pinned: 4l6tMNjp19tH

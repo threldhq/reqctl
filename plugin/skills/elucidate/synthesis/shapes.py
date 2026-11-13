@@ -91,6 +91,10 @@ CITING = {"covered_by": "uids", "conflicts": "uid", "relations": "target",
 DICTIONARY_CITING = {"values": "belongs_with", "words": "defined_by"}
 
 LABEL = {"type": "string", "minLength": 1, "maxLength": 120}
+SOURCES = _list(_object(["url", "passage"], {
+    "url": {"type": "string", "pattern": "^https?://\\S+$"},
+    "passage": REASON,
+}))
 
 # @req> REQ-82432523@dA6MI5WknAH4 poc76h
 REVIEW = _object(["practices"], {
@@ -99,15 +103,25 @@ REVIEW = _object(["practices"], {
             "practice": REASON,
             "field": LABEL,
             "leaders": {"type": "array", "minItems": 1, "items": LABEL},
-            "sources": _list(_object(["url", "passage"], {
-                "url": {"type": "string", "pattern": "^https?://\\S+$"},
-                "passage": REASON,
-            })),
+            "sources": SOURCES,
             "stated": {"anyOf": [REASON, {"type": "null"}]},
             "adopt": {"type": "boolean"},
             "fit": {"anyOf": [REASON, {"type": "null"}]},
         })),
 })
+
+
+def check(criteria):
+    return _object(["weighed"], {
+        "weighed": _list(_object(["name", "kind", "sources", "standing", "use"], {
+            "name": LABEL,
+            "kind": {"type": "string", "enum": ["library", "example"]},
+            "sources": SOURCES,
+            "standing": _object(list(criteria),
+                                {one: REASON for one in criteria}),
+            "use": {"type": "boolean"},
+        })),
+    })
 
 # @req+ REQ-36422345@O-3IKmoFSYSG lq44vs
 QUOTED = {"type": "string", "pattern": "\\S"}

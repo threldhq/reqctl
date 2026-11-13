@@ -51,22 +51,96 @@ that item is deprecated, ask nothing, and remove the citation with
 `reqctl untag ID`.
 <!-- @req- hr6rvl -->
 
+<!-- @req+ REQ-19000493@GHvudq2uuiq1 a2mxuq -->
 Before writing new code rather than extending code that already cites the
-requirement, research the code of products solving the same kind of problem,
-in any field, for a best-in-class example of that code. The pull request body
-names the sources read and the example chosen, or states that none could be
-read.
+requirement, have a best-in-class check made of the third-party code that can
+be reused for it.
+<!-- @req- a2mxuq -->
 
-Copy an example's code, unchanged or adapted, only where three things hold: the
-licence of the repository holding it resolves to one of these SPDX identifiers,
+<!-- @req+ REQ-32544293@2UJDijTDH1KJ khjpxx -->
+Before extending code that already cites the requirement with a behaviour that
+code does not have, have a best-in-class check made of the third-party code
+that can be reused for that behaviour. A change that adds no behaviour needs no
+check.
+<!-- @req- khjpxx -->
+
+<!-- @req+ REQ-46594931@M3uiWv_NWuJ_ axory4 -->
+Spawn the best-in-class agent to make the check, with a prompt naming each of
+the selection criteria: adoption, correctness record, licence and maintenance.
+Build that prompt, then spawn the agent with one call of the Workflow tool,
+`scriptPath` at the `workflow.js` beside the manifest the command names and
+`args` holding the contents of that manifest:
+
+```bash
+python3 ${CLAUDE_SKILL_DIR}/../elucidate/synthesis/review.py weigh --run .elucidate/<run> --code "<the code to be written>"
+```
+<!-- @req- axory4 -->
+
+<!-- @req+ REQ-38347678@QT6-FMODBgab ze536s -->
+The check records, for each library and each example it weighs, the sources it
+rests on and its standing against each of the selection criteria.
+<!-- @req- ze536s -->
+
+<!-- @req+ REQ-59435809@bHuMKX1_pkbz h4lkss -->
+The check states whether an existing library should be used instead of writing
+the code.
+<!-- @req- h4lkss -->
+
+<!-- @req+ REQ-48503136@eNAb4jIZahbK bwg3gk -->
+Write no code for which a best-in-class check is required until the product has
+passed that check:
+
+```bash
+python3 ${CLAUDE_SKILL_DIR}/../elucidate/synthesis/review.py weighed --run .elucidate/<run>
+```
+
+Where every fault over which it refuses the check is a transient failure, put a
+question to the owner, and write that code only once they have answered that it
+be written without a passed check.
+<!-- @req- bwg3gk -->
+
+<!-- @req+ REQ-45597762@a3hLC2ska6w_ dcm7k3 -->
+The body of the pull request carrying the code states the summary the product
+prints for the passed best-in-class check, or the owner's answer that the code
+be written without a passed check.
+<!-- @req- dcm7k3 -->
+
+<!-- @req+ REQ-45217924@ari9LDpV6zFm muvf2i -->
+Where the check states that an existing library should be used, add that
+library as a dependency rather than writing the code.
+<!-- @req- muvf2i -->
+
+<!-- @req+ REQ-15108485@EkqTZa-9MGOY w2l4ri -->
+Add a dependency only where its licence resolves to one of the SPDX identifiers
+of the copyable licences below.
+<!-- @req- w2l4ri -->
+
+<!-- @req+ REQ-22202465@9t-83q3xJ4ip ant226 -->
+Resolve the licence of each file you would copy from the SPDX licence
+identifier the file states, else from the licence file in the nearest folder
+above the file that holds one: a licence file nearer than the repository's root
+one is the one that counts.
+<!-- @req- ant226 -->
+
+<!-- @req+ REQ-42211986@pTHWhTqWKc3j mgrqlm -->
+Copy a file's code, unchanged or adapted, only where two things hold: the
+file's licence resolves to one of these SPDX identifiers,
 <!-- @req> copyable_licences@ns-krxMVBL57 kagdws -->
 MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC, 0BSD;
-the licence of the repository receiving it resolves to an SPDX identifier; and
-the first licence is compatible with the second. Then meet the first licence's
-conditions in the third-party notices file. Where the example's repository
-states no licence, either licence resolves to no SPDX identifier, the example's
-licence is copyleft, weak copyleft included, or whether the two are compatible
-cannot be told, copy none of it and write the code from the idea.
+and the receiving repository's licence is one that licence's code may be copied
+into:
+the file's own licence, or Apache-2.0.
+Where the file's licence is copyleft, weak copyleft included, the receiving
+repository's licence is neither of those, or the file states no SPDX licence
+identifier and no folder above it holds a licence file, copy none of it and
+write your own code from the idea.
+<!-- @req- mgrqlm -->
+
+<!-- @req+ REQ-87714849@0xyTYSwdPQW5 a2jztj -->
+Where a copied file's licence is Apache-2.0 and the repository holding the file
+holds a NOTICE file, carry the attribution notices of that NOTICE file into the
+third-party notices file.
+<!-- @req- a2jztj -->
 
 <!-- @req+ REQ-36108971@NoDvOdAAqqbz xr4cbg -->
 Record each copy in `THIRD_PARTY_NOTICES.md` at the repository's root, creating

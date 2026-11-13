@@ -6,6 +6,8 @@ acceptance_criteria:
 assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  ant226: BhpVdkP_A4idx1hN1WrHryPAMuiWKoTIJEboorVWL-c
 priority: medium
 relations: {}
 status: approved

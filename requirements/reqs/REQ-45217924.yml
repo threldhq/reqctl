@@ -4,6 +4,8 @@ assessed:
   best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  muvf2i: S4tikVVDyXy-9wgZ3bTNdzdUcUDpyclQI9t25j8yyiI
 priority: medium
 relations:
   REQ-59435809: depends_on
