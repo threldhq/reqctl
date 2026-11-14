@@ -2278,8 +2278,13 @@ def refuse_unheld_script(words, here, fed=()):
 def handed(words, here):
     scripts = []
     for named in (word.partition("::")[0] for word in words if not word.startswith("-")):
+        spelled = os.path.join(here, os.path.expanduser(named))
+        if here and "$" not in named and "`" not in named and GLOB_CHAR.search(named):
+            scripts += [(path, False) for form in bounded(spelled) for path in matches(form)
+                        if os.path.isfile(path)]
+            continue
         file = ("$" in named or "`" in named or named.endswith(".py") or not here
-                or os.path.isfile(os.path.join(here, os.path.expanduser(named))))
+                or os.path.isfile(spelled))
         scripts.append((named, False) if file else (named.replace(".", "/"), True))
     return scripts
 
@@ -2323,7 +2328,7 @@ def absolute_corpus(text):
     return next((found[0] for tree in trees
                  for found in re.finditer(re.escape(tree.rstrip("/")) + r"/[^\s'\"`]*", text)
                  if CORPUS_DIR.search(found[0])
-                 or found[0].rstrip("/").rsplit("/", 1)[-1] == CORPUS_ROOT_NAME), None)
+                 or re.search(rf"/{CORPUS_ROOT_NAME}/?(?![\w./-])", found[0])), None)
 
 
 # @req> REQ-75038049@w2u8eGVv46ut yu277l
@@ -3378,7 +3383,7 @@ def moved(pipeline, heres, places):
     target = os.path.expanduser(folder)
     if tool == "cd" and (len(bounded(target)) > 1 or len(list(itertools.dropwhile(
             lambda word: word != "-" and word.startswith("-"), rest))) > 1):
-        return heres, False
+        return heres | {""}, False
     there = {form if os.path.isabs(joined) and target != "-" and not target.startswith("~")
              and "$" not in target and "`" not in target and not GLOB_CHAR.search(spelled) else ""
              for spelled in bounded(target) for joined in (os.path.join(here, spelled) for here in heres)
