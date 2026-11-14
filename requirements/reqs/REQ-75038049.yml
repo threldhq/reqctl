@@ -117,13 +117,12 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   6vfbgw: hgcBhXUvKTWfaMdo24blFA12neQWZ79GIAbOF_QV7T8
-  cz2lgv: Eof6h-ZM_zzHuZac4l353hWsvJQXKKnRGL3VQaHg36Q
   g3ql3s: oH2QPujyTdHB5OutiIeg7i5GzBQLyrlbfMmaGvvAvfE
-  hwgp36: do9z93k8UP9Bl4BGCyB6Z51ZBAuuD-x8fxI6m8Uu9R8
+  hwgp36: FudEUPL6x8A0C5mXt94X3JkQwlFY7biirEXO8s6JUdI
   kbbyh4: 8zsNkhXX_iCvKUbfruEWnHsZSlsDI7HNJU56aX8-PwQ
   ohiazc: jYkSUqjOrJxwt0gcbqVVa9WZ6zkvS2Q66OFrS02gZKQ
-  rvzbno: ERBkXL-Z6A5qqFJghG-Q03ESF6ZEHBB5BfaDsnlgCwo
-  yu277l: CwnFu9SIXuBKGyspjzAvKISzEkuXMD7-wYGEiw5MBDQ
+  rvzbno: dAa0Pa1S2RqODoEz0rnif6jBe7ohdJvm_Ue8n15gAD8
+  yu277l: aYY69xNhlC7pFhEbpoqG7H_BcZzQbxMLZTWTQs2jEWg
 priority: medium
 relations:
   REQ-22704490: derives_from

@@ -466,7 +466,7 @@ ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=
                         r"export|declare|typeset|readonly|local|read|readarray|mapfile|getopts|let|"
                         r"eval|exec|source|for|select|hash|coproc|wait|alias|\.)(?=[\s<]|$)"
                         r"|printf(?:\s+-\S+)*?\s+-v|[A-Za-z_][\w.-]*\s*\(\s*\))|\$\{\w+(?:\[[^]]*\])?:?=")
-CALL = {"changes_environment": True, "cwd": ""}
+CALL = {"changes_environment": True}
 # @req> REQ-59919160@eEBU6tuB77Dq v6s3eb
 WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", "tee", "install",
            "rsync", "truncate", "dd", "unlink", "sed", "perl", "tar", "unzip", "patch", "cpio",
@@ -2247,9 +2247,9 @@ def refuse_unheld_script(words, here, fed=()):
         return
     # @req+ REQ-38681394@U-JsY-BEDCYK pqnkpz
     raw, key = called[0], runner(called[0])
-    if key in SCRIPT_RUNNERS:
-        for script in handed(called[1:], here):
-            judge_run(raw, script, False, here)
+    if key in SCRIPT_RUNNERS and "/" not in raw:
+        for script, dotted in handed(called[1:], here):
+            judge_run(raw, script, dotted, here)
         return
     file, module = (raw if key not in RUNNERS and "/" in raw else None), False
     for at, (previous, word) in enumerate(itertools.pairwise(called), 1) if key in RUNNERS else ():
@@ -2263,8 +2263,9 @@ def refuse_unheld_script(words, here, fed=()):
         if module or (not word.startswith("-") or not inline) and previous not in RUN_VALUED.get(
                 key, ()):
             file = word.replace(".", "/") if module else word
-            for script in handed(called[at + 1:], here) if module and word in SCRIPT_RUNNERS else ():
-                judge_run(raw, script, False, here)
+            for script, dotted in (handed(called[at + 1:], here)
+                                   if module and word in SCRIPT_RUNNERS else ()):
+                judge_run(raw, script, dotted, here)
             break
     if file:
         judge_run(raw, file, module, here)
@@ -2277,12 +2278,12 @@ def refuse_unheld_script(words, here, fed=()):
 def handed(words, here):
     scripts = []
     for previous, word in itertools.pairwise(["", *words]):
-        named = word.partition("::")[0]
-        if not word.startswith("-") and (
-                named.endswith(".py") or not here
-                or os.path.isfile(os.path.join(here, os.path.expanduser(named)))
-                or ("$" in word or "`" in word) and not previous.startswith("-")):
-            scripts.append(named)
+        named, hidden = word.partition("::")[0], "$" in word or "`" in word
+        if word.startswith("-") or hidden and previous.startswith("-"):
+            continue
+        file = (hidden or named.endswith(".py") or not here
+                or os.path.isfile(os.path.join(here, os.path.expanduser(named))))
+        scripts.append((named, False) if file else (named.replace(".", "/"), True))
     return scripts
 
 
@@ -2294,29 +2295,34 @@ def stdin_files(said):
 
 
 def piped_files(pipeline, at, here):
-    return tuple(word for part in pipeline[:at] for words in [argv(heading(part))[0]]
-                 for word in words[1:]
-                 if not word.startswith("-") and (
-                     invoked(words)[:1] == ["cat"] or not here
-                     or os.path.isfile(os.path.join(here, os.path.expanduser(word)))))
+    files = []
+    for part in pipeline[:at]:
+        called = invoked(argv(heading(part))[0])
+        files += stdin_files(heading(part))
+        files += [word for word in called[1:] if not word.startswith("-") and (
+            called[0] == "cat" or not here
+            or os.path.isfile(os.path.join(here, os.path.expanduser(word))))]
+    return tuple(files)
 
 
 @functools.cache
-def project_tree(cwd):
-    root = Path(os.path.realpath(os.environ.get("CLAUDE_PROJECT_DIR") or cwd))
+def project_tree():
+    root = Path(os.path.realpath(os.environ.get("CLAUDE_PROJECT_DIR") or "/"))
     return str(next((folder for folder in (root, *root.parents)
                      if (folder / ".git").exists()), root))
 
 
 def inside_project(path):
-    return Path(os.path.realpath(path)).is_relative_to(project_tree(CALL["cwd"]))
+    forms = (os.path.normpath(path), os.path.realpath(path))
+    return any(form.startswith(("/dev/", "/proc/")) for form in forms) or Path(
+        forms[1]).is_relative_to(project_tree())
 
 
 def absolute_corpus(text):
     home = os.path.expanduser("~")
-    trees = {project_tree(CALL["cwd"]),
-             os.path.abspath(os.environ.get("CLAUDE_PROJECT_DIR") or CALL["cwd"])}
-    trees |= {"~" + tree[len(home):] for tree in trees if tree.startswith(home + "/")}
+    trees = {project_tree(), os.path.abspath(os.environ.get("CLAUDE_PROJECT_DIR") or "/")}
+    trees |= {prefix + tree[len(home):] for prefix in ("~", "$HOME", "${HOME}")
+              for tree in trees if tree.startswith(home + "/")}
     return next((found[0] for tree in trees
                  for found in re.finditer(re.escape(tree.rstrip("/")) + r"/[^\s'\"`]*", text)
                  if CORPUS_DIR.search(found[0])
@@ -2333,8 +2339,6 @@ def judge_run(raw, file, module, here):
             else os.path.join(path, "__main__.py") if package else path)
     inside = inside_project(path)
     reaches = inside or not here or inside_project(here)
-    if path.startswith(("/dev/", "/proc/")):
-        deny(UNREADABLE.format(what=f"which file {raw} runs"))
     if not os.path.isfile(path):
         if package or not reaches:
             return
@@ -2399,9 +2403,11 @@ def sweeping(targets, here, bare):
 
 def judge_command(said, here, stdin=(), fed=()):
     words, unquoted = argv(said)
+    # @req> REQ-38681394@U-JsY-BEDCYK bqj2im
+    fed = (*fed, *stdin_files(said))
     # @req> REQ-38681394@U-JsY-BEDCYK coi6sj
     if split := env_split(words):
-        judge_shell(split, here, stdin)
+        judge_shell(split, here, stdin, fed=fed)
     refuse_destructive_push(said)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
@@ -2516,10 +2522,11 @@ def judge_command(said, here, stdin=(), fed=()):
     refuse_configured_force(words, here)
     refuse_api_write(words, here, said)
     # @req> REQ-38681394@U-JsY-BEDCYK ty4woi
-    refuse_unheld_script(words, here, (*fed, *stdin_files(said)))
+    refuse_unheld_script(words, here, fed)
     refuse_discarding_work(words, here)
+    # @req> REQ-38681394@U-JsY-BEDCYK aimxum
     for script in scripts_within(words, here):
-        judge_shell(script, here, stdin)
+        judge_shell(script, here, stdin, fed=fed)
     # @req> REQ-59919160@eEBU6tuB77Dq fwdndw
     for at in sed_calls(words, called):
         for script in sed_runs(words, words[at + 1:], here):
@@ -3130,15 +3137,15 @@ def names_corpus(part, cwd):
 
 
 @functools.cache
-def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None):
+def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
     # @req+ REQ-22704490@u7IClIQOfStA ak47k7
     # @req> REQ-60587913@64oissmU4Xo2 tfgxej
     # @req> REQ-36282702@sK_P4PZZM9_w qf6nfk
     CALL_TEXT["said"].setdefault(raw)
     if (spelled := ansi_c(raw)) != raw:
-        judge_shell(spelled, cwd, stdin, True, inherited)
+        judge_shell(spelled, cwd, stdin, True, inherited, fed)
     if parents and PARENT.search(unescaped(raw)):
-        judge_shell(raw, cwd, stdin, False, inherited)
+        judge_shell(raw, cwd, stdin, False, inherited, fed)
     cmd = flatten(unescaped(raw), parents)
     joins = []
     pipelines = scan(AMP_REDIRECT.sub(" ", cmd), joins)
@@ -3167,19 +3174,19 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None):
     for pipeline, heres in zip(pipelines, places):
         for (at, part), here in itertools.product(enumerate(pipeline), heres):
             left()
+            # @req> REQ-38681394@U-JsY-BEDCYK 3aixwf
+            files = (*fed, *piped_files(pipeline, at, here))
             invocation = heading(part)
             # @req> REQ-21901290@fc_rdI5ms5IC 5zrapb
             # @req> REQ-91051324@ljHcdWSG-nys 343uga
             # @req> REQ-70178381@2GE_TPwGTZKU vzfqst
-            # @req> REQ-38681394@U-JsY-BEDCYK sdr4nq
-            fed = piped_files(pipeline, at, here)
             for spelled in resolved(invocation, assigned):
-                judge_command(spelled, here, piped(stdin, pipeline, at), fed)
+                judge_command(spelled, here, piped(stdin, pipeline, at), files)
             judge_command(part if any(
                 len(alternatives) > 256 or any(map(STDIN_ARGUMENTS.search, alternatives))
                 for word in tokens_of(invocation)
                 for alternatives in [list(itertools.islice(braced(word), 257))]) else invocation,
-                here, piped(stdin, pipeline, at), fed)
+                here, piped(stdin, pipeline, at), files)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
@@ -3204,7 +3211,8 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None):
         for (at, part), here in itertools.product(enumerate(pipeline), heres):
             for script in nested(part):
                 left()
-                judge_shell(script, here, piped(stdin, pipeline, at), True, bound[:3])
+                judge_shell(script, here, piped(stdin, pipeline, at), True, bound[:3], (
+                    *fed, *piped_files(pipeline, at, here), *stdin_files(heading(part))))
     # @req- ak47k7
 
 
@@ -3655,9 +3663,6 @@ def decide(data: dict) -> "str | None":
     if not isinstance(cwd, str) or not cwd:
         cwd = os.environ.get("CLAUDE_PROJECT_DIR") or "."
     cwd = os.path.abspath(cwd)
-    # @req> REQ-75038049@w2u8eGVv46ut cz2lgv
-    # @req> REQ-38099593@mJ9vnM77-RdT tcufug
-    CALL["cwd"] = cwd
 
     # @req> REQ-73144852@yU84_78bOmur rlbt24
     # @req> REQ-85731550@GpdDXMWGeLgC ca7ecu
