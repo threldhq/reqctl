@@ -2247,8 +2247,8 @@ def refuse_unheld_script(words, here, fed=()):
         return
     # @req+ REQ-38681394@U-JsY-BEDCYK pqnkpz
     raw, key = called[0], runner(called[0])
-    if key in SCRIPT_RUNNERS and "/" not in raw:
-        for script, dotted in handed(called[1:], here):
+    if key in SCRIPT_RUNNERS:
+        for script, dotted in [(raw, False)] * ("/" in raw) + handed(called[1:], here):
             judge_run(raw, script, dotted, here)
         return
     file, module = (raw if key not in RUNNERS and "/" in raw else None), False
@@ -2259,7 +2259,7 @@ def refuse_unheld_script(words, here, fed=()):
         if inline and (word.startswith(("--eval", "--print"))
                        or any(short_flagged([word], letter) for letter in inline)):
             return
-        module = key == "python" and previous == "-m"
+        module = key == "python" and re.fullmatch(r"-[^-WXc]*m", previous) is not None
         if module or (not word.startswith("-") or not inline) and previous not in RUN_VALUED.get(
                 key, ()):
             file = word.replace(".", "/") if module else word
@@ -2277,11 +2277,8 @@ def refuse_unheld_script(words, here, fed=()):
 
 def handed(words, here):
     scripts = []
-    for previous, word in itertools.pairwise(["", *words]):
-        named, hidden = word.partition("::")[0], "$" in word or "`" in word
-        if word.startswith("-") or hidden and previous.startswith("-"):
-            continue
-        file = (hidden or named.endswith(".py") or not here
+    for named in (word.partition("::")[0] for word in words if not word.startswith("-")):
+        file = ("$" in named or "`" in named or named.endswith(".py") or not here
                 or os.path.isfile(os.path.join(here, os.path.expanduser(named))))
         scripts.append((named, False) if file else (named.replace(".", "/"), True))
     return scripts
