@@ -270,9 +270,11 @@ def generate(tree, root):
 
 def _restated(recorded, tree):
     wore = carriers(tree)
+    now = {item.uid for item in items(tree)}
     held = {}
     for name, pinned in recorded.items():
-        under = wore[name][0] if len(wore.get(name, ())) == 1 else name
+        under = (wore[name][0] if name not in now
+                 and len(wore.get(name, ())) == 1 else name)
         held[name if under in held else under] = pinned
     return held
 
@@ -348,7 +350,7 @@ def check(tree, root):
 
     # @req+ REQ-44642786@f_tuj97sj5Zn rfw24o
     current = derive(tree)
-    # @req> REQ-13861816@OGhn1Q-Xs0__ db6w7v
+    # @req> REQ-13861816@SpClrm8cjO-v db6w7v
     recorded = _restated(recorded, tree)
     for uid in sorted(set(recorded) - set(current)):
         # @req> REQ-30898926@Vu28eWaG_1mE b6pw73

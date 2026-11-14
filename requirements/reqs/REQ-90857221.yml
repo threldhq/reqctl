@@ -12,6 +12,8 @@ assessed:
   REQ-53177302: oSukBFyA3jXqDOQDBmlA51SQjzNbzGh51VVHA9EV_Kw
   REQ-94917590: 2yP1VjEjzn4-QYnaf6_2LW-F1vjIzDSpE-vV8yPzr7A
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  cv2nmd: E9wNeIIjl4S_L8P4fe3pgOr8coM7yNmHd7829Ma_cSA
 priority: medium
 relations:
   REQ-53177302: derives_from
