@@ -3375,7 +3375,8 @@ def moved(pipeline, heres, places):
              and "$" not in target and "`" not in target else ""
              for spelled in bounded(target) for joined in (os.path.join(here, spelled) for here in heres)
              for form in {os.path.normpath(joined), os.path.realpath(joined)}}
-    return there, not at and len(pipeline) == 1 and tool == "cd"
+    return there, not at and len(pipeline) == 1 and tool == "cd" and sum(
+        not word.startswith("-") for word in rest) < 2
 
 
 def citations(text):
@@ -3441,7 +3442,8 @@ def notebook_edited(args, cwd):
 # @req> REQ-38099593@mJ9vnM77-RdT 3yvytz
 def judge_citation_edit(tool, args, cwd):
     if tool not in ("NotebookEdit", "Edit", "MultiEdit", "Write") or not inside_project(Path(
-            cwd, os.path.expanduser(args.get("file_path") or args.get("notebook_path") or ""))):
+            cwd, os.path.expanduser(args.get(
+                "notebook_path" if tool == "NotebookEdit" else "file_path") or ""))):
         return
     if tool == "NotebookEdit":
         before, after = notebook_edited(args, cwd)
