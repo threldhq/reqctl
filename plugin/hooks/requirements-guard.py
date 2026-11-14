@@ -3575,8 +3575,8 @@ def written_outside(part, heres):
     targets = [word for found in REDIRECT_TARGET.finditer(masked(part))
                for word in tokens_of(part[found.start(1):found.end(1)])]
     return bool(targets) and only_reads(argv(part)[0]) and all(
-        here and not GLOB_CHAR.search(target) and not os.path.expanduser(target).startswith("~")
-        and not inside_project(os.path.join(here, os.path.expanduser(target)))
+        here and not GLOB_CHAR.search(target) and not target.startswith("~")
+        and not inside_project(os.path.join(here, target))
         for target in targets for here in heres)
 
 
