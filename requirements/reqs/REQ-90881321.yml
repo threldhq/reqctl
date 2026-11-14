@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a pull request of a calling repository
+  then: reqctl validate, the ${corpus_gates.corpus_validity} gate, ends before the
+    ${corpus_gates.travel_alone} gate starts
+  when: the corpus gates run
+assessed:
+  REQ-26876750: p5bO3gEKEYCbI2dpCZq5kyu2VQfTeMUGNu-MO-Pkodg
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.*: 8A8UuRhK3YApCO-ELA4iN_lh9nBQ5loCPFYllmodN3Q
+  corpus_gates.corpus_validity: vKfew2pvwKFB3h4_kH0sFeKIKywK_JiyRQ74oj8dxjA
+  corpus_gates.travel_alone: xaRPsjgxbPYBMGiOCJLRgvNdNNM9Z_uxjF7sdEvA8XA
+priority: medium
+relations:
+  REQ-26876750: constrains
+status: approved
+text: The product shall run the ${corpus_gates.corpus_validity} gate to its end before
+  starting any other of the ${corpus_gates}.
+type: functional
+verification: inspection
