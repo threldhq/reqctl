@@ -1,12 +1,15 @@
 acceptance_criteria:
-- given: an edit, multi-edit or write that adds, removes or changes a comment carrying
+- given: an edit, multi-edit or write, to a file inside the working tree holding the
+    [project root](project_root), that adds, removes or changes a comment carrying
     a [statement citation](statement_citation), including by deleting cited code together
     with its [citation](statement_citation)
   then: the product refuses it and names reqctl tag, repin and untag as the route
   when: the [tool call](tool_call) is made
 - given: a shell command that names the text opening a [statement citation](statement_citation)
     other than to read it, however that text is quoted, split or continued across
-    lines
+    lines, and that writes, or that the product cannot tell does not write, a file
+    inside the working tree holding the [project root](project_root) or a file whose
+    place cannot be resolved from the command's text
   then: the product refuses it
   when: the [tool call](tool_call) is made
 - given: an edit that carries every comment carrying a [statement citation](statement_citation)
@@ -28,11 +31,28 @@ acceptance_criteria:
 - given: such text holding a command substitution or a process substitution
   then: the product judges the substitution as it judges any other part of the command
   when: the [tool call](tool_call) is made
+- given: a write of a file in the scratchpad, or in a scratch clone made outside the
+    top folder of the working tree holding the [project root](project_root), holding
+    comments that carry a [statement citation](statement_citation)
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+- given: a shell command that names the text opening a [statement citation](statement_citation),
+    each file it writes resolving from its text to a place outside the working tree
+    holding the [project root](project_root)
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is made
+- given: an edit that changes a comment carrying a [statement citation](statement_citation)
+    in a file of a clone made under the top folder of the working tree holding the
+    [project root](project_root)
+  then: the product refuses it
+  when: the [tool call](tool_call) is made
 assessed:
   REQ-18833394: iNDqEsjKcVn-2n76AyyXLdzOWVuzvMwUQgaNAp4ISWQ
   REQ-26984738: 2Cu-ngxaDd6zI2TwmFRCzBrxeAWxGDX1sZQrNQvfa74
+  REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
@@ -50,11 +70,14 @@ priority: medium
 relations:
   REQ-18833394: depends_on
   REQ-26984738: depends_on
+  REQ-36925311: depends_on
   REQ-38288492: depends_on
   REQ-60346603: depends_on
 status: approved
 text: If a [tool call](tool_call) other than one running reqctl would add, remove
-  or change a comment that carries a [statement citation](statement_citation), then
-  the product shall refuse the [tool call](tool_call).
+  or change a comment that carries a [statement citation](statement_citation) in a
+  file that lies inside the working tree holding the [project root](project_root),
+  or in a file whose place the product cannot resolve from the [tool call](tool_call),
+  then the product shall refuse the [tool call](tool_call).
 type: functional
 verification: inspection
