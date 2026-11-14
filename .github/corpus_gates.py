@@ -13,12 +13,13 @@ def main():
     python, against, pulled = sys.executable, f"origin/{base}", bool(base)
     # @req+ REQ-26876750@p5bO3gEKEYCb x2zlt2
     # @req> corpus_gates@OdL88-lUnUJE vfrphp
+    # @req+ REQ-90881321@6MC00oZ7Vlj_ qprymf
     gates = (
+        ("corpus_validity", ["reqctl", "validate"], True),
         ("travel_alone", [python, HERE / "travel_alone.py", against], pulled),
         ("baseline_numbering", [python, HERE / "baseline_number.py", against],
          pulled),
         ("dependency_licence", [python, HERE / "dependency_licence.py"], pulled),
-        ("corpus_validity", ["reqctl", "validate"], True),
         ("baseline_match", ["reqctl", "baseline", "--check"], True),
         ("traceability", [python, HERE / "guards" / "citations.py"], True),
         ("taxonomy", [python, HERE / "guards" / "taxonomy.py"], True),
@@ -35,6 +36,7 @@ def main():
         if done.returncode != 0:
             print(f"::error::{name} refuses this change")
             return 1
+    # @req- qprymf
     # @req- x2zlt2
     return 0
 
