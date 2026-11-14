@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: an unapproved [item](item), in a repository with no remote named origin
+  then: the product refuses and says which branch is the default cannot be told
+  when: removal of the unapproved [item](item) is requested
+- given: an unapproved [item](item), in a repository whose remote named origin names
+    no default branch
+  then: the product refuses and says which branch is the default cannot be told
+  when: removal of the unapproved [item](item) is requested
+assessed:
+  REQ-42065260: 5rvs-ESunP50aKFlghTl55lX7VtCyl3gPyxUtJhTnHw
+  REQ-80226740: pd1uDx8y-jrwghMfC4eqxu59HOo3S162uJZJ32QDiO4
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-42065260: constrains
+  REQ-80226740: derives_from
+status: approved
+text: If the removal of an unapproved [item](item) is requested in a repository that
+  has no remote named origin, or whose remote named origin names no default branch,
+  then the product shall refuse the removal, stating that which branch is the default
+  cannot be told.
+type: functional
+verification: inspection

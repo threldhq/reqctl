@@ -5,12 +5,6 @@ acceptance_criteria:
   then: the product refuses and names every [item](item) recording a link, a reference
     or a [pin](pin) toward it
   when: removal of the unapproved [item](item) is requested
-- given: an unapproved [item](item) that the working tree's baseline does not state
-    and toward which other [items](item) record a link, a reference or a [pin](pin),
-    in a repository with no remote named origin
-  then: the product refuses and names every [item](item) recording a link, a reference
-    or a [pin](pin) toward it
-  when: removal of the unapproved [item](item) is requested
 - given: an unapproved [item](item) that the baseline the default branch carries does
     not state, and a requirement holding a [pin](pin) toward it with no link or reference
     beside it
