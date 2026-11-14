@@ -3376,12 +3376,14 @@ def moved(pipeline, heres, places):
     if tool == "popd" or folder is None:
         return heres.union(*places), False
     target = os.path.expanduser(folder)
-    there = {form if os.path.isabs(joined) and target != "-"
-             and "$" not in target and "`" not in target else ""
+    if tool == "cd" and (len(bounded(target)) > 1 or len(list(itertools.dropwhile(
+            lambda word: word != "-" and word.startswith("-"), rest))) > 1):
+        return heres, False
+    there = {form if os.path.isabs(joined) and target != "-" and not target.startswith("~")
+             and "$" not in target and "`" not in target and not GLOB_CHAR.search(spelled) else ""
              for spelled in bounded(target) for joined in (os.path.join(here, spelled) for here in heres)
              for form in {os.path.normpath(joined), os.path.realpath(joined)}}
-    return there, not at and len(pipeline) == 1 and tool == "cd" and sum(
-        not word.startswith("-") for word in rest) < 2
+    return there, not at and len(pipeline) == 1 and tool == "cd"
 
 
 def citations(text):
