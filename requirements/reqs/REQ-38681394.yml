@@ -5,8 +5,24 @@ acceptance_criteria:
 - given: python script.py
   then: the product takes script.py as the file to run
   when: the [tool call](tool_call) is judged
+- given: python3 < script.py, or cat script.py piped to python3
+  then: the product takes script.py as the file to run
+  when: the [tool call](tool_call) is judged
+- given: python -m pdb script.py, python -m cProfile script.py or python -m trace
+    script.py
+  then: the product takes script.py as the file to run
+  when: the [tool call](tool_call) is judged
+- given: pytest script.py or ipython script.py
+  then: the product takes script.py as the file to run
+  when: the [tool call](tool_call) is judged
+- given: env -S holding python3 script.py
+  then: the product takes script.py as the file to run
+  when: the [tool call](tool_call) is judged
+- given: a shell command that runs python3 script.py inside bash -c
+  then: the product takes script.py as the file to run
+  when: the [tool call](tool_call) is judged
 assessed:
-  REQ-75038049: hXyFNmxx-SWySt9u7ITdv6t6cQTH7MLACKtVXuTufk0
+  REQ-75038049: w2u8eGVv46uthgIU3jMAJNC8sLZfO5duLFM8DzU8iWw
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   7ojhwq: 5-PSQb0ER7Ev1MHyt0tsMB68zDsdeFySCEkB5qsWgfM
@@ -15,7 +31,8 @@ relations:
   REQ-75038049: constrains
 status: approved
 text: When the product judges which file a shell command in a [tool call](tool_call)
-  would run, the product shall take a word as that file only where the program the
-  command runs reads that word as a script to run.
+  would run, the product shall take as that file each file the program the command
+  runs would read as a script to run, however the command hands the file to that program,
+  and no other word of the command.
 type: functional
 verification: inspection

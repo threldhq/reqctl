@@ -1,6 +1,6 @@
 acceptance_criteria:
-- given: a Python file origin's default branch does not hold, naming a corpus [item](item)'s
-    file
+- given: a Python file inside the working tree holding the [project root](project_root)
+    that origin's default branch does not hold, naming a corpus [item](item)'s file
   then: the product refuses the [tool call](tool_call) and names running reqctl as
     the route
   when: a [tool call](tool_call) runs python, bash, sh, source or ./ on it
@@ -23,8 +23,9 @@ acceptance_criteria:
   when: a [tool call](tool_call) runs the script
 - given: origin names no default branch, or the repository cannot be read
   then: the product refuses the [tool call](tool_call)
-  when: a [tool call](tool_call) runs a file outside the plugin's folder naming a
-    corpus [item](item)'s file
+  when: a [tool call](tool_call) runs a file inside the working tree holding the [project
+    root](project_root), outside the plugin's folder, naming a corpus [item](item)'s
+    file
 - given: a file the local origin/HEAD ref holds unchanged, although origin has moved
     on since the last fetch
   then: the product does not refuse the [tool call](tool_call) on that ground
@@ -33,26 +34,76 @@ acceptance_criteria:
     SHA-256 digest the [fingerprint list](fingerprint_list) holds
   then: the product does not refuse the [tool call](tool_call) on that ground
   when: a [tool call](tool_call) runs it without changing the environment
-- given: a file under the plugin's folder naming a corpus [item](item)'s file, whose
-    SHA-256 digest the [fingerprint list](fingerprint_list) does not hold
+- given: a file under the plugin's folder, outside the working tree holding the [project
+    root](project_root), naming a corpus [item](item)'s file, whose SHA-256 digest
+    the [fingerprint list](fingerprint_list) does not hold
   then: the product refuses the [tool call](tool_call)
-  when: a [tool call](tool_call) runs it
-- given: a file outside the plugin's folder naming a corpus [item](item)'s file, that
-    origin's default branch does not hold, whose SHA-256 digest the [fingerprint list](fingerprint_list)
+  when: a [tool call](tool_call) runs it with its working directory inside that working
+    tree
+- given: a file inside the working tree holding the [project root](project_root) and
+    outside the plugin's folder, naming a corpus [item](item)'s file, that origin's
+    default branch does not hold, whose SHA-256 digest the [fingerprint list](fingerprint_list)
     holds
   then: the product refuses the [tool call](tool_call)
   when: a [tool call](tool_call) runs it
-- given: a script in the working repository committed nowhere, holding open("requirements/reqs/x.yml")
+- given: a script inside the working tree holding the [project root](project_root),
+    committed nowhere, holding open("requirements/reqs/x.yml")
   then: the product refuses the [tool call](tool_call)
   when: a [tool call](tool_call) runs it with python
 - given: a file under the plugin's folder whose digest the [fingerprint list](fingerprint_list)
     holds, naming the [corpus root](corpus_root)
   then: the product refuses the [tool call](tool_call)
-  when: a [tool call](tool_call) runs it with PYTHONPATH set on its command line
+  when: a [tool call](tool_call) runs it with PYTHONPATH set on its command line and
+    its working directory inside the working tree holding the [project root](project_root)
 - given: the same file
   then: the product refuses the [tool call](tool_call)
   when: a [tool call](tool_call) exports, unsets or clears a variable earlier in the
-    same command, or runs it under env -i, then runs it
+    same command, or runs it under env -i, then runs it from the same working directory
+- given: a file in the scratchpad, or in a scratch clone made outside the top folder
+    of the working tree holding the [project root](project_root), naming a corpus
+    [item](item)'s file by a relative path, that origin's default branch does not
+    hold
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) changes directory to a folder outside that working
+    tree, then runs it
+- given: the same file
+  then: the product refuses the [tool call](tool_call) and names running it from outside
+    that working tree as the route
+  when: a [tool call](tool_call) runs it with its working directory inside the working
+    tree holding the [project root](project_root)
+- given: a file outside the working tree holding the [project root](project_root)
+    whose text names a corpus [item](item)'s file by an absolute path inside that
+    working tree
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it from a working directory outside that working
+    tree
+- given: a file outside the working tree holding the [project root](project_root)
+    naming a corpus [item](item)'s file
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it with a working directory the product cannot
+    resolve from the [tool call](tool_call)
+- given: a file in a clone made under the top folder of the working tree holding the
+    [project root](project_root), naming a corpus [item](item)'s file, that origin's
+    default branch does not hold
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it
+- given: a file under the plugin's folder, outside the working tree holding the [project
+    root](project_root), naming a corpus [item](item)'s file by a relative path, whose
+    SHA-256 digest the [fingerprint list](fingerprint_list) does not hold
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) changes directory to a folder outside that working
+    tree, then runs it
+- given: a file the same command creates before running it, at a path that resolves
+    outside the working tree holding the [project root](project_root)
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: the [tool call](tool_call) runs it from a working directory outside that working
+    tree
+- given: a file the same command creates before running it, at a path that resolves
+    inside the working tree holding the [project root](project_root) or that cannot
+    be resolved from the command's text, or that the command runs with its working
+    directory inside that working tree
+  then: the product refuses the [tool call](tool_call)
+  when: the [tool call](tool_call) is made
 assessed:
   REQ-22704490: u7IClIQOfStAss5hIWQrPe_jxv9hNQ4JUr1VPuJ3SWM
   REQ-36925311: iX2i16E_7qvduH95Y5WF0mTtddwIPNkz730O6lBKMTQ
@@ -62,6 +113,7 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
+  project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   6vfbgw: hgcBhXUvKTWfaMdo24blFA12neQWZ79GIAbOF_QV7T8
@@ -76,13 +128,18 @@ relations:
   REQ-36925311: depends_on
   REQ-38288492: depends_on
 status: approved
-text: If a [tool call](tool_call) would run a file whose text names the path of a
-  corpus [item](item)'s file, a folder of corpus [items](item), the baseline or the
-  [corpus root](corpus_root), origin's default branch does not hold that file unchanged
-  at its path, and the file is not one that lies under the folder of the Claude Code
-  plugin whose ${plugin_components.requirements_guard_hook} judges the [tool call](tool_call),
-  whose bytes have a SHA-256 digest the plugin's [fingerprint list](fingerprint_list)
-  holds, and that the [tool call](tool_call) runs without changing the environment,
-  then the product shall refuse the [tool call](tool_call).
+text: If a [tool call](tool_call) would run a file that origin's default branch does
+  not hold unchanged at its path, whose text names the path of a corpus [item](item)'s
+  file, a folder of corpus [items](item), the baseline or the [corpus root](corpus_root),
+  or cannot be read when the product judges the [tool call](tool_call), then the product
+  shall refuse the [tool call](tool_call) where the file lies inside the working tree
+  holding the [project root](project_root), where the [tool call](tool_call) runs
+  the file with its working directory inside that working tree, where a corpus path
+  the file's text names is absolute and lies inside that working tree, or where the
+  product cannot resolve the file's place or that working directory from the [tool
+  call](tool_call), unless the file lies under the folder of the Claude Code plugin
+  whose ${plugin_components.requirements_guard_hook} judges the [tool call](tool_call),
+  its bytes have a SHA-256 digest the plugin's [fingerprint list](fingerprint_list)
+  holds, and the [tool call](tool_call) runs it without changing the environment.
 type: functional
 verification: inspection
