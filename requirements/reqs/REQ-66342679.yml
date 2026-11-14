@@ -6,6 +6,9 @@ assessed:
   REQ-89218328: 0_EQrNIm_cPAP0Jr46-l51VhBkyd3BFNr9uzyY78yQI
   REQ-91036410: EFhAQqWmHFZP2Q6O9XURDN7sEjwE2GpQn4YU8nVhUDs
   portal: mgj4Q8JSICGkA9pIqwiABzQkDWQ_XNqxUwh4hAL45zQ
+citations:
+  jm5gcq: Xbo9jd9cv7VqWwIFkSUrF-UM12ZGlanfVfOewAZLMNo
+  lvox6c: 2aoPtDPj-l9ikzOweP8R_DkXQNf_deT-D085fgJhE9o
 priority: medium
 relations:
   REQ-50159837: constrains
