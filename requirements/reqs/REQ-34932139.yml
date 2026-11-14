@@ -10,6 +10,8 @@ assessed:
   REQ-24681230: wxRn3BbY54kTIMD47-TIVLtkiMxL5RZMlKubZG_lvwk
   REQ-43924642: SDx_e7a7A1XMQPML3XbBx3zHEK_udtWgckeshRvI3qU
   REQ-51424927: vQb-YtKja6pqE_TcCEGCnXaQ8ZT0dg7meNKih38TtMk
+citations:
+  grgv34: pmlM3BXMqaSs4P0dEHqYRMpcEKkpQnmxegKIMwJzSMg
 priority: medium
 relations:
   REQ-21960639: constrains

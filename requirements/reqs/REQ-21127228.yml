@@ -10,6 +10,8 @@ assessed:
   REQ-42065260: 5rvs-ESunP50aKFlghTl55lX7VtCyl3gPyxUtJhTnHw
   REQ-80226740: pd1uDx8y-jrwghMfC4eqxu59HOo3S162uJZJ32QDiO4
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  h75rte: la9KE7CHfKt64Hlsz3beMcO6aA38wDIAFLzOTcBYXtM
 priority: medium
 relations:
   REQ-42065260: constrains

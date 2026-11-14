@@ -115,8 +115,8 @@ def _default_ref(root):
     if named.returncode:
         # @req> REQ-30898926@Vu28eWaG_1mE kkoqo5
         raise ReqctlError(
-            "git does not say which branch of origin is the default one -- "
-            "name it with `git remote set-head origin BRANCH`"
+            "origin names no default branch, so which branch is the default "
+            "cannot be told -- name it with `git remote set-head origin BRANCH`"
         )
     ref = named.stdout.strip()
     if _git(root, "rev-parse", "-q", "--verify", f"{ref}^{{commit}}").returncode:
@@ -126,6 +126,19 @@ def _default_ref(root):
             "states cannot be read -- fetch it"
         )
     # @req- k6tk6l
+    return ref
+
+
+def _required_ref(root):
+    ref = _default_ref(root)
+    if ref is None:
+        # @req> REQ-30898926@Vu28eWaG_1mE kvnayw
+        raise ReqctlError(
+            "no remote is named origin, so which branch is the default cannot "
+            "be told -- add it with `git remote add origin URL`, fetch it "
+            "with `git fetch origin`, then name its default branch with `git "
+            "remote set-head origin --auto`"
+        )
     return ref
 
 
@@ -184,21 +197,13 @@ def _stated(root):
 def _previous(root):
     claimed = _unresolved(path(root)) if path(root).is_file() else None
     # @req> REQ-25777470@4o7sac7TLlHi lmbowm
-    stated = None if claimed is not None else _stated(root)
+    if claimed is None:
+        _stated(root)
     # @req+ REQ-43924642@SDx_e7a7A1XM bbqmqm
-    ref = _default_ref(root)
-    if ref is not None:
-        return _carried(root, ref), claimed
+    # @req> REQ-34932139@bQA5L6Md3NdY grgv34
+    # @req> REQ-20411754@mcpvTzFw73NC falgdo
+    return _carried(root, _required_ref(root)), claimed
     # @req- bbqmqm
-    # @req> REQ-20411754@mcpvTzFw73NC d3ntho
-    if claimed is not None:
-        # @req> REQ-30898926@Vu28eWaG_1mE cbe5hq
-        raise ReqctlError(
-            f"{path(root).name} holds an unresolved merge, and no default "
-            "branch says which baseline it follows -- add origin with `git "
-            "remote add origin URL`, fetch it, then generate"
-        )
-    return stated, None
 
 
 def generate(tree, root):

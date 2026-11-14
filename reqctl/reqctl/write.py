@@ -1868,34 +1868,28 @@ def repin_links(store, uids, everything):
 
 
 def _stated(root):
-    # @req+ REQ-80226740@xdXflfkWkveF m6jqza
-    where = _baseline.path(root)
-    ref = _baseline._default_ref(root)
-    if ref is None:
-        if not where.is_file():
-            return set(), None
-        held = corpus.read(where)
-        where = where.relative_to(root)
-    else:
-        named = where.relative_to(root).as_posix()
-        listed = _baseline._git(root, "ls-tree", ref, "--", named)
-        if listed.returncode:
-            # @req> REQ-30898926@Vu28eWaG_1mE 7hhrbq
-            raise ReqctlError(
-                f"cannot read the tree {ref} names, so whether it states a "
-                f"baseline cannot be told: {listed.stderr.strip()} -- fetch it "
-                "with `git fetch origin`, then run the command again")
-        if not listed.stdout.strip():
-            return set(), None
-        found = _baseline._git(root, "show", f"{ref}:{named}")
-        if found.returncode:
-            # @req> REQ-30898926@Vu28eWaG_1mE iwplaf
-            raise ReqctlError(
-                f"{ref} states a baseline that cannot be read: "
-                f"{found.stderr.strip()} -- fetch it again with `git fetch "
-                "origin`, then run the command again")
-        held = corpus.loads(found.stdout, ref)
-        where = f"{named} on {ref.removeprefix('refs/remotes/')}"
+    # @req+ REQ-80226740@pd1uDx8y-jrw m6jqza
+    # @req> REQ-21127228@tmZmgoKx792t h75rte
+    ref = _baseline._required_ref(root)
+    named = _baseline.path(root).relative_to(root).as_posix()
+    listed = _baseline._git(root, "ls-tree", ref, "--", named)
+    if listed.returncode:
+        # @req> REQ-30898926@Vu28eWaG_1mE imajoc
+        raise ReqctlError(
+            f"cannot read the tree {ref} names, so whether it states a "
+            f"baseline cannot be told: {listed.stderr.strip()} -- fetch it "
+            "with `git fetch origin`, then run the command again")
+    if not listed.stdout.strip():
+        return set(), None
+    found = _baseline._git(root, "show", f"{ref}:{named}")
+    if found.returncode:
+        # @req> REQ-30898926@Vu28eWaG_1mE fntc33
+        raise ReqctlError(
+            f"{ref} states a baseline that cannot be read: "
+            f"{found.stderr.strip()} -- fetch it again with `git fetch "
+            "origin`, then run the command again")
+    held = corpus.loads(found.stdout, ref)
+    where = f"{named} on {ref.removeprefix('refs/remotes/')}"
     held = held if isinstance(held, dict) else {}
     recorded = held.get("items")
     return (set(recorded) if isinstance(recorded, dict) else set(),
@@ -1913,7 +1907,7 @@ def delete(tree, uid):
             f"{uid} is approved -- what the corpus promises is deprecated, "
             f"not removed: `reqctl revise {uid} --status deprecated`"
         )
-    # @req+ REQ-80226740@xdXflfkWkveF d223dk
+    # @req+ REQ-80226740@pd1uDx8y-jrw d223dk
     # @req+ REQ-13861816@SpClrm8cjO-v nmlqee
     name = corpus.name_of(item.uid, item.data)
     identity = {item.uid} | ({name} if name is not None else set())
