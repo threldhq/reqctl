@@ -1701,9 +1701,10 @@ function openForm(act, entry) {
       const line = document.createElement("div");
       if (!at) return Object.assign(line, { textContent: text });
       const link = Object.assign(document.createElement("a"), { href: "#", textContent: text });
+      const field = box.querySelector(at);
       link.addEventListener("click", (event) => {
         event.preventDefault();
-        box.querySelector(at).focus();
+        field.focus();
       });
       line.append(link);
       return line;
