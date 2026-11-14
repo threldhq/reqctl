@@ -1091,6 +1091,14 @@ def mint(store, kind, name=None, placeholder=None):
     folder = corpus.folder_for(store.root, kind)
     if name is not None:
         _refuse_unusable_name(store, name)
+        # @req+ REQ-90857221@Bj85mwvDJhME cv2nmd
+        wore = sorted(corpus.carriers(store).get(name, []))
+        if wore:
+            # @req> REQ-30898926@Vu28eWaG_1mE ttjwaa
+            raise ReqctlError(
+                f"{name}: {', '.join(wore)} has carried that name -- choose "
+                "another name")
+        # @req- cv2nmd
         # @req> REQ-49112003@ntC6kZ4OX71X gwr3km
         return name, folder / f"{name}.yml"
     prefix = KINDS[kind]
@@ -1906,10 +1914,11 @@ def delete(tree, uid):
             f"not removed: `reqctl revise {uid} --status deprecated`"
         )
     # @req+ REQ-80226740@xdXflfkWkveF d223dk
-    # @req+ REQ-13861816@OGhn1Q-Xs0__ nmlqee
+    # @req+ REQ-13861816@SpClrm8cjO-v nmlqee
     name = corpus.name_of(item.uid, item.data)
     identity = {item.uid} | ({name} if name is not None else set())
-    wore = set(corpus.carried_of(item.uid, item.data))
+    wore = set(corpus.carried_of(item.uid, item.data)) - {
+        other.uid for other in corpus.items(tree)}
     stated, cut = _stated(tree.root)
     if (identity | wore) & stated:
         # @req> REQ-30898926@Vu28eWaG_1mE vu6cxf
