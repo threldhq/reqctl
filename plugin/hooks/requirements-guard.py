@@ -86,6 +86,8 @@ REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
 SHELLS = ("sh", "bash", "dash", "zsh", "ksh")
 ECHO_FLAGS = re.compile(r"-[neE]+")
 FIND_RUNS = ("-exec", "-execdir", "-ok", "-okdir")
+CHDIR = re.compile(r"--chdir(?:=.*)?|-[^-]*[CD].*")
+FUNCTION = re.compile(r"(?:function\s+)?([^\s()]+)\s*\(\s*\)|function\s+(\S+)")
 READ_OPTIONS = ("-C", "--git-dir", "--work-tree", "-c")
 READ_FLAGS = ("--literal-pathspecs", "--glob-pathspecs", "--noglob-pathspecs", "--icase-pathspecs")
 GIT_VALUED = (*READ_OPTIONS, "--namespace", "--config-env")
@@ -2407,6 +2409,12 @@ def sweeping(targets, here, bare):
 
 def judge_command(said, here, stdin=(), fed=()):
     words, unquoted = argv(said)
+    # @req+ REQ-75038049@w2u8eGVv46ut wumvci
+    prefix = words[:len(words) - len(invoked(words))]
+    if any(CHDIR.fullmatch(word) and {"env", "sudo"} & {*map(os.path.basename, prefix[:at])}
+           for at, word in enumerate(prefix)):
+        here = ""
+    # @req- wumvci
     # @req> REQ-38681394@U-JsY-BEDCYK bqj2im
     fed = (*fed, *stdin_files(said))
     # @req> REQ-38681394@U-JsY-BEDCYK coi6sj
@@ -2573,10 +2581,10 @@ def scripts_within(words, here):
     if tool == "eval":
         return [" ".join(rest)]
     if tool == "find":
-        return [" ".join(word if UNQUOTED_WORD.fullmatch(word) else shlex.quote(word)
-                         for word in itertools.takewhile(lambda word: word not in (";", "+"),
-                                                         rest[at + 1:]))
-                for at, word in enumerate(rest) if word in FIND_RUNS]
+        return ["cd - && " * run.endswith("dir") + " ".join(
+                    word if UNQUOTED_WORD.fullmatch(word) else shlex.quote(word)
+                    for word in itertools.takewhile(lambda word: word not in (";", "+"), rest[at + 1:]))
+                for at, run in enumerate(rest) if run in FIND_RUNS]
     # @req> REQ-74982341@IIwAqzZV1bP3 b75cgx
     # @req> REQ-76235768@1l5tlNlByWT6 rnakdc
     # @req> REQ-30013664@ijHTWP75cTcK lgiylq
@@ -3343,11 +3351,14 @@ def feeds(part):
 
 def cwds(pipelines, joins, cwd):
     places, heres, start, anywhere = [], {cwd}, {cwd}, {cwd}
+    # @req> REQ-75038049@w2u8eGVv46ut xsizlj
+    named = {name for part in itertools.chain.from_iterable(pipelines)
+             for found in FUNCTION.finditer(masked(part)) for name in found.groups() if name}
     for pipeline, before, after in zip(pipelines, [";", *joins], joins):
         certain = before not in ("&&", "||")
         start = heres if certain else start
         places.append(sorted(heres))
-        there, changed = moved(pipeline, heres, places)
+        there, changed = moved(pipeline, heres, places, named)
         # @req+ REQ-75038049@w2u8eGVv46ut ohiazc
         settled = changed and certain and all(
             os.path.isdir(folder) and os.access(folder, os.X_OK) for folder in there)
@@ -3367,13 +3378,16 @@ def cwds(pipelines, joins, cwd):
     return places
 
 
-def moved(pipeline, heres, places):
+def moved(pipeline, heres, places, named):
     said = heading(pipeline[-1])
     at = COMPOUND.match(masked(said)).end()
     called = invoked(argv(said[at:])[0])
     if called[:1] == ["eval"]:
         called = invoked(argv(" ".join(called[1:]))[0])
     tool, *rest = called or [""]
+    # @req> REQ-75038049@w2u8eGVv46ut 5im45v
+    if tool in named:
+        return heres | {""}, False
     if tool not in ("cd", "pushd", "popd"):
         return heres, False
     folder = next((word for word in rest if word == "-" or not word.startswith(
