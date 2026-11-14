@@ -1923,7 +1923,7 @@ def delete(tree, uid):
         )
     # @req- nmlqee
     # @req- d223dk
-    # @req+ REQ-60430571@Whq2LW6rLEyb ebwpu6
+    # @req+ REQ-60430571@YKRlV2VM8y15 ebwpu6
     holders = sorted(
         other.uid
         for other in corpus.items(tree)
@@ -1942,7 +1942,7 @@ def delete(tree, uid):
             "relation, `reqctl revise HOLDER` to drop a link or reference"
         )
     # @req- ebwpu6
-    # @req+ REQ-42065260@tSlWvFBjE0qf s7iyuc
+    # @req+ REQ-42065260@5rvs-ESunP50 s7iyuc
     corpus.remove(item.path)
     corpus.invalidate(tree)
     return item.path
