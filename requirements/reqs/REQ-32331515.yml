@@ -14,8 +14,8 @@ assessed:
   REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
-  7jdohw: -pugzHjEfjZixRchsrWnb_LDURA0kgANR0KjNf2VNSU
-  myaobz: vEC-8R1gbQjRDkBpHXj5kCFXNBn3AVMKuKFzMTqdx68
+  7jdohw: FzZrV4MxYVTgF1w1BG8pJ0dONIu1HN1nHRKX8xMf3_Y
+  myaobz: 0d39rz6kd4ie0v9DAAcoF-6JO5RotIn6Tydj_izjs8U
 priority: medium
 relations:
   REQ-31526771: constrains
