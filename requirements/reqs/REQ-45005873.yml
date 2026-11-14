@@ -5,14 +5,14 @@ acceptance_criteria:
 assessed:
   REQ-38789214: OMx9lVswwRCevaLsb_rsKAv_fBmasTnYKWw4lD6efoA
 citations:
-  3zy5fv: RMI6kNcNVNzffsS-K3N3YannYas0SFetBXMmSk4Fq88
-  6ucjoj: OSwFczJfN9Z02SstStFj2KQfmTYEjvt3tlmprRVHFF8
-  b5ynwh: FKZBxe1ykmk-73gQmq9wFV7r6RTFUU8fnNT8xpxTIsI
-  gc3t5j: avqijQqQWQ9wP-E65kH_H0eisTM4C3Aa8MWRXeeuznQ
+  3zy5fv: E7gNbtRBVAtKyYP5cONlYoJXOToOY0Sz_hIvXe1il98
+  6ucjoj: Gdci_8GLxwPcoZJcMc7l-Sjc1nm5QhORZjUcKFq4bvs
+  b5ynwh: hEzz0koUSsGYczhMpbTHEJ-5taKVFw-HgCWRpN21Ou0
+  gc3t5j: 2jAcnF6gpxvyYLeASgmUqEoJ-2-D9StARHDW3GrXe7c
   phnvew: SMcAn6i09Q_i_qSu9aozVyQiuEkl6hazJ03ffOIsaQE
   poosiz: 4YvVzP_RLfVZVAxmg7sljkZ7ffJ9j1oDm88yzRv8Yqg
   rojbbp: t-I_R0Zr93qcqqDd0dhAaRO5odpQN4-XHtVozUUJGh4
-  rze4ij: hg1DdXdV3SkBrQN4WFCoE2_dxx_ramiiMzKyElFQQj8
+  rze4ij: ti8xL1MSwP-Sk3PDP_asUw-Ri-QD9OsT5BLCzKka52s
 priority: medium
 relations:
   REQ-38789214: depends_on

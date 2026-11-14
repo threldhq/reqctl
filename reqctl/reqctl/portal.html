@@ -1155,6 +1155,15 @@ const defaultTitle = (act, uid, kind, entry) => ({
   <!-- @req- hiauof -->
 <!-- @req- 7sls5s -->
 
+<!-- @req> REQ-34331811@C-JfQjkX5I_Q chlwag -->
+const UNCHANGED = "Nothing was changed: change a field first";
+
+<!-- @req+ REQ-66342679@YF3W8dKIgpQE jm5gcq -->
+function refusal(...faults) {
+  return Object.assign(new Error(faults.map(([text]) => text).join("; ")), { faults });
+}
+<!-- @req- jm5gcq -->
+
 <!-- @req+ REQ-45797944@wXgeXQtMt7tG ib7sx5 -->
 function payloadFor(act, uid, read, held) {
   if (act === "unrelate") {
@@ -1175,14 +1184,20 @@ function payloadFor(act, uid, read, held) {
   if (ENTRY_ACTS.has(act)) {
     <!-- @req+ REQ-65499760@Kmwfnj7-rVbi hiu7iq -->
     const key = act === "new-entry" ? read("entry-key").trim() : held.entry;
-    if (!key) throw new Error("the member needs a name");
+    <!-- @req> REQ-34331811@C-JfQjkX5I_Q ogtux4 -->
+    if (!key) throw refusal(["The member needs a name: enter one", "#f-entry-key"]);
     <!-- @req- hiu7iq -->
     <!-- @req> REQ-80416166@fZFXqf9ggCT8 rw36xl -->
     const before = act === "new-entry" ? {} : (byUid[uid]?.entries?.[key] ?? {});
     <!-- @req+ REQ-91036410@EFhAQqWmHFZP twk5vc -->
-    const named = held.pairs().map(([name]) => name).filter(Boolean);
-    const twice = named.find((name, at) => named.indexOf(name) !== at);
-    if (twice) throw new Error(`${twice} is listed twice`);
+    const named = held.pairs().map(([name]) => name);
+    const twice = named.findIndex((name, at) => name && named.indexOf(name) !== at);
+    <!-- @req+ REQ-34331811@C-JfQjkX5I_Q 6c2djp -->
+    if (twice >= 0) {
+      throw refusal([`${named[twice]} is listed twice: rename or drop one of the two`,
+                     `#pairs .pair:nth-child(${twice + 1}) input`]);
+    }
+    <!-- @req- 6c2djp -->
     <!-- @req- twk5vc -->
     <!-- @req+ REQ-80416166@fZFXqf9ggCT8 b6wjwi -->
     const now = new Map(held.pairs().filter(([name]) => name));
@@ -1193,7 +1208,8 @@ function payloadFor(act, uid, read, held) {
     const unset = Object.keys(before).filter((name) => !now.has(name));
     <!-- @req- b6wjwi -->
     <!-- @req> REQ-11466654@hJPYOKZDTuvq tyghs2 -->
-    if (!set.length && !unset.length) throw new Error("nothing was changed");
+    <!-- @req> REQ-34331811@C-JfQjkX5I_Q nqzorq -->
+    if (!set.length && !unset.length) throw refusal([UNCHANGED]);
     <!-- @req+ REQ-80416166@fZFXqf9ggCT8 q3utqe -->
     const flag = act === "new-entry" ? "new-entry" : "entry";
     return { steps: [{ command: "revise", args: [uid],
@@ -1207,7 +1223,12 @@ function payloadFor(act, uid, read, held) {
   if (act === "relate") {
     <!-- @req+ REQ-84269679@uQ500_HZ6_7e iasyxk -->
     const target = read("field-target").trim();
-    if (!/^REQ-\d+$/.test(target)) throw new Error("the target must be a requirement");
+    <!-- @req+ REQ-34331811@C-JfQjkX5I_Q jojmbu -->
+    if (!/^REQ-\d+$/.test(target)) {
+      throw refusal(["The target must be a requirement: enter the uid of one",
+                     "#f-field-target"]);
+    }
+    <!-- @req- jojmbu -->
     <!-- @req- iasyxk -->
     return { steps: [{ command: "relate", args: [uid, read("field-relation"), target] }] };
   }
@@ -1243,7 +1264,12 @@ function payloadFor(act, uid, read, held) {
       const phrases = options[field.flag]
         .map((line) => line.split("=")[0].trim().replace(/\s+/g, " "));
       const twice = phrases.find((phrase, at) => phrases.indexOf(phrase) !== at);
-      if (twice) throw new Error(`${twice} is listed twice`);
+      <!-- @req+ REQ-34331811@C-JfQjkX5I_Q uakc7z -->
+      if (twice) {
+        throw refusal([`${twice} is listed twice: remove one of the two lines`,
+                       `#f-field-${field.flag}`]);
+      }
+      <!-- @req- uakc7z -->
       const gone = Object.keys(held).filter((key) => !phrases.includes(key));
       if (gone.length) options[field.drops] = gone;
     }
@@ -1255,7 +1281,12 @@ function payloadFor(act, uid, read, held) {
     <!-- @req+ REQ-50159837@eYoI-qFNXpXN ymfeaw -->
     const missing = shapeOf(act, kind)
       .filter((field) => field.required && !options[field.flag]).map((field) => field.flag);
-    if (missing.length) throw new Error(`a ${kind} needs ${missing.join(", ")}`);
+    <!-- @req+ REQ-34331811@C-JfQjkX5I_Q 46owta -->
+    if (missing.length) {
+      throw refusal(...missing.map((flag) =>
+        [`A ${kind} needs ${flag}: enter it`, `#f-field-${flag}`]));
+    }
+    <!-- @req- 46owta -->
     <!-- @req- ymfeaw -->
     <!-- @req+ REQ-44810466@bLJV-4isqQ5j f2cqu4 -->
     const { status, ...rest } = options;
@@ -1271,25 +1302,32 @@ function payloadFor(act, uid, read, held) {
   }
     <!-- @req- 2ehqos -->
   <!-- @req+ REQ-14679866@V0QsDEPmgOq3 vpkyye -->
+  <!-- @req+ REQ-34331811@C-JfQjkX5I_Q bt755a -->
   if (stuck.length) {
-    throw new Error(`reqctl cannot empty ${stuck.join(", ")}; put ${
-      stuck.length > 1 ? "those" : "that"} back, or deprecate the item`);
+    throw refusal(...stuck.map((flag) =>
+      [`reqctl cannot empty ${flag}: put it back, or deprecate the item`,
+       `#f-field-${flag}`]));
   }
+  <!-- @req- bt755a -->
   <!-- @req- vpkyye -->
   <!-- @req+ REQ-69300019@zmqcHuaUXUje gr6trq -->
   <!-- @req+ REQ-89218328@0_EQrNIm_cPA 5v5cpw -->
   const reword = held.rewords().map(([word, becomes]) => {
+    <!-- @req+ REQ-34331811@C-JfQjkX5I_Q wtmile -->
     if (word.includes("=")) {
-      throw new Error(`${word} cannot be reworded: reqctl reads old=new up to `
-                      + `the first =, and this word carries one`);
+      throw refusal([`${word} cannot be reworded, as reqctl reads old=new up to the `
+                     + `first = and this word carries one: clear its replacement`,
+                     `[data-word="${CSS.escape(word)}"]`]);
     }
+    <!-- @req- wtmile -->
     return `${word}=${becomes}`;
   });
   <!-- @req- 5v5cpw -->
   if (reword.length) options.reword = reword;
   <!-- @req- gr6trq -->
   <!-- @req> REQ-11466654@hJPYOKZDTuvq i35p6w -->
-  if (!Object.keys(options).length) throw new Error("nothing was changed");
+  <!-- @req> REQ-34331811@C-JfQjkX5I_Q l36icd -->
+  if (!Object.keys(options).length) throw refusal([UNCHANGED]);
   <!-- @req+ REQ-21513166@zjiX-rVW8oFK 45zzp6 -->
   return { steps: [{ command: "revise", args: [uid], options }] };
 }
@@ -1656,6 +1694,22 @@ function openForm(act, entry) {
     note.classList.toggle("bad", bad);
   };
   <!-- @req- hoajjx -->
+  <!-- @req+ REQ-66342679@YF3W8dKIgpQE lvox6c -->
+  const state = (broken) => {
+    note.classList.add("bad");
+    note.replaceChildren(...(broken.faults ?? [[broken.message]]).map(([text, at]) => {
+      const line = document.createElement("div");
+      if (!at) return Object.assign(line, { textContent: text });
+      const link = Object.assign(document.createElement("a"), { href: "#", textContent: text });
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        box.querySelector(at).focus();
+      });
+      line.append(link);
+      return line;
+    }));
+  };
+  <!-- @req- lvox6c -->
   <!-- @req> REQ-67558098@GdMrvliz8Kv0 uo53u3 -->
   box.addEventListener("close", () => box.remove());
   <!-- @req+ REQ-64610303@tFQ0fV9lxwXY irqoj5 -->
@@ -1669,7 +1723,7 @@ function openForm(act, entry) {
     try {
       change = composed();
     } catch (broken) {
-      return say(broken.message, true);
+      return state(broken);
     }
   <!-- @req- tboibr -->
     <!-- @req+ REQ-77248647@YMbLJ7it09qa 76jwll -->
@@ -1691,7 +1745,7 @@ function openForm(act, entry) {
     try {
       change = composed();
     } catch (broken) {
-      return say(broken.message, true);
+      return state(broken);
     }
   <!-- @req- 7emiwr -->
   <!-- @req- eyvnty -->
