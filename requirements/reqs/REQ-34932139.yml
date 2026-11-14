@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a repository with no remote named origin
+  then: the product refuses and says which branch is the default cannot be told
+  when: reqctl baseline --generate is run
+- given: a repository whose remote named origin names no default branch
+  then: the product refuses and says which branch is the default cannot be told
+  when: reqctl baseline --generate is run
+assessed:
+  REQ-21960639: DzQkjJjbuYa1vdy-Z8HwO8EFMRNxQjEKnB5TYIXdLIo
+  REQ-24681230: wxRn3BbY54kTIMD47-TIVLtkiMxL5RZMlKubZG_lvwk
+  REQ-43924642: SDx_e7a7A1XMQPML3XbBx3zHEK_udtWgckeshRvI3qU
+  REQ-51424927: vQb-YtKja6pqE_TcCEGCnXaQ8ZT0dg7meNKih38TtMk
+priority: medium
+relations:
+  REQ-21960639: constrains
+  REQ-24681230: derives_from
+  REQ-43924642: constrains
+  REQ-51424927: constrains
+status: approved
+text: If reqctl baseline --generate is run in a repository that has no remote named
+  origin, or whose remote named origin names no default branch, then the product shall
+  refuse the generation, stating that which branch is the default cannot be told.
+type: functional
+verification: inspection

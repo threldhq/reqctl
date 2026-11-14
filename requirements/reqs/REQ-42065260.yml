@@ -9,11 +9,6 @@ acceptance_criteria:
     [item](item) records a link, a reference or a [pin](pin)
   then: the product removes the [item](item) file
   when: removal of the unapproved [item](item) is requested
-- given: an unapproved [item](item) that the working tree's baseline does not state
-    and toward which no other [item](item) records a link, a reference or a [pin](pin),
-    in a repository with no remote named origin
-  then: the product removes the [item](item) file
-  when: removal of the unapproved [item](item) is requested
 - given: an unapproved [item](item) that the baseline the default branch carries does
     not state, linked by a second [item](item) only by way of a third
   then: the product removes the [item](item) file

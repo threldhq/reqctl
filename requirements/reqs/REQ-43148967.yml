@@ -7,7 +7,7 @@ acceptance_criteria:
   when: removal of an unapproved [item](item) no baseline states, and toward which
     no other [item](item) records a link, a reference or a [pin](pin), is requested
 assessed:
-  REQ-42065260: tSlWvFBjE0qfpzFgfr2u3uWle8JUvjQjsYQUlqE__gs
+  REQ-42065260: 5rvs-ESunP50aKFlghTl55lX7VtCyl3gPyxUtJhTnHw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
