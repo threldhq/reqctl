@@ -86,7 +86,7 @@ REDIRECTION = re.compile(r"\d*(?:<<<|<>|>\||>>|<<|<|>)")
 SHELLS = ("sh", "bash", "dash", "zsh", "ksh")
 ECHO_FLAGS = re.compile(r"-[neE]+")
 FIND_RUNS = ("-exec", "-execdir", "-ok", "-okdir")
-CHDIR = re.compile(r"--chdir(?:=.*)?|-[^-]*[CD].*")
+CHDIR = re.compile(r"--c.*|-[^-]*[CD].*")
 FUNCTION = re.compile(r"(?:function\s+)?([^\s()]+)\s*\(\s*\)|function\s+(\S+)")
 READ_OPTIONS = ("-C", "--git-dir", "--work-tree", "-c")
 READ_FLAGS = ("--literal-pathspecs", "--glob-pathspecs", "--noglob-pathspecs", "--icase-pathspecs")
@@ -2247,6 +2247,12 @@ def refuse_unheld_script(words, here, fed=()):
         return
     if not called:
         return
+    for at, run in enumerate(called if os.path.basename(called[0]) == "find" else ()):
+        if run in ("-execdir", "-okdir"):
+            inner = list(itertools.takewhile(lambda word: word not in (";", "+"), called[at + 1:]))
+            refuse_unheld_script(inner, "")
+            for script in scripts_within(inner, ""):
+                judge_shell(script, "")
     # @req+ REQ-38681394@U-JsY-BEDCYK pqnkpz
     raw, key = called[0], runner(called[0])
     if key in SCRIPT_RUNNERS:
@@ -2581,10 +2587,10 @@ def scripts_within(words, here):
     if tool == "eval":
         return [" ".join(rest)]
     if tool == "find":
-        return ["cd - && " * run.endswith("dir") + " ".join(
-                    word if UNQUOTED_WORD.fullmatch(word) else shlex.quote(word)
-                    for word in itertools.takewhile(lambda word: word not in (";", "+"), rest[at + 1:]))
-                for at, run in enumerate(rest) if run in FIND_RUNS]
+        return [" ".join(word if UNQUOTED_WORD.fullmatch(word) else shlex.quote(word)
+                         for word in itertools.takewhile(lambda word: word not in (";", "+"),
+                                                         rest[at + 1:]))
+                for at, word in enumerate(rest) if word in FIND_RUNS]
     # @req> REQ-74982341@IIwAqzZV1bP3 b75cgx
     # @req> REQ-76235768@1l5tlNlByWT6 rnakdc
     # @req> REQ-30013664@ijHTWP75cTcK lgiylq
@@ -3353,7 +3359,8 @@ def cwds(pipelines, joins, cwd):
     places, heres, start, anywhere = [], {cwd}, {cwd}, {cwd}
     # @req> REQ-75038049@w2u8eGVv46ut xsizlj
     named = {name for part in itertools.chain.from_iterable(pipelines)
-             for found in FUNCTION.finditer(masked(part)) for name in found.groups() if name}
+             for found in FUNCTION.finditer(COMPOUND.match(masked(heading(part)))[0])
+             for name in found.groups() if name}
     for pipeline, before, after in zip(pipelines, [";", *joins], joins):
         certain = before not in ("&&", "||")
         start = heres if certain else start
@@ -3386,7 +3393,7 @@ def moved(pipeline, heres, places, named):
         called = invoked(argv(" ".join(called[1:]))[0])
     tool, *rest = called or [""]
     # @req> REQ-75038049@w2u8eGVv46ut 5im45v
-    if tool in named:
+    if named.intersection(tokens_of(said[at:])):
         return heres | {""}, False
     if tool not in ("cd", "pushd", "popd"):
         return heres, False
