@@ -132,7 +132,7 @@ SED_SCRIPT = re.compile(
     rf"(?:\s*(?:{_SED_ADDRESS}(?:,{_SED_ADDRESS})?!?\s*)?"
     r"(?:s(?P<d>[^\\\n\w\s])(?:\\.|(?!(?P=d))[^\\\n])*(?P=d)"
     r"(?:\\.|(?!(?P=d))[^\\\n])*(?P=d)[gpIiMm0-9]*|[pdqP=])\s*(?:;|$))+")
-# @req+ REQ-38099593@WZbBLy6bHv3j 2x3zhi
+# @req+ REQ-38099593@mJ9vnM77-RdT 2x3zhi
 SEARCHES = ("grep", "egrep", "fgrep", "rg", "ag")
 RUNS_PROGRAM = ("--open-files-in-pager", "--pre", "--pager", "--hostname-bin")
 OPENS_PAGER = re.compile(r"-[0-9A-Za-z]*O")
@@ -417,13 +417,23 @@ MERGE_VALUED = ("-m", "-s", "--strategy", "-X", "--strategy-option", "-F", "--fi
                 "--shallow-exclude", "--upload-pack", "-o", "--server-option",
                 "--negotiation-tip", "--refmap")
 
-# @req> REQ-75038049@hXyFNmxx-SWy g3ql3s
+# @req> REQ-75038049@w2u8eGVv46ut g3ql3s
 UNHELD_SCRIPT = (
     "Running {file} blocked: it names the requirements corpus ({found}), and the "
     "default branch of origin does not hold it unchanged at its path.\n" + USE_REQCTL
 )
+OUTSIDE_SCRIPT = (
+    "Running {file} blocked: it names the requirements corpus ({found}), and it would run "
+    "with its working directory inside the project's working tree, or in one the guard "
+    "cannot resolve.\nRun it from outside that working tree: change directory to a folder "
+    "outside it in the same command, then run the file."
+)
+ABSOLUTE_SCRIPT = (
+    "Running {file} blocked: it names the requirements corpus by an absolute path inside "
+    "the project's working tree ({found}).\n" + USE_REQCTL
+)
 
-# @req+ REQ-75038049@hXyFNmxx-SWy kbbyh4
+# @req+ REQ-75038049@w2u8eGVv46ut kbbyh4
 PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 FINGERPRINTS = frozenset({
     "956d657e9d16f55064156ce6c470dd51f4589ad5689924f0ad7d45c316b6e776",
@@ -451,12 +461,12 @@ PLUGIN_UNRESOLVED = (
     "plugin itself changes through a reqctl release: edit its sources in the reqctl repository, "
     "then `claude plugin update reqctl@reqctl`."
 )
-# @req> REQ-75038049@hXyFNmxx-SWy 6vfbgw
+# @req> REQ-75038049@w2u8eGVv46ut 6vfbgw
 ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
                         r"export|declare|typeset|readonly|local|read|readarray|mapfile|getopts|let|"
                         r"eval|exec|source|for|select|hash|coproc|wait|alias|\.)(?=[\s<]|$)"
                         r"|printf(?:\s+-\S+)*?\s+-v|[A-Za-z_][\w.-]*\s*\(\s*\))|\$\{\w+(?:\[[^]]*\])?:?=")
-CALL = {"changes_environment": True}
+CALL = {"changes_environment": True, "cwd": ""}
 # @req> REQ-59919160@eEBU6tuB77Dq v6s3eb
 WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", "tee", "install",
            "rsync", "truncate", "dd", "unlink", "sed", "perl", "tar", "unzip", "patch", "cpio",
@@ -493,6 +503,8 @@ CONNECTOR_WRITE = re.compile(
     re.IGNORECASE)
 RUNNERS = {"python": "c", "node": "ep", "perl": "eE", "ruby": "e", "source": "", ".": "",
            **dict.fromkeys((*SHELLS, "fish"), "cs")}
+SCRIPT_RUNNERS = ("pdb", "cProfile", "trace", "pytest", "ipython", "IPython")
+ENV_VALUED = ("-u", "--unset", "-C", "--chdir")
 PROGRAMS = tuple(tool for tool, inline in RUNNERS.items() if inline and tool not in SHELLS)
 PROGRAM_WORD = re.compile(r"[^\s'\"`();|&<>]+")
 RUN_VALUED = {"python": ("-W", "-X", "-m", "--check-hash-based-pycs"),
@@ -537,7 +549,7 @@ CURL_CONFIG_LINE = re.compile(r"(-{0,2}[A-Za-z0-9][\w-]*)(?:\s*[=:]\s*|\s+|$)(.*
 
 def named_paths(value, keys=PATH_KEY, key=""):
     if isinstance(value, str):
-        # @req> REQ-38099593@WZbBLy6bHv3j okrfi5
+        # @req> REQ-38099593@mJ9vnM77-RdT okrfi5
         # @req> REQ-68392771@WJbbGhVR9pq9 bmmpeb
         if keys.search(key) and len(value) > INPUT_LIMIT:
             deny(LONG_INPUT.format(key=key, length=len(value)))
@@ -963,7 +975,10 @@ def unescaped(text):
 @functools.cache
 def nested(part):
     at = COMPOUND.match(masked(part)).end()
-    return [part[at:], *groups(part[:at])] if at else groups(part)
+    # @req> REQ-38681394@U-JsY-BEDCYK ycqg7v
+    if not at or FOR_HEADER.fullmatch(masked(heading(part))):
+        return groups(part)
+    return [part[at:], *groups(part[:at])]
 
 
 def tokens_of(part):
@@ -1087,7 +1102,7 @@ def located(words, here):
     return here, [os.path.expanduser(word) for word in where], settings
 
 
-# @req> REQ-38099593@WZbBLy6bHv3j bc4mmq
+# @req> REQ-38099593@mJ9vnM77-RdT bc4mmq
 def searched(part):
     words = tokens_of(part.split("\n", 1)[0])
     tool, rest = (("git grep", words[2:]) if words[:2] == ["git", "grep"]
@@ -1101,7 +1116,7 @@ def searched(part):
     return tool, None
 
 
-# @req> REQ-38099593@WZbBLy6bHv3j dek4pk
+# @req> REQ-38099593@mJ9vnM77-RdT dek4pk
 def unreadable(part):
     quote = None
     for char in part:
@@ -1112,7 +1127,7 @@ def unreadable(part):
     return "a line break" if "\n" in part else None
 
 
-# @req> REQ-38099593@WZbBLy6bHv3j j6ubo7
+# @req> REQ-38099593@mJ9vnM77-RdT j6ubo7
 def only_reads(words):
     tool, rest = (words[0], words[1:]) if words else ("", [])
     if tool == "sort":
@@ -1149,7 +1164,7 @@ def sink_runs(words):
     return not scripts or not all(SED_SCRIPT.fullmatch(script) for script in scripts)
 
 
-# @req> REQ-38099593@WZbBLy6bHv3j 4h5lnn
+# @req> REQ-38099593@mJ9vnM77-RdT 4h5lnn
 def names_citation(cmd):
     reach = [{"split"}] + [set() for _ in OPENER]
     for admits, word, split in pattern_atoms(cmd.replace("\\\n", "")):
@@ -1238,7 +1253,7 @@ def heredoc_body(cmd, m, doc):
     return None
 
 
-# @req> REQ-38099593@WZbBLy6bHv3j xdls2r
+# @req> REQ-38099593@mJ9vnM77-RdT xdls2r
 # @req> REQ-22704490@u7IClIQOfStA ypnv3w
 def messageless(cmd):
     m = masked(cmd)
@@ -2192,10 +2207,10 @@ def refuse_api_write(words, here, said, expanded=False):
     guard_default(f"{called[0]} to api.github.com{found.group(1) or ''}", place, targets, slug)
 
 
-# @req> REQ-75038049@hXyFNmxx-SWy rvzbno
-def refuse_unheld_script(words, here):
+# @req> REQ-75038049@w2u8eGVv46ut rvzbno
+def refuse_unheld_script(words, here, fed=()):
     start = len(words) - len(invoked(words))
-    # @req+ REQ-38681394@yRU1nDICx55I 7ojhwq
+    # @req+ REQ-38681394@U-JsY-BEDCYK 7ojhwq
     head = invoked(words[:start - 1]) if start else []
     if (start and runner(words[start - 1]) in RUNNERS
             and not (head and head[0] in LAUNCHERS and "run" not in head)):
@@ -2230,37 +2245,99 @@ def refuse_unheld_script(words, here):
         return
     if not called:
         return
+    # @req+ REQ-38681394@U-JsY-BEDCYK pqnkpz
     raw, key = called[0], runner(called[0])
+    if key in SCRIPT_RUNNERS:
+        for script in handed(called[1:], here):
+            judge_run(raw, script, False, here)
+        return
     file, module = (raw if key not in RUNNERS and "/" in raw else None), False
-    for previous, word in itertools.pairwise(called) if key in RUNNERS else ():
+    for at, (previous, word) in enumerate(itertools.pairwise(called), 1) if key in RUNNERS else ():
         inline = RUNNERS[key]
-        if inline and (word == "-" or word.startswith(("--eval", "--print"))
+        if inline and (word == "-" or "s" in inline and short_flagged([word], "s")):
+            break
+        if inline and (word.startswith(("--eval", "--print"))
                        or any(short_flagged([word], letter) for letter in inline)):
             return
         module = key == "python" and previous == "-m"
         if module or (not word.startswith("-") or not inline) and previous not in RUN_VALUED.get(
                 key, ()):
             file = word.replace(".", "/") if module else word
+            for script in handed(called[at + 1:], here) if module and word in SCRIPT_RUNNERS else ():
+                judge_run(raw, script, False, here)
             break
     if file:
         judge_run(raw, file, module, here)
+    elif RUNNERS.get(key):
+        for script in fed:
+            judge_run(raw, script, False, here)
+    # @req- pqnkpz
 
 
-# @req> REQ-75038049@hXyFNmxx-SWy yu277l
+def handed(words, here):
+    scripts = []
+    for previous, word in itertools.pairwise(["", *words]):
+        named = word.partition("::")[0]
+        if not word.startswith("-") and (
+                named.endswith(".py")
+                or here and os.path.isfile(os.path.join(here, os.path.expanduser(named)))
+                or ("$" in word or "`" in word) and not previous.startswith("-")):
+            scripts.append(named)
+    return scripts
+
+
+def stdin_files(said):
+    words, bare = tokens_of(said), tokens_of(masked(said))
+    return tuple(word[found.end():] or following
+                 for word, mask, following in zip(words, bare, [*words[1:], ""])
+                 if (found := REDIRECTION.match(mask)) and found[0].lstrip("0") == "<")
+
+
+def piped_files(pipeline, at, here):
+    return tuple(word for part in pipeline[:at] for word in argv(heading(part))[0][1:]
+                 if not word.startswith("-") and here
+                 and os.path.isfile(os.path.join(here, os.path.expanduser(word))))
+
+
+@functools.cache
+def project_tree(cwd):
+    root = os.environ.get("CLAUDE_PROJECT_DIR") or cwd
+    top = (git_reads(["rev-parse", "--show-toplevel"], (root, [], {})) or "").strip()
+    return os.path.realpath(top or root)
+
+
+def inside_project(path):
+    return Path(os.path.realpath(path)).is_relative_to(project_tree(CALL["cwd"]))
+
+
+def absolute_corpus(text):
+    trees = {project_tree(CALL["cwd"]),
+             os.path.abspath(os.environ.get("CLAUDE_PROJECT_DIR") or CALL["cwd"])}
+    return next((found[0] for tree in trees
+                 for found in re.finditer(re.escape(tree.rstrip("/")) + r"/[^\s'\"`]*", text)
+                 if CORPUS_DIR.search(found[0])
+                 or found[0].rstrip("/").rsplit("/", 1)[-1] == CORPUS_ROOT_NAME), None)
+
+
+# @req> REQ-75038049@w2u8eGVv46ut yu277l
 def judge_run(raw, file, module, here):
-    if "$" in file or "`" in file or not here and not os.path.isabs(file):
+    if "$" in file or "`" in file or not here and not os.path.isabs(os.path.expanduser(file)):
         deny(UNREADABLE.format(what=f"which file {raw} runs"))
     path = os.path.realpath(os.path.join(here, os.path.expanduser(file)))
     package = module or os.path.isdir(path)
     path = (path + ".py" if module and os.path.isfile(path + ".py")
             else os.path.join(path, "__main__.py") if package else path)
+    inside = inside_project(path)
+    reaches = inside or not here or inside_project(here)
     if not os.path.isfile(path):
-        if package:
+        if package or not reaches:
             return
         deny(UNREADABLE.format(what=f"{file}, which does not exist yet"))
     try:
         data = Path(path).read_bytes()
     except OSError:
+        if not reaches:
+            return
         deny(UNREADABLE.format(what=file))
     text = flatten(data.decode(errors="replace")) if CORPUS_ROOT_NAME.encode() in data else ""
     found = CORPUS_DIR.search(text) or ROOT_QUOTED.search(text)
@@ -2268,6 +2345,12 @@ def judge_run(raw, file, module, here):
         return
     if (Path(path).is_relative_to(PLUGIN_ROOT) and not CALL["changes_environment"]
             and hashlib.sha256(data).hexdigest() in FINGERPRINTS):
+        return
+    if not inside:
+        if named := absolute_corpus(text):
+            deny(ABSOLUTE_SCRIPT.format(file=file, found=named))
+        if reaches:
+            deny(OUTSIDE_SCRIPT.format(file=file, found=found.group()))
         return
     place = (here, [], {})
     held = git_reads(["rev-parse", "--verify", "-q", "refs/remotes/origin/HEAD:./"
@@ -2307,8 +2390,11 @@ def sweeping(targets, here, bare):
             return w
 
 
-def judge_command(said, here, stdin=()):
+def judge_command(said, here, stdin=(), fed=()):
     words, unquoted = argv(said)
+    # @req> REQ-38681394@U-JsY-BEDCYK coi6sj
+    if split := env_split(words):
+        judge_shell(split, here, stdin)
     refuse_destructive_push(said)
     # @req+ REQ-70178381@2GE_TPwGTZKU dbuwzq
     subcommand, _ = git_subcommand(words)
@@ -2422,7 +2508,8 @@ def judge_command(said, here, stdin=()):
     # @req> REQ-60587913@64oissmU4Xo2 j3bx6n
     refuse_configured_force(words, here)
     refuse_api_write(words, here, said)
-    refuse_unheld_script(words, here)
+    # @req> REQ-38681394@U-JsY-BEDCYK ty4woi
+    refuse_unheld_script(words, here, (*fed, *stdin_files(said)))
     refuse_discarding_work(words, here)
     for script in scripts_within(words, here):
         judge_shell(script, here, stdin)
@@ -2434,6 +2521,26 @@ def judge_command(said, here, stdin=()):
             lambda word: word != "--" and word.startswith(("-", "+")), operands), "c"):
         for script in stdin:
             judge_shell(script, here)
+
+
+def env_split(words):
+    at = next((at for at, word in enumerate(words) if os.path.basename(word) == "env"), None)
+    if at is None or at >= len(words) - len(invoked(words)):
+        return None
+    rest = iter(enumerate(words[at + 1:], at + 1))
+    for index, word in rest:
+        short = re.fullmatch(r"-[i0v]*S(.*)", word)
+        if word.startswith("--split-string") or short and not word.startswith("--"):
+            value = word.partition("=")[2] if word.startswith("--") else short[1]
+            following = words[index + 1:]
+            if not value:
+                value, following = (following or [""])[0], following[1:]
+            return " ".join([*map(shlex.quote, words[:index]), value, *map(shlex.quote, following)])
+        if word in ENV_VALUED:
+            next(rest, None)
+        elif not word.startswith("-") and "=" not in word:
+            return None
+    return None
 
 
 def removes_recursively(called):
@@ -3064,13 +3171,15 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None):
             # @req> REQ-21901290@fc_rdI5ms5IC 5zrapb
             # @req> REQ-91051324@ljHcdWSG-nys 343uga
             # @req> REQ-70178381@2GE_TPwGTZKU vzfqst
+            # @req> REQ-38681394@U-JsY-BEDCYK sdr4nq
+            fed = piped_files(pipeline, at, here)
             for spelled in resolved(invocation, assigned):
-                judge_command(spelled, here, piped(stdin, pipeline, at))
+                judge_command(spelled, here, piped(stdin, pipeline, at), fed)
             judge_command(part if any(
                 len(alternatives) > 256 or any(map(STDIN_ARGUMENTS.search, alternatives))
                 for word in tokens_of(invocation)
                 for alternatives in [list(itertools.islice(braced(word), 257))]) else invocation,
-                here, piped(stdin, pipeline, at))
+                here, piped(stdin, pipeline, at), fed)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
             if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
                 deny(DIRECT_READ.format(target=invocation.strip()))
@@ -3227,13 +3336,16 @@ def cwds(pipelines, joins, cwd):
         start = heres if certain else start
         places.append(sorted(heres))
         there, changed = moved(pipeline, heres, places)
+        # @req+ REQ-75038049@w2u8eGVv46ut ohiazc
+        settled = changed and certain and all(map(os.path.isdir, there))
         if after == "&":
             heres = start
         elif after == "&&":
             heres = there if changed and before != "||" else heres | there
         else:
-            heres = there if changed and certain and all(map(os.path.isdir, there)) else anywhere | heres | there
-        anywhere = anywhere | heres if after == "&&" else heres
+            heres = there if settled else anywhere | heres | there
+        anywhere = (heres if settled else anywhere | heres) if after == "&&" else heres
+        # @req- ohiazc
         if len(heres) > CWD_LIMIT:
             deny(UNREADABLE.format(what=f"where the command runs, past {CWD_LIMIT} folders"))
     return places
@@ -3263,7 +3375,7 @@ def moved(pipeline, heres, places):
 def citations(text):
     if "\0" in text:
         return Counter()
-    # @req> REQ-38099593@WZbBLy6bHv3j mexsdk
+    # @req> REQ-38099593@mJ9vnM77-RdT mexsdk
     return Counter(line.strip() for line in text.removeprefix("\ufeff").split("\n")
                    if CITATION_LINE.match(line))
 
@@ -3320,14 +3432,15 @@ def notebook_edited(args, cwd):
     return before, "" if mode == "delete" else new
 
 
-# @req> REQ-38099593@WZbBLy6bHv3j 3yvytz
+# @req> REQ-38099593@mJ9vnM77-RdT 3yvytz
 def judge_citation_edit(tool, args, cwd):
+    if tool not in ("NotebookEdit", "Edit", "MultiEdit", "Write") or not inside_project(Path(
+            cwd, os.path.expanduser(args.get("file_path") or args.get("notebook_path") or ""))):
+        return
     if tool == "NotebookEdit":
         before, after = notebook_edited(args, cwd)
-    elif tool in ("Edit", "MultiEdit", "Write"):
-        before, after = edited(tool, args, cwd)
     else:
-        return
+        before, after = edited(tool, args, cwd)
     if not isinstance(after, str):
         deny(UNREADABLE.format(what="the content field"))
     if citations(before) != citations(after):
@@ -3418,7 +3531,7 @@ def governing(tool, args, cwd):
             "Read the code against what they name:\n" + "\n".join(shown))
 
 
-# @req> REQ-38099593@WZbBLy6bHv3j cebvfg
+# @req> REQ-38099593@mJ9vnM77-RdT cebvfg
 def judge_citation_shell(raw, cwd):
     cmd = unescaped(raw)
     held = set()
@@ -3426,12 +3539,16 @@ def judge_citation_shell(raw, cwd):
         held = held_citation_names(cwd) & set(NAME.findall(cmd.translate(UNQUOTED)))
         if not held:
             return
-    for part in (part for pipeline in scan(QUIET_REDIRECT.sub(" ", cmd)) if not held or held & set(
-            NAME.findall(" ".join(pipeline).translate(UNQUOTED))) for part in pipeline):
+    joins = []
+    pipelines = scan(QUIET_REDIRECT.sub(" ", cmd), joins)
+    for part, heres in ((part, heres) for pipeline, heres in zip(pipelines, cwds(pipelines, joins, cwd))
+                        if not held or held & set(NAME.findall(" ".join(pipeline).translate(UNQUOTED)))
+                        for part in pipeline):
         found = unreadable(part)
         if found:
             deny(UNREAD_COMMAND.format(found=found))
-        if ">" in masked(part) or OUTPUT_FLAG.search(part.translate(UNQUOTED)):
+        outside = written_outside(part, heres)
+        if not outside and ">" in masked(part) or OUTPUT_FLAG.search(part.translate(UNQUOTED)):
             deny(f"{HAND_CITATION}\nIn {part.strip()}")
         tool, flag = searched(part)
         if flag:
@@ -3439,9 +3556,26 @@ def judge_citation_shell(raw, cwd):
                  f"blocked: such a command may only read.\nSearch without {flag}.")
         words = tokens_of(part)
         git = GIT_READ.search(part)
-        if tool or (git and git["read"]) or only_reads(words):
+        if outside or tool or (git and git["read"]) or only_reads(words):
             continue
         deny(NOT_A_READ.format(tool=words[0]))
+
+
+def written_outside(part, heres):
+    words, bare = tokens_of(part), tokens_of(masked(part))
+    targets, plain, pairs = [], [], iter(zip(words, bare))
+    for word, mask in pairs if len(words) == len(bare) else ():
+        found = REDIRECTION.match(mask)
+        if not found:
+            plain.append(word)
+        elif ">" in found[0]:
+            targets.append(word[found.end():] or next(pairs, ("", ""))[0])
+        elif REDIRECTION.fullmatch(mask):
+            next(pairs, None)
+    return bool(targets) and only_reads(plain) and all(
+        here and target and not GLOB_CHAR.search(target)
+        and not inside_project(os.path.join(here, os.path.expanduser(target)))
+        for target in targets for here in heres)
 
 
 def held_citation_names(cwd):
@@ -3528,6 +3662,9 @@ def decide(data: dict) -> "str | None":
     if not isinstance(cwd, str) or not cwd:
         cwd = os.environ.get("CLAUDE_PROJECT_DIR") or "."
     cwd = os.path.abspath(cwd)
+    # @req> REQ-75038049@w2u8eGVv46ut cz2lgv
+    # @req> REQ-38099593@mJ9vnM77-RdT tcufug
+    CALL["cwd"] = cwd
 
     # @req> REQ-73144852@yU84_78bOmur rlbt24
     # @req> REQ-85731550@GpdDXMWGeLgC ca7ecu
@@ -3603,7 +3740,7 @@ def decide(data: dict) -> "str | None":
     judge_citation_edit(tool, args, cwd)
     shown = governing(tool, args, cwd)
     commands = [messageless(value) for value in named_paths(args, COMMAND_KEY)]
-    # @req> REQ-75038049@hXyFNmxx-SWy hwgp36
+    # @req> REQ-75038049@w2u8eGVv46ut hwgp36
     CALL["changes_environment"] = any(ENV_CHANGE.search(spoken(judged)) for judged in commands)
     # @req> REQ-60587913@64oissmU4Xo2 5qdzrp
     # @req> REQ-36282702@sK_P4PZZM9_w o2rpyz
