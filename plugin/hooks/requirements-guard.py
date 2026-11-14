@@ -2328,9 +2328,11 @@ def absolute_corpus(text):
 
 # @req> REQ-75038049@w2u8eGVv46ut yu277l
 def judge_run(raw, file, module, here):
-    if "$" in file or "`" in file or not here and not os.path.isabs(os.path.expanduser(file)):
+    spelled = os.path.expanduser(file)
+    if ("$" in file or "`" in file or spelled.startswith("~")
+            or not here and not os.path.isabs(spelled)):
         deny(UNREADABLE.format(what=f"which file {raw} runs"))
-    path = os.path.realpath(os.path.join(here, os.path.expanduser(file)))
+    path = os.path.realpath(os.path.join(here, spelled))
     package = module or os.path.isdir(path)
     path = (path + ".py" if module and os.path.isfile(path + ".py")
             else os.path.join(path, "__main__.py") if package else path)
@@ -3573,7 +3575,7 @@ def written_outside(part, heres):
     targets = [word for found in REDIRECT_TARGET.finditer(masked(part))
                for word in tokens_of(part[found.start(1):found.end(1)])]
     return bool(targets) and only_reads(argv(part)[0]) and all(
-        here and not GLOB_CHAR.search(target)
+        here and not GLOB_CHAR.search(target) and not os.path.expanduser(target).startswith("~")
         and not inside_project(os.path.join(here, os.path.expanduser(target)))
         for target in targets for here in heres)
 
