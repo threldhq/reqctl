@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a term that once carried the name glossary and now carries another
+  then: the product refuses, naming the first term
+  when: reqctl new is given the name glossary
+- given: a deprecated term that once carried the name glossary
+  then: the product refuses
+  when: reqctl new is given the name glossary
+- given: a term whose alias is glossary
+  then: the product does not refuse on that ground
+  when: reqctl new is given the name glossary
+assessed:
+  REQ-53177302: oSukBFyA3jXqDOQDBmlA51SQjzNbzGh51VVHA9EV_Kw
+  REQ-94917590: 2yP1VjEjzn4-QYnaf6_2LW-F1vjIzDSpE-vV8yPzr7A
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-53177302: derives_from
+  REQ-94917590: depends_on
+status: approved
+text: If reqctl new would give an [item](item) a name that another [item](item) the
+  corpus holds has carried as its name, deprecated or not, then the product shall
+  refuse, naming that other [item](item).
+type: functional
+verification: inspection

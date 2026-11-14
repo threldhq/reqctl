@@ -1,6 +1,10 @@
 acceptance_criteria:
-- given: a baseline stating a name, and a corpus holding exactly one [item](item)
-    that records that name as a name the [item](item) carried
+- given: a baseline stating a name, and a corpus holding one [item](item) that carries
+    that name and another that records it as a name the [item](item) carried
+  then: the product reports no disagreement
+  when: a baseline is generated and then checked
+- given: a baseline stating a name no [item](item) carries, and a corpus holding exactly
+    one [item](item) that records that name as a name the [item](item) carried
   then: the product does not refuse
   when: a baseline is generated
 assessed:
@@ -19,8 +23,8 @@ relations:
   REQ-80226740: constrains
   REQ-94917590: depends_on
 status: approved
-text: Where a baseline states a name exactly one [item](item) the corpus holds records
-  as a name the [item](item) carried, the product shall take the baseline as stating
-  that [item](item).
+text: Where a baseline states a name that no [item](item) the corpus holds carries
+  and that exactly one [item](item) the corpus holds records as a name the [item](item)
+  carried, the product shall take the baseline as stating that [item](item).
 type: functional
 verification: inspection
