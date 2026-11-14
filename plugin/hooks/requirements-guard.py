@@ -2328,7 +2328,7 @@ def absolute_corpus(text):
     return next((found[0] for tree in trees
                  for found in re.finditer(re.escape(tree.rstrip("/")) + r"/[^\s'\"`]*", text)
                  if CORPUS_DIR.search(found[0])
-                 or re.search(rf"/{CORPUS_ROOT_NAME}/?(?![\w./-])", found[0])), None)
+                 or re.search(rf"/{CORPUS_ROOT_NAME}/*(?![\w./-])", found[0])), None)
 
 
 # @req> REQ-75038049@w2u8eGVv46ut yu277l
