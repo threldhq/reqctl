@@ -6,7 +6,7 @@ acceptance_criteria:
   when: baseline --generate is run
 assessed: {}
 citations:
-  ckkjqm: 9qa8hm490LanzJUhn1Gd1IHkLYEP074ZznbiVLDEfOQ
+  ckkjqm: tohIMhYU06WGKsQE6ruItG-CFhjooExL-YBHAzsZVPA
   dk6vzq: -z08vq4BlVy6wJzvsZgmB8nd3PgoEh-zdUM1FYmg8eA
   dlppjs: Bob7KoyY20l3ZbGjr052__vgF1rizwJRHXOF83ls55A
 priority: medium

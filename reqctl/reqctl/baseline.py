@@ -137,7 +137,7 @@ def _required_ref(root):
             "no remote is named origin, so which branch is the default cannot "
             "be told -- add it with `git remote add origin URL`, fetch it "
             "with `git fetch origin`, then name its default branch with `git "
-            "remote set-head origin --auto`"
+            "remote set-head origin BRANCH`"
         )
     return ref
 
