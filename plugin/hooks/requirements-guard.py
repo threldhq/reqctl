@@ -3352,7 +3352,10 @@ def cwds(pipelines, joins, cwd):
             heres = there if changed and before != "||" else heres | there
         else:
             heres = there if settled else anywhere | heres | there
-        anywhere = (heres if settled and len(places) == 1 else anywhere | heres) if after == "&&" else heres
+        words = tokens_of(heading(pipeline[-1]))
+        plain = settled and len(places) == len(words) - 1 == 1 and LITERAL_VALUE.fullmatch(
+            words[1]) and not words[1].startswith("-")
+        anywhere = (heres if plain else anywhere | heres) if after == "&&" else heres
         # @req- ohiazc
         if len(heres) > CWD_LIMIT:
             deny(UNREADABLE.format(what=f"where the command runs, past {CWD_LIMIT} folders"))
