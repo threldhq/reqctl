@@ -503,8 +503,8 @@ CONNECTOR_WRITE = re.compile(
     re.IGNORECASE)
 RUNNERS = {"python": "c", "node": "ep", "perl": "eE", "ruby": "e", "source": "", ".": "",
            **dict.fromkeys((*SHELLS, "fish"), "cs")}
-SCRIPT_RUNNERS = ("pdb", "cProfile", "trace", "pytest", "ipython", "IPython")
-ENV_VALUED = ("-u", "--unset", "-C", "--chdir")
+SCRIPT_RUNNERS = ("pdb", "cProfile", "profile", "trace", "pytest", "ipython", "IPython", "ipdb",
+                  "pudb", "debugpy", "coverage", "unittest")
 PROGRAMS = tuple(tool for tool, inline in RUNNERS.items() if inline and tool not in SHELLS)
 PROGRAM_WORD = re.compile(r"[^\s'\"`();|&<>]+")
 RUN_VALUED = {"python": ("-W", "-X", "-m", "--check-hash-based-pycs"),
@@ -2279,8 +2279,8 @@ def handed(words, here):
     for previous, word in itertools.pairwise(["", *words]):
         named = word.partition("::")[0]
         if not word.startswith("-") and (
-                named.endswith(".py")
-                or here and os.path.isfile(os.path.join(here, os.path.expanduser(named)))
+                named.endswith(".py") or not here
+                or os.path.isfile(os.path.join(here, os.path.expanduser(named)))
                 or ("$" in word or "`" in word) and not previous.startswith("-")):
             scripts.append(named)
     return scripts
@@ -2294,16 +2294,18 @@ def stdin_files(said):
 
 
 def piped_files(pipeline, at, here):
-    return tuple(word for part in pipeline[:at] for word in argv(heading(part))[0][1:]
-                 if not word.startswith("-") and here
-                 and os.path.isfile(os.path.join(here, os.path.expanduser(word))))
+    return tuple(word for part in pipeline[:at] for words in [argv(heading(part))[0]]
+                 for word in words[1:]
+                 if not word.startswith("-") and (
+                     invoked(words)[:1] == ["cat"] or not here
+                     or os.path.isfile(os.path.join(here, os.path.expanduser(word)))))
 
 
 @functools.cache
 def project_tree(cwd):
-    root = os.environ.get("CLAUDE_PROJECT_DIR") or cwd
-    top = (git_reads(["rev-parse", "--show-toplevel"], (root, [], {})) or "").strip()
-    return os.path.realpath(top or root)
+    root = Path(os.path.realpath(os.environ.get("CLAUDE_PROJECT_DIR") or cwd))
+    return str(next((folder for folder in (root, *root.parents)
+                     if (folder / ".git").exists()), root))
 
 
 def inside_project(path):
@@ -2311,8 +2313,10 @@ def inside_project(path):
 
 
 def absolute_corpus(text):
+    home = os.path.expanduser("~")
     trees = {project_tree(CALL["cwd"]),
              os.path.abspath(os.environ.get("CLAUDE_PROJECT_DIR") or CALL["cwd"])}
+    trees |= {"~" + tree[len(home):] for tree in trees if tree.startswith(home + "/")}
     return next((found[0] for tree in trees
                  for found in re.finditer(re.escape(tree.rstrip("/")) + r"/[^\s'\"`]*", text)
                  if CORPUS_DIR.search(found[0])
@@ -2329,6 +2333,8 @@ def judge_run(raw, file, module, here):
             else os.path.join(path, "__main__.py") if package else path)
     inside = inside_project(path)
     reaches = inside or not here or inside_project(here)
+    if path.startswith(("/dev/", "/proc/")):
+        deny(UNREADABLE.format(what=f"which file {raw} runs"))
     if not os.path.isfile(path):
         if package or not reaches:
             return
@@ -2341,13 +2347,14 @@ def judge_run(raw, file, module, here):
         deny(UNREADABLE.format(what=file))
     text = flatten(data.decode(errors="replace")) if CORPUS_ROOT_NAME.encode() in data else ""
     found = CORPUS_DIR.search(text) or ROOT_QUOTED.search(text)
-    if not found:
+    named = not inside and absolute_corpus(text)
+    if not found and not named:
         return
     if (Path(path).is_relative_to(PLUGIN_ROOT) and not CALL["changes_environment"]
             and hashlib.sha256(data).hexdigest() in FINGERPRINTS):
         return
     if not inside:
-        if named := absolute_corpus(text):
+        if named:
             deny(ABSOLUTE_SCRIPT.format(file=file, found=named))
         if reaches:
             deny(OUTSIDE_SCRIPT.format(file=file, found=found.group()))
@@ -2524,22 +2531,15 @@ def judge_command(said, here, stdin=(), fed=()):
 
 
 def env_split(words):
-    at = next((at for at, word in enumerate(words) if os.path.basename(word) == "env"), None)
-    if at is None or at >= len(words) - len(invoked(words)):
-        return None
-    rest = iter(enumerate(words[at + 1:], at + 1))
-    for index, word in rest:
-        short = re.fullmatch(r"-[i0v]*S(.*)", word)
-        if word.startswith("--split-string") or short and not word.startswith("--"):
-            value = word.partition("=")[2] if word.startswith("--") else short[1]
-            following = words[index + 1:]
+    for at, word in enumerate(words[:len(words) - len(invoked(words))]):
+        found = re.fullmatch(r"-[i0v]*S(.*)|--split-string(?:=(.*))?", word)
+        if found and "env" in map(os.path.basename, words[:at]):
+            value, rest = found[1] or found[2], words[at + 1:]
             if not value:
-                value, following = (following or [""])[0], following[1:]
-            return " ".join([*map(shlex.quote, words[:index]), value, *map(shlex.quote, following)])
-        if word in ENV_VALUED:
-            next(rest, None)
-        elif not word.startswith("-") and "=" not in word:
-            return None
+                value, rest = (rest or [""])[0], rest[1:]
+            if "\\" in value:
+                deny(UNREADABLE.format(what=f"which command env {word} runs"))
+            return " ".join([*map(shlex.quote, words[:at]), value, *map(shlex.quote, rest)])
     return None
 
 
@@ -3337,14 +3337,15 @@ def cwds(pipelines, joins, cwd):
         places.append(sorted(heres))
         there, changed = moved(pipeline, heres, places)
         # @req+ REQ-75038049@w2u8eGVv46ut ohiazc
-        settled = changed and certain and all(map(os.path.isdir, there))
+        settled = changed and certain and all(
+            os.path.isdir(folder) and os.access(folder, os.X_OK) for folder in there)
         if after == "&":
             heres = start
         elif after == "&&":
             heres = there if changed and before != "||" else heres | there
         else:
             heres = there if settled else anywhere | heres | there
-        anywhere = (heres if settled else anywhere | heres) if after == "&&" else heres
+        anywhere = (heres if settled and len(places) == 1 else anywhere | heres) if after == "&&" else heres
         # @req- ohiazc
         if len(heres) > CWD_LIMIT:
             deny(UNREADABLE.format(what=f"where the command runs, past {CWD_LIMIT} folders"))
@@ -3547,7 +3548,7 @@ def judge_citation_shell(raw, cwd):
         found = unreadable(part)
         if found:
             deny(UNREAD_COMMAND.format(found=found))
-        outside = written_outside(part, heres)
+        outside = ">" in masked(part) and written_outside(part, heres)
         if not outside and ">" in masked(part) or OUTPUT_FLAG.search(part.translate(UNQUOTED)):
             deny(f"{HAND_CITATION}\nIn {part.strip()}")
         tool, flag = searched(part)
@@ -3562,18 +3563,10 @@ def judge_citation_shell(raw, cwd):
 
 
 def written_outside(part, heres):
-    words, bare = tokens_of(part), tokens_of(masked(part))
-    targets, plain, pairs = [], [], iter(zip(words, bare))
-    for word, mask in pairs if len(words) == len(bare) else ():
-        found = REDIRECTION.match(mask)
-        if not found:
-            plain.append(word)
-        elif ">" in found[0]:
-            targets.append(word[found.end():] or next(pairs, ("", ""))[0])
-        elif REDIRECTION.fullmatch(mask):
-            next(pairs, None)
-    return bool(targets) and only_reads(plain) and all(
-        here and target and not GLOB_CHAR.search(target)
+    targets = [word for found in REDIRECT_TARGET.finditer(masked(part))
+               for word in tokens_of(part[found.start(1):found.end(1)])]
+    return bool(targets) and only_reads(argv(part)[0]) and all(
+        here and not GLOB_CHAR.search(target)
         and not inside_project(os.path.join(here, os.path.expanduser(target)))
         for target in targets for here in heres)
 
