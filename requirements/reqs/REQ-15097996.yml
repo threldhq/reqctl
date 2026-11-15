@@ -1,0 +1,23 @@
+acceptance_criteria:
+- given: 'a package.json override "foo": "npm:bar@1" newly written'
+  then: bar is taken as a dependency the pull request adds
+  when: the gate runs
+- given: a package.json override that changes only the version of foo
+  then: no dependency is taken as added
+  when: the gate runs
+assessed:
+  REQ-22906462: 4l5aSIPqllRj35bF89C0YZRxI-IJXaJxanDnK-mWD5Y
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+  dependency_manifests: QrwTZ1WIzyuqrELlkmr25otdQzURKVHZIOFtMZIIfYE
+  dependency_manifests.package_json: CdP9Zt-76pwJCayi466F1LV7xoxkDTovvBr2sVo2QJk
+priority: medium
+relations:
+  REQ-22906462: derives_from
+status: approved
+text: When the ${corpus_gates.dependency_licence} gate runs, the product shall take
+  as a dependency the pull request adds each package that an override in a file of
+  the ${dependency_manifests.package_json} kind the pull request changes substitutes
+  for another package, and that the file does not name at the pull request's base.
+type: functional
+verification: inspection
