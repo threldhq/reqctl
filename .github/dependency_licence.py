@@ -75,13 +75,17 @@ def shown(named):
     return f"{REQUIREMENTS}*{named}" if named.startswith(".") else named
 
 
+def normalised(name):
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
 def requirement(line):
     found = REQUIREMENT.fullmatch(line)
     if not found:
         return line, "", "unreadable"
     name, rest = found.groups()
     spec = " ".join(rest.split(";", 1)[0].split())
-    name = re.sub(r"[-_.]+", "-", name).lower()
+    name = normalised(name)
     pinned = PINNED.fullmatch(spec)
     if pinned:
         return name, pinned.group(1), "exact"
@@ -90,7 +94,7 @@ def requirement(line):
 
 def requirements_file(text):
     named = set()
-    for line in text.replace("\\\n", " ").splitlines():
+    for line in re.sub(r"\\\r?\n", " ", text).splitlines():
         line = re.split(r"(?:^|\s)#", line, maxsplit=1)[0].strip()
         if line.startswith("-") and not line.startswith(HARMLESS):
             named.add((line, "", "unreadable"))
@@ -100,17 +104,39 @@ def requirements_file(text):
     return named
 
 
+def poetry(name, spec):
+    pinned = (re.fullmatch(r"=?=?\s*(\d[^\s,*<>!~^|]*)", spec.strip())
+              if isinstance(spec, str) else None)
+    if pinned:
+        return normalised(name), pinned.group(1), "exact"
+    return (normalised(name), str(spec),
+            "latest" if isinstance(spec, str) else "unreadable")
+
+
 def pyproject(text):
     held = tomllib.loads(text)
-    project = held.get("project") or {}
-    lines = list(project.get("dependencies") or [])
-    for group in (project.get("optional-dependencies") or {}).values():
-        lines += group
-    for group in (held.get("dependency-groups") or {}).values():
-        lines += [one for one in group if isinstance(one, str)]
-    lines += (held.get("build-system") or {}).get("requires") or []
-    return {requirement(line.strip()) for line in lines
-            if isinstance(line, str)}
+    project, tool = held.get("project") or {}, held.get("tool") or {}
+    uv, verse = tool.get("uv") or {}, tool.get("poetry") or {}
+    groups = [project.get("dependencies"),
+              (held.get("build-system") or {}).get("requires"),
+              uv.get("dev-dependencies"),
+              *(project.get("optional-dependencies") or {}).values(),
+              *(held.get("dependency-groups") or {}).values(),
+              *((tool.get("pdm") or {}).get("dev-dependencies") or {}).values(),
+              *(env.get(key) for env in
+                ((tool.get("hatch") or {}).get("envs") or {}).values()
+                for key in ("dependencies", "extra-dependencies"))]
+    tables = [verse.get("dependencies"), verse.get("dev-dependencies"),
+              *(group.get("dependencies")
+                for group in (verse.get("group") or {}).values())]
+    return ({requirement(one.strip()) if isinstance(one, str)
+             else (str(one), "", "unreadable")
+             for group in groups for one in (group or [])
+             if not (isinstance(one, dict) and "include-group" in one)}
+            | {poetry(name, spec) for table in tables
+               for name, spec in (table or {}).items() if name != "python"}
+            | {(normalised(name), str(source), "unreadable")
+               for name, source in (uv.get("sources") or {}).items()})
 
 
 def npm(name, spec):
@@ -124,10 +150,10 @@ def npm(name, spec):
 
 def package_json(text):
     held = json.loads(text)
-    return {npm(name, spec)
+    return {npm(name, spec) if isinstance(spec, str)
+            else (name.lower(), str(spec), "unreadable")
             for section in NPM_SECTIONS
-            for name, spec in (held.get(section) or {}).items()
-            if isinstance(spec, str)}
+            for name, spec in (held.get(section) or {}).items()}
 
 
 def lock_v1(tree):
@@ -146,11 +172,16 @@ def package_lock(text):
                    if "node_modules/" in path and isinstance(entry, dict)]
     else:
         entries = list(lock_v1(held.get("dependencies")))
-    return {(name.lower(), str(entry.get("version", "")),
-             "exact" if NPM_EXACT.fullmatch(str(entry.get("version", "")))
-             and str(entry.get("resolved", NPM_TARBALLS)).startswith(NPM_TARBALLS)
-             else "unreadable")
-            for name, entry in entries if not entry.get("link")}
+    return {locked(name, entry) for name, entry in entries
+            if not entry.get("link")}
+
+
+def locked(name, entry):
+    version = str(entry.get("version", ""))
+    tarball = f"{NPM_TARBALLS}{name}/-/{name.rsplit('/', 1)[-1]}-{version}.tgz"
+    exact = (NPM_EXACT.fullmatch(version) and entry.get("resolved") == tarball
+             and entry.get("name", name) == name)
+    return name.lower(), version, "exact" if exact else "unreadable"
 
 
 def dependencies(path, text):
@@ -344,9 +375,9 @@ def main(against):
         new, broken = added(fork.strip(), path)
         faults.append(broken)
         for name, version, how in sorted(new):
-            if (registry, name, version) in judged:
+            if (registry, name, version, how) in judged:
                 continue
-            judged.add((registry, name, version))
+            judged.add((registry, name, version, how))
             known = known or spdx_ids()
             found = (None if how == "unreadable"
                      else licence(registry, name, version, how))
