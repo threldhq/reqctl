@@ -19,6 +19,7 @@ EDITABLE = re.compile(r"--editable(=.*)?|-[qvUI]*e.*")
 REQUIREMENT = re.compile(r"--requirement(=.*)?|-[qvUI]*r.*")
 CONTINUED = re.compile(r"\\\n[ \t]*")
 READ_ONLY = {"contents": "read"}
+RELEASING = {"contents": "write", "id-token": "write"}
 TAGS = "release-tag.yml"
 PUSHED = {"push": {"branches": ["main"]}}
 SECRET = re.compile(r"\bsecrets\b", re.IGNORECASE)
@@ -262,15 +263,15 @@ def faults(text, where, gates=None, tools=None):
     # @req> GUARD-37835776@0Spg60Mwp26J ayey6b
     if len(jobs) != JOBS:
         found.append(f"{where}: has {len(jobs)} jobs, not {JOBS}")
-    # @req> GUARD-52037270@OztX8T4vOmsH ls2q44
+    # @req> GUARD-52037270@qgJuN0jv2_H8 ls2q44
     if held.get("permissions") != READ_ONLY:
         found.append(f"{where}: permissions is {held.get('permissions')!r}, "
                      f"not {READ_ONLY!r}")
     for name, job in jobs.items():
         if not isinstance(job, dict):
             continue
-        # @req+ GUARD-52037270@OztX8T4vOmsH w4sjw2
-        allowed = {"contents": "write"} if who == TAGS else READ_ONLY
+        # @req+ GUARD-52037270@qgJuN0jv2_H8 w4sjw2
+        allowed = RELEASING if who == TAGS else READ_ONLY
         taken = job.get("permissions", READ_ONLY)
         if taken != allowed:
             found.append(f"{where}: job {name} takes {taken!r}, not "
@@ -510,7 +511,7 @@ def runs_of(text):
                      if isinstance(step, dict))
 
 
-# @req> GUARD-52037270@OztX8T4vOmsH z3qmtw
+# @req> GUARD-52037270@qgJuN0jv2_H8 z3qmtw
 # @req> GUARD-24264620@IECSQ_EeiXfC c2mpcx
 # @req> GUARD-12128145@mFuOqNbkyV1o 6xrg3i
 # @req> GUARD-84344643@C0RxmQgbeF_W yklz3x
@@ -571,7 +572,7 @@ def main():
     return 1 if found else 0
 
 
-# @req> GUARD-52037270@OztX8T4vOmsH azlptq
+# @req> GUARD-52037270@qgJuN0jv2_H8 azlptq
 # @req> GUARD-24264620@IECSQ_EeiXfC p5qlkx
 # @req> GUARD-12128145@mFuOqNbkyV1o 2oldcn
 # @req> GUARD-84344643@C0RxmQgbeF_W cackjz
