@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a field the governing schema does not mark x-verbatim
+  then: the product refuses the value
+  when: a number grouped by a space or a comma is written to it
+- given: a parameter
+  then: the product does not refuse it on that ground
+  when: its value is stated as a bracketed set whose members are separated by a comma
+    and a space
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+priority: medium
+relations: {}
+status: approved
+text: If a value written as a parameter's value, or to a field of an [entry](entry)
+  that the governing schema does not mark as verbatim, holds between two digits a
+  character that Unicode classes as a space separator or whose Unicode name holds
+  COMMA, SEPARATOR, APOSTROPHE or QUOTATION, other than the comma and space separating
+  two members of a bracketed set, then the product shall refuse the value.
+type: functional
+verification: inspection
