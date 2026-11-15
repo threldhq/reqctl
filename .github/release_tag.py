@@ -86,9 +86,20 @@ def attach(repo, tag, commit):
         return f"attached {wheel.name} to the release for {tag}"
 
 
+def fetched(repo, tag, commit, into):
+    name = str((shown(commit, WHEEL, tomllib.loads).get("project") or {}).get("name"))
+    ran("gh", "release", "download", tag, "--repo", repo, "--pattern",
+        f"{re.sub(r'[-_.]+', '_', name).lower()}-*.whl", "--dir", into,
+        "--clobber")
+    with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+        output.write(f"dist={into}\n")
+    return f"fetched the wheel the release for {tag} carries into {into}"
+
+
 # @req> GUARD-14769016@T01UILpAY633 jbc37v
 # @req> GUARD-60575106@cyDaQHsIDZhK liioj5
-def main(before, after):
+# @req> GUARD-37876391@588H-w2rsk8r cbqwhi
+def main(before, after, into):
     repo = os.environ["GITHUB_REPOSITORY"]
     try:
         # @req+ GUARD-60575106@cyDaQHsIDZhK nc7w6k
@@ -105,6 +116,7 @@ def main(before, after):
         # @req> GUARD-14769016@T01UILpAY633 huv5w6
         if held == after:
             print(attach(repo, tag, after))
+            print(fetched(repo, tag, after, into))
     except (Refused, OSError) as refused:
         print(f"::error::{refused}")
         return 1
@@ -113,14 +125,16 @@ def main(before, after):
 
 # @req> GUARD-14769016@T01UILpAY633 7jpjuz
 # @req> GUARD-60575106@cyDaQHsIDZhK fbgjwt
+# @req> GUARD-37876391@588H-w2rsk8r dqtsbn
 def cli(argv):
-    if len(argv) != 3:
-        print("usage: release_tag.py BEFORE AFTER", file=sys.stderr)
+    if len(argv) != 4:
+        print("usage: release_tag.py BEFORE AFTER DIST", file=sys.stderr)
         return 2
-    return main(argv[1], argv[2])
+    return main(argv[1], argv[2], argv[3])
 
 
 # @req> GUARD-14769016@T01UILpAY633 66daiq
 # @req> GUARD-60575106@cyDaQHsIDZhK xx4o4g
+# @req> GUARD-37876391@588H-w2rsk8r c7wfm5
 if __name__ == "__main__":
     sys.exit(cli(sys.argv))

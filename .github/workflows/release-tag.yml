@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
 
-# @req> GUARD-52037270@OztX8T4vOmsH mluwis
+# @req> GUARD-52037270@qgJuN0jv2_H8 mluwis
 permissions:
   contents: read
 
@@ -11,9 +11,13 @@ permissions:
 jobs:
   tag:
     runs-on: ubuntu-latest
-    # @req> GUARD-52037270@OztX8T4vOmsH e5x4kz
+    # @req> GUARD-37876391@588H-w2rsk8r 6eylkz
+    environment: pypi
+    # @req> GUARD-52037270@qgJuN0jv2_H8 e5x4kz
+    # @req> GUARD-37876391@588H-w2rsk8r dxwufx
     permissions:
       contents: write
+      id-token: write
     steps:
       # @req> GUARD-85664071@zrnITtEG0Lqc t3vtxh
       # @req> GUARD-60575106@cyDaQHsIDZhK dgxdy4
@@ -30,8 +34,20 @@ jobs:
 
       # @req> GUARD-60575106@cyDaQHsIDZhK csdio5
       # @req> GUARD-14769016@T01UILpAY633 dcuk6f
-      - name: Push the release tag the change first pins the plugin to, and attach the reqctl wheel to its release
+      # @req> GUARD-37876391@588H-w2rsk8r yzyq3f
+      - name: Push the release tag the change first pins the plugin to, attach the reqctl wheel to its release, and fetch the wheel the release carries
+        id: release
         env:
           BEFORE: ${{ github.event.before }}
           GH_TOKEN: ${{ github.token }}
-        run: python3 .github/release_tag.py "$BEFORE" "$GITHUB_SHA"
+        run: python3 .github/release_tag.py "$BEFORE" "$GITHUB_SHA" dist
+
+      # @req> GUARD-37876391@588H-w2rsk8r whjai5
+      # @req> GUARD-34120803@Vbp-5MOZe5-V pqigdq
+      - name: Upload the wheel the release carries to PyPI by trusted publishing, with its attestation
+        if: steps.release.outputs.dist
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086
+        with:
+          packages-dir: ${{ steps.release.outputs.dist }}
+          skip-existing: true
+          attestations: true

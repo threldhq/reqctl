@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   GUARD-37876391: 588H-w2rsk8rHHdyhX7WCaL6pexB3Z0w-B5jJdkjQI4
   reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+citations:
+  pqigdq: f-czYONGESoQo1rSUwjDncduh9EMcChN-xVcLpqHUVQ
 relations:
   GUARD-37876391: depends_on
 status: approved

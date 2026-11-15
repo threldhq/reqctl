@@ -8,6 +8,14 @@ assessed:
   GUARD-60575106: cyDaQHsIDZhKvI_k7z0nyfMVUPzfsgOz9El4ta0v_Pc
   release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
   reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+citations:
+  6eylkz: yBuvI6nQ_nKO4sOAqyeF1kEz7VsW2bc_d2FlQJBYjkM
+  c7wfm5: XAFQtS1LWwI2xzNm6DUFGdCxboLZ_WPzcduAUx_d0sI
+  cbqwhi: XpT9g4iwlIr_dio2ONaGY_SDBsRoAopvJcX_7qAJQH4
+  dqtsbn: JLVaN0-pg-OhRAieA-YYMGfSX6WWaZ1ZFFva784xKYE
+  dxwufx: 1_c1-egCHJQdnKa3oV5pqYZ-eRcih9XvqbuoxEH9otU
+  whjai5: f-czYONGESoQo1rSUwjDncduh9EMcChN-xVcLpqHUVQ
+  yzyq3f: rIn0saQSUFS3wL4Jbqrn1vMLvs1cOzTiREMjPtAnmwQ
 relations:
   GUARD-14769016: depends_on
   GUARD-60575106: depends_on
