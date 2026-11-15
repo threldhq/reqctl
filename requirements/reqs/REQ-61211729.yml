@@ -1,0 +1,29 @@
+acceptance_criteria:
+- given: a dependency under Apache-2.0 OR BSD-2-Clause
+  then: the licence resolves to one of the copyable licences
+  when: the gate judges the licence
+- given: a dependency under MIT AND a licence that is none of the copyable licences
+  then: the licence resolves to none of the copyable licences
+  when: the gate judges the licence
+- given: a dependency under Apache-2.0 WITH an exception
+  then: the licence resolves to none of the copyable licences
+  when: the gate judges the licence
+assessed:
+  REQ-15645679: QRYMiqGzFlXNbMt9UUAOGT4VHZ8nDu17sSgaoCOPTps
+  REQ-36851513: 1OptO4udNoIPgmP2__2TgrpdjPr9jVo3CyS_4iJlMfk
+  copyable_licences: DEbCisObbtDRW8rf0vPIxbudFeeBtKEQVc9kQZRqU3w
+  copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+priority: medium
+relations:
+  REQ-15645679: depends_on
+  REQ-36851513: constrains
+status: approved
+text: When the ${corpus_gates.dependency_licence} gate judges a licence stated as
+  an SPDX licence expression, the product shall take the licence as resolving to one
+  of the ${copyable_licences} only where the expression carries no WITH operator and,
+  for one alternative chosen at each OR, every licence an AND joins is one of the
+  ${copyable_licences}.
+type: functional
+verification: inspection

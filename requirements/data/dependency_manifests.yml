@@ -20,6 +20,6 @@ entries:
       ${package_registries.pypi} resolves
 kind: data
 name: dependency_manifests
-status: draft
+status: approved
 text: the kinds of manifest and lockfile the dependency_licence gate reads, each with
   the package registry that resolves the dependencies it names

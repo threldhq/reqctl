@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: a PyPI release stating no licence expression and a licence field that is
+    no valid SPDX licence expression
+  then: the licence is one that cannot be detected
+  when: the product resolves the dependency's licence
+assessed:
+  REQ-16667247: 6CbB5MgYx58jO5eSragBjC7OnD6op0VnmuRcpw1bHig
+  REQ-43266463: Ea4ulHYAmCfNS_lk5e11_15v6yFE1HE6NwR8Aeuis28
+  package_registries: cqwwetP02B2u1vyS0feKR5-mjFZhcF3q_fiXYAeLJN4
+  package_registries.pypi: -0Gay8hTiPwSektXlB8OpOiy0hauueN6Hfa1-DV00SM
+priority: medium
+relations:
+  REQ-16667247: derives_from
+  REQ-43266463: constrains
+status: approved
+text: When the product resolves a dependency's licence from ${package_registries.pypi},
+  the product shall take the licence from the licence expression the release states,
+  or, where the release states none, from the release's licence field where that field
+  holds a valid SPDX licence expression.
+type: functional
+verification: inspection

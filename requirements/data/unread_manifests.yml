@@ -46,6 +46,6 @@ entries:
     definition: a file named yarn.lock
 kind: data
 name: unread_manifests
-status: draft
+status: approved
 text: the kinds of manifest and lockfile the dependency_licence gate recognises and
   does not read

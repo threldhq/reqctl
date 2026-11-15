@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-36851513: 1OptO4udNoIPgmP2__2TgrpdjPr9jVo3CyS_4iJlMfk
+  REQ-43266463: Ea4ulHYAmCfNS_lk5e11_15v6yFE1HE6NwR8Aeuis28
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+  dependency_manifests: nuXiAKNjoq3kbybCK1iuLulMWwbiNF-PCk96UCyt1W8
+  dependency_manifests.*: pDrVIGCxhHQuVZWT582Bk6UlUOXkq9NoR3nz3WthLZA
+priority: medium
+relations:
+  REQ-36851513: constrains
+  REQ-43266463: constrains
+status: approved
+text: When the ${corpus_gates.dependency_licence} gate runs, the product shall take
+  as the dependencies a pull request adds each dependency that a file of one of the
+  ${dependency_manifests} the pull request changes names under a name or at a version
+  that file does not name at the pull request's base.
+type: functional
+verification: inspection
