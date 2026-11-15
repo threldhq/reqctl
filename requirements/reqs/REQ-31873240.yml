@@ -1,0 +1,35 @@
+acceptance_criteria:
+- given: a field of an [entry](entry) of a [data item](data_item) that the governing
+    schema marks x-verbatim
+  then: the product stores that text unchanged and refuses nothing for the separators
+  when: SVG path data whose numbers are separated by spaces and commas is written
+    to it
+- given: a field the governing schema marks x-verbatim
+  then: the product stores the text with its brackets and refuses nothing a set would
+    be refused for
+  when: a value written in brackets is written to it
+- given: a field the governing schema marks x-verbatim
+  then: the [item](item) reads back the text, not a number or a boolean
+  when: a value that reads as a number, true or false is written to it
+- given: a field the governing schema marks x-verbatim
+  then: the product stores the value without them
+  when: a value with leading or trailing spaces is written to it
+- given: a field the governing schema marks x-verbatim
+  then: the product refuses the value
+  when: a value carrying a hidden character is written to it
+assessed:
+  REQ-37302987: mgBn704avyaMtZaHcsgbuD1yturLlodlOf5JUi_v3DE
+  REQ-64256114: T4kJ-fI_AXrqQ4Xq-YBJCr5GqTniCBw0TePIixa7zuA
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-37302987: constrains
+  REQ-64256114: constrains
+status: approved
+text: Where the governing schema marks a field of an [entry](entry) of a [data item](data_item)
+  as verbatim, the product shall store a value written to that field as the text given
+  less its leading and trailing whitespace, reading it as neither a number nor a set.
+type: functional
+verification: inspection
