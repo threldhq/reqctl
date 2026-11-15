@@ -1,0 +1,25 @@
+assessed:
+  package_registries: cqwwetP02B2u1vyS0feKR5-mjFZhcF3q_fiXYAeLJN4
+  package_registries.npm: bNxwe3uiwuVDt6FVwZRPoTRdSx50sjJJJ_fQpvxbhls
+  package_registries.pypi: -0Gay8hTiPwSektXlB8OpOiy0hauueN6Hfa1-DV00SM
+entries:
+  package_json:
+    definition: a file named package.json, whose dependencies ${package_registries.npm}
+      resolves
+  package_lock_json:
+    definition: a file named package-lock.json, whose dependencies ${package_registries.npm}
+      resolves
+  pyproject_toml:
+    definition: a file named pyproject.toml, whose dependencies ${package_registries.pypi}
+      resolves
+  requirements_in:
+    definition: a file whose name begins requirements and ends .in, whose dependencies
+      ${package_registries.pypi} resolves
+  requirements_txt:
+    definition: a file whose name begins requirements and ends .txt, whose dependencies
+      ${package_registries.pypi} resolves
+kind: data
+name: dependency_manifests
+status: approved
+text: the kinds of manifest and lockfile the dependency_licence gate reads, each with
+  the package registry that resolves the dependencies it names

@@ -1,0 +1,22 @@
+acceptance_criteria: []
+assessed:
+  REQ-26876750: p5bO3gEKEYCbI2dpCZq5kyu2VQfTeMUGNu-MO-Pkodg
+  REQ-36851513: 1OptO4udNoIPgmP2__2TgrpdjPr9jVo3CyS_4iJlMfk
+  REQ-43266463: Ea4ulHYAmCfNS_lk5e11_15v6yFE1HE6NwR8Aeuis28
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+  dependency_manifests: nuXiAKNjoq3kbybCK1iuLulMWwbiNF-PCk96UCyt1W8
+  dependency_manifests.*: pDrVIGCxhHQuVZWT582Bk6UlUOXkq9NoR3nz3WthLZA
+  unread_manifests: eh8D_HrlVLlU86VCAxfWeUBmxXUjv4Vc5_6G1QY-xkM
+  unread_manifests.*: nS-ho2bag_eWQkNZ97oLj6rjYW1mTIEaoNJLkkQ7hQk
+priority: medium
+relations:
+  REQ-26876750: constrains
+  REQ-36851513: constrains
+  REQ-43266463: constrains
+status: approved
+text: If a pull request changes no file of one of the ${dependency_manifests} and
+  no file of one of the ${unread_manifests}, then the product shall not refuse the
+  pull request when the ${corpus_gates.dependency_licence} gate runs.
+type: functional
+verification: inspection

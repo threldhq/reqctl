@@ -1,0 +1,51 @@
+assessed: {}
+entries:
+  build_gradle:
+    definition: a file named build.gradle
+  build_gradle_kts:
+    definition: a file named build.gradle.kts
+  bun_lock:
+    definition: a file named bun.lock
+  cargo_lock:
+    definition: a file named Cargo.lock
+  cargo_toml:
+    definition: a file named Cargo.toml
+  composer_json:
+    definition: a file named composer.json
+  composer_lock:
+    definition: a file named composer.lock
+  gemfile:
+    definition: a file named Gemfile
+  gemfile_lock:
+    definition: a file named Gemfile.lock
+  go_mod:
+    definition: a file named go.mod
+  go_sum:
+    definition: a file named go.sum
+  npm_shrinkwrap_json:
+    definition: a file named npm-shrinkwrap.json
+  pdm_lock:
+    definition: a file named pdm.lock
+  pipfile:
+    definition: a file named Pipfile
+  pipfile_lock:
+    definition: a file named Pipfile.lock
+  pnpm_lock_yaml:
+    definition: a file named pnpm-lock.yaml
+  poetry_lock:
+    definition: a file named poetry.lock
+  pom_xml:
+    definition: a file named pom.xml
+  setup_cfg:
+    definition: a file named setup.cfg
+  setup_py:
+    definition: a file named setup.py
+  uv_lock:
+    definition: a file named uv.lock
+  yarn_lock:
+    definition: a file named yarn.lock
+kind: data
+name: unread_manifests
+status: approved
+text: the kinds of manifest and lockfile the dependency_licence gate recognises and
+  does not read

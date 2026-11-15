@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a pull request changing yarn.lock
+  then: the product refuses the pull request
+  when: the gate runs
+assessed:
+  REQ-26876750: p5bO3gEKEYCbI2dpCZq5kyu2VQfTeMUGNu-MO-Pkodg
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+  unread_manifests: eh8D_HrlVLlU86VCAxfWeUBmxXUjv4Vc5_6G1QY-xkM
+  unread_manifests.*: nS-ho2bag_eWQkNZ97oLj6rjYW1mTIEaoNJLkkQ7hQk
+priority: medium
+relations:
+  REQ-26876750: depends_on
+status: approved
+text: If a pull request changes a file of one of the ${unread_manifests}, then the
+  product shall refuse the pull request when the ${corpus_gates.dependency_licence}
+  gate runs.
+type: functional
+verification: inspection

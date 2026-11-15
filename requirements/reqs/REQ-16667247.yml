@@ -1,0 +1,24 @@
+acceptance_criteria: []
+assessed:
+  REQ-22906462: vVvKGqQqZbArUQCNO7sCGV4scq2haZLPwdhLpnlw98o
+  REQ-36851513: 1OptO4udNoIPgmP2__2TgrpdjPr9jVo3CyS_4iJlMfk
+  REQ-43266463: Ea4ulHYAmCfNS_lk5e11_15v6yFE1HE6NwR8Aeuis28
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+  dependency_manifests: nuXiAKNjoq3kbybCK1iuLulMWwbiNF-PCk96UCyt1W8
+  dependency_manifests.*: pDrVIGCxhHQuVZWT582Bk6UlUOXkq9NoR3nz3WthLZA
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  package_registries: cqwwetP02B2u1vyS0feKR5-mjFZhcF3q_fiXYAeLJN4
+  package_registries.*: 6InvlWw_kg94PQrPyZ9-IDm3azUQuBW41jgKMglSV4E
+priority: medium
+relations:
+  REQ-22906462: depends_on
+  REQ-36851513: constrains
+  REQ-43266463: constrains
+status: approved
+text: When the ${corpus_gates.dependency_licence} gate runs, the product shall resolve
+  the licence of each dependency the pull request adds from the one of the ${package_registries}
+  that the [entry](entry) of the ${dependency_manifests} for the file naming the dependency
+  names.
+type: functional
+verification: inspection
