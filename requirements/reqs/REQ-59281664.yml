@@ -1,8 +1,10 @@
 acceptance_criteria: []
 assessed:
+  REQ-15645679: QRYMiqGzFlXNbMt9UUAOGT4VHZ8nDu17sSgaoCOPTps
   REQ-16667247: 6CbB5MgYx58jO5eSragBjC7OnD6op0VnmuRcpw1bHig
 priority: medium
 relations:
+  REQ-15645679: constrains
   REQ-16667247: derives_from
 status: approved
 text: When the product resolves the licence of a dependency that a manifest names
