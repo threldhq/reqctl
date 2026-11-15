@@ -10,6 +10,8 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   package_registries: cqwwetP02B2u1vyS0feKR5-mjFZhcF3q_fiXYAeLJN4
   package_registries.*: 6InvlWw_kg94PQrPyZ9-IDm3azUQuBW41jgKMglSV4E
+citations:
+  u7j5ul: vfFf1DG3saQzISr2_if4JbwlcCo5kNNOHCyMWtHcilQ
 priority: medium
 relations:
   REQ-22906462: depends_on
