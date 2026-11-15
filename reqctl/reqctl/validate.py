@@ -1229,6 +1229,7 @@ def _admits_link(root, uid, data, where, field, link, judged):
 
 PROSE = "x-prose"
 OBSERVED = "x-observed"
+VERBATIM = "x-verbatim"
 DATE = "date"
 # @req+ REQ-62072712@m81ZZqYdquaS 5ii662
 DATED = FormatChecker(formats=())
@@ -1277,6 +1278,10 @@ def _observed(node):
     return node.get(OBSERVED) is True
 
 
+def _verbatim(node):
+    return node.get(VERBATIM) is True
+
+
 def _date(node):
     return node.get("format") == DATE
 
@@ -1293,6 +1298,11 @@ def prose_paths(root, uid, data):
 def observed_paths(root, uid, data):
     # @req> REQ-48500355@rnstkLKM48vN t3fuqq
     return _marked_paths(root, uid, data, _observed)
+
+
+# @req> REQ-20917759@zhgr-pfTbobT fi5bwx
+def verbatim_paths(root, uid, data):
+    return _marked_paths(root, uid, data, _verbatim) if corpus.kind_of(uid, data) == "data" else []
 
 
 def dated_paths(root, uid, data):
@@ -1341,12 +1351,14 @@ def _own(root, uid, data, *finders):
 
 def own_words(root, uid, data):
     # @req> REQ-48500355@rnstkLKM48vN rwffnk
-    return _own(root, uid, data, observed_paths)
+    # @req> REQ-20917759@zhgr-pfTbobT rgfts7
+    return _own(root, uid, data, observed_paths, verbatim_paths)
 
 
 def own_quantities(root, uid, data):
     # @req> REQ-62072712@m81ZZqYdquaS hlxm3m
-    return _own(root, uid, data, observed_paths, dated_paths)
+    # @req> REQ-20917759@zhgr-pfTbobT qzvrsz
+    return _own(root, uid, data, observed_paths, dated_paths, verbatim_paths)
 
 
 def _declares_prose(root, uid, data, where, field, refused):
