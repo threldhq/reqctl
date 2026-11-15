@@ -3389,12 +3389,12 @@ def cwds(pipelines, joins, cwd):
 def moved(pipeline, heres, places):
     said = heading(pipeline[-1])
     at = COMPOUND.match(masked(said)).end()
-    called = invoked(argv(said[at:])[0])
-    if called[:1] == ["eval"]:
-        called = invoked(argv(" ".join(called[1:]))[0])
-    tool, *rest = called or [""]
+    words = argv(said[at:])[0]
+    called = invoked(words)
+    tool, *rest = (invoked(argv(" ".join(called[1:]))[0]) if called[:1] == ["eval"]
+                   else called) or [""]
     # @req> REQ-75038049@w2u8eGVv46ut 5im45v
-    if CALL_TEXT["functions"] & {tool, *tokens_of(said[at:])[:1]}:
+    if CALL_TEXT["functions"] & {tool, *words[:len(words) - len(called)]}:
         return heres | {""}, False
     if tool not in ("cd", "pushd", "popd"):
         return heres, False
