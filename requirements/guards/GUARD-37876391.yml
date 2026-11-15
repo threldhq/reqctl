@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a GitHub release for reqctl--v0.1.38 carrying reqctl-0.1.38-py3-none-any.whl,
+    attached by an earlier run of the build on that change whose upload to PyPI failed
+  then: PyPI serves, for reqctl 0.1.38, the file that GitHub release carries
+  when: the build runs on that change again
+assessed:
+  GUARD-14769016: T01UILpAY633Xx9HNeRIH-U9FQc6F-BSxc-b8nZHtBc
+  GUARD-60575106: cyDaQHsIDZhKvI_k7z0nyfMVUPzfsgOz9El4ta0v_Pc
+  release_tag: RsZIoLH5IxofpiVrimUhynfl1rVX4ezMIZpf3hyytUo
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+relations:
+  GUARD-14769016: depends_on
+  GUARD-60575106: depends_on
+status: approved
+text: While a GitHub release for a [release tag](release_tag) that stands at the commit
+  of a change that has reached the default branch carries a [reqctl wheel](reqctl_wheel)
+  whose file name PyPI does not hold, when the build runs on that change, the build
+  shall upload to PyPI, by trusted publishing from release-tag.yml in the pypi environment,
+  the file of that [reqctl wheel](reqctl_wheel) that the GitHub release carries.

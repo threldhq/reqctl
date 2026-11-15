@@ -35,4 +35,5 @@ status: approved
 text: If the permissions of a workflow, or of a job in a workflow other than the job
   that pushes a [release tag](release_tag), are other than read access to contents
   alone, or the permissions of the job that pushes a [release tag](release_tag) are
-  other than write access to contents alone, then the build shall refuse the change.
+  other than write access to contents and to the ID token alone, then the build shall
+  refuse the change.
