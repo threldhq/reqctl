@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-16667247: 6CbB5MgYx58jO5eSragBjC7OnD6op0VnmuRcpw1bHig
+priority: medium
+relations:
+  REQ-16667247: derives_from
+status: approved
+text: When the product resolves the licence of a dependency that a manifest names
+  with a version range, the product shall take the licence from the release the registry
+  names as the package's latest, excluding pre-releases and yanked releases.
+type: functional
+verification: inspection
