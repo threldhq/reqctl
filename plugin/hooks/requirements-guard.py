@@ -483,7 +483,7 @@ CONFIGURED_IN_CALL = (
     "git push blocked: the same call names {found}, so the guard cannot read the config "
     "git push runs with.\nChange the config in a call of its own, then run git push."
 )
-CALL_TEXT: dict = {"said": {}, "identity": set()}
+CALL_TEXT: dict = {"said": {}, "identity": set(), "functions": set()}
 IDENTITY_SECTIONS = ("user", "author", "committer")
 GH_VALUED = ("-X", "--method", "-f", "--raw-field", "-F", "--field", "--input", "-H",
              "--header", "-q", "--jq", "-t", "--template", "--hostname", "--cache",
@@ -3358,14 +3358,15 @@ def feeds(part):
 def cwds(pipelines, joins, cwd):
     places, heres, start, anywhere = [], {cwd}, {cwd}, {cwd}
     # @req> REQ-75038049@w2u8eGVv46ut xsizlj
-    named = {name for part in itertools.chain.from_iterable(pipelines)
-             for found in FUNCTION.finditer(COMPOUND.match(masked(heading(part)))[0])
-             for name in found.groups() if name}
+    CALL_TEXT["functions"].update(
+        name for part in itertools.chain.from_iterable(pipelines)
+        for found in FUNCTION.finditer(COMPOUND.match(masked(heading(part)))[0])
+        for name in found.groups() if name)
     for pipeline, before, after in zip(pipelines, [";", *joins], joins):
         certain = before not in ("&&", "||")
         start = heres if certain else start
         places.append(sorted(heres))
-        there, changed = moved(pipeline, heres, places, named)
+        there, changed = moved(pipeline, heres, places)
         # @req+ REQ-75038049@w2u8eGVv46ut ohiazc
         settled = changed and certain and all(
             os.path.isdir(folder) and os.access(folder, os.X_OK) for folder in there)
@@ -3385,7 +3386,7 @@ def cwds(pipelines, joins, cwd):
     return places
 
 
-def moved(pipeline, heres, places, named):
+def moved(pipeline, heres, places):
     said = heading(pipeline[-1])
     at = COMPOUND.match(masked(said)).end()
     called = invoked(argv(said[at:])[0])
@@ -3393,7 +3394,7 @@ def moved(pipeline, heres, places, named):
         called = invoked(argv(" ".join(called[1:]))[0])
     tool, *rest = called or [""]
     # @req> REQ-75038049@w2u8eGVv46ut 5im45v
-    if named.intersection(tokens_of(said[at:])):
+    if CALL_TEXT["functions"] & {tool, *tokens_of(said[at:])[:1]}:
         return heres | {""}, False
     if tool not in ("cd", "pushd", "popd"):
         return heres, False
