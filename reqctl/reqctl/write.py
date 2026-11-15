@@ -474,14 +474,16 @@ def entry_key(member):
     return str(member)
 
 
-def _verbatim_text(label, text, carried):
+def _held(label, text, carried, verbatim):
+    if not verbatim:
+        return scalar(text, carried)
     _refuse_hidden(label, text, carried)
     return text.strip()
 
 
 def _verbatim_steps(store, uid, prospective, named, key, fields):
-    place = named.partition(".")[0] if "." in named else "entries"
-    entry = dict((prospective.get(place) or {}).get(key) or {})
+    place = named.rpartition(".")[0] or "entries"
+    entry = dict(prospective[place].get(key) or {})
     stepped = [tuple(step.strip() for step in str(pair).partition("=")[0].strip().split("."))
                for pair in [*(fields.get("set") or []), *(fields.get("append") or [])]]
     for steps in stepped:
@@ -491,8 +493,8 @@ def _verbatim_steps(store, uid, prospective, named, key, fields):
             where[step] = nested = dict(nested) if isinstance(nested, dict) else {}
             where = nested
         where[steps[-1]] = ""
-    probe = {**prospective, place: {**(prospective.get(place) or {}), key: entry}}
-    marked = set(_validate.verbatim_paths(store.root, uid, probe))
+    probe = {**prospective, place: {**prospective[place], key: entry}}
+    marked = _validate.verbatim_paths(store.root, uid, probe)
     return frozenset(steps for steps in stepped if (place, key, *steps) in marked)
 
 
@@ -527,8 +529,7 @@ def _set_fields(entry, pairs, carried, verbatim=frozenset()):
             where = nested
         # @req> REQ-37302987@mgBn704avyaM 6zdpuv
         # @req> REQ-31873240@K0ddnolUc2IX c3ycu6
-        held = (_verbatim_text(f"--set {name.strip()!r}:", value, carried)
-                if tuple(steps) in verbatim else scalar(value, carried))
+        held = _held(f"--set {name.strip()!r}:", value, carried, tuple(steps) in verbatim)
         where[steps[-1]] = held
     return entry
 
@@ -574,8 +575,7 @@ def _append_fields(entry, pairs, carried, verbatim=frozenset()):
             _refuse_hidden(f"--append {name.strip()!r}:", said.strip(" "), carried)
         # @req> REQ-37302987@mgBn704avyaM lqbt6n
         # @req> REQ-31873240@K0ddnolUc2IX a533m7
-        member = (_verbatim_text(f"--append {name.strip()!r}:", value, carried)
-                  if tuple(steps) in verbatim else scalar(value, carried))
+        member = _held(f"--append {name.strip()!r}:", value, carried, tuple(steps) in verbatim)
         if isinstance(member, list):
             # @req> REQ-30898926@Vu28eWaG_1mE b4xdt6
             raise ReqctlError(
