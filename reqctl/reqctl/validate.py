@@ -1302,6 +1302,8 @@ def observed_paths(root, uid, data):
 
 # @req> REQ-20917759@zhgr-pfTbobT fi5bwx
 def verbatim_paths(root, uid, data):
+    if corpus.kind_of(uid, data) != "data":
+        return []
     return _marked_paths(root, uid, data, _verbatim)
 
 
