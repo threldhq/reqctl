@@ -6,6 +6,8 @@ assessed:
   corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
   dependency_manifests: nuXiAKNjoq3kbybCK1iuLulMWwbiNF-PCk96UCyt1W8
   dependency_manifests.*: pDrVIGCxhHQuVZWT582Bk6UlUOXkq9NoR3nz3WthLZA
+citations:
+  fo6ill: o04yMQTWm87QQqJ9aFOxpP5QRO_lXXsfYn3nMx2QxlY
 priority: medium
 relations:
   REQ-36851513: constrains

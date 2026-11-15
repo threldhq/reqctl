@@ -8,6 +8,8 @@ assessed:
   corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
   unread_manifests: eh8D_HrlVLlU86VCAxfWeUBmxXUjv4Vc5_6G1QY-xkM
   unread_manifests.*: nS-ho2bag_eWQkNZ97oLj6rjYW1mTIEaoNJLkkQ7hQk
+citations:
+  7zuphr: o04yMQTWm87QQqJ9aFOxpP5QRO_lXXsfYn3nMx2QxlY
 priority: medium
 relations:
   REQ-26876750: depends_on

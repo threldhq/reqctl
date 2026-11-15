@@ -15,6 +15,9 @@ assessed:
   copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+citations:
+  iy2bxl: Xr1YTMYdE5cfTv6_I8F2aov8Pmn2Ke_L4Yve9ceAuiE
+  zisvrj: _Zw9UXws7ZhJPV7oW2kQMDWBvSvIj_jBjMYhCDVKu7o
 priority: medium
 relations:
   REQ-15645679: depends_on

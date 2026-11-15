@@ -97,7 +97,7 @@ In a repository whose default branch is `main`:
    Releases are tagged `reqctl--v<version>`:
 
    ```bash
-   pip install https://github.com/threldhq/reqctl/releases/download/reqctl--v0.1.35/reqctl-0.1.35-py3-none-any.whl
+   pip install https://github.com/threldhq/reqctl/releases/download/reqctl--v0.1.36/reqctl-0.1.36-py3-none-any.whl
    ```
 
 2. **Plugin.** With `--scope project` both are declared in the repository rather
@@ -113,8 +113,8 @@ In a repository whose default branch is `main`:
 3. **Gates.** From a workflow run on `pull_request`, call this repository's
    `.github/workflows/corpus-gates.yml` at a release's commit SHA, passing that
    SHA as input `reqctl`. It refuses a pull request that fails baseline_match,
-   baseline_numbering, corpus_validity, stamp_admission, taxonomy, traceability
-   or travel_alone.
+   baseline_numbering, corpus_validity, dependency_licence, stamp_admission,
+   taxonomy, traceability or travel_alone.
 
 4. **Portal.**
    - A GitHub App installed on the repository with read and write access to

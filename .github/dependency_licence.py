@@ -1,79 +1,363 @@
 #!/usr/bin/env python3
-import base64
 import http.client
 import json
-import os
+import posixpath
+import re
+import subprocess
 import sys
+import tomllib
+import urllib.error
+import urllib.parse
 import urllib.request
 
-COMPARE = "https://api.github.com/repos/{}/dependency-graph/compare/{}...{}"
 SECONDS = 30
-# @req> copyable_licences@ns-krxMVBL57 r3cf6d
+SPDX_LIST = "https://raw.githubusercontent.com/spdx/license-list-data/main/json/{}.json"
+# @req> package_registries@kaJET_Ips9Ys lyvoye
+REGISTRY_URLS = (
+    ("pypi", "https://pypi.org/pypi/{name}/json",
+     "https://pypi.org/pypi/{name}/{version}/json"),
+    ("npm", "https://registry.npmjs.org/{name}/latest",
+     "https://registry.npmjs.org/{name}/{version}"),
+)
+# @req> copyable_licences@ns-krxMVBL57 mr2p56
 COPYABLE = ("Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MIT", "0BSD")
-UNDETECTED = ("NOASSERTION", "LicenseRef-")
-UNPROCESSED = "x-github-dependency-graph-snapshot-warnings"
+# @req> dependency_manifests@iSPeH-eauyh1 xeppuz
+READ = (
+    ("pyproject.toml", "pypi"),
+    (".in", "pypi"),
+    (".txt", "pypi"),
+    ("package.json", "npm"),
+    ("package-lock.json", "npm"),
+)
+# @req> unread_manifests@4Jgrka1mZkdx jbaqd5
+UNREAD = (
+    "setup.py", "setup.cfg", "Pipfile", "Pipfile.lock", "poetry.lock",
+    "uv.lock", "pdm.lock", "yarn.lock", "pnpm-lock.yaml",
+    "npm-shrinkwrap.json", "bun.lock", "go.mod", "go.sum", "Cargo.toml",
+    "Cargo.lock", "Gemfile", "Gemfile.lock", "pom.xml", "build.gradle",
+    "build.gradle.kts", "composer.json", "composer.lock",
+)
+REQUIREMENT = re.compile(
+    r"([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)\s*(?:\[[^\]]*\])?\s*"
+    r"((?:[=<>!~(,@;].*)?)")
+PINNED = re.compile(r"===?\s*([^\s,;=<>!~@*]+)")
+NPM_EXACT = re.compile(r"v?(\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.+-]*)?)")
+NPM_RANGE = re.compile(r"[\d\sxX*^~<>=.|v-]*")
+NPM_SECTIONS = ("dependencies", "devDependencies", "optionalDependencies",
+                "peerDependencies")
+REQUIREMENTS = "requirements"
+UNREADABLE = (ValueError, TypeError, AttributeError)
+TOKEN = re.compile(r"\(|\)|[^\s()]+")
+LICENCE_REF = re.compile(
+    r"(?:DocumentRef-[A-Za-z0-9.-]+:)?LicenseRef-[A-Za-z0-9.-]+")
 
 
-def added(repository, base, head, token):
-    request = urllib.request.Request(
-        COMPARE.format(repository, base, head),
-        headers={"Accept": "application/vnd.github+json",
-                 **({"Authorization": f"Bearer {token}"} if token else {})})
+def git(*args):
+    done = subprocess.run(["git", *args], capture_output=True, check=False)
+    return (done.returncode, done.stdout.decode(errors="replace"),
+            done.stderr.decode(errors="replace").strip())
+
+
+def kind(path):
+    name = posixpath.basename(path)
+    if name in UNREAD:
+        return "unread"
+    return next((registry for named, registry in READ
+                 if name == named or (named.startswith(".")
+                                      and name.startswith(REQUIREMENTS)
+                                      and name.endswith(named))), None)
+
+
+def shown(named):
+    return f"{REQUIREMENTS}*{named}" if named.startswith(".") else named
+
+
+def requirement(line):
+    found = REQUIREMENT.fullmatch(line)
+    if not found:
+        return line, "", "unreadable"
+    name, rest = found.groups()
+    spec = " ".join(rest.split(";", 1)[0].split())
+    name = re.sub(r"[-_.]+", "-", name).lower()
+    pinned = PINNED.fullmatch(spec)
+    if pinned:
+        return name, pinned.group(1), "exact"
+    return name, spec, "unreadable" if spec.startswith("@") else "latest"
+
+
+def requirements_file(text):
+    named = set()
+    for line in text.replace("\\\n", " ").splitlines():
+        line = re.split(r"(?:^|\s)#", line, maxsplit=1)[0]
+        line = re.split(r"\s--?[A-Za-z]", f" {line}", maxsplit=1)[0].strip()
+        if line and not line.startswith("-"):
+            named.add(requirement(line))
+    return named
+
+
+def pyproject(text):
+    held = tomllib.loads(text)
+    project = held.get("project") or {}
+    lines = list(project.get("dependencies") or [])
+    for group in (project.get("optional-dependencies") or {}).values():
+        lines += group
+    for group in (held.get("dependency-groups") or {}).values():
+        lines += [one for one in group if isinstance(one, str)]
+    lines += (held.get("build-system") or {}).get("requires") or []
+    return {requirement(line.strip()) for line in lines
+            if isinstance(line, str)}
+
+
+def npm(name, spec):
+    spec = spec.strip()
+    exact = NPM_EXACT.fullmatch(spec)
+    if exact:
+        return name.lower(), exact.group(1), "exact"
+    return (name.lower(), spec,
+            "latest" if NPM_RANGE.fullmatch(spec) else "unreadable")
+
+
+def package_json(text):
+    held = json.loads(text)
+    return {npm(name, spec)
+            for section in NPM_SECTIONS
+            for name, spec in (held.get(section) or {}).items()
+            if isinstance(spec, str)}
+
+
+def lock_v1(tree):
+    for name, entry in (tree or {}).items():
+        if isinstance(entry, dict):
+            yield name, entry
+            yield from lock_v1(entry.get("dependencies"))
+
+
+def package_lock(text):
+    held = json.loads(text)
+    packages = held.get("packages")
+    if isinstance(packages, dict):
+        entries = [(path.rsplit("node_modules/", 1)[1], entry)
+                   for path, entry in packages.items()
+                   if "node_modules/" in path and isinstance(entry, dict)]
+    else:
+        entries = list(lock_v1(held.get("dependencies")))
+    named = {npm(name, str(entry.get("version", "")))
+             for name, entry in entries if not entry.get("link")}
+    return {(name, version, how if how == "exact" else "unreadable")
+            for name, version, how in named}
+
+
+def dependencies(path, text):
+    name = posixpath.basename(path)
+    if name == "pyproject.toml":
+        return pyproject(text)
+    if name == "package.json":
+        return package_json(text)
+    if name == "package-lock.json":
+        return package_lock(text)
+    return requirements_file(text)
+
+
+def named_at(ref, path):
+    status, text, _ = git("show", f"{ref}:{path}")
+    if status != 0:
+        return set()
     try:
-        with urllib.request.urlopen(request, timeout=SECONDS) as answer:
-            held, pending = json.load(answer), answer.headers.get(UNPROCESSED)
+        return dependencies(path, text)
+    except UNREADABLE:
+        return set()
+
+
+def added(fork, path):
+    status, text, _ = git("show", f"HEAD:{path}")
+    if status != 0:
+        return set(), None
+    try:
+        now = dependencies(path, text)
+    except UNREADABLE as broken:
+        return set(), (f"{path} cannot be read: {broken} -- correct it so the "
+                       "dependency_licence gate can read the dependencies it "
+                       "names")
+    return now - named_at(fork, path), None
+
+
+def fetch(url):
+    try:
+        with urllib.request.urlopen(url, timeout=SECONDS) as answer:
+            return json.load(answer)
+    except urllib.error.HTTPError as refused:
+        if refused.code == 404:
+            return None
+        raise SystemExit(f"::error::{url} answered {refused.code} -- run the "
+                         "gate again") from refused
     except (OSError, http.client.HTTPException, ValueError) as broken:
-        said = getattr(broken, "read", bytes)().decode(errors="replace").strip()
-        raise SystemExit(f"::error::cannot read the dependencies {base}...{head} adds "
-                         f"in {repository}: {broken} {said} -- enable the "
-                         "repository's dependency graph, or run the gate again "
-                         "once GitHub's dependency review answers") from broken
-    if not isinstance(held, list) or not all(isinstance(one, dict) for one in held):
-        raise SystemExit("::error::GitHub's dependency review answered no list of "
-                         "changes -- run the gate again")
-    if pending and pending.strip():
-        try:
-            said = base64.b64decode(pending).decode(errors="replace").strip()
-        except ValueError:
-            said = pending
-        raise SystemExit("::error::GitHub's dependency graph has not processed "
-                         f"{base}...{head} yet: {said} -- run the gate again")
-    return [one for one in held if one.get("change_type") == "added"]
+        raise SystemExit(f"::error::cannot read {url}: {broken} -- run the "
+                         "gate again") from broken
 
 
-def fault(dependency):
-    named = (f"{dependency.get('manifest')}: {dependency.get('name')} "
-             f"{dependency.get('version')}")
-    licence = dependency.get("license")
-    if not isinstance(licence, str) or not licence.strip() or licence.startswith(UNDETECTED):
-        return (f"{named} adds a dependency whose licence cannot be detected -- "
-                f"remove it, or add one under {', '.join(COPYABLE)}")
-    words = licence.replace("(", " ").replace(")", " ").split()
-    if (len(words) % 2 == 0 or any(word.upper() != "OR" for word in words[1::2])
-            or not set(words[0::2]) & set(COPYABLE)):
-        return (f"{named} adds a dependency under {licence} -- remove it, or add "
+def spdx_ids():
+    held = {}
+    for listed, key in (("licenses", "licenseId"),
+                        ("exceptions", "licenseExceptionId")):
+        found = fetch(SPDX_LIST.format(listed))
+        if not isinstance(found, dict) or not isinstance(found.get(listed), list):
+            raise SystemExit(f"::error::{SPDX_LIST.format(listed)} holds no "
+                             "SPDX list -- run the gate again")
+        held[listed] = {str(one.get(key, "")).lower() for one in found[listed]}
+    return held
+
+
+def parse(text, known):
+    words = TOKEN.findall(text)
+    at = 0
+
+    def take(word):
+        nonlocal at
+        if at < len(words) and words[at] == word:
+            at += 1
+            return True
+        return False
+
+    def simple():
+        nonlocal at
+        if take("("):
+            inner = either()
+            return inner if inner is not None and take(")") else None
+        if at >= len(words):
+            return None
+        word = words[at]
+        at += 1
+        plus = word.endswith("+") and not LICENCE_REF.fullmatch(word)
+        bare = word[:-1] if plus else word
+        if not (LICENCE_REF.fullmatch(bare) or bare.lower() in known["licenses"]):
+            return None
+        if take("WITH"):
+            if at >= len(words) or words[at].lower() not in known["exceptions"]:
+                return None
+            at += 1
+            return ("WITH", bare, plus)
+        return ("id", bare, plus)
+
+    def joined(operator, below):
+        parts = [below()]
+        while None not in parts and take(operator):
+            parts.append(below())
+        if None in parts:
+            return None
+        return parts[0] if len(parts) == 1 else (operator, parts)
+
+    def both():
+        return joined("AND", simple)
+
+    def either():
+        return joined("OR", both)
+
+    tree = either() if words else None
+    return tree if at == len(words) else None
+
+
+# @req> REQ-61211729@g0PKx_PNg5Or zisvrj
+def copyable(tree):
+    if tree[0] == "OR":
+        return any(copyable(part) for part in tree[1])
+    if tree[0] == "AND":
+        return all(copyable(part) for part in tree[1])
+    return (tree[0] == "id" and not tree[2]
+            and tree[1].lower() in {one.lower() for one in COPYABLE})
+
+
+# @req> REQ-15645679@QRYMiqGzFlXN mjvve6
+def pypi_licence(release, known):
+    info = (release or {}).get("info") or {}
+    expression = info.get("license_expression")
+    if isinstance(expression, str) and expression.strip():
+        return expression
+    field = info.get("license")
+    if isinstance(field, str) and parse(field, known) is not None:
+        return field
+    return None
+
+
+def npm_licence(release, known):
+    licence = (release or {}).get("license")
+    if isinstance(licence, dict):
+        licence = licence.get("type")
+    return licence if isinstance(licence, str) else None
+
+
+# @req> REQ-16667247@6CbB5MgYx58j u7j5ul
+def licence(registry, name, version, how, known):
+    urls = next(urls for named, *urls in REGISTRY_URLS if named == registry)
+    url = urls[how == "exact"].format(
+        name=urllib.parse.quote(name, safe="@"),
+        version=urllib.parse.quote(version))
+    release = fetch(url)
+    if registry == "pypi":
+        return pypi_licence(release, known)
+    return npm_licence(release, known)
+
+
+# @req> REQ-36851513@1OptO4udNoIP enimn3
+# @req> REQ-43266463@Ea4ulHYAmCfN e6b5ko
+# @req> REQ-61211729@g0PKx_PNg5Or iy2bxl
+def fault(path, name, version, found, known):
+    named = f"{path}: {name} {version}".rstrip()
+    tree = parse(found, known) if found else None
+    if tree is None:
+        return (f"{named} adds a dependency whose licence cannot be detected "
+                f"-- remove it, or add one under {', '.join(COPYABLE)}")
+    if not copyable(tree):
+        return (f"{named} adds a dependency under {found} -- remove it, or add "
                 f"one under {', '.join(COPYABLE)}")
     return None
 
 
-# @req> REQ-36851513@1OptO4udNoIP 4ilqgs
-# @req> REQ-43266463@Ea4ulHYAmCfN r6hgpy
-def main():
-    repository, base, head = (os.environ.get(name, "") for name in
-                               ("GITHUB_REPOSITORY", "BASE_REF", "HEAD_SHA"))
-    if not (repository and base and head):
-        raise SystemExit("::error::the dependency licence gate needs "
-                         "GITHUB_REPOSITORY, BASE_REF and HEAD_SHA -- pass them "
-                         "from the pull request")
-    found = [one for one in map(fault, added(repository, base, head,
-                                             os.environ.get("GH_TOKEN", "")))
-             if one]
-    for one in found:
+# @req> REQ-22906462@vVvKGqQqZbAr fo6ill
+# @req> REQ-96192504@dsul6JgCzNzC n7y4gm
+# @req> REQ-73588338@tLdD8fxUwtFe 7zuphr
+def main(against):
+    status, listed, said = git("diff", "--no-renames", "--name-only", "-z",
+                               f"{against}...HEAD")
+    forked, fork, why = git("merge-base", against, "HEAD")
+    if status or forked:
+        raise SystemExit(f"::error::cannot diff against {against}: "
+                         f"{said or why} -- fetch {against} and run the gate "
+                         "again")
+    changed = [(path, kind(path)) for path in listed.split("\0") if path]
+    changed = [(path, found) for path, found in changed if found]
+    if not changed:
+        print("dependency_licence: this pull request changes no manifest or "
+              "lockfile")
+        return 0
+    faults = [f"{path} is a {posixpath.basename(path)} file, which the "
+              "dependency_licence gate cannot read -- leave it unchanged in "
+              "this pull request, or name its dependencies in a "
+              f"{', '.join(shown(named) for named, _ in READ)} file instead"
+              for path, found in changed if found == "unread"]
+    known, judged = None, set()
+    for path, registry in changed:
+        if registry == "unread":
+            continue
+        new, broken = added(fork.strip(), path)
+        faults.append(broken)
+        for name, version, how in sorted(new):
+            if (registry, name, version) in judged:
+                continue
+            judged.add((registry, name, version))
+            known = known or spdx_ids()
+            found = (None if how == "unreadable"
+                     else licence(registry, name, version, how, known))
+            faults.append(fault(path, name, version, found, known))
+    faults = [one for one in faults if one]
+    for one in faults:
         print(f"::error::{one}")
-    return 1 if found else 0
+    return 1 if faults else 0
 
 
-# @req> REQ-36851513@1OptO4udNoIP h27djc
-# @req> REQ-43266463@Ea4ulHYAmCfN 4vx66w
+# @req> REQ-36851513@1OptO4udNoIP atie3n
+# @req> REQ-43266463@Ea4ulHYAmCfN 6huzo4
 if __name__ == "__main__":
-    sys.exit(main())
+    if len(sys.argv) != 2:
+        raise SystemExit("::error::the dependency licence gate needs the base "
+                         "to diff against, as origin/<base branch>")
+    sys.exit(main(sys.argv[1]))

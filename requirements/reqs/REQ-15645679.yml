@@ -8,6 +8,8 @@ assessed:
   REQ-43266463: Ea4ulHYAmCfNS_lk5e11_15v6yFE1HE6NwR8Aeuis28
   package_registries: cqwwetP02B2u1vyS0feKR5-mjFZhcF3q_fiXYAeLJN4
   package_registries.pypi: -0Gay8hTiPwSektXlB8OpOiy0hauueN6Hfa1-DV00SM
+citations:
+  mjvve6: zHNT0guJOGOP_LEQ1YQxSjnYaULl8xfbr0jZH62PdFw
 priority: medium
 relations:
   REQ-16667247: derives_from
