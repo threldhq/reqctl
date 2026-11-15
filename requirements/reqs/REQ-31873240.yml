@@ -23,6 +23,11 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+citations:
+  a533m7: wXfwQuVd-6eOoe2PVWO_0GInfwR3_hWbcmfkRp_2Xao
+  c3ycu6: v_ZD6dbLV-uMsG5iq899apSi0S0eiAkI6JeRT0ac0dw
+  mfvnlx: jJsnoJUEc0mW1pP7_N3FDJxesl5cEbepu7WseWJ9Y88
+  xp5tyw: 2uNBXqr30eMIxVgJi5U2dPFVpTBR5_NSLawkxct8LvY
 priority: medium
 relations:
   REQ-37302987: constrains

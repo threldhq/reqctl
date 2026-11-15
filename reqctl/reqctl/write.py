@@ -44,6 +44,7 @@ def _listing(text):
 def scalar(text, carried=frozenset()):
     stripped = text.strip()
     if stripped.startswith("[") and stripped.endswith("]"):
+        # @req> REQ-37302987@mgBn704avyaM 66xcug
         if SEPARATED.search(stripped):
             # @req> REQ-30898926@Vu28eWaG_1mE fbreuh
             raise ReqctlError(
@@ -95,6 +96,7 @@ def scalar(text, carried=frozenset()):
                 "to state one value"
             )
         return [scalar(member, carried) for member in members]
+    # @req+ REQ-37302987@mgBn704avyaM t3a65b
     separator = next((c for c in BETWEEN_DIGITS.findall(stripped)
                       if unicodedata.category(c) == "Zs"
                       or {"COMMA", "SEPARATOR", "APOSTROPHE", "QUOTATION"}
@@ -106,6 +108,7 @@ def scalar(text, carried=frozenset()):
             "separator, and which digits it groups is ambiguous -- write the "
             "number whole (10000)"
         )
+    # @req- t3a65b
     # @req> REQ-79956352@OsoTGRd6D5CZ 6dcbid
     _refuse_hidden(f"{stripped!r}:", text, carried)
     if stripped.lower() in ("true", "false"):
@@ -471,7 +474,29 @@ def entry_key(member):
     return str(member)
 
 
-def _set_fields(entry, pairs, carried):
+def _verbatim_text(label, text, carried):
+    _refuse_hidden(label, text, carried)
+    return text.strip()
+
+
+def _verbatim_steps(store, uid, prospective, named, key, fields):
+    place = named.partition(".")[0] if "." in named else "entries"
+    entry = dict((prospective.get(place) or {}).get(key) or {})
+    stepped = [tuple(step.strip() for step in str(pair).partition("=")[0].strip().split("."))
+               for pair in [*(fields.get("set") or []), *(fields.get("append") or [])]]
+    for steps in stepped:
+        where = entry
+        for step in steps[:-1]:
+            nested = where.get(step)
+            where[step] = nested = dict(nested) if isinstance(nested, dict) else {}
+            where = nested
+        where[steps[-1]] = ""
+    probe = {**prospective, place: {**(prospective.get(place) or {}), key: entry}}
+    marked = set(_validate.verbatim_paths(store.root, uid, probe))
+    return frozenset(steps for steps in stepped if (place, key, *steps) in marked)
+
+
+def _set_fields(entry, pairs, carried, verbatim=frozenset()):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
         if not name.strip() or not split:
@@ -500,7 +525,10 @@ def _set_fields(entry, pairs, carried):
                 )
             where[step] = nested = dict(nested)
             where = nested
-        held = scalar(value, carried)
+        # @req> REQ-37302987@mgBn704avyaM 6zdpuv
+        # @req> REQ-31873240@K0ddnolUc2IX c3ycu6
+        held = (_verbatim_text(f"--set {name.strip()!r}:", value, carried)
+                if tuple(steps) in verbatim else scalar(value, carried))
         where[steps[-1]] = held
     return entry
 
@@ -526,7 +554,7 @@ def _appended(where, steps):
     return where, list(held or [])
 
 
-def _append_fields(entry, pairs, carried):
+def _append_fields(entry, pairs, carried, verbatim=frozenset()):
     for pair in pairs:
         name, split, value = str(pair).partition("=")
         if not name.strip() or not split:
@@ -544,7 +572,10 @@ def _append_fields(entry, pairs, carried):
         # @req> REQ-79956352@OsoTGRd6D5CZ gey5jb
         for said in name.split("."):
             _refuse_hidden(f"--append {name.strip()!r}:", said.strip(" "), carried)
-        member = scalar(value, carried)
+        # @req> REQ-37302987@mgBn704avyaM lqbt6n
+        # @req> REQ-31873240@K0ddnolUc2IX a533m7
+        member = (_verbatim_text(f"--append {name.strip()!r}:", value, carried)
+                  if tuple(steps) in verbatim else scalar(value, carried))
         if isinstance(member, list):
             # @req> REQ-30898926@Vu28eWaG_1mE b4xdt6
             raise ReqctlError(
@@ -1535,9 +1566,12 @@ def _revision(store, uid, fields, together=None):
                 raise ReqctlError(
                     f"--new-entry {named}: already an entry; use --entry {named}"
                 )
+            # @req+ REQ-31873240@K0ddnolUc2IX mfvnlx
+            verbatim = _verbatim_steps(store, uid, prospective, named, key, fields)
             held[key] = _append_fields(
-                _set_fields({}, fields.get("set") or [], carried),
-                fields.get("append") or [], carried)
+                _set_fields({}, fields.get("set") or [], carried, verbatim),
+                fields.get("append") or [], carried, verbatim)
+            # @req- mfvnlx
         if fields.get("entry") is not None:
             named = str(fields["entry"]).strip()
             held, key = _placed(uid, blocks, prospective, "--entry", named)
@@ -1547,11 +1581,14 @@ def _revision(store, uid, fields, together=None):
                     f"--entry {named}: not an entry of {uid}; to add one, pass "
                     f"--new-entry {named}"
                 )
+            # @req+ REQ-31873240@K0ddnolUc2IX xp5tyw
+            verbatim = _verbatim_steps(store, uid, prospective, named, key, fields)
             held[key] = _unset_fields(
                 _append_fields(
-                    _set_fields(dict(held[key] or {}), fields.get("set") or [], carried),
-                    fields.get("append") or [], carried),
+                    _set_fields(dict(held[key] or {}), fields.get("set") or [], carried, verbatim),
+                    fields.get("append") or [], carried, verbatim),
                 fields.get("unset") or [], named)
+            # @req- xp5tyw
         if fields.get("drop_entry") is not None:
             named = str(fields["drop_entry"]).strip()
             held, key = _placed(uid, blocks, prospective, "--drop-entry", named)
