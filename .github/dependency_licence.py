@@ -40,8 +40,8 @@ UNREAD = (
 REQUIREMENT = re.compile(
     r"([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)\s*(?:\[[^\]]*\])?\s*"
     r"((?:[=<>!~(,@;].*)?)")
-PINNED = re.compile(r"===?\s*([^\s,;=<>!~@*]+)")
-NPM_EXACT = re.compile(r"v?(\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.+-]*)?)")
+PINNED = re.compile(r"===?\s*((?:\d+!)?[^\s,;=<>!~@*]+)")
+NPM_EXACT = re.compile(r"=?\s*v?(\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.+-]*)?)")
 NPM_RANGE = re.compile(r"[\d\sxX*^~<>=.|v-]*")
 NPM_SECTIONS = ("dependencies", "devDependencies", "optionalDependencies",
                 "peerDependencies")
@@ -113,7 +113,7 @@ def poetry(name, spec):
     name = normalised(name)
     if not isinstance(spec, str):
         return name, str(spec), "unreadable"
-    pinned = re.fullmatch(r"=?=?\s*(\d[^\s,*<>!~^|]*)", spec.strip())
+    pinned = re.fullmatch(r"=?=?\s*((?:\d+!)?\d[^\s,*<>!~^|]*)", spec.strip())
     return (name, pinned.group(1), "exact") if pinned else (name, spec, "latest")
 
 
@@ -126,8 +126,9 @@ def listed(group):
 
 
 def walked(node, tool, under=False):
-    if isinstance(node, list) and under:
-        yield from listed(node)
+    if isinstance(node, list):
+        yield from (listed(node) if under else
+                    (one for item in node for one in walked(item, tool)))
     if not isinstance(node, dict):
         return
     for key, value in node.items():
@@ -138,7 +139,8 @@ def walked(node, tool, under=False):
                 yield poetry(key, value)
         else:
             yield from walked(value, tool, under or "dependencies" in key
-                              or key.startswith("requires"))
+                              or key.startswith("requires")
+                              or key == "plugins")
 
 
 def pyproject(text):
@@ -338,7 +340,7 @@ def licence(registry, name, version, how):
     urls = next(urls for named, *urls in REGISTRY_URLS if named == registry)
     url = urls[how == "exact"].format(
         name=urllib.parse.quote(name, safe="@"),
-        version=urllib.parse.quote(version))
+        version=urllib.parse.quote(version, safe=""))
     release = fetch(url)
     return pypi_licence(release) if registry == "pypi" else npm_licence(release)
 
