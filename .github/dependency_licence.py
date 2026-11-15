@@ -49,6 +49,9 @@ REQUIREMENTS = "requirements"
 HARMLESS = ("--hash", "--require-hashes", "--prefer-binary", "--only-binary",
             "--no-binary", "--pre", "-c", "--constraint")
 NPM_TARBALLS = "https://registry.npmjs.org/"
+TOOLS = ("poetry", "uv", "pdm", "hatch")
+INDEXES = ("source", "sources", "index", "index-url", "extra-index-url",
+           "find-links")
 UNREADABLE = (ValueError, TypeError, AttributeError)
 TOKEN = re.compile(r"\(|\)|[^\s()]+")
 LICENCE_REF = re.compile(
@@ -85,6 +88,7 @@ def requirement(line):
         return line, "", "unreadable"
     name, rest = found.groups()
     spec = " ".join(rest.split(";", 1)[0].split())
+    spec = spec[1:-1].strip() if spec[:1] == "(" and spec[-1:] == ")" else spec
     name = normalised(name)
     pinned = PINNED.fullmatch(spec)
     if pinned:
@@ -94,6 +98,7 @@ def requirement(line):
 
 def requirements_file(text):
     named = set()
+    text = re.sub(r"(?m)^\s*#.*$", "", text)
     for line in re.sub(r"\\\r?\n", " ", text).splitlines():
         line = re.split(r"(?:^|\s)#", line, maxsplit=1)[0].strip()
         if line.startswith("-") and not line.startswith(HARMLESS):
@@ -105,53 +110,61 @@ def requirements_file(text):
 
 
 def poetry(name, spec):
-    pinned = (re.fullmatch(r"=?=?\s*(\d[^\s,*<>!~^|]*)", spec.strip())
-              if isinstance(spec, str) else None)
-    if pinned:
-        return normalised(name), pinned.group(1), "exact"
-    return (normalised(name), str(spec),
-            "latest" if isinstance(spec, str) else "unreadable")
+    name = normalised(name)
+    if not isinstance(spec, str):
+        return name, str(spec), "unreadable"
+    pinned = re.fullmatch(r"=?=?\s*(\d[^\s,*<>!~^|]*)", spec.strip())
+    return (name, pinned.group(1), "exact") if pinned else (name, spec, "latest")
+
+
+def listed(group):
+    for one in group if isinstance(group, list) else [group]:
+        if isinstance(one, str):
+            yield requirement(one.strip())
+        elif not (isinstance(one, dict) and "include-group" in one):
+            yield str(one), "", "unreadable"
+
+
+def walked(node, tool, under=False):
+    if isinstance(node, list) and under:
+        yield from listed(node)
+    if not isinstance(node, dict):
+        return
+    for key, value in node.items():
+        if key in INDEXES and tool != "hatch":
+            yield key, str(value), "unreadable"
+        elif under and not isinstance(value, list):
+            if key != "python":
+                yield poetry(key, value)
+        else:
+            yield from walked(value, tool, under or "dependencies" in key
+                              or key.startswith("requires"))
 
 
 def pyproject(text):
     held = tomllib.loads(text)
     project, tool = held.get("project") or {}, held.get("tool") or {}
-    uv, verse = tool.get("uv") or {}, tool.get("poetry") or {}
     groups = [project.get("dependencies"),
               (held.get("build-system") or {}).get("requires"),
-              uv.get("dev-dependencies"),
               *(project.get("optional-dependencies") or {}).values(),
-              *(held.get("dependency-groups") or {}).values(),
-              *((tool.get("pdm") or {}).get("dev-dependencies") or {}).values(),
-              *(env.get(key) for env in
-                ((tool.get("hatch") or {}).get("envs") or {}).values()
-                for key in ("dependencies", "extra-dependencies"))]
-    tables = [verse.get("dependencies"), verse.get("dev-dependencies"),
-              *(group.get("dependencies")
-                for group in (verse.get("group") or {}).values())]
-    return ({requirement(one.strip()) if isinstance(one, str)
-             else (str(one), "", "unreadable")
-             for group in groups for one in (group or [])
-             if not (isinstance(one, dict) and "include-group" in one)}
-            | {poetry(name, spec) for table in tables
-               for name, spec in (table or {}).items() if name != "python"}
-            | {(normalised(name), str(source), "unreadable")
-               for name, source in (uv.get("sources") or {}).items()})
+              *(held.get("dependency-groups") or {}).values()]
+    return ({one for group in groups for one in listed(group or [])}
+            | {one for name in TOOLS for one in walked(tool.get(name), name)})
 
 
 def npm(name, spec):
     spec = spec.strip()
     exact = NPM_EXACT.fullmatch(spec)
     if exact:
-        return name.lower(), exact.group(1), "exact"
-    return (name.lower(), spec,
+        return name, exact.group(1), "exact"
+    return (name, spec,
             "latest" if NPM_RANGE.fullmatch(spec) else "unreadable")
 
 
 def package_json(text):
     held = json.loads(text)
     return {npm(name, spec) if isinstance(spec, str)
-            else (name.lower(), str(spec), "unreadable")
+            else (name, str(spec), "unreadable")
             for section in NPM_SECTIONS
             for name, spec in (held.get(section) or {}).items()}
 
@@ -181,7 +194,7 @@ def locked(name, entry):
     tarball = f"{NPM_TARBALLS}{name}/-/{name.rsplit('/', 1)[-1]}-{version}.tgz"
     exact = (NPM_EXACT.fullmatch(version) and entry.get("resolved") == tarball
              and entry.get("name", name) == name)
-    return name.lower(), version, "exact" if exact else "unreadable"
+    return name, version, "exact" if exact else "unreadable"
 
 
 def dependencies(path, text):
