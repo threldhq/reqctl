@@ -1,14 +1,17 @@
-acceptance_criteria: []
+acceptance_criteria:
+- given: a pull request changing only uv.lock
+  then: the product does not refuse the pull request
+  when: the gate runs
 assessed:
   REQ-26876750: p5bO3gEKEYCbI2dpCZq5kyu2VQfTeMUGNu-MO-Pkodg
   REQ-36851513: 1OptO4udNoIPgmP2__2TgrpdjPr9jVo3CyS_4iJlMfk
   REQ-43266463: Ea4ulHYAmCfNS_lk5e11_15v6yFE1HE6NwR8Aeuis28
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
-  dependency_manifests: nuXiAKNjoq3kbybCK1iuLulMWwbiNF-PCk96UCyt1W8
-  dependency_manifests.*: pDrVIGCxhHQuVZWT582Bk6UlUOXkq9NoR3nz3WthLZA
-  unread_manifests: eh8D_HrlVLlU86VCAxfWeUBmxXUjv4Vc5_6G1QY-xkM
-  unread_manifests.*: nS-ho2bag_eWQkNZ97oLj6rjYW1mTIEaoNJLkkQ7hQk
+  dependency_manifests: QrwTZ1WIzyuqrELlkmr25otdQzURKVHZIOFtMZIIfYE
+  dependency_manifests.*: giCyYchtipkGsrqmRBWvmhtHVarkpH0UIiDUCz08FpQ
+  unread_manifests: Z-PHCI7nWifdLpjsKQ4FnqwbQbbsIGsVPNtX-bLN7uY
+  unread_manifests.*: HiK8UyOYMs-pOinbJbrf6gPRhkYzRyLluGWk70d7WSI
 citations:
   n7y4gm: 1otl52NHx6tQKQ1rJo6gxhhcUJz64OfWVlIxz5GyvJs
 priority: medium

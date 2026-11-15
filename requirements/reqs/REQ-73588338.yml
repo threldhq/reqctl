@@ -1,13 +1,13 @@
 acceptance_criteria:
-- given: a pull request changing yarn.lock
+- given: a pull request changing Cargo.toml
   then: the product refuses the pull request
   when: the gate runs
 assessed:
   REQ-26876750: p5bO3gEKEYCbI2dpCZq5kyu2VQfTeMUGNu-MO-Pkodg
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
-  unread_manifests: eh8D_HrlVLlU86VCAxfWeUBmxXUjv4Vc5_6G1QY-xkM
-  unread_manifests.*: nS-ho2bag_eWQkNZ97oLj6rjYW1mTIEaoNJLkkQ7hQk
+  unread_manifests: Z-PHCI7nWifdLpjsKQ4FnqwbQbbsIGsVPNtX-bLN7uY
+  unread_manifests.*: HiK8UyOYMs-pOinbJbrf6gPRhkYzRyLluGWk70d7WSI
 citations:
   7zuphr: 1otl52NHx6tQKQ1rJo6gxhhcUJz64OfWVlIxz5GyvJs
 priority: medium

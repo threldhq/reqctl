@@ -8,20 +8,19 @@ entries:
   package_json:
     definition: a file named package.json, whose dependencies ${package_registries.npm}
       resolves
-  package_lock_json:
-    definition: a file named package-lock.json, whose dependencies ${package_registries.npm}
-      resolves
   pyproject_toml:
     definition: a file named pyproject.toml, whose dependencies ${package_registries.pypi}
       resolves
   requirements_in:
-    definition: a file whose name begins requirements and ends .in, whose dependencies
-      ${package_registries.pypi} resolves
+    definition: a file whose name ends .in and either contains requirements or sits
+      in a folder named requirements, whose dependencies ${package_registries.pypi}
+      resolves
   requirements_txt:
-    definition: a file whose name begins requirements and ends .txt, whose dependencies
-      ${package_registries.pypi} resolves
+    definition: a file whose name ends .txt and either contains requirements or sits
+      in a folder named requirements, whose dependencies ${package_registries.pypi}
+      resolves
 kind: data
 name: dependency_manifests
 status: approved
-text: the kinds of manifest and lockfile the dependency_licence gate reads, each with
-  the package registry that resolves the dependencies it names
+text: the kinds of manifest the dependency_licence gate reads, each with the package
+  registry that resolves the dependencies it names

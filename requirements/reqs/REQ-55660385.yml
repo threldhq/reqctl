@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a repository whose licence_exempt_packages names certifi on pypi, and a pull
+    request newly naming certifi
+  then: the pull request is not refused for certifi's licence
+  when: the gate runs
+- given: a repository whose licence_exempt_packages names a package on pypi whose
+    licence cannot be detected, and a pull request newly naming it
+  then: the pull request is not refused for that package's licence
+  when: the gate runs
+assessed:
+  REQ-36851513: 1OptO4udNoIPgmP2__2TgrpdjPr9jVo3CyS_4iJlMfk
+  REQ-43266463: Ea4ulHYAmCfNS_lk5e11_15v6yFE1HE6NwR8Aeuis28
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  package_registries: cqwwetP02B2u1vyS0feKR5-mjFZhcF3q_fiXYAeLJN4
+  package_registries.*: 6InvlWw_kg94PQrPyZ9-IDm3azUQuBW41jgKMglSV4E
+priority: medium
+relations:
+  REQ-36851513: constrains
+  REQ-43266463: constrains
+status: approved
+text: If a dependency a pull request adds is the package that an [entry](entry) of
+  the [data item](data_item) named licence_exempt_packages in the repository's corpus
+  names in its name field, on the one of the ${package_registries} its registry field
+  names, then the product shall not refuse the pull request for that dependency's
+  licence when the ${corpus_gates.dependency_licence} gate runs.
+type: functional
+verification: inspection
