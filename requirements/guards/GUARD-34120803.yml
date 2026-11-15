@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  GUARD-37876391: 588H-w2rsk8rHHdyhX7WCaL6pexB3Z0w-B5jJdkjQI4
+  reqctl_wheel: 5IqihJ_X27GTbwuZgl-x_D1MrfH18WarKCkP5DA8Wrk
+citations:
+  pqigdq: f-czYONGESoQo1rSUwjDncduh9EMcChN-xVcLpqHUVQ
+relations:
+  GUARD-37876391: depends_on
+status: approved
+text: When the build uploads a [reqctl wheel](reqctl_wheel) to PyPI, the build shall
+  upload with it a PEP 740 attestation of that file, bound to the PyPI trusted publisher
+  that makes the upload.

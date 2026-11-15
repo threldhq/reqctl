@@ -9,7 +9,7 @@ on:
         required: true
         type: string
 
-# @req> GUARD-52037270@OztX8T4vOmsH roebyf
+# @req> GUARD-52037270@qgJuN0jv2_H8 roebyf
 permissions:
   contents: read
 

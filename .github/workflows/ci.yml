@@ -6,7 +6,7 @@ on:
     types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
 
-# @req> GUARD-52037270@OztX8T4vOmsH i2oqdm
+# @req> GUARD-52037270@qgJuN0jv2_H8 i2oqdm
 permissions:
   contents: read
 
@@ -169,7 +169,7 @@ jobs:
       # @req> GUARD-26421773@SDQf4TqpYtSB b4rdwn
       # @req> GUARD-37835776@0Spg60Mwp26J rwzekc
       # @req> GUARD-40603760@BjP6UvmNcOQT fusl76
-      # @req> GUARD-52037270@OztX8T4vOmsH whtw5s
+      # @req> GUARD-52037270@qgJuN0jv2_H8 whtw5s
       # @req> GUARD-72877772@JfdZ18LPQLEi wg3djt
       # @req> GUARD-84344643@C0RxmQgbeF_W dbsuxc
       # @req> GUARD-85664071@zrnITtEG0Lqc baiftz

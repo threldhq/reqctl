@@ -29,7 +29,7 @@ on:
       CORPUS_APP_PRIVATE_KEY:
         required: true
 
-# @req> GUARD-52037270@OztX8T4vOmsH cyucoj
+# @req> GUARD-52037270@qgJuN0jv2_H8 cyucoj
 permissions:
   contents: read
 
