@@ -1,0 +1,11 @@
+assessed: {}
+entries:
+  npm:
+    definition: the public npm registry at registry.npmjs.org
+  pypi:
+    definition: the Python Package Index at pypi.org
+kind: data
+name: package_registries
+status: draft
+text: the package registries the dependency_licence gate resolves a dependency's licence
+  from
