@@ -13,3 +13,6 @@ It is read by the session that has to clear it, so it names what to change, not
 what to understand. It does not state why the rule exists: that asserts
 something about a system outside this repository, which reading this one cannot
 confirm.
+
+A guard that refuses a character asks Unicode what that character is. A list of
+codepoints is a guard that admits the next one.
