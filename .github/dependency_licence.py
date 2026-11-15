@@ -46,6 +46,9 @@ NPM_RANGE = re.compile(r"[\d\sxX*^~<>=.|v-]*")
 NPM_SECTIONS = ("dependencies", "devDependencies", "optionalDependencies",
                 "peerDependencies")
 REQUIREMENTS = "requirements"
+HARMLESS = ("--hash", "--require-hashes", "--prefer-binary", "--only-binary",
+            "--no-binary", "--pre", "-c", "--constraint")
+NPM_TARBALLS = "https://registry.npmjs.org/"
 UNREADABLE = (ValueError, TypeError, AttributeError)
 TOKEN = re.compile(r"\(|\)|[^\s()]+")
 LICENCE_REF = re.compile(
@@ -88,10 +91,12 @@ def requirement(line):
 def requirements_file(text):
     named = set()
     for line in text.replace("\\\n", " ").splitlines():
-        line = re.split(r"(?:^|\s)#", line, maxsplit=1)[0]
-        line = re.split(r"\s--?[A-Za-z]", f" {line}", maxsplit=1)[0].strip()
-        if line and not line.startswith("-"):
-            named.add(requirement(line))
+        line = re.split(r"(?:^|\s)#", line, maxsplit=1)[0].strip()
+        if line.startswith("-") and not line.startswith(HARMLESS):
+            named.add((line, "", "unreadable"))
+        elif line and not line.startswith("-"):
+            named.add(requirement(
+                re.split(r"\s--?[A-Za-z]", line, maxsplit=1)[0].strip()))
     return named
 
 
@@ -141,10 +146,11 @@ def package_lock(text):
                    if "node_modules/" in path and isinstance(entry, dict)]
     else:
         entries = list(lock_v1(held.get("dependencies")))
-    named = {npm(name, str(entry.get("version", "")))
-             for name, entry in entries if not entry.get("link")}
-    return {(name, version, how if how == "exact" else "unreadable")
-            for name, version, how in named}
+    return {(name.lower(), str(entry.get("version", "")),
+             "exact" if NPM_EXACT.fullmatch(str(entry.get("version", "")))
+             and str(entry.get("resolved", NPM_TARBALLS)).startswith(NPM_TARBALLS)
+             else "unreadable")
+            for name, entry in entries if not entry.get("link")}
 
 
 def dependencies(path, text):
@@ -263,22 +269,20 @@ def copyable(tree):
     if tree[0] == "AND":
         return all(copyable(part) for part in tree[1])
     return (tree[0] == "id" and not tree[2]
-            and tree[1].lower() in {one.lower() for one in COPYABLE})
+            and tree[1].lower() in map(str.lower, COPYABLE))
 
 
 # @req> REQ-15645679@QRYMiqGzFlXN mjvve6
-def pypi_licence(release, known):
+def pypi_licence(release):
     info = (release or {}).get("info") or {}
     expression = info.get("license_expression")
     if isinstance(expression, str) and expression.strip():
         return expression
     field = info.get("license")
-    if isinstance(field, str) and parse(field, known) is not None:
-        return field
-    return None
+    return field if isinstance(field, str) else None
 
 
-def npm_licence(release, known):
+def npm_licence(release):
     licence = (release or {}).get("license")
     if isinstance(licence, dict):
         licence = licence.get("type")
@@ -286,20 +290,19 @@ def npm_licence(release, known):
 
 
 # @req> REQ-16667247@6CbB5MgYx58j u7j5ul
-def licence(registry, name, version, how, known):
+def licence(registry, name, version, how):
     urls = next(urls for named, *urls in REGISTRY_URLS if named == registry)
     url = urls[how == "exact"].format(
         name=urllib.parse.quote(name, safe="@"),
         version=urllib.parse.quote(version))
     release = fetch(url)
-    if registry == "pypi":
-        return pypi_licence(release, known)
-    return npm_licence(release, known)
+    return pypi_licence(release) if registry == "pypi" else npm_licence(release)
 
 
 # @req> REQ-36851513@1OptO4udNoIP enimn3
 # @req> REQ-43266463@Ea4ulHYAmCfN e6b5ko
 # @req> REQ-61211729@g0PKx_PNg5Or iy2bxl
+# @req> REQ-15645679@QRYMiqGzFlXN 7vkgxn
 def fault(path, name, version, found, known):
     named = f"{path}: {name} {version}".rstrip()
     tree = parse(found, known) if found else None
@@ -323,8 +326,8 @@ def main(against):
         raise SystemExit(f"::error::cannot diff against {against}: "
                          f"{said or why} -- fetch {against} and run the gate "
                          "again")
-    changed = [(path, kind(path)) for path in listed.split("\0") if path]
-    changed = [(path, found) for path, found in changed if found]
+    changed = [(path, found) for path in listed.split("\0")
+               if path and (found := kind(path))]
     if not changed:
         print("dependency_licence: this pull request changes no manifest or "
               "lockfile")
@@ -346,7 +349,7 @@ def main(against):
             judged.add((registry, name, version))
             known = known or spdx_ids()
             found = (None if how == "unreadable"
-                     else licence(registry, name, version, how, known))
+                     else licence(registry, name, version, how))
             faults.append(fault(path, name, version, found, known))
     faults = [one for one in faults if one]
     for one in faults:

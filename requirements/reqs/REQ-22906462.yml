@@ -7,7 +7,7 @@ assessed:
   dependency_manifests: nuXiAKNjoq3kbybCK1iuLulMWwbiNF-PCk96UCyt1W8
   dependency_manifests.*: pDrVIGCxhHQuVZWT582Bk6UlUOXkq9NoR3nz3WthLZA
 citations:
-  fo6ill: o04yMQTWm87QQqJ9aFOxpP5QRO_lXXsfYn3nMx2QxlY
+  fo6ill: aRHAT4yLNjY7qKbEPxL9kXiUmsgd77Ed22tOiYTfA3Y
 priority: medium
 relations:
   REQ-36851513: constrains
