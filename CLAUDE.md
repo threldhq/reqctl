@@ -41,9 +41,9 @@ Every pull request that follows from one names it in its body: `Closes #N` on
 the one that finishes it, `Refs #N` on the rest. A pull request nothing asked
 for, such as a dependency bump, names none.
 
-Every change to what `reqctl`, `reqportal` or `elucidate` does must cite a
-governing approved requirement. If none exists, **stop** and ask the owner to
-create one. No exceptions, including fixes.
+Every change to what `reqctl`, `reqportal` or `elucidate` does cites a governing
+approved requirement, a fix included. If none exists, stop and ask the owner to
+create one.
 
 `reqctl` is the product this repository builds, so a statement about what it
 does states "the product shall" and is a `REQ`. What reqctl ships as its Claude
@@ -52,128 +52,70 @@ Code plugin, the requirements-guard hook included, is product, so its rules are
 and checks reqctl rather than for reqctl itself; it is minted, approved and
 baselined like a requirement, and cited at the code that enforces it.
 
-A lockfile, a dependency manifest or a configuration file holds no citation of
-its own, so each item whose rule it serves cites it whole (REQ-78788058):
-`reqctl tag PATH --req UID`, naming no lines. Where such a file carries the
-build and no guard states the rule it serves, stop and ask the owner to create
-one. A rule of ours is sorted as the elucidate skill sorts it (REQ-83468274): a
-rule a behaviour of reqctl depends on is a `REQ`, even where only this
-repository runs that behaviour
-today; a rule only this repository's own check depends on -- the comment and
-help budgets, CODEOWNERS -- is a `GUARD`; a rule both depend on is one of each.
-Where a rule is enforced does not sort it: travel-alone is a corpus gate reqctl
-runs for any repository that calls it, so its rule is a `REQ`.
-The session-start hook is wired by the repository's own settings rather than
-the plugin, so it is build, and its install parity is GUARD-93589588. A
-third-party ruleset -- `ruff`, `mypy`, `actionlint` -- states no rule of ours to
-lift, and stays code; a rule of ours configured into one is still ours.
+A rule of ours is sorted as the elucidate skill sorts it (REQ-83468274), by what
+depends on it and not by where it is enforced. Travel-alone is a corpus gate
+reqctl runs for any repository that calls it, so its rule is a `REQ`. The
+comment and help budgets and CODEOWNERS serve only this repository's own check,
+so theirs are `GUARD`s. The session-start hook is wired by the repository's own
+settings rather than the plugin, so it is build, and its install parity is
+GUARD-93589588.
 
-`reqctl` is the only way the corpus is touched. Never hand-edit an item or
-baseline file, never read one except through `reqctl`, and never reach one with
-`sed`, a redirect, or a script. The hook refuses a Read, Grep, Glob or shell
+The plugin prints its session rules when a session starts and after each
+compaction, and they are not repeated here: the corpus read and written through
+`reqctl` alone, `reqctl context` before implementing, citing with `reqctl tag`,
+re-pinning, and the corpus pull request that travels alone, after which every
+other pull request is refused until the next one re-pins. A session or subagent
+that does not hold them reads `plugin/hooks/session-rules.md` before working.
+
+The hook backs two of those rules. It refuses a Read, Grep, Glob or shell
 command that names a file under requirements/reqs, guards, params, terms, data
 or the baseline; schemas stay readable, git's own read forms stay allowed, and a
 recursive grep that names no corpus path is beyond a hook that sees only the
-command text.
+command text. It refuses an edit, or a shell command naming a citation, that
+adds, removes or changes a citation comment (REQ-38099593); a script that writes
+one without naming it is beyond it too. `reqctl trace` refuses the retired
+single-line tag, a module-level mapping of them (`REQ-44164687`), and a citation
+naming no stamp (`REQ-75161909`).
 
 Claude may draft requirements, assess impact, mark one approved and cut a
 baseline. All of those are proposals. **Approval is the merge**: only `main`
 states what is approved, and only the owner merges.
 
-A pull request carrying a corpus change must carry nothing else. CI rejects the
-mixture, so the approval is looked at on its own rather than buried beside the
-code written against it.
-
-A corpus pull request lands with the code still pinned to the statements it
-superseded, so `main` goes red on the citations guard and every other pull
-request is refused until a following one re-pins. That following pull request is
-the next work in the repository, ahead of whatever else is open. `implement`
-states how to do it: read the code against the statement that now stands, then
-re-pin.
-
-Run `reqctl context UID [UID ...]` before implementing. Never implement from an
-ID alone.
-
-`reqctl --help` is the index of what reqctl can do. `reqctl list
-[requirement|guard|parameter|term|data]` names what the corpus holds -- the
-glossary, the parameters -- without reading all of it. `reqctl export` prints
-the corpus at large, approved only unless `--all` adds everything else, as
-markdown unless `reqctl --json` asks for the records.
-
-Cite implementation with `reqctl tag PATH --from N --to M --req UID` over the
-smallest region whose behaviour satisfies the requirement. It writes one comment
-over a single code statement and a pair of comments over more, pinned to the
-statement as it stands, so no stamp is ever composed or pasted. Cover the code
-that satisfies a clause and every line that code names, directly or through what
-those lines name, that no citation digest takes in. A Python citation's digest
-takes in each function, class and constant of the code base its lines name, a
-JavaScript citation's each function and const, let or var binding declared at the
-top level of the same file, and a TypeScript citation's those and each enum
-declared there, and what those name in turn, so those get no citation of their
-own; JavaScript or TypeScript in another file, and code in any other language,
-that the lines name is cited too. A stale citation is re-pinned by reading the code against the
-statement that now stands, then `reqctl repin ID`; one that no longer governs
-goes with `reqctl untag ID`, and a region that moved is untagged and cited again.
-The hook refuses an edit, or a shell command naming a citation, that adds,
-removes or changes a citation comment (REQ-38099593); a script that writes one
-without naming it is beyond a hook that sees only the command text.
-
-A statement citation is the only form `reqctl trace` accepts: it refuses the
-retired single-line tag and a module-level mapping of them (`REQ-44164687`), and
-a citation naming no stamp (`REQ-75161909`).
-
 ## Goals
 
-`/goal` is a built-in command the owner runs. Built-ins are absent from the
-session's skills list, which holds skills only — so ask the owner to set a goal
-rather than reading the command as missing.
-
-Work under an explicit `/goal`. If none is set, propose the condition that would
-mean done and let the owner set it before modifying files. Write the condition
-as the transcript can show it — name the command that proves it — because the
-evaluator reads the conversation and runs nothing itself. Do not widen a goal
+Work under an explicit `/goal`, a built-in the owner runs that the skills list
+does not show. If none is set, propose the condition that would mean done and
+let the owner set it before modifying files. Write the condition as the
+transcript can show it — name the command that proves it — because the evaluator
+reads the conversation and runs nothing itself. Do not widen a goal
 mid-implementation — finish it, or propose a new one.
 
 ## Before writing
 
-Read the current contents of a file before modifying it. Never assume state.
+Read the current contents of a file before modifying it, rather than assuming
+its state.
 
-Check existing manifests before proposing a dependency, and justify it.
-
-Where two existing patterns contradict each other, pick one, say why, and flag
-the other. Do not average them.
+Check existing manifests before proposing a dependency, and justify it. Where two
+existing patterns contradict each other, pick one, say why, and flag the other.
+Do not average them.
 
 ## Changes
 
-Touch the smallest parts of the fewest files.
+Touch the smallest parts of the fewest files. Write production-grade code,
+strictly YAGNI: build what an approved requirement asks for, and stop there.
 
-Write production-grade code, strictly YAGNI: build what an approved requirement
-asks for, and stop there.
-
-Never write placeholders — no `// TODO: implement`, no eliding with `...`.
-Output complete logic for what you are changing.
+Output complete logic for what you are changing: no placeholder such as
+`// TODO: implement`, and no eliding with `...`.
 
 Change what the task names. Mention anything else you noticed separately, and
-leave it where it is.
-
-Write succinctly — in files, in commits, and in replies to the owner. Write what
-the next session must act on.
+leave it where it is. Write succinctly — in files, in commits, and in replies to
+the owner — and write what the next session must act on.
 
 The code says what it does. Write no comments and no docstrings; what one would
-have said belongs in a name, the corpus, or the commit message.
-
-The only exception is a directive a tool reads — `zizmor: ignore`, `shellcheck
-disable`, a statement citation. Those are syntax, not prose. A
-directive that belongs to one file is named in `comment_budget.ALLOWED` against
-that file; a citation belongs wherever the code it governs is, so the budget
-reads it by shape instead and counts it as nothing. CI holds the count of what
-is left at zero and refuses a file type it has no rule for.
-
-Prose inside a string is invisible to that guard, so argparse `help=` and
-`description=` are counted by their own budget in `ci.yml`. What survives it is
-`reqctl`'s, which a session reads through `reqctl --help` rather than the whole
-of `cli.py`. A script nothing hand-drives carries none: its caller states the
-arguments.
+have said belongs in a name, the corpus, or the commit message. The only
+exception is a directive a tool reads — `zizmor: ignore`, `shellcheck disable`,
+a statement citation. Those are syntax, not prose, and `.claude/rules/budgets.md`
+states how CI counts them.
 
 Do not create decision records, ADRs, or design documents. A constraint belongs
 in a `REQ`, a `GUARD`, or a schema — if it did not become one of those, it does
@@ -187,9 +129,9 @@ again.
 
 A test may be written and run to exercise code while working, and is deleted
 before commit. No test is committed, and no requirement is drafted with
-`automated_test` verification. A pass is never offered as evidence that the code
-does what its statement says, of correctness or against regression, because the
-test and the code come from the same understanding.
+`automated_test` verification. A pass is not evidence that the code does what
+its statement says, of correctness or against regression, because the test and
+the code come from the same understanding.
 
 `python .github/verify.py` runs the gates: it reads the `check` job from
 `.github/workflows/ci.yml` and runs the steps CI would run for this tree, so a
@@ -198,16 +140,16 @@ skipped — a step skipped for provisioning is checked only by CI.
 
 A task is called complete only by stating what was checked: the statements the
 code was read against and the gates that ran. Where only use can show it works,
-ask the owner to try it.
-
-Kill background processes and delete temp files before declaring done.
+ask the owner to try it. Kill background processes and delete temp files before
+declaring done.
 
 If the same command fails three times, stop. Report the command, the error, what
 you tried, what you learned, and what you need. Do not attempt a fourth fix.
 
 ## Git and pull requests
 
-Work on a branch. Never commit to `main`. Never force push.
+Work on a branch: a commit reaches `main` only through the owner's merge. Do not
+force push.
 
 Commit at coherent milestones with conventional messages, citing the requirement
 where useful: `feat(REQ-75161909): refuse an unstamped citation`.
@@ -226,19 +168,15 @@ those need the owner's approval. An owned path never gets a carve-out: that
 puts `dill-eng` on both sides of its own change.
 
 Corpus changes and implementation changes stay in separate commits and separate
-pull requests.
+pull requests. CI rejects the mixture, so the approval is looked at on its own
+rather than buried beside the code written against it.
 
 CI is the enforcement boundary. This file is not.
 
 ## Tools and subagents
 
-Prefer a script or CLI over doing something by hand. Prefer an existing skill or
-tool over improvising.
-
-Never weaken a check, a schema, or a gate to make something pass.
-
-A guard that refuses a character asks Unicode what that character is. A list of
-codepoints is a guard that admits the next one.
+Prefer a script, CLI or existing skill over doing something by hand. Do not
+weaken a check, a schema, or a gate to make something pass: fix what it caught.
 
 Use subagents when work is large, parallelisable, or would flood context — not
 by default. Define each subtask, assign non-overlapping files, and state the
