@@ -10,6 +10,10 @@ assessed:
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
   REQ-62710822: DZLgFus7Dgs-Q8gFosJyoTNjgFfwKtYltTX3_10J5eE
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  fdewff: bQs7m8gov-wawVwqPAT-CyhfJaMlMpmHnxt2x9jhREo
+  resqxz: Wjy9IMOI0CcYw_UxCJFSbEsQ7L_6cSOz8agJh7RTsn8
+  x32cmy: KUH6i-ilpU0xsCwW_Q-JLMmim2ozVO8Pq8Lek8IUrv4
 priority: medium
 relations:
   REQ-20121033: depends_on

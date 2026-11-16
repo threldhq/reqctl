@@ -37,13 +37,14 @@ def recall(scope):
         })),
     })
 
+# @req> REQ-27930634@-OkZvQlAtuMK vhufak
 GROUP = _object(["proposal", "group", "findings"], {
     "proposal": {"type": "integer", "minimum": 1},
     "group": {"type": "integer", "minimum": 1},
     "findings": _list(_object(["uid", "kind", "clause", "reason"], {
         "uid": UID,
         "kind": {"type": "string", "enum": FINDINGS},
-        "clause": REASON,
+        "clause": {"type": "string", "minLength": 1},
         "reason": REASON,
     })),
 })
