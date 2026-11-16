@@ -12,7 +12,7 @@ assessed:
   dependency_manifests: QrwTZ1WIzyuqrELlkmr25otdQzURKVHZIOFtMZIIfYE
   dependency_manifests.package_json: CdP9Zt-76pwJCayi466F1LV7xoxkDTovvBr2sVo2QJk
 citations:
-  f5pxht: 7X7HIakQwBlmFBGddRF0sNPglKw3X-1n1pPKqsIbGt0
+  f5pxht: BZWwyxHKp9gkPY1Ww5XKJdVDhwv4xXqG4tnO2NNYSRM
 priority: medium
 relations:
   REQ-22906462: derives_from

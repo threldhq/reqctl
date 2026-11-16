@@ -179,9 +179,9 @@ def package_json(text):
     held = json.loads(text)
     return {one for section in NPM_SECTIONS
             for name, spec in (held.get(section) or {}).items()
-            for one in set(substituted(spec)) or {
-                npm(name, spec) if isinstance(spec, str)
-                else (name, str(spec), "unreadable")}} | {
+            for one in (set(substituted(spec)) or {npm(name, spec)}
+                        if isinstance(spec, str)
+                        else {(name, str(spec), "unreadable")})} | {
         one for node in (held.get("overrides"), held.get("resolutions"),
                          (held.get("pnpm") or {}).get("overrides"))
         for one in substituted(node)}
