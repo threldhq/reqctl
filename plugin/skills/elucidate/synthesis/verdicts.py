@@ -157,6 +157,13 @@ def main(argv=None):
     if again:
         print(f"{len(again)} judge(s) to spawn again: "
               f"{respawn(run, state_held, again)}")
+    # @req+ REQ-96274588@EKryoa8GyKn1 resqxz
+    held = [number for number, _ in absent if number not in again]
+    if held:
+        print(f"proposal {', '.join(held)}: a group judge's return is refused "
+              "or missing -- spawn the group judges `plan.py final` lists, then "
+              "run `plan.py final` again")
+    # @req- resqxz
     return 1 if failed or absent else 0
 
 

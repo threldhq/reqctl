@@ -1632,9 +1632,9 @@ def final(run):
     for name, body in prompts.items():
         corpus.atomic_write(run / "prompts" / "final" / f"{name}.md", body)
     saved(run, state_held)
-    where = manifest(run, "final", spawned)
+    where = f": {manifest(run, 'final', spawned)}" if spawned else ""
     # @req> REQ-56479390@CzOsA-KyXyrW oapzeo
-    print(f"{len(spawned)} final judge(s) to spawn: {where}")
+    print(f"{len(spawned)} final judge(s) to spawn{where}")
     return 1 if again else 0
 
 
