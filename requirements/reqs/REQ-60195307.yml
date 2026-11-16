@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a [practice](practice) quoting passages from two sources, one whose [page
+    text](page_text) holds words only in its title elements and not the passage, the
+    other holding its passage
+  then: the product sets the first source aside, keeps the [practice](practice) with
+    the second source, and does not refuse the review
+  when: the review is checked
+- given: a source whose [page text](page_text) holds a word outside its title elements
+    and does not hold the passage a [practice](practice) quotes from it
+  then: the product refuses the review and names the source as not holding the passage
+  when: the review is checked
+assessed:
+  REQ-46144308: P3xngA8kbje2PMWTRirQni_Mzzmm84cjrkjCcjAo8w0
+  REQ-56262611: ZUTJf7RGA59bLDi8MJiUy8lYJjK-wYcBk_9khae-wcE
+  REQ-81751575: u9IqdcfRFLSMrIBNDJCgQBvbiv3WxHiv6FoM_f9LaTI
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-46144308: constrains
+  REQ-56262611: depends_on
+  REQ-81751575: supersedes
+status: approved
+text: If the [page text](page_text) of the page at a source that a [practice](practice)
+  of the [best-in-class review](best_in_class_review) names does not hold the passage
+  the [practice](practice) quotes from that source and holds no word outside the page's
+  title elements, then the product shall set the source aside from the review, removing
+  it from every [practice](practice) that names it.
+type: functional
+verification: inspection

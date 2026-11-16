@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a review whose check drops one [practice](practice) and passes
+  then: it names the [practice](practice)
+  when: the check prints its result
+assessed:
+  REQ-19273294: 0fLJ0D4Ya9nksagdzh6VYr4Ei8tlPp6GDjsekoTiNyU
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+  practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+priority: medium
+relations:
+  REQ-19273294: depends_on
+status: approved
+text: When the product checks the [best-in-class review](best_in_class_review), the
+  product shall name, in what it prints for the check, each [practice](practice) it
+  dropped from the review.
+type: functional
+verification: inspection

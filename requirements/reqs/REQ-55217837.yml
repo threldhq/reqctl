@@ -18,7 +18,7 @@ acceptance_criteria:
   then: the prompt names each source that failed
   when: the review is made again
 assessed:
-  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  REQ-46144308: P3xngA8kbje2PMWTRirQni_Mzzmm84cjrkjCcjAo8w0
   REQ-46711731: rqojAeSdcYOnIgKWWfTXSfGr9gWGYpBFMtEHxbCuE80
   REQ-82432523: dA6MI5WknAH4W2nm9dEUdYToQ1b4odSafkhoaK-cx00
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
