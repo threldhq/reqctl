@@ -727,8 +727,7 @@ def weighed(run):
               f"{', '.join(unrecorded)}; {again}")
         return 1
     # @req- qxms3m
-    if held["follow"] is not None and held["follow"] not in {
-            one["name"] for one in examples}:
+    if held["follow"] not in {None, *(one["name"] for one in examples)}:
         print(f"{path}: follow names {held['follow']!r}, which is no example "
               f"the check weighed; {again}")
         return 1
