@@ -12,6 +12,10 @@ assessed:
   REQ-89706423: fyVHTsenA51DWUAD4wfvm8Kv3L6Y6paZ635Gi9uKJuc
   single_line_comment: Jus2ZEVegmdWsrD-TXdgIGqqNN_fpp6pgjgcwGu3oPw
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  5ypwiv: AqTVtDR3r8cAw1LpHF8LsZE1ngptLA_N55JFAtAh0tw
+  loubzh: _s6JnAFneQ1znZtsgS6s0LwA-QHv1ObkN5R1C-rRjw8
+  mr2xea: ZutWccST14V5uN12zYUqIEvaaciTKpZQvPrzAoeb48w
 priority: medium
 relations:
   REQ-12235023: depends_on

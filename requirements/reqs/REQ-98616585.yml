@@ -14,6 +14,8 @@ assessed:
   REQ-39743451: 3H-M6CvTxyI0bcINVUW86pwYS9hN9jfwVZYclS3OsIM
   REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  b2ahhp: UnV9E4-e2fSglfNyp18fIM08swbJu7RlOmBbLoGucSI
 priority: medium
 relations:
   REQ-30898926: depends_on

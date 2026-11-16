@@ -31,9 +31,11 @@ FORMER = re.compile(rf"@req:\s*((?:{corpus.KINDS})-\d+)")
 MARKUP = re.compile(r"\A\s*<!--\s*|\s*-->\s*\Z")
 # @req> REQ-38033048@mKGzPYjyS_wD nvsgih
 # @req> REQ-21225852@RMA1Qtug7rzF kjbkap
+# @req> REQ-85194755@yDQYUXuIl46j mr2xea
 DELIMITERS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"\A\s*#+\s*")),
               **dict.fromkeys((".js", *typescript.SUFFIXES), re.compile(r"\A\s*//\s*")),
-              ".sql": re.compile(r"\A\s*--\s*")}
+              ".sql": re.compile(r"\A\s*--\s*"),
+              ".html": re.compile(r"\A\s*(?://|<!--)\s*|\s*-->\s*\Z")}
 # @req- tup4w2
 ALPHABET = "abcdefghijklmnopqrstuvwxyz234567"
 # @req> REQ-60346603@FI4Rjvk1iDNp ulk4ve
@@ -240,6 +242,8 @@ def _spans(suffix, text):
         return _sql(text)[0]
     if suffix in typescript.SUFFIXES:
         return typescript.read(suffix, text).spans
+    if suffix == ".html":
+        return _marked_up(text)
     return [(found.start(), found.end(), found.groupdict().get("kept") is not None)
             for found in REMARKS[suffix].finditer(text)]
 
@@ -260,7 +264,8 @@ def remarks(suffix, text):
 # @req+ REQ-79989567@oaSFUA9o3D48 6fth2x
 REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
            **dict.fromkeys((".md", ".html"), re.compile(r"<!--[\s\S]*?(?:-->|\Z)")),
-           ".js": re.compile(r"""(?P<kept>"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
+           ".js": re.compile(r'(?P<kept>"(?:\\(?:\r\n|[\s\S])|[^"\\\n])*"'
+                             r"""|'(?:\\(?:\r\n|[\s\S])|[^'\\\n])*'"""
                              r"""|`(?:\\[\s\S]|[^`\\])*`)|//[^\n]*|/\*[\s\S]*?(?:\*/|\Z)""")}
 
 
@@ -274,12 +279,89 @@ def hollow(path, text, first, last):
 
 RAW = re.compile(REMARKS[".html"].pattern
                  + r"|<style(?=[\s/>])[^>]*>(?P<style>[\s\S]*?)(?:</style(?=[\s/>])|\Z)"
-                 r"|<script(?=[\s/>])[^>]*>(?P<script>[\s\S]*?)(?:</script(?=[\s/>])|\Z)",
+                 r"|<script(?=[\s/>])(?P<attrs>[^>]*)>(?P<script>[\s\S]*?)"
+                 r"(?:</script(?=[\s/>])|\Z)",
                  re.IGNORECASE)
+SCRIPT_REMARKS = re.compile(REMARKS[".js"].pattern + r"|<!--[^\n]*")
+ATTRIBUTE = re.compile(r"""([^\s/>"'=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]*)))?""")
+JAVASCRIPT = {"module", "application/ecmascript", "application/javascript",
+              "application/x-ecmascript", "application/x-javascript", "text/ecmascript",
+              "text/javascript", *(f"text/javascript1.{n}" for n in range(6)), "text/jscript",
+              "text/livescript", "text/x-ecmascript", "text/x-javascript"}
+CONTINUED = "string that a backslash continues onto the next line"
 
 
 def _row(text, offset):
     return text.count("\n", 0, offset) + 1
+
+
+def _block(attrs):
+    held = {}
+    for found in ATTRIBUTE.finditer(attrs):
+        held.setdefault(found[1].lower(), found[2] or found[3] or found[4] or "")
+    if held.get("type") == "" or ("type" not in held and not held.get("language")):
+        return None
+    kind = held["type"].strip(" \t\n\f\r") if "type" in held else "text/" + held["language"]
+    return None if kind.lower() in JAVASCRIPT else kind
+
+
+def _elements(text):
+    for found in RAW.finditer(text):
+        yield found, None if found["script"] is None else _block(found["attrs"])
+
+
+def _marked_up(text):
+    spans = []
+    for found, block in _elements(text):
+        if found["style"] is None and found["script"] is None:
+            spans.append((found.start(), found.end(), False))
+        elif found["script"] is not None and block is None:
+            spans += [(each.start(), each.end(), each["kept"] is not None) for each in
+                      SCRIPT_REMARKS.finditer(text, found.start("script"), found.end("script"))]
+    return spans
+
+
+@functools.cache
+def _scripted(text):
+    return {number for found, block in _elements(text)
+            if found["script"] is not None and block is None
+            for number in range(_row(text, found.start("script")) + 1,
+                                _row(text, found.end("script")) + 1)}
+
+
+def _comment(suffix, text, before, viewed):
+    if suffix == ".html" and before in _scripted(text):
+        return COMMENTS[".js"]
+    return COMMENTS[_view(suffix, text, viewed)[0]]
+
+
+def _strings(suffix, text):
+    if suffix == ".py":
+        try:
+            return [(token.start[0], token.end[0])
+                    for token in tokenize.generate_tokens(io.StringIO(text).readline)
+                    if token.type in (tokenize.STRING, tokenize.FSTRING_MIDDLE)]
+        except (tokenize.TokenError, IndentationError, SyntaxError):
+            return []
+    if suffix in (".yml", ".yaml"):
+        try:
+            return [(event.start_mark.line + 1, event.end_mark.line + 1)
+                    for event in yaml.parse(text, Loader=corpus.Loader)
+                    if isinstance(event, yaml.ScalarEvent) and event.style == '"']
+        except yaml.YAMLError:
+            return []
+    if suffix in (".js", ".html", *typescript.SUFFIXES):
+        return [(_row(text, start), _row(text, end)) for start, end, kept in _spans(suffix, text)
+                if kept and text[start] in "\"'"]
+    return []
+
+
+def _continued(suffix, text):
+    if suffix == ".md":
+        suffix, text = ".yml", _matter(text)
+    lines = _feed_lines(text)
+    return {row + 1 for first, last in _strings(suffix, text) for row in range(first, last)
+            if (len(body := lines[row - 1].rstrip("\r\n")) - len(body.rstrip("\\"))) % 2}
 
 
 def _between(text, start, end, kind):
@@ -307,9 +389,13 @@ def _embedded(suffix, text):
     if suffix != ".html":
         return {}
     held = {}
-    for found in RAW.finditer(text):
+    for found, block in _elements(text):
         if found["style"] is not None:
             held |= _between(text, found.start("style"), found.end("style"), "style element")
+        elif block is not None:
+            held |= _between(text, found.start("script"), found.end("script"),
+                             f'script element of type "{block}", whose content cannot '
+                             "carry a comment")
         elif found["script"] is not None:
             held |= _literals(text, found.start("script"), found.end("script"))
     return held
@@ -741,21 +827,29 @@ def tagged(root, path, asked, exclusive=False):
     word = " exclusive" if exclusive else ""
     # @req+ REQ-81417723@q6UfXsP6e-N7 kmbhnk
     # @req+ REQ-62782894@x4o_oB5H0-tY k2lzwu
-    before, after, minted = {}, {}, []
+    before, after, minted, strung = {}, {}, [], set()
+    # @req> REQ-13156124@bsx8o1UTu4Ae fcqifa
+    continued = _continued(target.suffix, text)
     for at, (first, last, uid, stamp) in enumerate(asked):
         identity = mint(taken)
         taken.add(identity)
         minted.append(identity)
         indent = _indent(lines[first - 1])
         # @req> REQ-55291596@DLuklmxajzSV 7zqv4i
-        lead, tail = COMMENTS[_view(target.suffix, text, first)[0]]
+        # @req> REQ-85194755@yDQYUXuIl46j loubzh
+        lead, tail = _comment(target.suffix, text, first, first)
         # @req+ REQ-61906662@vIt4Qdb6Q01L 4z5goa
         single = _statement(path, text, first, last)
         sign = SINGLE if single else OPEN
+        # @req> REQ-13156124@bsx8o1UTu4Ae hqe4d6
+        if first in continued or not single and last + 1 in continued:
+            strung.add(identity)
         # @req+ REQ-84469558@zZGF1hH7cNnc hp5jwl
         before.setdefault(first, []).append(
             (-last, at, f"{indent}{lead}@req{sign} {uid}@{stamp} {identity}{word}{tail}"))
         if not single:
+            # @req> REQ-85194755@yDQYUXuIl46j 5ypwiv
+            lead, tail = _comment(target.suffix, text, last + 1, first)
             after.setdefault(last, []).append(
                 (-first, -at, f"{indent}{lead}@req{CLOSE} {identity}{tail}"))
         # @req- hp5jwl
@@ -768,10 +862,13 @@ def tagged(root, path, asked, exclusive=False):
     alone = _alone(path, written)
     # @req+ REQ-39743451@3H-M6CvTxyI0 xasn2j
     # @req+ REQ-62110789@XlGrbQnAd80g hczsn5
+    # @req+ REQ-98616585@rBqAyVnbiNoe b2ahhp
     embedded = _embedded(target.suffix, written)
     falling = {parsed["id"]: embedded.get(number, "multiline comment or string")
                for number, _, parsed in markers(written, target.suffix)
                if parsed and (number in embedded or number not in alone)}
+    # @req+ REQ-13156124@bsx8o1UTu4Ae xvzxzm
+    falling |= dict.fromkeys(strung, CONTINUED)
     # @req> REQ-30898926@Vu28eWaG_1mE 6tukfm
     inside = [f"{path}: lines {first}-{last}: a comment carrying the citation would "
               f"fall inside a {falling[identity]} -- choose lines outside the "
@@ -781,6 +878,8 @@ def tagged(root, path, asked, exclusive=False):
     if inside:
         # @req> REQ-30898926@Vu28eWaG_1mE dlokdg
         raise ReqctlError("\n".join(inside))
+    # @req- xvzxzm
+    # @req- b2ahhp
     # @req- hczsn5
     # @req- xasn2j
     # @req- 4wwahn
