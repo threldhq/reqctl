@@ -7,12 +7,12 @@ acceptance_criteria:
   then: the report states that no [proposal](proposal) was split into groups
   when: the final judges are built
 assessed:
-  REQ-20121033: iowcBoRYOX0gymmcTePjNxep-Ics-a8JtOBGIPUJ_w4
+  REQ-20121033: NVXgPsXVZMSXVqrFQtWwvtqW00XhgJoJiCh3VPHgl-A
   REQ-48762557: jm9fn2mpwhmlR3rOqfNUCUB2pspY7Gy1WkktVhDxj1k
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
 citations:
-  buupgw: khcg8M_2PadaCB4iGd_sZseeDPYnIop698D34euqiqU
-  oapzeo: R310b6sNGf2QZ_wMT9e-bWxA4zPz58cwboNYI0DvxJk
+  buupgw: T99OvIMAS8d7YtkjbOABiUkYICW2w0-2BwoQai3f4gw
+  oapzeo: o2lOlsUM-n3S662G0bW5bDwxgLC7Z2h944B3SZ94dHc
 priority: medium
 relations:
   REQ-20121033: depends_on

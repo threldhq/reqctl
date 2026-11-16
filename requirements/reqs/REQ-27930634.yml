@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a group prompt
+  then: the group shape it states bounds the reason of a finding and states no length
+    for its clause
+  when: it is built
+assessed:
+  REQ-11403762: rlstwnBTjzrVLMZzwBAHbooeoc2myAPxWjw6jhm5EE8
+  REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
+citations:
+  vhufak: bWLy1gYZCgy74kd_2F54kBI-CUX2A0a4IgDzcUThY44
+priority: medium
+relations:
+  REQ-11403762: constrains
+  REQ-46162234: constrains
+status: approved
+text: When a group prompt is built, the product shall state no length bound on the
+  clause a finding quotes in the group shape the prompt states.
+type: functional
+verification: inspection

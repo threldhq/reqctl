@@ -439,8 +439,8 @@ ABSOLUTE_SCRIPT = (
 PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 FINGERPRINTS = frozenset({
     "956d657e9d16f55064156ce6c470dd51f4589ad5689924f0ad7d45c316b6e776",
-    "1e0fb1ccfa26bb4cdd7d8d07140104e66bbed210807ed59322a01aa213b64b81",
-    "891c4d5e2fda9987cd663d950812d25aa11a85cb652fcdc8d4e364621e8ff043",
+    "ca31dfe1031f9bd75af16e4d75f282883e17190f32fcc755c8c5e925556fd2d3",
+    "f35c64b252b07b3507a81cad9237603c0ce9fbb66e463a9c2abf1cfb9bee3a77",
 })
 # @req- kbbyh4
 PLUGIN_SPELLINGS = {str(PLUGIN_ROOT), os.path.abspath(Path(__file__).parent.parent)}
