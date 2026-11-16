@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: a review whose check sets one source aside and passes
+  then: it names the source's web address
+  when: the check prints its result
+assessed:
+  REQ-60195307: m27i7rnUqETsuq8oa9CQOllonMXbCs8njdchhEK7dCI
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
+priority: medium
+relations:
+  REQ-60195307: depends_on
+status: approved
+text: When the product checks the [best-in-class review](best_in_class_review), the
+  product shall name, in what it prints for the check, each source it set aside from
+  the review.
+type: functional
+verification: inspection

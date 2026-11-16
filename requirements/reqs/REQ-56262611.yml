@@ -5,7 +5,7 @@ acceptance_criteria:
   then: the product refuses the review and names the source as not holding the passage
   when: the review is checked
 assessed:
-  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  REQ-46144308: P3xngA8kbje2PMWTRirQni_Mzzmm84cjrkjCcjAo8w0
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw

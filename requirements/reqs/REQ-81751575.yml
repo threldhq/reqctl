@@ -23,7 +23,7 @@ citations:
 priority: medium
 relations:
   REQ-46144308: derives_from
-status: approved
+status: superseded
 text: If the [page text](page_text) of the page at a source that a [practice](practice)
   of the [best-in-class review](best_in_class_review) names does not hold the passage
   the [practice](practice) quotes from that source and holds no word outside the page's

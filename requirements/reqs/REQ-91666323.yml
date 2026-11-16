@@ -20,7 +20,7 @@ acceptance_criteria:
   then: the product refuses the review without fetching from the [internal address](internal_address)
   when: the review is checked
 assessed:
-  REQ-46144308: Za0OY4GCoecls_js-7iHi9mKjMgjP06cBn0h3foF1aE
+  REQ-46144308: P3xngA8kbje2PMWTRirQni_Mzzmm84cjrkjCcjAo8w0
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   internal_address: foruPVLONTJIIP85LDy7rj_9C4rFHDLR6A8aKQlogqI
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
