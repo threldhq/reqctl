@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: an .html file whose script element has type application/json
+  then: the product refuses, states that the element's content cannot carry a comment,
+    and writes nothing
+  when: reqctl tag cites lines so that a citation comment would fall inside that element
+- given: an .html file whose script element has type importmap
+  then: the product refuses and writes nothing
+  when: reqctl tag cites lines so that a citation comment would fall inside that element
+- given: an .html file whose script element has type text/template
+  then: the product refuses and writes nothing
+  when: reqctl tag cites lines so that a citation comment would fall inside that element
+assessed:
+  REQ-30898926: Vu28eWaG_1mEOkNDj-6x3uKFNaUwFedOiL2MhrAGpR4
+  REQ-39743451: 3H-M6CvTxyI0bcINVUW86pwYS9hN9jfwVZYclS3OsIM
+  REQ-60346603: FI4Rjvk1iDNpE2CY_Th8eqlD0d4jES79vjhDSNeWE5Q
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-30898926: depends_on
+  REQ-39743451: derives_from
+  REQ-60346603: constrains
+status: approved
+text: If reqctl tag would write a comment carrying a [statement citation](statement_citation)
+  inside an HTML script element whose content is not JavaScript, then the product
+  shall refuse the [citation](statement_citation) and state that the element's content
+  cannot carry a comment.
+type: functional
+verification: inspection
