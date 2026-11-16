@@ -6,7 +6,7 @@ assessed:
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
 citations:
   dcm7k3: tHWQ0lf85CLWKi2GtCmf_9ZPVUUXc56sqYO35DsQ9bg
-  tc3qqj: SqKr94CJGwbI61ybIR2oUwuAREfioC5HeiQCqTJdxG4
+  tc3qqj: CKsfkgT8GSNirG3lPq9aUNN37O5Ze08mJGh6cHq-Rcc
 priority: medium
 relations:
   REQ-48503136: depends_on

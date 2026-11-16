@@ -721,15 +721,17 @@ def weighed(run):
     # @req+ REQ-23527990@OWNjGmRiIHc2 om5ayh
     # @req+ REQ-64160887@44h5IeQQkazq qxms3m
     examples = [one for one in held["weighed"] if one["kind"] == "example"]
-    unrecorded = [one["name"] for one in examples if one["approach"] is None]
+    unrecorded = [one["name"] for one in examples
+                  if not (one["approach"] or "").strip()]
     if unrecorded:
         print(f"{path}: the check records no approach for the example(s) "
               f"{', '.join(unrecorded)}; {again}")
         return 1
     # @req- qxms3m
-    if held["follow"] not in {None, *(one["name"] for one in examples)}:
-        print(f"{path}: follow names {held['follow']!r}, which is no example "
-              f"the check weighed; {again}")
+    if held["follow"] is not None and [
+            one["name"] for one in examples].count(held["follow"]) != 1:
+        print(f"{path}: follow names {held['follow']!r}, which is not the "
+              f"name of exactly one example the check weighed; {again}")
         return 1
     # @req- om5ayh
     # @req+ REQ-45597762@a3hLC2ska6w_ tc3qqj
@@ -743,7 +745,7 @@ def weighed(run):
             f"{name}: {one['standing'][name]}" for name in CRITERIA) + " -- "
             + " ".join(source["url"] for source in one["sources"]))
         # @req> REQ-64160887@44h5IeQQkazq peaz5x
-        if one["approach"] is not None:
+        if one["kind"] == "example":
             print(f"   approach: {one['approach']}")
     # @req> REQ-23527990@OWNjGmRiIHc2 jayas5
     print(f"follow the approach of {held['follow']}" if held["follow"]
