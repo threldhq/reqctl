@@ -297,8 +297,7 @@ def _row(text, offset):
 def _block(attrs):
     held = {}
     for found in ATTRIBUTE.finditer(attrs):
-        held.setdefault(found[1].lower(),
-                        next((value for value in found.groups()[1:] if value is not None), ""))
+        held.setdefault(found[1].lower(), found[2] or found[3] or found[4] or "")
     if held.get("type") == "" or ("type" not in held and not held.get("language")):
         return None
     kind = held["type"].strip(" \t\n\f\r") if "type" in held else "text/" + held["language"]
