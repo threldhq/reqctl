@@ -16,6 +16,11 @@ assessed:
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
+citations:
+  4vnby7: 5njgS0UWyQ-Ke2BHyFEg9iidW3-8EwZS-MRweF08X1U
+  nvs6eg: EtlGKdjf6vP4lzxx5AvqqBdMRquKB3JicJjO_XwbSyI
+  ocx4wd: Kk98tPaJz5F-OfCIj4hVgr5YWh2TQkJyNsYaRzWs8UU
+  wei5yo: cXmFIiIPPljH9xw5yntySDwYwu5Gzf8mFpXmXellW90
 priority: medium
 relations:
   REQ-46144308: constrains
