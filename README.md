@@ -96,14 +96,14 @@ In a repository whose default branch is `main`:
 1. **CLI.** Install the version the plugin is pinned to, from PyPI:
 
    ```bash
-   pip install reqctl==0.1.41
+   pip install reqctl==0.1.42
    ```
 
    Or the same wheel from its GitHub release; releases are tagged
    `reqctl--v<version>`:
 
    ```bash
-   pip install https://github.com/threldhq/reqctl/releases/download/reqctl--v0.1.41/reqctl-0.1.41-py3-none-any.whl
+   pip install https://github.com/threldhq/reqctl/releases/download/reqctl--v0.1.42/reqctl-0.1.42-py3-none-any.whl
    ```
 
 2. **Plugin.** With `--scope project` both are declared in the repository rather

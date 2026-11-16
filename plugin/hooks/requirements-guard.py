@@ -3068,8 +3068,10 @@ def program(called, here):
              if not REDIRECTION.match(word) and not REDIRECTION.fullmatch(previous)]
     script = next((word for previous, word in itertools.pairwise(plain)
                    if not word.startswith("-") and previous not in RUN_VALUED.get(tool, ())), "")
-    inline = any(letter in flag for flag in plain[1:] if flag.startswith("-")
-                 for letter in RUNNERS.get(tool, ""))
+    letters = RUNNERS.get(tool, "")
+    inline = bool(letters) and any(
+        word.startswith(("--eval", "--print")) or any(short_flagged([word], letter) for letter in letters)
+        for word in plain[1:])
     from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
         ("dev/", "proc/"))
     return script, inline, from_stdin
