@@ -3075,7 +3075,7 @@ def program(called, here):
         or any(short_flagged([word], letter) for letter in letters)
         or tool == "fish" and (short_flagged([word], "C") or len(name := word.split("=", 1)[0]) > 2
                                and any(option.startswith(name) for option in ("--command", "--init-command")))
-        or tool == "node" and (word.startswith("data:") or "=data:" in word)
+        or tool == "node" and word.split("=", 1)[-1].lower().startswith("data:")
         for word in plain[1:])
     from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
         ("dev/", "proc/"))
