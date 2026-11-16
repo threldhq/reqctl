@@ -1,8 +1,8 @@
 acceptance_criteria:
 - given: a group prompt naming an [item](item) whose statement as rendered is longer
-    than the clause length the group shape allows
-  then: the prompt asks for the decisive clause verbatim within that length, and states
-    the length
+    than three hundred characters
+  then: the prompt asks for the decisive clause verbatim and states no length for
+    it
   when: the group prompt is built
 assessed:
   REQ-22034470: UtTX-sX116FwvDC01dHo2q4QacqTj84CikdDmOwmiS0
@@ -16,7 +16,6 @@ relations:
   REQ-48762557: depends_on
 status: approved
 text: When a group prompt is built, the product shall ask the group judge to quote
-  the decisive clause of each finding's [item](item) verbatim within the clause length
-  the group shape allows, stating that length.
+  the decisive clause of each finding's [item](item) verbatim.
 type: functional
 verification: inspection
