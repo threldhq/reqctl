@@ -145,7 +145,7 @@ def walked(node, tool, under=False):
         return
     for key, value in node.items():
         if key in INDEXES and tool != "hatch":
-            yield key, str(value), "unreadable"
+            yield f"{key} {value}", "", "unreadable"
         elif under and not isinstance(value, list):
             if key != "python":
                 yield poetry(key, value)
@@ -177,10 +177,11 @@ def npm(name, spec):
 
 def package_json(text):
     held = json.loads(text)
-    return {npm(name, spec) if isinstance(spec, str)
-            else (name, str(spec), "unreadable")
-            for section in NPM_SECTIONS
-            for name, spec in (held.get(section) or {}).items()} | {
+    return {one for section in NPM_SECTIONS
+            for name, spec in (held.get(section) or {}).items()
+            for one in set(substituted(spec)) or {
+                npm(name, spec) if isinstance(spec, str)
+                else (name, str(spec), "unreadable")}} | {
         one for node in (held.get("overrides"), held.get("resolutions"),
                          (held.get("pnpm") or {}).get("overrides"))
         for one in substituted(node)}
