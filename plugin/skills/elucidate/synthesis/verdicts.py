@@ -29,6 +29,10 @@ def cited(data, stated, dictionary):
     # @req- adhfwh
 
 
+def withheld(spec):
+    return bool(spec["groups"]) and spec.get("stated", ()) is None
+
+
 def judged(run, state_held):
     accepted, failed, absent = [], [], []
     for number, spec in sorted(state_held["judge"].items(),
@@ -40,6 +44,10 @@ def judged(run, state_held):
             if data is not None:
                 accepted.append((number, data))
                 continue
+        # @req> REQ-96274588@EKryoa8GyKn1 fdewff
+        if withheld(spec):
+            absent.append((number, ["its group judges have not all returned"]))
+            continue
         folder = "final" if spec["groups"] else "judge"
         path = run / "returns" / folder / f"{number}.json"
         data, why = plan.read_return(path, shapes.JUDGE)
@@ -143,11 +151,13 @@ def main(argv=None):
     accepted, failed, absent = judged(run, state_held)
     print(report(accepted, failed, absent))
     # @req> REQ-82676674@r-c5TnDW5gbD zeg5gl
-    if failed or absent:
-        print(f"{len(failed) + len(absent)} judge(s) to spawn again: "
-              f"{respawn(run, state_held, [n for n, _ in failed + absent])}")
-        return 1
-    return 0
+    # @req> REQ-96274588@EKryoa8GyKn1 x32cmy
+    again = [number for number, _ in failed + absent
+             if not withheld(state_held["judge"][number])]
+    if again:
+        print(f"{len(again)} judge(s) to spawn again: "
+              f"{respawn(run, state_held, again)}")
+    return 1 if failed or absent else 0
 
 
 # @req+ REQ-29234402@b5_8tR6bNR44 oaxxcb

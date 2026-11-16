@@ -10,6 +10,9 @@ assessed:
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
   REQ-62710822: DZLgFus7Dgs-Q8gFosJyoTNjgFfwKtYltTX3_10J5eE
   proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+citations:
+  fdewff: 3WPWxAZtxipMZ_66kUhARw6pd2smSQgwIquCYMJFwjg
+  x32cmy: 59vaqs9PytlmA-k1XdqPdyHHUIdgxBimtPTF73JtKK0
 priority: medium
 relations:
   REQ-20121033: depends_on

@@ -154,9 +154,7 @@ For each item that matters to the proposal, return one finding: covered_whole
 part of the proposal; say which part in reason), conflict (the proposal
 contradicts it), derives_from, depends_on, constrains, supersedes (the edge
 the proposal should carry toward it), or near (close but none of the above;
-say why not). Copy the item's decisive clause verbatim into clause, in at most
-{clause_length} characters, the clause length the shape below allows; where the
-decisive clause is longer, copy only the words of it that decide the finding.
+say why not). Copy the item's decisive clause verbatim into clause.
 Judge by meaning, not wording. Never report a finding for a shared noun alone.
 Cite only identifiers stated below.
 Set proposal to {number} and group to {group}.
@@ -1415,13 +1413,11 @@ def link_words(text):
 def group_prompt(run, number, spec, at, names, named, state_held, text,
                  dictionary_text, records):
     out = run / "returns" / "judge" / f"{number}-g{at}.json"
-    # @req> REQ-11403762@DHO9tybNlGFY 7gze7m
+    # @req> REQ-11403762@rlstwnBTjzrV 7gze7m
     # @req> REQ-28281185@syDWpskOmr1u cwj6la
     return GROUP.format(
         number=number, statement=spec["statement"], binding=binding_text(spec),
         group=at, write=written(out, shapes.GROUP),
-        clause_length=shapes.GROUP["properties"]["findings"]["items"][
-            "properties"]["clause"]["maxLength"],
         dictionary=DICTIONARY.format(dictionary=dictionary_text),
         items=link_words(stated_items(state_held, text, names, named, records)))
 
@@ -1600,7 +1596,8 @@ def final(run):
     prompts, spawned, again, waiting = {}, [], [], 0
     for number, spec in state_held["judge"].items():
         # @req> REQ-42199988@RmH4Z1Ifs4oQ cu4vz2
-        if spec["groups"] is None or spec.get("stands"):
+        if (spec["groups"] is None or spec.get("stands")
+                or spec.get("stated") is not None):
             continue
         lines, refused, stated = group_returns(run, number, spec["groups"])
         # @req> REQ-82676674@r-c5TnDW5gbD fnjvuz
@@ -1610,7 +1607,9 @@ def final(run):
                           missing_ok=True)
             again.append(spawn(run, "judge", name, f"group:{name}",
                                shapes.GROUP, judging))
+        # @req> REQ-20121033@NVXgPsXVZMSX gbxahe
         if refused:
+            spec["stated"] = None
             waiting += 1
             continue
         prompts[number] = final_prompt(
@@ -1620,14 +1619,12 @@ def final(run):
         spec["stated"] = stated
         spawned.append(spawn(run, "final", number, f"final:{number}",
                              shapes.JUDGE, judging))
-    # @req> REQ-20121033@iowcBoRYOX0g zqtqps
     # @req> REQ-82676674@r-c5TnDW5gbD ukzxgc
     if again:
         print(f"{len(again)} group judge(s) to spawn again, {waiting} final "
               f"prompt(s) waiting on them: {manifest(run, 'judge', again)}")
-        return 1
     # @req> REQ-56479390@CzOsA-KyXyrW buupgw
-    if not prompts:
+    if not any(spec["groups"] for spec in state_held["judge"].values()):
         print("no proposal was split into groups; nothing to assemble")
         return 0
     # @req> REQ-97779306@Ql43AqTqpENC 5hvslp
@@ -1638,7 +1635,7 @@ def final(run):
     where = manifest(run, "final", spawned)
     # @req> REQ-56479390@CzOsA-KyXyrW oapzeo
     print(f"{len(spawned)} final judge(s) to spawn: {where}")
-    return 0
+    return 1 if again else 0
 
 
 def describe(run):

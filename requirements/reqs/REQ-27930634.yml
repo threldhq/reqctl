@@ -6,6 +6,8 @@ acceptance_criteria:
 assessed:
   REQ-11403762: rlstwnBTjzrVLMZzwBAHbooeoc2myAPxWjw6jhm5EE8
   REQ-46162234: 7Wvh6guc-MoyzRqqF2wt5BnOYnxr7G9C_hn3VQxuLLw
+citations:
+  vhufak: bWLy1gYZCgy74kd_2F54kBI-CUX2A0a4IgDzcUThY44
 priority: medium
 relations:
   REQ-11403762: constrains
