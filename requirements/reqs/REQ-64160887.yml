@@ -1,0 +1,16 @@
+acceptance_criteria: []
+assessed:
+  REQ-19000493: GHvudq2uuiq1SKfjm5b-KRPmO85r9LAvYNTED3sqEcg
+  approach: BOlg60JDbPY34OaY4RtJh9PlyHLQLmPwGwI-mbUxIGI
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-19000493: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  [best-in-class check](best_in_class_check) records, for each example it weighs,
+  the [approach](approach) that example takes.
+type: functional
+verification: inspection
