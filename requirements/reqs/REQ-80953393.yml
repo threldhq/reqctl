@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a library naming two sources, one whose [page text](page_text) holds words
+    only in its title elements and not the passage, the other holding its passage
+  then: the product sets the first source aside, keeps the library with the second
+    source, and does not refuse the check
+  when: the check is checked
+- given: a source whose [page text](page_text) holds a word outside its title elements
+    and does not hold the passage quoted from it
+  then: the product refuses the check and names the source
+  when: the check is checked
+assessed:
+  REQ-49761714: PmbDdeKBVbZFcfSXUK6GNMq5OQErSL7tbDWLsBge2ug
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  page_text: U-VSt6cEQ6Q_pJDIfq85zTnildqkmhs3pQidqcHMA28
+priority: medium
+relations:
+  REQ-49761714: derives_from
+status: approved
+text: If the [page text](page_text) of the page at a source that a library or an example
+  of a [best-in-class check](best_in_class_check) names does not hold the passage
+  quoted from that source and holds no word outside the page's title elements, then
+  the product shall set the source aside from the check, removing it from every library
+  and example that names it.
+type: functional
+verification: inspection

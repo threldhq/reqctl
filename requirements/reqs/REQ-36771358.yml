@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a file whose licence is copyleft, weak copyleft included
+  then: it copies none of it and writes its own code from the idea
+  when: the session would copy its code
+- given: a file under MIT and a receiving repository under BSD-3-Clause
+  then: it copies none of it and writes its own code from the idea
+  when: the session would copy the file's code
+- given: a file stating no SPDX licence identifier with no licence file in any folder
+    above it
+  then: it copies none of it and writes its own code from the idea
+  when: the session would copy its code
+assessed:
+  REQ-22202465: 9t-83q3xJ4ipPyic4nUpuXuCXob-BbkB0aKohpdt8Qo
+  REQ-42211986: pTHWhTqWKc3jWKLAdFeeU8YV1UNUJzVpZrqs7icSL0M
+  copyable_licences: DEbCisObbtDRW8rf0vPIxbudFeeBtKEQVc9kQZRqU3w
+  copyable_licences.*: Gf0p3MN-iLTSoP6cH_DOlvyplk6oGoruqIoZG_CW4ik
+  copyable_licences.apache_2_0: 5zF9OFNgypQYO8hHuD9mVJUpphEWH1PzS_ncMvZpRls
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+priority: medium
+relations:
+  REQ-22202465: depends_on
+  REQ-42211986: supersedes
+status: approved
+text: The product shall state, in the ${plugin_components.implement_skill}, that the
+  session copies a file's code, unchanged or adapted, only where the file's licence
+  resolves to the SPDX identifier of one of the ${copyable_licences} and the receiving
+  repository's licence is that licence or ${copyable_licences.apache_2_0}.
+type: functional
+verification: inspection

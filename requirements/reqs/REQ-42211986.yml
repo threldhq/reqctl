@@ -26,7 +26,7 @@ priority: medium
 relations:
   REQ-10550356: supersedes
   REQ-22202465: depends_on
-status: approved
+status: superseded
 text: The product shall state, in the ${plugin_components.implement_skill}, that the
   session copies a file's code, unchanged or adapted, only where the file's licence
   resolves to the SPDX identifier of one of the ${copyable_licences} and the ${licence_compatibility}

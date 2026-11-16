@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a [best-in-class check](best_in_class_check) weighing no library and no example
+    that states why none can be reused
+  then: the product passes it and prints that reason
+  when: the product checks it
+- given: a [best-in-class check](best_in_class_check) weighing no library and no example
+    that states no reason
+  then: the product refuses it
+  when: the product checks it
+- given: a [best-in-class check](best_in_class_check) every library and example of
+    which is dropped for naming only sources set aside
+  then: the product refuses it
+  when: the product checks it
+assessed:
+  REQ-49761714: PmbDdeKBVbZFcfSXUK6GNMq5OQErSL7tbDWLsBge2ug
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+priority: medium
+relations:
+  REQ-49761714: derives_from
+status: approved
+text: If a [best-in-class check](best_in_class_check) weighs no library and no example
+  and states no reason that no library or example can be reused for the code, then
+  the product shall refuse the check.
+type: functional
+verification: inspection

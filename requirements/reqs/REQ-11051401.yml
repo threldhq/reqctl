@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-15975640: n4FK9WWFj6UsPgDF9mZdfiGaAS0rlH_z9fSeVKLGzcM
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+priority: medium
+relations:
+  REQ-15975640: depends_on
+status: approved
+text: When the product checks a [best-in-class check](best_in_class_check), the product
+  shall name, in what it prints for the check, each library and example it dropped
+  from the check.
+type: functional
+verification: inspection

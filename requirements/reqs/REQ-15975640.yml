@@ -1,0 +1,16 @@
+acceptance_criteria:
+- given: an example whose only source is set aside
+  then: the product drops the example and checks the rest
+  when: the check is checked
+assessed:
+  REQ-80953393: Rww947Q5J-HCgd5wXZG5M_Tf45A3oUmvMt2aIcslXPc
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+priority: medium
+relations:
+  REQ-80953393: depends_on
+status: approved
+text: If setting sources aside from a [best-in-class check](best_in_class_check) leaves
+  a library or an example naming no source, then the product shall drop that library
+  or example from the check.
+type: functional
+verification: inspection
