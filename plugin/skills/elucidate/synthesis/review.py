@@ -469,7 +469,7 @@ def faults(review, bound, redirects, seconds, attempts, noun="practice",
                 if why and setting_aside:
                     aside.append({**source, "fault": why})
                     continue
-                named = f"does not hold {source['passage']!r}"
+                named = why or f"does not hold {source['passage']!r}"
                 found.append(f"{noun} {number}: {url} {named}")
             else:
                 continue
