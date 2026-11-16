@@ -511,7 +511,8 @@ PROGRAMS = tuple(tool for tool, inline in RUNNERS.items() if inline and tool not
 PROGRAM_WORD = re.compile(r"[^\s'\"`();|&<>]+")
 RUN_VALUED = {"python": ("-W", "-X", "-m", "--check-hash-based-pycs"),
               "node": ("-r", "--require", "--import", "--loader"),
-              **dict.fromkeys((*SHELLS, "fish"), ("-o", "-O", "--rcfile", "--init-file"))}
+              **dict.fromkeys(SHELLS, ("-o", "-O", "--rcfile", "--init-file")),
+              "fish": ("-o", "-O", "--rcfile", "--init-file", "-C", "--init-command")}
 SEARCH_VALUED = {
     "grep": ("-A", "-B", "-C", "-D", "-d", "-e", "-f", "-m", "--exclude", "--exclude-dir",
              "--include", "--label", "--max-count", "--context", "--after-context",
@@ -3068,8 +3069,14 @@ def program(called, here):
              if not REDIRECTION.match(word) and not REDIRECTION.fullmatch(previous)]
     script = next((word for previous, word in itertools.pairwise(plain)
                    if not word.startswith("-") and previous not in RUN_VALUED.get(tool, ())), "")
-    inline = any(letter in flag for flag in plain[1:] if flag.startswith("-")
-                 for letter in RUNNERS.get(tool, ""))
+    letters = RUNNERS.get(tool, "")
+    inline = bool(letters) and any(
+        word.startswith(("--eval", "--print", "--command", "--init-command"))
+        or any(short_flagged([word], letter) for letter in letters)
+        or tool == "fish" and (short_flagged([word], "C") or len(name := word.split("=", 1)[0]) > 2
+                               and any(option.startswith(name) for option in ("--command", "--init-command")))
+        or tool == "node" and (word.lower().startswith("data:") or "=data:" in word.lower())
+        for word in plain[1:])
     from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
         ("dev/", "proc/"))
     return script, inline, from_stdin
