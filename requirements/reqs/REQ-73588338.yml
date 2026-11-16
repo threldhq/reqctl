@@ -9,7 +9,7 @@ assessed:
   unread_manifests: Z-PHCI7nWifdLpjsKQ4FnqwbQbbsIGsVPNtX-bLN7uY
   unread_manifests.*: HiK8UyOYMs-pOinbJbrf6gPRhkYzRyLluGWk70d7WSI
 citations:
-  7zuphr: 4vv_i5VPqwRwWKT16NefM7n4yZ8vS5urKqzIfDM3sUA
+  7zuphr: hFw-1K1_WyczMVdm0dqycn9yAPO1YlfjbfQDdz1N23A
 priority: medium
 relations:
   REQ-26876750: depends_on

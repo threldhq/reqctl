@@ -69,10 +69,10 @@ def kind(path):
     name = posixpath.basename(path)
     if name in UNREAD:
         return "unread"
-    listed = (REQUIREMENTS in name
-              or posixpath.basename(posixpath.dirname(path)) == REQUIREMENTS)
+    pip = (REQUIREMENTS in name
+           or posixpath.basename(posixpath.dirname(path)) == REQUIREMENTS)
     return next((registry for named, registry in READ
-                 if name == named or (named.startswith(".") and listed
+                 if name == named or (named.startswith(".") and pip
                                       and name.endswith(named))), None)
 
 
@@ -180,7 +180,10 @@ def package_json(text):
     return {npm(name, spec) if isinstance(spec, str)
             else (name, str(spec), "unreadable")
             for section in NPM_SECTIONS
-            for name, spec in (held.get(section) or {}).items()}
+            for name, spec in (held.get(section) or {}).items()} | {
+        one for node in (held.get("overrides"), held.get("resolutions"),
+                         (held.get("pnpm") or {}).get("overrides"))
+        for one in substituted(node)}
 
 
 def substituted(node):
@@ -193,20 +196,13 @@ def substituted(node):
         yield npm(body, "") if at < 0 else npm(body[:at], body[at + 1:])
 
 
-def overrides(text):
-    held = json.loads(text)
-    return {one for node in (held.get("overrides"), held.get("resolutions"),
-                             (held.get("pnpm") or {}).get("overrides"))
-            for one in substituted(node)}
-
-
 def dependencies(path, text):
     name = posixpath.basename(path)
     if name == "pyproject.toml":
         return pyproject(text)
     # @req> REQ-15097996@DdRQFzdIz2qu f5pxht
     if name == "package.json":
-        return package_json(text) | overrides(text)
+        return package_json(text)
     # @req> REQ-22615713@83AITaHCUCCT hhtisg
     if name.endswith(".txt") and compiled(text):
         return set()
@@ -257,10 +253,10 @@ def exempted():
                for item in reqctl("list", "data").get("items", [])):
         return set()
     entries = reqctl("context", EXEMPT)[0].get("entries")
+    held = [(registered(entry.get("registry")), str(entry.get("name", "")))
+            for entry in (entries or {}).values() if isinstance(entry, dict)]
     return {(registry, normalised(name) if registry == "pypi" else name)
-            for entry in (entries or {}).values() if isinstance(entry, dict)
-            for registry, name in [(registered(entry.get("registry")),
-                                    str(entry.get("name", "")))]}
+            for registry, name in held}
 
 
 def registered(value):
