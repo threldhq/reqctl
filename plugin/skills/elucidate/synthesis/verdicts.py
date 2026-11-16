@@ -30,7 +30,7 @@ def cited(data, stated, dictionary):
 
 
 def withheld(spec):
-    return bool(spec["groups"]) and spec.get("stated", ()) is None
+    return spec.get("stated", ()) is None
 
 
 def judged(run, state_held):
@@ -46,7 +46,7 @@ def judged(run, state_held):
                 continue
         # @req> REQ-96274588@EKryoa8GyKn1 fdewff
         if withheld(spec):
-            absent.append((number, ["its group judges have not all returned"]))
+            absent.append((number, []))
             continue
         folder = "final" if spec["groups"] else "judge"
         path = run / "returns" / folder / f"{number}.json"
