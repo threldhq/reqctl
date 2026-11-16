@@ -3,7 +3,7 @@ acceptance_criteria:
   then: it names the [practice](practice)
   when: the check prints its result
 assessed:
-  REQ-19273294: eTOYOpdYM8omM0r8wM4OXaUdKv6EUh8XoH7vCgUk3x0
+  REQ-19273294: 0fLJ0D4Ya9nksagdzh6VYr4Ei8tlPp6GDjsekoTiNyU
   best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   practice: Sa0hbMn7y83gPia8-OK699dyLh0t9HAgkuMWcf1GXaw
 priority: medium

@@ -5,6 +5,10 @@ acceptance_criteria:
 - given: a [practice](practice) the agent wrote naming no source
   then: the product refuses the review and names the [practice](practice)
   when: the review is checked
+- given: a review in which setting sources aside drops every [practice](practice)
+  then: the product refuses the review, stating that every [practice](practice) was
+    dropped and naming each source set aside
+  when: the review is checked
 assessed:
   REQ-32352887: xGar-bj5ZAXnFmick-xYAUVwf6Hpp-nZNos4N0ehO8s
   REQ-60195307: m27i7rnUqETsuq8oa9CQOllonMXbCs8njdchhEK7dCI
