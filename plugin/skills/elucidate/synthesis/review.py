@@ -721,15 +721,14 @@ def weighed(run):
     # @req+ REQ-23527990@OWNjGmRiIHc2 om5ayh
     # @req+ REQ-64160887@44h5IeQQkazq qxms3m
     examples = [one for one in held["weighed"] if one["kind"] == "example"]
-    unrecorded = [one["name"] for one in examples
-                  if not (one["approach"] or "").strip()]
+    unrecorded = [one["name"] for one in examples if one["approach"] is None]
     if unrecorded:
         print(f"{path}: the check records no approach for the example(s) "
               f"{', '.join(unrecorded)}; {again}")
         return 1
     # @req- qxms3m
-    if held["follow"] is not None and [
-            one["name"] for one in examples].count(held["follow"]) != 1:
+    if held["follow"] is not None and sum(
+            one["name"] == held["follow"] for one in examples) != 1:
         print(f"{path}: follow names {held['follow']!r}, which is not the "
               f"name of exactly one example the check weighed; {again}")
         return 1

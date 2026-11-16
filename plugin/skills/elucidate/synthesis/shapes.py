@@ -122,7 +122,8 @@ def check(criteria):
                 "standing": _object(list(criteria),
                                     {one: REASON for one in criteria}),
                 "use": {"type": "boolean"},
-                "approach": {"anyOf": [REASON, {"type": "null"}]},
+                "approach": {"anyOf": [{**QUOTED, "maxLength": 300},
+                                       {"type": "null"}]},
             })),
         "follow": {"anyOf": [LABEL, {"type": "null"}]},
     })
