@@ -3,7 +3,7 @@ assessed:
   package_registries.npm: bNxwe3uiwuVDt6FVwZRPoTRdSx50sjJJJ_fQpvxbhls
   package_registries.pypi: -0Gay8hTiPwSektXlB8OpOiy0hauueN6Hfa1-DV00SM
 citations:
-  xeppuz: W2neYrel7qZwu-mE0dJ48R9meHUTM9BvOtEybcHKG0k
+  xeppuz: etA0bMwWVhnm9R5CO4nsvZTuXAFLmsU0_lxVBCLzSkQ
 entries:
   package_json:
     definition: a file named package.json, whose dependencies ${package_registries.npm}

@@ -2,6 +2,8 @@ acceptance_criteria: []
 assessed:
   REQ-15645679: QRYMiqGzFlXNbMt9UUAOGT4VHZ8nDu17sSgaoCOPTps
   REQ-16667247: 6CbB5MgYx58jO5eSragBjC7OnD6op0VnmuRcpw1bHig
+citations:
+  uixdst: J7ixVzfbehBiiaRpciUHovz4kQSx7zjt8KMjpBeSXt0
 priority: medium
 relations:
   REQ-15645679: constrains

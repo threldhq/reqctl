@@ -11,6 +11,8 @@ assessed:
   corpus_gates.dependency_licence: A7Ki6jsHb4aHeVwuyvmTU8J0KVZnStrp2sWUv8hhayI
   dependency_manifests: QrwTZ1WIzyuqrELlkmr25otdQzURKVHZIOFtMZIIfYE
   dependency_manifests.package_json: CdP9Zt-76pwJCayi466F1LV7xoxkDTovvBr2sVo2QJk
+citations:
+  f5pxht: yxcs5weiHuxiwzQ5ZJQnS2KuQ4UYMDzk-Xc_cZvtDms
 priority: medium
 relations:
   REQ-22906462: derives_from
