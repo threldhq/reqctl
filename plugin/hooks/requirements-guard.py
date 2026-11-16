@@ -504,14 +504,15 @@ CONNECTOR_WRITE = re.compile(
     r"github.*__\w*(?:create|update|upsert|push|delete|commit)\w*_(?:files?|commits?|refs?)$",
     re.IGNORECASE)
 RUNNERS = {"python": "c", "node": "ep", "perl": "eE", "ruby": "e", "source": "", ".": "",
-           **dict.fromkeys(SHELLS, "cs"), "fish": "csC"}
+           **dict.fromkeys((*SHELLS, "fish"), "cs")}
 SCRIPT_RUNNERS = ("pdb", "cProfile", "profile", "trace", "pytest", "ipython", "IPython", "ipdb",
                   "pudb", "debugpy", "coverage", "unittest")
 PROGRAMS = tuple(tool for tool, inline in RUNNERS.items() if inline and tool not in SHELLS)
 PROGRAM_WORD = re.compile(r"[^\s'\"`();|&<>]+")
 RUN_VALUED = {"python": ("-W", "-X", "-m", "--check-hash-based-pycs"),
               "node": ("-r", "--require", "--import", "--loader"),
-              **dict.fromkeys((*SHELLS, "fish"), ("-o", "-O", "--rcfile", "--init-file"))}
+              **dict.fromkeys(SHELLS, ("-o", "-O", "--rcfile", "--init-file")),
+              "fish": ("-o", "-O", "--rcfile", "--init-file", "-C", "--init-command")}
 SEARCH_VALUED = {
     "grep": ("-A", "-B", "-C", "-D", "-d", "-e", "-f", "-m", "--exclude", "--exclude-dir",
              "--include", "--label", "--max-count", "--context", "--after-context",
@@ -3072,6 +3073,8 @@ def program(called, here):
     inline = bool(letters) and any(
         word.startswith(("--eval", "--print", "--command", "--init-command"))
         or any(short_flagged([word], letter) for letter in letters)
+        or tool == "fish" and (short_flagged([word], "C") or len(name := word.split("=", 1)[0]) > 2
+                               and any(option.startswith(name) for option in ("--command", "--init-command")))
         for word in plain[1:])
     from_stdin = not script or os.path.normpath(os.path.join(here or "/", script)).lstrip("/").startswith(
         ("dev/", "proc/"))
