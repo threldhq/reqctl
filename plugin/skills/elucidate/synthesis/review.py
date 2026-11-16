@@ -46,8 +46,7 @@ CRITERIA = {
 HIDDEN = {"script", "style", "noscript", "template"}
 PACKED = {"gzip", "x-gzip", "deflate"}
 WAIT = 30
-# @req> REQ-81751575@u9IqdcfRFLSM rkliio
-SHELL = "serves no readable text without running scripts; cite another page"
+SHELL = "serves no readable text without running scripts"
 
 # @req> REQ-79800652@-RuBVIjAa4FV isjntr
 # @req> REQ-82432523@dA6MI5WknAH4 sfrez4
@@ -144,7 +143,6 @@ follow.
 
 
 # @req> REQ-56262611@ZUTJf7RGA59b wqyc67
-# @req> REQ-81751575@u9IqdcfRFLSM nctcuj
 class PageText(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -371,7 +369,7 @@ def page(url, fetch, bound):
             if answer.peek(1):
                 return None, f"the page is larger than {bound} bytes as served"
             # @req- f4kwgo
-            # @req> REQ-46144308@Za0OY4GCoecl nxt6cz
+            # @req> REQ-46144308@P3xngA8kbje2 nxt6cz
             if answer.length:
                 raise http.client.IncompleteRead(raw, answer.length)
             packed = (answer.headers.get("Content-Encoding")
@@ -422,7 +420,7 @@ def timed(url, fetch, bound, seconds, attempts):
     reader.feed(body)
     reader.close()
     # @req> REQ-56262611@ZUTJf7RGA59b qmyfnd
-    # @req> REQ-81751575@u9IqdcfRFLSM cwwryv
+    # @req> REQ-60195307@m27i7rnUqETs nvs6eg
     return words(" ".join(reader.held)), None if reader.shown else SHELL
 
 
@@ -433,7 +431,8 @@ def host(url):
         return url
 
 
-def faults(review, bound, redirects, seconds, attempts, noun="practice"):
+def faults(review, bound, redirects, seconds, attempts, noun="practice",
+           setting_aside=False):
     urls = sorted({source["url"] for practice in review["practices"]
                    for source in practice["sources"]})
     # @req+ REQ-52340197@5988BwARNjD- mtrs7n
@@ -447,13 +446,13 @@ def faults(review, bound, redirects, seconds, attempts, noun="practice"):
                           for url in held], hosts.values())
                  for url, read in fetched}
     # @req- mtrs7n
-    found, refused = [], []
+    found, refused, aside = [], [], []
     for number, practice in enumerate(review["practices"], 1):
         # @req> REQ-32352887@xGar-bj5ZAXn dx3v2z
         if not practice["sources"]:
             found.append(f"{noun} {number} names no source: "
                          f"{practice['practice']}")
-        # @req> REQ-46144308@Za0OY4GCoecl piz2bo
+        # @req> REQ-46144308@P3xngA8kbje2 piz2bo
         for source in practice["sources"]:
             url = source["url"]
             text, why = pages[url]
@@ -466,14 +465,17 @@ def faults(review, bound, redirects, seconds, attempts, noun="practice"):
                 # @req> REQ-55217837@PsKdezweHHNp 5z24tb
                 named = found[-1].removeprefix(f"{noun} {number}: {url} ")
             elif not holds(text, clipped(source["passage"])):
-                # @req> REQ-81751575@u9IqdcfRFLSM ot73lz
+                # @req> REQ-60195307@m27i7rnUqETs 4vnby7
+                if why and setting_aside:
+                    aside.append({**source, "fault": why})
+                    continue
                 named = why or f"does not hold {source['passage']!r}"
                 found.append(f"{noun} {number}: {url} {named}")
             else:
                 continue
             # @req> REQ-55217837@PsKdezweHHNp 3soeou
             refused.append({**source, "fault": named})
-    return found, pages, refused
+    return found, pages, refused, aside
 
 
 def holds(text, passage):
@@ -618,9 +620,37 @@ def check(run):
     # @req> REQ-75041625@fdufkvO5WYz7 kehox2
     limits = settings.quantities(plan.configured(run, ("review_limits.",)),
                                  "review_limits")
-    found, pages, refused = faults(
+    # @req+ REQ-60195307@m27i7rnUqETs wei5yo
+    # @req+ REQ-19273294@0fLJ0D4Ya9nk 7zqvkg
+    found, pages, refused, aside = faults(
         review, limits["page_bytes"], limits["redirects"],
-        limits["fetch_seconds"], limits["fetch_attempts"])
+        limits["fetch_seconds"], limits["fetch_attempts"], setting_aside=True)
+    gone = list(dict.fromkeys(one["url"] for one in aside))
+    kept, dropped = [], []
+    for number, practice in enumerate(review["practices"], 1):
+        left = [one for one in practice["sources"] if one["url"] not in gone]
+        if practice["sources"] and not left:
+            dropped.append((number, practice))
+        else:
+            kept.append({**practice, "sources": left})
+    # @req- 7zqvkg
+    # @req- wei5yo
+    # @req> REQ-82216352@YWUfQ5SXukih xygnbr
+    for url in gone:
+        print(f"set aside: {url} {SHELL}")
+    # @req> REQ-62981256@l2_0nyF5Wz4M 6t6rlj
+    for number, practice in dropped:
+        print(f"dropped practice {number}, every source of which was set "
+              f"aside: {practice['practice']}")
+    # @req> REQ-19273294@0fLJ0D4Ya9nk qch2gf
+    if review["practices"] and not kept:
+        found.append("every practice was dropped, each naming only sources "
+                     f"set aside: {', '.join(gone)}")
+        refused += aside
+    # @req> REQ-60195307@m27i7rnUqETs ocx4wd
+    elif aside and not found:
+        review = {"practices": kept}
+        corpus.atomic_write(path, json.dumps(review))
     for fault in found:
         print(fault)
     if found:
@@ -668,7 +698,7 @@ def weighed(run):
         return 1
     limits = settings.quantities(plan.configured(run, ("review_limits.",)),
                                  "review_limits")
-    found, _, _ = faults(
+    found, _, _, _ = faults(
         {"practices": [{"practice": one["name"], "sources": one["sources"]}
                        for one in held["weighed"]]},
         limits["page_bytes"], limits["redirects"], limits["fetch_seconds"],
