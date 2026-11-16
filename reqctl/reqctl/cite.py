@@ -264,7 +264,8 @@ def remarks(suffix, text):
 # @req+ REQ-79989567@oaSFUA9o3D48 6fth2x
 REMARKS = {**dict.fromkeys((".py", ".yml", ".yaml"), re.compile(r"#[^\n]*")),
            **dict.fromkeys((".md", ".html"), re.compile(r"<!--[\s\S]*?(?:-->|\Z)")),
-           ".js": re.compile(r"""(?P<kept>"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
+           ".js": re.compile(r'(?P<kept>"(?:\\(?:\r\n|[\s\S])|[^"\\\n])*"'
+                             r"""|'(?:\\(?:\r\n|[\s\S])|[^'\\\n])*'"""
                              r"""|`(?:\\[\s\S]|[^`\\])*`)|//[^\n]*|/\*[\s\S]*?(?:\*/|\Z)""")}
 
 
@@ -393,7 +394,7 @@ def _embedded(suffix, text):
             held |= _between(text, found.start("style"), found.end("style"), "style element")
         elif block is not None:
             held |= _between(text, found.start("script"), found.end("script"),
-                             f"script element of type {block}, whose content cannot "
+                             f'script element of type "{block}", whose content cannot '
                              "carry a comment")
         elif found["script"] is not None:
             held |= _literals(text, found.start("script"), found.end("script"))
