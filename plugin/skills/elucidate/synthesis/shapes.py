@@ -113,15 +113,18 @@ REVIEW = _object(["practices"], {
 
 
 def check(criteria):
-    return _object(["weighed"], {
-        "weighed": _list(_object(["name", "kind", "sources", "standing", "use"], {
-            "name": LABEL,
-            "kind": {"type": "string", "enum": ["library", "example"]},
-            "sources": SOURCES,
-            "standing": _object(list(criteria),
-                                {one: REASON for one in criteria}),
-            "use": {"type": "boolean"},
-        })),
+    return _object(["weighed", "follow"], {
+        "weighed": _list(_object(
+            ["name", "kind", "sources", "standing", "use", "approach"], {
+                "name": LABEL,
+                "kind": {"type": "string", "enum": ["library", "example"]},
+                "sources": SOURCES,
+                "standing": _object(list(criteria),
+                                    {one: REASON for one in criteria}),
+                "use": {"type": "boolean"},
+                "approach": {"anyOf": [REASON, {"type": "null"}]},
+            })),
+        "follow": {"anyOf": [LABEL, {"type": "null"}]},
     })
 
 # @req+ REQ-36422345@O-3IKmoFSYSG lq44vs
