@@ -648,7 +648,7 @@ def check(run):
                      f"set aside: {', '.join(gone)}")
         refused += aside
     # @req> REQ-60195307@m27i7rnUqETs ocx4wd
-    elif aside:
+    elif aside and not found:
         review = {"practices": kept}
         corpus.atomic_write(path, json.dumps(review))
     for fault in found:
