@@ -13,7 +13,7 @@ assessed:
   unread_manifests: Z-PHCI7nWifdLpjsKQ4FnqwbQbbsIGsVPNtX-bLN7uY
   unread_manifests.*: HiK8UyOYMs-pOinbJbrf6gPRhkYzRyLluGWk70d7WSI
 citations:
-  n7y4gm: 1otl52NHx6tQKQ1rJo6gxhhcUJz64OfWVlIxz5GyvJs
+  n7y4gm: RyNJEVwk40Jz1gHgwYnbYwrS90O9xw4JIQzq65c9_MI
 priority: medium
 relations:
   REQ-26876750: constrains
