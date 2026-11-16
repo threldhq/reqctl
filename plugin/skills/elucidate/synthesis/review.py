@@ -677,6 +677,8 @@ def check(run):
 
 
 # @req> REQ-46594931@M3uiWv_NWuJ_ tmeapy
+# @req> REQ-23527990@OWNjGmRiIHc2 lgzcsz
+# @req> REQ-64160887@44h5IeQQkazq z3o5pp
 def weigh(run, code):
     crew = settings.table(plan.configured(
         run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
@@ -716,17 +718,21 @@ def weighed(run):
         print(f"\n{len(found)} fault(s): write no code on this check; {again}")
         return 1
     # @req- tmqibm
+    # @req+ REQ-23527990@OWNjGmRiIHc2 om5ayh
+    # @req+ REQ-64160887@44h5IeQQkazq qxms3m
     examples = [one for one in held["weighed"] if one["kind"] == "example"]
     unrecorded = [one["name"] for one in examples if one["approach"] is None]
     if unrecorded:
         print(f"{path}: the check records no approach for the example(s) "
               f"{', '.join(unrecorded)}; {again}")
         return 1
+    # @req- qxms3m
     if held["follow"] is not None and held["follow"] not in {
             one["name"] for one in examples}:
         print(f"{path}: follow names {held['follow']!r}, which is no example "
               f"the check weighed; {again}")
         return 1
+    # @req- om5ayh
     # @req+ REQ-45597762@a3hLC2ska6w_ tc3qqj
     used = [one["name"] for one in held["weighed"]
             if one["use"] and one["kind"] == "library"]
@@ -737,8 +743,10 @@ def weighed(run):
         print(f"{number}. {one['name']} ({one['kind']}) -- " + "; ".join(
             f"{name}: {one['standing'][name]}" for name in CRITERIA) + " -- "
             + " ".join(source["url"] for source in one["sources"]))
+        # @req> REQ-64160887@44h5IeQQkazq peaz5x
         if one["approach"] is not None:
             print(f"   approach: {one['approach']}")
+    # @req> REQ-23527990@OWNjGmRiIHc2 jayas5
     print(f"follow the approach of {held['follow']}" if held["follow"]
           else "follow no example's approach")
     # @req- tc3qqj

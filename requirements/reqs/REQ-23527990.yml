@@ -5,6 +5,11 @@ assessed:
   best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
+citations:
+  frhzdb: HQ1KTJfzntbyEG4UMKZPSyX8waiHNNNPUqiPtQmNBgk
+  jayas5: D3b1ipOvZePpv5xBmwjBOxbawrKpLLT6clGtCbZ5A04
+  lgzcsz: PqYZMOSfXtHqnXS6Gu3Wbbep9T894fXcjMAz5yp3SeY
+  om5ayh: jmqQV7syK3Ri76QfRzdUMXMxT-5x9VJRFa5kPnNPmFA
 priority: medium
 relations:
   REQ-64160887: depends_on
