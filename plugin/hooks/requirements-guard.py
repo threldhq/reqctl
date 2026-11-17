@@ -481,7 +481,7 @@ RUNTIME_ARGUMENT = (
 )
 FUNCTION_BODY = re.compile(r"(?:^|(?<=[\s;&|(]))(?:function\s+([^\s()]+)(?:\s*\(\s*\))?|([^\s()]+)\s*\(\s*\))"
                            r"\s*[{(]")
-UNSUBSTITUTED = re.compile(r"\$\{(?!(?:[@*#]|\d+)\})[#!]?[\d@*]|(?<![\w-])(?:shift|set|getopts|for\s+\w+(?!\s+in\b))(?![\w-])|<<|esac|BASH_ARG|\$_(?!\w)")
+UNSUBSTITUTED = re.compile(r"\$\{(?!(?:[@*#]|\d+)\})[#!]?[\d@*_]|(?<![\w-])(?:shift|set|getopts|for\s+\w+(?!\s+in\b))(?![\w-])|<<|esac|BASH_ARG|\$_(?!\w)")
 POSITIONAL = re.compile(r'"\$(?:\{([@*]|\d+)\}|([@*]|\d))"|\$(?:\{([@*#]|\d+)\}|([@*#]|\d))')
 # @req> REQ-75038049@w2u8eGVv46ut 6vfbgw
 ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
@@ -2382,7 +2382,7 @@ def judge_run(raw, file, module, here):
                  or names_plugin(written) and "the reqctl plugin's own folder")
         if named:
             deny(WRITTEN_SCRIPT.format(file=file, found=named))
-        shell_commands(raw, path, written, here)
+        shell_commands(raw, file, path, written, here)
     if not os.path.isfile(path):
         if package or not reaches:
             return
@@ -2401,7 +2401,7 @@ def judge_run(raw, file, module, here):
         deny(PLUGIN_SCRIPT.format(file=file))
     # @req- e3l4gq
     # @req> REQ-77453691@DQIX4tx3U57I pee7g3
-    shell_commands(raw, path, whole, here)
+    shell_commands(raw, file, path, whole, here)
     text = flatten(whole) if CORPUS_ROOT_NAME.encode() in data else ""
     found = CORPUS_DIR.search(text) or ROOT_QUOTED.search(text)
     named = not inside and absolute_corpus(text)
@@ -2428,14 +2428,14 @@ def held_unchanged(path):
     return bool(held) and held == git_reads(["hash-object", "--no-filters", "--", path], place)
 
 
-def shell_commands(raw, path, text, here):
+def shell_commands(raw, file, path, text, here):
     first = text.partition("\n")[0]
-    ran = next((name for name in map(runner, first[2:].split())
+    ran = next((name for name in map(runner, first[2:].split() if first.startswith("#!") else ())
                 if name != "env" and not name.startswith("-") and "=" not in name),
-               "sh") if first.startswith("#!") else "sh"
-    direct = (os.path.realpath(os.path.join(here, os.path.expanduser(raw))) == path
-              and "\0" not in text[:80].partition("\n")[0] and (ran in SHELLS or ran not in RUNNERS))
-    if ((runner(raw) in (*SHELLS, "source", ".") or direct)
+               "python" if path.endswith(".py") else "sh")
+    if ((runner(raw) in (*SHELLS, "source", ".")
+         or os.path.basename(raw) == os.path.basename(file) and (first.startswith("#!") or "\0" not in first[:80])
+         and (ran in SHELLS or ran not in RUNNERS))
             and (path, here, text) not in CALL_TEXT["running"]):
         CALL_TEXT["running"].add((path, here, text))
         judge_shell(text, here)
