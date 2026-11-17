@@ -126,7 +126,7 @@ def check(criteria):
                                        {"type": "null"}]},
             })),
         "follow": {"anyOf": [LABEL, {"type": "null"}]},
-        "none": {"anyOf": [REASON, {"type": "null"}]},
+        "none": {"anyOf": [{**QUOTED, "maxLength": 300}, {"type": "null"}]},
     })
 
 # @req+ REQ-36422345@O-3IKmoFSYSG lq44vs
