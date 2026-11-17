@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a heredoc writing a script outside the working tree whose text writes a file
+    under the plugin's folder, run with bash from outside the working tree
+  then: the product refuses it
+  when: the [tool call](tool_call) is judged
+- given: a heredoc writing a script outside the working tree whose text names no corpus
+    path and not the plugin's folder, run with bash from outside the working tree
+  then: the product does not refuse it on that ground
+  when: the [tool call](tool_call) is judged
+assessed:
+  REQ-38681394: U-JsY-BEDCYKE-vqpf3ZUhwH2LwvvWPyxmw9dzRx2M8
+  REQ-75038049: w2u8eGVv46uthgIU3jMAJNC8sLZfO5duLFM8DzU8iWw
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
+  project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38681394: depends_on
+  REQ-75038049: constrains
+status: approved
+text: If a [tool call](tool_call) would run with a shell a file it writes outside
+  the working tree holding the [project root](project_root), and the text the [tool
+  call](tool_call) writes into that file names the path of a corpus [item](item)'s
+  file, a folder of corpus [items](item), the baseline, the [corpus root](corpus_root),
+  or the folder of the Claude Code plugin whose ${plugin_components.requirements_guard_hook}
+  judges the [tool call](tool_call), then the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

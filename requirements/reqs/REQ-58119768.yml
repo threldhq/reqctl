@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a shell function the [tool call](tool_call) defines, called with an argument
+    built by command substitution
+  then: the product refuses it and names running the command directly as the remedy
+  when: the [tool call](tool_call) is judged
+assessed:
+  REQ-28910142: _orXQgdTjhXNyy2WCp7nSZG8glb2A2wDeWkMdGUDteg
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-28910142: depends_on
+status: approved
+text: If a [tool call](tool_call) calls a shell function it defines with an argument
+  the product cannot resolve from the text of the [tool call](tool_call), then the
+  product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

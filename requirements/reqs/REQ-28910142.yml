@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: w() { "$@"; } defined in the [tool call](tool_call) and w python3 unheld.py,
+    where unheld.py is an uncommitted file inside the working tree naming a corpus
+    [item](item)'s file
+  then: the product refuses it as it refuses python3 unheld.py
+  when: the [tool call](tool_call) is judged
+- given: a function whose body runs its arguments through a positional parameter,
+    $*, eval, exec or command, called with a write to a file under the plugin's folder
+  then: the product refuses it
+  when: the [tool call](tool_call) is judged
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations: {}
+status: approved
+text: When the product judges a [tool call](tool_call) that defines a shell function
+  and calls it, the product shall judge each command the function would run, with
+  the arguments of each call in place of its parameters, against each rule the product
+  applies to a command the [tool call](tool_call) states.
+type: functional
+verification: inspection

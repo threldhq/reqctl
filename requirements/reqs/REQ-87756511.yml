@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: trap 'python3 unheld.py' EXIT, where unheld.py is an uncommitted file inside
+    the working tree naming a corpus [item](item)'s file
+  then: the product refuses it as it refuses python3 unheld.py
+  when: the [tool call](tool_call) is judged
+- given: trap 'git push -f origin feat' EXIT
+  then: the product refuses it
+  when: the [tool call](tool_call) is judged
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations: {}
+status: approved
+text: When the product judges a [tool call](tool_call) that sets a trap, the product
+  shall judge the command the trap would run against each rule the product applies
+  to a command the [tool call](tool_call) states.
+type: functional
+verification: inspection

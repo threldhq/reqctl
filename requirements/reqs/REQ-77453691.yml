@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a shell script holding git push -f origin feat
+  then: the product refuses the [tool call](tool_call) as it refuses git push -f origin
+    feat stated in the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it as bash FILE, sh FILE, bash < FILE or cat
+    FILE piped to zsh
+- given: a shell script whose only line writes a file under the plugin's folder
+  then: the product refuses the [tool call](tool_call)
+  when: a [tool call](tool_call) runs it with bash
+- given: a shell script holding only commands no rule refuses
+  then: the product does not refuse the [tool call](tool_call) on that ground
+  when: a [tool call](tool_call) runs it with bash
+assessed:
+  REQ-38681394: U-JsY-BEDCYKE-vqpf3ZUhwH2LwvvWPyxmw9dzRx2M8
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-38681394: depends_on
+status: approved
+text: When the product judges a [tool call](tool_call), the product shall judge each
+  command in each file the [tool call](tool_call) would run with a shell, as that
+  shell would read the file, against each rule the product applies to a command the
+  [tool call](tool_call) states.
+type: functional
+verification: inspection
