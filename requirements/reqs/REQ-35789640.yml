@@ -1,0 +1,31 @@
+acceptance_criteria:
+- given: a check refused only over sources every attempt at which ended in a [transient
+    failure](transient_failure)
+  then: the product raises one [question for the owner](question_for_the_owner) naming
+    each source and offering the four answers, and spawns no agent
+  when: the product checks it
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-46711731: rqojAeSdcYOnIgKWWfTXSfGr9gWGYpBFMtEHxbCuE80
+  REQ-48503136: eNAb4jIZahbKN32QVpXjMlm53XuK1UjrxGtpDm1GKx4
+  REQ-49761714: PmbDdeKBVbZFcfSXUK6GNMq5OQErSL7tbDWLsBge2ug
+  REQ-89642091: -fsID3Q5hG8uN3aa29O_UMdD7X6rhXWsLRdUmCCvlxM
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+  transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
+priority: medium
+relations:
+  REQ-12222066: depends_on
+  REQ-46711731: derives_from
+  REQ-48503136: depends_on
+  REQ-49761714: depends_on
+  REQ-89642091: depends_on
+status: approved
+text: 'If every fault over which the product refuses a [best-in-class check](best_in_class_check)
+  is a [transient failure](transient_failure) of a source, then the product shall
+  raise one [question for the owner](question_for_the_owner) naming every such source
+  and offering four answers: checking the same check again, dropping every library
+  and example that names one of those sources, making the check again, or writing
+  the code without a passed check.'
+type: functional
+verification: inspection

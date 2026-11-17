@@ -11,4 +11,4 @@ fields:
 - host
 kind: data
 name: unreadable_hosts
-status: draft
+status: approved

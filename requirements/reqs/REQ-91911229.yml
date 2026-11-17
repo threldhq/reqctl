@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: the prompt of a [best-in-class check](best_in_class_check)
+  then: it names the host each [entry](entry) states and states that no library or
+    example may name a source there
+  when: it is read
+assessed:
+  REQ-46594931: M3uiWv_NWuJ_mV8Vt3frq5HWhWYbvNYB_FmXmcdiNac
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  unreadable_hosts: XT_ZRGyc9rxsVXBky_VyKB15EkjmtnmE4bs0nN7BQ6M
+  unreadable_hosts.*: az9eSjNH53g-DpjX30DJ_jU0KA5wDoINw4YEMrDa4C4
+priority: medium
+relations:
+  REQ-46594931: depends_on
+status: approved
+text: The product shall state, in the prompt of each [best-in-class check](best_in_class_check),
+  that no library or example may name a source at a host that an [entry](entry) of
+  ${unreadable_hosts} states.
+type: functional
+verification: inspection
