@@ -463,6 +463,26 @@ PLUGIN_UNRESOLVED = (
     "plugin itself changes through a reqctl release: edit its sources in the reqctl repository, "
     "then `claude plugin update reqctl@reqctl`."
 )
+PLUGIN_SCRIPT = (
+    "Running {file} blocked: it names the reqctl plugin's own folder, and the default branch "
+    "of origin does not hold it unchanged at its path.\n"
+    "The plugin changes through a reqctl release: edit its sources in the reqctl repository, "
+    "then `claude plugin update reqctl@reqctl`."
+)
+WRITTEN_SCRIPT = (
+    "Running {file} blocked: the text this call writes into it names {found}.\n"
+    "Reach the requirements corpus through reqctl, and change the plugin through a reqctl "
+    "release; a script that names neither runs as written."
+)
+RUNTIME_ARGUMENT = (
+    "{name} blocked: the guard cannot tell what the shell function {name} runs, because its "
+    "argument {word} is built at run time.\n"
+    "Run the command directly, or spell the function's arguments out."
+)
+FUNCTION_BODY = re.compile(r"(?:^|(?<=[\s;&|(]))(?:function\s+([^\s()]+)(?:\s*\(\s*\))?|([^\s()]+)\s*\(\s*\))"
+                           r"\s*[{(]")
+UNSUBSTITUTED = re.compile(r"\$\{(?!(?:[@*#]|\d+)\})[#!]?[\d@*_]|(?<![\w-])(?:shift|set|getopts|for\s+\w+(?!\s+in\b))(?![\w-])|<<|esac|BASH_ARG|\$_(?!\w)")
+POSITIONAL = re.compile(r'"\$(?:\{([@*]|\d+)\}|([@*]|\d))"|\$(?:\{([@*#]|\d+)\}|([@*#]|\d))')
 # @req> REQ-75038049@w2u8eGVv46ut 6vfbgw
 ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
                         r"export|declare|typeset|readonly|local|read|readarray|mapfile|getopts|let|"
@@ -483,7 +503,8 @@ CONFIGURED_IN_CALL = (
     "git push blocked: the same call names {found}, so the guard cannot read the config "
     "git push runs with.\nChange the config in a call of its own, then run git push."
 )
-CALL_TEXT: dict = {"said": {}, "identity": set(), "functions": set()}
+CALL_TEXT: dict = {"said": {}, "identity": set(), "functions": set(), "bodies": {},
+                   "written": {}, "running": set(), "calling": []}
 IDENTITY_SECTIONS = ("user", "author", "committer")
 GH_VALUED = ("-X", "--method", "-f", "--raw-field", "-F", "--field", "--input", "-H",
              "--header", "-q", "--jq", "-t", "--template", "--hostname", "--cache",
@@ -2352,6 +2373,16 @@ def judge_run(raw, file, module, here):
             else os.path.join(path, "__main__.py") if package else path)
     inside = inside_project(path)
     reaches = inside or not here or inside_project(here)
+    # @req> REQ-86738891@9LNvHbeCG7Wj yw6cft
+    # @req> REQ-77453691@DQIX4tx3U57I unffvf
+    bodies = sorted(CALL_TEXT["written"].get(path, ()))
+    for written in (*bodies, "\n".join(bodies)) if bodies else ():
+        found = CORPUS_DIR.search(flatten(written)) or ROOT_QUOTED.search(written)
+        named = (found and found.group() or absolute_corpus(written)
+                 or names_plugin(written) and "the reqctl plugin's own folder")
+        if named:
+            deny(WRITTEN_SCRIPT.format(file=file, found=named))
+        shell_commands(raw, file, path, written, here)
     if not os.path.isfile(path):
         if package or not reaches:
             return
@@ -2362,13 +2393,21 @@ def judge_run(raw, file, module, here):
         if not reaches:
             return
         deny(UNREADABLE.format(what=file))
-    text = flatten(data.decode(errors="replace")) if CORPUS_ROOT_NAME.encode() in data else ""
+    # @req+ REQ-73257010@MofkZ7_ctoTL e3l4gq
+    whole = data.decode(errors="replace")
+    fingerprinted = (Path(path).is_relative_to(PLUGIN_ROOT) and not CALL["changes_environment"]
+                     and hashlib.sha256(data).hexdigest() in FINGERPRINTS)
+    if names_plugin(whole) and not fingerprinted and not held_unchanged(path):
+        deny(PLUGIN_SCRIPT.format(file=file))
+    # @req- e3l4gq
+    # @req> REQ-77453691@DQIX4tx3U57I pee7g3
+    shell_commands(raw, file, path, whole, here)
+    text = flatten(whole) if CORPUS_ROOT_NAME.encode() in data else ""
     found = CORPUS_DIR.search(text) or ROOT_QUOTED.search(text)
     named = not inside and absolute_corpus(text)
     if not found and not named:
         return
-    if (Path(path).is_relative_to(PLUGIN_ROOT) and not CALL["changes_environment"]
-            and hashlib.sha256(data).hexdigest() in FINGERPRINTS):
+    if fingerprinted:
         return
     if not inside:
         if named:
@@ -2376,11 +2415,76 @@ def judge_run(raw, file, module, here):
         if reaches:
             deny(OUTSIDE_SCRIPT.format(file=file, found=found.group()))
         return
-    place = (here, [], {})
-    held = git_reads(["rev-parse", "--verify", "-q", "refs/remotes/origin/HEAD:./"
-                      + os.path.relpath(path, os.path.realpath(here))], place)
-    if not held or held != git_reads(["hash-object", "--no-filters", "--", path], place):
+    if not held_unchanged(path):
         deny(UNHELD_SCRIPT.format(file=file, found=found.group()))
+
+
+def held_unchanged(path):
+    if not inside_project(path):
+        return False
+    place = (os.path.dirname(path), [], {})
+    held = git_reads(["rev-parse", "--verify", "-q",
+                      "refs/remotes/origin/HEAD:./" + os.path.basename(path)], place)
+    return bool(held) and held == git_reads(["hash-object", "--no-filters", "--", path], place)
+
+
+def shell_commands(raw, file, path, text, here):
+    first = text.partition("\n")[0]
+    ran = next((name for name in map(runner, first[2:].split() if first.startswith("#!") else ())
+                if name != "env" and not name.startswith("-") and "=" not in name),
+               "python" if path.endswith(".py") and raw != file else "sh")
+    if ((runner(raw) in (*SHELLS, "source", ".")
+         or os.path.basename(raw) == os.path.basename(file) and (first.startswith("#!") or "\0" not in first[:80])
+         and (ran in SHELLS or ran not in RUNNERS))
+            and (path, here, text) not in CALL_TEXT["running"]):
+        CALL_TEXT["running"].add((path, here, text))
+        judge_shell(text, here)
+
+
+def heredoc_writes(part):
+    said = heading(part)
+    hidden = masked(said)
+    opened = next((found for start in HEREDOC.finditer(hidden)
+                   if (found := heredoc_at(said, start.start()))), None)
+    if not opened:
+        return []
+    delimiter, _, dash, _ = opened
+    body = "\n".join(itertools.takewhile(
+        lambda line: (line.lstrip("\t") if dash else line) != delimiter,
+        part[len(said) + 1:].split("\n")))
+    targets = [said[found.start(1):found.end(1)] for found in REDIRECT_TARGET.finditer(hidden)
+               if "&" not in found.group()]
+    called = invoked(argv(said)[0])
+    if called[:1] == ["tee"]:
+        targets += [word for word in called[1:] if not word.startswith("-")]
+    return [(target.strip("'\""), body) for target in targets]
+
+
+def function_bodies(text):
+    hidden = masked(text)
+    closing = {"{": "}", "(": ")"}
+    for found in FUNCTION_BODY.finditer(hidden):
+        opener, depth = found.end() - 1, 0
+        for at in range(opener, len(hidden)):
+            depth += (hidden[at] == hidden[opener]) - (hidden[at] == closing[hidden[opener]])
+            if not depth:
+                break
+        else:
+            deny(UNREADABLE.format(what=f"where the shell function {found[1] or found[2]} ends"))
+        CALL_TEXT["bodies"].setdefault(found[1] or found[2], set()).add(text[opener + 1:at])
+
+
+def substituted(body, args):
+    def put(found):
+        key = found[found.lastindex]
+        if key == "#":
+            return str(len(args))
+        if key == "@" or key == "*" and not found[0].startswith('"'):
+            return shlex.join(args)
+        if key == "*":
+            return shlex.quote(" ".join(args))
+        return shlex.quote(args[int(key) - 1] if 0 < int(key) <= len(args) else "")
+    return POSITIONAL.sub(put, body)
 
 
 BARE_ROOTS = (".", "..", "/", "~")
@@ -2416,6 +2520,21 @@ def sweeping(targets, here, bare):
 
 def judge_command(said, here, stdin=(), fed=()):
     words, unquoted = argv(said)
+    # @req+ REQ-28910142@_orXQgdTjhXN ls7bvt
+    at = next((at for at, word in enumerate(words) if not ASSIGNMENT.match(word)), len(words))
+    name = words[at] if at < len(words) else None
+    if name in CALL_TEXT["bodies"] and name not in CALL_TEXT["calling"]:
+        if len(words) != len(unquoted) or any(map(UNSUBSTITUTED.search, CALL_TEXT["bodies"][name])):
+            deny(UNREADABLE.format(what=f"which arguments the shell function {name} runs with"))
+        # @req> REQ-58119768@WIJa7Sd_8CKi 3wlfh6
+        if built := next((word for word, bare in zip(words[at + 1:], unquoted[at + 1:])
+                          if EXPANSION.search(word) and not bare.startswith("'")), None):
+            deny(RUNTIME_ARGUMENT.format(name=name, word=built))
+        CALL_TEXT["calling"].append(name)
+        for body in CALL_TEXT["bodies"][name]:
+            judge_shell(substituted(body, words[at + 1:]), here, stdin, fed=fed)
+        CALL_TEXT["calling"].pop()
+    # @req- ls7bvt
     # @req+ REQ-75038049@w2u8eGVv46ut wumvci
     prefix = words[:len(words) - len(invoked(words))]
     if any(CHDIR.fullmatch(word) and {"env", "sudo"} & {*map(os.path.basename, prefix[:at])}
@@ -2587,6 +2706,10 @@ def scripts_within(words, here):
         return [] if at is None else [word for word in rest[at + 1:] if not word.startswith("-")]
     if tool == "eval":
         return [" ".join(rest)]
+    # @req> REQ-87756511@pfGFNVXvvkY8 mruohq
+    if tool == "trap":
+        rest = rest[rest[:1] == ["--"]:]
+        return rest[:1] if len(rest) > 1 and not rest[0].startswith("-") else []
     if tool == "find":
         return [" ".join(word if UNQUOTED_WORD.fullmatch(word) else shlex.quote(word)
                          for word in itertools.takewhile(lambda word: word not in (";", "+"),
@@ -3175,6 +3298,14 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
     joins = []
     pipelines = scan(AMP_REDIRECT.sub(" ", cmd), joins)
     places = cwds(pipelines, joins, cwd)
+    # @req> REQ-28910142@_orXQgdTjhXN wurmgi
+    function_bodies(cmd)
+    # @req> REQ-86738891@9LNvHbeCG7Wj ph4cui
+    for pipeline, heres in zip(pipelines, places):
+        for target, body in (pair for part in pipeline for pair in heredoc_writes(part)):
+            for here in heres:
+                CALL_TEXT["written"].setdefault(
+                    os.path.realpath(os.path.join(here, os.path.expanduser(target))), set()).add(body)
     assigned = assignments(pipelines)
     spliced = cmd.replace("\\\n", "")
     unquoted = QUOTED_REDIRECT.sub(r"\1\3", spliced)

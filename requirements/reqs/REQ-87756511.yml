@@ -9,6 +9,8 @@ acceptance_criteria:
 assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  mruohq: y8_FA1s9AwZBwb1kn-A0yhK7I4JRSCfpaiJnKz9QxW0
 priority: medium
 relations: {}
 status: approved

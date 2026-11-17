@@ -20,6 +20,8 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  e3l4gq: UR87FdoE6ANfF8WAYyD6STUuaam1ENjUmyTqiZ_9kEs
 priority: medium
 relations:
   REQ-38681394: depends_on
