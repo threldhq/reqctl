@@ -6,6 +6,8 @@ acceptance_criteria:
 assessed:
   REQ-28910142: _orXQgdTjhXNyy2WCp7nSZG8glb2A2wDeWkMdGUDteg
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+citations:
+  3wlfh6: x1n9UgL8k6WitsdhULPTh3w74vs4QOuoCxxJQkxdy2A
 priority: medium
 relations:
   REQ-28910142: depends_on
