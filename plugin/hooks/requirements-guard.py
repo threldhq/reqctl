@@ -2432,7 +2432,7 @@ def shell_commands(raw, file, path, text, here):
     first = text.partition("\n")[0]
     ran = next((name for name in map(runner, first[2:].split() if first.startswith("#!") else ())
                 if name != "env" and not name.startswith("-") and "=" not in name),
-               "python" if path.endswith(".py") else "sh")
+               "python" if path.endswith(".py") and raw != file else "sh")
     if ((runner(raw) in (*SHELLS, "source", ".")
          or os.path.basename(raw) == os.path.basename(file) and (first.startswith("#!") or "\0" not in first[:80])
          and (ran in SHELLS or ran not in RUNNERS))
