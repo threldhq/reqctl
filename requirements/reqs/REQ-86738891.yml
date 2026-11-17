@@ -17,8 +17,8 @@ assessed:
   project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  ph4cui: CmdBPScerPugGhwea_Adsa71c0JcJTK15KsawbMD6hg
-  yw6cft: 4LjJsCot8MpHTT-FAsNIlz40Nr62Ok2fwIR09EAvFP0
+  ph4cui: 8wAfyectsFLkVFgSBeZdB3-JSWKlePDQiNpkzuMhTXc
+  yw6cft: f61KtqGK8Xc5eA_M0Q6W3xUdnmIgnjFqCnjMushop-8
 priority: medium
 relations:
   REQ-38681394: depends_on
