@@ -1,0 +1,12 @@
+acceptance_criteria: []
+assessed:
+  REQ-80953393: Rww947Q5J-HCgd5wXZG5M_Tf45A3oUmvMt2aIcslXPc
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+priority: medium
+relations:
+  REQ-80953393: depends_on
+status: approved
+text: When the product checks a [best-in-class check](best_in_class_check), the product
+  shall name, in what it prints for the check, each source it set aside from the check.
+type: functional
+verification: inspection

@@ -27,6 +27,6 @@ entries:
       under ${copyable_licences.zero_bsd} or ${copyable_licences.apache_2_0}
 kind: data
 name: licence_compatibility
-status: approved
+status: deprecated
 text: for each of the copyable licences, the licences of a receiving repository its
   code may be copied into
