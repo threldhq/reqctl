@@ -18,7 +18,7 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.implement_skill: 5hkrbYkTWWxIYISzmXI8yAAHPAqgg1ySzemSatgXU-0
 citations:
-  mgrqlm: oo91WpcGtlu0LJGtPgAcnItZ9o2CAof46deWIqHucU8
+  mgrqlm: fx98sytqwY3SSO5rNXTFdiFzVx3dU2n45La4p8cRYis
 priority: medium
 relations:
   REQ-10550356: supersedes

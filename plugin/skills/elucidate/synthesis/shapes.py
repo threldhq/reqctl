@@ -113,7 +113,7 @@ REVIEW = _object(["practices"], {
 
 
 def check(criteria):
-    return _object(["weighed", "follow"], {
+    return _object(["weighed", "follow", "none"], {
         "weighed": _list(_object(
             ["name", "kind", "sources", "standing", "use", "approach"], {
                 "name": LABEL,
@@ -126,6 +126,7 @@ def check(criteria):
                                        {"type": "null"}]},
             })),
         "follow": {"anyOf": [LABEL, {"type": "null"}]},
+        "none": {"anyOf": [REASON, {"type": "null"}]},
     })
 
 # @req+ REQ-36422345@O-3IKmoFSYSG lq44vs
