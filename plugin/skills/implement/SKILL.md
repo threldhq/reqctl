@@ -86,6 +86,16 @@ The check states whether an existing library should be used instead of writing
 the code.
 <!-- @req- h4lkss -->
 
+<!-- @req+ REQ-64160887@44h5IeQQkazq hf5r6j -->
+The check records, for each example it weighs, the approach that example takes:
+how its code does what the code to be written is to do.
+<!-- @req- hf5r6j -->
+
+<!-- @req+ REQ-23527990@OWNjGmRiIHc2 frhzdb -->
+The check states the one example whose approach the code is to follow, or that
+the code is to follow no example's approach.
+<!-- @req- frhzdb -->
+
 <!-- @req+ REQ-48503136@eNAb4jIZahbK bwg3gk -->
 Write no code for which a best-in-class check is required until the product has
 passed that check:
@@ -109,6 +119,11 @@ be written without a passed check.
 Where the check states that an existing library should be used, add that
 library as a dependency rather than writing the code.
 <!-- @req- muvf2i -->
+
+<!-- @req+ REQ-83568507@H8cRP5esXe5D 55ccsa -->
+Where the check states an example whose approach the code is to follow, read
+the files of that example that hold that approach before writing the code.
+<!-- @req- 55ccsa -->
 
 <!-- @req+ REQ-15108485@EkqTZa-9MGOY w2l4ri -->
 Add a dependency only where its licence resolves to one of the SPDX identifiers
