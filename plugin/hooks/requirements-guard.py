@@ -481,7 +481,7 @@ RUNTIME_ARGUMENT = (
 )
 FUNCTION_BODY = re.compile(r"(?:^|(?<=[\s;&|(]))(?:function\s+([^\s()]+)(?:\s*\(\s*\))?|([^\s()]+)\s*\(\s*\))"
                            r"\s*[{(]")
-UNSUBSTITUTED = re.compile(r"\$\{(?!(?:[@*#]|\d+)\})[#!]?[\d@*]|(?<![\w-])(?:shift|set)(?![\w-])|<<")
+UNSUBSTITUTED = re.compile(r"\$\{(?!(?:[@*#]|\d+)\})[#!]?[\d@*]|(?<![\w-])(?:shift|set|getopts|for\s+\w+(?!\s+in\b))(?![\w-])|<<|esac|BASH_ARG|\$_(?!\w)")
 POSITIONAL = re.compile(r'"\$(?:\{([@*]|\d+)\}|([@*]|\d))"|\$(?:\{([@*#]|\d+)\}|([@*#]|\d))')
 # @req> REQ-75038049@w2u8eGVv46ut 6vfbgw
 ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
@@ -2375,8 +2375,8 @@ def judge_run(raw, file, module, here):
     reaches = inside or not here or inside_project(here)
     # @req> REQ-86738891@9LNvHbeCG7Wj yw6cft
     # @req> REQ-77453691@DQIX4tx3U57I unffvf
-    if path in CALL_TEXT["written"]:
-        written = "\n".join(sorted(CALL_TEXT["written"][path]))
+    bodies = sorted(CALL_TEXT["written"].get(path, ()))
+    for written in (*bodies, "\n".join(bodies)) if bodies else ():
         found = CORPUS_DIR.search(flatten(written)) or ROOT_QUOTED.search(written)
         named = (found and found.group() or absolute_corpus(written)
                  or names_plugin(written) and "the reqctl plugin's own folder")
@@ -2429,11 +2429,15 @@ def held_unchanged(path):
 
 
 def shell_commands(raw, path, text, here):
-    shebang = text.partition("\n")[0][2:].split() if text.startswith("#!") else ["sh"] * ("\0" not in text)
-    ran = runner(raw) if runner(raw) in (*RUNNERS, *SHELLS) else next(
-        (name for name in map(runner, shebang) if name != "env" and not name.startswith("-")), "")
-    if ran in (*SHELLS, "source", ".") and (path, here) not in CALL_TEXT["running"]:
-        CALL_TEXT["running"].add((path, here))
+    first = text.partition("\n")[0]
+    ran = next((name for name in map(runner, first[2:].split())
+                if name != "env" and not name.startswith("-") and "=" not in name),
+               "sh") if first.startswith("#!") else "sh"
+    direct = (os.path.realpath(os.path.join(here, os.path.expanduser(raw))) == path
+              and "\0" not in text[:80].partition("\n")[0] and (ran in SHELLS or ran not in RUNNERS))
+    if ((runner(raw) in (*SHELLS, "source", ".") or direct)
+            and (path, here, text) not in CALL_TEXT["running"]):
+        CALL_TEXT["running"].add((path, here, text))
         judge_shell(text, here)
 
 
@@ -2520,8 +2524,7 @@ def judge_command(said, here, stdin=(), fed=()):
     at = next((at for at, word in enumerate(words) if not ASSIGNMENT.match(word)), len(words))
     name = words[at] if at < len(words) else None
     if name in CALL_TEXT["bodies"] and name not in CALL_TEXT["calling"]:
-        if len(words) != len(unquoted) or any(UNSUBSTITUTED.search(body) or "esac" in body
-                                              for body in CALL_TEXT["bodies"][name]):
+        if len(words) != len(unquoted) or any(map(UNSUBSTITUTED.search, CALL_TEXT["bodies"][name])):
             deny(UNREADABLE.format(what=f"which arguments the shell function {name} runs with"))
         # @req> REQ-58119768@WIJa7Sd_8CKi 3wlfh6
         if built := next((word for word, bare in zip(words[at + 1:], unquoted[at + 1:])

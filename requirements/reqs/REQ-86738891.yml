@@ -18,7 +18,7 @@ assessed:
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   ph4cui: 8wAfyectsFLkVFgSBeZdB3-JSWKlePDQiNpkzuMhTXc
-  yw6cft: f61KtqGK8Xc5eA_M0Q6W3xUdnmIgnjFqCnjMushop-8
+  yw6cft: xjf3H9HLsjEIUCJk3n6fNyIU1krkvKJ_lLr4DNJAats
 priority: medium
 relations:
   REQ-38681394: depends_on

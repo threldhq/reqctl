@@ -14,8 +14,8 @@ assessed:
   REQ-38681394: U-JsY-BEDCYKE-vqpf3ZUhwH2LwvvWPyxmw9dzRx2M8
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  pee7g3: RsmJRRGpWO8V-VyfJcaxdlAthctDICsekniS-LzqyRI
-  unffvf: f61KtqGK8Xc5eA_M0Q6W3xUdnmIgnjFqCnjMushop-8
+  pee7g3: RVMzGrJmbKX9cnuAzKUDpF52KcmikTE4yi6RXjkI3ao
+  unffvf: xjf3H9HLsjEIUCJk3n6fNyIU1krkvKJ_lLr4DNJAats
 priority: medium
 relations:
   REQ-38681394: depends_on
