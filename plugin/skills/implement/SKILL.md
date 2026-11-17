@@ -137,14 +137,12 @@ above the file that holds one: a licence file nearer than the repository's root
 one is the one that counts.
 <!-- @req- ant226 -->
 
-<!-- @req+ REQ-42211986@pTHWhTqWKc3j mgrqlm -->
+<!-- @req+ REQ-42211986@wHnC_OxwtC76 mgrqlm -->
 Copy a file's code, unchanged or adapted, only where two things hold: the
 file's licence resolves to one of these SPDX identifiers,
 <!-- @req> copyable_licences@ns-krxMVBL57 kagdws -->
 MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC, 0BSD;
-and the receiving repository's licence is one that licence's code may be copied
-into:
-the file's own licence, or Apache-2.0.
+and the receiving repository's licence is that licence or Apache-2.0.
 Where the file's licence is copyleft, weak copyleft included, the receiving
 repository's licence is neither of those, or the file states no SPDX licence
 identifier and no folder above it holds a licence file, copy none of it and
