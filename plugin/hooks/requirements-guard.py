@@ -479,9 +479,8 @@ RUNTIME_ARGUMENT = (
     "argument {word} is built at run time.\n"
     "Run the command directly, or spell the function's arguments out."
 )
-SHELL_RUNNERS = (*SHELLS, "source", ".")
 FUNCTION_BODY = re.compile(r"(?:^|(?<=[\s;&|(]))(?:function\s+([^\s()]+)(?:\s*\(\s*\))?|([^\s()]+)\s*\(\s*\))"
-                           r"\s*([{(])")
+                           r"\s*[{(]")
 POSITIONAL = re.compile(r'"\$(?:\{([@*]|\d+)\}|([@*]|\d))"|\$(?:\{([@*#]|\d+)\}|([@*#]|\d))')
 # @req> REQ-75038049@w2u8eGVv46ut 6vfbgw
 ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=|(?:env|unset|set|"
@@ -2379,7 +2378,7 @@ def judge_run(raw, file, module, here):
         found = CORPUS_DIR.search(flatten(written)) or ROOT_QUOTED.search(written)
         named = (found and found.group() or absolute_corpus(written)
                  or names_plugin(written) and "the reqctl plugin's own folder")
-        if named and not inside:
+        if named:
             deny(WRITTEN_SCRIPT.format(file=file, found=named))
         shell_commands(raw, path, written, here)
     if not os.path.isfile(path):
@@ -2414,10 +2413,7 @@ def judge_run(raw, file, module, here):
         if reaches:
             deny(OUTSIDE_SCRIPT.format(file=file, found=found.group()))
         return
-    place = (here, [], {})
-    held = git_reads(["rev-parse", "--verify", "-q", "refs/remotes/origin/HEAD:./"
-                      + os.path.relpath(path, os.path.realpath(here))], place)
-    if not held or held != git_reads(["hash-object", "--no-filters", "--", path], place):
+    if not held_unchanged(path):
         deny(UNHELD_SCRIPT.format(file=file, found=found.group()))
 
 
@@ -2431,7 +2427,7 @@ def held_unchanged(path):
 
 
 def shell_commands(raw, path, text, here):
-    if runner(raw) in SHELL_RUNNERS and path not in CALL_TEXT["running"]:
+    if runner(raw) in (*SHELLS, "source", ".") and path not in CALL_TEXT["running"]:
         CALL_TEXT["running"].add(path)
         judge_shell(text, here)
 
@@ -2459,17 +2455,17 @@ def function_bodies(text):
     hidden = masked(text)
     closing = {"{": "}", "(": ")"}
     for found in FUNCTION_BODY.finditer(hidden):
-        opener, depth, at = found.end() - 1, 0, found.end() - 1
+        opener, depth = found.end() - 1, 0
         for at in range(opener, len(hidden)):
             depth += (hidden[at] == hidden[opener]) - (hidden[at] == closing[hidden[opener]])
             if not depth:
                 break
-        CALL_TEXT["bodies"].setdefault(found[1] or found[2], text[opener + 1:at])
+        CALL_TEXT["bodies"].setdefault(found[1] or found[2], set()).add(text[opener + 1:at])
 
 
 def substituted(body, args):
     def put(found):
-        key = next(group for group in found.groups() if group)
+        key = found[found.lastindex]
         if key == "#":
             return str(len(args))
         if key == "@" or key == "*" and not found[0].startswith('"'):
@@ -2522,7 +2518,8 @@ def judge_command(said, here, stdin=(), fed=()):
                           if EXPANSION.search(word) and not bare.startswith("'")), None):
             deny(RUNTIME_ARGUMENT.format(name=name, word=built))
         CALL_TEXT["calling"].append(name)
-        judge_shell(substituted(CALL_TEXT["bodies"][name], words[at + 1:]), here, stdin, fed=fed)
+        for body in CALL_TEXT["bodies"][name]:
+            judge_shell(substituted(body, words[at + 1:]), here, stdin, fed=fed)
         CALL_TEXT["calling"].pop()
     # @req- ls7bvt
     # @req+ REQ-75038049@w2u8eGVv46ut wumvci
@@ -3293,8 +3290,8 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
     # @req> REQ-86738891@9LNvHbeCG7Wj ph4cui
     CALL_TEXT["written"].update(
         (os.path.realpath(os.path.join(here, os.path.expanduser(target))), body)
-        for pipeline, heres in zip(pipelines, places) for part in pipeline for here in heres
-        for target, body in heredoc_writes(part))
+        for pipeline, heres in zip(pipelines, places) for part in pipeline
+        for target, body in heredoc_writes(part) for here in heres)
     assigned = assignments(pipelines)
     spliced = cmd.replace("\\\n", "")
     unquoted = QUOTED_REDIRECT.sub(r"\1\3", spliced)
