@@ -1,0 +1,27 @@
+acceptance_criteria:
+- given: a branch touching no [statement citation](statement_citation)
+  then: the [evidence block](evidence_block) states that no [item](item) was touched
+  when: the [evidence block](evidence_block) is asked for
+- given: any branch
+  then: the [evidence block](evidence_block) holds no line stating a conclusion drawn
+    from the facts it states
+  when: the [evidence block](evidence_block) is asked for
+assessed:
+  REQ-56906371: wq3BL0IRTLVVKuOe3drLtf2CYn6JfDGY337Kk20tmfM
+  REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-56906371: depends_on
+  REQ-70581878: depends_on
+status: approved
+text: When the product is asked for the [evidence block](evidence_block) of a branch,
+  the product shall print as markdown every requirement, guard, parameter and [data
+  item](data_item) the product names as touched by the branch, each with the [statement
+  citations](statement_citation) of the [item](item) that the branch added, deleted,
+  moved or changed.
+type: functional
+verification: inspection

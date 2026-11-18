@@ -1,0 +1,17 @@
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+entries:
+  cannot_tell:
+    definition: 'cannot tell: the code read does not settle whether the [item](item)
+      is satisfied'
+  not_satisfied:
+    definition: 'not satisfied: the code read fails the statement or an acceptance
+      criterion of the [item](item)'
+  satisfied:
+    definition: 'satisfied: the code read satisfies the statement and every acceptance
+      criterion of the [item](item)'
+kind: data
+name: reading_verdicts
+status: approved
+text: the verdicts a [reading agent](reading_agent) may return for its [item](item)

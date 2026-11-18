@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: an [item](item) whose [reading agent](reading_agent) returned no verdict
+    and whose code the owner accepted
+  then: the body states that no verdict was returned and that the owner accepted the
+    code
+  when: the pull request is prepared
+assessed:
+  REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
+  REQ-42425794: haYtnGYRwgcGIOcz9cWoqnb7BRcjEo38OTliA7RDsXM
+  REQ-51001407: CLFQHU6-XTzdaf6D58L1bXwp6PCYgfrsInvCbsS96OI
+  REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+priority: medium
+relations:
+  REQ-18882967: depends_on
+  REQ-42425794: depends_on
+  REQ-51001407: derives_from
+  REQ-70581878: depends_on
+status: approved
+text: When the pre-pr skill prepares a pull request, the product shall state in the
+  pull request body, for every requirement, guard, parameter and [data item](data_item)
+  the product names as touched by the branch, the verdict of the [reading agent](reading_agent)
+  spawned for the [item](item) and the lines that show the verdict, and, where the
+  owner accepted the code as satisfying the [item](item), the acceptance.
+type: functional
+verification: inspection

@@ -1,0 +1,9 @@
+assessed: {}
+entries:
+  gate_results_file:
+    definition: The file under the folder .reqctl that the gate runner of a repository
+      writes, naming the commit the gates ran on and stating of each step whether
+      the step passed, failed or was skipped, with the reason for a skip.
+    word: gate results file
+kind: term
+status: approved

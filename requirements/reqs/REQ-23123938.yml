@@ -1,0 +1,10 @@
+acceptance_criteria: []
+assessed:
+  pass_record: _mBYOG8R9HMjjZXIjOL5aKgbTNdq6012Bm_Tbc1o_9c
+priority: medium
+relations: {}
+status: approved
+text: When the product is asked to record a pass of the pre-pr skill, the product
+  shall write a [pass record](pass_record) naming the commit HEAD names.
+type: functional
+verification: inspection

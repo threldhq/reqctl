@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a [gate results file](gate_results_file) naming a commit
+  then: the [evidence block](evidence_block) names that commit beside the steps
+  when: the [evidence block](evidence_block) is asked for
+assessed:
+  REQ-26348048: DZtMIa67gVG9AuIJWWOhYs9YglAMOd94N2asjfWGWLI
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+  gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+priority: medium
+relations:
+  REQ-26348048: depends_on
+status: approved
+text: When the product is asked for the [evidence block](evidence_block) of a branch
+  while a [gate results file](gate_results_file) is present, the product shall state
+  in the [evidence block](evidence_block) each step the [gate results file](gate_results_file)
+  states as run and each step the [gate results file](gate_results_file) states as
+  skipped, with the reason stated for the skip.
+type: functional
+verification: inspection

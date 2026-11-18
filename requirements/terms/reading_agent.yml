@@ -1,0 +1,14 @@
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+entries:
+  reading_agent:
+    aliases:
+    - reading agents
+    definition: The agent a pass of the pre-pr skill spawns for one [item](item) to
+      read the code that the [statement citations](statement_citation) of the [item](item)
+      touched by the branch cover against the statement and acceptance criteria of
+      the [item](item).
+    word: reading agent
+kind: term
+status: approved

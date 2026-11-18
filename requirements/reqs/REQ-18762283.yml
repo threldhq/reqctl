@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-18193596: rq6WSvU_zslegOU4ZxXvos_XwjLXzK_9HCkr_ESjKck
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-18193596: constrains
+status: approved
+text: The product shall hold in the prompt of a [reading agent](reading_agent) no
+  part of the corpus or of the [code base](code_base) other than the statement and
+  acceptance criteria of the [item](item) the [reading agent](reading_agent) is spawned
+  for and the code that the [statement citations](statement_citation) of the [item](item)
+  touched by the branch cover.
+type: functional
+verification: inspection
