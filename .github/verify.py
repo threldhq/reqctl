@@ -77,6 +77,8 @@ def condition_holds(expression, context):
         return None, f"condition names {', '.join(sorted(set(unresolved)))}"
     match = EQUALITY.match(resolved.strip())
     if match:
+        if match.group(1) not in context and str(expression).lstrip().startswith(match.group(1)):
+            return None, f"condition names {match.group(1)}"
         held = context.get(match.group(1), match.group(1)) == match.group(3)
         return held if match.group(2) == "==" else not held, ""
     return None, f"condition is not a form this runner evaluates: {resolved}"

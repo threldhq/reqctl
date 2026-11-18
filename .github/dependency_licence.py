@@ -350,6 +350,10 @@ def copyable(tree):
             and tree[1].lower() in map(str.lower, COPYABLE))
 
 
+def excepted(tree):
+    return tree[0] == "WITH" or tree[0] in ("OR", "AND") and any(map(excepted, tree[1]))
+
+
 # @req> REQ-15645679@QRYMiqGzFlXN mjvve6
 def pypi_licence(release):
     info = (release or {}).get("info") or {}
@@ -399,7 +403,7 @@ def fault(path, name, version, found, known):
     if tree is None:
         return (f"{named} adds a dependency whose licence cannot be detected "
                 f"-- remove it, or add one under {', '.join(COPYABLE)}")
-    if not copyable(tree):
+    if excepted(tree) or not copyable(tree):
         return (f"{named} adds a dependency under {found} -- remove it, or add "
                 f"one under {', '.join(COPYABLE)}")
     return None

@@ -17,8 +17,8 @@ assessed:
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  nevicm: bcUjm3JjoRmBDb4_iBBlRAQM-esQz1BFF11ciGh8PeU
-  r4nj25: dc-Ci668j17fY4cd3CmUI5_5Tamwoa0l6Q45u_IVx4w
+  nevicm: 4cZwSMIukhq7ZfXJlFnpYanFLXuruFLj4ed03M022e8
+  r4nj25: teg1fKGzbn7MQUni0baXkb47-KGoWr0X0xyZcLUDFak
 priority: medium
 relations:
   REQ-18833394: derives_from
