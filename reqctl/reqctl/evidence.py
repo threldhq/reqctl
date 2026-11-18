@@ -1,5 +1,5 @@
 import json
-from pathlib import Path
+import os
 
 from . import cite
 from . import graph
@@ -18,19 +18,21 @@ def _step(held):
 
 
 def gates(root):
-    path = Path(root) / GATES
+    path = root / GATES
     # @req> REQ-74192068@wqaVZoxWF25v l7elak
-    if not path.is_file():
+    if not os.path.lexists(path):
         return None
     # @req+ REQ-96243908@PG2NeOENWp_B kdw2mt
     try:
         held = json.loads(path.read_text(encoding="utf-8"))
     except ValueError as error:
+        # @req> REQ-30898926@Vu28eWaG_1mE awigjw
         raise ReqctlError(f"{GATES} does not read as JSON: {error} -- run the "
                           "gates again, or delete the file") from error
     if not (isinstance(held, dict) and isinstance(held.get("commit"), str)
             and isinstance(held.get("steps"), list)
             and all(_step(step) for step in held["steps"])):
+        # @req> REQ-30898926@Vu28eWaG_1mE ert3gh
         raise ReqctlError(f"{GATES} does not state a commit and, of each step, a "
                           f"name, an outcome of {', '.join(OUTCOMES)} and the "
                           "reason for a skip -- run the gates again, or delete "

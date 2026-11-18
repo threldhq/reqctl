@@ -1104,6 +1104,7 @@ def cmd_evidence(args):
     tree, root = corpus.load()
     ref = args.base or _baseline._default_ref(root)
     if ref is None:
+        # @req> REQ-30898926@Vu28eWaG_1mE zryu6i
         raise ReqctlError("no origin to compare against -- name one with --base")
     data = _evidence.read(tree, root, ref)
     _emit(args, data, _evidence.block(data))
