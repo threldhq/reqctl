@@ -32,6 +32,13 @@ REFUSED = "refused.json"
 SPAWN = "review"
 CHECKED = "check.json"
 WEIGH = "check"
+BARRED = "barred.json"
+# @req> unreadable_hosts@yNs1cF451kj8 jjfqv7
+UNREADABLE = {
+    "github_api": {"host": "api.github.com"},
+    "pypi": {"host": "pypi.org"},
+}
+WHOLE = {"text/plain", "text/markdown"}
 # @req> maintenance_window@5BVQt2aYCXAZ 2j6w2z
 MAINTENANCE_WINDOW = 12
 # @req> selection_criteria@FuMC2dHxyWCv fkrz2o
@@ -98,11 +105,12 @@ README = """
 REFUSALS = """
 ## Sources the check refused
 
-The script refused an earlier review of these words over each source below. No
-practice may name one of them: cite another page.
+The script refused an earlier {made} over each source below. No
+{noun} may name one of them: cite another page.
 
 {sources}
 """
+CHECK_BAR = ("check of this code", "library or example")
 
 CHECK = """You make the best-in-class check of the code described below: the
 third-party libraries and examples that can be reused for it. You write no
@@ -132,6 +140,9 @@ check: a page you fetched. A page you saw only in search results was not read.
 Where you read no source for one, leave it out, rather than weighing it from
 memory.
 
+No library or example may name a source at any of these hosts, which the
+script cannot read: {hosts}.
+
 Set use to whether that library should be used instead of writing the code,
 and to false for an example.
 
@@ -141,6 +152,9 @@ be written is to do, and to null for a library.
 Compare the approaches of the examples you weighed. Set follow to the name of
 the one example whose approach the code is to follow, or to null where the
 code is to follow no example's approach.
+
+Where you weigh an example and set follow to null, set unfollowed to why the
+code is to follow no example's approach, and to null otherwise.
 
 Where you weigh no library and no example, set none to why none can be reused
 for the code, and to null otherwise.
@@ -226,7 +240,8 @@ def build(run, answered):
     # @req> REQ-55217837@PsKdezweHHNp nq24wh
     prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
-        words=words, readme=text) + refusals(earlier(run))
+        words=words, readme=text) + refusals(
+            recorded(run, REFUSED).get("sources", []))
     # @req> REQ-40447106@_7d9O2HDnoPr evxzj5
     crew = settings.table(plan.configured(
         run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
@@ -252,14 +267,14 @@ def clipped(passage):
     return words(passage).rstrip(" .!?")
 
 
-def earlier(run):
-    path = run / REFUSED
-    return plan.read_json(path)["sources"] if path.is_file() else []
+def recorded(run, record):
+    path = run / record
+    return plan.read_json(path) if path.is_file() else {}
 
 
 # @req> REQ-55217837@PsKdezweHHNp dtlb52
-def refusals(held):
-    return REFUSALS.format(sources="\n".join(
+def refusals(held, made="review of these words", noun="practice"):
+    return REFUSALS.format(made=made, noun=noun, sources="\n".join(
         f"- {one['url']}, quoting {one['passage']!r}: {one['fault']}"
         for one in held)) if held else ""
 
@@ -271,12 +286,25 @@ class Transient(str):
     pass
 
 
+class Denied(str):
+    pass
+
+
+class Whole(str):
+    pass
+
+
 # @req> REQ-16875926@rLub1dpB7yu_ hnfov3
 def transient(broken):
     if isinstance(broken, urllib.request.HTTPError):
         return broken.code in (408, 429, 500, 502, 503, 504)
     return isinstance(getattr(broken, "reason", broken),
                       (TimeoutError, ConnectionError))
+
+
+def denied(broken, why):
+    return Denied(why) if isinstance(
+        broken, urllib.request.HTTPError) and broken.code in (401, 403) else why
 
 
 # @req> REQ-88584597@SIv6i6OT97j3 vz6m2q
@@ -385,6 +413,9 @@ def page(url, fetch, bound):
             packed = (answer.headers.get("Content-Encoding")
                       or "").strip().lower()
             charset = answer.headers.get_content_charset() or "utf-8"
+            # @req> REQ-56262611@ZUTJf7RGA59b gtwhld
+            served = (answer.headers.get("Content-Type")
+                      or "").split(";")[0].strip().lower()
         if packed in PACKED:
             # @req+ REQ-99188850@t4pvJTwe8prh 4c6q6e
             unpacked = zlib.decompressobj(zlib.MAX_WBITS | 32)
@@ -397,12 +428,15 @@ def page(url, fetch, bound):
                 return None, "the compressed page is cut short"
         elif packed not in ("", "identity"):
             return None, f"served as {packed}, which the check cannot read"
-        return raw.decode(charset, errors="replace"), None
+        # @req+ REQ-56262611@ZUTJf7RGA59b kuqiex
+        text = raw.decode(charset, errors="replace")
+        return Whole(text) if served in WHOLE else text, None
+        # @req- kuqiex
     except (OSError, ValueError, LookupError, EOFError, zlib.error,
             http.client.HTTPException) as broken:
         # @req+ REQ-16875926@rLub1dpB7yu_ wuv5em
         why = str(broken) or type(broken).__name__
-        return None, Transient(why) if transient(broken) else why
+        return None, Transient(why) if transient(broken) else denied(broken, why)
         # @req- wuv5em
 
 
@@ -426,6 +460,10 @@ def timed(url, fetch, bound, seconds, attempts):
             break
     if body is None:
         return None, why
+    # @req> REQ-56262611@ZUTJf7RGA59b vv5cka
+    # @req> REQ-60195307@m27i7rnUqETs q5cmnm
+    if isinstance(body, Whole):
+        return words(body), None if re.search(r"\w", body) else SHELL
     reader = PageText()
     reader.feed(body)
     reader.close()
@@ -442,7 +480,7 @@ def host(url):
 
 
 def faults(review, bound, redirects, seconds, attempts, noun="practice",
-           setting_aside=False):
+           setting_aside=False, denied_aside=False):
     urls = sorted({source["url"] for practice in review["practices"]
                    for source in practice["sources"]})
     # @req+ REQ-52340197@5988BwARNjD- mtrs7n
@@ -466,7 +504,11 @@ def faults(review, bound, redirects, seconds, attempts, noun="practice",
         for source in practice["sources"]:
             url = source["url"]
             text, why = pages[url]
-            if text is None:
+            # @req> REQ-84686626@Kt-Q5Pc3JYgB lprznl
+            if text is None and isinstance(why, Denied) and denied_aside:
+                aside.append({**source, "fault": f"cannot be read: {why}"})
+                continue
+            elif text is None:
                 # @req+ REQ-16875926@rLub1dpB7yu_ zrdwyr
                 line = f"{noun} {number}: {url} cannot be read: {why}"
                 found.append(Transient(f"{line} (a transient failure)")
@@ -588,16 +630,17 @@ def decline(run):
 
 
 # @req> REQ-55217837@PsKdezweHHNp rqqfbr
-def bar(run, refused):
-    before = earlier(run)
+def bar(run, refused, name=SPAWN, record=REFUSED, wording=()):
+    kept = recorded(run, record)
+    before = kept.get("sources", [])
     after = before + [one for at, one in enumerate(refused)
                       if one not in before + refused[:at]]
-    spawning = plan.manifested(run, SPAWN)
+    spawning = plan.manifested(run, name)
     held = plan.read_json(spawning)
     one = held["prompts"][0]
-    one["prompt"] = (one["prompt"].removesuffix(refusals(before))
-                     + refusals(after))
-    corpus.atomic_write(run / REFUSED, json.dumps({"sources": after}))
+    one["prompt"] = (one["prompt"].removesuffix(refusals(before, *wording))
+                     + refusals(after, *wording))
+    corpus.atomic_write(run / record, json.dumps({**kept, "sources": after}))
     corpus.atomic_write(spawning, json.dumps(held, indent=1) + "\n")
 
 
@@ -683,21 +726,43 @@ def check(run):
 # @req> REQ-23527990@OWNjGmRiIHc2 lgzcsz
 # @req> REQ-64160887@44h5IeQQkazq z3o5pp
 # @req> REQ-84550987@C6wf-tEKmqzf lvmta2
+# @req> REQ-40223631@8gPz17OZEI3L kvcoaw
+# @req> REQ-91911229@0JsRF2wHr9DV lhogay
+# @req> REQ-16176709@BgKkf6V9ECg2 l5u4ta
 def weigh(run, code):
     crew = settings.table(plan.configured(
         run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
     out, shape = run / CHECKED, shapes.check(CRITERIA)
     corpus.remove(out, missing_ok=True)
+    kept = recorded(run, BARRED)
+    before = kept.get("sources", []) if kept.get("code") == code else []
+    corpus.atomic_write(run / BARRED, json.dumps({"code": code, "sources": before}))
     prompt = CHECK.format(
-        code=code, write=plan.written(out, shape), criteria="\n".join(
+        code=code, write=plan.written(out, shape),
+        hosts=", ".join(one["host"] for one in UNREADABLE.values()),
+        criteria="\n".join(
             f"- {name}: {fields['definition']}"
             for name, fields in CRITERIA.items()).replace(
-                "${maintenance_window}", f"{MAINTENANCE_WINDOW} months"))
+                "${maintenance_window}", f"{MAINTENANCE_WINDOW} months")
+    ) + refusals(before, *CHECK_BAR)
     spawning = plan.manifest(run, WEIGH, [plan.inline(
         "check", prompt, out, shape, plan.registered("best-in-class"),
         plan.agent("best_in_class", crew))])
     print(f"spawn the best-in-class agent through the workflow with {spawning}")
     return 0
+
+
+def put(run, held, pages, again):
+    failed = sorted(url for url, (_, why) in pages.items()
+                    if isinstance(why, Transient))
+    named = [one["name"] for one in held["weighed"]
+             if any(source["url"] in failed for source in one["sources"])]
+    return ("every source above failed every attempt. Put one question to the "
+            f"owner naming {', '.join(failed)}, with four answers:\n- check "
+            f"the same check again: `python3 {__file__} weighed --run {run}`\n"
+            "- drop every library and example that names one of those sources "
+            f"from the check: {', '.join(named)}\n- make the check again: "
+            f"{again}\n- write the code without a passed check")
 
 
 def weighed(run):
@@ -712,12 +777,15 @@ def weighed(run):
     limits = settings.quantities(plan.configured(run, ("review_limits.",)),
                                  "review_limits")
     # @req+ REQ-80953393@Rww947Q5J-HC 3ythhx
-    found, _, _, aside = faults(
+    # @req+ REQ-84686626@Kt-Q5Pc3JYgB y7ze7b
+    found, pages, refused, aside = faults(
         {"practices": [{"practice": one["name"], "sources": one["sources"]}
                        for one in held["weighed"]]},
         limits["page_bytes"], limits["redirects"], limits["fetch_seconds"],
-        limits["fetch_attempts"], "candidate", setting_aside=True)
-    gone = list(dict.fromkeys(one["url"] for one in aside))
+        limits["fetch_attempts"], "candidate", setting_aside=True,
+        denied_aside=True)
+    gone = {one["url"]: one["fault"] for one in aside}
+    # @req- y7ze7b
     # @req+ REQ-15975640@n4FK9WWFj6Us o7r5bj
     kept, dropped = [], []
     for number, one in enumerate(held["weighed"], 1):
@@ -729,8 +797,8 @@ def weighed(run):
     # @req- o7r5bj
     # @req- 3ythhx
     # @req> REQ-67023404@oMynYKUy_bLW 7gndxj
-    for url in gone:
-        print(f"set aside: {url} {SHELL}")
+    for url, fault in gone.items():
+        print(f"set aside: {url} {fault}")
     # @req> REQ-11051401@Km1F0RWVRMwl n5ku3p
     for number, one in dropped:
         print(f"dropped candidate {number}, every source of which was set "
@@ -739,6 +807,8 @@ def weighed(run):
     if dropped and not kept:
         found.append("every candidate was dropped, each naming only sources "
                      f"set aside: {', '.join(gone)}")
+        # @req> REQ-16176709@BgKkf6V9ECg2 dq4pzr
+        refused += aside
     elif not kept and held["none"] is None:
         found.append("the check weighs no library and no example and states "
                      "no reason none can be reused")
@@ -746,7 +816,13 @@ def weighed(run):
     for fault in found:
         print(fault)
     if found:
-        print(f"\n{len(found)} fault(s): write no code on this check; {again}")
+        # @req> REQ-16176709@BgKkf6V9ECg2 ocxcej
+        bar(run, refused, WEIGH, BARRED, CHECK_BAR)
+        # @req> REQ-35789640@GW3qGf_n84W7 zoxyqh
+        remedy = (put(run, held, pages, again)
+                  if all(isinstance(fault, Transient) for fault in found)
+                  else again)
+        print(f"\n{len(found)} fault(s): write no code on this check; {remedy}")
         return 1
     # @req> REQ-80953393@Rww947Q5J-HC 3f2xve
     held = {**held, "weighed": kept}
@@ -767,6 +843,12 @@ def weighed(run):
               f"name of exactly one example the check weighed; {again}")
         return 1
     # @req- om5ayh
+    # @req> REQ-40223631@8gPz17OZEI3L m6nylf
+    if examples and held["follow"] is None and held["unfollowed"] is None:
+        print(f"{path}: the check weighs an example, states that the code is "
+              "to follow no example's approach and states no reason it is to "
+              f"follow none; {again}")
+        return 1
     # @req> REQ-80953393@Rww947Q5J-HC sj3ycm
     if aside:
         corpus.atomic_write(path, json.dumps(held))
