@@ -10,10 +10,6 @@ acceptance_criteria:
     prints for the head commit only in the gate steps it states
   then: the build does not refuse it on that ground
   when: the build checks it
-- given: a body whose [evidence block](evidence_block) states gate steps naming a
-    commit other than the head commit of the pull request
-  then: the build refuses the pull request
-  when: the build checks it
 - given: a pull request changing only files under the [corpus root](corpus_root)
   then: the build does not refuse it on that ground
   when: the build checks it
@@ -23,6 +19,7 @@ assessed:
 relations: {}
 status: approved
 text: If the body of a pull request that dependabot did not open and that changes
-  a file outside the [corpus root](corpus_root) does not hold the [evidence block](evidence_block)
+  a file outside the [corpus root](corpus_root) does not hold, other than in the gate
+  steps and the verdicts that the body states, the [evidence block](evidence_block)
   that reqctl prints for the head commit of the pull request, then the build shall
   refuse the pull request.

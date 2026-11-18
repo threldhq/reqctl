@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a body whose [evidence block](evidence_block) states gate steps naming the
+    head commit of the pull request
+  then: the build does not refuse it on that ground
+  when: the build checks it
+- given: a pull request dependabot opened
+  then: the build does not refuse it on that ground
+  when: the build checks it
+assessed:
+  GUARD-88726011: me5bzLGdPzERHp6-dJfh7_a5z7-o2HgpTL6UP293RTk
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+relations:
+  GUARD-88726011: depends_on
+status: draft
+text: If the [evidence block](evidence_block) in the body of a pull request that dependabot
+  did not open states gate steps naming a commit other than the head commit of the
+  pull request, then the build shall refuse the pull request.
