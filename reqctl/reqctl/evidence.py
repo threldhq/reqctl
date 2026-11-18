@@ -48,7 +48,8 @@ def read(tree, root, ref):
     compared = cite.compare(root, ref)
     touches = [{"uid": uid,
                 "citations": [row for row in compared["citations"]
-                              if row["uid"] == uid]}
+                              if row["uid"] == uid],
+                "files": [row for row in compared["files"] if row["uid"] == uid]}
                for uid in compared["touches"]]
     # @req> REQ-34657590@ZhBfEGE4gcUK smylog
     valid = not validate.run(root)
@@ -71,6 +72,8 @@ def _touched(touches):
         lines.append(f"- {touch['uid']}")
         lines += [f"  - `{row['id']}` in `{row['path']}`: {', '.join(row['state'])}"
                   for row in touch["citations"]]
+        lines += [f"  - whole file `{row['path']}`: {', '.join(row['state'])}"
+                  for row in touch["files"]]
     return lines
 
 
