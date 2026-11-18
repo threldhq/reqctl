@@ -240,7 +240,8 @@ def build(run, answered):
     # @req> REQ-55217837@PsKdezweHHNp nq24wh
     prompt = PROMPT.format(
         field=field, write=plan.written(run / plan.REVIEWED, shapes.REVIEW),
-        words=words, readme=text) + refusals(earlier(run))
+        words=words, readme=text) + refusals(
+            recorded(run, REFUSED).get("sources", []))
     # @req> REQ-40447106@_7d9O2HDnoPr evxzj5
     crew = settings.table(plan.configured(
         run, (f"{settings.AGENTS}.best_in_class.",)), settings.AGENTS)
@@ -269,10 +270,6 @@ def clipped(passage):
 def recorded(run, record):
     path = run / record
     return plan.read_json(path) if path.is_file() else {}
-
-
-def earlier(run):
-    return recorded(run, REFUSED).get("sources", [])
 
 
 # @req> REQ-55217837@PsKdezweHHNp dtlb52
