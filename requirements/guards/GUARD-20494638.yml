@@ -1,0 +1,8 @@
+acceptance_criteria: []
+assessed:
+  advisor_model: BrPUF3RDXiIgATWsI7T71PeB2SqwobCYr3JW8zutc5Q
+  advisor_model.fable: cgscx5ZEd88flQt4nD0HN6oEuXXZUUS2wW7uEZyun58
+relations: {}
+status: approved
+text: The build shall state ${advisor_model.default} as the advisor model in this
+  repository's Claude Code settings.
