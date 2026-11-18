@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a [best-in-class check](best_in_class_check) weighing two examples that states
+    that the code is to follow neither and states why
+  then: the product passes it
+  when: the product checks it
+- given: a [best-in-class check](best_in_class_check) weighing an example that states
+    that the code is to follow no example's [approach](approach) and states no reason
+  then: the product refuses it
+  when: the product checks it
+- given: a [best-in-class check](best_in_class_check) weighing only libraries that
+    names no example to follow and states no reason
+  then: the product does not refuse it on that ground
+  when: the product checks it
+assessed:
+  REQ-23527990: OWNjGmRiIHc2l2dQaMY4mPDDQdyakgQzl1JSKZHSn6Q
+  REQ-49761714: PmbDdeKBVbZFcfSXUK6GNMq5OQErSL7tbDWLsBge2ug
+  approach: BOlg60JDbPY34OaY4RtJh9PlyHLQLmPwGwI-mbUxIGI
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+priority: medium
+relations:
+  REQ-23527990: depends_on
+  REQ-49761714: derives_from
+status: approved
+text: If a [best-in-class check](best_in_class_check) that weighs an example states
+  that the code is to follow no example's [approach](approach) and states no reason
+  the code is to follow none, then the product shall refuse the check.
+type: functional
+verification: inspection

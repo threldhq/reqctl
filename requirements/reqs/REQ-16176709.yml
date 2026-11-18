@@ -1,0 +1,29 @@
+acceptance_criteria:
+- given: a check refused over a source whose page does not hold the passage quoted
+    from it
+  then: the prompt names the source's web address, the passage and the fault, and
+    states that no library or example may name the source
+  when: the check is made again for the same code
+- given: two libraries quoting different passages from one source over which the check
+    is refused
+  then: the prompt names both passages
+  when: the check is made again for the same code
+- given: a check refused over one source, then made again for the same code and refused
+    over another
+  then: the prompt names both sources
+  when: the check is made again
+assessed:
+  REQ-49761714: PmbDdeKBVbZFcfSXUK6GNMq5OQErSL7tbDWLsBge2ug
+  REQ-55217837: PsKdezweHHNpUbr-TtPC_Jn6MXRRPCbVJxuIu4HaTeE
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+priority: medium
+relations:
+  REQ-49761714: depends_on
+  REQ-55217837: derives_from
+status: approved
+text: When the product refuses a [best-in-class check](best_in_class_check) over a
+  source, the product shall state in the prompt of each check made again for the same
+  code that no library or example may name the source, naming its web address, each
+  passage quoted from it and the fault the product named.
+type: functional
+verification: inspection

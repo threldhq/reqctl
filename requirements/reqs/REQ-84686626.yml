@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a library naming two sources, one whose server answers 403 and one holding
+    its passage
+  then: the product sets the first source aside, keeps the library with the second,
+    and does not refuse the check
+  when: the product checks it
+- given: an example whose only source answers 401
+  then: the product drops the example and checks the rest
+  when: the product checks it
+assessed:
+  REQ-49761714: PmbDdeKBVbZFcfSXUK6GNMq5OQErSL7tbDWLsBge2ug
+  REQ-80953393: Rww947Q5J-HCgd5wXZG5M_Tf45A3oUmvMt2aIcslXPc
+  best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+priority: medium
+relations:
+  REQ-49761714: derives_from
+  REQ-80953393: depends_on
+status: approved
+text: If the product's fetch of a source that a library or an example of a [best-in-class
+  check](best_in_class_check) names ends in an answer of 401 or 403, then the product
+  shall set the source aside from the check, removing it from every library and example
+  that names it.
+type: functional
+verification: inspection

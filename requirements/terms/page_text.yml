@@ -1,9 +1,10 @@
 assessed: {}
 entries:
   page_text:
-    definition: The text a web page serves outside its script, style, noscript and
-      template elements, excluding its comments and the values of its elements' attributes,
-      such as a meta description.
+    definition: For a web page served as text/plain or text/markdown, the whole of
+      the text it serves; for any other web page, the text it serves outside its script,
+      style, noscript and template elements, excluding its comments and the values
+      of its elements' attributes, such as a meta description.
     word: page text
 kind: term
 status: approved

@@ -1,0 +1,14 @@
+assessed: {}
+entries:
+  github_api:
+    definition: GitHub's REST API, which answers the check's fetch with 403
+    host: api.github.com
+  pypi:
+    definition: The Python Package Index, which answers the check's fetch with a page
+      asking for proof the client is a browser
+    host: pypi.org
+fields:
+- host
+kind: data
+name: unreadable_hosts
+status: approved
