@@ -2,7 +2,7 @@ acceptance_criteria: []
 assessed:
   GUARD-32116873: b8Rc9YBATiqcGyeGV6cAx7yEHxiFJSlzYWsY6nNQkyA
 citations:
-  x6req7: R1ozKOTBWp5FqQbSVNfZmbhLJ-aYP1me7-caTWb-PUs
+  x6req7: y9eFqlkQo0t1L8V8sWK_DtNuAlMPRSmR9oPbRPW3hPY
 relations:
   GUARD-32116873: depends_on
 status: approved

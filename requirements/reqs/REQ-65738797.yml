@@ -12,9 +12,9 @@ assessed:
   REQ-62782894: x4o_oB5H0-tYQk5UAEXKJd01T1euR2jsAXAG9i9u048
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  g4qwzc: eHUtwCBdF7HWlaHIIrn_EsF9ypO93nsHDPOuOvIRqgc
+  g4qwzc: nvryZh6MEd7iRRhTVm3y5QE1CLxR8JPcacVHUKOrf90
   msfg5w: mLbUOmawd1ayngnrlJm0Mck1fX43qp4jRUEIU3_8-gE
-  zkxsxx: QgyvGZgUdkzZJ8zlZ_OVLPg2FNTFyqX8lOWZ8xFgHuk
+  zkxsxx: ca1ZdCyyfoT9x4G0lJOkGRlYEh2VcCjD4KuwtcfrQEU
 priority: medium
 relations:
   REQ-60346603: constrains
