@@ -10,6 +10,7 @@ acceptance_criteria:
 assessed:
   REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
   REQ-23123938: pNzjD3R4wwAe0nkKprjBku3zys_Sza8WjNcEmn0iDEc
+  REQ-42425794: haYtnGYRwgcGIOcz9cWoqnb7BRcjEo38OTliA7RDsXM
   REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
@@ -20,6 +21,7 @@ priority: medium
 relations:
   REQ-18882967: depends_on
   REQ-23123938: constrains
+  REQ-42425794: depends_on
   REQ-70581878: depends_on
 status: approved
 text: If the product is asked to record a pass of the pre-pr skill while reqctl validate

@@ -8,11 +8,15 @@ acceptance_criteria:
   then: the acceptance counts for the [item](item)
   when: the product is asked to record a pass
 assessed:
+  REQ-18193596: rq6WSvU_zslegOU4ZxXvos_XwjLXzK_9HCkr_ESjKck
+  REQ-56883985: x2Y2ChQ8_UD8feuVNyaIkjnyDEwGPm-qV023q_oCVJ4
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
 priority: medium
-relations: {}
-status: draft
+relations:
+  REQ-18193596: depends_on
+  REQ-56883985: depends_on
+status: approved
 text: When the product is asked to record that the owner accepts the code as satisfying
   an [item](item), the product shall record the acceptance against the [item](item)
   and the prompt that the script built for the [reading agent](reading_agent) of the
