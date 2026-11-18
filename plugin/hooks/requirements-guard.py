@@ -2481,7 +2481,7 @@ def substituted(body, args):
             return str(len(args))
         named = args if key in "@*" else args[int(key) - 1:int(key)]
         if not found[0].startswith('"'):
-            return shlex.join(word for one in named for word in re.findall("[^ \t\n]+", one))
+            return shlex.join(re.findall("[^ \t\n]+", " ".join(named)))
         return shlex.join(named) if key == "@" else shlex.quote(" ".join(named))
     return POSITIONAL.sub(put, body)
 
