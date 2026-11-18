@@ -1891,8 +1891,8 @@ def writes_origin_refs(words, here):
         return [spec for named in remotes if named != "origin"
                 for remote in [named, *(git_reads(["config", "--get-all", f"remotes.{named}"],
                                                   place) or "").split()] if remote != "origin"
-                for spec in specs or (git_reads(["config", "--get-all", f"remote.{remote}.fetch"],
-                                                place) or "").split()]
+                for spec in (*specs, *(git_reads(["config", "--get-all", f"remote.{remote}.fetch"],
+                                                 place) or "").split())]
 
     if subcommand in ("fetch", "pull"):
         branch = head_branch(place)
@@ -2479,11 +2479,10 @@ def substituted(body, args):
         key = found[found.lastindex]
         if key == "#":
             return str(len(args))
-        if key == "@" or key == "*" and not found[0].startswith('"'):
-            return shlex.join(args)
-        if key == "*":
-            return shlex.quote(" ".join(args))
-        return shlex.quote(args[int(key) - 1] if 0 < int(key) <= len(args) else "")
+        named = args if key in "@*" else args[int(key) - 1:int(key)] if int(key) else []
+        if not found[0].startswith('"'):
+            return shlex.join(word for one in named for word in one.split())
+        return shlex.join(named) if key == "@" else shlex.quote(" ".join(named))
     return POSITIONAL.sub(put, body)
 
 
