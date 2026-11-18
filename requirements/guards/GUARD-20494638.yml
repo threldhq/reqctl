@@ -6,3 +6,7 @@ relations: {}
 status: approved
 text: The build shall state ${advisor_model.default} as the advisor model in this
   repository's Claude Code settings.
+whole_file_citations:
+  .claude/settings.json:
+    digest: 9Jw9h1rc9gnQtG6dFgcyeZbSa1FQzE9LLNiVgl55Bp4
+    pinned: fnyyeK8ne54Y

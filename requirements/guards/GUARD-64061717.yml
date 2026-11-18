@@ -9,5 +9,5 @@ text: The build shall enable in this repository's Claude Code settings exactly t
   plugins of ${session_plugins}, each from the marketplace its [entry](entry) names.
 whole_file_citations:
   .claude/settings.json:
-    digest: 0rHFb3FvgBhyZ7TABZZGB3e2fXEWMc90xmquMjKzlpM
+    digest: 9Jw9h1rc9gnQtG6dFgcyeZbSa1FQzE9LLNiVgl55Bp4
     pinned: tX5vtLlRVYic
