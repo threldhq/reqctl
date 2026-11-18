@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-26348048: DZtMIa67gVG9AuIJWWOhYs9YglAMOd94N2asjfWGWLI
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+  gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+priority: medium
+relations:
+  REQ-26348048: depends_on
+status: approved
+text: If the product is asked for the [evidence block](evidence_block) of a branch
+  while no [gate results file](gate_results_file) is present, then the product shall
+  state in the [evidence block](evidence_block) that no gate results were given.
+type: functional
+verification: inspection

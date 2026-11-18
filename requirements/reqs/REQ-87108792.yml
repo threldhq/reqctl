@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-23123938: pNzjD3R4wwAe0nkKprjBku3zys_Sza8WjNcEmn0iDEc
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  pass_record: _mBYOG8R9HMjjZXIjOL5aKgbTNdq6012Bm_Tbc1o_9c
+  tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
+priority: medium
+relations:
+  REQ-23123938: depends_on
+  REQ-38288492: depends_on
+status: approved
+text: If a [tool call](tool_call) other than one running reqctl would write the [pass
+  record](pass_record), then the product shall refuse the [tool call](tool_call).
+type: functional
+verification: inspection

@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a branch one of whose touched [items](item) has a verdict of cannot tell
+  then: the product writes no [pass record](pass_record) and names the [item](item)
+  when: the product is asked to record the pass
+assessed:
+  REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
+  REQ-23123938: pNzjD3R4wwAe0nkKprjBku3zys_Sza8WjNcEmn0iDEc
+  REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  pass_record: _mBYOG8R9HMjjZXIjOL5aKgbTNdq6012Bm_Tbc1o_9c
+  reading_verdicts: 9but5MsHrC5UEtZD9F-Hy3xW5M3OLysWZeVs0Yh3CnM
+  reading_verdicts.satisfied: T65qoRHnttI2IUCN7onWnt5mGz1iftD3iQsjZEVCkeo
+priority: medium
+relations:
+  REQ-18882967: depends_on
+  REQ-23123938: constrains
+  REQ-70581878: depends_on
+status: approved
+text: If the product is asked to record a pass of the pre-pr skill while reqctl validate
+  or reqctl trace reports a problem, or while a requirement, guard, parameter or [data
+  item](data_item) the product names as touched by the branch has no verdict of ${reading_verdicts.satisfied},
+  then the product shall refuse to write the [pass record](pass_record).
+type: functional
+verification: inspection

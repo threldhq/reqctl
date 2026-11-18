@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a verdict of not satisfied
+  then: the session asks the owner whether to change the code or revise the [item](item),
+    and writes no pull request body before the owner answers
+  when: the pass reaches the verdict
+- given: a verdict of cannot tell
+  then: the session asks the owner the same question
+  when: the pass reaches the verdict
+assessed:
+  REQ-16376491: pLH6qM9Dx4whD6nFVGa7Avgh7rUd4lXKVM2K8PwlIYA
+  REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  reading_verdicts: 9but5MsHrC5UEtZD9F-Hy3xW5M3OLysWZeVs0Yh3CnM
+  reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
+  reading_verdicts.not_satisfied: hJrfvOGIh4krB2NsmrG9_2Vuj6Udn5FgswvfqbXu_rk
+priority: medium
+relations:
+  REQ-16376491: derives_from
+  REQ-18882967: depends_on
+status: approved
+text: If the verdict of a [reading agent](reading_agent) for an [item](item) is ${reading_verdicts.not_satisfied}
+  or ${reading_verdicts.cannot_tell}, then the product shall raise as a [question
+  for the owner](question_for_the_owner) whether to change the code or to revise the
+  [item](item).
+type: functional
+verification: inspection

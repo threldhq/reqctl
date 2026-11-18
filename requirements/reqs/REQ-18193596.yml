@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: an [item](item) two of whose [statement citations](statement_citation) the
+    branch touches
+  then: the prompt holds the code both [statement citations](statement_citation) cover
+  when: the prompt of its [reading agent](reading_agent) is built
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-85663008: a6KT1d2uAdNfqrcfB5Wl0AkuzTHF9BewmnBgKs7s4SQ
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-85663008: depends_on
+status: approved
+text: When the ${plugin_components.pre_pr_skill} spawns a [reading agent](reading_agent)
+  for an [item](item), the product shall build the prompt of the [reading agent](reading_agent)
+  by a script from the statement and acceptance criteria that reqctl context prints
+  for the [item](item) and the code that the [statement citations](statement_citation)
+  of the [item](item) touched by the branch cover.
+type: functional
+verification: inspection

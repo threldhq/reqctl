@@ -1,15 +1,25 @@
-assessed: {}
+assessed:
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
 citations:
   hqp6ec: B4jAgRgsRX4FfPR-K1Nxqz_d68ShgZqlcprLOekLBho
 entries:
+  reading:
+    definition: the [reading agent](reading_agent), spawned once for each [item](item)
+      the product names as touched by the branch
+    effort: high
+    model: claude-sonnet-5-5
   silent_failure_hunter:
     definition: the pr-review-toolkit:silent-failure-hunter agent, run over the branch's
       diff
     model: claude-sonnet-5-5
 fields:
-- definition
 - model
+- effort
+- definition
 kind: data
 name: pre_pr_agents
 status: approved
 text: each agent that a pass of the pre-pr skill runs, with the model it is run on
+  and, where its [entry](entry) states one, the effort

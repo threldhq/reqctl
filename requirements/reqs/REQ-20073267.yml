@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-85663008: a6KT1d2uAdNfqrcfB5Wl0AkuzTHF9BewmnBgKs7s4SQ
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+priority: medium
+relations:
+  REQ-85663008: depends_on
+status: approved
+text: The product shall define the [reading agent](reading_agent) with no tool that
+  reads a file, searches the [code base](code_base) or runs a command.
+type: functional
+verification: inspection

@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  evidence_block:
+    aliases:
+    - evidence blocks
+    definition: The markdown the product prints for a branch to be put in the body
+      of the pull request of the branch.
+    word: evidence block
+kind: term
+status: approved

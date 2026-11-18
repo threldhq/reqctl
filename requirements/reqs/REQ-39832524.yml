@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-23123938: pNzjD3R4wwAe0nkKprjBku3zys_Sza8WjNcEmn0iDEc
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+priority: medium
+relations:
+  REQ-23123938: depends_on
+  REQ-38288492: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session asks the product to record the pass once every step of the pass is clean.
+type: functional
+verification: inspection

@@ -1,0 +1,15 @@
+acceptance_criteria: []
+assessed:
+  REQ-96243908: PG2NeOENWp_BVR7KkXD3ltZoFMHbOI4Pe-XuTfmBnYY
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+  gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+priority: medium
+relations:
+  REQ-96243908: constrains
+status: approved
+text: If the [gate results file](gate_results_file) names a commit other than the
+  commit HEAD names when the product is asked for the [evidence block](evidence_block)
+  of a branch, then the product shall state in the [evidence block](evidence_block)
+  that the gate results are those of another commit.
+type: functional
+verification: inspection

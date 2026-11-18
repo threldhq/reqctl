@@ -1,0 +1,10 @@
+acceptance_criteria: []
+assessed:
+  GUARD-88726011: CaQPKn-ZK9KqyVdm27MigPAqlXWFgw89UAOlaiumRoI
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+relations:
+  GUARD-88726011: depends_on
+status: approved
+text: When the body of a pull request is edited, the build shall check again whether
+  the body holds the [evidence block](evidence_block) that reqctl prints for the head
+  commit of the pull request.

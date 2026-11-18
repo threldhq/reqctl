@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-85663008: a6KT1d2uAdNfqrcfB5Wl0AkuzTHF9BewmnBgKs7s4SQ
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  pre_pr_agents: 1FK3U3Z5R4oXedjNUmI9LPmg-bcguIwHUlhZOAt_140
+  pre_pr_agents.reading: pDWnDkmOc8VF0MpAjy9YqVNw5UJjWnyYZZzDvH_IzDI
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+priority: medium
+relations:
+  REQ-38288492: depends_on
+  REQ-85663008: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session runs each [reading agent](reading_agent) on ${pre_pr_agents.reading.model}
+  at ${pre_pr_agents.reading.effort} effort.
+type: functional
+verification: inspection

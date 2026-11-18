@@ -1,0 +1,20 @@
+acceptance_criteria:
+- given: a [reading agent](reading_agent) whose return states none of the three verdicts
+  then: the [item](item) has no verdict
+  when: the return is read
+assessed:
+  REQ-85663008: a6KT1d2uAdNfqrcfB5Wl0AkuzTHF9BewmnBgKs7s4SQ
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  reading_verdicts: 9but5MsHrC5UEtZD9F-Hy3xW5M3OLysWZeVs0Yh3CnM
+  reading_verdicts.*: 9Y_foWD7hc0U6nuYNDNFjfMngKwvURx-VM5PWesZinc
+priority: medium
+relations:
+  REQ-85663008: depends_on
+status: approved
+text: When a [reading agent](reading_agent) returns, the product shall take from the
+  [reading agent](reading_agent) one of the ${reading_verdicts} for the [item](item)
+  the [reading agent](reading_agent) was spawned for, with the lines that show the
+  verdict.
+type: functional
+verification: inspection

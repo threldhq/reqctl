@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a pull request dependabot opened whose body holds no [evidence block](evidence_block)
+  then: the build does not refuse it on that ground
+  when: the build checks it
+- given: a body holding the [evidence block](evidence_block) and, beside it, the verdicts
+    the session added
+  then: the build does not refuse it on that ground
+  when: the build checks it
+- given: a body whose [evidence block](evidence_block) differs from the one reqctl
+    prints for the head commit only in the gate steps it states
+  then: the build does not refuse it on that ground
+  when: the build checks it
+- given: a body whose [evidence block](evidence_block) states gate steps naming a
+    commit other than the head commit of the pull request
+  then: the build refuses the pull request
+  when: the build checks it
+- given: a pull request changing only files under the [corpus root](corpus_root)
+  then: the build does not refuse it on that ground
+  when: the build checks it
+assessed:
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+relations: {}
+status: approved
+text: If the body of a pull request that dependabot did not open and that changes
+  a file outside the [corpus root](corpus_root) does not hold the [evidence block](evidence_block)
+  that reqctl prints for the head commit of the pull request, then the build shall
+  refuse the pull request.

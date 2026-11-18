@@ -1,0 +1,10 @@
+assessed: {}
+entries:
+  pass_record:
+    aliases:
+    - pass records
+    definition: The file under the folder .reqctl that the product writes when a pass
+      of the pre-pr skill completes, naming the commit the pass ran on.
+    word: pass record
+kind: term
+status: approved
