@@ -2479,9 +2479,10 @@ def substituted(body, args):
         key = found[found.lastindex]
         if key == "#":
             return str(len(args))
-        named = args if key in "@*" else args[int(key) - 1:int(key)] if int(key) else []
+        named = args if key in "@*" else args[int(key) - 1:int(key)]
         if not found[0].startswith('"'):
-            return shlex.join(word for one in named for word in one.split())
+            return shlex.join(filter(None, (word for one in named
+                                            for word in re.split("[ \t\n]+", one))))
         return shlex.join(named) if key == "@" else shlex.quote(" ".join(named))
     return POSITIONAL.sub(put, body)
 
