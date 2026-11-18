@@ -2,6 +2,9 @@ acceptance_criteria: []
 assessed:
   REQ-26348048: DZtMIa67gVG9AuIJWWOhYs9YglAMOd94N2asjfWGWLI
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+citations:
+  53uvyo: AiEJ_BKnz9_71QEtUbuVVnTv6I3vs29w2NSV1FOOkg4
+  japrql: PiFwH0o8JJ0zWNo7E8I_UqzWj7_-d36l23cQrXKmU7I
 priority: medium
 relations:
   REQ-26348048: depends_on

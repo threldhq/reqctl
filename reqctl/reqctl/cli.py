@@ -13,6 +13,7 @@ from pathlib import Path
 from . import baseline as _baseline
 from . import cite
 from . import corpus
+from . import evidence as _evidence
 from . import fields as _fields
 from . import graph
 from . import history
@@ -1098,6 +1099,17 @@ def cmd_compare(args):
     return EXIT_OK
 
 
+# @req> REQ-26348048@DZtMIa67gVG9 sp63uo
+def cmd_evidence(args):
+    tree, root = corpus.load()
+    ref = args.base or _baseline._default_ref(root)
+    if ref is None:
+        raise ReqctlError("no origin to compare against -- name one with --base")
+    data = _evidence.read(tree, root, ref)
+    _emit(args, data, _evidence.block(data))
+    return EXIT_OK
+
+
 # @req> REQ-49576265@pFihs7WdIwGS pihyx4
 def _opened(url):
     if not webbrowser.open(url):
@@ -1420,6 +1432,13 @@ def build_parser(root, fielded):
                  "they name")
     s.add_argument("--base")
     s.set_defaults(func=cmd_compare)
+
+    s = _command(sub, "evidence",
+                 "print, as markdown for a pull request body, the items this "
+                 "branch touches, whether validate and trace pass, and the "
+                 "gate steps .reqctl/gates.json states")
+    s.add_argument("--base")
+    s.set_defaults(func=cmd_evidence)
 
     s = _command(sub, "portal",
                  "serve the portal on the repository origin names, and open "

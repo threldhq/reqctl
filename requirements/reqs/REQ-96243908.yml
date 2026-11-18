@@ -6,6 +6,11 @@ assessed:
   REQ-26348048: DZtMIa67gVG9AuIJWWOhYs9YglAMOd94N2asjfWGWLI
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
   gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+citations:
+  clndxe: wHHvXoMn2F2NUDIB6vADjLRLm4G7MHqMsoHK0mjEupQ
+  hj6fnz: HKuXqLt4CShiLUypZtYaGDg-ws4e3Kz4xbPYlwItRAg
+  kdw2mt: VYZNpWZpPjoAbBd6TMdbfrceKoikGqLNap3GY4qPbkM
+  nqy2sa: Ncd5TmdlXoqubxGzpBG4VInxLxbmvNlOota3ecfUzMQ
 priority: medium
 relations:
   REQ-26348048: depends_on

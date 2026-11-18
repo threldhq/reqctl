@@ -13,6 +13,11 @@ assessed:
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  2a3l36: QaqyJS9zrgK9gu04GrS_VqxxNGXDk2H857ByewkH_1o
+  56k566: WRk4EoOEyoRtxkJfwRP8SkrYI9moWcLgzlEzgi3kYvU
+  ktj6wc: pGqljdgeHgFxGzTm4FC8NjXGTz5_nBFbzJkc9i9Xc2M
+  sp63uo: ooq1k6FJteUeh-x8lOEfMoGcyLG8UvWxufLgg-jLG0w
 priority: medium
 relations:
   REQ-56906371: depends_on
