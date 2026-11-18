@@ -1,0 +1,11 @@
+assessed:
+  pinned_model_id: 0BUJar86NBWcROiGnOfjerEx59pbgDFJQ1By5KS4saU
+default: fable
+entries:
+  fable:
+    definition: the Fable family of Claude models, named by its alias rather than
+      by a [pinned model ID](pinned_model_id)
+kind: data
+name: advisor_model
+status: approved
+text: the model this repository's Claude Code settings state as the advisor model

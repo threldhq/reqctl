@@ -1,5 +1,5 @@
-baseline: 156
-commit: 70821fbb9c96fe4a6946bec914c6729672f6f11d
+baseline: 157
+commit: 483a088650e8174b10ec9d3d0ecfe9e5f3092fcb
 items:
   GUARD-10822746: 5q3_dsWRmBCDseEFPF2ksbl_95o5hULwFCkqFtokhl4
   GUARD-10823996: bfm-dN6H_Udf-3J2NRQT_YN8l7CB1irPaAFNx_PyI6o
@@ -16,6 +16,7 @@ items:
   GUARD-20035007: EUUCqO_GisrKWrpC8a5u5yxPfKLv-qOQ6qnYKEFYu2s
   GUARD-20154572: z2_hbXJO9sHnVMQd1fo-1KELeiBgdPt32F2PD4ygZIo
   GUARD-20209566: zkKPlDbnzFuAQjV-IP9QFYCBEHun4PFff8aHhactzO4
+  GUARD-20494638: fnyyeK8ne54Yy_-iYWZcoCmWi-KnsxenBK0GD6gcDb4
   GUARD-21085755: -uspUi1-r2Pef8x7rIvWNTAmST7B4FwlkeR_CiXq02A
   GUARD-21104547: JEmmBQUD-r4ChotAz3-l-6kcsqpNRHKvdeY54XAiZN0
   GUARD-21296330: 1vKKetZd35C0GIAuwzYW1XnjDEe0AZf8s_lwi0JSCBs
@@ -983,6 +984,7 @@ items:
   REQ-99520421: EA982CV9V8L5HLFuolrfvaNcgaHQ4ppD6-NQNeE3E4Q
   REQ-99682173: tUofGNw2yXBOlBkEhB3mxv1dxHrIYbkligf0hn6MhAA
   addressable_block: 6Sbj6G94qgJYkhggdH5IUt5roWha4mXIvQjynF79Lrs
+  advisor_model: BrPUF3RDXiIgATWsI7T71PeB2SqwobCYr3JW8zutc5Q
   approach: BOlg60JDbPY34OaY4RtJh9PlyHLQLmPwGwI-mbUxIGI
   awaiting_assessment: TC8l8BIUQf0dDAdsEEdlwfsSI7yuxE2DCR529iRxQJE
   best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
@@ -1093,4 +1095,4 @@ items:
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
   worktree_commands: rID7DXP6f3qw1--5Os9Hu0MBUVN7p_pFMUP-_ucue2w
   write_time_normalisation: oBdIBBNiZAVaalngsKaqiXl0qS4YIZ2G4Wo8drbe4o0
-supersedes: 155
+supersedes: 156
