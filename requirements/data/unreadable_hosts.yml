@@ -1,4 +1,6 @@
 assessed: {}
+citations:
+  jjfqv7: xsBFEtKbnz84pTqVZBiYTi0hjry3ZGNvnDnCDykqeeI
 entries:
   github_api:
     definition: GitHub's REST API, which answers the check's fetch with 403

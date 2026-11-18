@@ -9,6 +9,8 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   unreadable_hosts: XT_ZRGyc9rxsVXBky_VyKB15EkjmtnmE4bs0nN7BQ6M
   unreadable_hosts.*: az9eSjNH53g-DpjX30DJ_jU0KA5wDoINw4YEMrDa4C4
+citations:
+  lhogay: ybyZMXqND3PGmJEu8xPS_hYyG86Q7P4qgWQ0leXZ80U
 priority: medium
 relations:
   REQ-46594931: depends_on
