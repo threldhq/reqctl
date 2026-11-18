@@ -1,0 +1,21 @@
+acceptance_criteria:
+- given: an acceptance recorded for an [item](item) whose statement, acceptance criteria
+    or cited code then changes
+  then: the acceptance does not count for the [item](item)
+  when: the product is asked to record a pass
+- given: an acceptance recorded for an [item](item) whose prompt, as the script builds
+    it, is unchanged after a later commit
+  then: the acceptance counts for the [item](item)
+  when: the product is asked to record a pass
+assessed:
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+priority: medium
+relations: {}
+status: draft
+text: When the product is asked to record that the owner accepts the code as satisfying
+  an [item](item), the product shall record the acceptance against the [item](item)
+  and the prompt that the script built for the [reading agent](reading_agent) of the
+  [item](item).
+type: functional
+verification: inspection

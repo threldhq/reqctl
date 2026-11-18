@@ -1,4 +1,9 @@
-acceptance_criteria: []
+acceptance_criteria:
+- given: an [item](item) whose [reading agent](reading_agent) returned no verdict
+    and whose code the owner accepted
+  then: the body states that no verdict was returned and that the owner accepted the
+    code
+  when: the pull request is prepared
 assessed:
   REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
   REQ-51001407: CLFQHU6-XTzdaf6D58L1bXwp6PCYgfrsInvCbsS96OI
@@ -15,6 +20,7 @@ status: approved
 text: When the pre-pr skill prepares a pull request, the product shall state in the
   pull request body, for every requirement, guard, parameter and [data item](data_item)
   the product names as touched by the branch, the verdict of the [reading agent](reading_agent)
-  spawned for the [item](item) and the lines that show the verdict.
+  spawned for the [item](item) and the lines that show the verdict, and, where the
+  owner accepted the code as satisfying the [item](item), the acceptance.
 type: functional
 verification: inspection

@@ -5,7 +5,7 @@ acceptance_criteria:
   when: the prompt of its [reading agent](reading_agent) is built
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
-  REQ-85663008: a6KT1d2uAdNfqrcfB5Wl0AkuzTHF9BewmnBgKs7s4SQ
+  REQ-85663008: aQdSXq7ibn2jD5mrfsMetjguAtjvAWKCwL-K8R9ZCXI
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
