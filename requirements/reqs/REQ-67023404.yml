@@ -3,7 +3,7 @@ assessed:
   REQ-80953393: Rww947Q5J-HCgd5wXZG5M_Tf45A3oUmvMt2aIcslXPc
   best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
 citations:
-  7gndxj: tshX2P4DGkIGbgpFT76eT-X8XJRNMLCLex7P44pePBI
+  7gndxj: npJrrPHBkjNq4UxcvgQr2lRjQ0U_OGszyf6cLrmX-dQ
 priority: medium
 relations:
   REQ-80953393: depends_on

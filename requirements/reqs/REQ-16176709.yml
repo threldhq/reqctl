@@ -16,6 +16,10 @@ assessed:
   REQ-49761714: PmbDdeKBVbZFcfSXUK6GNMq5OQErSL7tbDWLsBge2ug
   REQ-55217837: PsKdezweHHNpUbr-TtPC_Jn6MXRRPCbVJxuIu4HaTeE
   best_in_class_check: 5uvEIMbMjVamiN7SJiJ-kZv8Y43ldlmsX727oHLggWc
+citations:
+  dq4pzr: i8vvzAdBr-SxEtDMWXg2GGLEqjBdsvj5I0UjJqdkdeQ
+  l5u4ta: ybyZMXqND3PGmJEu8xPS_hYyG86Q7P4qgWQ0leXZ80U
+  ocxcej: 5nXa2VAIDezImmvkdl5IMCPoxzdyPaS0sMM_ZXF_GxA
 priority: medium
 relations:
   REQ-49761714: depends_on

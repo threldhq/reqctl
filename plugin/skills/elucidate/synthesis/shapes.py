@@ -113,7 +113,7 @@ REVIEW = _object(["practices"], {
 
 
 def check(criteria):
-    return _object(["weighed", "follow", "none"], {
+    return _object(["weighed", "follow", "unfollowed", "none"], {
         "weighed": _list(_object(
             ["name", "kind", "sources", "standing", "use", "approach"], {
                 "name": LABEL,
@@ -126,6 +126,7 @@ def check(criteria):
                                        {"type": "null"}]},
             })),
         "follow": {"anyOf": [LABEL, {"type": "null"}]},
+        "unfollowed": {"anyOf": [{**QUOTED, "maxLength": 300}, {"type": "null"}]},
         "none": {"anyOf": [{**QUOTED, "maxLength": 300}, {"type": "null"}]},
     })
 
