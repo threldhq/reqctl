@@ -14,7 +14,7 @@ import yaml
 
 from . import corpus, typescript
 from .corpus import ReqctlError
-from .reach import SCRIPTED, Reach, remarked
+from .reach import SCRIPTED, Reach, foreign, remarked
 
 OPEN, CLOSE, SINGLE = "+", "-", ">"
 EVERY = object()
@@ -283,11 +283,6 @@ RAW = re.compile(REMARKS[".html"].pattern
                  r"(?:</script(?=[\s/>])|\Z)",
                  re.IGNORECASE)
 SCRIPT_REMARKS = re.compile(REMARKS[".js"].pattern + r"|<!--[^\n]*")
-ATTRIBUTE = re.compile(r"""([^\s/>"'=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]*)))?""")
-JAVASCRIPT = {"module", "application/ecmascript", "application/javascript",
-              "application/x-ecmascript", "application/x-javascript", "text/ecmascript",
-              "text/javascript", *(f"text/javascript1.{n}" for n in range(6)), "text/jscript",
-              "text/livescript", "text/x-ecmascript", "text/x-javascript"}
 CONTINUED = "string that a backslash continues onto the next line"
 
 
@@ -295,19 +290,9 @@ def _row(text, offset):
     return text.count("\n", 0, offset) + 1
 
 
-def _block(attrs):
-    held = {}
-    for found in ATTRIBUTE.finditer(attrs):
-        held.setdefault(found[1].lower(), found[2] or found[3] or found[4] or "")
-    if held.get("type") == "" or ("type" not in held and not held.get("language")):
-        return None
-    kind = held["type"].strip(" \t\n\f\r") if "type" in held else "text/" + held["language"]
-    return None if kind.lower() in JAVASCRIPT else kind
-
-
 def _elements(text):
     for found in RAW.finditer(text):
-        yield found, None if found["script"] is None else _block(found["attrs"])
+        yield found, None if found["script"] is None else foreign(found["attrs"])
 
 
 def _marked_up(text):

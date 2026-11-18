@@ -10,9 +10,11 @@ from . import corpus, typescript
 SCRIPTED = (".js", ".html", *typescript.SUFFIXES)
 CLASSIC = re.compile(r"<script(?=[\s/>])(?P<attrs>[^>]*)>(?P<body>[\s\S]*?)"
                      r"(?:</script(?=[\s/>])|\Z)", re.IGNORECASE)
-TYPED = re.compile(r"""\btype\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))""", re.IGNORECASE)
-JAVASCRIPT = {"", "text/javascript", "application/javascript", "text/ecmascript",
-              "application/ecmascript"}
+ATTRIBUTE = re.compile(r"""([^\s/>"'=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]*)))?""")
+JAVASCRIPT = {"module", "application/ecmascript", "application/javascript",
+              "application/x-ecmascript", "application/x-javascript", "text/ecmascript",
+              "text/javascript", *(f"text/javascript1.{n}" for n in range(6)), "text/jscript",
+              "text/livescript", "text/x-ecmascript", "text/x-javascript"}
 LEXED = re.compile(r""""(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'"""
                    r"|(?P<tick>`)|(?P<brace>[{}])"
                    r"|(?P<remark>//[^\n]*|/\*[\s\S]*?(?:\*/|\Z)|<!--[^\n]*|^[ \t]*-->[^\n]*)"
@@ -30,7 +32,8 @@ BINDINGS = ("const", "let", "var")
 # @req+ REQ-59827868@eeHZvhZPFhD3 4pmkcf
 DEFINED = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
 ASSIGNED = (ast.Assign, ast.AnnAssign)
-NESTED = (ast.If, ast.Try, ast.TryStar)
+NESTED = (ast.If, ast.Try, ast.TryStar, ast.With, ast.AsyncWith, ast.For, ast.AsyncFor,
+          ast.While, ast.Match)
 UNREAD = (tokenize.COMMENT, tokenize.NL, tokenize.ENDMARKER, tokenize.INDENT,
           tokenize.DEDENT)
 
@@ -41,8 +44,28 @@ def _statements(body):
         if isinstance(node, NESTED):
             for branch in ("body", "orelse", "finalbody"):
                 yield from _statements(getattr(node, branch, []))
-            for handler in getattr(node, "handlers", []):
-                yield from _statements(handler.body)
+            for held in (*getattr(node, "handlers", []), *getattr(node, "cases", [])):
+                yield from _statements(held.body)
+
+
+def _defined(body, within=()):
+    for node in _statements(body):
+        if isinstance(node, DEFINED):
+            yield (*within, node)
+            yield from _defined(node.body, (*within, node))
+
+
+def _named(within):
+    return ".".join(node.name for node in within)
+
+
+def _dotted(node):
+    if isinstance(node, ast.Name):
+        return (node.id,)
+    if isinstance(node, ast.Subscript):
+        return _dotted(node.value)
+    below = _dotted(node.value) if isinstance(node, ast.Attribute) else None
+    return (*below, node.attr) if below else None
 
 
 def _bound(target):
@@ -68,7 +91,7 @@ class Reach:
         self.roots = [".", *sorted({posixpath.dirname(folder) or "." for folder in packages
                                     if posixpath.dirname(folder) not in packages})]
         self.tables, self.streams, self.edges, self.digests = {}, {}, {}, {}
-        self.scripts = {}
+        self.scripts, self.scopes, self.classes = {}, {}, {}
 
     # @req> REQ-22608177@cdmX9Aqh6XXC upntcv
     # @req> REQ-45330509@y34lW04HzVzy ad2sq3
@@ -110,14 +133,19 @@ class Reach:
                                  else _declarations(self._scripted(path)[0]))
             return self.tables[path]
         table = self.tables[path] = {}
+        scopes = self.scopes[path] = {}
         try:
             tree = ast.parse(self.texts[path])
         except (SyntaxError, ValueError):
             return table
+        for within in _defined(tree.body):
+            first, last = _span(within[-1])
+            scopes.update(dict.fromkeys(range(first, last + 1), within))
+            table.setdefault(_named(within), []).append(("def", (first, last)))
+            if isinstance(within[-1], ast.ClassDef):
+                self.classes.setdefault((path, _named(within)), []).append(within)
         for node in _statements(tree.body):
-            if isinstance(node, DEFINED):
-                table.setdefault(node.name, []).append(("def", _span(node)))
-            elif isinstance(node, ASSIGNED):
+            if isinstance(node, ASSIGNED):
                 targets = node.targets if isinstance(node, ast.Assign) else [node.target]
                 for target in targets:
                     for name in _bound(target):
@@ -159,6 +187,30 @@ class Reach:
                 found += self._within(source, (name, *rest), seen | {what})
         return found
 
+    def _method(self, path, owner, name, seen):
+        held = f"{_named(owner)}.{name}"
+        if held in self._table(path):
+            return [(path, held)]
+        for chain in filter(None, map(_dotted, owner[-1].bases)):
+            for found in self._local(path, owner[:-1], chain) or self._resolve(path, chain):
+                for base in self.classes.get(found, []) if found not in seen else []:
+                    if below := self._method(found[0], base, name, seen | {found}):
+                        return below
+        return []
+
+    def _local(self, path, within, chain):
+        table = self._table(path)
+        for at in range(len(within) - 1, 0, -1):
+            if isinstance(within[at - 1], ast.ClassDef) and not isinstance(within[at], ast.ClassDef):
+                first = [*within[at].args.posonlyargs, *within[at].args.args][:1]
+                if (len(chain) > 1 and first and first[0].arg == chain[0] and ("staticmethod",) not in
+                        map(_dotted, within[at].decorator_list)):
+                    return self._method(path, within[:at], chain[1], frozenset())
+                break
+        return next(([(path, name)] for at in range(len(within), 0, -1)
+                     if not isinstance(within[at - 1], ast.ClassDef)
+                     and (name := f"{_named(within[:at])}.{chain[0]}") in table), [])
+
     def _stream(self, path):
         if path not in self.streams:
             held, depth = [], 0
@@ -172,7 +224,7 @@ class Reach:
         return self.streams[path]
 
     def _chains(self, path, lines):
-        chains, chain, after_dot = [], [], False
+        chains, chain, after_dot, at = [], [], False, 0
         for line, kind, _, text in self._stream(path):
             if line not in lines or kind in UNREAD:
                 continue
@@ -182,16 +234,16 @@ class Reach:
                         chain.append(text)
                 else:
                     if chain:
-                        chains.append(tuple(chain))
-                    chain = [text]
+                        chains.append((at, tuple(chain)))
+                    chain, at = [text], line
                 after_dot = False
                 continue
             after_dot = kind == tokenize.OP and text == "."
             if not after_dot and chain:
-                chains.append(tuple(chain))
+                chains.append((at, tuple(chain)))
                 chain = []
         if chain:
-            chains.append(tuple(chain))
+            chains.append((at, tuple(chain)))
         return chains
 
     def _lines(self, key):
@@ -207,8 +259,10 @@ class Reach:
             return [(path, name) for name in dict.fromkeys(
                 piece for at, (line, piece) in enumerate(pieces)
                 if line in lines and piece in table and (at == 0 or pieces[at - 1][1] != "."))]
-        return [found for chain in dict.fromkeys(self._chains(path, lines))
-                for found in self._resolve(path, chain)]
+        scopes = (self._table(path), self.scopes[path])[1]
+        return [found for within, chain in dict.fromkeys(
+                    (scopes.get(line, ()), chain) for line, chain in self._chains(path, lines))
+                for found in self._local(path, within, chain) or self._resolve(path, chain)]
 
     def _digest(self, key):
         # @req> REQ-22608177@cdmX9Aqh6XXC g2mzok
@@ -278,16 +332,21 @@ def _blanked(chars, start, end):
             chars[at] = " "
 
 
+def foreign(attrs):
+    held = {}
+    for found in ATTRIBUTE.finditer(attrs):
+        held.setdefault(found[1].lower(), found[2] or found[3] or found[4] or "")
+    if held.get("type") == "" or ("type" not in held and not held.get("language")):
+        return None
+    kind = held["type"].strip(" \t\n\f\r") if "type" in held else "text/" + held["language"]
+    return None if kind.lower() in JAVASCRIPT else kind
+
+
 def _bodies(path, text):
     if path.endswith(".js"):
         return [(0, len(text))]
-    held = []
-    for script in CLASSIC.finditer(text):
-        typed = TYPED.search(script["attrs"])
-        kind = next((one for one in typed.groups() if one is not None), "") if typed else ""
-        if kind.strip().lower() in JAVASCRIPT:
-            held.append(script.span("body"))
-    return held
+    return [script.span("body") for script in CLASSIC.finditer(text)
+            if foreign(script["attrs"]) is None]
 
 
 def _opens_pattern(text, at):
