@@ -9,5 +9,5 @@ entries:
     definition: 'skipped: the step was not run'
 kind: data
 name: gate_step_outcomes
-status: draft
+status: approved
 text: the outcomes a [gate results file](gate_results_file) states of a step

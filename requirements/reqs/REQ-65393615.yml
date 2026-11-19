@@ -1,0 +1,38 @@
+acceptance_criteria:
+- given: a [gate results file](gate_results_file) that does not read as JSON
+  then: the product refuses and names running the gates again or deleting the file
+  when: the [evidence block](evidence_block) is asked for
+- given: a [gate results file](gate_results_file) whose step states an outcome that
+    is none of the three
+  then: the product refuses
+  when: the [evidence block](evidence_block) is asked for
+- given: a [gate results file](gate_results_file) stating a commit and no list of
+    steps
+  then: the product refuses
+  when: the [evidence block](evidence_block) is asked for
+- given: a folder at the place of the [gate results file](gate_results_file)
+  then: the product states the fault and prints no [evidence block](evidence_block)
+  when: the [evidence block](evidence_block) is asked for
+assessed:
+  REQ-26348048: aTcCvMjFCdmROvnFFxplTuNkuqHfRzWmRqxROjyu3l0
+  REQ-83330302: kWkBOJuy81laddVNSQbSqEa7PmhH2-tuZoE520u-oYQ
+  REQ-96243908: _JWPW5ZdbY9b1Ejc1h21A9XLiICHv_Tu8i5lfhMAbLM
+  REQ-96699115: zhnZnL6or8CzBYkMPr-ecQF_M0u_wZ9HZOMvyOb_GHA
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+  gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+  gate_step_outcomes: Kr47bubIWdN2dJ-XA5ND_feFflM6lhcWrb8Np0mbeEg
+  gate_step_outcomes.*: tjSZIBsUZ0mBKVCXVd5ziVqoGSJLcZ5CfRbHOrpHtTw
+  gate_step_outcomes.skipped: BlGIZKMC9A9ALInTWDhqXMkaJ_kwo8y1BWS6efXMhRc
+priority: medium
+relations:
+  REQ-26348048: constrains
+  REQ-83330302: depends_on
+  REQ-96243908: constrains
+  REQ-96699115: depends_on
+status: approved
+text: If the [gate results file](gate_results_file) is present and is not a JSON object
+  stating a commit and, of each step, a name, one of the ${gate_step_outcomes} and,
+  for a step whose outcome is ${gate_step_outcomes.skipped}, a reason, then the product
+  shall refuse to print the [evidence block](evidence_block).
+type: functional
+verification: inspection

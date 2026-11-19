@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a working tree and an index whose tracked files match the commit HEAD names
+  then: the [evidence block](evidence_block) states nothing about uncommitted changes
+  when: the [evidence block](evidence_block) is asked for
+- given: an untracked file and no change to a tracked file
+  then: the [evidence block](evidence_block) states nothing about uncommitted changes
+  when: the [evidence block](evidence_block) is asked for
+- given: a new file added to the index and not committed
+  then: the [evidence block](evidence_block) states that tracked files have uncommitted
+    changes
+  when: the [evidence block](evidence_block) is asked for
+- given: two tracked files changed in the working tree
+  then: the [evidence block](evidence_block) states once that tracked files have uncommitted
+    changes and names neither file
+  when: the [evidence block](evidence_block) is asked for
+assessed:
+  REQ-26348048: aTcCvMjFCdmROvnFFxplTuNkuqHfRzWmRqxROjyu3l0
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+priority: medium
+relations:
+  REQ-26348048: depends_on
+status: approved
+text: If a tracked file differs, in the index or in the working tree, from the commit
+  HEAD names when the product is asked for the [evidence block](evidence_block) of
+  a branch, then the product shall state in the [evidence block](evidence_block) that
+  tracked files have uncommitted changes.
+type: functional
+verification: inspection

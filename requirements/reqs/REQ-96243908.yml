@@ -4,6 +4,7 @@ acceptance_criteria:
   when: the [evidence block](evidence_block) is asked for
 assessed:
   REQ-26348048: aTcCvMjFCdmROvnFFxplTuNkuqHfRzWmRqxROjyu3l0
+  REQ-96699115: zhnZnL6or8CzBYkMPr-ecQF_M0u_wZ9HZOMvyOb_GHA
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
   gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
 citations:
@@ -14,11 +15,13 @@ citations:
 priority: medium
 relations:
   REQ-26348048: depends_on
+  REQ-96699115: depends_on
 status: approved
 text: When the product is asked for the [evidence block](evidence_block) of a branch
-  while a [gate results file](gate_results_file) is present, the product shall state
-  in the [evidence block](evidence_block) each step the [gate results file](gate_results_file)
-  states as run and each step the [gate results file](gate_results_file) states as
-  skipped, with the reason stated for the skip.
+  while a [gate results file](gate_results_file) of the shape the product reads is
+  present, the product shall state in the [evidence block](evidence_block) each step
+  the [gate results file](gate_results_file) states as run and each step the [gate
+  results file](gate_results_file) states as skipped, with the reason stated for the
+  skip.
 type: functional
 verification: inspection

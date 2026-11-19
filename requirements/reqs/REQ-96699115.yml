@@ -1,0 +1,22 @@
+acceptance_criteria:
+- given: a [gate results file](gate_results_file) whose step states a key other than
+    name, outcome and reason
+  then: the product reads the step and leaves the other key out of what it states
+  when: the product reads the file
+assessed:
+  REQ-83330302: kWkBOJuy81laddVNSQbSqEa7PmhH2-tuZoE520u-oYQ
+  gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+  gate_step_outcomes: Kr47bubIWdN2dJ-XA5ND_feFflM6lhcWrb8Np0mbeEg
+  gate_step_outcomes.*: tjSZIBsUZ0mBKVCXVd5ziVqoGSJLcZ5CfRbHOrpHtTw
+  gate_step_outcomes.skipped: BlGIZKMC9A9ALInTWDhqXMkaJ_kwo8y1BWS6efXMhRc
+priority: medium
+relations:
+  REQ-83330302: depends_on
+status: approved
+text: When the product reads the [gate results file](gate_results_file), the product
+  shall read a JSON object holding the commit as a string under commit and, under
+  steps, a list holding for each step the name of the step as a string under name,
+  one of the ${gate_step_outcomes} under outcome and, for a step whose outcome is
+  ${gate_step_outcomes.skipped}, the reason for the skip as a string under reason.
+type: functional
+verification: inspection
