@@ -1,0 +1,13 @@
+assessed:
+  gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+entries:
+  failed:
+    definition: 'failed: the step ran and did not succeed'
+  passed:
+    definition: 'passed: the step ran and succeeded'
+  skipped:
+    definition: 'skipped: the step was not run'
+kind: data
+name: gate_step_outcomes
+status: approved
+text: the outcomes a [gate results file](gate_results_file) states of a step

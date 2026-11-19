@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
+  evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+  gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+priority: medium
+relations: {}
+status: approved
+text: When the product is asked for the [evidence block](evidence_block) of a branch,
+  the product shall read the [gate results file](gate_results_file) at .reqctl/gates.json
+  in the folder that holds the [corpus root](corpus_root).
+type: functional
+verification: inspection
