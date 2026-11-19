@@ -1,16 +1,47 @@
 acceptance_criteria:
 - given: an [item](item) two of whose [statement citations](statement_citation) the
     branch touches
-  then: the prompt holds the code both [statement citations](statement_citation) cover
+  then: the prompt holds the code both [citation digests](citation_digest) take in
   when: the prompt of its [reading agent](reading_agent) is built
+- given: a [data item](data_item) the branch touches
+  then: the prompt holds the text and each [entry](entry) of the [data item](data_item)
+    as reqctl context prints them
+  when: the prompt of its [reading agent](reading_agent) is built
+- given: a requirement whose statement names a parameter and links a term
+  then: the prompt holds the value of the parameter and the definition of the term
+    as reqctl context prints them
+  when: the prompt of its [reading agent](reading_agent) is built
+- given: a [statement citation](statement_citation) in a Python file whose covered
+    lines name a function of the [code base](code_base)
+  then: the prompt holds the function, as far as the [citation digest](citation_digest)
+    takes it in
+  when: the prompt of its [reading agent](reading_agent) is built
+- given: an [item](item) the branch touches only through a [whole-file citation](whole_file_citation)
+  then: the prompt holds the file
+  when: the prompt of its [reading agent](reading_agent) is built
+- given: a [statement citation](statement_citation) of the [item](item) that the branch
+    does not touch
+  then: the prompt holds no code that only that [statement citation](statement_citation)
+    covers
+  when: the prompt of its [reading agent](reading_agent) is built
+- given: a function that the covered lines of a [statement citation](statement_citation)
+    name, changed while the covered lines stand
+  then: the prompt differs from the prompt built before the change
+  when: the prompt of the [reading agent](reading_agent) of the [item](item) is built
+    again
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-85663008: aQdSXq7ibn2jD5mrfsMetjguAtjvAWKCwL-K8R9ZCXI
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
-  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 priority: medium
 relations:
   REQ-38288492: depends_on
@@ -18,8 +49,12 @@ relations:
 status: approved
 text: When the ${plugin_components.pre_pr_skill} spawns a [reading agent](reading_agent)
   for an [item](item), the product shall build the prompt of the [reading agent](reading_agent)
-  by a script from the statement and acceptance criteria that reqctl context prints
-  for the [item](item) and the code that the [statement citations](statement_citation)
-  of the [item](item) touched by the branch cover.
+  by a script from the text, acceptance criteria, value and [entries](entry) that
+  reqctl context prints for the [item](item), the value of each parameter and [data
+  item](data_item) and the definition of each term that reqctl context prints as named
+  by the [item](item), the code that the [citation digest](citation_digest) of each
+  [statement citation](statement_citation) of the [item](item) touched by the branch
+  takes in, and each file that a [whole-file citation](whole_file_citation) of the
+  [item](item) touched by the branch holds.
 type: functional
 verification: inspection

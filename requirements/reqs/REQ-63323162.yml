@@ -11,7 +11,7 @@ assessed:
   REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
-  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 priority: medium
 relations:
   REQ-18882967: depends_on
