@@ -66,7 +66,7 @@ def read(tree, root, ref):
     # @req- 53uvyo
     # @req> REQ-26884656@F6FCcDIagP_f fv7sjv
     head = cite._git(root, "rev-parse", "HEAD").strip()
-    # @req> REQ-29385748@NsfOmiGdMQm0 ght24q
+    # @req> REQ-29385748@vxXI35uvc_cp ght24q
     uncommitted = bool(cite._git(root, "status", "--porcelain",
                                  "--untracked-files=no").strip())
     # @req> REQ-83330302@kWkBOJuy81la i7fb3m
@@ -108,7 +108,7 @@ def _gated(held, head):
     return lines + [""] + [_stepped(step) for step in held["steps"]]
 
 
-# @req> REQ-29385748@NsfOmiGdMQm0 oglnda
+# @req> REQ-29385748@vxXI35uvc_cp oglnda
 def _uncommitted(stated):
     return ["Tracked files have uncommitted changes.", ""] if stated else []
 
