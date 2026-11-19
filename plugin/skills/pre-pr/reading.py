@@ -24,8 +24,13 @@ UNTOUCHED = (["moved"], ["deleted"])
 
 # @req> REQ-18193596@oSjMcEZMnBK6 lcqfuw
 def printed(uid):
-    done = subprocess.run(["reqctl", "context", uid], capture_output=True,
-                          text=True, check=False)
+    try:
+        done = subprocess.run(["reqctl", "context", uid], capture_output=True,
+                              text=True, check=False)
+    except OSError as absent:
+        # @req> REQ-92715984@izHQzbW23L0y tp44ab
+        raise corpus.ReqctlError(f"cannot run reqctl: {absent.strerror} -- install "
+                                 "reqctl or put it on PATH") from absent
     if done.returncode:
         # @req> REQ-92715984@izHQzbW23L0y rkatxd
         raise corpus.ReqctlError(done.stderr.strip()
@@ -37,6 +42,11 @@ def printed(uid):
 def stated(uid):
     head, *blocks = printed(uid).split("\n\n")
     lines = [line for line in head.split("\n") if OWN.match(line)]
+    if not lines:
+        # @req> REQ-92715984@izHQzbW23L0y 4kxswd
+        raise corpus.ReqctlError(f"reqctl context {uid} printed no text, acceptance "
+                                 "criteria, value or entries -- install the reqctl "
+                                 "release this plugin ships with")
     for block in blocks:
         title, _, body = block.strip("\n").partition("\n")
         if title in NAMED and body:
@@ -64,6 +74,10 @@ def taken(uid, compared, citations, reach):
 def code(root, uid, compared, citations, reach, texts):
     lines = []
     for path, numbers in sorted(taken(uid, compared, citations, reach).items()):
+        if texts.get(path) is None:
+            # @req> REQ-92715984@izHQzbW23L0y 44kmga
+            raise corpus.ReqctlError(f"cannot read {path}, which a citation of {uid} "
+                                     "takes in -- make the file readable as UTF-8")
         said = texts[path].split("\n")
         lines += ["", f"=== {path} ==="]
         for at, number in enumerate(numbers):
@@ -109,8 +123,8 @@ def records(root):
 
 # @req> REQ-85663008@aQdSXq7ibn2j neu5tj
 def standing(held, text):
-    read = held.get(corpus.digest(text))
-    return read if isinstance(read, dict) and read.get("verdict") == next(iter(VERDICTS)) else None
+    read = sound(held.get(corpus.digest(text)), text)
+    return read if read and read["verdict"] == "satisfied" else None
 
 
 # @req> REQ-18882967@W34Ole45XgJE 7xdgt7
@@ -134,8 +148,9 @@ def build(args):
     if folder.is_dir():
         for earlier in sorted(folder.iterdir()):
             corpus.remove(earlier)
-    for uid in compared["touches"]:
-        text = prompt(root, uid, compared, citations, reach, texts)
+    built = {uid: prompt(root, uid, compared, citations, reach, texts)
+             for uid in compared["touches"]}
+    for uid, text in built.items():
         corpus.atomic_write(folder / f"{uid}.md", text)
         read = standing(held, text)
         print("\n".join(shown(uid, read) + ["    read before from an identical prompt"])
@@ -146,16 +161,25 @@ def build(args):
 
 
 # @req> REQ-18882967@W34Ole45XgJE up776f
-def returned(where):
-    try:
-        held = json.loads(where.read_text())
-    except (OSError, ValueError):
-        return None
-    if not (isinstance(held, dict) and held.get("verdict") in VERDICTS
+def sound(held, text):
+    said = {line.strip() for line in text.split("\n")}
+    if not (isinstance(held, dict) and isinstance(held.get("verdict"), str)
+            and held["verdict"] in VERDICTS
             and isinstance(held.get("lines"), list) and held["lines"]
-            and all(isinstance(line, str) and line.strip() for line in held["lines"])):
+            and all(isinstance(line, str) and line.strip() in said - {""}
+                    for line in held["lines"])):
         return None
     return {"verdict": held["verdict"], "lines": held["lines"]}
+
+
+# @req> REQ-18882967@W34Ole45XgJE w3h7qz
+def returned(where, text):
+    if not where.exists():
+        return None
+    try:
+        return sound(json.loads(corpus.read_text(where)), text)
+    except ValueError:
+        return None
 
 
 # @req> REQ-18882967@W34Ole45XgJE woxofe
@@ -165,7 +189,7 @@ def take(_):
     built = sorted(folder.glob("*.md")) if folder.is_dir() else []
     for where in built:
         uid, text = where.stem, corpus.read_text(where)
-        read = standing(held, text) or returned(where.with_suffix(".json"))
+        read = standing(held, text) or returned(where.with_suffix(".json"), text)
         if read is None:
             print(f"{uid}: no verdict")
             continue
