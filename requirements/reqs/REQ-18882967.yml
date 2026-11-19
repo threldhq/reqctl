@@ -8,6 +8,9 @@ assessed:
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   reading_verdicts: 9but5MsHrC5UEtZD9F-Hy3xW5M3OLysWZeVs0Yh3CnM
   reading_verdicts.*: 9Y_foWD7hc0U6nuYNDNFjfMngKwvURx-VM5PWesZinc
+citations:
+  doz25v: Sh2lHtxA8NsJv4XJQzrFU0rUVGZAIv-TytBkyWe_wV4
+  msj3nx: u3kr6QlTTYE3OktcUS3a3XR38U6G2BfVZzhORceheTk
 priority: medium
 relations:
   REQ-85663008: depends_on
