@@ -116,6 +116,19 @@ on `claude-sonnet-5-5`.
 carries it; where it does not, this step has nothing to run.
 <!-- @req- w4p2zx -->
 
+Run `python3 ${CLAUDE_SKILL_DIR}/reading.py build`: it writes one prompt for
+each requirement, guard, parameter and data item the branch touches, and names
+each item that needs a reading.
+
+Spawn one `reqctl:reading` agent for each item it names as needing a reading,
+with the text of the prompt file it names as the whole prompt, unchanged.
+
+Run each reading agent on `claude-sonnet-5-5` at high effort.
+
+Run `python3 ${CLAUDE_SKILL_DIR}/reading.py take`: it takes each reading
+agent's verdict with the lines that show it, and names each item that has no
+verdict.
+
 <!-- @req+ REQ-57899112@64ONbe8G-1dz 7kivsv -->
 Open the pull request only once every step of the pass before it is clean: a
 step is clean once every finding it made is fixed.

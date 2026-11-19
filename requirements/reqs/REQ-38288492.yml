@@ -4,7 +4,7 @@ acceptance_criteria:
   when: its contents are read
 assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
-  plugin_components.*: nuKo6PX5_Bjyy195a9tJHQJTAqoGyNZhODg1Goy7Naw
+  plugin_components.*: lQ3r0BIHFn6aEN12skLX2d6Wm3oMJDEqFvc3_w8DdbA
 citations:
   26246r: Tpf_fI6wd25t2EmIQfAJihThxw-d6YVeWruO7jiaHSE
   3dxf7n: h_KMV8NDOueBQGpi5zgQezZS01AFSmPTGbCVuiCnVkM
