@@ -1,7 +1,7 @@
 acceptance_criteria: []
 assessed: {}
 citations:
-  ew6je4: oSuBd8p_7fskmDaY8xqH8xV3N1KXnvKFiNArV7EmBm0
+  ew6je4: X7xFmmEedhIAqLnMtjn2x5RjH9dzxL_tX2nh2DPp1X4
 relations: {}
 status: approved
 text: When .github/verify.py runs, the build shall take the event as the one --event

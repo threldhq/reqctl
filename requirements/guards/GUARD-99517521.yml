@@ -2,7 +2,7 @@ acceptance_criteria: []
 assessed:
   GUARD-82603422: G-oWXFmFwF5yLjZbFfXwYihUjCKVy-N6toNKMIh9g2w
 citations:
-  mcmyxk: oSuBd8p_7fskmDaY8xqH8xV3N1KXnvKFiNArV7EmBm0
+  mcmyxk: X7xFmmEedhIAqLnMtjn2x5RjH9dzxL_tX2nh2DPp1X4
 relations:
   GUARD-82603422: depends_on
 status: approved
