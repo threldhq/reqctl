@@ -3,7 +3,7 @@ acceptance_criteria:
   then: the [evidence block](evidence_block) names that commit beside the steps
   when: the [evidence block](evidence_block) is asked for
 assessed:
-  REQ-26348048: DZtMIa67gVG9AuIJWWOhYs9YglAMOd94N2asjfWGWLI
+  REQ-26348048: aTcCvMjFCdmROvnFFxplTuNkuqHfRzWmRqxROjyu3l0
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
   gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
 priority: medium
