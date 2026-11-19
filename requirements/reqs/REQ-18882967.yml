@@ -9,8 +9,13 @@ assessed:
   reading_verdicts: 9but5MsHrC5UEtZD9F-Hy3xW5M3OLysWZeVs0Yh3CnM
   reading_verdicts.*: 9Y_foWD7hc0U6nuYNDNFjfMngKwvURx-VM5PWesZinc
 citations:
+  7xdgt7: ykF8FCAo6wlOQibcOaZI2mD7c94QveAcCj9iyRNQKAg
   doz25v: Sh2lHtxA8NsJv4XJQzrFU0rUVGZAIv-TytBkyWe_wV4
+  hutvpr: CJpE1AJbD1WdoPJQbuXtu6m1iQaBIawSUFKjMCCv8Wk
   msj3nx: u3kr6QlTTYE3OktcUS3a3XR38U6G2BfVZzhORceheTk
+  up776f: 9b-NdzV9RNGMyPCxeqLTIpydQbM0sSVorni97iCuXpQ
+  w3h7qz: rWNTnxSiJnjXE8N-TgfgeHuNxDoMrur5bY0B5X_tQaE
+  woxofe: -L2ty_HyJ-VaCNevOUMiPXJ-i2td9JCqkHo9UfCwsF8
 priority: medium
 relations:
   REQ-85663008: depends_on
