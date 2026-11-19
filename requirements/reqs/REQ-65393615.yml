@@ -23,6 +23,9 @@ assessed:
   gate_step_outcomes: Kr47bubIWdN2dJ-XA5ND_feFflM6lhcWrb8Np0mbeEg
   gate_step_outcomes.*: tjSZIBsUZ0mBKVCXVd5ziVqoGSJLcZ5CfRbHOrpHtTw
   gate_step_outcomes.skipped: BlGIZKMC9A9ALInTWDhqXMkaJ_kwo8y1BWS6efXMhRc
+citations:
+  qcjyta: 0gKWI_BcjdvQAFFT_mTpDpkK-OZPH6vzCyVypXrorwI
+  tnadyt: d_SI6VTOkzft_FNLjfLxuC-qT4YnxiVEVSWVVk9CtTw
 priority: medium
 relations:
   REQ-26348048: constrains
