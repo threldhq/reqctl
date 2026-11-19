@@ -11,7 +11,7 @@ from reqctl.reach import Reach
 from reqctl import baseline, cite, corpus
 
 # @req> reading_verdicts@wJS-OszXMr_Q 3qo4wm
-VERDICTS = {"satisfied": {}, "not_satisfied": {}, "cannot_tell": {}}
+VERDICTS: dict[str, dict] = {"satisfied": {}, "not_satisfied": {}, "cannot_tell": {}}
 # @req> REQ-18193596@oSjMcEZMnBK6 6rm73a
 OWN = re.compile(r"(text|acceptance criteria|value|entries)\s{2,}")
 # @req> REQ-18193596@oSjMcEZMnBK6 4zf45f
