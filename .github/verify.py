@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -12,6 +13,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "ci.yml"
 GATES = ROOT / ".github" / "workflows" / "corpus-gates.yml"
+RESULTS = ROOT / ".reqctl" / "gates.json"
 VENV = ROOT / ".venv" / "bin"
 EXPRESSION = re.compile(r"\$\{\{\s*(.+?)\s*\}\}")
 EQUALITY = re.compile(r"^([\w.]+)\s*(==|!=)\s*'([^']*)'$")
@@ -20,6 +22,8 @@ NOT_FOUND = 127
 MISSING = re.compile(r"([\w./-]+): command not found")
 
 PASS, FAIL, SKIP = "pass", "FAIL", "skip"
+# @req> gate_step_outcomes@LMCYqqlETeXS v3i5hd
+OUTCOMES = dict(zip((PASS, FAIL, SKIP), ("passed", "failed", "skipped")))
 # @req> GUARD-63869848@V9lllz-dAIsM ykvsgh
 DIRTY = ("the working tree holds uncommitted changes, and what this touches was "
          "read from committed history only -- commit first, or pass --event "
@@ -135,9 +139,39 @@ def touched_outputs(doc, context):
 
 
 # @req> GUARD-20035007@EUUCqO_GisrK ujjzel
-def report(state, name, note):
+def report(taken, state, name, note):
     tail = f"  ({note})" if note else ""
     print(f"  {state:<4}  {name}{tail}")
+    # @req> GUARD-11968908@ySIuLN-Lfbhf v3vmfl
+    taken.append({"name": name, "outcome": OUTCOMES[state],
+                  **({"reason": note} if state == SKIP else {})})
+
+
+# @req> GUARD-11968908@ySIuLN-Lfbhf gdvfgo
+def record(commit, taken):
+    try:
+        RESULTS.parent.mkdir(exist_ok=True)
+        RESULTS.write_text(json.dumps({"commit": commit, "steps": taken},
+                                      indent=1) + "\n")
+    except OSError as unwritable:
+        sys.exit(f"{RESULTS.relative_to(ROOT)}: {unwritable}")
+
+
+def began():
+    # @req+ GUARD-33055612@uuTqxLEd8j-N p2x43i
+    try:
+        RESULTS.unlink(missing_ok=True)
+    except OSError as unremovable:
+        sys.exit(f"{RESULTS.relative_to(ROOT)}: {unremovable}")
+    # @req- p2x43i
+    # @req+ GUARD-11968908@ySIuLN-Lfbhf bhzdek
+    head = run("git rev-parse HEAD", {})
+    if head.returncode:
+        sys.exit("cannot name the commit the gates run on: "
+                 + (head.stderr.strip()
+                    or f"git rev-parse exited {head.returncode}"))
+    return head.stdout.strip()
+    # @req- bhzdek
 
 
 # @req> GUARD-10822746@5q3_dsWRmBCD ptxves
@@ -158,6 +192,9 @@ def report(state, name, note):
 # @req> GUARD-31362751@_U8NAPJBxtsf nqlfvv
 # @req> GUARD-15686102@QkQ-CEAbWBgS v3mvrz
 def main(argv=None):
+    # @req> GUARD-33055612@uuTqxLEd8j-N jbo5ql
+    # @req> GUARD-11968908@ySIuLN-Lfbhf urw6as
+    commit = began()
     parsed = argparse.ArgumentParser()
     parsed.add_argument("--base", default="main", metavar="REF")
     parsed.add_argument("--event", default="pull_request", metavar="NAME")
@@ -175,7 +212,7 @@ def main(argv=None):
     context.update(found)
 
     counts = {PASS: 0, FAIL: 0, SKIP: 0}
-    failures = []
+    failures, taken = [], []
     print(f"{WORKFLOW.relative_to(ROOT)} and {GATES.relative_to(ROOT)}: "
           f"base={args.base} event={args.event}")
     changed = {key.rsplit(".", 1)[-1] for key, value in found.items()
@@ -187,30 +224,30 @@ def main(argv=None):
     # @req- 5xmujr
 
     for job, step in steps_of(doc) + steps_of(gates):
-        name = step.get("name") or step.get("id") or "unnamed"
+        name = str(step.get("name") or step.get("id") or "unnamed")
         if step.get("id") == "touched":
             counts[PASS] += 1
-            report(PASS, name, "ran first, to decide what CI would run")
+            report(taken, PASS,name, "ran first, to decide what CI would run")
             continue
         if step.get("if") is not None:
             holds, why = condition_holds(step["if"], context)
             if holds is None:
                 counts[SKIP] += 1
-                report(SKIP, name, why)
+                report(taken, SKIP,name, why)
                 continue
             if not holds:
                 counts[SKIP] += 1
-                report(SKIP, name, "CI would not run this step for this tree")
+                report(taken, SKIP,name, "CI would not run this step for this tree")
                 continue
         settings, unresolved = environment(step, context)
         if unresolved:
             counts[SKIP] += 1
-            report(SKIP, name,
+            report(taken, SKIP,name,
                    f"env names {', '.join(sorted(set(unresolved)))}")
             continue
         if PROVISIONS.search(step["run"]):
             counts[SKIP] += 1
-            report(SKIP, name, "provisions the environment")
+            report(taken, SKIP,name, "provisions the environment")
             continue
         settings.setdefault("GITHUB_EVENT_NAME", context["github.event_name"])
         # @req+ GUARD-29439031@Yrqmt10udLze e2sjnw
@@ -220,16 +257,16 @@ def main(argv=None):
         if done.returncode == NOT_FOUND:
             counts[SKIP] += 1
             absent = MISSING.search(done.stderr or "")
-            report(SKIP, name, f"not installed here: {absent.group(1)}"
+            report(taken, SKIP,name, f"not installed here: {absent.group(1)}"
                    if absent else "a command it runs is not installed here")
             continue
         if done.returncode != 0:
             counts[FAIL] += 1
-            report(FAIL, name, f"exit {done.returncode}")
+            report(taken, FAIL,name, f"exit {done.returncode}")
             failures.append((name, done))
             continue
         counts[PASS] += 1
-        report(PASS, name, "")
+        report(taken, PASS,name, "")
 
     for name, done in failures:
         print(f"\n=== {name} ===")
@@ -237,6 +274,8 @@ def main(argv=None):
         for line in body.strip().splitlines()[-25:]:
             print(f"  {line}")
 
+    # @req> GUARD-11968908@ySIuLN-Lfbhf 2ckeew
+    record(commit, taken)
     print(f"\n{counts[PASS]} passed, {counts[FAIL]} failed, "
           f"{counts[SKIP]} skipped")
     if counts[PASS] + counts[FAIL] < 2:
