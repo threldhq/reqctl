@@ -1,18 +1,26 @@
 acceptance_criteria: []
 assessed:
-  REQ-18193596: rq6WSvU_zslegOU4ZxXvos_XwjLXzK_9HCkr_ESjKck
+  REQ-18193596: oSjMcEZMnBK6AUt5v2NbgYhrinhVNs4VX3vERw45Qpw
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
-  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 priority: medium
 relations:
   REQ-18193596: constrains
 status: approved
 text: The product shall hold in the prompt of a [reading agent](reading_agent) no
-  part of the corpus or of the [code base](code_base) other than the statement and
-  acceptance criteria of the [item](item) the [reading agent](reading_agent) is spawned
-  for and the code that the [statement citations](statement_citation) of the [item](item)
-  touched by the branch cover.
+  part of the corpus or of the [code base](code_base) other than the text, acceptance
+  criteria, value and [entries](entry) that reqctl context prints for the [item](item)
+  the [reading agent](reading_agent) is spawned for, the value of each parameter and
+  [data item](data_item) and the definition of each term that reqctl context prints
+  as named by the [item](item), the code that the [citation digest](citation_digest)
+  of each [statement citation](statement_citation) of the [item](item) touched by
+  the branch takes in, and each file that a [whole-file citation](whole_file_citation)
+  of the [item](item) touched by the branch holds.
 type: functional
 verification: inspection

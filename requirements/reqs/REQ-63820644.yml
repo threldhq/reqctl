@@ -6,7 +6,7 @@ assessed:
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
   pre_pr_agents: 1FK3U3Z5R4oXedjNUmI9LPmg-bcguIwHUlhZOAt_140
   pre_pr_agents.reading: pDWnDkmOc8VF0MpAjy9YqVNw5UJjWnyYZZzDvH_IzDI
-  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 priority: medium
 relations:
   REQ-38288492: depends_on

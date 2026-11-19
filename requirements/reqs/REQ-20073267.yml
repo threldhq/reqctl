@@ -2,7 +2,7 @@ acceptance_criteria: []
 assessed:
   REQ-85663008: aQdSXq7ibn2jD5mrfsMetjguAtjvAWKCwL-K8R9ZCXI
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
-  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 priority: medium
 relations:
   REQ-85663008: depends_on

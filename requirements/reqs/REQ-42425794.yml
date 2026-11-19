@@ -8,10 +8,10 @@ acceptance_criteria:
   then: the acceptance counts for the [item](item)
   when: the product is asked to record a pass
 assessed:
-  REQ-18193596: rq6WSvU_zslegOU4ZxXvos_XwjLXzK_9HCkr_ESjKck
+  REQ-18193596: oSjMcEZMnBK6AUt5v2NbgYhrinhVNs4VX3vERw45Qpw
   REQ-56883985: x2Y2ChQ8_UD8feuVNyaIkjnyDEwGPm-qV023q_oCVJ4
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
-  reading_agent: VGxHAtI37b7qgtwr5LlhDQQ-kYaGgzvsUR5paflKxYs
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 priority: medium
 relations:
   REQ-18193596: depends_on
