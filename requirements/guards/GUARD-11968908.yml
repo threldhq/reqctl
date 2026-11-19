@@ -1,4 +1,8 @@
-acceptance_criteria: []
+acceptance_criteria:
+- given: a commit made while .github/verify.py takes its steps
+  then: the [gate results file](gate_results_file) names the commit HEAD named when
+    .github/verify.py started
+  when: .github/verify.py has taken every step
 assessed:
   GUARD-10822746: 5q3_dsWRmBCDseEFPF2ksbl_95o5hULwFCkqFtokhl4
   GUARD-20035007: EUUCqO_GisrKWrpC8a5u5yxPfKLv-qOQ6qnYKEFYu2s
@@ -8,5 +12,6 @@ relations:
   GUARD-20035007: depends_on
 status: approved
 text: When .github/verify.py has taken every step, the build shall write a [gate results
-  file](gate_results_file) naming the commit HEAD names and stating of each step whether
-  the step passed, failed or was skipped, with the reason for a skip.
+  file](gate_results_file) naming the commit HEAD named when .github/verify.py started
+  and stating of each step whether the step passed, failed or was skipped, with the
+  reason for a skip.
