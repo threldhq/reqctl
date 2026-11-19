@@ -9,6 +9,8 @@ assessed:
   gate_step_outcomes: Kr47bubIWdN2dJ-XA5ND_feFflM6lhcWrb8Np0mbeEg
   gate_step_outcomes.*: tjSZIBsUZ0mBKVCXVd5ziVqoGSJLcZ5CfRbHOrpHtTw
   gate_step_outcomes.skipped: BlGIZKMC9A9ALInTWDhqXMkaJ_kwo8y1BWS6efXMhRc
+citations:
+  5t5s4n: VYZNpWZpPjoAbBd6TMdbfrceKoikGqLNap3GY4qPbkM
 priority: medium
 relations:
   REQ-83330302: depends_on

@@ -16,6 +16,9 @@ acceptance_criteria:
 assessed:
   REQ-26348048: aTcCvMjFCdmROvnFFxplTuNkuqHfRzWmRqxROjyu3l0
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
+citations:
+  ght24q: j8ia2IaSZw_OgFZokcrrwo9eQGywxRE-nIJDc7-0Rt8
+  oglnda: 3lBlC2nyLqjqSPQHTOv6v5BAbfrb9Svbdf_tio-MvzQ
 priority: medium
 relations:
   REQ-26348048: depends_on
