@@ -7,7 +7,7 @@ acceptance_criteria:
   then: the build does not refuse it on that ground
   when: the build checks it
 assessed:
-  GUARD-11968908: l1eiy9jkd7MXxGOrCk0Di5GWQ7V1m7hQfTaAmy3uYJU
+  GUARD-11968908: ySIuLN-LfbhfpVUIIBK79LtUefkUeEuBFkOcsdeBI-Q
   GUARD-88726011: me5bzLGdPzERHp6-dJfh7_a5z7-o2HgpTL6UP293RTk
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
 relations:
