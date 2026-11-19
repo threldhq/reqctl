@@ -22,6 +22,9 @@ entries:
   pre_pr_skill:
     paths:
     - skills/pre-pr/
+  reading_agent:
+    paths:
+    - agents/reading.md
   recall_agent:
     paths:
     - agents/recall.md
