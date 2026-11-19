@@ -127,9 +127,11 @@ Spawn one `reqctl:reading` agent for each item it names as needing a reading,
 with the text of the prompt file it names as the whole prompt, unchanged.
 <!-- @req- vyfku6 -->
 
-<!-- @req> REQ-63820644@JOlGQYMihI_j suncsf -->
-<!-- @req> pre_pr_agents.reading@O0Qk99QMNGY1 kpsrs2 -->
-Run each reading agent on `claude-sonnet-5-5` at high effort.
+<!-- @req+ REQ-63820644@JOlGQYMihI_j wac5fi -->
+<!-- @req> pre_pr_agents.reading@O0Qk99QMNGY1 j7nvyc -->
+Run each reading agent at `high` effort
+on `claude-sonnet-5-5`.
+<!-- @req- wac5fi -->
 
 <!-- @req+ REQ-18882967@W34Ole45XgJE hutvpr -->
 Run `python3 ${CLAUDE_SKILL_DIR}/reading.py take`: it takes each reading

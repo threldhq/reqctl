@@ -16,13 +16,11 @@ the code against the item's text and each of its acceptance criteria. Judge
 from what the prompt holds and nothing else.
 <!-- @req- t4urgb -->
 
-<!-- @req+ reading_verdicts@wJS-OszXMr_Q k6wb5w -->
-<!-- @req+ REQ-18882967@W34Ole45XgJE ejy7ou -->
-Answer `satisfied` where the code satisfies the item's text and every
-acceptance criterion, `not_satisfied` where it fails the text or a criterion,
-and `cannot_tell` where the code does not settle it.
-<!-- @req- ejy7ou -->
-<!-- @req- k6wb5w -->
+<!-- @req+ REQ-18882967@W34Ole45XgJE doz25v -->
+Answer with the one verdict your prompt lists that fits: the code satisfies
+the item's text and every acceptance criterion, it fails the text or a
+criterion, or it does not settle which.
+<!-- @req- doz25v -->
 
 <!-- @req> REQ-18882967@W34Ole45XgJE msj3nx -->
 You write no file other than the one your prompt names.

@@ -10,8 +10,8 @@ from reqctl.reach import Reach
 
 from reqctl import baseline, cite, corpus
 
-# @req> reading_verdicts@wJS-OszXMr_Q dtiqoy
-VERDICTS = ("satisfied", "not_satisfied", "cannot_tell")
+# @req> reading_verdicts@wJS-OszXMr_Q 3qo4wm
+VERDICTS = {"satisfied": {}, "not_satisfied": {}, "cannot_tell": {}}
 # @req> REQ-18193596@oSjMcEZMnBK6 6rm73a
 OWN = re.compile(r"(text|acceptance criteria|value|entries)\s{2,}")
 # @req> REQ-18193596@oSjMcEZMnBK6 4zf45f
@@ -110,7 +110,7 @@ def records(root):
 # @req> REQ-85663008@aQdSXq7ibn2j neu5tj
 def standing(held, text):
     read = held.get(corpus.digest(text))
-    return read if isinstance(read, dict) and read.get("verdict") == VERDICTS[0] else None
+    return read if isinstance(read, dict) and read.get("verdict") == next(iter(VERDICTS)) else None
 
 
 # @req> REQ-18882967@W34Ole45XgJE 7xdgt7
