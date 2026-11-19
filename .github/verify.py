@@ -22,8 +22,8 @@ NOT_FOUND = 127
 MISSING = re.compile(r"([\w./-]+): command not found")
 
 PASS, FAIL, SKIP = "pass", "FAIL", "skip"
-# @req> gate_step_outcomes@LMCYqqlETeXS 4fnqht
-OUTCOMES = {PASS: "passed", FAIL: "failed", SKIP: "skipped"}
+# @req> gate_step_outcomes@LMCYqqlETeXS v3i5hd
+OUTCOMES = dict(zip((PASS, FAIL, SKIP), ("passed", "failed", "skipped")))
 # @req> GUARD-63869848@V9lllz-dAIsM ykvsgh
 DIRTY = ("the working tree holds uncommitted changes, and what this touches was "
          "read from committed history only -- commit first, or pass --event "
