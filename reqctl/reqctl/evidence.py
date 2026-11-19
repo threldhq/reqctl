@@ -68,10 +68,9 @@ def read(tree, root, ref):
     # @req> REQ-29385748@NsfOmiGdMQm0 ght24q
     uncommitted = bool(cite._git(root, "status", "--porcelain",
                                  "--untracked-files=no").strip())
-    # @req> REQ-83330302@kWkBOJuy81la p6vr64
-    held = gates(root)
+    # @req> REQ-83330302@kWkBOJuy81la i7fb3m
     return {"touches": touches, "validate": valid, "trace": traces,
-            "head": head, "uncommitted": uncommitted, "gates": held}
+            "head": head, "uncommitted": uncommitted, "gates": gates(root)}
 
 
 # @req> REQ-26348048@aTcCvMjFCdmR ktj6wc
