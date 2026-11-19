@@ -3,6 +3,9 @@ assessed:
   REQ-26348048: aTcCvMjFCdmROvnFFxplTuNkuqHfRzWmRqxROjyu3l0
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
   gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+citations:
+  l7elak: nRKRer_X7FCkGK4_veM1f3nJcti7K9IfPC0jmFfPayY
+  wndpjk: eSqqOpmdW2Lpv4hDFfdkNdOQw5aPLYxWsaE3xZqA7Ow
 priority: medium
 relations:
   REQ-26348048: depends_on
