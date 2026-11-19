@@ -17,6 +17,7 @@ build/
 .claude/settings.local.json
 .claude/worktrees/
 .elucidate/
+.reqctl/
 
 .DS_Store
 Thumbs.db
