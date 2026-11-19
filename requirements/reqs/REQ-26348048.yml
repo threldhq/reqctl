@@ -1,5 +1,5 @@
 acceptance_criteria:
-- given: a branch touching no [statement citation](statement_citation)
+- given: a branch touching no [item](item)
   then: the [evidence block](evidence_block) states that no [item](item) was touched
   when: the [evidence block](evidence_block) is asked for
 - given: any branch
@@ -13,11 +13,12 @@ assessed:
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+  whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
 citations:
-  2a3l36: 2rbXxOO8_sAcNw5x7N7Ai9Nk8-SMP2j1AdawX_f6DFQ
-  56k566: WRk4EoOEyoRtxkJfwRP8SkrYI9moWcLgzlEzgi3kYvU
-  ktj6wc: pGqljdgeHgFxGzTm4FC8NjXGTz5_nBFbzJkc9i9Xc2M
-  sp63uo: 1AMHAR_c1VU5Dv0R-rR5jbtCwmF0UWOvjzdPso72v7U
+  2a3l36: VlC1mz9I8IqYejFyykJkEoZNQW9-Nf2gi_zDjo_oUb4
+  56k566: e4M9QPTeQLdv-uwMZAu2apWUUpQdzXRqEiwLDpI10Fc
+  ktj6wc: GrS3TNGcCChkD-W6MJThVnFxikfuaEM4xP23wsB32xU
+  sp63uo: 6tlo7PuXyNmrsuAT5lpCgMpHRcc94MyZKweprhnLFis
 priority: medium
 relations:
   REQ-56906371: depends_on
@@ -27,6 +28,7 @@ text: When the product is asked for the [evidence block](evidence_block) of a br
   the product shall print as markdown every requirement, guard, parameter and [data
   item](data_item) the product names as touched by the branch, each with the [statement
   citations](statement_citation) of the [item](item) that the branch added, deleted,
-  moved or changed.
+  moved or changed and, for an [item](item) touched through a [whole-file citation](whole_file_citation),
+  the file and that the file changed.
 type: functional
 verification: inspection

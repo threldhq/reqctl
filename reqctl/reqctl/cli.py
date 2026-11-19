@@ -1099,7 +1099,7 @@ def cmd_compare(args):
     return EXIT_OK
 
 
-# @req> REQ-26348048@DZtMIa67gVG9 sp63uo
+# @req> REQ-26348048@aTcCvMjFCdmR sp63uo
 def cmd_evidence(args):
     tree, root = corpus.load()
     ref = args.base or _baseline._default_ref(root)

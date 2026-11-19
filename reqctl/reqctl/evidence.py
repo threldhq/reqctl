@@ -43,7 +43,7 @@ def gates(root):
     # @req- kdw2mt
 
 
-# @req> REQ-26348048@DZtMIa67gVG9 2a3l36
+# @req> REQ-26348048@aTcCvMjFCdmR 2a3l36
 def read(tree, root, ref):
     compared = cite.compare(root, ref)
     touches = [{"uid": uid,
@@ -63,7 +63,7 @@ def read(tree, root, ref):
             "head": head, "gates": gates(root)}
 
 
-# @req> REQ-26348048@DZtMIa67gVG9 ktj6wc
+# @req> REQ-26348048@aTcCvMjFCdmR ktj6wc
 def _touched(touches):
     if not touches:
         return ["No item was touched."]
@@ -97,7 +97,7 @@ def _gated(held, head):
     return lines + [""] + [_stepped(step) for step in held["steps"]]
 
 
-# @req> REQ-26348048@DZtMIa67gVG9 56k566
+# @req> REQ-26348048@aTcCvMjFCdmR 56k566
 def block(data):
     lines = ["## Evidence", "", "### Items touched", "",
              *_touched(data["touches"]), "", "### Checks", ""]
