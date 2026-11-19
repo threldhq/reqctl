@@ -4,7 +4,7 @@ assessed:
   verify_failure_lines: G9SaYTI1_EBBGJjBYQ2MK4lcTpk8raWHQOIgNMV7a3I
   verify_failure_lines.*: TXzipdh4SEye_2CETNK-L3YAR2Hqc7FZcndo1Xx3mkA
 citations:
-  rhq23g: kNrM-qwxNPfBPEk7QrP0jReqvAThpnDzFFbyFecdEy8
+  rhq23g: M02BrSnrnfjKeOpTTBYJ2JfaVQ-Su3t2xzdn6_Xr27Y
 relations:
   GUARD-82603422: depends_on
 status: approved

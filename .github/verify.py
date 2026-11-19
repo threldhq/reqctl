@@ -192,13 +192,13 @@ def began():
 # @req> GUARD-31362751@_U8NAPJBxtsf nqlfvv
 # @req> GUARD-15686102@QkQ-CEAbWBgS v3mvrz
 def main(argv=None):
+    # @req> GUARD-33055612@uuTqxLEd8j-N jbo5ql
+    # @req> GUARD-11968908@ySIuLN-Lfbhf urw6as
+    commit = began()
     parsed = argparse.ArgumentParser()
     parsed.add_argument("--base", default="main", metavar="REF")
     parsed.add_argument("--event", default="pull_request", metavar="NAME")
     args = parsed.parse_args(argv)
-    # @req> GUARD-33055612@uuTqxLEd8j-N wzkw5c
-    # @req> GUARD-11968908@ySIuLN-Lfbhf hqzxl7
-    commit = began()
 
     doc, gates = loaded(WORKFLOW), loaded(GATES)
     context = {

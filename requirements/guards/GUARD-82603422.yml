@@ -2,7 +2,7 @@ acceptance_criteria: []
 assessed:
   GUARD-43143362: loXh8wpGI7bY8E4UOeSkC-EqaEpNqHrwIYUDzOHFiV0
 citations:
-  uelz7u: kNrM-qwxNPfBPEk7QrP0jReqvAThpnDzFFbyFecdEy8
+  uelz7u: M02BrSnrnfjKeOpTTBYJ2JfaVQ-Su3t2xzdn6_Xr27Y
 relations:
   GUARD-43143362: depends_on
 status: approved
