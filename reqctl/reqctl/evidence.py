@@ -26,18 +26,19 @@ def gates(root):
         return None
     # @req+ REQ-96243908@_JWPW5ZdbY9b kdw2mt
     # @req+ REQ-96699115@zhnZnL6or8Cz 5t5s4n
+    # @req+ REQ-65393615@LeFXBgH9P-29 qcjyta
     try:
         held = json.loads(path.read_text(encoding="utf-8"))
     except ValueError as error:
         # @req> REQ-30898926@Vu28eWaG_1mE awigjw
-        # @req> REQ-65393615@LeFXBgH9P-29 b4sowa
         raise ReqctlError(f"{GATES} does not read as JSON: {error} -- run the "
                           "gates again, or delete the file") from error
+    # @req- qcjyta
+    # @req> REQ-65393615@LeFXBgH9P-29 tnadyt
     if not (isinstance(held, dict) and isinstance(held.get("commit"), str)
             and isinstance(held.get("steps"), list)
             and all(_step(step) for step in held["steps"])):
         # @req> REQ-30898926@Vu28eWaG_1mE ert3gh
-        # @req> REQ-65393615@LeFXBgH9P-29 5r7v6a
         raise ReqctlError(f"{GATES} does not state a commit and, of each step, a "
                           f"name, an outcome of {', '.join(OUTCOMES)} and the "
                           "reason for a skip -- run the gates again, or delete "
