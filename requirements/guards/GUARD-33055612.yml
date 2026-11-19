@@ -12,6 +12,9 @@ acceptance_criteria:
 assessed:
   GUARD-11968908: ySIuLN-LfbhfpVUIIBK79LtUefkUeEuBFkOcsdeBI-Q
   gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+citations:
+  p2x43i: DSujuVhWZolfqiiJ4u2Ml3YVWJOCdGCRkQZ13SMUL4E
+  wzkw5c: LIp6yZRoAHAN_aHBYfT7Pz70nVIVuuMX71fa-5Aj0I0
 relations:
   GUARD-11968908: depends_on
 status: approved

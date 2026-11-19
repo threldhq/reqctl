@@ -3,7 +3,7 @@ assessed:
   verify_least_steps: AQElkykfg_hEkvmgMP0Ef8ZPWGn841CM79g23x5cNhA
   verify_least_steps.*: EW9yNmmM0yefndFKmJzAZ44VNdXGwUwwn2KbXERQH2w
 citations:
-  3gfiyl: 6CN2bx8ehUOECJfPVa-Sfzs17fMq9evo5CVbPWaSZ9M
+  3gfiyl: kNrM-qwxNPfBPEk7QrP0jReqvAThpnDzFFbyFecdEy8
 relations: {}
 status: approved
 text: If fewer than ${verify_least_steps} of the steps .github/verify.py takes ran
