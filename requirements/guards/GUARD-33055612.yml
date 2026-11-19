@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: no [gate results file](gate_results_file)
+  then: the build takes its steps and states no fault
+  when: .github/verify.py starts
+- given: a [gate results file](gate_results_file) an earlier run wrote, and a run
+    that stops before it has taken every step
+  then: no [gate results file](gate_results_file) is left
+  when: the run stops
+- given: a [gate results file](gate_results_file) the build cannot remove
+  then: the build stops .github/verify.py and states the fault
+  when: .github/verify.py starts
+assessed:
+  GUARD-11968908: ySIuLN-LfbhfpVUIIBK79LtUefkUeEuBFkOcsdeBI-Q
+  gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+relations:
+  GUARD-11968908: depends_on
+status: approved
+text: When .github/verify.py starts, the build shall remove the [gate results file](gate_results_file)
+  an earlier run wrote.
