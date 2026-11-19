@@ -3,6 +3,9 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
   gate_results_file: Ym_SO1QDY-HclOSMJCWgLOC0-Fjvku5z1gOUZH5DpHI
+citations:
+  i7fb3m: oWAS76DJiWIopxXFkGgci0Kg6GX7jUG60V909Bzt6IA
+  tcygas: rlMtLUidQlTG5kauHZ0bcIm64_QCIujdwbdqIJOQuP4
 priority: medium
 relations: {}
 status: approved
