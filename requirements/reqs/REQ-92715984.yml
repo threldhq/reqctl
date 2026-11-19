@@ -13,6 +13,15 @@ acceptance_criteria:
 assessed:
   REQ-18193596: oSjMcEZMnBK6AUt5v2NbgYhrinhVNs4VX3vERw45Qpw
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+citations:
+  44kmga: wQc6GkeSRyhwCL6-jKHTKE9jd7XpD12bfpaIBE5M2v4
+  4kxswd: bFmFZuqDDfGnzELwItXl8GTuXJdhg2vGnQHGp6BcXFI
+  6l7fzx: gX4q4JiurokfQs7kA34qZsLQtZtkgSk0vyUP7LuJOuQ
+  6nan42: L2p7qxL2DcDYzTs7YTehi1NyIeijVOks2RR4yzT9EZE
+  7hkm6e: LyTJMTJjLo1JTYjYhiCyskM4LTrJWc6D8K5EyUgpqM4
+  qwkkhk: 5aYhm3X0LxHrblp7W5WIZy-SuOA41Nu1JTe2XVZ4IRE
+  rkatxd: CNU3WUqeeXh_rfbh2UZOJ6Y8IDkbKLYZBRYcmN9mLm0
+  tp44ab: xViejMpqReHLJzUqXWf5yNat9lW7Akt9_3RB86GHIhE
 priority: medium
 relations:
   REQ-18193596: depends_on

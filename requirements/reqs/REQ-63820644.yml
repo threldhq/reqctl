@@ -7,6 +7,8 @@ assessed:
   pre_pr_agents: 1FK3U3Z5R4oXedjNUmI9LPmg-bcguIwHUlhZOAt_140
   pre_pr_agents.reading: pDWnDkmOc8VF0MpAjy9YqVNw5UJjWnyYZZzDvH_IzDI
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+citations:
+  wac5fi: gBMt3lh65JmuW509Ysjpbymvutya8hp021HiYSqcO2Q
 priority: medium
 relations:
   REQ-38288492: depends_on

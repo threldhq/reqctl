@@ -9,6 +9,8 @@ assessed:
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
   whole_file_citation: J5ZlUEB5u9Rx2CAHW4Sh2ecGjgZwH4RyHyVKM9CkB3Q
+citations:
+  plidzn: piiU7yybP35qf_2-vbfgPIx05zcXA_7XiVBbJI0f-ok
 priority: medium
 relations:
   REQ-18193596: constrains
