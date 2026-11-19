@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a repository with no origin to compare against
+  then: the output is one line naming the script and naming --base as the step that
+    clears the fault
+  when: the script is asked to build the prompts
+- given: a record of earlier readings that does not read as JSON
+  then: the output is one line naming the script, the record and deleting the record
+    as the step that clears the fault
+  when: the script reads the record
+- given: a defect in the script itself rather than in what it reads
+  then: the traceback stands
+  when: the fault reaches the caller
+assessed:
+  REQ-18193596: oSjMcEZMnBK6AUt5v2NbgYhrinhVNs4VX3vERw45Qpw
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+priority: medium
+relations:
+  REQ-18193596: depends_on
+status: approved
+text: If a fault in what the script that builds the prompts of the [reading agents](reading_agent)
+  reads or writes, or in the environment the script runs in, reaches the caller, then
+  the product shall state the fault as one line naming the script, the message and
+  each step that would clear the fault, rather than as a traceback.
+type: functional
+verification: inspection
