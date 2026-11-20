@@ -157,9 +157,8 @@ def standing(root, held, text):
 def digested(root, name):
     try:
         place, top = (root / name).resolve(), root.resolve()
-        if (not place.is_relative_to(top) or not place.is_file()
-                or any(corpus.skipped(top, folder) for folder in place.parents
-                       if folder.is_relative_to(top))):
+        if (not place.is_relative_to(top)
+                or place.is_relative_to(corpus.folder_for(top, "requirement").parent)):
             return None, None
         text = corpus.read_text(place)
     except (corpus.ReqctlError, OSError, ValueError):
@@ -317,8 +316,8 @@ def found(root, criteria, reply, text):
         return None
     met = reply["verdict"] == "satisfied"
     # @req+ REQ-87568267@JmZEPF8Ng69z yuhiou
-    each = reply.get("criteria") if met else []
-    if not isinstance(each, list) or len(each) != (criteria if met else 0):
+    each = reply.get("criteria", []) if met else []
+    if not isinstance(each, list) or len(each) != criteria * met:
         return None
     # @req- yuhiou
     groups = [reply.get("lines"), *each]
@@ -331,8 +330,7 @@ def found(root, criteria, reply, text):
     files = {}
     for one in [one for lines in groups for one in lines] if met else []:
         said, held = (text, None) if one["file"] == "prompt" else digested(root, one["file"])
-        if said is None or one["line"].strip() not in {
-                line.strip() for line in said.split("\n")}:
+        if said is None or one["line"].strip() not in map(str.strip, said.split("\n")):
             return None
         if held:
             files[one["file"]] = held
