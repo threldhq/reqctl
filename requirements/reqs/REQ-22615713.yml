@@ -10,7 +10,7 @@ assessed:
   dependency_manifests: QrwTZ1WIzyuqrELlkmr25otdQzURKVHZIOFtMZIIfYE
   dependency_manifests.requirements_txt: htEvbeDPo47YXu4bgmnCyUvvKby4uWAWUFYkdhw7iK4
 citations:
-  hhtisg: z4SylJ7tH6uahBZ4cBunF6AYpItR8O-A6ronIzvIp0g
+  hhtisg: 6yv4LX5jCQAAg8mS_LXOdA5ZyFr2hUnJ4t-yvCF3AMQ
 priority: medium
 relations:
   REQ-22906462: constrains

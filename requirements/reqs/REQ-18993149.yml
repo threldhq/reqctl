@@ -16,8 +16,8 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  s5nw3l: FttCjjtiauBQ7l1oNZjtEaEK0Ejuqgx1fVqCkiINbWQ
-  yxze4j: pbFSvAGZuNjYqqEOBXbHzznRJ5-yWH7TL3WMrfWTUFo
+  s5nw3l: rpfmGyMXDeCf290kBdQLxEqUmD6bHViA_pyovgGxUOo
+  yxze4j: rkMb4Ye43SAq2PCedajJvGFl44DhONC7SnO65rlZ3So
 priority: medium
 relations:
   REQ-24481048: depends_on

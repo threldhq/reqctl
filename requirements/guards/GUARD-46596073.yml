@@ -11,11 +11,11 @@ acceptance_criteria:
 assessed: {}
 citations:
   2ebkbc: _LsogYhpcE9JSRGZrYMqmMI54XitMta5w8lrY8th4CA
-  bgj4ii: ge5-Aye-MrkhvQL1Fw_S6qZx0Z9-isRfH8QJg0dGOiE
+  bgj4ii: eGoEMS-tfcDPK-Wu5SzEBlNKHAPu2EewhnPu4KIFSdo
   gfzndj: 5Mk8yZ9GW1X-L3ePUN6IaFy2g4dLghQDHm70L43f_Ic
   hcbzdh: XQCWklACB_RjTE9ndp23CFkRYA3dzMcx4B83uhkqusQ
-  vdkcgm: _vtMj7L7OE1954n-TF6ZjMCGWDjnqvPaKzzIHV1UQqQ
-  yywv5u: 2I2mQPSsk7-qBhbT1RbjX2ipBBM4VhyPKMymxrIejvQ
+  vdkcgm: kwrsqKSbcXpFEEFqlzI4355OMkYzwe6upyMAFGHbH28
+  yywv5u: c6_-WCG9Y5M17P3rqwA6jT0h-GO_1Zkk8pYi8XkLHk4
 relations: {}
 status: approved
 text: If a rules file under .claude/rules states no path patterns in the frontmatter

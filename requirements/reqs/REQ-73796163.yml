@@ -11,8 +11,8 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
-  bdp26a: 0EJza-fCDA9roybb1aGTPyxzKNK1P4t8eWS5HWGNZeM
-  x43h3h: 2cV9OZ1vEGJutnHZeG5eB56WleKuhTgu4Szg-qf4RWs
+  bdp26a: xJY7Uh8wlQQ9B4RjLeKu3SYPJZcuWcJAQRwzm5qL1hQ
+  x43h3h: tEkDgEl27E-gghiKvBThztW2iW10MkWNlnarLMPDXGw
 priority: medium
 relations:
   REQ-11930677: derives_from

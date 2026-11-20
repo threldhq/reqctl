@@ -12,8 +12,8 @@ assessed:
   linted_paths.*: Og6DV_h-N5BWy7agNDjGSWECTCOyPvpQNv_IMFHSpj8
 citations:
   464eon: cupeB9uEW-Dls8ODTHXB1rf23EOpjXcKsQA0EZb-lDc
-  c53mga: OD0QV01dR3EpRKZZTIV6YFq--4NdM7gUhKcvpN4mZyM
-  riza3g: LRdWRO5vQE5tGvm0E4We5HoNNEElB4vKhF8cqnBzcQc
+  c53mga: kHSWn5fXp7o3h2FT91MvgKOZdnzIHO-CY0g9rJTPKWY
+  riza3g: 0aYoNML1GBo6XD8A0WpK8e4ptSCwsjDtOLaeESRNkg4
 relations: {}
 status: approved
 text: If ruff or mypy, run under the configuration the repository states for it, reports
@@ -21,7 +21,7 @@ text: If ruff or mypy, run under the configuration the repository states for it,
   then the build shall refuse the change.
 whole_file_citations:
   reqctl/pyproject.toml:
-    digest: giHB-i_m6U7Llyk2N6d8_og39ZhPb5Mz726EPTlEgwI
+    digest: lsOlHuNjsfsD8HexRvFmf_xhQ_h4dZZt7rO0jm_kJ7o
     pinned: u605TKfh4fwm
   ruff.toml:
     digest: -cvigZ1Q6pkVjyhHuKuzKWH4toKhcAQBpB9db2dYouA

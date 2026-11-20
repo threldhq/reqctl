@@ -44,7 +44,7 @@ def _bound(node):
     return []
 
 
-# @req> REQ-45330509@y34lW04HzVzy u54ghq
+# @req> REQ-45330509@Y50_uyNNrnLT u54ghq
 def _declarations(root):
     table = {}
     for outer in root.named_children:

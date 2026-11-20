@@ -18,8 +18,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  g2x6cn: 7csirnFmwRiRelpq1inzYvhB9irHei6IHTMwL1sVJdU
-  lds6u4: eVZbO7I0iXMouiK4NUKGWeWx9OpYOCBu_NNZNgjcdGE
+  g2x6cn: cIKtaDuslDfOHWFEhA8esx9pIWvP4QEYoREmeOMnbHY
+  lds6u4: IaaW0YY4V06XnH7jyeh71xchnJx-0VALzsCxAk231Uw
 priority: medium
 relations:
   REQ-12235023: derives_from

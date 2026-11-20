@@ -11,7 +11,7 @@ assessed:
   package_registries: cqwwetP02B2u1vyS0feKR5-mjFZhcF3q_fiXYAeLJN4
   package_registries.*: 6InvlWw_kg94PQrPyZ9-IDm3azUQuBW41jgKMglSV4E
 citations:
-  u7j5ul: RlbRWZo-1bia1Irn-OQ_jndnYH7U7VRFPB1mLBh17Jc
+  u7j5ul: 50Uzg48R9PCUIdJPSiLdZWHvgkCVouaVTfBrrdHB_qA
 priority: medium
 relations:
   REQ-22906462: depends_on

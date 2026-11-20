@@ -1,7 +1,7 @@
 acceptance_criteria: []
 assessed: {}
 citations:
-  bhdeig: 6INXomzJV5NR70pCAoHIb7kXpE05XyZ93EajrCf4p8Y
+  bhdeig: zDuJKI-vtMEPMKkQ648756RhTJU0zxmIpi5wP3zPVFk
 relations: {}
 status: approved
 text: When .github/verify.py runs, the build shall run the step of .github/workflows/ci.yml

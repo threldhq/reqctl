@@ -116,7 +116,7 @@ on `claude-sonnet-5-5`.
 carries it; where it does not, this step has nothing to run.
 <!-- @req- w4p2zx -->
 
-<!-- @req+ REQ-18193596@oSjMcEZMnBK6 5k4yld -->
+<!-- @req+ REQ-18193596@I26mta6oEsfZ 5k4yld -->
 Run `python3 ${CLAUDE_SKILL_DIR}/reading.py build`: it writes one prompt for
 each requirement, guard, parameter and data item the branch touches, and names
 each item that needs a reading.

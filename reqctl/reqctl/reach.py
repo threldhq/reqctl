@@ -29,7 +29,7 @@ CONTINUING = re.compile(r"(?!\+\+\Z|--\Z)[-+*/%&|^!<>=?:~]+\Z|[(\[,.]\Z|\.\.\.\Z
 OPENS, CLOSES = "{([", "})]"
 BINDINGS = ("const", "let", "var")
 
-# @req+ REQ-59827868@eeHZvhZPFhD3 4pmkcf
+# @req+ REQ-59827868@VUQQ5OsZyU_4 4pmkcf
 DEFINED = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
 ASSIGNED = (ast.Assign, ast.AnnAssign)
 NESTED = (ast.If, ast.Try, ast.TryStar, ast.With, ast.AsyncWith, ast.For, ast.AsyncFor,
@@ -83,7 +83,7 @@ def _span(node):
 
 class Reach:
     def __init__(self, texts):
-        # @req> REQ-22608177@cdmX9Aqh6XXC 2ap6ns
+        # @req> REQ-22608177@lN59LSJksYqW 2ap6ns
         self.texts = {path.replace("\\", "/"): text for path, text in texts.items()
                       if text is not None and path.endswith((".py", *SCRIPTED))}
         packages = {posixpath.dirname(path) for path in self.texts
@@ -93,8 +93,8 @@ class Reach:
         self.tables, self.streams, self.digests = {}, {}, {}
         self.scripts, self.scopes, self.classes = {}, {}, {}
 
-    # @req> REQ-22608177@cdmX9Aqh6XXC upntcv
-    # @req> REQ-45330509@y34lW04HzVzy ad2sq3
+    # @req> REQ-22608177@lN59LSJksYqW upntcv
+    # @req> REQ-45330509@Y50_uyNNrnLT ad2sq3
     # @req> REQ-71419978@R9LaJT-ldfB9 eci2zb
     def _scripted(self, path):
         if path not in self.scripts:
@@ -125,8 +125,8 @@ class Reach:
     def _table(self, path):
         if path in self.tables:
             return self.tables[path]
-        # @req> REQ-22608177@cdmX9Aqh6XXC wgjme7
-        # @req> REQ-45330509@y34lW04HzVzy egzrhu
+        # @req> REQ-22608177@lN59LSJksYqW wgjme7
+        # @req> REQ-45330509@Y50_uyNNrnLT egzrhu
         if path.endswith(SCRIPTED):
             self.tables[path] = (_reading(path, self.texts[path]).table
                                  if path.endswith(typescript.SUFFIXES)
@@ -252,7 +252,7 @@ class Reach:
                 for line in range(span[0], span[1] + 1)}
 
     def _calls(self, path, lines):
-        # @req> REQ-22608177@cdmX9Aqh6XXC um45e2
+        # @req> REQ-22608177@lN59LSJksYqW um45e2
         # @req> REQ-71419978@R9LaJT-ldfB9 oyqqn7
         if path.endswith(SCRIPTED):
             pieces, table = self._scripted(path)[0], self._table(path)
@@ -265,7 +265,7 @@ class Reach:
                 for found in self._local(path, within, chain) or self._resolve(path, chain)]
 
     def _digest(self, key):
-        # @req> REQ-22608177@cdmX9Aqh6XXC g2mzok
+        # @req> REQ-22608177@lN59LSJksYqW g2mzok
         if key not in self.digests and key[0].endswith(SCRIPTED):
             said, remarks = self.texts[key[0]].split("\n"), self._scripted(key[0])[1]
             self.digests[key] = corpus.digest([said[n - 1].rstrip() for n in sorted(self._lines(key))

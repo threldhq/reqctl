@@ -13,14 +13,14 @@ acceptance_criteria:
 assessed: {}
 citations:
   2ffk35: Y39u9IAIplSG8i8LNy56vku0HUMWr2fBbbTxGcrfnJI
-  33d7t4: PR7rS6whxZtP_rj6nDyMYDNN5MHNEhxE708x8lrCN2A
+  33d7t4: _aRRF3NWDTmivZUJaOsckHYE1dHnJWM0bR1F6OYPGUE
   6g44ix: bWjlRqr2TNt71m4WUkCTlDlVhBeAMZvXgk8zuQ1x19E
   hfsgbs: oyiokNEw6GHZwq-qFPlm8lJgqjPOQER0a9v9IJgFqO8
   i3i2gm: sIj4sqji5AOB3iJSNSBt6m7WeuVUy2rjLVeGU5Jvn1o
   jwqg6d: VD78vZcktaSKhdlPCX59WFe7uCJ8CSNmzADjuoI5qPM
-  o7pchp: 5awQTbzzfG4sayUKWfgbQWLxTVT0D_LrDUch3YTD-UA
+  o7pchp: lRKQHWcD7kC6sxqlq2qIYaeo6Lh1rkX4iyklS6LoPWs
   sekx6w: CI3uoSdECsMw13WUqdF8_ZK8CPKOqv3lV6b5O8l9iSg
-  ywumnj: m50Xi8VMRROVHdL-IKuPKUEUDVvBoeLyJr6wd6PzlE4
+  ywumnj: VJiTuqiFRs_-RDgZ1sXDElvtNJ8dtA_4GgbKGdcmviM
 relations: {}
 status: approved
 text: If a skill shows a --value example whose value type or members the build cannot

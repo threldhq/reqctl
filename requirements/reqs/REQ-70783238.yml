@@ -4,7 +4,7 @@ acceptance_criteria:
   when: the statement is exported
 assessed: {}
 citations:
-  lxx4c3: xyGW311gPDTmmUtxRZNc7uaRAmLCqNUZNuS_kUe30bM
+  lxx4c3: gdgPlOtLPIbdtyBQdunN9vHh_ZI5U1dBON2bPDmnDvY
 priority: medium
 relations: {}
 status: approved

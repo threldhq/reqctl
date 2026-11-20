@@ -4,7 +4,7 @@ assessed:
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
 citations:
   msqtrb: rqVcm5LkpN4PjraC9P-7sqzBMhkr1x6JIWa97HFsU6g
-  smylog: NuomMHNqrVKMsbcPA8K3lpCDKWDFYJakCo6wRazQ38U
+  smylog: ICRVg5HUy2B8a6mtHQscI8AsnIFch6oqsKuLjvZye4k
 priority: medium
 relations:
   REQ-26348048: depends_on

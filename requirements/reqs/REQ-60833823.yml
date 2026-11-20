@@ -2,8 +2,8 @@ acceptance_criteria: []
 assessed:
   REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
 citations:
-  afaqnn: 6ao2utqr3hbZ3Lhte925uYsacZ7MPMn9Qx_yehYeQ6I
-  n7el7s: 7Lq_VxbSIOgl2_G5lgOHcQUJFbF8cSuenOXEe2S3A3I
+  afaqnn: m7AH_5u1p1tUgz51H5lPkUXXPkYMqVvZ6C0HOHW83kM
+  n7el7s: ZDcYHKgA-cbiB8fsrD_AHXZTZg2kSyyMTXbtepWgNO8
 priority: medium
 relations:
   REQ-15770866: constrains
@@ -15,7 +15,7 @@ type: functional
 verification: inspection
 whole_file_citations:
   reqctl/pyproject.toml:
-    digest: giHB-i_m6U7Llyk2N6d8_og39ZhPb5Mz726EPTlEgwI
+    digest: lsOlHuNjsfsD8HexRvFmf_xhQ_h4dZZt7rO0jm_kJ7o
     pinned: pdX0Xr4bVNDt
   reqctl/requirements-lock.txt:
     digest: aFrK6SeiIkmsFmwst1oB4nNxfqgIdeEbc_8xiXpWIok

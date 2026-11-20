@@ -13,7 +13,7 @@ acceptance_criteria:
 assessed:
   REQ-24481048: ZhiYUpKwnPlAiZ0tuAecXcjEtmD3bvQNRMr-xBrJUVU
 citations:
-  5n63fi: RrTe0lpHvmwDwsbTZuxYXIS4zAHev0_kuyC-m1G6oP0
+  5n63fi: xGfOAvluXVixg4V9oklB0uddnQBkP6aJTlhk6uY7UAU
 priority: medium
 relations:
   REQ-24481048: constrains

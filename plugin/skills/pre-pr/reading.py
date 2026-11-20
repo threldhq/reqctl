@@ -12,15 +12,15 @@ from reqctl import baseline, cite, corpus
 
 # @req> reading_verdicts@wJS-OszXMr_Q 3qo4wm
 VERDICTS: dict[str, dict] = {"satisfied": {}, "not_satisfied": {}, "cannot_tell": {}}
-# @req> REQ-18193596@oSjMcEZMnBK6 6rm73a
+# @req> REQ-18193596@I26mta6oEsfZ 6rm73a
 OWN = re.compile(r"(text|acceptance criteria|value|entries)\s{2,}")
-# @req> REQ-18193596@oSjMcEZMnBK6 4zf45f
+# @req> REQ-18193596@I26mta6oEsfZ 4zf45f
 NAMED = ("parameters", "concepts")
 FOLDER = Path(".reqctl") / "readings"
 RECORD = Path(".reqctl") / "readings.json"
 
 
-# @req> REQ-18193596@oSjMcEZMnBK6 lcqfuw
+# @req> REQ-18193596@I26mta6oEsfZ lcqfuw
 def printed(uid):
     try:
         done = subprocess.run(["reqctl", "context", uid], capture_output=True,
@@ -36,7 +36,7 @@ def printed(uid):
     return done.stdout
 
 
-# @req> REQ-18193596@oSjMcEZMnBK6 v5do75
+# @req> REQ-18193596@I26mta6oEsfZ v5do75
 def stated(uid):
     head, *blocks = printed(uid).split("\n\n")
     lines = [line for line in head.split("\n") if OWN.match(line)]
@@ -52,7 +52,7 @@ def stated(uid):
     return lines
 
 
-# @req> REQ-18193596@oSjMcEZMnBK6 x2ryeq
+# @req> REQ-18193596@I26mta6oEsfZ x2ryeq
 def taken(uid, citations, reach):
     wanted = {}
     for held in citations.values():
@@ -67,7 +67,7 @@ def taken(uid, citations, reach):
             for path, lines in wanted.items()}
 
 
-# @req> REQ-18193596@oSjMcEZMnBK6 su5ahl
+# @req> REQ-18193596@I26mta6oEsfZ su5ahl
 def code(root, uid, files, citations, reach, texts):
     lines = []
     for path, numbers in sorted(taken(uid, citations, reach).items()):
@@ -87,8 +87,8 @@ def code(root, uid, files, citations, reach, texts):
     return lines
 
 
-# @req> REQ-18193596@oSjMcEZMnBK6 xdxo6t
-# @req> REQ-18762283@02ASyELj83Tv plidzn
+# @req> REQ-18193596@I26mta6oEsfZ xdxo6t
+# @req> REQ-18762283@KHBhiDTwKW9T plidzn
 def prompt(root, uid, files, citations, reach, texts):
     return "\n".join([
         f"ITEM {uid}", *stated(uid), "", "CODE",
@@ -129,7 +129,7 @@ def shown(uid, read):
 
 
 # @req> REQ-85663008@aQdSXq7ibn2j ajo3rv
-# @req> REQ-18193596@oSjMcEZMnBK6 dt63ke
+# @req> REQ-18193596@I26mta6oEsfZ dt63ke
 def build(args):
     store, root = corpus.load()
     ref = args.base or baseline._default_ref(root)
@@ -199,7 +199,7 @@ def take(_):
     return 0
 
 
-# @req> REQ-18193596@oSjMcEZMnBK6 rswytl
+# @req> REQ-18193596@I26mta6oEsfZ rswytl
 def main(argv=None):
     parsed = argparse.ArgumentParser()
     steps = parsed.add_subparsers(dest="step", required=True)

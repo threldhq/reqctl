@@ -20,7 +20,7 @@ assessed:
   review_limits.fetch_attempts: vQVDgFl6yEbwUF34Kt3z0Jao6cGWkrzkRuqWslvg3ig
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
-  m4qxzr: U-jHaUW1ETtJQWKRASdASDjAJfwPAP-99_KVQsW17bg
+  m4qxzr: gz0S8uJKxArWnPuRv9CXEB_dgLJCLN03lVTA1qNz9Z4
 priority: medium
 relations:
   REQ-16875926: constrains
