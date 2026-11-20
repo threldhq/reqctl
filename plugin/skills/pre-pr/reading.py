@@ -112,7 +112,7 @@ def code(root, uid, files, citations, reach, texts):
 def prompt(root, uid, files, citations, reach, texts):
     return "\n".join([
         f"ITEM {uid}", *stated(uid), "", "CODE",
-        *code(root, uid, files, citations, reach, texts), "",
+        *code(root, uid, files, citations, reach, texts), "", "RETURN",
         (f"Write your reading to {(FOLDER / uid).as_posix()}.json as one JSON "
          f"object holding verdict, one of {', '.join(VERDICTS)}, and lines, a "
          "list of the lines of the code above that show the verdict, each "
