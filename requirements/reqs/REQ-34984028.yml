@@ -26,6 +26,11 @@ acceptance_criteria:
     and another part reads
   then: the [statement citation](statement_citation) covers the code stating the [entries](entry)
   when: a skill of the plugin cites the [data item](data_item)
+- given: a Python function that the code deciding a clause of an [item](item) names
+    only through another function
+  then: no [statement citation](statement_citation) of the [item](item) is written
+    over the function on that ground
+  when: a skill of the plugin cites the [item](item)
 assessed:
   REQ-17608335: ejFjhGoCg5c7xx31BmDLrVdrs9rLBqVkDgiXkKKHH7c
   REQ-22625894: pLUy8k7jMwKkug4noDETeHGqixCrlJlfPHGxuzkXUc0
@@ -64,7 +69,7 @@ text: When a skill of the product's Claude Code plugin writes a [statement citat
   the product shall make the [statement citation](statement_citation) cover the code
   that decides a clause or acceptance criterion of the [item](item) it names, or,
   for a parameter, [data item](data_item) or [entry](entry), the code stating its
-  value, together with each line of code that code names, directly or through what
-  those lines name, which no [citation digest](citation_digest) takes in.
+  value, together with each line of code that code names directly which no [citation
+  digest](citation_digest) takes in.
 type: functional
 verification: inspection

@@ -1,33 +1,53 @@
 acceptance_criteria:
-- given: a verdict of not satisfied
+- given: a [reading agent](reading_agent)'s verdict of not satisfied
   then: the session asks the owner whether to change the code, revise the [item](item)
     or accept the code as satisfying it, and writes no pull request body before the
     owner answers
   when: the pass reaches the verdict
-- given: a verdict of cannot tell
+- given: a [searching reader](searching_reader)'s verdict of not satisfied or cannot
+    tell
   then: the session asks the owner the same question
   when: the pass reaches the verdict
-- given: a [reading agent](reading_agent) whose return states none of the three verdicts
+- given: a [searching reader](searching_reader) that returns no verdict for its [item](item)
+  then: the session asks the owner the same question
+  when: the pass reaches the [item](item)
+- given: a [reading agent](reading_agent)'s verdict of cannot tell, or a [reading
+    agent](reading_agent) that returns no verdict
+  then: the session asks the owner nothing about the [item](item) before the [searching
+    reader](searching_reader) of the [item](item) returns
+  when: the pass reaches the [item](item)
+- given: a [searching reader](searching_reader)'s verdict of satisfied for an [item](item)
+    whose [reading agent](reading_agent) returned cannot tell
+  then: the session asks the owner nothing about the [item](item)
+  when: the pass reaches the verdict
+- given: a satisfied return of a [searching reader](searching_reader) for which the
+    product records no verdict
   then: the session asks the owner the same question
   when: the pass reaches the [item](item)
 assessed:
   REQ-16376491: pLH6qM9Dx4whD6nFVGa7Avgh7rUd4lXKVM2K8PwlIYA
+  REQ-18486982: ovAUIy1DmRVvn6lbZorbECuNxyFkOkl2-JZXBS0fedg
   REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
+  REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
-  reading_verdicts: 9but5MsHrC5UEtZD9F-Hy3xW5M3OLysWZeVs0Yh3CnM
+  reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
   reading_verdicts.not_satisfied: hJrfvOGIh4krB2NsmrG9_2Vuj6Udn5FgswvfqbXu_rk
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
 priority: medium
 relations:
   REQ-16376491: derives_from
+  REQ-18486982: depends_on
   REQ-18882967: depends_on
+  REQ-77379732: depends_on
 status: approved
-text: If the verdict of a [reading agent](reading_agent) for an [item](item) is ${reading_verdicts.not_satisfied}
-  or ${reading_verdicts.cannot_tell}, or the [reading agent](reading_agent) returns
-  no verdict for the [item](item), then the product shall raise as a [question for
-  the owner](question_for_the_owner) whether to change the code, to revise the [item](item)
-  or to accept the code as satisfying the [item](item).
+text: If the verdict of a [reading agent](reading_agent) for an [item](item) is ${reading_verdicts.not_satisfied},
+  or the verdict of a [searching reader](searching_reader) for an [item](item) is
+  ${reading_verdicts.not_satisfied} or ${reading_verdicts.cannot_tell}, or a [searching
+  reader](searching_reader) returns no verdict for an [item](item), then the product
+  shall raise as a [question for the owner](question_for_the_owner) whether to change
+  the code, to revise the [item](item) or to accept the code as satisfying the [item](item).
 type: functional
 verification: inspection

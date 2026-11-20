@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a Python function that cited code reaches past the first level of a [citation
+    digest](citation_digest) and that no [item](item) states the behaviour of
+  then: the session asks the owner for an [item](item) stating what the function does,
+    and writes no [statement citation](statement_citation) over the function before
+    the owner answers
+  when: a skill of the plugin comes to cite the function
+assessed:
+  REQ-12222066: fbTfN4X4xFUsT0UJ-iirP903TKdzi0sUW3za8cPioMc
+  REQ-31745207: 1VD3x72ROTWRvQjp6IOOhxFiw8KQkWwoOA4dVmItEcM
+  REQ-34984028: _psCZf8dpJ_AXYsI_kVBsIxMgTQ0gyqId2CIk5Q1lzE
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-12222066: derives_from
+  REQ-31745207: constrains
+  REQ-34984028: constrains
+status: approved
+text: If no [item](item) states what code does that a skill of the product's Claude
+  Code plugin is to cite, and the code that decides a clause or acceptance criterion
+  of an [item](item) names that code only through what other code names, then the
+  product shall raise as a [question for the owner](question_for_the_owner) a request
+  for an [item](item) that states what the code does.
+type: functional
+verification: inspection

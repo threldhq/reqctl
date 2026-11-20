@@ -1,0 +1,23 @@
+acceptance_criteria: []
+assessed:
+  REQ-13095275: W9v3hH4NZDqhKmEKmb328Ps6jCLsaNNJZFLFAK914M0
+  REQ-17805226: pdUrFTsMz_Wx8g007rA0SFw98Q_IT9pVxffim8JMp28
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
+  REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  reading_workflow: hJwbJvkKMjGOf7_OEEHQKJ5gAcyyNyQ3uaaNGfHeeGg
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+priority: medium
+relations:
+  REQ-13095275: depends_on
+  REQ-17805226: derives_from
+  REQ-38288492: depends_on
+  REQ-77379732: depends_on
+status: approved
+text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
+  session spawns the [searching readers](searching_reader) of a pass by running each
+  [reading workflow](reading_workflow) that the script building the prompts wrote
+  for the [searching readers](searching_reader).
+type: functional
+verification: inspection

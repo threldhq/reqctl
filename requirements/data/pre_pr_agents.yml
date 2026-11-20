@@ -2,6 +2,7 @@ assessed:
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
 citations:
   rvwyy7: Hb5U63jZfv60PlMHClmbRaaJjaZkmFm7YyQReEGiK9g
   xxldqg: B4jAgRgsRX4FfPR-K1Nxqz_d68ShgZqlcprLOekLBho
@@ -9,6 +10,11 @@ entries:
   reading:
     definition: the [reading agent](reading_agent), spawned once for each [item](item)
       the product names as touched by the branch
+    effort: high
+    model: claude-sonnet-5-5
+  searching:
+    definition: the [searching reader](searching_reader), spawned once for each [item](item)
+      whose [reading agent](reading_agent) returned cannot tell or no verdict
     effort: high
     model: claude-sonnet-5-5
   silent_failure_hunter:

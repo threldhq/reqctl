@@ -4,25 +4,37 @@ acceptance_criteria:
   then: the body states that no verdict was returned and that the owner accepted the
     code
   when: the pull request is prepared
+- given: an [item](item) whose [reading agent](reading_agent) returned cannot tell
+    and whose [searching reader](searching_reader) returned satisfied
+  then: the body states both verdicts and the lines the [searching reader](searching_reader)
+    gave for each acceptance criterion
+  when: the pull request is prepared
 assessed:
+  REQ-18486982: ovAUIy1DmRVvn6lbZorbECuNxyFkOkl2-JZXBS0fedg
   REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
   REQ-42425794: haYtnGYRwgcGIOcz9cWoqnb7BRcjEo38OTliA7RDsXM
   REQ-51001407: CLFQHU6-XTzdaf6D58L1bXwp6PCYgfrsInvCbsS96OI
   REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
+  REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
 priority: medium
 relations:
+  REQ-18486982: depends_on
   REQ-18882967: depends_on
   REQ-42425794: depends_on
   REQ-51001407: derives_from
   REQ-70581878: depends_on
+  REQ-77379732: depends_on
 status: approved
 text: When the pre-pr skill prepares a pull request, the product shall state in the
   pull request body, for every requirement, guard, parameter and [data item](data_item)
   the product names as touched by the branch, the verdict of the [reading agent](reading_agent)
-  spawned for the [item](item) and the lines that show the verdict, and, where the
-  owner accepted the code as satisfying the [item](item), the acceptance.
+  spawned for the [item](item) and the lines that show the verdict, where a [searching
+  reader](searching_reader) was spawned for the [item](item), the verdict of the [searching
+  reader](searching_reader) and the lines that show the verdict, and, where the owner
+  accepted the code as satisfying the [item](item), the acceptance.
 type: functional
 verification: inspection
