@@ -416,12 +416,12 @@ def reported(_):
         lines += [f"  - Reading agent: {worded(read)}",
                   *(quoted(read["lines"], "    ") if read else [])]
         if "searching" in was:
-            found = was["searching"]
-            lines += [f"  - Searching reader: {worded(found)}",
-                      *(quoted(found["lines"], "    ") if found else [])]
-            for at, each in enumerate((found or {}).get("criteria") or [], 1):
+            gave = was["searching"]
+            lines += [f"  - Searching reader: {worded(gave)}",
+                      *(quoted(gave["lines"], "    ") if gave else [])]
+            for at, each in enumerate((gave or {}).get("criteria") or [], 1):
                 lines += [f"    - Acceptance criterion {at}", *quoted(each, "      ")]
-            if found and not unchanged(root, found["files"]):
+            if gave and not unchanged(root, gave.get("files")):
                 lines.append("    - A file these lines stand in changed after the "
                              "searching reader read it.")
         elif read is None or read["verdict"] == "cannot_tell":
