@@ -210,7 +210,7 @@ names none, say that none was touched.
 <!-- @req- hbi4d7 -->
 
 <!-- @req+ REQ-16376491@pLH6qM9Dx4wh zvf5ke -->
-<!-- @req+ REQ-56883985@EzC4IvKLNiB8 5wjobx -->
+<!-- @req+ REQ-56883985@EzC4IvKLNiB8 oyxth4 -->
 Where a reading agent returns not satisfied for an item, or the item's searching
 reader returns not satisfied, cannot tell or no verdict -- a satisfied reply
 that `searched` did not take is no verdict -- put a question for the owner:
@@ -218,9 +218,11 @@ change the code, revise the item, or accept the code as satisfying the item.
 Write no pull request body before the owner answers. Ask nothing about an item
 whose reading agent returned cannot tell or no verdict before its searching
 reader returns, and nothing about an item whose searching reader returned
-satisfied. Where that item is deprecated, ask nothing, and remove the citation
-with `reqctl untag ID`.
-<!-- @req- 5wjobx -->
+satisfied.
+<!-- @req- oyxth4 -->
+
+Where the item a statement citation names is deprecated, ask nothing, and
+remove the citation with `reqctl untag ID`.
 <!-- @req- zvf5ke -->
 
 <!-- @req+ REQ-42425794@haYtnGYRwgcG 6br7yh -->
