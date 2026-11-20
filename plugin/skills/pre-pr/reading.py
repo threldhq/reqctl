@@ -20,8 +20,6 @@ FOLDER = Path(".reqctl") / "readings"
 RECORD = Path(".reqctl") / "readings.json"
 # @req> pre_pr_agents.reading@O0Qk99QMNGY1 rvwyy7
 SPAWNED = {"model": "claude-sonnet-5-5", "effort": "high"}
-# @req> REQ-99520421@EA982CV9V8L5 qfcahf
-PLUGIN = Path(".claude-plugin") / "plugin.json"
 # @req+ REQ-17125120@feot1-3cXxVn km2e6r
 FITS = 524288
 SCRIPT = """export const meta = {
@@ -152,7 +150,7 @@ def shown(uid, read):
 
 # @req> REQ-99520421@EA982CV9V8L5 veennf
 def registered(name):
-    plugin = Path(__file__).resolve().parents[2] / PLUGIN
+    plugin = Path(__file__).resolve().parents[2] / ".claude-plugin" / "plugin.json"
     if not plugin.is_file():
         return name
     try:
