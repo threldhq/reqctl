@@ -11,7 +11,7 @@ acceptance_criteria:
   when: the product checks the [code base](code_base) for uncited code
 assessed:
   REQ-27097724: WuK_Hn1OEs1s_m_AQxFGudO16pcqblXg-Ue-pL1GA0A
-  REQ-27534660: OcqGUyoB-NORU6eCVbYC54QnZiOWTAQq5gWGC73tN7I
+  REQ-27534660: FbVH2NHsBzRHA-Yp2NZrY2IwioylY7Udzl2Y_wIuIbg
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M

@@ -1,0 +1,12 @@
+assessed:
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+entries:
+  reading_workflow:
+    aliases:
+    - reading workflows
+    definition: The workflow script that the script of the pre-pr skill writes for
+      a pass, through which the session spawns the [reading agents](reading_agent)
+      of the pass.
+    word: reading workflow
+kind: term
+status: approved

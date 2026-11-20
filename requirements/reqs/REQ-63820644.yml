@@ -13,7 +13,7 @@ priority: medium
 relations:
   REQ-38288492: depends_on
   REQ-85663008: depends_on
-status: approved
+status: deprecated
 text: The product shall state, in the ${plugin_components.pre_pr_skill}, that the
   session runs each [reading agent](reading_agent) on ${pre_pr_agents.reading.model}
   at ${pre_pr_agents.reading.effort} effort.

@@ -9,8 +9,9 @@ acceptance_criteria:
   then: the product reports the [citation](statement_citation) as a problem
   when: the body of that function changes and trace is run
 - given: a JavaScript [statement citation](statement_citation) over a line calling
-    a top-level function that calls a second top-level function
-  then: the product reports the [citation](statement_citation) as a problem
+    a top-level function that calls a second top-level function, which the covered
+    lines do not name
+  then: the product reports no problem for the [citation](statement_citation)
   when: the body of the second function changes and trace is run
 - given: a JavaScript [statement citation](statement_citation) over a line reading
     a top-level const binding
@@ -26,7 +27,7 @@ assessed:
   REQ-34984028: 9K2_3Vg-ud_iZNwzAUXpTSLSwmyrHa5p11K_W-D_buQ
   REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
   REQ-52925332: 8dtaEN9KH9jOCxXzVNUpq9dtMqRSzwFE4cYId13itu4
-  REQ-59827868: eeHZvhZPFhD38dvm-etVer1PZNSpdh4rgW0mFpE8Cos
+  REQ-59827868: VUQQ5OsZyU_43AoSjJv2n1x389kJMUU-CaTUOrk_ab8
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
@@ -50,7 +51,7 @@ text: Where the lines a [statement citation](statement_citation) covers are Java
   the product shall take into the [citation digest](citation_digest), as it takes
   the covered lines, each function and each const, let or var binding declared at
   the top level of the JavaScript the same file holds to which a name in those lines
-  resolves without running the code, and each one to which a name in those declarations
-  resolves in turn.
+  resolves without running the code, and no declaration that only a name in those
+  declarations resolves to.
 type: functional
 verification: inspection

@@ -4,8 +4,9 @@ acceptance_criteria:
   then: the product reports the [citation](statement_citation) as a problem
   when: the body of that function changes and trace is run
 - given: a Python [statement citation](statement_citation) over a line calling a function
-    that calls a second function of the [code base](code_base)
-  then: the product reports the [citation](statement_citation) as a problem
+    that calls a second function of the [code base](code_base), which the covered
+    lines do not name
+  then: the product reports no problem for the [citation](statement_citation)
   when: the body of the second function changes and trace is run
 - given: a Python [statement citation](statement_citation) over a line reading a module-level
     constant of the [code base](code_base)
@@ -60,6 +61,6 @@ text: Where the lines a [statement citation](statement_citation) covers are Pyth
   the product shall take into the [citation digest](citation_digest), as it takes
   the covered lines, each function, method, class and constant defined in the [code
   base](code_base) to which a name in those lines resolves without running the code,
-  and each one to which a name in those definitions resolves in turn.
+  and no definition that only a name in those definitions resolves to.
 type: functional
 verification: inspection

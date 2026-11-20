@@ -24,7 +24,7 @@ acceptance_criteria:
   when: the product checks the file for uncited code
 assessed:
   REQ-27097724: WuK_Hn1OEs1s_m_AQxFGudO16pcqblXg-Ue-pL1GA0A
-  REQ-27534660: OcqGUyoB-NORU6eCVbYC54QnZiOWTAQq5gWGC73tN7I
+  REQ-27534660: FbVH2NHsBzRHA-Yp2NZrY2IwioylY7Udzl2Y_wIuIbg
   code_statement: j1tpCse-TLQ_ixbO29Q4cvQuWufntKLn8iSJSto7Y40
   front_matter: kwaAUCiG8Bg-hk-YUtQnzrD4YhEyK2xtztmb6W_cuzQ
   multiline_comment: b-g2U6Ckv_QXfYFMRfoZt1ldH7So0CKkY9G736jL2Ms
