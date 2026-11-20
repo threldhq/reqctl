@@ -434,7 +434,7 @@ def read(root, digested=False, uid=None):
     # @req> REQ-32191310@aZkvQ6hvIwPv yjp5s6
     if digested:
         texts = dict(sources)
-        # @req> REQ-59827868@eeHZvhZPFhD3 tsczoy
+        # @req> REQ-59827868@VUQQ5OsZyU_4 tsczoy
         reach = Reach(texts)
         for citation in citations:
             citation["digest"] = digest(citation["path"], texts[citation["path"]],
@@ -889,7 +889,7 @@ def tagged(root, path, asked, exclusive=False):
         # @req> REQ-30898926@Vu28eWaG_1mE c7h3c7
         raise ReqctlError("\n".join(problems))
     # @req- zkxsxx
-    # @req+ REQ-59827868@eeHZvhZPFhD3 entyuu
+    # @req+ REQ-59827868@VUQQ5OsZyU_4 entyuu
     relative = target.resolve().relative_to(base).as_posix()
     reach = Reach({**dict(sources), relative: written})
     # @req- entyuu
@@ -911,7 +911,7 @@ def pinning(root, identities):
                           "trace UID lists the identities an item is cited by; nothing "
                           "was re-pinned")
     # @req+ REQ-64846889@TSG5uy3nM0nk wbaon5
-    # @req+ REQ-59827868@eeHZvhZPFhD3 unauut
+    # @req+ REQ-59827868@VUQQ5OsZyU_4 unauut
     reach = Reach(sources)
     return [(citation, digest(citation["path"], sources[citation["path"]], citation["lines"], reach))
             for citation in (found[identity] for identity in identities)]
@@ -1060,7 +1060,7 @@ def digest(path, text, lines, reach=None):
             held = _tokens(text, wanted)
         except (tokenize.TokenError, IndentationError, SyntaxError):
             held = None
-        # @req+ REQ-59827868@eeHZvhZPFhD3 kwj4mx
+        # @req+ REQ-59827868@VUQQ5OsZyU_4 kwj4mx
         taken = reach.taken(path, wanted) if held is not None and reach else []
         if taken:
             held = [held, taken]
@@ -1070,7 +1070,7 @@ def digest(path, text, lines, reach=None):
         split = [line.rstrip("\r\n") for line in _feed_lines(text)]
         held = [split[n - 1] for n in sorted(wanted)]
         # @req- soehrs
-        # @req+ REQ-22608177@cdmX9Aqh6XXC louba3
+        # @req+ REQ-22608177@lN59LSJksYqW louba3
         taken = reach.taken(path, wanted) if reach and Path(path).suffix in SCRIPTED else []
         if taken:
             held = [held, taken]
@@ -1197,13 +1197,13 @@ def _carried(root, commit):
         yield relative, _git(root, "show", f"{commit}:{relative}").removeprefix(BOM)
 
 
-# @req> REQ-59827868@eeHZvhZPFhD3 jwvhp4
+# @req> REQ-59827868@VUQQ5OsZyU_4 jwvhp4
 def _reached_at(root, commit):
     blobs = [line.split("\t", 1)[1] for line in
              _git(root, "ls-tree", "-r", "-z", commit).split("\0")
              if "\t" in line and line.split()[1] == "blob"]
     base = Path(root)
-    # @req> REQ-22608177@cdmX9Aqh6XXC s4aizn
+    # @req> REQ-22608177@lN59LSJksYqW s4aizn
     return {path: _git(root, "show", f"{commit}:{path}").removeprefix(BOM)
             for path in blobs if path.endswith((".py", *SCRIPTED)) and not any(
                 corpus.skipped(base, base / folder) for folder in Path(path).parents[:-1])}
@@ -1225,7 +1225,7 @@ def compare(root, ref):
     before = {c["id"]: c for c in was}
     after = {c["id"]: c for c in now}
     # @req- a5i7lc
-    # @req> REQ-59827868@eeHZvhZPFhD3 5swpuo
+    # @req> REQ-59827868@VUQQ5OsZyU_4 5swpuo
     was_reach, now_reach = Reach(_reached_at(root, commit)), Reach(dict(_sources(root)))
     rows = []
     for identity in sorted(set(before) | set(after)):

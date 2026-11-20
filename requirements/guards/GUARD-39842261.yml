@@ -10,8 +10,8 @@ acceptance_criteria:
 assessed:
   GUARD-20154572: z2_hbXJO9sHnVMQd1fo-1KELeiBgdPt32F2PD4ygZIo
 citations:
-  eu56d6: OP67UoPH53NfwFLtLZjf_OCBzh-4jId2lnmn-fRJTXU
-  lkwots: BNhY8HbaOifxoAvkcGyBTZdjpTL8jGAHfmJ2ZdRFMiY
+  eu56d6: qQucOukK-c0WucjyEl1MTUWIiw8mo4aOY2dM2JPgpnI
+  lkwots: vuE0Inon3uUBv1r9zwOJbcr205IHppGLAbH_-QjaE3s
   qko53r: txw3QGycB1dYd2jINmpDVS4sr_fkG0J7Ptfo4TV3BcU
   u4yxij: ih6eAgqDt_QVc7NOCaFvsGfjxAVGErxf6-cankcG5Cc
 relations:
@@ -22,7 +22,7 @@ text: If reqctl's pyproject.toml declares a runtime or build-system requirement 
   range, then the build shall refuse the change.
 whole_file_citations:
   reqctl/pyproject.toml:
-    digest: giHB-i_m6U7Llyk2N6d8_og39ZhPb5Mz726EPTlEgwI
+    digest: lsOlHuNjsfsD8HexRvFmf_xhQ_h4dZZt7rO0jm_kJ7o
     pinned: bWyFMC8rM_YC
   reqctl/requirements-lock.txt:
     digest: aFrK6SeiIkmsFmwst1oB4nNxfqgIdeEbc_8xiXpWIok

@@ -36,8 +36,8 @@ assessed:
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  cwxoe2: _-Q_wt6R6lf4spYpw39dco9CyJyGyolUQ3ATbT-qNOY
-  yqdz42: KlhXclbOa7RUkvrJSfQOdehFsOIp8HcqXkwqU3hAc48
+  cwxoe2: AaC3QrpMB344Zc5Cun1zzwXSGEbbhhV9Y50XtSVIdFs
+  yqdz42: McVHJH-BVs1j_XBhQdssWzxfh9mdbMFvJ0hUjv0yb5w
 priority: medium
 relations:
   REQ-11268295: constrains

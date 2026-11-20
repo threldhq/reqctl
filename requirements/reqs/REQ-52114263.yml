@@ -20,10 +20,10 @@ assessed:
   REQ-53412038: i8VnjjZfn-sCxnxIa1JKlfZUBhBUBFQ_gHqVMPbLE40
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
 citations:
-  dbzebu: zA_Is7mUiWdIOVUJ9BJIH9Gk2Gi8KwYvKbfy4_C_LaM
-  gedop6: YhH4CfIAbK_PQCiLqDxR64ZevEVj-l6S3-x0hoijNyA
+  dbzebu: aXXq4M1RI5RpnV6TjJuV62WVppgslrvuabAvnrM1s1w
+  gedop6: EAz4LiXynxjAf0mH5CsntA3SNmRSK96DWdOrP92M6XY
   hfxzn5: Yb9_2ecgbq-icC1ERUIbcevCuXQtIXLEkWr_MZ1k_uI
-  huroi7: x--3uBJ9spQCzdBo_ERrcK5NMuLCBDJm4PVm18R7U6c
+  huroi7: lwqU1RxH8IR-BD4cyCYN0BhR0Te0iKlRZGIbHANv664
 priority: medium
 relations:
   REQ-21373303: derives_from

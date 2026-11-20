@@ -23,8 +23,8 @@ assessed:
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
 citations:
-  5usm7z: ILwu_grtoPFScKj5e4Sxua4AeC1v1GYnnXL2wTEN7Gc
-  ipk7bd: yficYKjl0euO7pYG5T5kX8-9m6KwLIL4HY4GNsX_ZWs
+  5usm7z: 0QCTllFGwIj7pTiBf22gnxAy2fl4aMN9VvhVgEHgBHI
+  ipk7bd: ZTmJgx1-oihwdJB4uLvzQMMHzd3RzxV-T5y_rnyWau8
 priority: medium
 relations:
   REQ-54851939: depends_on

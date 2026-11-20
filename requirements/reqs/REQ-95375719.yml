@@ -7,8 +7,8 @@ acceptance_criteria:
   when: the coverage agent is spawned
 assessed: {}
 citations:
-  ey5733: -5zfFbV6rkgrE5_XXRJwYJPweaBR5gjyibPpbEwUGL8
-  k26kry: 98dTjSi4kZ4xhLriD327sf-vvzmR__F3yoVleA7BZAs
+  ey5733: 06JGEDhd8bjvqKD5fo__zXTYcpHENU2TVa_SLZr9eLA
+  k26kry: DN1mi8vTz4t3n4E6jNRl7kWaMa2MdKVnzTGoYhGs1nk
 priority: medium
 relations: {}
 status: approved

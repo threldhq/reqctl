@@ -10,7 +10,7 @@ from .reach import Reach
 
 RECORD = PurePosixPath("requirements") / "uncited.yml"
 
-# @req> REQ-27534660@OcqGUyoB-NOR zu7qeg
+# @req> REQ-27534660@FbVH2NHsBzRH zu7qeg
 MODES = settings.MODES[1:]
 # @req> uncited_code_exemptions@UTuKr6P-FxU0 7z5oma
 EXEMPTIONS = {
@@ -225,7 +225,7 @@ def _ratchet(root, uncited):
     return found
 
 
-# @req> REQ-27534660@OcqGUyoB-NOR tml2jy
+# @req> REQ-27534660@FbVH2NHsBzRH tml2jy
 def problems(tree, root, citations, base=None):
     mode = settings.table(settings.read(root)[1], "uncited_code")["check"]["mode"]
     if mode not in MODES or (mode == "changed_lines" and not base):

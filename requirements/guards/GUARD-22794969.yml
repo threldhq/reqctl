@@ -18,10 +18,10 @@ assessed:
   path_suffixes: Xra8WAFW9yj6q5X3w79Fxzu-ZKQIgGPH3AukLp2J9rs
   path_suffixes.*: bmng8G3uhq9TttUzoObCrQD3SGwXiZlfYAUswfU4poY
 citations:
-  4ssf6m: ngmtVEOJ4wMC8AJ1-44qv55md5OoHYcCMeqkpZYsQfw
-  6xedtr: zmrGi0Q7NURR6H8Le5FR7YvhjObfBSKVr6TfwcxuHF8
+  4ssf6m: iwFO_IKGim924M1i0glRoTnfIhhxwF3sAPqY11hSmJU
+  6xedtr: CapSyZDTHlS8f5bZwLQZEpr7y1I1JftqdR5E0OaUP7E
   qxcqba: ebvutEiiF3gZwvy5J694n1Ha75jXYvAEs-qrAwL_S34
-  rubhxs: jN3xTQZvXIAw2rFh6ixxul1YWdmcHf3_DETeEuwApe4
+  rubhxs: 3LrrevQ05GY6mkuqVKdWypvk6t_ainmZKudRQ2l3jw8
 relations: {}
 status: approved
 text: If a markdown file outside the [corpus root](corpus_root) names a file path

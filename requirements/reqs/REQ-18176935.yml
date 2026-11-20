@@ -20,8 +20,8 @@ assessed:
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  r63o2r: OT47goRVIkx39YRdmiBEnYBjFcUddUFfDpsJCPcioRA
-  wkv6gw: NPaAEhcTUYgDu5pe_wJWPblNmOs3wgUdgbwfYUiOCWg
+  r63o2r: YxEUkwbiogxWtJH6Ky-wQRoP0ZbM-wSWx4DYfctpW5Y
+  wkv6gw: 4dfCYBcB_r_tIZuH7dozbG_rOfRX5eDvU21OWvgUNDM
 priority: medium
 relations:
   REQ-88203622: depends_on

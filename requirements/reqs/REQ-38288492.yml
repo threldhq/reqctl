@@ -8,19 +8,19 @@ assessed:
 citations:
   26246r: Tpf_fI6wd25t2EmIQfAJihThxw-d6YVeWruO7jiaHSE
   3dxf7n: h_KMV8NDOueBQGpi5zgQezZS01AFSmPTGbCVuiCnVkM
-  46mvef: l64nxfmcFw3GZP0xxtN7wDegEfN5AD_z6OsYvZI_ZgE
+  46mvef: B7_ZxBavsMUFeOYOhlHIp0jt9R8OFcNi2y--HvB7ouQ
   6dyv25: xn2ccUQua_AuZeIdwDWwJfrLMIb4eOzFFTtPokC6vSU
   6mjij4: A7nO8slj06tyseZYpirGOQAdTBWg9_Evems3MymA47U
   7hamkf: NmWFCIln4hHAQPwnXuE3ze7YV4OtGncIlAYZ8SyUxcY
-  bhnqhd: Pd5a5r2xVj9kXmgRlToATJsaDB52ExlNGJ4P3o0cYn0
+  bhnqhd: ioBAJhxQOBdNRQnyNTK9BCFqeOpVS_6OJpOLg6PRw6A
   btqw4r: 2wbcje80ohuR0XSvV0rsFtUYicvh7_1-1GeIuZd4k4w
   cartup: TKSp9jBe7fTdj_BsAUAno5AS9caFTnOVD1hoLFobRro
   gqyp6i: K1AmWguMbSdXyw4lLDUCJ9P2yJpArHzQMnmVqRKJ2gg
   ioxe55: V6DJxhRlVN8vHVx7Z5q-oHXgZvzaYvV4m0CskTNAOm4
   msgkfn: C-v5PWcrY-S52jRSM5uwTe5C_j5jJJDpwjqdoCSRLps
-  myhqkt: 3C_HZVL03y7VA6pUhDdnDgXpu79MHDzCOwmreTv_gX4
+  myhqkt: sH3wEkvYltgNf7bPgCDiwqsmkKBqcFs3Cakp9iCZWg8
   ptkrb7: lEyeuzKECS_C7V7uQnGW_9uu9nOq4ETO2IUm9MHuaFw
-  pygxmx: lOAvyZJAMwWHBRDHlDMAktEkhUsZR6jnoefE7Pcc0pQ
+  pygxmx: xJlV_CxLMtPltHDg1fc4CPHLYbgl_EuNIm9Cfwx_x7E
   qtmeg3: L_OWckpWelHUUTKqNrobSIZO3_mfMlMB9GvnRFhfsgU
   s4a54e: RjLkVwKyHp_0xLJnvOGir3qssvfJgsohub4r2LaD_1g
   twgacs: YL3DTO8hbO8pdl5x8txU6JG1TLs5HlVm7z-DzBfZp9s
@@ -36,5 +36,5 @@ type: functional
 verification: inspection
 whole_file_citations:
   plugin/.claude-plugin/plugin.json:
-    digest: nwIU6zWqpiSiawCjJEDv72LbUAyColHKeu4Uxq2gjn0
+    digest: 3ymbej2ZMHAYkca0XAoSmNMX67uZ2zd908obXp-HMWY
     pinned: 4l6tMNjp19tH

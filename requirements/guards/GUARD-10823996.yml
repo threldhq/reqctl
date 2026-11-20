@@ -8,8 +8,8 @@ assessed:
 citations:
   bibl65: P7n5Z_9YJzSCcwnbYsQ45zRyQJRK1eHqAa5Cofh0cmM
   lmpkxv: cWq1TtneYtdrWtw3_Y4HzIMOiJbU0m9B2gWYi0FQA-g
-  o5pd55: eXgnKRDC4B-F9yfX9EE7lb-xvI-hIbAe6MpI-5QZ2Zw
-  vtknph: WzOKBMCcmf3XfDBUf9_7QxJtj80I0vidHF7MCbOXhS4
+  o5pd55: ib9Nyvejhrivbm2x9783GY4e1s7Y8MV6iyvpzardbAc
+  vtknph: 7KcAzEHRoU1s4dTg8EoAULb32rS-Phmy2JR7D9D9354
 relations: {}
 status: approved
 text: If the CODEOWNERS file holds no rule for one of the ${owned_paths}, then the

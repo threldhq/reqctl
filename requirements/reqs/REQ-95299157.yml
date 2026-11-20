@@ -19,7 +19,7 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   pin: 02gBkYgJvvQ8X_LT5vns7KKEAYOyFhqpVJMSjpp3QR8
 citations:
-  w4qjbn: SmGVDe9KCnYHa2EUNSpSQNNGQVR9gyNbCMUL3KnYab4
+  w4qjbn: d6VAC-MaMILkvIpkaf3uk2SUH9GWYKdTw1PsyeoCAQM
 priority: medium
 relations:
   REQ-64846889: depends_on

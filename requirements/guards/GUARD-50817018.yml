@@ -12,9 +12,9 @@ assessed:
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
 citations:
   2owrd4: ebvutEiiF3gZwvy5J694n1Ha75jXYvAEs-qrAwL_S34
-  6clhhw: ngmtVEOJ4wMC8AJ1-44qv55md5OoHYcCMeqkpZYsQfw
+  6clhhw: iwFO_IKGim924M1i0glRoTnfIhhxwF3sAPqY11hSmJU
   bndeye: 8QRepp2XCwd4samAXO-8H311e04XoJryS_QCqI6ccbs
-  pjlkkl: zmrGi0Q7NURR6H8Le5FR7YvhjObfBSKVr6TfwcxuHF8
+  pjlkkl: CapSyZDTHlS8f5bZwLQZEpr7y1I1JftqdR5E0OaUP7E
 relations: {}
 status: approved
 text: If a markdown file outside the [corpus root](corpus_root) names a flag alone

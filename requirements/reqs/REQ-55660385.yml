@@ -17,7 +17,7 @@ assessed:
   package_registries: cqwwetP02B2u1vyS0feKR5-mjFZhcF3q_fiXYAeLJN4
   package_registries.*: 6InvlWw_kg94PQrPyZ9-IDm3azUQuBW41jgKMglSV4E
 citations:
-  g6cmow: EKGvWw9p2E9liasEVVzMY_Bd9lPz2-J2m4SlBtPECLA
+  g6cmow: DUKDTmHX1Ep7EigwxZdvUAg3ydpbw09pH-DSRXpG_Jk
 priority: medium
 relations:
   REQ-36851513: constrains

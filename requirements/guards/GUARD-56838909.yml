@@ -8,8 +8,8 @@ assessed:
 citations:
   5442zm: zlMtCyMK7LghNd3odyCKpKBMc4YccSMO_HinIGfxsEw
   lfk7zr: -gCJ1huIz-0cxa2OGX5vbfqDsbAEwc8htfbvNGKQvJ4
-  w6qlu6: lQJ2N2ObleAv0wN1zp-jJkQCvzVrKlRIWaiYs_WJPiE
-  whtn3h: cssRfXGw2YcZqWp1bN6OgUUKddb6c4VCuVj7NG34VhM
+  w6qlu6: 5ogVrw_L3twFg1K1injR5che0_pwp4KFpzVsmMeO1Gs
+  whtn3h: CTouK4Bz-v0287MfKcOLeLnpJ_WiNyuJULbF9pTPdac
   zznuqt: UZYf9vqFjCTuTiweTf69KCLRldoxhbUN2FRY1RX-ToM
 relations: {}
 status: approved
@@ -17,5 +17,5 @@ text: The build shall refuse a Claude Code plugin whose version differs from the
   of the [reqctl wheel](reqctl_wheel).
 whole_file_citations:
   reqctl/pyproject.toml:
-    digest: giHB-i_m6U7Llyk2N6d8_og39ZhPb5Mz726EPTlEgwI
+    digest: lsOlHuNjsfsD8HexRvFmf_xhQ_h4dZZt7rO0jm_kJ7o
     pinned: xIKhRXKhnYS1
