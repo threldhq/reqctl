@@ -389,8 +389,8 @@ def quoted(lines, indent):
     said = [part for line in lines
             for part in (line if isinstance(line, str)
                          else f"{line['file']}: {line['line']}").splitlines()]
-    fence = "`" * max(3, 1 + max((len(run) for part in said
-                                  for run in re.findall("`+", part)), default=0))
+    fence = "`" * max(3, 1 + max(map(len, re.findall("`+", "\n".join(said))),
+                                 default=0))
     return [indent + part for part in (fence, *said, fence)]
 
 
