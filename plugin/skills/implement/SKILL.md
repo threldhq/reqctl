@@ -184,19 +184,30 @@ Write each statement citation with `reqctl tag PATH --from N --to M --req UID`
 and never by hand: it covers whole code statements, and no stamp is composed.
 <!-- @req- vuyexu -->
 
-<!-- @req+ REQ-34984028@9K2_3Vg-ud_i vc4i2s -->
+<!-- @req+ REQ-34984028@_psCZf8dpJ_A vc4i2s -->
 Cover the code that decides a clause or acceptance criterion of the item
 cited, or, for a parameter, a data item or one of its entries, the code stating
 its value -- where a data item's entries are stated in one place and read in
-another, the place stating them -- and every line that code names, directly or
-through what those lines name, that no citation digest takes in. A Python
-citation's digest takes in each function, class and constant of the code base its
-lines name, a JavaScript citation's each function and const, let or var binding
-declared at the top level of the same file, and a TypeScript citation's those and
-each enum declared there, so what a digest takes in gets no citation of its own;
-it takes in nothing those name in turn, so that is cited too, as is JavaScript or
-TypeScript in another file, and code in any other language, that the lines name.
+another, the place stating them -- and every line that code names directly that
+no citation digest takes in. A Python citation's digest takes in each function,
+class and constant of the code base its lines name, a JavaScript citation's each
+function and const, let or var binding declared at the top level of the same
+file, and a TypeScript citation's those and each enum declared there, so what a
+digest takes in gets no citation of its own; JavaScript or TypeScript in another
+file, and code in any other language, that the lines name directly is cited too.
 <!-- @req- vc4i2s -->
+
+<!-- @req+ REQ-31745207@1VD3x72ROTWR oh4zck -->
+Code the deciding code names only through other code, which no citation digest
+of the item takes in, is cited to the item that states what that code does, not
+to each item whose cited code reaches it.
+<!-- @req- oh4zck -->
+
+<!-- @req+ REQ-35185256@S__PTrxlMclw 7dm5zt -->
+Where no item states what that code does, put a question for the owner asking
+for an item that states it, and write no citation over that code before the
+owner answers.
+<!-- @req- 7dm5zt -->
 
 <!-- @req+ REQ-10074279@gXZHp2too_ik vlm5uy -->
 Once code is written, run `reqctl validate` and then `reqctl trace`, and run

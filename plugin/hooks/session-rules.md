@@ -20,15 +20,16 @@ Cite the code that satisfies a requirement with
 behaviour satisfies it. Never compose or paste a citation. Once the code is read
 against the statement that now stands, re-pin a stale citation with
 `reqctl repin ID`; remove one that no longer governs with `reqctl untag ID`.
-Cover the code that satisfies a clause and every line that code names, directly
-or through what those lines name, that no citation digest takes in. A Python
-citation's digest takes in each function, class and constant of the code base its
-lines name, a JavaScript citation's each function and const, let or var binding
-declared at the top level of the same file, and a TypeScript citation's those and
-each enum declared there, so what a digest takes in gets no citation of its own;
-it takes in nothing those name in turn, so that is cited too, as is JavaScript or
-TypeScript in another file, and code in any other language, that the lines name. A region that moved is untagged and
-cited again. A statement citation is the only form `reqctl trace` accepts.
+Cover the code that satisfies a clause and every line that code names directly
+that no citation digest takes in. A Python citation's digest takes in each
+function, class and constant of the code base its lines name, a JavaScript
+citation's each function and const, let or var binding declared at the top level
+of the same file, and a TypeScript citation's those and each enum declared there,
+so what a digest takes in gets no citation of its own; JavaScript or TypeScript
+in another file, and code in any other language, that the lines name directly is
+cited too. Code named only through other code is cited to the item that states
+what it does; where no item states it, ask the owner for one. A region that
+moved is untagged and cited again. A statement citation is the only form `reqctl trace` accepts.
 
 Verify code by reading it against the statement it cites: `reqctl compare` names
 the cited regions a change touches, and `reqctl trace` must pass.

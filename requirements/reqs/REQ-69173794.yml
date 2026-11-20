@@ -8,6 +8,9 @@ assessed:
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+citations:
+  em6cjx: 8MBi3lnrR6MuuBi5WsSaeJbvqXWmbtRK-ACiV99dh3c
+  zuixui: uWIolvEScNwyPw0uMc8rt8i4jYrR54cz39LUAHRMFPg
 priority: medium
 relations:
   REQ-18193596: depends_on
