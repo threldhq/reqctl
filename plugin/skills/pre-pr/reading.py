@@ -18,8 +18,6 @@ OWN = re.compile(r"(text|acceptance criteria|value|entries)\s{2,}")
 NAMED = ("parameters", "concepts")
 FOLDER = Path(".reqctl") / "readings"
 RECORD = Path(".reqctl") / "readings.json"
-# @req> REQ-18193596@oSjMcEZMnBK6 tpw4qc
-UNTOUCHED = (["moved"], ["deleted"])
 
 
 # @req> REQ-18193596@oSjMcEZMnBK6 lcqfuw
@@ -55,12 +53,11 @@ def stated(uid):
 
 
 # @req> REQ-18193596@oSjMcEZMnBK6 x2ryeq
-def taken(uid, compared, citations, reach):
+def taken(uid, citations, reach):
     wanted = {}
-    for row in compared["citations"]:
-        if row["uid"] != uid or row["state"] in UNTOUCHED:
+    for held in citations.values():
+        if held["uid"] != uid:
             continue
-        held = citations[row["id"]]
         wanted.setdefault(held["path"], set()).update(held["lines"])
         for path, line in reach.reached(held["path"], held["lines"]):
             wanted.setdefault(path, set()).add(line)
@@ -71,9 +68,9 @@ def taken(uid, compared, citations, reach):
 
 
 # @req> REQ-18193596@oSjMcEZMnBK6 su5ahl
-def code(root, uid, compared, citations, reach, texts):
+def code(root, uid, files, citations, reach, texts):
     lines = []
-    for path, numbers in sorted(taken(uid, compared, citations, reach).items()):
+    for path, numbers in sorted(taken(uid, citations, reach).items()):
         if texts.get(path) is None:
             # @req> REQ-92715984@izHQzbW23L0y 44kmga
             raise corpus.ReqctlError(f"cannot read {path}, which a citation of {uid} "
@@ -84,19 +81,18 @@ def code(root, uid, compared, citations, reach, texts):
             if at and number != numbers[at - 1] + 1:
                 lines.append("-----")
             lines.append(said[number - 1])
-    for row in compared["files"]:
-        if row["uid"] == uid and row["state"] != ["deleted"]:
-            lines += ["", f"=== {row['path']} ===",
-                      corpus.read_text(root / row["path"]).rstrip("\n")]
+    for path in sorted(files):
+        if (root / path).is_file():
+            lines += ["", f"=== {path} ===", corpus.read_text(root / path).rstrip("\n")]
     return lines
 
 
 # @req> REQ-18193596@oSjMcEZMnBK6 xdxo6t
 # @req> REQ-18762283@02ASyELj83Tv plidzn
-def prompt(root, uid, compared, citations, reach, texts):
+def prompt(root, uid, files, citations, reach, texts):
     return "\n".join([
         f"ITEM {uid}", *stated(uid), "", "CODE",
-        *code(root, uid, compared, citations, reach, texts), "",
+        *code(root, uid, files, citations, reach, texts), "",
         (f"Write your reading to {(FOLDER / uid).as_posix()}.json as one JSON "
          f"object holding verdict, one of {', '.join(VERDICTS)}, and lines, a "
          "list of the lines of the code above that show the verdict, each "
@@ -135,7 +131,7 @@ def shown(uid, read):
 # @req> REQ-85663008@aQdSXq7ibn2j ajo3rv
 # @req> REQ-18193596@oSjMcEZMnBK6 dt63ke
 def build(args):
-    _, root = corpus.load()
+    store, root = corpus.load()
     ref = args.base or baseline._default_ref(root)
     # @req> REQ-92715984@izHQzbW23L0y 6l7fzx
     if ref is None:
@@ -148,7 +144,9 @@ def build(args):
     if folder.is_dir():
         for earlier in sorted(folder.iterdir()):
             corpus.remove(earlier)
-    built = {uid: prompt(root, uid, compared, citations, reach, texts)
+    built = {uid: prompt(root, uid,
+                         corpus.mapping(corpus.find(store, uid).data, corpus.WHOLE_FILES),
+                         citations, reach, texts)
              for uid in compared["touches"]}
     for uid, text in built.items():
         corpus.atomic_write(folder / f"{uid}.md", text)

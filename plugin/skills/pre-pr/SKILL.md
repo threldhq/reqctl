@@ -67,7 +67,7 @@ through what those lines name, that no citation digest takes in. A Python
 citation's digest takes in each function, class and constant of the code base its
 lines name, a JavaScript citation's each function and const, let or var binding
 declared at the top level of the same file, and a TypeScript citation's those and
-each enum declared there, and what those name in turn, so those get no citation
+each enum declared there, but nothing those name in turn, so those get no citation
 of their own; JavaScript or TypeScript in another file, and code in any other
 language, that the lines name is cited too.
 <!-- @req- j6i32e -->
@@ -127,11 +127,9 @@ Spawn one `reqctl:reading` agent for each item it names as needing a reading,
 with the text of the prompt file it names as the whole prompt, unchanged.
 <!-- @req- vyfku6 -->
 
-<!-- @req+ REQ-63820644@JOlGQYMihI_j wac5fi -->
 <!-- @req> pre_pr_agents.reading@O0Qk99QMNGY1 j7nvyc -->
 Run each reading agent at `high` effort
 on `claude-sonnet-5-5`.
-<!-- @req- wac5fi -->
 
 <!-- @req+ REQ-18882967@W34Ole45XgJE hutvpr -->
 Run `python3 ${CLAUDE_SKILL_DIR}/reading.py take`: it takes each reading

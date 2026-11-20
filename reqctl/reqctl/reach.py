@@ -90,7 +90,7 @@ class Reach:
                     if posixpath.basename(path) == "__init__.py"}
         self.roots = [".", *sorted({posixpath.dirname(folder) or "." for folder in packages
                                     if posixpath.dirname(folder) not in packages})]
-        self.tables, self.streams, self.edges, self.digests = {}, {}, {}, {}
+        self.tables, self.streams, self.digests = {}, {}, {}
         self.scripts, self.scopes, self.classes = {}, {}, {}
 
     # @req> REQ-22608177@cdmX9Aqh6XXC upntcv
@@ -286,16 +286,7 @@ class Reach:
         path = path.replace("\\", "/")
         if path not in self.texts:
             return set()
-        todo, seen = self._calls(path, set(lines)), set()
-        while todo:
-            key = todo.pop()
-            if key in seen:
-                continue
-            seen.add(key)
-            if key not in self.edges:
-                self.edges[key] = self._calls(key[0], self._lines(key))
-            todo += self.edges[key]
-        return seen
+        return set(self._calls(path, set(lines)))
 
     def taken(self, path, lines):
         return [[held, name, self._digest((held, name))]
