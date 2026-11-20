@@ -9,7 +9,7 @@ relations:
   REQ-29409340: derives_from
 status: approved
 text: The product shall define the [searching reader](searching_reader) with no tool
-  that writes a file other than the tool with which the [searching reader](searching_reader)
-  writes its reply.
+  that runs a command and no tool that writes a file other than the tool with which
+  the [searching reader](searching_reader) writes its reply.
 type: functional
 verification: inspection
