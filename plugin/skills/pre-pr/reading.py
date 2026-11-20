@@ -155,21 +155,21 @@ def standing(root, held, text):
 
 # @req> REQ-18418155@kQKuNMnvZhlx hha5kh
 def digested(root, name):
-    place = (root / name).resolve()
-    if (not place.is_relative_to(root.resolve()) or not place.is_file()
-            or place.is_relative_to(corpus.folder_for(root, "requirement").parent.resolve())):
-        return None, None
     try:
+        place, top = (root / name).resolve(), root.resolve()
+        if (not place.is_relative_to(top) or not place.is_file()
+                or any(corpus.skipped(top, folder) for folder in place.parents
+                       if folder.is_relative_to(top))):
+            return None, None
         text = corpus.read_text(place)
-    except corpus.ReqctlError:
+    except (corpus.ReqctlError, OSError, ValueError):
         return None, None
     return text, corpus.digest(text)
 
 
 def unchanged(root, files):
     return isinstance(files, dict) and all(
-        isinstance(name, str) and digested(root, name)[1] == was
-        for name, was in files.items())
+        was and digested(root, name)[1] == was for name, was in files.items())
 
 
 # @req> REQ-18882967@W34Ole45XgJE 7xdgt7
@@ -294,7 +294,6 @@ def take(_):
         # @req> REQ-69173794@fzaCORJxLXi5 em6cjx
         if read is None or read["verdict"] == "cannot_tell":
             needed[uid] = text
-            corpus.remove(reply, missing_ok=True)
     # @req> REQ-13095275@W9v3hH4NZDqh m4t2gf
     for at, script in enumerate(workflows(needed, registered("searching"), SEARCHED), 1):
         corpus.atomic_write(folder / f"searching-{at}.js", script)
@@ -349,7 +348,7 @@ def searched(_):
             continue
         try:
             reply = json.loads(corpus.read_text(where.with_suffix(".json")))
-        except (ValueError, corpus.ReqctlError):
+        except (ValueError, RecursionError, corpus.ReqctlError):
             reply = None
         read = found(root, len(corpus.find(store, uid).data.get("acceptance_criteria") or []),
                      reply, text)
