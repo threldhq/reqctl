@@ -105,7 +105,7 @@ def code_lines(path, text):
         quiet |= cite.remarks(suffix, text)
     elif suffix in (".md", ".html"):
         quiet |= _fenced(text, MARKUP, False) | cite.remarks(suffix, text)
-        close = cite._front(text)
+        close = cite._front(text) if suffix == ".md" else 0
         quiet |= {number for number, line in enumerate(lines, 1)
                   if 1 < number < close and line.lstrip().startswith("#")}
         quiet |= {1, close} if close else set()
