@@ -1,6 +1,7 @@
 acceptance_criteria: []
 assessed:
   REQ-18486982: ovAUIy1DmRVvn6lbZorbECuNxyFkOkl2-JZXBS0fedg
+  REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
@@ -9,6 +10,7 @@ assessed:
 priority: medium
 relations:
   REQ-18486982: derives_from
+  REQ-77379732: depends_on
 status: approved
 text: When a [searching reader](searching_reader) returns ${reading_verdicts.not_satisfied}
   or ${reading_verdicts.cannot_tell} for an [item](item), the product shall take from

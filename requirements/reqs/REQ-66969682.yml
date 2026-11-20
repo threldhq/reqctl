@@ -7,9 +7,13 @@ acceptance_criteria:
   when: the session starts
 assessed:
   REQ-43307438: JSYnloFEMvf_V6kQrbcvf21imwhysuV2CPzLKotuOpI
+  REQ-90700416: AGFmCuLqPUC4--GB_pwIhxKPL8sKBO5RXxLmkKRMC08
+  REQ-94206537: I4xcLLW1nbOHd4_6xrMTeEFGxtqKK9SkiDZjehM59dc
 priority: medium
 relations:
   REQ-43307438: depends_on
+  REQ-90700416: constrains
+  REQ-94206537: depends_on
 status: approved
 text: If the Claude Code plugin that a session loaded and the reqctl that the session
   finds are different releases when the session starts, then the product shall state

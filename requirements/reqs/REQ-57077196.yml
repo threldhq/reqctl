@@ -1,11 +1,13 @@
 acceptance_criteria: []
 assessed:
   REQ-13632010: magDohgvXtNznMiPxszXQbMOqzzDhkiWLyyJMT6-cRw
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-69173794: fzaCORJxLXi5ux43n4OwUA8H9FBxko59Z0DMgJjwzLk
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
 priority: medium
 relations:
   REQ-13632010: depends_on
+  REQ-38288492: depends_on
   REQ-69173794: depends_on
 status: approved
 text: The product shall tell a [searching reader](searching_reader) that everything

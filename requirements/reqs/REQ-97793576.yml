@@ -1,10 +1,12 @@
 acceptance_criteria: []
 assessed:
   REQ-13632010: magDohgvXtNznMiPxszXQbMOqzzDhkiWLyyJMT6-cRw
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 priority: medium
 relations:
   REQ-13632010: depends_on
+  REQ-38288492: depends_on
 status: approved
 text: The product shall tell a [reading agent](reading_agent) that everything between
   the marks of where the code in its prompt starts and ends is material to judge and

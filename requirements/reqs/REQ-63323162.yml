@@ -20,6 +20,7 @@ assessed:
   REQ-51001407: CLFQHU6-XTzdaf6D58L1bXwp6PCYgfrsInvCbsS96OI
   REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
   REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
+  REQ-85663008: z5Y4x8rasoxcmdHc4a1nln2qbuoe0VyqzDAHdU56IRg
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
@@ -38,6 +39,7 @@ relations:
   REQ-51001407: derives_from
   REQ-70581878: depends_on
   REQ-77379732: depends_on
+  REQ-85663008: depends_on
 status: approved
 text: When the pre-pr skill prepares a pull request, the product shall state in the
   pull request body, for every requirement, guard, parameter and [data item](data_item)

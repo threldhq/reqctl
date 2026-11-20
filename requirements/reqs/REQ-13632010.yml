@@ -4,11 +4,13 @@ acceptance_criteria:
   when: the prompt of its [reading agent](reading_agent) is built
 assessed:
   REQ-18193596: I26mta6oEsfZ-5xMrNAMApccy2nhsU-mhFsQEIgafAY
+  REQ-18762283: KHBhiDTwKW9TTB5jtDinfXp_BkQ0iZYuJcmWvcElGK8
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 priority: medium
 relations:
   REQ-18193596: depends_on
+  REQ-18762283: constrains
 status: approved
 text: When the script builds the prompt of a [reading agent](reading_agent), the product
   shall mark in the prompt where the code that the prompt holds starts and where it
