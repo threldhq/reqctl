@@ -9,7 +9,7 @@ acceptance_criteria:
   when: the product is asked to record a pass
 assessed:
   REQ-18193596: I26mta6oEsfZ-5xMrNAMApccy2nhsU-mhFsQEIgafAY
-  REQ-56883985: qz346hU8p0MmorGRBYVSOZC3H_vIx5pKbNHNxnMmJS0
+  REQ-56883985: EzC4IvKLNiB8c0Xp0_RodizuxJ8fUgkHE1sNuDpQjWQ
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 priority: medium

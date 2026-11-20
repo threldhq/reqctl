@@ -1,10 +1,12 @@
 acceptance_criteria: []
 assessed:
   REQ-11567053: Oghnsfw31wXHN1LLwRavC0Pc7Y1bA-zm3Ya7ZhwGhKw
+  REQ-29409340: tDdPsgiXDyDRBCsAH1_wuxoQa3shtwOYqvbOsb7P4SU
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
 priority: medium
 relations:
   REQ-11567053: constrains
+  REQ-29409340: derives_from
 status: approved
 text: The product shall define the [searching reader](searching_reader) with no tool
   that writes a file other than the tool with which the [searching reader](searching_reader)

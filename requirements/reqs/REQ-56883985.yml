@@ -20,6 +20,10 @@ acceptance_criteria:
     whose [reading agent](reading_agent) returned cannot tell
   then: the session asks the owner nothing about the [item](item)
   when: the pass reaches the verdict
+- given: a satisfied return of a [searching reader](searching_reader) for which the
+    product records no verdict
+  then: the session asks the owner the same question
+  when: the pass reaches the [item](item)
 assessed:
   REQ-16376491: pLH6qM9Dx4whD6nFVGa7Avgh7rUd4lXKVM2K8PwlIYA
   REQ-18486982: ovAUIy1DmRVvn6lbZorbECuNxyFkOkl2-JZXBS0fedg

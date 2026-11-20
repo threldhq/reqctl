@@ -1,6 +1,7 @@
 acceptance_criteria: []
 assessed:
   REQ-18193596: I26mta6oEsfZ-5xMrNAMApccy2nhsU-mhFsQEIgafAY
+  REQ-18762283: KHBhiDTwKW9TTB5jtDinfXp_BkQ0iZYuJcmWvcElGK8
   REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
@@ -10,6 +11,7 @@ assessed:
 priority: medium
 relations:
   REQ-18193596: depends_on
+  REQ-18762283: depends_on
   REQ-77379732: depends_on
 status: approved
 text: When the ${plugin_components.pre_pr_skill} spawns a [searching reader](searching_reader)

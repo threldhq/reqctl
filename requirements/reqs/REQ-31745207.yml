@@ -6,14 +6,18 @@ acceptance_criteria:
     covers the function
   when: a skill of the plugin cites the function
 assessed:
+  REQ-22608177: lN59LSJksYqW13K5uSQvsffMfBikXaAF_XfMiAaT3ho
   REQ-34984028: _psCZf8dpJ_AXYsI_kVBsIxMgTQ0gyqId2CIk5Q1lzE
+  REQ-45330509: Y50_uyNNrnLTeilVuyOI2Nh5IKc6yX5KP-32uZC053Y
   REQ-59827868: VUQQ5OsZyU_43AoSjJv2n1x389kJMUU-CaTUOrk_ab8
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 priority: medium
 relations:
+  REQ-22608177: depends_on
   REQ-34984028: derives_from
+  REQ-45330509: depends_on
   REQ-59827868: depends_on
 status: approved
 text: When a skill of the product's Claude Code plugin cites code that the code deciding

@@ -4,6 +4,9 @@ acceptance_criteria:
     the model and the effort of the searching [entry](entry) of pre_pr_agents
   when: the script has written their [reading workflow](reading_workflow)
 assessed:
+  REQ-17125120: feot1-3cXxVnBz9WJoYkF45FwUn-Ly6VUtFcHlcNR6I
+  REQ-18193596: I26mta6oEsfZ-5xMrNAMApccy2nhsU-mhFsQEIgafAY
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-69173794: fzaCORJxLXi5ux43n4OwUA8H9FBxko59Z0DMgJjwzLk
   REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
@@ -16,6 +19,9 @@ assessed:
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
 priority: medium
 relations:
+  REQ-17125120: derives_from
+  REQ-18193596: depends_on
+  REQ-38288492: depends_on
   REQ-69173794: depends_on
   REQ-77379732: depends_on
 status: approved
