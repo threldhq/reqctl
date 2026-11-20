@@ -104,11 +104,11 @@ Rank succinctness above simplicity and maintainability.
 <!-- @req> REQ-80081791@-tGzsJetLhFp r3gd6k -->
 Reject a suggestion of `/simplify` that adds code, names or indirection.
 
-<!-- @req+ pre_pr_agents.silent_failure_hunter@rfHy5sm8yGhu hqp6ec -->
 <!-- @req+ REQ-89802309@scSvke1X3gFa zuhffx -->
+<!-- @req+ pre_pr_agents.silent_failure_hunter@rfHy5sm8yGhu a7j75p -->
 Run the `pr-review-toolkit:silent-failure-hunter` agent over the branch's diff
-<!-- @req- hqp6ec -->
 on `claude-sonnet-5-5`.
+<!-- @req- a7j75p -->
 <!-- @req- zuhffx -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz w4p2zx -->
