@@ -210,9 +210,37 @@ names none, say that none was touched.
 <!-- @req- hbi4d7 -->
 
 <!-- @req+ REQ-16376491@pLH6qM9Dx4wh zvf5ke -->
-Where reading code a statement citation covers finds that the code does not
-satisfy the item the citation names, put a question for the owner: change the
-code, or revise the item. Write no pull request body before the owner answers.
-Where that item is deprecated, ask nothing, and remove the citation with
-`reqctl untag ID`.
+<!-- @req+ REQ-56883985@EzC4IvKLNiB8 oyxth4 -->
+Where a reading agent returns not satisfied for an item, or the item's searching
+reader returns not satisfied, cannot tell or no verdict -- a satisfied reply
+that `searched` did not take is no verdict -- put a question for the owner:
+change the code, revise the item, or accept the code as satisfying the item.
+Write no pull request body before the owner answers. Ask nothing about an item
+whose reading agent returned cannot tell or no verdict before its searching
+reader returns, and nothing about an item whose searching reader returned
+satisfied.
+<!-- @req- oyxth4 -->
+
+Where the item a statement citation names is deprecated, ask nothing, and
+remove the citation with `reqctl untag ID`.
 <!-- @req- zvf5ke -->
+
+<!-- @req+ REQ-42425794@haYtnGYRwgcG 6br7yh -->
+Where the owner accepts the code as satisfying an item, run
+`python3 ${CLAUDE_SKILL_DIR}/reading.py accept UID`: it records the acceptance
+against the item and the prompt built for the item's reading agent, so the
+acceptance counts only while that prompt is unchanged.
+<!-- @req- 6br7yh -->
+
+<!-- @req+ REQ-63323162@F9pxvOJXIC7v 5k3ohn -->
+Run `python3 ${CLAUDE_SKILL_DIR}/reading.py stated` and put what it prints in
+the pull request body: for each item the branch touches, the reading agent's
+verdict with the lines that show it, the searching reader's where one was
+spawned, with the lines it gave for each acceptance criterion, and the owner's
+acceptance where one is recorded.
+<!-- @req- 5k3ohn -->
+
+<!-- @req+ REQ-55343532@_Cx35RaHIOyc zdqpjy -->
+Run `reqctl evidence` and put the evidence block in the pull request body as
+it prints it.
+<!-- @req- zdqpjy -->
