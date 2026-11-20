@@ -1,4 +1,29 @@
 acceptance_criteria:
+- given: a [reading agent](reading_agent)'s verdict of not satisfied
+  then: the session asks the owner whether to change the code, revise the [item](item)
+    or accept the code as satisfying it, and writes no pull request body before the
+    owner answers
+  when: the pass reaches the verdict
+- given: a [searching reader](searching_reader)'s verdict of not satisfied or cannot
+    tell
+  then: the session asks the owner the same question
+  when: the pass reaches the verdict
+- given: a [searching reader](searching_reader) that returns no verdict for its [item](item)
+  then: the session asks the owner the same question
+  when: the pass reaches the [item](item)
+- given: a [reading agent](reading_agent)'s verdict of cannot tell, or a [reading
+    agent](reading_agent) that returns no verdict
+  then: the session asks the owner nothing about the [item](item) before the [searching
+    reader](searching_reader) of the [item](item) returns
+  when: the pass reaches the [item](item)
+- given: a [searching reader](searching_reader)'s verdict of satisfied for an [item](item)
+    whose [reading agent](reading_agent) returned cannot tell
+  then: the session asks the owner nothing about the [item](item)
+  when: the pass reaches the verdict
+- given: a satisfied return of a [searching reader](searching_reader) for which the
+    product records no verdict
+  then: the session asks the owner the same question
+  when: the pass reaches the [item](item)
 - given: an [item](item) for which the pass spawned no [reading agent](reading_agent)
     because the owner accepted its code against an unchanged prompt
   then: the session asks the owner nothing about the [item](item)
