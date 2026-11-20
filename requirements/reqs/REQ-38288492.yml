@@ -4,9 +4,10 @@ acceptance_criteria:
   when: its contents are read
 assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
-  plugin_components.*: lQ3r0BIHFn6aEN12skLX2d6Wm3oMJDEqFvc3_w8DdbA
+  plugin_components.*: 96NhH7ONNgYg7GebMPNZLvvVwI_mKfh7XXD-rs5p47o
 citations:
   26246r: Tpf_fI6wd25t2EmIQfAJihThxw-d6YVeWruO7jiaHSE
+  36lx6w: CPRV6DftGRVHZpoLhuJmspa6hz41f-ae6VVMCRU7V3Q
   3dxf7n: h_KMV8NDOueBQGpi5zgQezZS01AFSmPTGbCVuiCnVkM
   46mvef: B7_ZxBavsMUFeOYOhlHIp0jt9R8OFcNi2y--HvB7ouQ
   6dyv25: xn2ccUQua_AuZeIdwDWwJfrLMIb4eOzFFTtPokC6vSU
@@ -17,6 +18,7 @@ citations:
   cartup: TKSp9jBe7fTdj_BsAUAno5AS9caFTnOVD1hoLFobRro
   gqyp6i: K1AmWguMbSdXyw4lLDUCJ9P2yJpArHzQMnmVqRKJ2gg
   ioxe55: V6DJxhRlVN8vHVx7Z5q-oHXgZvzaYvV4m0CskTNAOm4
+  luvesv: 9YGnFMXKcLMmRPQYXlulc4PsNKSABTC17ZhJtSOjAbM
   msgkfn: C-v5PWcrY-S52jRSM5uwTe5C_j5jJJDpwjqdoCSRLps
   myhqkt: sH3wEkvYltgNf7bPgCDiwqsmkKBqcFs3Cakp9iCZWg8
   ptkrb7: lEyeuzKECS_C7V7uQnGW_9uu9nOq4ETO2IUm9MHuaFw

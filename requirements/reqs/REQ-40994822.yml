@@ -3,6 +3,9 @@ assessed:
   REQ-11567053: Oghnsfw31wXHN1LLwRavC0Pc7Y1bA-zm3Ya7ZhwGhKw
   REQ-29409340: tDdPsgiXDyDRBCsAH1_wuxoQa3shtwOYqvbOsb7P4SU
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+citations:
+  66ziuk: u3kr6QlTTYE3OktcUS3a3XR38U6G2BfVZzhORceheTk
+  g6qg4q: ekOW7GkSA-3aQv7yDxWrtjMVWHgBOv3s8CR9tMRWYXE
 priority: medium
 relations:
   REQ-11567053: constrains
