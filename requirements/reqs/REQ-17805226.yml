@@ -7,6 +7,8 @@ assessed:
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   reading_workflow: cDT6vELXf6820LQOrkbw3m2JA7wYOzVCegtsc1AD95w
+citations:
+  ryz5cx: 0ByrME2j0_uMxlIK5CXYc4FKubpeiEIv4xS2e5-6uJU
 priority: medium
 relations:
   REQ-17125120: depends_on

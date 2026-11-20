@@ -18,6 +18,28 @@ OWN = re.compile(r"(text|acceptance criteria|value|entries)\s{2,}")
 NAMED = ("parameters", "concepts")
 FOLDER = Path(".reqctl") / "readings"
 RECORD = Path(".reqctl") / "readings.json"
+# @req> pre_pr_agents.reading@O0Qk99QMNGY1 rvwyy7
+SPAWNED = {"model": "claude-sonnet-5-5", "effort": "high"}
+# @req> REQ-99520421@EA982CV9V8L5 qfcahf
+PLUGIN = Path(".claude-plugin") / "plugin.json"
+# @req+ REQ-17125120@feot1-3cXxVn km2e6r
+FITS = 524288
+SCRIPT = """export const meta = {
+  name: 'reading',
+  description: 'Spawn one reading agent per prompt the build wrote',
+  phases: [{ title: 'Read', detail: 'one reading agent per item, in parallel' }],
+}
+const readings = [
+%s
+]
+const results = await parallel(readings.map(one => () =>
+  agent(one.prompt, { label: one.label, phase: 'Read', model: one.model, effort: one.effort, agentType: one.agentType })))
+return {
+  spawned: readings.length,
+  failed: readings.filter((one, at) => !results[at]).map(one => one.label),
+}
+"""
+# @req- km2e6r
 
 
 # @req> REQ-18193596@I26mta6oEsfZ lcqfuw
@@ -128,6 +150,39 @@ def shown(uid, read):
     return [f"{uid}: {read['verdict']}", *(f"    {line}" for line in read["lines"])]
 
 
+# @req> REQ-99520421@EA982CV9V8L5 veennf
+def registered(name):
+    plugin = Path(__file__).resolve().parents[2] / PLUGIN
+    if not plugin.is_file():
+        return name
+    try:
+        return f"{json.loads(corpus.read_text(plugin))['name']}:{name}"
+    except (ValueError, KeyError, TypeError) as broken:
+        # @req> REQ-92715984@izHQzbW23L0y ih4xig
+        raise corpus.ReqctlError(f"{plugin} states no plugin name: {broken!r} "
+                                 "-- install the plugin again") from broken
+
+
+# @req> REQ-17125120@feot1-3cXxVn 6ravfp
+def workflows(needed, agent):
+    room, packs, held = FITS - len(SCRIPT % ""), [], 0
+    for uid, text in needed.items():
+        entry = json.dumps({"label": uid, "prompt": text, **SPAWNED,
+                            "agentType": agent})
+        size = len(entry) + len(",\n")
+        if size > room:
+            # @req> REQ-92715984@izHQzbW23L0y ckixes
+            raise corpus.ReqctlError(
+                f"the prompt of {uid} takes {size} bytes of a reading workflow, "
+                f"which holds {room} -- cite {uid} over less code")
+        if not packs or held + size > room:
+            packs.append([])
+            held = 0
+        packs[-1].append(entry)
+        held += size
+    return [SCRIPT % ",\n".join(pack) for pack in packs]
+
+
 # @req> REQ-85663008@aQdSXq7ibn2j ajo3rv
 # @req> REQ-18193596@I26mta6oEsfZ dt63ke
 def build(args):
@@ -148,11 +203,19 @@ def build(args):
                          corpus.mapping(corpus.find(store, uid).data, corpus.WHOLE_FILES),
                          citations, reach, texts)
              for uid in compared["touches"]}
+    needed = {}
     for uid, text in built.items():
         corpus.atomic_write(folder / f"{uid}.md", text)
         read = standing(held, text)
+        if not read:
+            needed[uid] = text
         print("\n".join(shown(uid, read) + ["    read before from an identical prompt"])
               if read else f"{uid}: reading needed -- {(FOLDER / uid).as_posix()}.md")
+    # @req> REQ-17125120@feot1-3cXxVn v7riys
+    # @req> REQ-99520421@EA982CV9V8L5 faw5sx
+    for at, script in enumerate(workflows(needed, registered("reading")), 1):
+        corpus.atomic_write(folder / f"workflow-{at}.js", script)
+        print(f"reading workflow: {(folder / f'workflow-{at}.js').as_posix()}")
     if not compared["touches"]:
         print("No item was touched.")
     return 0

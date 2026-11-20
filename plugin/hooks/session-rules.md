@@ -25,9 +25,9 @@ or through what those lines name, that no citation digest takes in. A Python
 citation's digest takes in each function, class and constant of the code base its
 lines name, a JavaScript citation's each function and const, let or var binding
 declared at the top level of the same file, and a TypeScript citation's those and
-each enum declared there, but nothing those name in turn, so those get no citation
-of their own; JavaScript or TypeScript in another file, and code in any other
-language, that the lines name is cited too. A region that moved is untagged and
+each enum declared there, so what a digest takes in gets no citation of its own;
+it takes in nothing those name in turn, so that is cited too, as is JavaScript or
+TypeScript in another file, and code in any other language, that the lines name. A region that moved is untagged and
 cited again. A statement citation is the only form `reqctl trace` accepts.
 
 Verify code by reading it against the statement it cites: `reqctl compare` names
