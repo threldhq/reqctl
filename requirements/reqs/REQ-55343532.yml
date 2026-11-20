@@ -5,6 +5,8 @@ assessed:
   evidence_block: CF0Bn1IB-xBLrvZkVZi6iuiMkQ-ko9FF4rg2idf8IKo
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+citations:
+  zdqpjy: KvblRS502w1RS3LeZr8Py9V67JwiU8G0FTQuz1wx_MM
 priority: medium
 relations:
   REQ-26348048: depends_on

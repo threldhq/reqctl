@@ -22,5 +22,11 @@ the item's text and every acceptance criterion, it fails the text or a
 criterion, or it does not settle which.
 <!-- @req- doz25v -->
 
+<!-- @req+ REQ-18882967@W34Ole45XgJE weirhv -->
+Write your reply to the file your prompt names, as one JSON object holding
+`verdict` and `lines`, a list of the lines of the code in your prompt that show
+the verdict, each copied exactly.
+<!-- @req- weirhv -->
+
 <!-- @req> REQ-18882967@W34Ole45XgJE msj3nx -->
 You write no file other than the one your prompt names.

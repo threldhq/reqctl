@@ -116,10 +116,9 @@ def prompt(root, uid, files, citations, reach, texts):
     return "\n".join([
         f"ITEM {uid}", *stated(uid), "", "CODE",
         *code(root, uid, files, citations, reach, texts), "", "RETURN",
-        (f"Write your reading to {(FOLDER / uid).as_posix()}.json as one JSON "
-         f"object holding verdict, one of {', '.join(VERDICTS)}, and lines, a "
-         "list of the lines of the code above that show the verdict, each "
-         "copied exactly."), ""])
+        (f"Write your reply to {(FOLDER / uid).as_posix()}.json, in the shape "
+         f"your definition states, with verdict one of {', '.join(VERDICTS)}."),
+        ""])
 
 
 # @req> REQ-85663008@tk3qFTz0aYud z6mbsu
@@ -289,7 +288,10 @@ def take(_):
         reply = where.with_suffix(".json")
         # @req> REQ-77379732@dFXrgstPkXaL m6bum7
         read = returned(reply, text)
-        held[corpus.digest(text)] = {"uid": uid, **(read or {"verdict": None, "lines": []})}
+        # @req> REQ-42425794@haYtnGYRwgcG 7sis6y
+        held[corpus.digest(text)] = {"uid": uid,
+                                     **(read or {"verdict": None, "lines": []}),
+                                     **accepted(held.get(corpus.digest(text)))}
         print("\n".join(shown(uid, read)) if read else f"{uid}: no verdict")
         # @req> REQ-77379732@dFXrgstPkXaL jpe7lr
         # @req> REQ-69173794@fzaCORJxLXi5 em6cjx
@@ -360,6 +362,76 @@ def searched(_):
     return 0
 
 
+# @req> REQ-42425794@haYtnGYRwgcG lcss3l
+def accepted(was):
+    return ({"accepted": True}
+            if isinstance(was, dict) and was.get("accepted") is True else {})
+
+
+# @req> REQ-42425794@haYtnGYRwgcG xcukbw
+def accept(args):
+    store, root = corpus.load()
+    uid = corpus.find(store, args.uid).uid
+    held, where = records(root), root / FOLDER / f"{uid}.md"
+    if not where.is_file():
+        raise corpus.ReqctlError(f"no prompt is built for {uid} -- run build on a "
+                                 "branch that touches it")
+    at = corpus.digest(corpus.read_text(where))
+    was = held.get(at)
+    held[at] = {"uid": uid, "verdict": None, "lines": [],
+                **(was if isinstance(was, dict) else {}), "accepted": True}
+    corpus.atomic_write(root / RECORD, json.dumps(held, indent=1, sort_keys=True) + "\n")
+    print(f"{uid}: accepted by the owner as satisfying the item")
+    return 0
+
+
+# @req> REQ-63323162@F9pxvOJXIC7v u37wmy
+def quoted(lines, indent):
+    said = [part for line in lines
+            for part in (line if isinstance(line, str)
+                         else f"{line['file']}: {line['line']}").splitlines()]
+    fence = "`" * max(3, 1 + max((len(run) for part in said
+                                  for run in re.findall("`+", part)), default=0))
+    return [indent + part for part in (fence, *said, fence)]
+
+
+# @req> REQ-63323162@F9pxvOJXIC7v xyonaw
+def worded(read):
+    return read["verdict"].replace("_", " ") if read else "no verdict was returned"
+
+
+# @req> REQ-63323162@F9pxvOJXIC7v 55rz7r
+def reported(_):
+    _, root = corpus.load()
+    held, folder = records(root), root / FOLDER
+    built = sorted(folder.glob("*.md")) if folder.is_dir() else []
+    lines = ["### Readings", ""]
+    for where in built:
+        text = corpus.read_text(where)
+        was = held.get(corpus.digest(text))
+        lines.append(f"- {where.stem}")
+        if not isinstance(was, dict):
+            lines.append("  - Reading agent: not read")
+            continue
+        read = sound(was, text)
+        lines += [f"  - Reading agent: {worded(read)}",
+                  *(quoted(read["lines"], "    ") if read else [])]
+        if "searching" in was:
+            found = was["searching"]
+            lines += [f"  - Searching reader: {worded(found)}",
+                      *(quoted(found["lines"], "    ") if found else [])]
+            for at, each in enumerate((found or {}).get("criteria") or [], 1):
+                lines += [f"    - Acceptance criterion {at}", *quoted(each, "      ")]
+        elif read is None or read["verdict"] == "cannot_tell":
+            lines.append("  - Searching reader: not returned")
+        if accepted(was):
+            lines.append("  - The owner accepted the code as satisfying the item.")
+    if not built:
+        lines.append("No item was touched.")
+    print("\n".join(lines))
+    return 0
+
+
 # @req> REQ-18193596@I26mta6oEsfZ rswytl
 def main(argv=None):
     parsed = argparse.ArgumentParser()
@@ -367,8 +439,13 @@ def main(argv=None):
     steps.add_parser("build").add_argument("--base", metavar="REF")
     steps.add_parser("take")
     steps.add_parser("searched")
+    # @req> REQ-42425794@haYtnGYRwgcG upu453
+    steps.add_parser("accept").add_argument("uid")
+    # @req> REQ-63323162@F9pxvOJXIC7v xtdpvc
+    steps.add_parser("stated")
     args = parsed.parse_args(argv)
-    return {"build": build, "take": take, "searched": searched}[args.step](args)
+    return {"build": build, "take": take, "searched": searched, "accept": accept,
+            "stated": reported}[args.step](args)
 
 
 # @req> REQ-92715984@izHQzbW23L0y qwkkhk

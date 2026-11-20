@@ -27,8 +27,7 @@ criterion, or it does not settle which.
 
 <!-- @req+ REQ-18486982@ovAUIy1DmRVv fmjviv -->
 Write your reply to the file your prompt names, as one JSON object holding
-`verdict` and `lines`, the lines that show the verdict. Write this shape, not
-the one your prompt states for `lines`.
+`verdict` and `lines`, the lines that show the verdict.
 <!-- @req- fmjviv -->
 
 <!-- @req+ REQ-87568267@JmZEPF8Ng69z ki5rqe -->
