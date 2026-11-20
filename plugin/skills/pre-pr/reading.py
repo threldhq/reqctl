@@ -285,13 +285,12 @@ def take(_):
         if read:
             print("\n".join(shown(uid, read)))
             continue
-        reply = where.with_suffix(".json")
+        reply, at = where.with_suffix(".json"), corpus.digest(text)
         # @req> REQ-77379732@dFXrgstPkXaL m6bum7
         read = returned(reply, text)
         # @req> REQ-42425794@haYtnGYRwgcG 7sis6y
-        held[corpus.digest(text)] = {"uid": uid,
-                                     **(read or {"verdict": None, "lines": []}),
-                                     **accepted(held.get(corpus.digest(text)))}
+        held[at] = {"uid": uid, **(read or {"verdict": None, "lines": []}),
+                    **accepted(held.get(at))}
         print("\n".join(shown(uid, read)) if read else f"{uid}: no verdict")
         # @req> REQ-77379732@dFXrgstPkXaL jpe7lr
         # @req> REQ-69173794@fzaCORJxLXi5 em6cjx
