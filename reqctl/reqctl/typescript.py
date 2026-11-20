@@ -80,9 +80,10 @@ def _region(node):
     return None
 
 
+# @req> REQ-29782682@vNwe2DOIu-N0 4u2tkx
 def _among(regions, at):
     held = [region for region in regions if region[0] <= at < region[1]]
-    return bool(held) and max(held, key=lambda region: region[0])[2]
+    return bool(held) and max(held, key=lambda region: (region[0], not region[2]))[2]
 
 
 def _offsets(text):
