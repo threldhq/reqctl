@@ -9,9 +9,9 @@ acceptance_criteria:
 assessed:
   REQ-12032769: 1Km3PLqZHCDuV9kvCUqnJuU2P1mQdROcvfm6hg4k4QI
 citations:
-  czhlcg: n1M_S41ISf5fDqpEERY23Wzr3IYDKeH6SoblCtqUdYk
+  czhlcg: VDW0xhCYyirsogC1DRuBPFvuK-ZBVOtkl_awCmnO-FU
   hou53s: qjwjmwu6fvES3gRl8o7yAe3hW4kBkhktwY7hR1JzYM0
-  pdq53a: Lhg25qjx6eS-_UR9reYpqV95MgFBtQG4BDe_pfOAqWM
+  pdq53a: 46ut87uExufn6M4AxSc5FdzPOfNw_QZc5poFpFsqOc0
 priority: medium
 relations:
   REQ-12032769: constrains

@@ -1,7 +1,7 @@
 acceptance_criteria: []
 assessed: {}
 citations:
-  bkpdjy: M02BrSnrnfjKeOpTTBYJ2JfaVQ-Su3t2xzdn6_Xr27Y
+  bkpdjy: d40FQLi9-t6zgl_1FGf0v3OipLM2JJDRXnLnf3UXke0
 relations: {}
 status: approved
 text: When .github/verify.py runs, the build shall take the base branch as the one

@@ -11,8 +11,8 @@ assessed:
   stamp: FYb0WF5d184xbqnB3zNnFBdXkgsSPy3TRv4iv6zgdw8
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  dvvyvi: 9pAKXtYz_sxVH5_h0kUOn1yw3g61MWEoCBDhk7OiyE4
-  qgp2gz: teukEy3sRyLeM98CJ51KlimQUV-vv8FcDWWtxFBJC9A
+  dvvyvi: sHmwuniZoHZrhSu5yIO_kwYDEk7Nz8plBjtOzZvS0kE
+  qgp2gz: zxyrHmBTWIbzC_qe9h0fdHOYqMHUy-U0QDASkNBCc9U
 priority: medium
 relations:
   REQ-24608716: derives_from

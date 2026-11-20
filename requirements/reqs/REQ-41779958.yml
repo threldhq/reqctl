@@ -6,8 +6,8 @@ assessed:
   kind_schema: u7qgw1_P5Trjj9G3s7zJkmk-8tYvK2wXGdAbv1BKMho
   mint: _vlSBdLUXLRNbkD7MDRiq430UGq2irck-wHVM6L-dpY
 citations:
-  4aox7m: edMUK-BnehwEARzFn84yJAFGDqPP20Ah42xOToRFqzA
-  lxx4he: lIgJ8tij2BP38Gh5vdCvhii80-SLow8Wo1NsQnRohNM
+  4aox7m: 0G-L3HbHZ7RMGqoq-kbNovYMZjDew9ozm79AfDhdcgM
+  lxx4he: vkp5T8Ojd6FluFITvQwOxlGY0wWghhBLYlbdu23_CAg
 priority: medium
 relations:
   REQ-13148397: depends_on

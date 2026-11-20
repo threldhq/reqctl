@@ -2,7 +2,7 @@ acceptance_criteria: []
 assessed:
   GUARD-20035007: EUUCqO_GisrKWrpC8a5u5yxPfKLv-qOQ6qnYKEFYu2s
 citations:
-  6reuag: M02BrSnrnfjKeOpTTBYJ2JfaVQ-Su3t2xzdn6_Xr27Y
+  6reuag: d40FQLi9-t6zgl_1FGf0v3OipLM2JJDRXnLnf3UXke0
 relations:
   GUARD-20035007: depends_on
 status: approved

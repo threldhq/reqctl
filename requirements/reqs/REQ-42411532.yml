@@ -6,7 +6,7 @@ acceptance_criteria:
 assessed:
   REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
 citations:
-  na2sto: cQMJGmstugGIG6JmDe91q8cqQWUvmHYWGh5A8etmj2I
+  na2sto: WuPOw2twSEP1qxgXSW454BjUAk5Hrh09VAol55skxzk
 priority: medium
 relations:
   REQ-29203000: depends_on

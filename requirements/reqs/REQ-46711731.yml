@@ -39,8 +39,8 @@ assessed:
   transient_failure: Lp70ckiMkxb6hHeELi4rfHwX-inXaziVDD0HAeUlP4c
 citations:
   4avail: n3OgJduzk5pxvixqkJFsmQoCFtnzkgU4JGFZ2jhEf2E
-  jkd2va: P2_1RNB3ozGfoAToukxiTaOTOGMacgjpz57etX_SHVo
-  uput5b: 8MElaxo7fg5VP3fhp_bW5SvU3djz1JtoPyiSuXJi3HU
+  jkd2va: 3RxBnSr1hXYmfryrh4VSBm9llHKs1q66CcXKofXVrK4
+  uput5b: _OCFR1PTsIs-JqWJJOY-TNJzT7RbhCWqotsSo2xYjuY
 priority: medium
 relations:
   REQ-12222066: depends_on
