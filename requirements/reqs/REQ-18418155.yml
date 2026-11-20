@@ -1,0 +1,35 @@
+acceptance_criteria:
+- given: a satisfied return giving lines for one of the two acceptance criteria of
+    the [item](item)
+  then: the [item](item) has no verdict from the [searching reader](searching_reader)
+  when: the return is read
+- given: a satisfied return giving a line that the file it names for the line does
+    not hold
+  then: the [item](item) has no verdict from the [searching reader](searching_reader)
+  when: the return is read
+- given: a satisfied return naming for a line a file of the corpus
+  then: the [item](item) has no verdict from the [searching reader](searching_reader)
+  when: the return is read
+assessed:
+  REQ-18486982: ovAUIy1DmRVvn6lbZorbECuNxyFkOkl2-JZXBS0fedg
+  REQ-21983975: PaeNX9-i1wlQ4AjpoSJjOOAtvMPt3p11YQB7wbd_vp8
+  REQ-87568267: JmZEPF8Ng69zx-P_1LJMGt1hL-yAGA2eX30hy7jNkr8
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
+  reading_verdicts.satisfied: T65qoRHnttI2IUCN7onWnt5mGz1iftD3iQsjZEVCkeo
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+priority: medium
+relations:
+  REQ-18486982: constrains
+  REQ-21983975: depends_on
+  REQ-87568267: depends_on
+status: approved
+text: If a [searching reader](searching_reader) returns ${reading_verdicts.satisfied}
+  for an [item](item) and gives no line for an acceptance criterion of the [item](item),
+  or gives a line that stands neither in the prompt of the [searching reader](searching_reader)
+  nor in the file of the [code base](code_base) outside the corpus that the [searching
+  reader](searching_reader) names for the line, then the product shall record no verdict
+  of the [searching reader](searching_reader) for the [item](item).
+type: functional
+verification: inspection

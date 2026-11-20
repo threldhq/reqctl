@@ -1,0 +1,28 @@
+acceptance_criteria:
+- given: a pass that spawns two [searching readers](searching_reader)
+  then: the [reading workflow](reading_workflow) holds both prompts and, for each,
+    the model and the effort of the searching [entry](entry) of pre_pr_agents
+  when: the script has written their [reading workflow](reading_workflow)
+assessed:
+  REQ-69173794: fzaCORJxLXi5ux43n4OwUA8H9FBxko59Z0DMgJjwzLk
+  REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
+  entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  pre_pr_agents: 1FK3U3Z5R4oXedjNUmI9LPmg-bcguIwHUlhZOAt_140
+  pre_pr_agents.searching: vl4TrpOfj6aQMgo_JchO1zbRTDvtTcW6ysZbYGtJDC4
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+  reading_workflow: hJwbJvkKMjGOf7_OEEHQKJ5gAcyyNyQ3uaaNGfHeeGg
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+priority: medium
+relations:
+  REQ-69173794: depends_on
+  REQ-77379732: depends_on
+status: approved
+text: When the ${plugin_components.pre_pr_skill} makes its pass over a branch, the
+  product shall write, by the script that builds the prompts of the [reading agents](reading_agent),
+  the prompt of each [searching reader](searching_reader) the pass spawns into a [reading
+  workflow](reading_workflow) that holds, as the model and the effort each [searching
+  reader](searching_reader) is spawned on, ${pre_pr_agents.searching.model} and ${pre_pr_agents.searching.effort}.
+type: functional
+verification: inspection

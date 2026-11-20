@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-87568267: JmZEPF8Ng69zx-P_1LJMGt1hL-yAGA2eX30hy7jNkr8
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
+  reading_verdicts.satisfied: T65qoRHnttI2IUCN7onWnt5mGz1iftD3iQsjZEVCkeo
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+priority: medium
+relations:
+  REQ-87568267: depends_on
+status: approved
+text: When a [searching reader](searching_reader) returns ${reading_verdicts.satisfied}
+  for an [item](item), the product shall take from the [searching reader](searching_reader),
+  with each line the [searching reader](searching_reader) gives, either that the line
+  is in the prompt of the [searching reader](searching_reader) or the path of the
+  file of the [code base](code_base) that holds the line.
+type: functional
+verification: inspection

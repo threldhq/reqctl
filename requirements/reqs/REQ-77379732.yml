@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a [reading agent](reading_agent) whose verdict for an [item](item) is cannot
+    tell
+  then: one [searching reader](searching_reader) is spawned for the [item](item)
+  when: the pass reaches the verdict
+- given: a [reading agent](reading_agent) whose return states none of the three verdicts
+  then: one [searching reader](searching_reader) is spawned for the [item](item)
+  when: the pass reaches the [item](item)
+- given: a [reading agent](reading_agent) whose verdict for an [item](item) is satisfied
+    or not satisfied
+  then: no [searching reader](searching_reader) is spawned for the [item](item)
+  when: the pass reaches the verdict
+assessed:
+  REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
+  REQ-85663008: tk3qFTz0aYudz-ULV1pmogPVNkhd07caD2umHZT3txU
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+  reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
+  reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+priority: medium
+relations:
+  REQ-18882967: depends_on
+  REQ-85663008: depends_on
+status: approved
+text: When a [reading agent](reading_agent) returns ${reading_verdicts.cannot_tell}
+  or no verdict for an [item](item), the product shall spawn one [searching reader](searching_reader)
+  for the [item](item).
+type: functional
+verification: inspection

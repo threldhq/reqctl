@@ -8,12 +8,24 @@ acceptance_criteria:
   then: one [reading agent](reading_agent) is spawned for the requirement
   when: the pre-pr skill makes its pass
 - given: an [item](item) whose prompt, as the script builds it, is identical to one
-    already read as satisfied
+    already read as satisfied by a [reading agent](reading_agent)
   then: no [reading agent](reading_agent) is spawned for the [item](item), and the
     earlier verdict and its lines stand as the verdict of the [item](item)
   when: the pre-pr skill makes its pass
 - given: an [item](item) whose statement, acceptance criteria or cited code changed
     since it was read as satisfied
+  then: a [reading agent](reading_agent) is spawned for the [item](item)
+  when: the pre-pr skill makes its pass
+- given: an [item](item) whose prompt is identical to one a [searching reader](searching_reader)
+    read as satisfied, and every file the reply of the [searching reader](searching_reader)
+    names unchanged since
+  then: no [reading agent](reading_agent) and no [searching reader](searching_reader)
+    is spawned for the [item](item), and the earlier verdict and its lines stand as
+    the verdict of the [item](item)
+  when: the pre-pr skill makes its pass
+- given: an [item](item) whose prompt is identical to one a [searching reader](searching_reader)
+    read as satisfied, and a file the reply of the [searching reader](searching_reader)
+    names changed since
   then: a [reading agent](reading_agent) is spawned for the [item](item)
   when: the pre-pr skill makes its pass
 assessed:
@@ -24,8 +36,9 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
-  reading_verdicts: 9but5MsHrC5UEtZD9F-Hy3xW5M3OLysWZeVs0Yh3CnM
+  reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.satisfied: T65qoRHnttI2IUCN7onWnt5mGz1iftD3iQsjZEVCkeo
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
   ajo3rv: wjP3tiV_naCcZvQnxngqMjzFfUzKeAq8_zbmx_VJx7U
@@ -42,6 +55,10 @@ text: When the ${plugin_components.pre_pr_skill} makes its pass over a branch, t
   product shall spawn one [reading agent](reading_agent) for each requirement, guard,
   parameter and [data item](data_item) the product names as touched by the branch,
   other than an [item](item) for which the script builds a prompt identical to one
-  that a [reading agent](reading_agent) already read as ${reading_verdicts.satisfied}.
+  that a [reading agent](reading_agent) already read as ${reading_verdicts.satisfied},
+  and other than an [item](item) for which the script builds a prompt identical to
+  one that a [searching reader](searching_reader) already read as ${reading_verdicts.satisfied}
+  while every file that the reply of the [searching reader](searching_reader) names
+  is unchanged since that reading.
 type: functional
 verification: inspection

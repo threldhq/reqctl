@@ -1,0 +1,25 @@
+acceptance_criteria:
+- given: a Python function that the cited code of three [items](item) reaches past
+    the first level of their [citation digests](citation_digest), and one [item](item)
+    stating what the function does
+  then: one [statement citation](statement_citation), naming that one [item](item),
+    covers the function
+  when: a skill of the plugin cites the function
+assessed:
+  REQ-34984028: _psCZf8dpJ_AXYsI_kVBsIxMgTQ0gyqId2CIk5Q1lzE
+  REQ-59827868: VUQQ5OsZyU_43AoSjJv2n1x389kJMUU-CaTUOrk_ab8
+  citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+priority: medium
+relations:
+  REQ-34984028: derives_from
+  REQ-59827868: depends_on
+status: approved
+text: When a skill of the product's Claude Code plugin cites code that the code deciding
+  a clause or acceptance criterion of an [item](item) names only through what other
+  code names, and that no [citation digest](citation_digest) of a [statement citation](statement_citation)
+  of the [item](item) takes in, the product shall make the [statement citation](statement_citation)
+  name the [item](item) that states what the cited code does.
+type: functional
+verification: inspection

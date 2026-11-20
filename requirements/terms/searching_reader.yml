@@ -1,0 +1,14 @@
+assessed:
+  code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+entries:
+  searching_reader:
+    aliases:
+    - searching readers
+    definition: The agent a pass of the pre-pr skill spawns for one [item](item) whose
+      [reading agent](reading_agent) returned cannot tell or no verdict, to read and
+      search files of the [code base](code_base) outside the corpus against the [item](item).
+    word: searching reader
+kind: term
+status: approved

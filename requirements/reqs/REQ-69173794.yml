@@ -1,0 +1,19 @@
+acceptance_criteria: []
+assessed:
+  REQ-18193596: I26mta6oEsfZ-5xMrNAMApccy2nhsU-mhFsQEIgafAY
+  REQ-77379732: dFXrgstPkXaLHM1VlbQU0iyrLEQAn5XKp8cz41Q_IfE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.pre_pr_skill: SWg1vHvY_pJtM0SDIkMQKTDAvtr1N6ywBauzHbON7gI
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+  searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+priority: medium
+relations:
+  REQ-18193596: depends_on
+  REQ-77379732: depends_on
+status: approved
+text: When the ${plugin_components.pre_pr_skill} spawns a [searching reader](searching_reader)
+  for an [item](item), the product shall give the [searching reader](searching_reader)
+  the prompt that the script built for the [reading agent](reading_agent) of the [item](item).
+type: functional
+verification: inspection
