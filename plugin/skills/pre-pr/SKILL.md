@@ -67,9 +67,9 @@ through what those lines name, that no citation digest takes in. A Python
 citation's digest takes in each function, class and constant of the code base its
 lines name, a JavaScript citation's each function and const, let or var binding
 declared at the top level of the same file, and a TypeScript citation's those and
-each enum declared there, but nothing those name in turn, so those get no citation
-of their own; JavaScript or TypeScript in another file, and code in any other
-language, that the lines name is cited too.
+each enum declared there, so what a digest takes in gets no citation of its own;
+it takes in nothing those name in turn, so that is cited too, as is JavaScript or
+TypeScript in another file, and code in any other language, that the lines name.
 <!-- @req- j6i32e -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->
@@ -104,10 +104,9 @@ Rank succinctness above simplicity and maintainability.
 <!-- @req> REQ-80081791@-tGzsJetLhFp r3gd6k -->
 Reject a suggestion of `/simplify` that adds code, names or indirection.
 
-<!-- @req+ pre_pr_agents.silent_failure_hunter@rfHy5sm8yGhu hqp6ec -->
 <!-- @req+ REQ-89802309@scSvke1X3gFa zuhffx -->
+<!-- @req> pre_pr_agents.silent_failure_hunter@rfHy5sm8yGhu xxldqg -->
 Run the `pr-review-toolkit:silent-failure-hunter` agent over the branch's diff
-<!-- @req- hqp6ec -->
 on `claude-sonnet-5-5`.
 <!-- @req- zuhffx -->
 
@@ -123,13 +122,18 @@ each item that needs a reading.
 <!-- @req- 5k4yld -->
 
 <!-- @req+ REQ-85663008@aQdSXq7ibn2j vyfku6 -->
-Spawn one `reqctl:reading` agent for each item it names as needing a reading,
-with the text of the prompt file it names as the whole prompt, unchanged.
+The reading workflows it writes hold one reading agent for each item it names
+as needing a reading, and none for an item read before from an identical prompt.
 <!-- @req- vyfku6 -->
 
-<!-- @req> pre_pr_agents.reading@O0Qk99QMNGY1 j7nvyc -->
-Run each reading agent at `high` effort
-on `claude-sonnet-5-5`.
+<!-- @req+ REQ-17805226@pdUrFTsMz_Wx ryz5cx -->
+Spawn the reading agents of the pass by running each reading workflow that the
+script building their prompts, `reading.py build`, wrote for the pass: one call
+of the Workflow tool for each, `scriptPath` at the file it names and no `args`.
+<!-- @req- ryz5cx -->
+
+<!-- @req> REQ-70511521@twPRafax5PKB rq2qry -->
+Pass no prompt text to a reading agent yourself.
 
 <!-- @req+ REQ-18882967@W34Ole45XgJE hutvpr -->
 Run `python3 ${CLAUDE_SKILL_DIR}/reading.py take`: it takes each reading
