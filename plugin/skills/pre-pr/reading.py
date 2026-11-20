@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -150,7 +151,7 @@ def shown(uid, read):
 
 # @req> REQ-99520421@EA982CV9V8L5 veennf
 def registered(name):
-    plugin = Path(__file__).resolve().parents[2] / ".claude-plugin" / "plugin.json"
+    plugin = Path(os.path.abspath(__file__)).parents[2] / ".claude-plugin" / "plugin.json"
     if not plugin.is_file():
         return name
     try:
