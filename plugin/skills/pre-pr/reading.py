@@ -421,12 +421,15 @@ def reported(_):
                       *(quoted(found["lines"], "    ") if found else [])]
             for at, each in enumerate((found or {}).get("criteria") or [], 1):
                 lines += [f"    - Acceptance criterion {at}", *quoted(each, "      ")]
+            if found and not unchanged(root, found["files"]):
+                lines.append("    - A file these lines stand in changed after the "
+                             "searching reader read it.")
         elif read is None or read["verdict"] == "cannot_tell":
             lines.append("  - Searching reader: not returned")
         if accepted(was):
             lines.append("  - The owner accepted the code as satisfying the item.")
     if not built:
-        lines.append("No item was touched.")
+        lines.append("No prompt was built.")
     print("\n".join(lines))
     return 0
 
