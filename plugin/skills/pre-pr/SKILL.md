@@ -128,8 +128,9 @@ as needing a reading, and none for an item read before from an identical prompt.
 <!-- @req- vyfku6 -->
 
 <!-- @req+ REQ-17805226@pdUrFTsMz_Wx ryz5cx -->
-Spawn the reading agents by running each reading workflow it names: one call
-of the Workflow tool for each, `scriptPath` at the file named and no `args`.
+Spawn the reading agents of the pass by running each reading workflow that the
+script building their prompts, `reading.py build`, wrote for the pass: one call
+of the Workflow tool for each, `scriptPath` at the file it names and no `args`.
 <!-- @req- ryz5cx -->
 
 <!-- @req> REQ-70511521@twPRafax5PKB rq2qry -->
