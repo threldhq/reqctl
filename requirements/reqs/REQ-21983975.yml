@@ -8,6 +8,10 @@ assessed:
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.satisfied: T65qoRHnttI2IUCN7onWnt5mGz1iftD3iQsjZEVCkeo
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+citations:
+  7p6xlm: ET-gIl8GzsR_nRpZE4e8h8qm2EnJS0nk3KbuefVfOq0
+  f53weu: rKeAqdHxEf0NjjbX5QkS4sewUnjNNoClKN_fDR2p6_s
+  zaqd6h: f0CEP9nf9DgdoE4v5W8zbHLek077JgqxAeZ677SkBWg
 priority: medium
 relations:
   REQ-11567053: depends_on

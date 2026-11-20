@@ -13,6 +13,9 @@ assessed:
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  hmkvrl: nMTGQ0xAdDV-XeYbCDDlxLJUFHwgupyC2dRIEa3RJIA
+  oh4zck: nMTGQ0xAdDV-XeYbCDDlxLJUFHwgupyC2dRIEa3RJIA
 priority: medium
 relations:
   REQ-22608177: depends_on

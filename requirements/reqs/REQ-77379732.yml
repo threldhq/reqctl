@@ -18,6 +18,11 @@ assessed:
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+citations:
+  ggdqft: HsNEnLmhy_qSWzutNUDi7TBXBj8BOU921mpleQlOuww
+  jpe7lr: n168Om3dvMxi66uI99shDnn0KEOV0hjYtaLgN2kBns4
+  m6bum7: m2HEhcInLUIglFpNonc123T71z3s2JOPpnlAsFYd7YU
+  s2kcnh: uWIolvEScNwyPw0uMc8rt8i4jYrR54cz39LUAHRMFPg
 priority: medium
 relations:
   REQ-18882967: depends_on

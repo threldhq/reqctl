@@ -5,6 +5,10 @@ assessed:
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.satisfied: T65qoRHnttI2IUCN7onWnt5mGz1iftD3iQsjZEVCkeo
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+citations:
+  7l6dgd: EzAS7QY8fNM-YKxR1qNoK1-JsGdSuD4gtCcYplrkKdU
+  ki5rqe: 7wM2AJroSaERlJv0kjoxqBx4eVaZTdLr4KdFbYc9oZQ
+  yuhiou: t0o0Byl5zJNL3T6VM9ijKesBb5D50AE7cwRsZHnX8dc
 priority: medium
 relations:
   REQ-18486982: derives_from

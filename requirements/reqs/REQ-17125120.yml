@@ -15,9 +15,9 @@ assessed:
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   reading_workflow: hJwbJvkKMjGOf7_OEEHQKJ5gAcyyNyQ3uaaNGfHeeGg
 citations:
-  6ravfp: NPbli87Ds-puJCEaIC6KndvrrIththBoOC-KkiYR6wc
-  km2e6r: z2gi5Bh9DmX6Yi4guhQ4qxuZ0drUYTTNLGa7_rQXGxI
-  v7riys: 7bGoG5lupbM5JPa9FHRGEz9V65szqCiuFaXRXTSMi7M
+  6ravfp: QQCxkDmQqLiuOCI22UuasafiZXBJo7A8lRgDust8T14
+  km2e6r: PvIRx3Z09M-k9w4w7Z_zxQAEHe8EQmgpTL0dfCbaQBk
+  v7riys: mEUsUvcp1ZaO42lGCfo-xDDAxryLHjQC1o8qw3nNIq4
 priority: medium
 relations:
   REQ-18193596: depends_on

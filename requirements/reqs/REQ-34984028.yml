@@ -49,8 +49,8 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  j6i32e: Aedq-xXRujf1oDVmYs8WtYXrd6xXqT7qMS9Us7rXWCc
-  vc4i2s: Aedq-xXRujf1oDVmYs8WtYXrd6xXqT7qMS9Us7rXWCc
+  j6i32e: VXeighgOW9S4LVxPm4iofACrjtR5s8GfwS2-Qn6wMuE
+  vc4i2s: VXeighgOW9S4LVxPm4iofACrjtR5s8GfwS2-Qn6wMuE
 priority: medium
 relations:
   REQ-17608335: depends_on

@@ -11,7 +11,7 @@ from reqctl.reach import Reach
 
 from reqctl import baseline, cite, corpus
 
-# @req> reading_verdicts@wJS-OszXMr_Q 3qo4wm
+# @req> reading_verdicts@HpeJsZ_Iw3sd 3qo4wm
 VERDICTS: dict[str, dict] = {"satisfied": {}, "not_satisfied": {}, "cannot_tell": {}}
 # @req> REQ-18193596@I26mta6oEsfZ 6rm73a
 OWN = re.compile(r"(text|acceptance criteria|value|entries)\s{2,}")
@@ -21,12 +21,14 @@ FOLDER = Path(".reqctl") / "readings"
 RECORD = Path(".reqctl") / "readings.json"
 # @req> pre_pr_agents.reading@O0Qk99QMNGY1 rvwyy7
 SPAWNED = {"model": "claude-sonnet-5-5", "effort": "high"}
+# @req> pre_pr_agents.searching@dEf23Bzo2ME2 rycimn
+SEARCHED = {"model": "claude-sonnet-5-5", "effort": "high"}
 # @req+ REQ-17125120@feot1-3cXxVn km2e6r
 FITS = 524288
 SCRIPT = """export const meta = {
   name: 'reading',
-  description: 'Spawn one reading agent per prompt the build wrote',
-  phases: [{ title: 'Read', detail: 'one reading agent per item, in parallel' }],
+  description: 'Spawn one agent per prompt the script wrote',
+  phases: [{ title: 'Read', detail: 'one agent per item, in parallel' }],
 }
 const readings = [
 %s
@@ -120,7 +122,7 @@ def prompt(root, uid, files, citations, reach, texts):
          "copied exactly."), ""])
 
 
-# @req> REQ-85663008@aQdSXq7ibn2j z6mbsu
+# @req> REQ-85663008@tk3qFTz0aYud z6mbsu
 def records(root):
     where = root / RECORD
     if not where.exists():
@@ -138,15 +140,44 @@ def records(root):
     return held
 
 
-# @req> REQ-85663008@aQdSXq7ibn2j neu5tj
-def standing(held, text):
-    read = sound(held.get(corpus.digest(text)), text)
-    return read if read and read["verdict"] == "satisfied" else None
+# @req> REQ-85663008@tk3qFTz0aYud neu5tj
+def standing(root, held, text):
+    was = held.get(corpus.digest(text))
+    read = sound(was, text)
+    if read and read["verdict"] == "satisfied":
+        return read
+    found = was.get("searching") if isinstance(was, dict) else None
+    if (isinstance(found, dict) and found.get("verdict") == "satisfied"
+            and unchanged(root, found.get("files"))):
+        return found
+    return None
+
+
+# @req> REQ-18418155@kQKuNMnvZhlx hha5kh
+def digested(root, name):
+    try:
+        place, top = (root / name).resolve(), root.resolve()
+        if (not place.is_relative_to(top) or place.is_relative_to(top / FOLDER.parent)
+                or place.is_relative_to(corpus.folder_for(top, "requirement").parent)):
+            return None, None
+        text = corpus.read_text(place)
+    except (corpus.ReqctlError, OSError, ValueError):
+        return None, None
+    return text, corpus.digest(text)
+
+
+def unchanged(root, files):
+    return isinstance(files, dict) and all(
+        was and digested(root, name)[1] == was for name, was in files.items())
 
 
 # @req> REQ-18882967@W34Ole45XgJE 7xdgt7
 def shown(uid, read):
-    return [f"{uid}: {read['verdict']}", *(f"    {line}" for line in read["lines"])]
+    return [f"{uid}: {read['verdict']}",
+            *(f"    {line}" if isinstance(line, str)
+              else f"    {line['file']}: {line['line']}" for line in read["lines"]),
+            *(f"    criterion {at}: {line['file']}: {line['line']}"
+              for at, lines in enumerate(read.get("criteria") or [], 1) for line in lines)]
 
 
 # @req> REQ-99520421@EA982CV9V8L5 veennf
@@ -163,10 +194,10 @@ def registered(name):
 
 
 # @req> REQ-17125120@feot1-3cXxVn 6ravfp
-def workflows(needed, agent):
+def workflows(needed, agent, spawned):
     room, packs, held = FITS - len(SCRIPT % ""), [], 0
     for uid, text in needed.items():
-        entry = json.dumps({"label": uid, "prompt": text, **SPAWNED,
+        entry = json.dumps({"label": uid, "prompt": text, **spawned,
                             "agentType": agent})
         size = len(entry) + len(",\n")
         if size > room:
@@ -182,7 +213,7 @@ def workflows(needed, agent):
     return [SCRIPT % ",\n".join(pack) for pack in packs]
 
 
-# @req> REQ-85663008@aQdSXq7ibn2j ajo3rv
+# @req> REQ-85663008@tk3qFTz0aYud ajo3rv
 # @req> REQ-18193596@I26mta6oEsfZ dt63ke
 def build(args):
     store, root = corpus.load()
@@ -205,14 +236,14 @@ def build(args):
     needed = {}
     for uid, text in built.items():
         corpus.atomic_write(folder / f"{uid}.md", text)
-        read = standing(held, text)
+        read = standing(root, held, text)
         if not read:
             needed[uid] = text
         print("\n".join(shown(uid, read) + ["    read before from an identical prompt"])
               if read else f"{uid}: reading needed -- {(FOLDER / uid).as_posix()}.md")
     # @req> REQ-17125120@feot1-3cXxVn v7riys
     # @req> REQ-99520421@EA982CV9V8L5 faw5sx
-    for at, script in enumerate(workflows(needed, registered("reading")), 1):
+    for at, script in enumerate(workflows(needed, registered("reading"), SPAWNED), 1):
         corpus.atomic_write(folder / f"workflow-{at}.js", script)
         print(f"reading workflow: {(folder / f'workflow-{at}.js').as_posix()}")
     if not compared["touches"]:
@@ -247,16 +278,84 @@ def take(_):
     _, root = corpus.load()
     held, folder = records(root), root / FOLDER
     built = sorted(folder.glob("*.md")) if folder.is_dir() else []
+    needed = {}
     for where in built:
+        # @req> REQ-69173794@fzaCORJxLXi5 grd57x
         uid, text = where.stem, corpus.read_text(where)
-        read = standing(held, text) or returned(where.with_suffix(".json"), text)
-        if read is None:
-            print(f"{uid}: no verdict")
+        read = standing(root, held, text)
+        if read:
+            print("\n".join(shown(uid, read)))
             continue
-        held[corpus.digest(text)] = {"uid": uid, **read}
-        print("\n".join(shown(uid, read)))
+        reply = where.with_suffix(".json")
+        # @req> REQ-77379732@dFXrgstPkXaL m6bum7
+        read = returned(reply, text)
+        held[corpus.digest(text)] = {"uid": uid, **(read or {"verdict": None, "lines": []})}
+        print("\n".join(shown(uid, read)) if read else f"{uid}: no verdict")
+        # @req> REQ-77379732@dFXrgstPkXaL jpe7lr
+        # @req> REQ-69173794@fzaCORJxLXi5 em6cjx
+        if read is None or read["verdict"] == "cannot_tell":
+            needed[uid] = text
+    # @req> REQ-13095275@W9v3hH4NZDqh m4t2gf
+    # @req> REQ-77379732@dFXrgstPkXaL ggdqft
+    # @req> REQ-69173794@fzaCORJxLXi5 qqtxgc
+    for at, script in enumerate(workflows(needed, registered("searching"), SEARCHED), 1):
+        corpus.atomic_write(folder / f"searching-{at}.js", script)
+        print(f"searching reader needed for {len(needed)} item(s) -- reading workflow: "
+              f"{(folder / f'searching-{at}.js').as_posix()}")
     if not built:
         print("No prompt was built.")
+    corpus.atomic_write(root / RECORD, json.dumps(held, indent=1, sort_keys=True) + "\n")
+    return 0
+
+
+# @req> REQ-18486982@ovAUIy1DmRVv t5ajde
+# @req> REQ-18418155@kQKuNMnvZhlx 6tr2fk
+def found(root, criteria, reply, text):
+    if not (isinstance(reply, dict) and isinstance(reply.get("verdict"), str)
+            and reply["verdict"] in VERDICTS):
+        return None
+    met = reply["verdict"] == "satisfied"
+    # @req+ REQ-87568267@JmZEPF8Ng69z yuhiou
+    each = reply.get("criteria", []) if met else []
+    if not isinstance(each, list) or len(each) != criteria * met:
+        return None
+    # @req- yuhiou
+    groups = [reply.get("lines"), *each]
+    # @req> REQ-21983975@PaeNX9-i1wlQ 7p6xlm
+    if not all(isinstance(lines, list) and lines and all(
+            isinstance(one, dict) and isinstance(one.get("line"), str)
+            and one["line"].strip() and isinstance(one.get("file"), str)
+            for one in lines) for lines in groups):
+        return None
+    files = {}
+    for one in [one for lines in groups for one in lines] if met else []:
+        said, held = (text, None) if one["file"] == "prompt" else digested(root, one["file"])
+        if said is None or one["line"].strip() not in map(str.strip, said.split("\n")):
+            return None
+        if held:
+            files[one["file"]] = held
+    return {"verdict": reply["verdict"], "lines": groups[0], "files": files,
+            **({"criteria": each} if met else {})}
+
+
+# @req> REQ-18486982@ovAUIy1DmRVv bjxgnk
+def searched(_):
+    store, root = corpus.load()
+    held, folder = records(root), root / FOLDER
+    for where in sorted(folder.glob("*.md")) if folder.is_dir() else []:
+        uid, text = where.stem, corpus.read_text(where)
+        was = held.get(corpus.digest(text))
+        if (standing(root, held, text) or not isinstance(was, dict)
+                or was.get("verdict") not in (None, "cannot_tell")):
+            continue
+        try:
+            reply = json.loads(corpus.read_text(where.with_suffix(".json")))
+        except (ValueError, RecursionError, corpus.ReqctlError):
+            reply = None
+        read = found(root, len(corpus.find(store, uid).data.get("acceptance_criteria") or []),
+                     reply, text)
+        was["searching"] = read
+        print("\n".join(shown(uid, read)) if read else f"{uid}: no verdict")
     corpus.atomic_write(root / RECORD, json.dumps(held, indent=1, sort_keys=True) + "\n")
     return 0
 
@@ -267,8 +366,9 @@ def main(argv=None):
     steps = parsed.add_subparsers(dest="step", required=True)
     steps.add_parser("build").add_argument("--base", metavar="REF")
     steps.add_parser("take")
+    steps.add_parser("searched")
     args = parsed.parse_args(argv)
-    return {"build": build, "take": take}[args.step](args)
+    return {"build": build, "take": take, "searched": searched}[args.step](args)
 
 
 # @req> REQ-92715984@izHQzbW23L0y qwkkhk

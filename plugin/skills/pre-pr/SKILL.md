@@ -58,19 +58,30 @@ naming no lines -- before going on. Where no guard states that rule, stop the
 pass and ask the owner to create one.
 <!-- @req- ec6fz5 -->
 
-<!-- @req+ REQ-34984028@9K2_3Vg-ud_i j6i32e -->
+<!-- @req+ REQ-34984028@_psCZf8dpJ_A j6i32e -->
 Cover the code that decides a clause or acceptance criterion of the item
 cited, or, for a parameter, a data item or one of its entries, the code stating
 its value -- where a data item's entries are stated in one place and read in
-another, the place stating them -- and every line that code names, directly or
-through what those lines name, that no citation digest takes in. A Python
-citation's digest takes in each function, class and constant of the code base its
-lines name, a JavaScript citation's each function and const, let or var binding
-declared at the top level of the same file, and a TypeScript citation's those and
-each enum declared there, so what a digest takes in gets no citation of its own;
-it takes in nothing those name in turn, so that is cited too, as is JavaScript or
-TypeScript in another file, and code in any other language, that the lines name.
+another, the place stating them -- and every line that code names directly that
+no citation digest takes in. A Python citation's digest takes in each function,
+class and constant of the code base its lines name, a JavaScript citation's each
+function and const, let or var binding declared at the top level of the same
+file, and a TypeScript citation's those and each enum declared there, so what a
+digest takes in gets no citation of its own; JavaScript or TypeScript in another
+file, and code in any other language, that the lines name directly is cited too.
 <!-- @req- j6i32e -->
+
+<!-- @req+ REQ-31745207@1VD3x72ROTWR hmkvrl -->
+Code the deciding code names only through other code, which no citation digest
+of the item takes in, is cited to the item that states what that code does, not
+to each item whose cited code reaches it.
+<!-- @req- hmkvrl -->
+
+<!-- @req+ REQ-35185256@S__PTrxlMclw q3hef6 -->
+Where no item states what code named only through other code does, put a
+question for the owner asking for an item that states it, and write no citation
+over that code before the owner answers.
+<!-- @req- q3hef6 -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->
 `python .github/verify.py`, where the repository carries it: it reads every
@@ -121,9 +132,11 @@ each requirement, guard, parameter and data item the branch touches, and names
 each item that needs a reading.
 <!-- @req- 5k4yld -->
 
-<!-- @req+ REQ-85663008@aQdSXq7ibn2j vyfku6 -->
+<!-- @req+ REQ-85663008@tk3qFTz0aYud vyfku6 -->
 The reading workflows it writes hold one reading agent for each item it names
-as needing a reading, and none for an item read before from an identical prompt.
+as needing a reading, and none for an item read before as satisfied from an
+identical prompt: by a reading agent, or by a searching reader while every file
+its reply named is unchanged.
 <!-- @req- vyfku6 -->
 
 <!-- @req+ REQ-17805226@pdUrFTsMz_Wx ryz5cx -->
@@ -140,6 +153,38 @@ Run `python3 ${CLAUDE_SKILL_DIR}/reading.py take`: it takes each reading
 agent's verdict with the lines that show it, and names each item that has no
 verdict.
 <!-- @req- hutvpr -->
+
+<!-- @req+ REQ-77379732@dFXrgstPkXaL s2kcnh -->
+<!-- @req+ REQ-69173794@fzaCORJxLXi5 zuixui -->
+<!-- @req+ REQ-13095275@W9v3hH4NZDqh 2qolcv -->
+For each item whose reading agent returned cannot tell or no verdict, `take`
+writes that reading agent's prompt into a reading workflow for a searching
+reader, and names the workflow.
+<!-- @req- 2qolcv -->
+<!-- @req- zuixui -->
+<!-- @req- s2kcnh -->
+
+<!-- @req+ REQ-44819741@wl--3l7T9I_q biy6g6 -->
+Spawn the searching readers of the pass by running each reading workflow that
+`reading.py take` wrote for them: one call of the Workflow tool for each,
+`scriptPath` at the file it names and no `args`.
+<!-- @req- biy6g6 -->
+
+<!-- @req+ REQ-18486982@ovAUIy1DmRVv yccjrf -->
+<!-- @req+ REQ-21983975@PaeNX9-i1wlQ zaqd6h -->
+Run `python3 ${CLAUDE_SKILL_DIR}/reading.py searched`: it takes each searching
+reader's verdict with the lines that show it and the file each line stands in,
+and names each item that has no verdict.
+<!-- @req- zaqd6h -->
+<!-- @req- yccjrf -->
+
+<!-- @req+ REQ-87568267@JmZEPF8Ng69z 7l6dgd -->
+<!-- @req+ REQ-18418155@kQKuNMnvZhlx n3xbym -->
+A searching reader's satisfied verdict is taken only where it gives lines for
+each acceptance criterion of the item and each line stands in the prompt or in
+the file named for it, outside the corpus; otherwise the item has no verdict.
+<!-- @req- n3xbym -->
+<!-- @req- 7l6dgd -->
 
 <!-- @req+ REQ-57899112@64ONbe8G-1dz 7kivsv -->
 Open the pull request only once every step of the pass before it is clean: a

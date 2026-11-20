@@ -13,6 +13,9 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
+citations:
+  7dm5zt: 1yh9MgsBsqevpnYnn1_weyle5rJuRtIkeHtINC9IIXM
+  q3hef6: 1yh9MgsBsqevpnYnn1_weyle5rJuRtIkeHtINC9IIXM
 priority: medium
 relations:
   REQ-12222066: derives_from

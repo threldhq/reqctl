@@ -19,6 +19,10 @@ assessed:
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.satisfied: T65qoRHnttI2IUCN7onWnt5mGz1iftD3iQsjZEVCkeo
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+citations:
+  6tr2fk: UgRv3pqMvgfrgT5wQ1QGVEnn0rTR7pgY3GJlFBfmp5M
+  hha5kh: fhiL7I5Djcxw_r6ExYUVffgXYk3s0oAO5SD45-slThg
+  n3xbym: EzAS7QY8fNM-YKxR1qNoK1-JsGdSuD4gtCcYplrkKdU
 priority: medium
 relations:
   REQ-18486982: constrains
