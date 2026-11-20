@@ -78,9 +78,9 @@ to each item whose cited code reaches it.
 <!-- @req- hmkvrl -->
 
 <!-- @req+ REQ-35185256@S__PTrxlMclw q3hef6 -->
-Where no item states what that code does, put a question for the owner asking
-for an item that states it, and write no citation over that code before the
-owner answers.
+Where no item states what code named only through other code does, put a
+question for the owner asking for an item that states it, and write no citation
+over that code before the owner answers.
 <!-- @req- q3hef6 -->
 
 <!-- @req+ REQ-61212158@EISsRx_ntdvz bd2fgi -->

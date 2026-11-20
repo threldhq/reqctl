@@ -281,12 +281,14 @@ def take(_):
     built = sorted(folder.glob("*.md")) if folder.is_dir() else []
     needed = {}
     for where in built:
+        # @req> REQ-69173794@fzaCORJxLXi5 grd57x
         uid, text = where.stem, corpus.read_text(where)
         read = standing(root, held, text)
         if read:
             print("\n".join(shown(uid, read)))
             continue
         reply = where.with_suffix(".json")
+        # @req> REQ-77379732@dFXrgstPkXaL m6bum7
         read = returned(reply, text)
         held[corpus.digest(text)] = {"uid": uid, **(read or {"verdict": None, "lines": []})}
         print("\n".join(shown(uid, read)) if read else f"{uid}: no verdict")
@@ -295,6 +297,8 @@ def take(_):
         if read is None or read["verdict"] == "cannot_tell":
             needed[uid] = text
     # @req> REQ-13095275@W9v3hH4NZDqh m4t2gf
+    # @req> REQ-77379732@dFXrgstPkXaL ggdqft
+    # @req> REQ-69173794@fzaCORJxLXi5 qqtxgc
     for at, script in enumerate(workflows(needed, registered("searching"), SEARCHED), 1):
         corpus.atomic_write(folder / f"searching-{at}.js", script)
         print(f"searching reader needed for {len(needed)} item(s) -- reading workflow: "

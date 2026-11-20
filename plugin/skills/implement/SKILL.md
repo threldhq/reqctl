@@ -204,9 +204,9 @@ to each item whose cited code reaches it.
 <!-- @req- oh4zck -->
 
 <!-- @req+ REQ-35185256@S__PTrxlMclw 7dm5zt -->
-Where no item states what that code does, put a question for the owner asking
-for an item that states it, and write no citation over that code before the
-owner answers.
+Where no item states what code named only through other code does, put a
+question for the owner asking for an item that states it, and write no citation
+over that code before the owner answers.
 <!-- @req- 7dm5zt -->
 
 <!-- @req+ REQ-10074279@gXZHp2too_ik vlm5uy -->

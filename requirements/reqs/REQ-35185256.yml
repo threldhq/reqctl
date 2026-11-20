@@ -14,8 +14,8 @@ assessed:
   question_for_the_owner: _K-QXRdAUjK5uw-93kVCDMze0rpiDcH1g9GkOYINgmo
   statement_citation: APYD4GmY1GSiHqi1bntb5y7Hs2Xco_NU6OX_CZiAZzs
 citations:
-  7dm5zt: OCwux_Y_UaEQJNYLU0SbG_3tMC7fvV3QkxO1SAz68fE
-  q3hef6: OCwux_Y_UaEQJNYLU0SbG_3tMC7fvV3QkxO1SAz68fE
+  7dm5zt: 1yh9MgsBsqevpnYnn1_weyle5rJuRtIkeHtINC9IIXM
+  q3hef6: 1yh9MgsBsqevpnYnn1_weyle5rJuRtIkeHtINC9IIXM
 priority: medium
 relations:
   REQ-12222066: derives_from
