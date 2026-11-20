@@ -3,7 +3,7 @@ acceptance_criteria:
   then: the [item](item) has no verdict
   when: the return is read
 assessed:
-  REQ-85663008: tk3qFTz0aYudz-ULV1pmogPVNkhd07caD2umHZT3txU
+  REQ-85663008: 9k5HE3njLBQMDrHqT9MVHomi7TyohcrhdTJ52KdFcZw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo

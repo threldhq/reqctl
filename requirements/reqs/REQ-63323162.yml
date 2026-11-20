@@ -1,13 +1,7 @@
 acceptance_criteria:
-- given: an [item](item) whose [reading agent](reading_agent) returned no verdict
-    and whose code the owner accepted
-  then: the body states that no verdict was returned and that the owner accepted the
-    code
-  when: the pull request is prepared
-- given: an [item](item) whose [reading agent](reading_agent) returned cannot tell
-    and whose [searching reader](searching_reader) returned satisfied
-  then: the body states both verdicts and the lines the [searching reader](searching_reader)
-    gave for each acceptance criterion
+- given: an [item](item) whose code the owner accepted on an earlier pass and for
+    which this pass spawned no [reading agent](reading_agent)
+  then: the body states the acceptance
   when: the pull request is prepared
 assessed:
   REQ-18486982: ovAUIy1DmRVvn6lbZorbECuNxyFkOkl2-JZXBS0fedg

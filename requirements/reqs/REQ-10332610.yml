@@ -1,0 +1,14 @@
+acceptance_criteria: []
+assessed:
+  REQ-58972279: TE27xoNYxoQq0KiIdJdYapuaOJKFYR0UyzWEqAIwCTY
+  REQ-63323162: GraZZl019YNakPkTwH6NYrlIB9Ce-Hw3y4sEJlfS8KE
+priority: medium
+relations:
+  REQ-58972279: depends_on
+  REQ-63323162: derives_from
+status: approved
+text: When the pre-pr skill prepares a pull request, the product shall state in the
+  pull request body, with each acceptance by the owner that the pull request body
+  states, the reason that the product recorded with the acceptance.
+type: functional
+verification: inspection

@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a session that loaded the plugin of one release and finds the reqctl of another
+  then: the session's context names both releases and states that they differ
+  when: the session starts
+- given: a session that loaded the plugin and finds the reqctl of the same release
+  then: the session's context states no difference of release
+  when: the session starts
+assessed:
+  REQ-43307438: JSYnloFEMvf_V6kQrbcvf21imwhysuV2CPzLKotuOpI
+priority: medium
+relations:
+  REQ-43307438: depends_on
+status: approved
+text: If the Claude Code plugin that a session loaded and the reqctl that the session
+  finds are different releases when the session starts, then the product shall state
+  in the session's context that they are different releases, naming both.
+type: functional
+verification: demonstration

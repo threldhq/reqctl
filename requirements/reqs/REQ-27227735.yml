@@ -1,0 +1,24 @@
+acceptance_criteria:
+- given: a [reading agent](reading_agent) whose reply states not satisfied and no
+    sentence naming a clause or acceptance criterion
+  then: the [item](item) has no verdict
+  when: the reply is read
+assessed:
+  REQ-12678136: 0uDF0n6a2v1jvWcSd1TeSJRZm1h-c3IEg11yj4YQmUY
+  REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+  reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
+  reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
+  reading_verdicts.not_satisfied: hJrfvOGIh4krB2NsmrG9_2Vuj6Udn5FgswvfqbXu_rk
+priority: medium
+relations:
+  REQ-12678136: depends_on
+  REQ-18882967: constrains
+status: approved
+text: If the reply of a [reading agent](reading_agent) states ${reading_verdicts.not_satisfied}
+  or ${reading_verdicts.cannot_tell} for an [item](item) without one sentence naming
+  the clause or acceptance criterion of the [item](item) at issue and why, then the
+  product shall take no verdict for the [item](item) from the reply.
+type: functional
+verification: inspection

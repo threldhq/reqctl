@@ -1,0 +1,18 @@
+acceptance_criteria: []
+assessed:
+  REQ-18882967: W34Ole45XgJEtF5epRLjcWdo5ANNNULWQTmbsNyRwxU
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+  reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
+  reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
+  reading_verdicts.not_satisfied: hJrfvOGIh4krB2NsmrG9_2Vuj6Udn5FgswvfqbXu_rk
+priority: medium
+relations:
+  REQ-18882967: derives_from
+status: approved
+text: When a [reading agent](reading_agent) returns ${reading_verdicts.not_satisfied}
+  or ${reading_verdicts.cannot_tell} for an [item](item), the product shall take from
+  the [reading agent](reading_agent), with the verdict, one sentence naming the clause
+  or acceptance criterion of the [item](item) at issue and why.
+type: functional
+verification: inspection

@@ -1,0 +1,13 @@
+acceptance_criteria: []
+assessed:
+  REQ-42425794: haYtnGYRwgcGIOcz9cWoqnb7BRcjEo38OTliA7RDsXM
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-42425794: derives_from
+status: approved
+text: When the product is asked to record that the owner accepts the code as satisfying
+  an [item](item), the product shall record with the acceptance the reason the owner
+  gives.
+type: functional
+verification: inspection
