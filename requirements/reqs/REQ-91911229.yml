@@ -10,7 +10,7 @@ assessed:
   unreadable_hosts: XT_ZRGyc9rxsVXBky_VyKB15EkjmtnmE4bs0nN7BQ6M
   unreadable_hosts.*: az9eSjNH53g-DpjX30DJ_jU0KA5wDoINw4YEMrDa4C4
 citations:
-  lhogay: nFNLeb8AFYjqof6cNyblt9xeW4e4u0qyaW0BfEFnAJ4
+  lhogay: 1yCEVGme3gdMWusTp18fIKP4vvnFNvZKs0xSSBjF8_A
 priority: medium
 relations:
   REQ-46594931: depends_on
