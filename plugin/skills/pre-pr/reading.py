@@ -157,7 +157,7 @@ def standing(root, held, text):
 def digested(root, name):
     try:
         place, top = (root / name).resolve(), root.resolve()
-        if (not place.is_relative_to(top)
+        if (not place.is_relative_to(top) or place.is_relative_to(top / FOLDER.parent)
                 or place.is_relative_to(corpus.folder_for(top, "requirement").parent)):
             return None, None
         text = corpus.read_text(place)
