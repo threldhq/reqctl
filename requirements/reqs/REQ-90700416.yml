@@ -11,7 +11,7 @@ assessed:
   plugin_components.session_rules_hook: Tx3G6OYhH7nRFUOqsuRQHgaWPeNfTfpLxgkfH_ZuAXM
 citations:
   reo737: csJvaUxcJNJ975K3RfS33CVFgUS2YZn8fYW__hgcWbQ
-  rqniex: sa0Lix3uLrnaxJU0LVCY0ooUAlypnzIGYIsWf9_zDLQ
+  rqniex: STPNfpCgpNiw2CvxO6Kgkxe2zg-IKjIASK8OrVZ7umY
 priority: medium
 relations:
   REQ-38288492: depends_on
