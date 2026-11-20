@@ -31,6 +31,9 @@ entries:
   requirements_guard_hook:
     paths:
     - hooks/requirements-guard.py
+  searching_reader_agent:
+    paths:
+    - agents/searching.md
   session_rules_hook:
     paths:
     - hooks/session-rules.py
