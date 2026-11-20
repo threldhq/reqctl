@@ -21,7 +21,7 @@ assessed:
   plugin_components.requirements_guard_hook: zXFOhtOCSUbgeVVtEWlK5WTi-d9snkymrXlsD8bgOmU
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  e3l4gq: 9G95IxlUWVj1gXqmJ8bKfmMnEJkRS00YcQcnlLSdfYM
+  e3l4gq: R6OC1DulPxOgUnwQA4W4NtB7lMBNSER4ri48GTAJFdg
 priority: medium
 relations:
   REQ-38681394: depends_on

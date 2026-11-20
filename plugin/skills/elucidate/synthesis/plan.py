@@ -2,6 +2,7 @@
 import argparse
 import collections
 import json
+import os
 import re
 import subprocess
 import sys
@@ -309,7 +310,7 @@ def inline(label, prompt, out, shape, kind, held):
 
 # @req> REQ-99520421@EA982CV9V8L5 cucduq
 def registered(name):
-    plugin = Path(sys.argv[0]).absolute().parents[3] / PLUGIN
+    plugin = Path(os.path.abspath(sys.argv[0])).parents[3] / PLUGIN
     if not plugin.is_file():
         return name
     return f"{read_json(plugin)['name']}:{name}"
