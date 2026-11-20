@@ -11,7 +11,7 @@ acceptance_criteria:
   then: the traceback stands
   when: the fault reaches the caller
 assessed:
-  REQ-18193596: oSjMcEZMnBK6AUt5v2NbgYhrinhVNs4VX3vERw45Qpw
+  REQ-18193596: I26mta6oEsfZ-5xMrNAMApccy2nhsU-mhFsQEIgafAY
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 citations:
   44kmga: wQc6GkeSRyhwCL6-jKHTKE9jd7XpD12bfpaIBE5M2v4

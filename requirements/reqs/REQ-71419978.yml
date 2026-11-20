@@ -4,7 +4,7 @@ acceptance_criteria:
   then: the [citation digest](citation_digest) takes in no declaration for that name
   when: the product takes the [citation digest](citation_digest)
 assessed:
-  REQ-45330509: y34lW04HzVzyYKP1_Eeg3_Kd22BRh8xyjClqvCqzORc
+  REQ-45330509: Y50_uyNNrnLTeilVuyOI2Nh5IKc6yX5KP-32uZC053Y
   REQ-60833823: pdX0Xr4bVNDtl9aib-VHzOBkyw6gL8mQ6UalOOZdKso
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
 citations:

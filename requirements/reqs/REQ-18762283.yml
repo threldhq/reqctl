@@ -1,6 +1,6 @@
 acceptance_criteria: []
 assessed:
-  REQ-18193596: oSjMcEZMnBK6AUt5v2NbgYhrinhVNs4VX3vERw45Qpw
+  REQ-18193596: I26mta6oEsfZ-5xMrNAMApccy2nhsU-mhFsQEIgafAY
   citation_digest: z5BRKV4RmOb-2dZOlekouuNooD3w_jc8YbCgDoSAYy0
   code_base: y1cf7eHuIAHXRld-3oBf5Rp5TuF2gDR6VPrYyzRjeGw
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
@@ -21,8 +21,8 @@ text: The product shall hold in the prompt of a [reading agent](reading_agent) n
   the [reading agent](reading_agent) is spawned for, the value of each parameter and
   [data item](data_item) and the definition of each term that reqctl context prints
   as named by the [item](item), the code that the [citation digest](citation_digest)
-  of each [statement citation](statement_citation) of the [item](item) touched by
-  the branch takes in, and each file that a [whole-file citation](whole_file_citation)
-  of the [item](item) touched by the branch holds.
+  of each [statement citation](statement_citation) of the [item](item) takes in, whether
+  or not the branch touches the [statement citation](statement_citation), and each
+  file that a [whole-file citation](whole_file_citation) of the [item](item) holds.
 type: functional
 verification: inspection

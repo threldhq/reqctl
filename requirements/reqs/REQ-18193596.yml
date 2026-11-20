@@ -1,6 +1,6 @@
 acceptance_criteria:
-- given: an [item](item) two of whose [statement citations](statement_citation) the
-    branch touches
+- given: an [item](item) with two [statement citations](statement_citation), one of
+    which the branch touches
   then: the prompt holds the code both [citation digests](citation_digest) take in
   when: the prompt of its [reading agent](reading_agent) is built
 - given: a [data item](data_item) the branch touches
@@ -18,11 +18,6 @@ acceptance_criteria:
   when: the prompt of its [reading agent](reading_agent) is built
 - given: an [item](item) the branch touches only through a [whole-file citation](whole_file_citation)
   then: the prompt holds the file
-  when: the prompt of its [reading agent](reading_agent) is built
-- given: a [statement citation](statement_citation) of the [item](item) that the branch
-    does not touch
-  then: the prompt holds no code that only that [statement citation](statement_citation)
-    covers
   when: the prompt of its [reading agent](reading_agent) is built
 - given: a function that the covered lines of a [statement citation](statement_citation)
     name, changed while the covered lines stand
@@ -65,8 +60,8 @@ text: When the ${plugin_components.pre_pr_skill} spawns a [reading agent](readin
   reqctl context prints for the [item](item), the value of each parameter and [data
   item](data_item) and the definition of each term that reqctl context prints as named
   by the [item](item), the code that the [citation digest](citation_digest) of each
-  [statement citation](statement_citation) of the [item](item) touched by the branch
-  takes in, and each file that a [whole-file citation](whole_file_citation) of the
-  [item](item) touched by the branch holds.
+  [statement citation](statement_citation) of the [item](item) takes in, whether or
+  not the branch touches the [statement citation](statement_citation), and each file
+  that a [whole-file citation](whole_file_citation) of the [item](item) holds.
 type: functional
 verification: inspection

@@ -7,9 +7,13 @@ acceptance_criteria:
     the file
   then: the [citation digest](citation_digest) takes in that enum
   when: the product takes the [citation digest](citation_digest)
+- given: a .ts file whose covered lines call a top-level function that calls a second
+    top-level function, which the covered lines do not name
+  then: the [citation digest](citation_digest) does not take in the second function
+  when: the product takes the [citation digest](citation_digest)
 assessed:
   REQ-15770866: PJj7anRT1m47KC7NdpMZcHham_YPrV2UJhB6Ul4Hjpg
-  REQ-22608177: cdmX9Aqh6XXCn-yojTpE3O5D-_-28vBGF_suMdZV-YM
+  REQ-22608177: lN59LSJksYqW13K5uSQvsffMfBikXaAF_XfMiAaT3ho
   REQ-31471659: hKmNhTkU9xOAFkZt4GkdGC-Prnfl7nQD1cBEFSp2-so
   REQ-42668747: CRvKDa_F_lxEalWi74bFZiyexLdfBYBkTckgMyRZQtI
   REQ-60833823: pdX0Xr4bVNDtl9aib-VHzOBkyw6gL8mQ6UalOOZdKso
@@ -31,7 +35,7 @@ text: Where the lines a [statement citation](statement_citation) covers are Type
   in a .ts or a .tsx file, the product shall take into the [citation digest](citation_digest),
   as it takes the covered lines, each function, each const, let or var binding and
   each enum declared at the top level of the same file to which a name in those lines
-  resolves without running the code, and each one to which a name in those declarations
-  resolves in turn.
+  resolves without running the code, and no declaration that only a name in those
+  declarations resolves to.
 type: functional
 verification: inspection
