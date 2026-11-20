@@ -46,13 +46,15 @@ def checked(path):
     # @req- 5ycu2s
     found_faults = []
     for where, block in enumerate(paragraphs(text), 1):
+        # @req> GUARD-56877438@R8tS_bbVly0h umrpk4
+        if any(not SET.match(block, shown.start())
+               for shown in LOOSE.finditer(block)):
+            found_faults.append(
+                f"{path}: paragraph {where} shows a --value example this "
+                "guard cannot parse; use --value \"[a, b]\"")
+            continue
         found = SET.search(block)
         if not found:
-            # @req> GUARD-56877438@R8tS_bbVly0h sekx6w
-            if LOOSE.search(block):
-                found_faults.append(
-                    f"{path}: paragraph {where} shows a --value example this "
-                    "guard cannot parse; use --value \"[a, b]\"")
             continue
         members = [part.strip() for part in found.group(1).split(",")
                    if part.strip()]

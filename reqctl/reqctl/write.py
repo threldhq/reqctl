@@ -26,7 +26,7 @@ MINT_ATTEMPTS = 10
 GIVEN_UID = re.compile(rf"\A({corpus.KINDS})-[0-9]{{8}}\Z")
 
 SEPARATED = re.compile(r"\d,\d")
-BETWEEN_DIGITS = re.compile(r"\d\s*(\D)\s*\d")
+BETWEEN_DIGITS = re.compile(r"\d\s*(\D)\s*(?=\d)")
 
 ARTICLED_LINK = re.compile(r"(?:\b([Aa]n?)(\s+))?" + corpus.CONCEPT_LINK.pattern)
 
