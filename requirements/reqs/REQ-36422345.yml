@@ -1,15 +1,36 @@
 acceptance_criteria:
-- given: an agent spawned through the [elucidate workflow](elucidate_workflow)
-  then: the agent is asked again, and no return that does not match is read
-  when: its return does not match the shape its prompt states
-- given: an agent whose returns never match its shape
-  then: it fails with the last validation error and is reported as an agent that did
-    not return
-  when: it is asked for the last time
+- given: a review the best-in-class agent wrote that does not match the review shape
+  then: the product refuses the review and names the best-in-class agent to spawn
+    again from the [spawn manifest](spawn_manifest) the build wrote for it
+  when: the [best-in-class review](best_in_class_review) is checked
+- given: a recall return from a batch of more than one [proposal](proposal) that does
+    not match the recall shape
+  then: the product refuses the return and lists the recall agents of the rebuilt
+    shard to spawn again
+  when: the recall returns are read
+- given: a judge return that does not match the judge shape
+  then: the product refuses the return and lists that judge to spawn again
+  when: the verdicts are read
+- given: coverage findings that do not match the coverage shape
+  then: the product refuses the findings and names the coverage agent to spawn again
+    from the [spawn manifest](spawn_manifest) the build wrote for it
+  when: the findings are checked
+- given: a recall return from a batch of one [proposal](proposal) that does not match
+    the recall shape
+  then: the product refuses the run and names no agent to spawn
+  when: the recall returns are read
 assessed:
   REQ-22034470: UtTX-sX116FwvDC01dHo2q4QacqTj84CikdDmOwmiS0
+  REQ-29203000: rYU8NmxmlHLn0JQ67TsPgMBBlsQgvMYUmAsvD6HvRVY
+  REQ-33633053: mo4XdZGYpUJ5xWXtL-FVmQ4wyqFA6-5mS_iOgO2HENg
   REQ-61616834: ocFeB1JGP518dTo37bhkp0LKfeG6BTBIFGYwBXIEHEU
+  REQ-82676674: r-c5TnDW5gbDItidNakQGBbEcLPMFWs6YajOe94yAO8
+  REQ-94426583: 8JHtrZp73dHbt0YdrxVVJJCwoQIjtjEQO5VDptA7dRQ
+  REQ-99520421: EA982CV9V8L5HLFuolrfvaNcgaHQ4ppD6-NQNeE3E4Q
+  best_in_class_review: A8lzMPk1cmlN5RDENxUcGWDLuDZhRSKZos5fy12c7QE
   elucidate_workflow: LLnSfqUTLbwl39eM7HWxSLD1q97stP7Pc5uZbHCJu_o
+  proposal: ZFrSczFKZ53WD6euGno_lWVYOuCXq4W0HCBEoTY7E50
+  spawn_manifest: LeqZRL9C1nI_-1gFS7vV0swbkClsManYXpNbwBAobyM
 citations:
   2rmqw3: RfE0sYF_HPo3B9H7Ea0uiIyFAvuvPQQ5n3NdPyJkOwA
   5wmxfp: RfE0sYF_HPo3B9H7Ea0uiIyFAvuvPQQ5n3NdPyJkOwA
@@ -23,10 +44,17 @@ citations:
 priority: medium
 relations:
   REQ-22034470: depends_on
+  REQ-29203000: depends_on
+  REQ-33633053: derives_from
   REQ-61616834: constrains
+  REQ-82676674: derives_from
+  REQ-94426583: depends_on
+  REQ-99520421: depends_on
 status: approved
-text: When the product spawns an agent through the [elucidate workflow](elucidate_workflow),
-  the product shall accept from it only a return matching the shape its prompt states,
-  asking the agent again before failing it with the last validation error.
+text: If the return of an agent spawned through the [elucidate workflow](elucidate_workflow)
+  is missing, does not parse or does not match the shape its prompt states when the
+  product reads it, then the product shall refuse the return, naming the agents to
+  spawn in its place, or refuse the run instead where the return is a recall return
+  from a batch of one [proposal](proposal).
 type: functional
 verification: inspection
