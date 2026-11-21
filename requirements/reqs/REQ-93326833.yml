@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a request to record an acceptance for an [item](item) that gives no reason
+  then: the product records no acceptance for the [item](item)
+  when: the product is asked to record the acceptance
+assessed:
+  REQ-42425794: haYtnGYRwgcGIOcz9cWoqnb7BRcjEo38OTliA7RDsXM
+  REQ-58972279: TE27xoNYxoQq0KiIdJdYapuaOJKFYR0UyzWEqAIwCTY
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+priority: medium
+relations:
+  REQ-42425794: constrains
+  REQ-58972279: depends_on
+status: approved
+text: If the product is asked to record that the owner accepts the code as satisfying
+  an [item](item) and no reason is given, then the product shall refuse to record
+  the acceptance.
+type: functional
+verification: inspection

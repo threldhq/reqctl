@@ -16,7 +16,9 @@ relations:
   REQ-94206537: depends_on
 status: approved
 text: If the Claude Code plugin that a session loaded and the reqctl that the session
-  finds are different releases when the session starts, then the product shall state
-  in the session's context that they are different releases, naming both.
+  finds are different releases when the session starts, compared by the version that
+  the manifest of the plugin states and the version that the reqctl reports, then
+  the product shall state in the session's context that they are different releases,
+  naming both.
 type: functional
 verification: demonstration
