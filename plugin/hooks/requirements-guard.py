@@ -1470,28 +1470,36 @@ def discarded(subcommand, rest, place, unread):
             or len(word) > 2 and "--exclude".startswith(word))
     forced = unread or any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if unread and subcommand != "clean":
-        return WHOLE_TREE, False, False
+        return WHOLE_TREE, False, False, False
     if subcommand == "reset":
-        return WHOLE_TREE if {"--hard", "--merge"} & set(flags) else None, False, False
+        return WHOLE_TREE if {"--hard", "--merge"} & set(flags) else None, False, False, False
     if subcommand == "clean":
         if not forced or any(not f.startswith("--") and "n" in f[1:].split("e", 1)[0]
                                 for f in flags) or "--dry-run" in flags:
-            return None, False, False
+            return None, False, False, False
+        if not unread and not valued and all(
+                re.fullmatch(r"-[dfxX]*e|-[dfxX]+|--force", f) for f in flags) and (
+                git_reads(["clean", "--dry-run", *rest], place) == ""):
+            return None, False, False, False
         ignored = unread or short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (operands if after and not unread else WHOLE_TREE), True, ignored
+        return (operands if after and not unread else WHOLE_TREE), True, ignored, False
     if subcommand == "restore":
-        if "--staged" in flags and "--worktree" not in flags and not short_flagged(flags, "W"):
-            return None, False, False
-        return (operands or WHOLE_TREE), False, False
+        if ("--staged" in flags or any(not f.startswith("--") and "S" in f[1:].split("s", 1)[0]
+                                       for f in flags)) and "--worktree" not in flags and (
+                not short_flagged(flags, "W")):
+            return None, False, False, False
+        return (operands or WHOLE_TREE), False, False, not flags
     if separated and subcommand == "checkout":
-        return after, False, False
+        return after, False, False, not flags and operands == [*after]
     if forced or "." in operands:
-        return WHOLE_TREE, False, False
+        return WHOLE_TREE, False, False, (
+            subcommand == "checkout" and not flags and operands[0] == ".")
     if subcommand == "checkout" and operands:
-        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"],
+        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{tree}}"],
                          place)
-        return (operands[1:] if tree is not None else operands) or None, False, False
-    return None, False, False
+        return (operands[1:] if tree is not None else operands) or None, False, False, (
+            tree is None and not flags)
+    return None, False, False, False
 
 
 def refuse_discarding_work(words, here):
@@ -1527,7 +1535,7 @@ def refuse_discarding_work(words, here):
         staged = git_reads(["ls-files", "--stage", "--", top], place)
         if staged is None or any(line.startswith("160000 ") for line in staged.splitlines()):
             deny(INTO_SUBMODULES.format(source=source))
-    for paths, sweeps_untracked, sweeps_ignored in readings:
+    for paths, sweeps_untracked, sweeps_ignored, from_index in readings:
         args = [*unfiltered(place), "status", "--porcelain", "--untracked-files=normal",
                 "--ignore-submodules=dirty"]
         if sweeps_ignored:
@@ -1537,7 +1545,8 @@ def refuse_discarding_work(words, here):
         said = git_sees(args, place)
         swept = UNTRACKED if sweeps_ignored else UNTRACKED_ONLY
         at_risk = [f"  {line}" for line in said.splitlines() if line.strip()
-                   and (line[:2] in swept) == sweeps_untracked]
+                   and (line[:2] in swept) == sweeps_untracked
+                   and not (from_index and line[1] == " ")]
         if at_risk:
             deny(DISCARDS_WORK.format(listing="\n".join(at_risk)))
     # @req- uivqls
