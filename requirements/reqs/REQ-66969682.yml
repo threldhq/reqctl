@@ -1,27 +1,40 @@
 acceptance_criteria:
-- given: a session that loaded the plugin of one release and finds the reqctl of another
-  then: the session's context names both releases and states that they differ
-  when: the session starts
-- given: a session that loaded the plugin and finds the reqctl of the same release
-  then: the session's context states no difference of release
-  when: the session starts
+- given: a script that a skill of the plugin runs, the plugin being of one release
+    and the reqctl that the script uses of another
+  then: the script's output names both releases and states that they differ
+  when: the script starts
+- given: a script that a skill of the plugin runs, the plugin and the reqctl that
+    the script uses being of the same release
+  then: the script's output states no difference of release
+  when: the script starts
+- given: a script that a skill of the plugin runs, the plugin being of one release
+    and the reqctl that the script uses of another
+  then: the script goes on with its run
+  when: the script has stated that they differ
 assessed:
-  REQ-43307438: JSYnloFEMvf_V6kQrbcvf21imwhysuV2CPzLKotuOpI
-  REQ-90700416: AGFmCuLqPUC4--GB_pwIhxKPL8sKBO5RXxLmkKRMC08
+  REQ-13684791: C0Dl1DhCdIyBD_Gsl5GW1Et6c3_a7VlOVo4Q83SfdNA
+  REQ-17125120: feot1-3cXxVnBz9WJoYkF45FwUn-Ly6VUtFcHlcNR6I
+  REQ-18193596: I26mta6oEsfZ-5xMrNAMApccy2nhsU-mhFsQEIgafAY
+  REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-94206537: I4xcLLW1nbOHd4_6xrMTeEFGxtqKK9SkiDZjehM59dc
+  plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
+  plugin_components.plugin_manifest: BlkPgUD1qOIZNrPZ8skmYno4hKehZ52EWM_5VQM96Hw
 citations:
   crcpyo: NhJuUhoPKVF-ai-aGiH6sSbSKbrU_j2S0kOFTPQ8nKI
   ijl5lw: 6otSPLBDA4nDX69o0PMrKG-ChV-UdIDj2yFkap_PJzM
 priority: medium
 relations:
-  REQ-43307438: depends_on
-  REQ-90700416: constrains
+  REQ-13684791: constrains
+  REQ-17125120: constrains
+  REQ-18193596: constrains
+  REQ-38288492: depends_on
   REQ-94206537: depends_on
 status: approved
-text: If the Claude Code plugin that a session loaded and the reqctl that the session
-  finds are different releases when the session starts, compared by the version that
-  the manifest of the plugin states and the version that the reqctl reports, then
-  the product shall state in the session's context that they are different releases,
-  naming both.
+text: If the Claude Code plugin that a script belongs to and the reqctl that the script
+  uses are different releases when a script that a skill of the plugin runs starts,
+  compared by the version that the ${plugin_components.plugin_manifest} states and
+  the version that the reqctl reports, then the product shall state on the script's
+  output that they are different releases, naming both, and go on with the run of
+  the script.
 type: functional
 verification: demonstration
