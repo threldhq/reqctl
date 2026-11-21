@@ -10,7 +10,7 @@ citations:
 priority: medium
 relations:
   REQ-43307438: depends_on
-status: approved
+status: deprecated
 text: If a session finds no reqctl when the session starts, then the product shall
   state in the session's context that the session finds no reqctl.
 type: functional
