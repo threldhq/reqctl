@@ -3288,7 +3288,7 @@ def names_corpus(part, cwd):
     said = heading(part)
     words = [*(GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(said))),
              *program_words(part, cwd)]
-    git = invoked(argv(said[COMPOUND.match(masked(said)).end():])[0])[:1] == ["git"]
+    git = git_split(argv(said[COMPOUND.match(masked(said)).end():])[0])
     return any(CORPUS_DIR.search(word) or is_corpus_root(word) or reaches_corpus(word, cwd)
                or not git and not re.search(r"\s", word)
                and any(map(is_corpus_root, re.split("[:,]", word)))
