@@ -3,13 +3,11 @@ import json
 import sys
 from pathlib import Path
 
-# @req> REQ-66969682@cz1F6um1nDLN dpptld
-MANIFEST = Path(__file__).resolve().parents[3] / ".claude-plugin" / "plugin.json"
-
 
 def compare():
     try:
-        stated = str(json.loads(MANIFEST.read_text(encoding="utf-8"))["version"])
+        stated = str(json.loads(Path(__file__).resolve().parents[3].joinpath(
+            ".claude-plugin", "plugin.json").read_text(encoding="utf-8"))["version"])
     except (OSError, ValueError, KeyError, TypeError) as broken:
         stated = f"unreadable ({broken!r})"
     try:

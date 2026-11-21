@@ -499,8 +499,8 @@ def reported(_):
 
 # @req> REQ-18193596@I26mta6oEsfZ rswytl
 def main(argv=None):
+    # @req> REQ-66969682@cz1F6um1nDLN igabum
     release.compare()
-    # @req> REQ-66969682@cz1F6um1nDLN neliir
     parsed = argparse.ArgumentParser()
     steps = parsed.add_subparsers(dest="step", required=True)
     steps.add_parser("build").add_argument("--base", metavar="REF")
