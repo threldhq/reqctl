@@ -87,7 +87,7 @@ give a one-clause reason in clause. Set shard to "{shard}" and batch to
 
 SHARD = "Shard {shard}: {count} of the {total} {scope} the corpus holds, whole"
 OTHERS = "The run's {count} proposals, each recalled against the others"
-# @req> REQ-36422345@O-3IKmoFSYSG ghenbw
+# @req> REQ-36422345@F2EhsuLktVu8 ghenbw
 WRITE = """Write the result as JSON matching this shape to {out} with the Write tool,
 then return exactly what you wrote. Do not narrate.
 
@@ -196,7 +196,7 @@ UNBOUND = """\
 This proposal states a build rule, which binds to no dimension. What it binds
 to is not a question about it."""
 
-# @req> REQ-36422345@O-3IKmoFSYSG aw3cqu
+# @req> REQ-36422345@F2EhsuLktVu8 aw3cqu
 # @req> REQ-47744588@ZrmtfTL6RUOL kldtif
 COVERAGE = """You read the owner's words back against this run's proposals and
 its declined list, and name what neither accounts for. You have no tool to read
@@ -1227,12 +1227,14 @@ def recalled(run, state_held):
     stopped, refused = {}, []
     for label, spec in sorted(state_held["recall"].items()):
         path = run / "returns" / "recall" / f"{label}.json"
+        # @req+ REQ-36422345@F2EhsuLktVu8 mabgnd
         data, why = read_return(path, shapes.recall(
             state_held["shards"][spec["shard"]]["scope"]))
         # @req> REQ-82676674@r-c5TnDW5gbD ag2nbe
         if data is None:
             stopped.setdefault(spec["shard"], []).append(f"{label} {why}")
             continue
+        # @req- mabgnd
         # @req+ REQ-25592483@hyAvD5E-8sMd vamoo7
         stated = {str(one) for one in spec["proposals"]}
         seen = {str(entry["proposal"]) for entry in data["results"]}
@@ -1276,6 +1278,7 @@ def halved(run, state_held, stopped, held, words, declined, dictionary_text,
                          if spec["shard"] == name and not spec.get("kept")),
                         default=state_held["shards"][name]["batch"]))
         # @req> REQ-33633053@mo4XdZGYpUJ5 mrzj65
+        # @req> REQ-36422345@F2EhsuLktVu8 tbckxo
         if batch < 2:
             raise SystemExit(
                 f"{'; '.join(whys)}, and its batch is already one proposal, so "
@@ -1461,6 +1464,7 @@ def judge(run):
                                  shapes.recall(scope),
                                  state_held["agents"]["recall"]))
     # @req> REQ-82676674@r-c5TnDW5gbD 3jbdj7
+    # @req> REQ-36422345@F2EhsuLktVu8 uarji3
     if stopped or refused:
         print(f"{len(spawned)} recall agent(s) to spawn again: "
               f"{manifest(run, 'recall', spawned)}")
@@ -1552,11 +1556,13 @@ def group_returns(run, number, groups):
     lines, refused, stated = [], [], set()
     for at, group in enumerate(groups, 1):
         path = run / "returns" / "judge" / f"{number}-g{at}.json"
+        # @req+ REQ-36422345@F2EhsuLktVu8 da4alu
         data, why = read_return(path, shapes.GROUP)
         # @req> REQ-46162234@7Wvh6guc-Moy 4e2mbt
         if data is None:
             refused.append((f"{number}-g{at}", why))
             continue
+        # @req- da4alu
         # @req+ REQ-26720462@C-3RqWsFVbDL fdqj6u
         foreign = sorted({finding["uid"] for finding in data["findings"]
                           if finding["uid"] not in group})
@@ -1622,6 +1628,7 @@ def final(run):
         spawned.append(spawn(run, "final", number, f"final:{number}",
                              shapes.JUDGE, judging))
     # @req> REQ-82676674@r-c5TnDW5gbD ukzxgc
+    # @req> REQ-36422345@F2EhsuLktVu8 ujyjgq
     if again:
         print(f"{len(again)} group judge(s) to spawn again, {waiting} final "
               f"prompt(s) waiting on them: {manifest(run, 'judge', again)}")

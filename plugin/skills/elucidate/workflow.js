@@ -6,7 +6,7 @@ export const meta = {
 }
 // @req- awfsja
 
-// @req+ REQ-36422345@O-3IKmoFSYSG dnv4ob
+// @req+ REQ-36422345@F2EhsuLktVu8 dnv4ob
 function task(one) {
   return [
     `Read exactly one file with the Read tool: ${one.path}. It states everything you are given and everything you are asked, including the path to write to and the shape to write.`,
@@ -17,10 +17,8 @@ function task(one) {
 
 // @req+ REQ-29203000@rYU8NmxmlHLn o7zxou
 // @req+ REQ-23060027@zeNeSryv-0-1 xxpn4n
-// @req+ REQ-36422345@O-3IKmoFSYSG kgth24
 const results = await parallel(args.prompts.map(one => () =>
-  agent(one.prompt ?? task(one), { label: one.label, phase: 'Spawn', schema: args.shapes[one.schema], model: one.model, effort: one.effort, agentType: one.agent })))
-// @req- kgth24
+  agent(one.prompt ?? task(one), { label: one.label, phase: 'Spawn', model: one.model, effort: one.effort, agentType: one.agent })))
 // @req- xxpn4n
 // @req- o7zxou
 

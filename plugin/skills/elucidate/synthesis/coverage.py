@@ -111,9 +111,11 @@ def main(argv=None):
 
     where = Path(args.found)
     # @req> REQ-27370034@uYfNuf6k4Q_h ptkgg3
+    # @req> REQ-36422345@F2EhsuLktVu8 j74vgt
     respawn = ("spawn the coverage agent again from "
                f"{where.parent / 'workflow' / 'coverage.json'}")
     # @req+ REQ-95375719@-TYbW5JhiwAf k26kry
+    # @req+ REQ-36422345@F2EhsuLktVu8 wyd2la
     try:
         found = corpus.loads(corpus.read_text(where), where)
     except corpus.ReqctlError as broken:
@@ -121,12 +123,14 @@ def main(argv=None):
         # @req> REQ-27370034@uYfNuf6k4Q_h way2fx
         raise corpus.ReqctlError(f"{broken} -- {respawn}") from broken
     held = faults(found, corpus.read_text(args.words))
+    # @req- wyd2la
     if held:
         corpus.remove(where)
     # @req- k26kry
     # @req+ REQ-74501429@3K-aFi7yo4Cp rzcign
     for fault in held:
         print(f"{where.name}: {fault}")
+    # @req> REQ-36422345@F2EhsuLktVu8 i2rbcx
     if held:
         # @req> REQ-27370034@uYfNuf6k4Q_h nodcxf
         print(f"\n{len(held)} fault(s): the run does not act on these findings "

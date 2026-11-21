@@ -18,7 +18,5 @@ Copy each passage you quote exactly as the owner's words state it.
 <!-- @req> REQ-29409340@tDdPsgiXDyDR lf5wht -->
 You write no file other than the one your prompt names.
 
-<!-- @req+ REQ-36422345@O-3IKmoFSYSG 2rmqw3 -->
 Return exactly what you wrote in it, and nothing more: a return that differs
 from the file is a second version of what you found.
-<!-- @req- 2rmqw3 -->

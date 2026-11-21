@@ -19,5 +19,4 @@ You read no file other than the one your prompt names: it states everything you 
 <!-- @req> REQ-29409340@tDdPsgiXDyDR m5lz5z -->
 You write no file other than the one that file names.
 
-<!-- @req> REQ-36422345@O-3IKmoFSYSG h6q3eh -->
 Return exactly what you wrote in it, and nothing more.

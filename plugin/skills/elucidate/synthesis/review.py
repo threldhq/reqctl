@@ -650,6 +650,7 @@ def check(run):
                                     "the review is read against the owner's "
                                     "words"))
     path = run / plan.REVIEWED
+    # @req+ REQ-36422345@F2EhsuLktVu8 uapb3o
     review, why = plan.read_return(path, shapes.REVIEW)
     # @req> REQ-82432523@dA6MI5WknAH4 4cioyu
     again = (f"run `rm -f {path} {run / plan.REMOVED}`, then spawn the "
@@ -660,6 +661,7 @@ def check(run):
     if review is None:
         print(f"{path}: the review {why}; {again}")
         return 1
+    # @req- uapb3o
     # @req+ REQ-82432523@dA6MI5WknAH4 mwzi36
     blind = README.split("{text}")[0] not in plan.read_json(
         plan.manifested(run, SPAWN))["prompts"][0]["prompt"]
@@ -769,12 +771,14 @@ def put(run, held, pages, again):
 def weighed(run):
     # @req+ REQ-49761714@PmbDdeKBVbZF tmqibm
     path = run / CHECKED
+    # @req+ REQ-36422345@F2EhsuLktVu8 u7qxoq
     held, why = plan.read_return(path, shapes.check(CRITERIA))
     again = (f"run `rm -f {path}`, then spawn the best-in-class agent again "
              f"through the workflow with {plan.manifested(run, WEIGH)}")
     if held is None:
         print(f"{path}: the check {why}; {again}")
         return 1
+    # @req- u7qxoq
     limits = settings.quantities(plan.configured(run, ("review_limits.",)),
                                  "review_limits")
     # @req+ REQ-80953393@Rww947Q5J-HC 3ythhx
