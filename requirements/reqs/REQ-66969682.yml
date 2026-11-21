@@ -9,6 +9,9 @@ assessed:
   REQ-43307438: JSYnloFEMvf_V6kQrbcvf21imwhysuV2CPzLKotuOpI
   REQ-90700416: AGFmCuLqPUC4--GB_pwIhxKPL8sKBO5RXxLmkKRMC08
   REQ-94206537: I4xcLLW1nbOHd4_6xrMTeEFGxtqKK9SkiDZjehM59dc
+citations:
+  crcpyo: NhJuUhoPKVF-ai-aGiH6sSbSKbrU_j2S0kOFTPQ8nKI
+  ijl5lw: 6otSPLBDA4nDX69o0PMrKG-ChV-UdIDj2yFkap_PJzM
 priority: medium
 relations:
   REQ-43307438: depends_on

@@ -112,16 +112,19 @@ def code(root, uid, files, citations, reach, texts):
 
 # @req> REQ-18193596@I26mta6oEsfZ xdxo6t
 # @req> REQ-18762283@KHBhiDTwKW9T plidzn
+# @req> REQ-13632010@magDohgvXtNz tmjiit
 def prompt(root, uid, files, citations, reach, texts):
+    held = code(root, uid, files, citations, reach, texts)
+    mark = corpus.digest("\n".join(held))
     return "\n".join([
-        f"ITEM {uid}", *stated(uid), "", "CODE",
-        *code(root, uid, files, citations, reach, texts), "", "RETURN",
+        f"ITEM {uid}", *stated(uid), "", f"CODE STARTS {mark}", *held,
+        f"CODE ENDS {mark}", "", "RETURN",
         (f"Write your reply to {(FOLDER / uid).as_posix()}.json, in the shape "
          f"your definition states, with verdict one of {', '.join(VERDICTS)}."),
         ""])
 
 
-# @req> REQ-85663008@tk3qFTz0aYud z6mbsu
+# @req> REQ-85663008@z5Y4x8rasoxc z6mbsu
 def records(root):
     where = root / RECORD
     if not where.exists():
@@ -139,7 +142,7 @@ def records(root):
     return held
 
 
-# @req> REQ-85663008@tk3qFTz0aYud neu5tj
+# @req> REQ-85663008@z5Y4x8rasoxc neu5tj
 def standing(root, held, text):
     was = held.get(corpus.digest(text))
     read = sound(was, text)
@@ -170,9 +173,28 @@ def unchanged(root, files):
         was and digested(root, name)[1] == was for name, was in files.items())
 
 
+# @req> REQ-85663008@z5Y4x8rasoxc ypzsnn
+def named(root, reply):
+    if not isinstance(reply, dict):
+        return {}
+    each = reply.get("criteria")
+    groups = [reply.get("lines"), *(each if isinstance(each, list) else [])]
+    return {one["file"]: digested(root, one["file"])[1]
+            for lines in groups if isinstance(lines, list)
+            for one in lines if isinstance(one, dict)
+            and isinstance(one.get("file"), str) and one["file"] != "prompt"}
+
+
+# @req> REQ-85663008@z5Y4x8rasoxc 6ofxde
+def kept(root, held, text):
+    was = held.get(corpus.digest(text))
+    return accepted(was) and unchanged(root, was.get("files", {}))
+
+
 # @req> REQ-18882967@W34Ole45XgJE 7xdgt7
 def shown(uid, read):
     return [f"{uid}: {read['verdict']}",
+            *([f"    at issue: {read['issue']}"] if read.get("issue") else []),
             *(f"    {line}" if isinstance(line, str)
               else f"    {line['file']}: {line['line']}" for line in read["lines"]),
             *(f"    criterion {at}: {line['file']}: {line['line']}"
@@ -212,7 +234,7 @@ def workflows(needed, agent, spawned):
     return [SCRIPT % ",\n".join(pack) for pack in packs]
 
 
-# @req> REQ-85663008@tk3qFTz0aYud ajo3rv
+# @req> REQ-85663008@z5Y4x8rasoxc ajo3rv
 # @req> REQ-18193596@I26mta6oEsfZ dt63ke
 def build(args):
     store, root = corpus.load()
@@ -236,10 +258,13 @@ def build(args):
     for uid, text in built.items():
         corpus.atomic_write(folder / f"{uid}.md", text)
         read = standing(root, held, text)
-        if not read:
+        if read:
+            print("\n".join(shown(uid, read) + ["    read before from an identical prompt"]))
+        elif kept(root, held, text):
+            print(f"{uid}: accepted by the owner against an identical prompt -- not read again")
+        else:
             needed[uid] = text
-        print("\n".join(shown(uid, read) + ["    read before from an identical prompt"])
-              if read else f"{uid}: reading needed -- {(FOLDER / uid).as_posix()}.md")
+            print(f"{uid}: reading needed -- {(FOLDER / uid).as_posix()}.md")
     # @req> REQ-17125120@feot1-3cXxVn v7riys
     # @req> REQ-99520421@EA982CV9V8L5 faw5sx
     for at, script in enumerate(workflows(needed, registered("reading"), SPAWNED), 1):
@@ -251,15 +276,27 @@ def build(args):
 
 
 # @req> REQ-18882967@W34Ole45XgJE up776f
+# @req> REQ-12678136@0uDF0n6a2v1j y7doxo
+# @req> REQ-27227735@7V5PywZWMbkg bw7uvd
 def sound(held, text):
     said = {line.strip() for line in text.split("\n")}
     if not (isinstance(held, dict) and isinstance(held.get("verdict"), str)
             and held["verdict"] in VERDICTS
             and isinstance(held.get("lines"), list) and held["lines"]
             and all(isinstance(line, str) and line.strip() in said - {""}
-                    for line in held["lines"])):
+                    for line in held["lines"])
+            and (issue := at_issue(held)) is not None):
         return None
-    return {"verdict": held["verdict"], "lines": held["lines"]}
+    return {"verdict": held["verdict"], "lines": held["lines"], **issue}
+
+
+def at_issue(reply):
+    if reply["verdict"] == "satisfied":
+        return {}
+    said = reply.get("issue")
+    if not isinstance(said, str) or not said.strip() or "\n" in said.strip():
+        return None
+    return {"issue": said.strip()}
 
 
 # @req> REQ-18882967@W34Ole45XgJE w3h7qz
@@ -284,6 +321,9 @@ def take(_):
         read = standing(root, held, text)
         if read:
             print("\n".join(shown(uid, read)))
+            continue
+        if kept(root, held, text):
+            print(f"{uid}: accepted by the owner against an identical prompt -- not read again")
             continue
         reply, at = where.with_suffix(".json"), corpus.digest(text)
         # @req> REQ-77379732@dFXrgstPkXaL m6bum7
@@ -311,9 +351,12 @@ def take(_):
 
 # @req> REQ-18486982@ovAUIy1DmRVv t5ajde
 # @req> REQ-18418155@kQKuNMnvZhlx 6tr2fk
+# @req> REQ-18264143@WAQF00ATdLzX hbbevv
+# @req> REQ-75334157@N992YetUABCQ 4ennyj
 def found(root, criteria, reply, text):
     if not (isinstance(reply, dict) and isinstance(reply.get("verdict"), str)
-            and reply["verdict"] in VERDICTS):
+            and reply["verdict"] in VERDICTS
+            and (issue := at_issue(reply)) is not None):
         return None
     met = reply["verdict"] == "satisfied"
     # @req+ REQ-87568267@JmZEPF8Ng69z yuhiou
@@ -336,7 +379,7 @@ def found(root, criteria, reply, text):
         if held:
             files[one["file"]] = held
     return {"verdict": reply["verdict"], "lines": groups[0], "files": files,
-            **({"criteria": each} if met else {})}
+            **({"criteria": each} if met else {}), **issue}
 
 
 # @req> REQ-18486982@ovAUIy1DmRVv bjxgnk
@@ -346,7 +389,8 @@ def searched(_):
     for where in sorted(folder.glob("*.md")) if folder.is_dir() else []:
         uid, text = where.stem, corpus.read_text(where)
         was = held.get(corpus.digest(text))
-        if (standing(root, held, text) or not isinstance(was, dict)
+        if (standing(root, held, text) or kept(root, held, text)
+                or not isinstance(was, dict)
                 or was.get("verdict") not in (None, "cannot_tell")):
             continue
         try:
@@ -355,7 +399,7 @@ def searched(_):
             reply = None
         read = found(root, len(corpus.find(store, uid).data.get("acceptance_criteria") or []),
                      reply, text)
-        was["searching"] = read
+        was["searching"], was["files"] = read, named(root, reply)
         print("\n".join(shown(uid, read)) if read else f"{uid}: no verdict")
     corpus.atomic_write(root / RECORD, json.dumps(held, indent=1, sort_keys=True) + "\n")
     return 0
@@ -363,14 +407,22 @@ def searched(_):
 
 # @req> REQ-42425794@haYtnGYRwgcG lcss3l
 def accepted(was):
-    return ({"accepted": True}
-            if isinstance(was, dict) and was.get("accepted") is True else {})
+    if not (isinstance(was, dict) and was.get("accepted") is True):
+        return {}
+    return {key: was[key] for key in ("accepted", "reason", "files") if key in was}
 
 
 # @req> REQ-42425794@haYtnGYRwgcG xcukbw
+# @req> REQ-58972279@TE27xoNYxoQq 7322wn
 def accept(args):
     store, root = corpus.load()
     uid = corpus.find(store, args.uid).uid
+    # @req+ REQ-93326833@RQp2KSyOF_lP w6daxd
+    reason = (args.reason or "").strip()
+    if not reason:
+        raise corpus.ReqctlError(f"no reason is given for accepting the code as "
+                                 f"satisfying {uid} -- give the owner's with --reason")
+    # @req- w6daxd
     held, where = records(root), root / FOLDER / f"{uid}.md"
     if not where.is_file():
         raise corpus.ReqctlError(f"no prompt is built for {uid} -- run build on a "
@@ -378,13 +430,14 @@ def accept(args):
     at = corpus.digest(corpus.read_text(where))
     was = held.get(at)
     held[at] = {"uid": uid, "verdict": None, "lines": [],
-                **(was if isinstance(was, dict) else {}), "accepted": True}
+                **(was if isinstance(was, dict) else {}), "accepted": True,
+                "reason": reason}
     corpus.atomic_write(root / RECORD, json.dumps(held, indent=1, sort_keys=True) + "\n")
-    print(f"{uid}: accepted by the owner as satisfying the item")
+    print(f"{uid}: accepted by the owner as satisfying the item: {reason}")
     return 0
 
 
-# @req> REQ-63323162@F9pxvOJXIC7v u37wmy
+# @req> REQ-63323162@-dWXL3C-LaxX u37wmy
 def quoted(lines, indent):
     said = [part for line in lines
             for part in (line if isinstance(line, str)
@@ -394,12 +447,16 @@ def quoted(lines, indent):
     return [indent + part for part in (fence, *said, fence)]
 
 
-# @req> REQ-63323162@F9pxvOJXIC7v xyonaw
+# @req> REQ-63323162@-dWXL3C-LaxX xyonaw
+# @req> REQ-80563826@LhN5BKyOutx2 wct7v5
 def worded(read):
-    return read["verdict"].replace("_", " ") if read else "no verdict was returned"
+    if not read:
+        return "no verdict was returned"
+    return read["verdict"].replace("_", " ") + (
+        f" -- {read['issue']}" if read.get("issue") else "")
 
 
-# @req> REQ-63323162@F9pxvOJXIC7v 55rz7r
+# @req> REQ-63323162@-dWXL3C-LaxX 55rz7r
 def reported(_):
     _, root = corpus.load()
     held, folder = records(root), root / FOLDER
@@ -426,8 +483,11 @@ def reported(_):
                              "searching reader read it.")
         elif read is None or read["verdict"] == "cannot_tell":
             lines.append("  - Searching reader: not returned")
+        # @req+ REQ-10332610@PHoJmeAqUqB5 bm4vv7
         if accepted(was):
-            lines.append("  - The owner accepted the code as satisfying the item.")
+            lines.append("  - The owner accepted the code as satisfying the item"
+                         + (f": {was['reason']}" if was.get("reason") else "."))
+        # @req- bm4vv7
     if not built:
         lines.append("No prompt was built.")
     print("\n".join(lines))
@@ -442,8 +502,11 @@ def main(argv=None):
     steps.add_parser("take")
     steps.add_parser("searched")
     # @req> REQ-42425794@haYtnGYRwgcG upu453
-    steps.add_parser("accept").add_argument("uid")
-    # @req> REQ-63323162@F9pxvOJXIC7v xtdpvc
+    accepting = steps.add_parser("accept")
+    accepting.add_argument("uid")
+    # @req> REQ-58972279@TE27xoNYxoQq fpnznd
+    accepting.add_argument("--reason")
+    # @req> REQ-63323162@-dWXL3C-LaxX xtdpvc
     steps.add_parser("stated")
     args = parsed.parse_args(argv)
     return {"build": build, "take": take, "searched": searched, "accept": accept,

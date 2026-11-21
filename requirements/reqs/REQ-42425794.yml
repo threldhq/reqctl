@@ -14,10 +14,10 @@ assessed:
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
 citations:
   6br7yh: eExhwRr3Yh-SMqUDiADpPmpO4U0v73V2YLdV8ZLEMm0
-  7sis6y: f7JExNuJhLSzzaA3XFrR0bcgj7tDZMB-3v2zrNg5FQg
-  lcss3l: F5eiXfYN_CINshEsPur7m7aprC5cTzP013JvnewcGpI
-  upu453: Y3UT7TT6Vp24z1oKoliOy0Dl0BbhQDCJDixNBGyZtTs
-  xcukbw: O_-D9UAfcB-dKlbfQiWsJyo-e8RJh4OPDvTQVxJq8Ps
+  7sis6y: nczLv51CHzKimI2-sB2X2A9WPURpd1coI9tgTV_xt3c
+  lcss3l: q1jXUbL9muJm3Oc2n8quSmWrUNEx2gm5KHW9iUimR9g
+  upu453: oXkNffK7dN16MffvLvNDgozJl3mjtxQfp46KVxZQKAA
+  xcukbw: yj9SFXCR2VivYlSLOavzmYtuRkqjcv6AwCEBVuj9FOs
 priority: medium
 relations:
   REQ-18193596: depends_on

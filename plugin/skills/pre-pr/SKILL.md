@@ -132,11 +132,13 @@ each requirement, guard, parameter and data item the branch touches, and names
 each item that needs a reading.
 <!-- @req- 5k4yld -->
 
-<!-- @req+ REQ-85663008@tk3qFTz0aYud vyfku6 -->
+<!-- @req+ REQ-85663008@z5Y4x8rasoxc vyfku6 -->
 The reading workflows it writes hold one reading agent for each item it names
 as needing a reading, and none for an item read before as satisfied from an
 identical prompt: by a reading agent, or by a searching reader while every file
-its reply named is unchanged.
+its reply named is unchanged. They hold none either for an item whose code the
+owner accepted against an identical prompt while, where a searching reader read
+the item, every file its reply named is unchanged.
 <!-- @req- vyfku6 -->
 
 <!-- @req+ REQ-17805226@pdUrFTsMz_Wx ryz5cx -->
@@ -153,6 +155,14 @@ Run `python3 ${CLAUDE_SKILL_DIR}/reading.py take`: it takes each reading
 agent's verdict with the lines that show it, and names each item that has no
 verdict.
 <!-- @req- hutvpr -->
+
+<!-- @req+ REQ-12678136@0uDF0n6a2v1j qhmgbr -->
+<!-- @req+ REQ-18264143@WAQF00ATdLzX beiiyk -->
+With a verdict of not satisfied or cannot tell, `take` and `searched` take the
+one sentence the reply gives as at issue, and print it; a reply of either
+verdict without that sentence is no verdict.
+<!-- @req- beiiyk -->
+<!-- @req- qhmgbr -->
 
 <!-- @req+ REQ-77379732@dFXrgstPkXaL s2kcnh -->
 <!-- @req+ REQ-69173794@fzaCORJxLXi5 zuixui -->
@@ -210,7 +220,7 @@ names none, say that none was touched.
 <!-- @req- hbi4d7 -->
 
 <!-- @req+ REQ-16376491@pLH6qM9Dx4wh zvf5ke -->
-<!-- @req+ REQ-56883985@EzC4IvKLNiB8 oyxth4 -->
+<!-- @req+ REQ-56883985@Uk2MFr8R8HUr oyxth4 -->
 Where a reading agent returns not satisfied for an item, or the item's searching
 reader returns not satisfied, cannot tell or no verdict -- a satisfied reply
 that `searched` did not take is no verdict -- put a question for the owner:
@@ -218,12 +228,18 @@ change the code, revise the item, or accept the code as satisfying the item.
 Write no pull request body before the owner answers. Ask nothing about an item
 whose reading agent returned cannot tell or no verdict before its searching
 reader returns, and nothing about an item whose searching reader returned
-satisfied.
+satisfied. Ask nothing about an item the pass spawned no reading agent for:
+`build` names it as read before or as accepted by the owner.
 <!-- @req- oyxth4 -->
 
 Where the item a statement citation names is deprecated, ask nothing, and
 remove the citation with `reqctl untag ID`.
 <!-- @req- zvf5ke -->
+
+<!-- @req+ REQ-68224602@Aebq69197_27 2tealp -->
+State in that question, with a verdict of not satisfied or cannot tell, the
+sentence `take` or `searched` printed as at issue with the verdict.
+<!-- @req- 2tealp -->
 
 <!-- @req+ REQ-42425794@haYtnGYRwgcG 6br7yh -->
 Where the owner accepts the code as satisfying an item, run
@@ -232,13 +248,28 @@ against the item and the prompt built for the item's reading agent, so the
 acceptance counts only while that prompt is unchanged.
 <!-- @req- 6br7yh -->
 
-<!-- @req+ REQ-63323162@F9pxvOJXIC7v 5k3ohn -->
+<!-- @req+ REQ-58972279@TE27xoNYxoQq nmtp3f -->
+<!-- @req+ REQ-93326833@RQp2KSyOF_lP fzw5ve -->
+Give `accept` the reason the owner gives, as `--reason "..."`: it records the
+reason with the acceptance, and refuses to record an acceptance given none.
+<!-- @req- fzw5ve -->
+<!-- @req- nmtp3f -->
+
+<!-- @req+ REQ-63323162@-dWXL3C-LaxX 5k3ohn -->
 Run `python3 ${CLAUDE_SKILL_DIR}/reading.py stated` and put what it prints in
 the pull request body: for each item the branch touches, the reading agent's
 verdict with the lines that show it, the searching reader's where one was
 spawned, with the lines it gave for each acceptance criterion, and the owner's
-acceptance where one is recorded.
+acceptance where one is recorded, also for an item this pass did not read
+again.
 <!-- @req- 5k3ohn -->
+
+<!-- @req+ REQ-80563826@LhN5BKyOutx2 o43yvd -->
+<!-- @req+ REQ-10332610@PHoJmeAqUqB5 r5jz5i -->
+With each verdict of not satisfied or cannot tell it states the sentence taken
+with the verdict, and with each acceptance the reason recorded with it.
+<!-- @req- r5jz5i -->
+<!-- @req- o43yvd -->
 
 <!-- @req+ REQ-55343532@_Cx35RaHIOyc zdqpjy -->
 Run `reqctl evidence` and put the evidence block in the pull request body as

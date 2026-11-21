@@ -3,6 +3,8 @@ assessed:
   REQ-13632010: magDohgvXtNznMiPxszXQbMOqzzDhkiWLyyJMT6-cRw
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+citations:
+  22s3bh: 6agqjh4LYIxLyOn2GUwVK4b_Fp_jmpvqRhuDFntYpqw
 priority: medium
 relations:
   REQ-13632010: depends_on

@@ -4,6 +4,8 @@ assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-69173794: fzaCORJxLXi5ux43n4OwUA8H9FBxko59Z0DMgJjwzLk
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
+citations:
+  g43inq: 6agqjh4LYIxLyOn2GUwVK4b_Fp_jmpvqRhuDFntYpqw
 priority: medium
 relations:
   REQ-13632010: depends_on
