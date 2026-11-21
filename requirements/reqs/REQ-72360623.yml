@@ -4,9 +4,6 @@ acceptance_criteria:
   when: the session starts
 assessed:
   REQ-43307438: JSYnloFEMvf_V6kQrbcvf21imwhysuV2CPzLKotuOpI
-citations:
-  eyhgli: NhJuUhoPKVF-ai-aGiH6sSbSKbrU_j2S0kOFTPQ8nKI
-  pylefz: 39t1xGxOEASeenH-DdLkePBS9lDyZjNreEdNrgflKN8
 priority: medium
 relations:
   REQ-43307438: depends_on

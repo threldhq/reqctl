@@ -7,6 +7,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+# @req> REQ-66969682@cz1F6um1nDLN elbjdc
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "elucidate" / "synthesis"))
+import release
 from reqctl.reach import Reach
 
 from reqctl import baseline, cite, corpus
@@ -496,6 +499,8 @@ def reported(_):
 
 # @req> REQ-18193596@I26mta6oEsfZ rswytl
 def main(argv=None):
+    release.compare()
+    # @req> REQ-66969682@cz1F6um1nDLN neliir
     parsed = argparse.ArgumentParser()
     steps = parsed.add_subparsers(dest="step", required=True)
     steps.add_parser("build").add_argument("--base", metavar="REF")
