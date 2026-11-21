@@ -120,7 +120,7 @@ NAME_ONLY = ("ls", "stat", "file", "reqctl", "echo", "printf", "du", "tree",
 READ = re.compile(rf"^\s*({'|'.join(READ_VERBS)})(?=\s|$)")
 CONTENT_READ = re.compile(
     rf"^\s*({'|'.join(v for v in READ_VERBS if v not in NAME_ONLY)})(?=\s|$)")
-TEST = re.compile(r"\s*(?:(?:if|elif|while|until|then|do|else|time|[!{])\s+)*(?:test|\[\[?)(?=\s|$)")
+TEST = re.compile(r"\s*(?:(?:if|elif|while|until|then|do|else|time|[!{])\s+)*(?:test|\[\[?)(?!\S)")
 SINK = re.compile(
     r"^\s*(sort|uniq|awk|sed|tr|tac|rev|xxd|od|paste|fold|fmt)(?=\s|$)"
 )
@@ -3288,10 +3288,9 @@ def names_corpus(part, cwd):
     said = heading(part)
     words = [*(GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(said))),
              *program_words(part, cwd)]
-    git = git_split(argv(said[COMPOUND.match(masked(said)).end():])[0])
     return any(CORPUS_DIR.search(word) or is_corpus_root(word) or reaches_corpus(word, cwd)
-               or not git and not re.search(r"\s", word)
-               and any(map(is_corpus_root, re.split("[:,]", word)))
+               or word.split() == [word] and any(map(is_corpus_root, re.split("[:,]", word)))
+               and not git_split(argv(said[COMPOUND.match(masked(said)).end():])[0])
                for word in words)
 
 
