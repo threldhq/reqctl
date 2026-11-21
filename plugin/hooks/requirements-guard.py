@@ -2378,8 +2378,8 @@ def judge_run(raw, file, module, here):
     bodies = sorted(CALL_TEXT["written"].get(path, ()))
     for written in (*bodies, "\n".join(bodies)) if bodies else ():
         found = CORPUS_DIR.search(flatten(written)) or ROOT_QUOTED.search(written)
-        refused = reaches or shell_reads(raw, file, path, written, (*SHELLS, "fish"))
-        named = (refused and found and found.group() or absolute_corpus(written)
+        named = (found and (reaches or shell_reads(raw, file, path, written, (*SHELLS, "fish")))
+                 and found.group() or absolute_corpus(written)
                  or names_plugin(written) and "the reqctl plugin's own folder")
         if named:
             deny(WRITTEN_SCRIPT.format(file=file, found=named))
