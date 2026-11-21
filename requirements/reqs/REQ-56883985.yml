@@ -24,6 +24,10 @@ acceptance_criteria:
     product records no verdict
   then: the session asks the owner the same question
   when: the pass reaches the [item](item)
+- given: an [item](item) for which the pass spawned no [reading agent](reading_agent)
+    because the owner accepted its code against an unchanged prompt
+  then: the session asks the owner nothing about the [item](item)
+  when: the pass reaches the [item](item)
 assessed:
   REQ-16376491: pLH6qM9Dx4whD6nFVGa7Avgh7rUd4lXKVM2K8PwlIYA
   REQ-18486982: ovAUIy1DmRVvn6lbZorbECuNxyFkOkl2-JZXBS0fedg
@@ -45,11 +49,13 @@ relations:
   REQ-18882967: depends_on
   REQ-77379732: depends_on
 status: approved
-text: If the verdict of a [reading agent](reading_agent) for an [item](item) is ${reading_verdicts.not_satisfied},
-  or the verdict of a [searching reader](searching_reader) for an [item](item) is
-  ${reading_verdicts.not_satisfied} or ${reading_verdicts.cannot_tell}, or a [searching
-  reader](searching_reader) returns no verdict for an [item](item), then the product
-  shall raise as a [question for the owner](question_for_the_owner) whether to change
-  the code, to revise the [item](item) or to accept the code as satisfying the [item](item).
+text: If the pass spawned a [reading agent](reading_agent) for an [item](item) and
+  either the verdict of the [reading agent](reading_agent) for the [item](item) is
+  ${reading_verdicts.not_satisfied}, or the verdict of a [searching reader](searching_reader)
+  for the [item](item) is ${reading_verdicts.not_satisfied} or ${reading_verdicts.cannot_tell},
+  or a [searching reader](searching_reader) returns no verdict for the [item](item),
+  then the product shall raise as a [question for the owner](question_for_the_owner)
+  whether to change the code, to revise the [item](item) or to accept the code as
+  satisfying the [item](item).
 type: functional
 verification: inspection

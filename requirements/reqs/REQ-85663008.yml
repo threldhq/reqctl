@@ -28,6 +28,25 @@ acceptance_criteria:
     names changed since
   then: a [reading agent](reading_agent) is spawned for the [item](item)
   when: the pre-pr skill makes its pass
+- given: an [item](item) whose code the owner accepted against a prompt identical
+    to the one the script builds, read by no [searching reader](searching_reader)
+  then: no [reading agent](reading_agent) is spawned for the [item](item)
+  when: the pre-pr skill makes its pass
+- given: an [item](item) whose code the owner accepted against a prompt identical
+    to the one the script builds, and every file the reply of its [searching reader](searching_reader)
+    names unchanged since
+  then: no [reading agent](reading_agent) and no [searching reader](searching_reader)
+    is spawned for the [item](item)
+  when: the pre-pr skill makes its pass
+- given: an [item](item) whose code the owner accepted against a prompt identical
+    to the one the script builds, and a file the reply of its [searching reader](searching_reader)
+    names changed since
+  then: a [reading agent](reading_agent) is spawned for the [item](item)
+  when: the pre-pr skill makes its pass
+- given: an [item](item) whose statement, acceptance criteria or cited code changed
+    since the owner accepted its code
+  then: a [reading agent](reading_agent) is spawned for the [item](item)
+  when: the pre-pr skill makes its pass
 assessed:
   REQ-38288492: 4l6tMNjp19tHWkQ-hdjWGsk1nF7xt13STtYleHnWmkg
   REQ-70581878: Oua6NaKONA27_UcWUpc-jxwmw5loMiWe6K19E8Qg-O8
@@ -56,9 +75,13 @@ text: When the ${plugin_components.pre_pr_skill} makes its pass over a branch, t
   parameter and [data item](data_item) the product names as touched by the branch,
   other than an [item](item) for which the script builds a prompt identical to one
   that a [reading agent](reading_agent) already read as ${reading_verdicts.satisfied},
-  and other than an [item](item) for which the script builds a prompt identical to
-  one that a [searching reader](searching_reader) already read as ${reading_verdicts.satisfied}
+  other than an [item](item) for which the script builds a prompt identical to one
+  that a [searching reader](searching_reader) already read as ${reading_verdicts.satisfied}
   while every file that the reply of the [searching reader](searching_reader) names
-  is unchanged since that reading.
+  is unchanged since that reading, and other than an [item](item) for which the script
+  builds a prompt identical to the one against which the product recorded that the
+  owner accepts the code as satisfying the [item](item) while, where a [searching
+  reader](searching_reader) read the [item](item), every file that the reply of the
+  [searching reader](searching_reader) names is unchanged since that reading.
 type: functional
 verification: inspection
