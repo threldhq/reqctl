@@ -120,6 +120,7 @@ NAME_ONLY = ("ls", "stat", "file", "reqctl", "echo", "printf", "du", "tree",
 READ = re.compile(rf"^\s*({'|'.join(READ_VERBS)})(?=\s|$)")
 CONTENT_READ = re.compile(
     rf"^\s*({'|'.join(v for v in READ_VERBS if v not in NAME_ONLY)})(?=\s|$)")
+TEST = re.compile(r"\s*(?:(?:if|elif|while|until|then|do|else|time|[!{])\s+)*(?:test|\[\[?)(?!\S)")
 SINK = re.compile(
     r"^\s*(sort|uniq|awk|sed|tr|tac|rev|xxd|od|paste|fold|fmt)(?=\s|$)"
 )
@@ -3284,9 +3285,13 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running, bound):
 def names_corpus(part, cwd):
     if CORPUS_DIR.search(ESCAPE.sub("", part)):
         return True
-    operands = [GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(heading(part)))]
-    return any(CORPUS_DIR.search(word) or is_corpus_root(word)
-               or reaches_corpus(word, cwd) for word in [*operands, *program_words(part, cwd)])
+    said = heading(part)
+    words = [*(GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(said))),
+             *program_words(part, cwd)]
+    return any(CORPUS_DIR.search(word) or is_corpus_root(word) or reaches_corpus(word, cwd)
+               or word.split() == [word] and any(map(is_corpus_root, re.split("[:,]", word)))
+               and not git_split(argv(said[COMPOUND.match(masked(said)).end():])[0])
+               for word in words)
 
 
 @functools.cache
@@ -3362,7 +3367,7 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
         if running:
             deny(NOT_A_KNOWN_READ.format(target=running))
         for part in pipeline:
-            if READ.search(part) or GIT_READ.search(part):
+            if READ.search(part) or GIT_READ.search(part) or TEST.match(part):
                 continue
             if (part not in naming and SINK.search(part)
                     and not SINK_WRITES.search(part)):
