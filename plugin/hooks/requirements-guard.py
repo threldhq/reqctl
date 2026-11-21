@@ -1478,7 +1478,7 @@ def discarded(subcommand, rest, place, unread, alone):
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False, False
         if alone and not unread and not valued and all(
-                re.fullmatch(r"-[dfxX]*e|-[dfxX]+|--force", f) for f in flags) and (
+                re.fullmatch(r"-[dfxX]*[dfxXe]|--force", f) for f in flags) and (
                 git_reads(["clean", "--dry-run", *rest], place) == ""):
             return None, False, False, False
         ignored = unread or short_flagged(flags, "x") or short_flagged(flags, "X")
