@@ -1522,7 +1522,8 @@ def refuse_discarding_work(words, here):
                     + said[said.index("--"):] for said in sayings if "--" in said[:-1]]
     unread = any(map(STDIN_ARGUMENTS.search, words)) or any(
         "$" in word or "`" in word for word in rest)
-    alone = all(tokens_of(text) == words for text in CALL_TEXT["said"])
+    alone = all(tokens_of(text) == words and not set("$`(") & set(text)
+                for text in CALL_TEXT["said"])
     readings = [reading for said in dict.fromkeys(map(tuple, sayings))
                 if (reading := discarded(subcommand, said, place, unread, alone))[0] is not None]
     if not readings:
