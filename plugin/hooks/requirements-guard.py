@@ -1490,7 +1490,7 @@ def discarded(subcommand, rest, place, unread, alone):
             return None, False, False, False
         return (operands or WHOLE_TREE), False, False, alone and not flags
     if separated and subcommand == "checkout":
-        return after, False, False, alone and not flags and operands == [*after]
+        return after, False, False, alone and not before
     if forced or "." in operands:
         return WHOLE_TREE, False, False, (
             alone and subcommand == "checkout" and not flags and operands[0] == ".")
