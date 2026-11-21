@@ -188,8 +188,7 @@ def named(root, reply):
 # @req> REQ-85663008@z5Y4x8rasoxc 6ofxde
 def kept(root, held, text):
     was = held.get(corpus.digest(text))
-    return bool(accepted(was)) and ("searching" not in was
-                                    or unchanged(root, was.get("files")))
+    return accepted(was) and unchanged(root, was.get("files", {}))
 
 
 # @req> REQ-18882967@W34Ole45XgJE 7xdgt7
@@ -285,10 +284,8 @@ def sound(held, text):
             and held["verdict"] in VERDICTS
             and isinstance(held.get("lines"), list) and held["lines"]
             and all(isinstance(line, str) and line.strip() in said - {""}
-                    for line in held["lines"])):
-        return None
-    issue = at_issue(held)
-    if issue is None:
+                    for line in held["lines"])
+            and (issue := at_issue(held)) is not None):
         return None
     return {"verdict": held["verdict"], "lines": held["lines"], **issue}
 
@@ -358,10 +355,8 @@ def take(_):
 # @req> REQ-75334157@N992YetUABCQ 4ennyj
 def found(root, criteria, reply, text):
     if not (isinstance(reply, dict) and isinstance(reply.get("verdict"), str)
-            and reply["verdict"] in VERDICTS):
-        return None
-    issue = at_issue(reply)
-    if issue is None:
+            and reply["verdict"] in VERDICTS
+            and (issue := at_issue(reply)) is not None):
         return None
     met = reply["verdict"] == "satisfied"
     # @req+ REQ-87568267@JmZEPF8Ng69z yuhiou
@@ -414,7 +409,7 @@ def searched(_):
 def accepted(was):
     if not (isinstance(was, dict) and was.get("accepted") is True):
         return {}
-    return {key: was[key] for key in ("accepted", "reason") if key in was}
+    return {key: was[key] for key in ("accepted", "reason", "files") if key in was}
 
 
 # @req> REQ-42425794@haYtnGYRwgcG xcukbw
@@ -489,10 +484,9 @@ def reported(_):
         elif read is None or read["verdict"] == "cannot_tell":
             lines.append("  - Searching reader: not returned")
         # @req+ REQ-10332610@PHoJmeAqUqB5 bm4vv7
-        took = accepted(was)
-        if took:
+        if accepted(was):
             lines.append("  - The owner accepted the code as satisfying the item"
-                         + (f": {took['reason']}" if took.get("reason") else "."))
+                         + (f": {was['reason']}" if was.get("reason") else "."))
         # @req- bm4vv7
     if not built:
         lines.append("No prompt was built.")
