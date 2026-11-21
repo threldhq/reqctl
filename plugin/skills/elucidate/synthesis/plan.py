@@ -12,6 +12,7 @@ HERE = Path(__file__).resolve().parent
 # @req> REQ-38288492@4l6tMNjp19tH wphsc4
 sys.path.insert(0, str(HERE))
 import coverage as _coverage
+import release
 import shapes
 from coverage import NAMES
 
@@ -1798,6 +1799,8 @@ def deferred(run, words):
 
 
 def main(argv=None):
+    # @req> REQ-66969682@cz1F6um1nDLN afnhba
+    release.compare()
     parsed = argparse.ArgumentParser()
     sub = parsed.add_subparsers(dest="command", required=True)
 

@@ -20,8 +20,13 @@ assessed:
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
   plugin_components.plugin_manifest: BlkPgUD1qOIZNrPZ8skmYno4hKehZ52EWM_5VQM96Hw
 citations:
-  crcpyo: NhJuUhoPKVF-ai-aGiH6sSbSKbrU_j2S0kOFTPQ8nKI
-  ijl5lw: 6otSPLBDA4nDX69o0PMrKG-ChV-UdIDj2yFkap_PJzM
+  afnhba: tirL-Zw-iSIn7qY6acZ68dhEEymw--Lv0xlys3HGR0w
+  c2jrx3: mpz-XDBZRhVBviqzOMkLV-6ffKLQKzfoXPI_os-HuiI
+  elbjdc: xOcOuya2AlbQsvA9t3fdUDUFGB_HJkjbTxAaYsIdk3k
+  igabum: mpz-XDBZRhVBviqzOMkLV-6ffKLQKzfoXPI_os-HuiI
+  iv7pas: tirL-Zw-iSIn7qY6acZ68dhEEymw--Lv0xlys3HGR0w
+  t6pzj4: tirL-Zw-iSIn7qY6acZ68dhEEymw--Lv0xlys3HGR0w
+  xchis4: tirL-Zw-iSIn7qY6acZ68dhEEymw--Lv0xlys3HGR0w
 priority: medium
 relations:
   REQ-13684791: constrains

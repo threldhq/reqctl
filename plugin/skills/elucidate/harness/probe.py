@@ -14,6 +14,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "synthesis"))
 # @req- ynw5ex
 import plan
+import release
 import shapes
 
 # @req> REQ-91336482@TiPdPxI_xFIm 6gegy3
@@ -449,6 +450,8 @@ def cmd_score(args):
 
 
 def main(argv=None):
+    # @req> REQ-66969682@cz1F6um1nDLN c2jrx3
+    release.compare()
     parsed = argparse.ArgumentParser()
     sub = parsed.add_subparsers(dest="command", required=True)
 

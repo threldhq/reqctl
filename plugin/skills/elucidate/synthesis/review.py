@@ -22,6 +22,7 @@ sys.path.insert(0, str(HERE))
 # @req- 6mjij4
 import coverage
 import plan
+import release
 import shapes
 
 from reqctl import corpus, settings
@@ -875,6 +876,8 @@ def weighed(run):
 
 
 def main(argv=None):
+    # @req> REQ-66969682@cz1F6um1nDLN xchis4
+    release.compare()
     parsed = argparse.ArgumentParser()
     sub = parsed.add_subparsers(dest="command", required=True)
     made = sub.add_parser("build")

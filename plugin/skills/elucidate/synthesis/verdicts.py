@@ -9,6 +9,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 # @req- btqw4r
 import plan
+import release
 import shapes
 
 from reqctl import corpus
@@ -133,6 +134,8 @@ def respawn(run, state_held, numbers):
 
 
 def main(argv=None):
+    # @req> REQ-66969682@cz1F6um1nDLN iv7pas
+    release.compare()
     parsed = argparse.ArgumentParser()
     parsed.add_argument("--run", required=True, metavar="DIR")
     args = parsed.parse_args(argv)

@@ -5,6 +5,8 @@ import sys
 import unicodedata
 from pathlib import Path
 
+import release
+
 from reqctl import corpus, write
 
 LISTS = ("unclaimed", "renamed")
@@ -100,6 +102,8 @@ def faults(found, words):
 
 
 def main(argv=None):
+    # @req> REQ-66969682@cz1F6um1nDLN t6pzj4
+    release.compare()
     parsed = argparse.ArgumentParser()
     parsed.add_argument("--words", required=True, metavar="FILE")
     parsed.add_argument("--found", required=True, metavar="FILE")
