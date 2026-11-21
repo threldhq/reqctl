@@ -132,7 +132,7 @@ each requirement, guard, parameter and data item the branch touches, and names
 each item that needs a reading.
 <!-- @req- 5k4yld -->
 
-<!-- @req+ REQ-85663008@tk3qFTz0aYud vyfku6 -->
+<!-- @req+ REQ-85663008@z5Y4x8rasoxc vyfku6 -->
 The reading workflows it writes hold one reading agent for each item it names
 as needing a reading, and none for an item read before as satisfied from an
 identical prompt: by a reading agent, or by a searching reader while every file
@@ -220,7 +220,7 @@ names none, say that none was touched.
 <!-- @req- hbi4d7 -->
 
 <!-- @req+ REQ-16376491@pLH6qM9Dx4wh zvf5ke -->
-<!-- @req+ REQ-56883985@EzC4IvKLNiB8 oyxth4 -->
+<!-- @req+ REQ-56883985@Uk2MFr8R8HUr oyxth4 -->
 Where a reading agent returns not satisfied for an item, or the item's searching
 reader returns not satisfied, cannot tell or no verdict -- a satisfied reply
 that `searched` did not take is no verdict -- put a question for the owner:
@@ -255,7 +255,7 @@ reason with the acceptance, and refuses to record an acceptance given none.
 <!-- @req- fzw5ve -->
 <!-- @req- nmtp3f -->
 
-<!-- @req+ REQ-63323162@F9pxvOJXIC7v 5k3ohn -->
+<!-- @req+ REQ-63323162@-dWXL3C-LaxX 5k3ohn -->
 Run `python3 ${CLAUDE_SKILL_DIR}/reading.py stated` and put what it prints in
 the pull request body: for each item the branch touches, the reading agent's
 verdict with the lines that show it, the searching reader's where one was

@@ -26,11 +26,11 @@ assessed:
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
   searching_reader: NtIQrINtdWd7ufvfaFL0LLir-8Qv_uuHHpMTJ3Epm7w
 citations:
-  55rz7r: oZ9Q_o7rmNeJIA4RW2QIx_E4TkUYAZ4Mm8Vt27Btq00
-  5k3ohn: clnUWyYhMeX8wXLk9iO5CJ39xXCNmqg6Ts5AwWoNYdE
+  55rz7r: Y882ghv1DjCLS0Dph_vkHhHHDn_AeOBROzgg1cB66Wk
+  5k3ohn: VP_GbZ0bSnHuKdbsTfKzHsMx8DYYr60kBd-HZZsyuhU
   u37wmy: kJklAKxYXV6a_UzpIy6-ukXxewBmY_bAF3D2SeSaP0U
   xtdpvc: VmLV8ogIrMx1JWy3mEoQ9EQ-O8-wH9K2yFev4bkO5uA
-  xyonaw: dl604DWLU30k7WnKK-aWulIBp_x4VjiIkqLQc_wBki8
+  xyonaw: FKZ615ePz7ka04IVajyFXRK1mEqe1KGg6fJYEWpz7gs
 priority: medium
 relations:
   REQ-18486982: depends_on

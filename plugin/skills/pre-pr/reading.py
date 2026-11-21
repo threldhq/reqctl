@@ -124,7 +124,7 @@ def prompt(root, uid, files, citations, reach, texts):
         ""])
 
 
-# @req> REQ-85663008@tk3qFTz0aYud z6mbsu
+# @req> REQ-85663008@z5Y4x8rasoxc z6mbsu
 def records(root):
     where = root / RECORD
     if not where.exists():
@@ -142,7 +142,7 @@ def records(root):
     return held
 
 
-# @req> REQ-85663008@tk3qFTz0aYud neu5tj
+# @req> REQ-85663008@z5Y4x8rasoxc neu5tj
 def standing(root, held, text):
     was = held.get(corpus.digest(text))
     read = sound(was, text)
@@ -235,7 +235,7 @@ def workflows(needed, agent, spawned):
     return [SCRIPT % ",\n".join(pack) for pack in packs]
 
 
-# @req> REQ-85663008@tk3qFTz0aYud ajo3rv
+# @req> REQ-85663008@z5Y4x8rasoxc ajo3rv
 # @req> REQ-18193596@I26mta6oEsfZ dt63ke
 def build(args):
     store, root = corpus.load()
@@ -442,7 +442,7 @@ def accept(args):
     return 0
 
 
-# @req> REQ-63323162@F9pxvOJXIC7v u37wmy
+# @req> REQ-63323162@-dWXL3C-LaxX u37wmy
 def quoted(lines, indent):
     said = [part for line in lines
             for part in (line if isinstance(line, str)
@@ -452,7 +452,7 @@ def quoted(lines, indent):
     return [indent + part for part in (fence, *said, fence)]
 
 
-# @req> REQ-63323162@F9pxvOJXIC7v xyonaw
+# @req> REQ-63323162@-dWXL3C-LaxX xyonaw
 # @req> REQ-80563826@LhN5BKyOutx2 wct7v5
 def worded(read):
     if not read:
@@ -461,7 +461,7 @@ def worded(read):
         f" -- {read['issue']}" if read.get("issue") else "")
 
 
-# @req> REQ-63323162@F9pxvOJXIC7v 55rz7r
+# @req> REQ-63323162@-dWXL3C-LaxX 55rz7r
 def reported(_):
     _, root = corpus.load()
     held, folder = records(root), root / FOLDER
@@ -512,7 +512,7 @@ def main(argv=None):
     accepting.add_argument("uid")
     # @req> REQ-58972279@TE27xoNYxoQq fpnznd
     accepting.add_argument("--reason")
-    # @req> REQ-63323162@F9pxvOJXIC7v xtdpvc
+    # @req> REQ-63323162@-dWXL3C-LaxX xtdpvc
     steps.add_parser("stated")
     args = parsed.parse_args(argv)
     return {"build": build, "take": take, "searched": searched, "accept": accept,

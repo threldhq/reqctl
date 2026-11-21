@@ -21,7 +21,7 @@ text: If ruff or mypy, run under the configuration the repository states for it,
   then the build shall refuse the change.
 whole_file_citations:
   reqctl/pyproject.toml:
-    digest: zEow6Fgyg_iD9pNAls1qKlT9Yy76exH-xGNiWNc_Ogg
+    digest: A5B0msriC7DtKbknnXo7PWO46N3E3BjNdoo5svtXTVw
     pinned: u605TKfh4fwm
   ruff.toml:
     digest: -cvigZ1Q6pkVjyhHuKuzKWH4toKhcAQBpB9db2dYouA
