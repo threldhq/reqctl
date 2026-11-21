@@ -1454,7 +1454,7 @@ def short_flagged(flags, letter):
                and letter in word[1:] for word in flags)
 
 
-def discarded(subcommand, rest, place, unread):
+def discarded(subcommand, rest, place, unread, alone):
     separated = "--" in rest
     after = rest[rest.index("--") + 1:] if separated else []
     before = rest[:rest.index("--")] if separated else rest
@@ -1477,7 +1477,7 @@ def discarded(subcommand, rest, place, unread):
         if not forced or any(not f.startswith("--") and "n" in f[1:].split("e", 1)[0]
                                 for f in flags) or "--dry-run" in flags:
             return None, False, False, False
-        if not unread and not valued and all(
+        if alone and not unread and not valued and all(
                 re.fullmatch(r"-[dfxX]*e|-[dfxX]+|--force", f) for f in flags) and (
                 git_reads(["clean", "--dry-run", *rest], place) == ""):
             return None, False, False, False
@@ -1488,17 +1488,16 @@ def discarded(subcommand, rest, place, unread):
                                        for f in flags)) and "--worktree" not in flags and (
                 not short_flagged(flags, "W")):
             return None, False, False, False
-        return (operands or WHOLE_TREE), False, False, not flags
+        return (operands or WHOLE_TREE), False, False, alone and not flags
     if separated and subcommand == "checkout":
-        return after, False, False, not flags and operands == [*after]
+        return after, False, False, alone and not flags and operands == [*after]
     if forced or "." in operands:
         return WHOLE_TREE, False, False, (
-            subcommand == "checkout" and not flags and operands[0] == ".")
+            alone and subcommand == "checkout" and not flags and operands[0] == ".")
     if subcommand == "checkout" and operands:
-        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{tree}}"],
+        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"],
                          place)
-        return (operands[1:] if tree is not None else operands) or None, False, False, (
-            tree is None and not flags)
+        return (operands[1:] if tree is not None else operands) or None, False, False, False
     return None, False, False, False
 
 
@@ -1523,8 +1522,9 @@ def refuse_discarding_work(words, here):
                     + said[said.index("--"):] for said in sayings if "--" in said[:-1]]
     unread = any(map(STDIN_ARGUMENTS.search, words)) or any(
         "$" in word or "`" in word for word in rest)
+    alone = all(tokens_of(text) == words for text in CALL_TEXT["said"])
     readings = [reading for said in dict.fromkeys(map(tuple, sayings))
-                if (reading := discarded(subcommand, said, place, unread))[0] is not None]
+                if (reading := discarded(subcommand, said, place, unread, alone))[0] is not None]
     if not readings:
         return
     if found := next((word for word in rest if "{}" in word), None):
