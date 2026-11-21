@@ -130,7 +130,6 @@ def check(criteria):
         "none": {"anyOf": [{**QUOTED, "maxLength": 300}, {"type": "null"}]},
     })
 
-# @req+ REQ-36422345@O-3IKmoFSYSG lq44vs
 QUOTED = {"type": "string", "pattern": "\\S"}
 
 
@@ -147,4 +146,3 @@ COVERAGE = _object(list(LISTS), {
     "renamed": _list(_object(["owner"], {**NAMED, "owner": _bounded("owner", QUOTED)})),
 })
 # @req- qpryf4
-# @req- lq44vs

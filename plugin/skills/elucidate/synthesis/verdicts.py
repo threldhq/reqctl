@@ -51,12 +51,14 @@ def judged(run, state_held):
             continue
         folder = "final" if spec["groups"] else "judge"
         path = run / "returns" / folder / f"{number}.json"
+        # @req+ REQ-36422345@F2EhsuLktVu8 ocm3yn
         data, why = plan.read_return(path, shapes.JUDGE)
         # @req> REQ-46162234@7Wvh6guc-Moy fmxygz
         if data is None:
             (absent if why == "returned nothing" else failed).append(
                 (number, [why]))
             continue
+        # @req- ocm3yn
         # @req+ REQ-62710822@DZLgFus7Dgs- v3dukx
         faults = ([f"answers proposal {data['proposal']}, not {number}"]
                   if str(data["proposal"]) != number else [])
@@ -157,6 +159,7 @@ def main(argv=None):
     # @req> REQ-96274588@EKryoa8GyKn1 x32cmy
     again = [number for number, _ in failed + absent
              if not withheld(state_held["judge"][number])]
+    # @req> REQ-36422345@F2EhsuLktVu8 6dc7tl
     if again:
         print(f"{len(again)} judge(s) to spawn again: "
               f"{respawn(run, state_held, again)}")
