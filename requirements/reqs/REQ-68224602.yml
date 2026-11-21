@@ -8,6 +8,8 @@ assessed:
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
   reading_verdicts.not_satisfied: hJrfvOGIh4krB2NsmrG9_2Vuj6Udn5FgswvfqbXu_rk
+citations:
+  2tealp: MP9dnniMrSemoBLhsOcntQVoCh5eHjfbWas2z2W3TGg
 priority: medium
 relations:
   REQ-12678136: depends_on

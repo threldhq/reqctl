@@ -6,6 +6,9 @@ assessed:
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
   reading_verdicts.not_satisfied: hJrfvOGIh4krB2NsmrG9_2Vuj6Udn5FgswvfqbXu_rk
+citations:
+  o43yvd: 4Iy9qIH9OtzYeWAOk91g0nLMfrDH6Opfvd7Xa8CrK4A
+  wct7v5: FKZ615ePz7ka04IVajyFXRK1mEqe1KGg6fJYEWpz7gs
 priority: medium
 relations:
   REQ-12678136: depends_on

@@ -7,6 +7,8 @@ assessed:
   REQ-18762283: KHBhiDTwKW9TTB5jtDinfXp_BkQ0iZYuJcmWvcElGK8
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   reading_agent: bmpUd0mf1EBlgv0bsmZbAEFjFEJrGJYOmVh_84iUCAg
+citations:
+  tmjiit: WJLFiNa-2mIPOPz9n1DYL210q0jOQwKdXbyrtB1UIlw
 priority: medium
 relations:
   REQ-18193596: depends_on
