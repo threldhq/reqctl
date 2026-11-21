@@ -2373,16 +2373,18 @@ def judge_run(raw, file, module, here):
             else os.path.join(path, "__main__.py") if package else path)
     inside = inside_project(path)
     reaches = inside or not here or inside_project(here)
-    # @req> REQ-86738891@9LNvHbeCG7Wj yw6cft
     # @req> REQ-77453691@DQIX4tx3U57I unffvf
+    # @req+ REQ-86738891@9LNvHbeCG7Wj mckggb
     bodies = sorted(CALL_TEXT["written"].get(path, ()))
     for written in (*bodies, "\n".join(bodies)) if bodies else ():
         found = CORPUS_DIR.search(flatten(written)) or ROOT_QUOTED.search(written)
-        named = (found and found.group() or absolute_corpus(written)
+        named = (found and (reaches or shell_reads(raw, file, path, written, (*SHELLS, "fish")))
+                 and found.group() or absolute_corpus(written)
                  or names_plugin(written) and "the reqctl plugin's own folder")
         if named:
             deny(WRITTEN_SCRIPT.format(file=file, found=named))
         shell_commands(raw, file, path, written, here)
+    # @req- mckggb
     if not os.path.isfile(path):
         if package or not reaches:
             return
@@ -2428,15 +2430,19 @@ def held_unchanged(path):
     return bool(held) and held == git_reads(["hash-object", "--no-filters", "--", path], place)
 
 
-def shell_commands(raw, file, path, text, here):
+# @req> REQ-77453691@DQIX4tx3U57I a3hs6r
+def shell_reads(raw, file, path, text, shells=SHELLS):
     first = text.partition("\n")[0]
     ran = next((name for name in map(runner, first[2:].split() if first.startswith("#!") else ())
                 if name != "env" and not name.startswith("-") and "=" not in name),
                "python" if path.endswith(".py") and raw != file else "sh")
-    if ((runner(raw) in (*SHELLS, "source", ".")
-         or os.path.basename(raw) == os.path.basename(file) and (first.startswith("#!") or "\0" not in first[:80])
-         and (ran in SHELLS or ran not in RUNNERS))
-            and (path, here, text) not in CALL_TEXT["running"]):
+    return (runner(raw) in (*shells, "source", ".")
+            or os.path.basename(raw) == os.path.basename(file) and (first.startswith("#!") or "\0" not in first[:80])
+            and (ran in shells or ran not in RUNNERS))
+
+
+def shell_commands(raw, file, path, text, here):
+    if shell_reads(raw, file, path, text) and (path, here, text) not in CALL_TEXT["running"]:
         CALL_TEXT["running"].add((path, here, text))
         judge_shell(text, here)
 

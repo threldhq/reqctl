@@ -17,8 +17,8 @@ assessed:
   project_root: 9MmFlNe36dmHOkrHF6NLLvbkqB8vJhh6fz5w644JucQ
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
+  mckggb: YwPypp3c9xoTC9HnLbmlc1T1N7V54hEjj74EJQJnjlo
   ph4cui: M9VCrajbIQ7zB5-hMcRFazrNac7nY9oMG8l4hLrzkEc
-  yw6cft: xjf3H9HLsjEIUCJk3n6fNyIU1krkvKJ_lLr4DNJAats
 priority: medium
 relations:
   REQ-38681394: depends_on
