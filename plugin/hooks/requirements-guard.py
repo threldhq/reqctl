@@ -120,7 +120,7 @@ NAME_ONLY = ("ls", "stat", "file", "reqctl", "echo", "printf", "du", "tree",
 READ = re.compile(rf"^\s*({'|'.join(READ_VERBS)})(?=\s|$)")
 CONTENT_READ = re.compile(
     rf"^\s*({'|'.join(v for v in READ_VERBS if v not in NAME_ONLY)})(?=\s|$)")
-TEST = re.compile(r"\s*(?:test|\[\[?)(?=\s|$)")
+TEST = re.compile(r"\s*(?:(?:if|elif|while|until|then|do|else|time|[!{])\s+)*(?:test|\[\[?)(?=\s|$)")
 SINK = re.compile(
     r"^\s*(sort|uniq|awk|sed|tr|tac|rev|xxd|od|paste|fold|fmt)(?=\s|$)"
 )
@@ -3368,8 +3368,7 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
         if running:
             deny(NOT_A_KNOWN_READ.format(target=running))
         for part in pipeline:
-            if READ.search(part) or GIT_READ.search(part) or TEST.match(
-                    part, COMPOUND.match(masked(part)).end()):
+            if READ.search(part) or GIT_READ.search(part) or TEST.match(part):
                 continue
             if (part not in naming and SINK.search(part)
                     and not SINK_WRITES.search(part)):
