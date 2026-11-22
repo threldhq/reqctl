@@ -1,6 +1,6 @@
 acceptance_criteria:
-- given: a tracked file holding uncommitted changes
-  then: the product refuses it and lists the changes
+- given: a tracked file holding uncommitted changes that the command would discard
+  then: the product refuses it and lists those changes
   when: a [tool call](tool_call) runs git checkout or git restore naming it, git checkout
     ., git checkout -f, git switch -f, git switch --discard-changes or git reset --hard
 - given: an untracked file

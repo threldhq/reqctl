@@ -95,7 +95,10 @@ acceptance_criteria:
     tree, then runs it
 - given: a file the same command creates before running it, at a path that resolves
     outside the working tree holding the [project root](project_root)
-  then: the product does not refuse the [tool call](tool_call) on that ground
+  then: the product refuses the [tool call](tool_call) where a shell reads the file
+    and its text names the path of a corpus [item](item)'s file, a folder of corpus
+    [items](item), the baseline or the [corpus root](corpus_root), and does not refuse
+    it on that ground otherwise
   when: the [tool call](tool_call) runs it from a working directory outside that working
     tree
 - given: a file the same command creates before running it, at a path that resolves
