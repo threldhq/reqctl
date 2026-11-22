@@ -21,8 +21,19 @@ acceptance_criteria:
 - given: a shell command that runs python3 script.py inside bash -c
   then: the product takes script.py as the file to run
   when: the [tool call](tool_call) is judged
+- given: head FILE piped to python3
+  then: the product takes FILE as the file to run
+  when: the [tool call](tool_call) is judged
+- given: uv run or uvx followed by a word that the program it launches does not read
+    as a script to run
+  then: the product does not take that word as a file to run
+  when: the [tool call](tool_call) is judged
+- given: a script runner followed by an option and that option's value, as pytest
+    -k NAME
+  then: the product does not take the option's value as a file to run
+  when: the [tool call](tool_call) is judged
 assessed:
-  REQ-75038049: w2u8eGVv46uthgIU3jMAJNC8sLZfO5duLFM8DzU8iWw
+  REQ-75038049: zv2WExRPUXOyZKN3l3D3Xg1sK-r0t5GCKc3lpFDpt6g
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   3aixwf: u1yGbcX958aOT85hVPNCT3Zu1gxEEec4XGMnuK5JAno
@@ -40,6 +51,7 @@ status: approved
 text: When the product judges which file a shell command in a [tool call](tool_call)
   would run, the product shall take as that file each file the program the command
   runs would read as a script to run, however the command hands the file to that program,
-  and no other word of the command.
+  taking each file a command earlier in the same pipeline names as a file that program
+  would read, and no other word of the command.
 type: functional
 verification: inspection

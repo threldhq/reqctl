@@ -8,8 +8,8 @@ acceptance_criteria:
   then: the product does not refuse it on that ground
   when: the [tool call](tool_call) is judged
 assessed:
-  REQ-38681394: U-JsY-BEDCYKE-vqpf3ZUhwH2LwvvWPyxmw9dzRx2M8
-  REQ-75038049: w2u8eGVv46uthgIU3jMAJNC8sLZfO5duLFM8DzU8iWw
+  REQ-38681394: 3PHgov8InZoMrb0fhh0z_n3flakUPOzA6EOcLFzVIxk
+  REQ-75038049: zv2WExRPUXOyZKN3l3D3Xg1sK-r0t5GCKc3lpFDpt6g
   corpus_root: 42bG48UKHE6pEK2n1CytM02Q6UihwojWiCoUcm-gEPw
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   plugin_components: s2dyMv0bqBLikol-bQSG8IugVKPeykK_j4LeT8CL0Js
