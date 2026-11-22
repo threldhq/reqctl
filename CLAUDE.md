@@ -69,9 +69,8 @@ that does not hold them reads `plugin/hooks/session-rules.md` before working.
 
 The hook backs two of those rules. It refuses a Read, Grep, Glob or shell
 command that names a file under requirements/reqs, guards, params, terms, data
-or the baseline; schemas stay readable, git's own read forms stay allowed, and a
-recursive grep that names no corpus path is beyond a hook that sees only the
-command text. It refuses an edit, or a shell command naming a citation, that
+or the baseline; schemas stay readable, and git's own read forms stay allowed. It
+refuses an edit, or a shell command naming a citation, that
 adds, removes or changes a citation comment (REQ-38099593); a script that writes
 one without naming it is beyond it too. `reqctl trace` refuses the retired
 single-line tag, a module-level mapping of them (`REQ-44164687`), and a citation
