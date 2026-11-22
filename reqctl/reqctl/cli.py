@@ -18,6 +18,7 @@ from . import fields as _fields
 from . import graph
 from . import history
 from . import portal as _portal
+from . import readings as _readings
 from . import resolve as _resolve
 from . import write as _write
 from . import validate as _validate
@@ -1154,6 +1155,19 @@ def cmd_resolve(args):
     return EXIT_OK
 
 
+# @req> REQ-23123938@pNzjD3R4wwAe ibvrxm
+def cmd_record_pass(args):
+    tree, root = corpus.load()
+    ref = args.base or _baseline._default_ref(root)
+    if ref is None:
+        # @req> REQ-30898926@Vu28eWaG_1mE 6fzexo
+        raise ReqctlError("no origin to compare against -- name one with --base")
+    head = _readings.record(tree, root, ref)
+    _emit(args, {"commit": head, "path": _readings.PASS.as_posix()},
+          f"pass record written: {_readings.PASS.as_posix()} names {head}")
+    return EXIT_OK
+
+
 def cmd_baseline(args):
     tree, root = corpus.load()
 
@@ -1452,6 +1466,12 @@ def build_parser(root, fielded):
                  "merge conflicted")
     s.add_argument("uid")
     s.set_defaults(func=cmd_resolve)
+
+    # @req+ REQ-23123938@pNzjD3R4wwAe riwxgu
+    s = sub.add_parser("record-pass")
+    s.add_argument("--base")
+    s.set_defaults(func=cmd_record_pass)
+    # @req- riwxgu
 
     s = _command(sub, "baseline", "the manifest of what is approved")
     g = s.add_mutually_exclusive_group(required=True)

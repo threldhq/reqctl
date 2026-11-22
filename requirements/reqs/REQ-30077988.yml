@@ -17,6 +17,9 @@ assessed:
   pass_record: _mBYOG8R9HMjjZXIjOL5aKgbTNdq6012Bm_Tbc1o_9c
   reading_verdicts: zONb2w_VInrYqQMCITQ7KD1J3Z9GgzKa42WWoqMcIxo
   reading_verdicts.satisfied: T65qoRHnttI2IUCN7onWnt5mGz1iftD3iQsjZEVCkeo
+citations:
+  7rvm24: gsAfUpvf8D4CKTbvPBEgN5SO9kFTgFI8fsmQkUisc4U
+  uowvyt: 3xlKLcy1f0m6NciQsQOWpg68ewsg8iMMxDCwsbY2Sr8
 priority: medium
 relations:
   REQ-18882967: depends_on

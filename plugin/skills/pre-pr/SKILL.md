@@ -255,6 +255,11 @@ reason with the acceptance, and refuses to record an acceptance given none.
 <!-- @req- fzw5ve -->
 <!-- @req- nmtp3f -->
 
+<!-- @req+ REQ-39832524@MMcT1Ru5_GJ3 o4tp3v -->
+Once every step of the pass is clean, run `reqctl record-pass`: it writes the
+pass record naming the commit HEAD names.
+<!-- @req- o4tp3v -->
+
 <!-- @req+ REQ-63323162@-dWXL3C-LaxX 5k3ohn -->
 Run `python3 ${CLAUDE_SKILL_DIR}/reading.py stated` and put what it prints in
 the pull request body: for each item the branch touches, the reading agent's
