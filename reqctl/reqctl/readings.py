@@ -210,7 +210,7 @@ def unsettled(store, root, ref):
 # @req> REQ-23123938@pNzjD3R4wwAe g3ymgd
 # @req> REQ-30077988@Ugzat0welz0c uowvyt
 def record(store, root, ref):
-    traced = graph.trace(store, root)
+    traced = graph.trace(store, root, base=ref)
     faults = [f"reqctl {name} reports a problem -- run it and fix what it names"
               for name, failed in (("validate", validate.run(root)),
                                    ("trace", traced["problems"] or traced["stale"]))
