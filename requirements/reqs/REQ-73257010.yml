@@ -13,7 +13,7 @@ acceptance_criteria:
   then: the product does not refuse the [tool call](tool_call) on that ground
   when: a [tool call](tool_call) runs it
 assessed:
-  REQ-38681394: 3PHgov8InZoMrb0fhh0z_n3flakUPOzA6EOcLFzVIxk
+  REQ-38681394: OH393HQiAa22nTEaUg3hMHFpZzZnCgCSPcnK77JMskk
   REQ-59919160: eEBU6tuB77DqBnglgYPhL4IaiS1xIp3KsAXMhKD3oQA
   REQ-75038049: zv2WExRPUXOyZKN3l3D3Xg1sK-r0t5GCKc3lpFDpt6g
   fingerprint_list: IKuN4F4xCtcTuRJWxeEIwcI85RfUbSbEdY045f0hbr0

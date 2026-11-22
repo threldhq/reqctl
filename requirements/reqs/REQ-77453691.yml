@@ -11,7 +11,7 @@ acceptance_criteria:
   then: the product does not refuse the [tool call](tool_call) on that ground
   when: a [tool call](tool_call) runs it with bash
 assessed:
-  REQ-38681394: 3PHgov8InZoMrb0fhh0z_n3flakUPOzA6EOcLFzVIxk
+  REQ-38681394: OH393HQiAa22nTEaUg3hMHFpZzZnCgCSPcnK77JMskk
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
   a3hs6r: efl804V56IyPt-t0iMII-jHdoeq-vAuAjVUwxoixDl0
