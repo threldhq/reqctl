@@ -7,9 +7,9 @@ assessed:
   reading_verdicts.cannot_tell: f5ODyfb-0ufaT8FGz8qCevsaQehjju6dYj_z32eY5lQ
   reading_verdicts.not_satisfied: hJrfvOGIh4krB2NsmrG9_2Vuj6Udn5FgswvfqbXu_rk
 citations:
+  aezlzi: EIbsbA-pQjZ5bROX368eu-fT-MF9RyHO6n8eao7s0dk
   d4fs6l: _YrnkM0a_j8MmpmyXLx4MwlOq2gVNiqp_Goumobf3bs
   qhmgbr: 6mTFe1VwcXF75d0bSiYBa2frgqbb6tu9axOr7yWSW74
-  y7doxo: Ba2HU1dQpC92QwuQplSvZU3njiwMLs8P8RrcBVUY_Fc
 priority: medium
 relations:
   REQ-18882967: derives_from
