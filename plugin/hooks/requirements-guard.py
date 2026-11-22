@@ -2329,7 +2329,7 @@ def refuse_unheld_script(words, here, fed=()):
     # @req- pqnkpz
 
 
-def handed(words, here, valued=()):
+def handed(words, here, valued):
     scripts = []
     for named in (word.partition("::")[0] for previous, word in itertools.pairwise(["", *words])
                   if not word.startswith("-") and previous not in valued):
@@ -3312,13 +3312,10 @@ def names_corpus(part, cwd):
     said = heading(part)
     words = [*(GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(said))),
              *program_words(part, cwd)]
-    if any(CORPUS_DIR.search(word) or is_corpus_root(word) or reaches_corpus(word, cwd)
-           or word.split() == [word] and any(map(is_corpus_root, re.split("[:,]", word)))
-           and not git_split(argv(said[COMPOUND.match(masked(said)).end():])[0])
-           for word in words):
-        return True
-    refuse_searching_corpus(said, cwd)
-    return False
+    return any(CORPUS_DIR.search(word) or is_corpus_root(word) or reaches_corpus(word, cwd)
+               or word.split() == [word] and any(map(is_corpus_root, re.split("[:,]", word)))
+               and not git_split(argv(said[COMPOUND.match(masked(said)).end():])[0])
+               for word in words) or refuse_searching_corpus(said, cwd)
 
 
 # @req> REQ-54260750@MTrWbA9_HZWY ib6ckc
@@ -3335,9 +3332,8 @@ def refuse_searching_corpus(said, cwd):
         for word in head if word.startswith("-") for name in [word.partition("=")[0]])
     if not recursive:
         return
-    explicit = any(name in ("-e", "-f", "--regexp", "--file") for name, _ in flags) or any(
-        not word.startswith("--") and len(word) > 2 and set("ef") & set(word[1:])
-        for word in head if word.startswith("-"))
+    explicit = short_flagged(head, "e") or short_flagged(head, "f") or any(
+        name in ("--regexp", "--file") for name, _ in flags)
     glob = " ".join(f"!{value}" for name, value in flags
                     if name == "--exclude-dir" and re.fullmatch(r"[^/\s,]+", value)
                     and fnmatch.fnmatchcase(CORPUS_ROOT_NAME, value))
@@ -3345,8 +3341,7 @@ def refuse_searching_corpus(said, cwd):
         for alt in bounded(os.path.expanduser(EXPANSION.sub("*", operand))):
             if not cwd and not os.path.isabs(alt):
                 continue
-            joined = os.path.join(cwd, alt)
-            for path in matches(joined) if GLOB_CHAR.search(alt) else [joined]:
+            for path in matches(os.path.join(cwd, alt)) if GLOB_CHAR.search(alt) else [alt]:
                 if root := searched_corpus({"path": path, "glob": glob}, cwd):
                     deny(SEARCHES_TREE.format(target=said.strip(), root=root))
 
