@@ -123,6 +123,10 @@ def main(argv=None):
         # @req> REQ-27370034@uYfNuf6k4Q_h way2fx
         raise corpus.ReqctlError(f"{broken} -- {respawn}") from broken
     held = faults(found, corpus.read_text(args.words))
+    import shapes
+    held += [f"schema: {'/'.join(map(str, fault.absolute_path)) or 'root'}: "
+             f"{fault.message}" for fault in sorted(
+                 corpus.validator(shapes.COVERAGE).iter_errors(found), key=str)]
     # @req- wyd2la
     if held:
         corpus.remove(where)
