@@ -32,9 +32,11 @@ CORPUS_DIR = re.compile(
     rf"{_ROOT}/({_CORPUS})(?![\w.-])"
     rf"|{_BASELINE_FILE}"
     rf"|{_ROOT}" r"/[^/\s]*[*?{\[$`]"
-    r"|\bcd\s+requirements(?![\w.-]|/schemas(?=[\s;&|)]|$))"
+    r"|\bcd\s+requirements(?![\w.-])"
 )
 CORPUS_ROOT_NAME = "requirements"
+SCHEMAS_CD = re.compile(r"cd\s+requirements/schemas")
+UNPLAIN = re.compile(r"[$`]|(?<![^\s/])\.\.(?![^\s/])")
 CORPUS_FOLDERS = (*ITEM_FOLDERS, "baselines")
 CORPUS_FILE = re.compile(rf"{_ROOT}/(?:({_ITEMS})/({_UIDS})-\d{{8}}|baselines/BASELINE-[^/]*)\.ya?ml$")
 REDIRECT = re.compile(rf">[>|]?&?\s*[^\s>]*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
@@ -1541,10 +1543,9 @@ def discarded(subcommand, rest, place, unread, alone):
         return WHOLE_TREE, False, False, (
             alone and subcommand == "checkout" and not flags and operands[0] == ".")
     if subcommand == "checkout" and operands:
-        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{tree}}"],
-                         place)
-        return (operands[1:] if tree is not None else operands) or None, False, False, (
-            alone and tree is None and not flags)
+        source = git_sees(["rev-parse", "--revs-only", operands[0]], place).strip()
+        return (operands[1:] if source else operands) or None, False, False, (
+            alone and not source and not flags)
     return None, False, False, False
 
 
@@ -3362,7 +3363,9 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running, bound):
 
 
 def names_corpus(part, cwd, piped_in):
-    if CORPUS_DIR.search(ESCAPE.sub("", part)):
+    if CORPUS_DIR.search(ESCAPE.sub("", part)) and not (
+            SCHEMAS_CD.fullmatch(heading(part).strip())
+            and not any(UNPLAIN.search(text) for text in CALL_TEXT["said"])):
         return True
     said = heading(part)
     words = [*(GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(said))),

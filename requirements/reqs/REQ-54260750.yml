@@ -31,15 +31,15 @@ assessed:
   item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
   tool_call: ZMfAa1CHka2FiHdMEeZ4mEgAm6zaeSCeqHOxr65tyyA
 citations:
-  37auve: tdt7pPQj9ak7AahXm5diwzq-HOuFm5XjZvJDM5Z0Rno
+  37auve: b29I7Gk2EbMDlVZEnwTcAJhUkbqiYhHWVCQ1HK3Q5Ew
   5wgwq2: _p1fXZHRhv0HczazhW6K22VUgHtR38vFvKc3XmXexHU
   g43xgl: 3rL1spXkZE-iDR8wuVf4fOcsTC7cfu1hL228jVl2iHM
-  haai6c: JQfu1zAASEbvPVQBQ5pkewp7JeS2XubfjT9AX3OKWHE
+  haai6c: xfPDKLUBTy1nRBkMkQWr3cC1IAz435d8trj_aTkUZNQ
   hcy6rk: 2klDvTFh81ovHEAbVyG96YAY5WqymBZdsxhN3BCQ1T8
   ib6ckc: U5r9FwhVNf69tuBDbEVl8gfRoh1unH2L8Smcr0FjNOY
   pokpqc: 0sc-gtq-bvUmml5kO9uFSUiheHy-6IeIClVpSLCYLuw
   qrdgnw: arQz5P8AAwbkh3zjoGmrZiRgJZVCSpbRJrq3NzxWhuE
-  xkcay3: OsKJxPFzyjt9dtsscHYW90XVvJuA6Kj4unt9t4JsIyU
+  xkcay3: ujvQ_dnwZgMffLI5bNBPK4Bc0ofiE1RR_Y-y2viqUoY
 priority: medium
 relations:
   REQ-38288492: depends_on
