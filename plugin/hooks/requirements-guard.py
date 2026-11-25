@@ -1987,15 +1987,20 @@ def pass_fault(record, head):
 
 
 def names_pass_record(word, here):
-    return PASS_RECORD.search(word) or PASS_RECORD.search(
-        os.path.normpath(os.path.join(here, os.path.expanduser(word.strip("'\"")))))
+    return any(PASS_RECORD.search(form) for alt in bounded(os.path.expanduser(word))
+               for path in [os.path.normpath(os.path.join(here, alt))]
+               for form in (alt, path, *(matches(path) if os.path.isabs(path) and GLOB_CHAR.search(alt)
+                                         else ())))
 
 
-def writes_pass_record(said, called, here):
-    named = [said[found.start(1):found.end(1)] for found in REDIRECT_TARGET.finditer(masked(said))]
+def writes_pass_record(said, called, here, stdin):
+    named = [word for found in REDIRECT_TARGET.finditer(masked(said))
+             for word in tokens_of(said[found.start(1):found.end(1)])]
+    texts = []
     if not (only_reads(called) or called[:1] == ["rm"]):
-        named += [flatten(said), *tokens_of(said)]
-    return any(names_pass_record(word, here) for word in named)
+        named += tokens_of(said)
+        texts = [flatten(said), *(stdin if called and runner(called[0]) in RUNNERS else ())]
+    return any(map(PASS_RECORD.search, texts)) or any(names_pass_record(word, here) for word in named)
 
 
 # @req> REQ-30003727@hxeWJAbWlac7 zejfbq
@@ -2805,7 +2810,7 @@ def judge_command(said, here, stdin=(), fed=()):
     if writes_origin_head(said, plain, here, ORIGIN_REF_FILE) or writes_origin_refs(words, here):
         deny(MOVES_ORIGIN_REF.format(what=said.strip()))
     # @req> REQ-87108792@K7z-CFNGy8V_ 54vj5d
-    if writes_pass_record(said, called, here):
+    if writes_pass_record(said, called, here, stdin):
         deny(PASS_WRITE.format(target=said.strip()))
     # @req> REQ-62315271@1tyDGuqT4pyh 7p5inp
     if called[:3] == ["gh", "pr", "create"]:
