@@ -571,8 +571,7 @@ SEARCH_VALUED = {
                  "--locale", "--newline", "--om-separator", "--max-count"),
     "git": ("-e", "-f", "-A", "-B", "-C", "-m", "--max-count", "--max-depth", "--threads",
             "--after-context", "--before-context", "--context")}
-TREE_SEARCHERS = {"grep": "grep", "egrep": "grep", "fgrep": "grep", "rg": "rg", "ag": "ag",
-                  "ack": "ack", "pcregrep": "pcregrep", "pcre2grep": "pcregrep", "git": "git"}
+SEARCH_ALIASES = {"egrep": "grep", "fgrep": "grep", "pcre2grep": "pcregrep"}
 NAMES_ONLY = {"grep": (), "pcregrep": (), "rg": ("--files", "--type-list", "--help", "-h", "--version", "-V"),
               "ag": ("-g", "--list-file-types", "--help", "-h", "--version", "-V"),
               "ack": ("-f", "-g", "--help", "--help-types", "--version")}
@@ -2528,14 +2527,14 @@ def written_texts(part):
         return []
     targets = [said[found.start(1):found.end(1)] for found in REDIRECT_TARGET.finditer(hidden)
                if "&" not in found.group() and (opened or not hidden[:found.start()][-1:].strip("1 \t"))]
-    if opened and called[:1] == ["tee"]:
+    if called[:1] == ["tee"]:
         targets += [word for word in called[1:] if not word.startswith("-")]
     return [(target.strip("'\""), body) for target in targets]
 
 
 # @req> REQ-86738891@9LNvHbeCG7Wj jlbas6
 def printed(called):
-    tool, rest = (called[0], called[1:]) if called else ("", [])
+    tool, *rest = called or [""]
     rest = rest[1:] if tool == "printf" and rest[:1] == ["--"] else rest
     if (tool not in ("printf", "echo") or not rest or rest[0].startswith("-")
             or any(char in word for word in rest for char in "$`")
@@ -3361,7 +3360,7 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running, bound):
         deny((PLUGIN_WRITE if plain else PLUGIN_UNRESOLVED).format(target=target))
 
 
-def names_corpus(part, cwd, piped_in=False):
+def names_corpus(part, cwd, piped_in):
     if CORPUS_DIR.search(ESCAPE.sub("", part)):
         return True
     said = heading(part)
@@ -3374,13 +3373,13 @@ def names_corpus(part, cwd, piped_in=False):
 
 
 # @req> REQ-54260750@MTrWbA9_HZWY ib6ckc
-def refuse_searching_corpus(said, cwd, piped_in=False):
+def refuse_searching_corpus(said, cwd, piped_in):
     words = argv(said)[0]
     called = invoked(words)
-    tool = TREE_SEARCHERS.get(called[0] if called else "")
+    tool = SEARCH_ALIASES.get(called[0], called[0]) if called else ""
     if tool == "git":
         return refuse_git_grep(said, words, cwd)
-    if not tool:
+    if tool not in SEARCH_VALUED:
         return
     head = list(itertools.takewhile(lambda word: word != "--", called[1:]))
     flags, positional = options(head, SEARCH_VALUED[tool])
@@ -3405,9 +3404,7 @@ def refuse_searching_corpus(said, cwd, piped_in=False):
     default = ["."] if tool == "grep" or tool != "pcregrep" and not reads_stdin else []
     excluded = [value if name == "--exclude-dir" else value[1:] for name, value in flags
                 if name == "--exclude-dir" or tool == "rg" and name in GLOBBED_BY and value.startswith("!")]
-    glob = " ".join(f"!{value}" for value in excluded if re.fullmatch(r"[^/\s,]+", value)
-                    and fnmatch.fnmatchcase(CORPUS_ROOT_NAME, value))
-    refuse_searching(said, positional[not explicit:] or default, glob, cwd, tool)
+    refuse_searching(said, positional[not explicit:] or default, excluded, cwd, tool)
 
 
 def refuse_git_grep(said, words, cwd):
@@ -3418,7 +3415,7 @@ def refuse_git_grep(said, words, cwd):
     base = cwd
     for at, word in enumerate(options_given):
         name, eq, value = word.partition("=")
-        value = value if eq else options_given[at + 1] if at + 1 < len(options_given) else ""
+        value = value if eq else "".join(options_given[at + 1:at + 2])
         if name in ("-C", "--work-tree"):
             base = os.path.join(base, os.path.expanduser(value))
     if tree := next((word.split("=", 1)[1] for word in prefix if word.startswith("GIT_WORK_TREE=")), None):
@@ -3431,10 +3428,8 @@ def refuse_git_grep(said, words, cwd):
     top = None
     paths, excluded = [], []
     for spec in specs:
-        magic = re.match(r":(?:\(([^)]*)\)|([/!^]*):?)", spec) if spec.startswith(":") else None
-        words_of = magic and (magic[1] or "").split(",") or []
-        short = magic and magic[2] or ""
-        path = spec[magic.end():] if magic else spec
+        magic = re.match(r"(?::(?:\(([^)]*)\)|([/!^]*):?))?", spec)
+        words_of, short, path = (magic[1] or "").split(","), magic[2] or "", spec[magic.end():]
         if "exclude" in words_of or set(short) & set("!^"):
             excluded.append(path)
             continue
@@ -3442,12 +3437,12 @@ def refuse_git_grep(said, words, cwd):
             top = top or (git_reads(["rev-parse", "--show-toplevel"], (base, [], {})) or base).strip()
             path = os.path.join(top, path)
         paths.append(path or ".")
-    glob = " ".join(f"!{path}" for path in excluded if re.fullmatch(r"[^/\s,]+", path)
-                    and fnmatch.fnmatchcase(CORPUS_ROOT_NAME, path))
-    refuse_searching(said, paths or ["."], glob, base, "git")
+    refuse_searching(said, paths or ["."], excluded, base, "git")
 
 
-def refuse_searching(said, operands, glob, cwd, tool):
+def refuse_searching(said, operands, excluded, cwd, tool):
+    glob = " ".join(f"!{value}" for value in excluded if re.fullmatch(r"[^/\s,]+", value)
+                    and fnmatch.fnmatchcase(CORPUS_ROOT_NAME, value))
     for operand in operands:
         for alt in bounded(os.path.expanduser(EXPANSION.sub("*", operand))):
             if not cwd and not os.path.isabs(alt):
