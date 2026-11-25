@@ -1959,7 +1959,8 @@ def writes_origin_head(said, plain, here, pattern=ORIGIN_HEAD_FILE):
 
 def refuse_unpassed_opening(what, here):
     place = (here, [], {})
-    changed = git_reads(["diff", "--no-ext-diff", "--no-renames", "--name-only", "-z",
+    changed = git_reads(["diff", "--no-ext-diff", "--no-renames", "--no-relative",
+                         "--ignore-submodules=none", "--name-only", "-z",
                          "refs/remotes/origin/HEAD...HEAD"], place) if here else None
     if changed is None:
         deny(PASS_UNCOMPARED.format(what=what))
@@ -1992,11 +1993,12 @@ def names_pass_record(word, here):
                                          else ())))
 
 
-def writes_pass_record(said, called, here, stdin):
+def writes_pass_record(said, words, here, stdin):
+    called = invoked(words)
     named = [word for found in REDIRECT_TARGET.finditer(masked(said))
              for word in tokens_of(said[found.start(1):found.end(1)])]
     texts = []
-    if not (only_reads(called) or called[:1] == ["rm"]):
+    if not (only_reads(called) or called[:1] == ["rm"] and not invoked(words[:len(words) - len(called)])):
         named += tokens_of(said)
         texts = [flatten(said), *(stdin if called and runner(called[0]) in RUNNERS else ())]
     return any(map(PASS_RECORD.search, texts)) or any(names_pass_record(word, here) for word in named)
@@ -2809,7 +2811,7 @@ def judge_command(said, here, stdin=(), fed=()):
     if writes_origin_head(said, plain, here, ORIGIN_REF_FILE) or writes_origin_refs(words, here):
         deny(MOVES_ORIGIN_REF.format(what=said.strip()))
     # @req> REQ-87108792@K7z-CFNGy8V_ 54vj5d
-    if writes_pass_record(said, called, here, stdin):
+    if writes_pass_record(said, words, here, stdin):
         deny(PASS_WRITE.format(target=said.strip()))
     # @req> REQ-62315271@1tyDGuqT4pyh 7p5inp
     if called[:3] == ["gh", "pr", "create"]:
