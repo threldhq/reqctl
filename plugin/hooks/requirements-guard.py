@@ -1534,7 +1534,8 @@ def discarded(subcommand, rest, place, unread, alone):
                 re.fullmatch(r"-[dfxX]*[dfxXe]|--force", f) for f in flags) and (
                 git_reads(["clean", "--dry-run", *rest], place) == ""):
             return None, False, False, False
-        swept = (UNTRACKED if unread or short_flagged(flags, "x")
+        excludes = any(f.startswith("--e") or not f.startswith("--") and "e" in f[1:] for f in flags)
+        swept = (UNTRACKED if unread or short_flagged(flags, "x") or excludes and short_flagged(flags, "X")
                  else IGNORED_ONLY if short_flagged(flags, "X") else UNTRACKED_ONLY)
         return (operands if after and not unread else WHOLE_TREE), True, swept, False
     if subcommand == "restore":
