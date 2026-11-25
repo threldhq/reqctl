@@ -3434,7 +3434,7 @@ def refuse_git_grep(said, words, cwd):
             excluded.append(path)
             continue
         if "top" in words_of or "/" in short:
-            top = top or (git_reads(["rev-parse", "--show-toplevel"], (base, [], {})) or base).strip()
+            top = top or git_sees(["rev-parse", "--show-toplevel"], (base, [], {})).strip()
             path = os.path.join(top, path)
         paths.append(path or ".")
     refuse_searching(said, paths or ["."], excluded, base, "git")
