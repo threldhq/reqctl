@@ -576,6 +576,9 @@ TREE_SEARCHERS = {"grep": "grep", "egrep": "grep", "fgrep": "grep", "rg": "rg", 
 NAMES_ONLY = {"grep": (), "pcregrep": (), "rg": ("--files", "--type-list", "--help", "-h", "--version", "-V"),
               "ag": ("-g", "--list-file-types", "--help", "-h", "--version", "-V"),
               "ack": ("-f", "-g", "--help", "--help-types", "--version")}
+PATTERN_GIVEN = {"grep": ("-e", "-f", "--regexp", "--file"), "pcregrep": ("-e", "-f", "--regex", "--file"),
+                 "rg": ("-e", "-f", "--regexp", "--file"), "ag": (), "ack": ("--match",)}
+# @req> REQ-54260750@MTrWbA9_HZWY g43xgl
 TREE_EXCLUSIONS = {"grep": ", or add --exclude-dir=requirements", "rg": ", or add -g '!requirements'",
                    "git": ", or add the pathspec ':!requirements' after --"}
 EXCLUDED_BY = ("--exclude", "--exclude-dir")
@@ -2530,6 +2533,7 @@ def written_texts(part):
     return [(target.strip("'\""), body) for target in targets]
 
 
+# @req> REQ-86738891@9LNvHbeCG7Wj jlbas6
 def printed(called):
     tool, rest = (called[0], called[1:]) if called else ("", [])
     rest = rest[1:] if tool == "printf" and rest[:1] == ["--"] else rest
@@ -3391,9 +3395,13 @@ def refuse_searching_corpus(said, cwd, piped_in=False):
             for word in head if word.startswith("-") for name in [word.partition("=")[0]]))
     if not recursive:
         return
-    explicit = named & {"-e", "-f", "--regexp", "--regex", "--file"} or tool in (
-        "grep", "pcregrep") and (short_flagged(head, "e") or short_flagged(head, "f"))
-    reads_stdin = piped_in or any(re.match(r"\d*<(?!\()", mask) for mask in tokens_of(masked(said)))
+    explicit = named & set(PATTERN_GIVEN[tool]) or tool in ("grep", "pcregrep") and (
+        short_flagged(head, "e") or short_flagged(head, "f"))
+    spoken_words, bare = tokens_of(said), tokens_of(masked(said))
+    reads_stdin = piped_in or len(bare) == len(spoken_words) and any(
+        re.match(r"0?<<", mask) or re.match(r"0?<(?![&(<])", mask) and source
+        and not source.startswith("/dev/") for at, mask in enumerate(bare)
+        for source in [spoken_words[at].lstrip("0<") or "".join(spoken_words[at + 1:at + 2])])
     default = ["."] if tool == "grep" or tool != "pcregrep" and not reads_stdin else []
     excluded = [value if name == "--exclude-dir" else value[1:] for name, value in flags
                 if name == "--exclude-dir" or tool == "rg" and name in GLOBBED_BY and value.startswith("!")]
