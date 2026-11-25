@@ -1579,7 +1579,7 @@ def refuse_discarding_work(words, here):
     unread = any(map(STDIN_ARGUMENTS.search, words)) or any(
         "$" in word or "`" in word for word in rest)
     alone = all(text.split() == words and re.fullmatch(r"git (?:[\w ./=:@+,%-]|~\+(?![^\s/]))*", text)
-                for text in CALL_TEXT["said"])
+                for text in CALL_TEXT["said"]) and not any("~" in word for word in words[:len(words) - len(written)])
     readings = [reading for said in dict.fromkeys(map(tuple, sayings))
                 if (reading := discarded(subcommand, said, place, unread, alone))[0] is not None]
     if not readings:
