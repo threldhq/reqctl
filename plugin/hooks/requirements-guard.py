@@ -1963,11 +1963,10 @@ def refuse_unpassed_opening(what, here):
                          "refs/remotes/origin/HEAD...HEAD"], place) if here else None
     if changed is None:
         deny(PASS_UNCOMPARED.format(what=what))
-    if all(name.startswith(CORPUS_ROOT_NAME + "/") for name in changed.split("\0") if name):
-        return
-    head, top = git_sees(["rev-parse", "HEAD", "--show-toplevel"], place).splitlines()
-    if fault := pass_fault(Path(top, PASS_RECORD_PATH), head):
-        deny(PASS_UNRECORDED.format(what=what, fault=fault, head=head))
+    if any(name and not name.startswith(CORPUS_ROOT_NAME + "/") for name in changed.split("\0")):
+        head, top = git_sees(["rev-parse", "HEAD", "--show-toplevel"], place).splitlines()
+        if fault := pass_fault(Path(top, PASS_RECORD_PATH), head):
+            deny(PASS_UNRECORDED.format(what=what, fault=fault, head=head))
 
 
 # @req> REQ-62315271@1tyDGuqT4pyh u35e3h
@@ -1976,7 +1975,7 @@ def pass_fault(record, head):
         held = json.loads(record.read_text())
     except FileNotFoundError:
         return f"no pass record exists at {PASS_RECORD_PATH}"
-    except (OSError, UnicodeError, ValueError):
+    except (OSError, ValueError):
         held = None
     if not isinstance(held, dict):
         return f"{PASS_RECORD_PATH} does not read as a JSON object"
