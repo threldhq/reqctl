@@ -16,5 +16,5 @@ type: functional
 verification: inspection
 whole_file_citations:
   .claude-plugin/marketplace.json:
-    digest: dQoATyBIgW-7fGMiGkxg8zTZ-AQq6lCg40PT6ZHqshw
+    digest: C6Nv4-dXtlVGhGvvG8bS8tU3tZm8iHVN-kdIKVz3lWA
     pinned: XH-t8i6eMs-_
