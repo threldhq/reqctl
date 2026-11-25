@@ -504,6 +504,25 @@ ENV_CHANGE = re.compile(r"(?:^|[\s;&|(\n`{}/$])(?:[A-Za-z_]\w*(?:\[[^]]*\])?\+?=
                         r"eval|exec|source|for|select|hash|coproc|wait|alias|\.)(?=[\s<]|$)"
                         r"|printf(?:\s+-\S+)*?\s+-v|[A-Za-z_][\w.-]*\s*\(\s*\))|\$\{\w+(?:\[[^]]*\])?:?=")
 CALL = {"changes_environment": True}
+PASS_RECORD_PATH = ".reqctl/pass.json"
+# @req> REQ-87108792@K7z-CFNGy8V_ sn4inx
+PASS_RECORD = re.compile(r"(?<![\w.-])\.reqctl/+pass\.json(?![\w.-])")
+# @req+ REQ-62315271@1tyDGuqT4pyh 6l7opq
+PASS_UNRECORDED = (
+    "{what} blocked: the branch changes files outside requirements/, and {fault}.\n"
+    "Run the pre-pr pass on HEAD ({head}), then `reqctl record-pass` to write the record naming "
+    "it, and open the pull request with no commit in between."
+)
+PASS_UNCOMPARED = (
+    "{what} blocked: the guard cannot tell whether the branch changes a file outside "
+    "requirements/, because git cannot compare HEAD with refs/remotes/origin/HEAD here.\n"
+    "Run the call inside the repository the pull request is for, after `git fetch origin`."
+)
+# @req- 6l7opq
+PASS_WRITE = (
+    "Writing the pass record blocked: {target}\n"
+    "Only `reqctl record-pass` writes .reqctl/pass.json: finish the pre-pr pass, then run it."
+)
 # @req> REQ-59919160@eEBU6tuB77Dq v6s3eb
 WRITERS = ("rm", "mv", "cp", "ln", "chmod", "chown", "touch", "mkdir", "rmdir", "tee", "install",
            "rsync", "truncate", "dd", "unlink", "sed", "perl", "tar", "unzip", "patch", "cpio",
@@ -1938,6 +1957,53 @@ def writes_origin_head(said, plain, here, pattern=ORIGIN_HEAD_FILE):
                for target in targets for path in paths)
 
 
+def refuse_unpassed_opening(what, here):
+    place = (here, [], {})
+    changed = git_reads(["diff", "--no-ext-diff", "--no-renames", "--no-relative",
+                         "--ignore-submodules=none", "--name-only", "-z",
+                         "refs/remotes/origin/HEAD...HEAD"], place) if here else None
+    if changed is None:
+        deny(PASS_UNCOMPARED.format(what=what))
+    if any(name and not name.startswith(CORPUS_ROOT_NAME + "/") for name in changed.split("\0")):
+        head, top = git_sees(["rev-parse", "HEAD", "--show-toplevel"], place).splitlines()
+        if fault := pass_fault(Path(top, PASS_RECORD_PATH), head):
+            deny(PASS_UNRECORDED.format(what=what, fault=fault, head=head))
+
+
+# @req> REQ-62315271@1tyDGuqT4pyh u35e3h
+def pass_fault(record, head):
+    try:
+        held = json.loads(record.read_text())
+    except FileNotFoundError:
+        return f"no pass record exists at {PASS_RECORD_PATH}"
+    except (OSError, ValueError):
+        held = None
+    if not isinstance(held, dict):
+        return f"{PASS_RECORD_PATH} does not read as a JSON object"
+    named = held.get("commit")
+    if named != head:
+        return (f"{PASS_RECORD_PATH} names {named}, not HEAD" if isinstance(named, str) and named
+                else f"{PASS_RECORD_PATH} names no commit")
+
+
+def names_pass_record(word, here):
+    return any(PASS_RECORD.search(form) for alt in bounded(os.path.expanduser(word))
+               for path in [os.path.normpath(os.path.join(here, alt))]
+               for form in (alt, path, *(matches(path) if os.path.isabs(path) and GLOB_CHAR.search(alt)
+                                         else ())))
+
+
+def writes_pass_record(said, words, here, stdin):
+    called = invoked(words)
+    named = [word for found in REDIRECT_TARGET.finditer(masked(said))
+             for word in tokens_of(said[found.start(1):found.end(1)])]
+    texts = []
+    if not (only_reads(called) or called[:1] == ["rm"] and not invoked(words[:len(words) - len(called)])):
+        named += tokens_of(said)
+        texts = [flatten(said), *(stdin if called and runner(called[0]) in RUNNERS else ())]
+    return any(map(PASS_RECORD.search, texts)) or any(names_pass_record(word, here) for word in named)
+
+
 # @req> REQ-30003727@hxeWJAbWlac7 zejfbq
 def writes_origin_refs(words, here):
     subcommand, rest = git_subcommand(words)
@@ -2744,6 +2810,12 @@ def judge_command(said, here, stdin=(), fed=()):
     # @req> REQ-30003727@hxeWJAbWlac7 euswxj
     if writes_origin_head(said, plain, here, ORIGIN_REF_FILE) or writes_origin_refs(words, here):
         deny(MOVES_ORIGIN_REF.format(what=said.strip()))
+    # @req> REQ-87108792@K7z-CFNGy8V_ 54vj5d
+    if writes_pass_record(said, words, here, stdin):
+        deny(PASS_WRITE.format(target=said.strip()))
+    # @req> REQ-62315271@1tyDGuqT4pyh 7p5inp
+    if called[:3] == ["gh", "pr", "create"]:
+        refuse_unpassed_opening(said.strip(), here)
     # @req> REQ-60907337@VippyfXWAiv2 4oqzpv
     refuse_unresolved_remote(words, here)
     refuse_commit_on_default(words, here)
@@ -4086,6 +4158,15 @@ def decide(data: dict) -> "str | None":
         guard_default(tool, (cwd, [], {}), [
             branch.removeprefix("refs/heads/") if isinstance(branch, str) else None],
             f"{owner}/{repo}" if all(isinstance(v, str) and v for v in (owner, repo)) else None)
+
+    # @req> REQ-62315271@1tyDGuqT4pyh kqkzmn
+    if tool.startswith("mcp__") and tool.endswith("create_pull_request"):
+        refuse_unpassed_opening(tool, cwd)
+    # @req> REQ-87108792@K7z-CFNGy8V_ 3encbc
+    if tool not in ("Bash", "Read", "Grep", "Glob"):
+        for value in named_paths(args) + bare_paths(args):
+            if names_pass_record(value, cwd):
+                deny(PASS_WRITE.format(target=f"{tool} of {value}"))
 
     judge_citation_edit(tool, args, cwd)
     shown = governing(tool, args, cwd)
