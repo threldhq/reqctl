@@ -32,7 +32,7 @@ CORPUS_DIR = re.compile(
     rf"{_ROOT}/({_CORPUS})(?![\w.-])"
     rf"|{_BASELINE_FILE}"
     rf"|{_ROOT}" r"/[^/\s]*[*?{\[$`]"
-    r"|\bcd\s+requirements(?![\w.-])"
+    r"|\bcd\s+requirements(?![\w.-]|/schemas(?=[\s;&|)]|$))"
 )
 CORPUS_ROOT_NAME = "requirements"
 CORPUS_FOLDERS = (*ITEM_FOLDERS, "baselines")
@@ -1543,7 +1543,8 @@ def discarded(subcommand, rest, place, unread, alone):
     if subcommand == "checkout" and operands:
         tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"],
                          place)
-        return (operands[1:] if tree is not None else operands) or None, False, False, False
+        return (operands[1:] if tree is not None else operands) or None, False, False, (
+            alone and tree is None and not flags)
     return None, False, False, False
 
 
