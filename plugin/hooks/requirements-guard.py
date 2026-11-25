@@ -35,6 +35,9 @@ CORPUS_DIR = re.compile(
     r"|\bcd\s+requirements(?![\w.-])"
 )
 CORPUS_ROOT_NAME = "requirements"
+# @req+ REQ-22704490@u7IClIQOfStA 7yczev
+SCHEMAS_CALL = re.compile(r"\s*cd\s+requirements/schemas(?:\s*(?:&&|;)\s*[A-Za-z][\w-]*(?:\s+-[\w-]+)*)*\s*")
+# @req- 7yczev
 CORPUS_FOLDERS = (*ITEM_FOLDERS, "baselines")
 CORPUS_FILE = re.compile(rf"{_ROOT}/(?:({_ITEMS})/({_UIDS})-\d{{8}}|baselines/BASELINE-[^/]*)\.ya?ml$")
 REDIRECT = re.compile(rf">[>|]?&?\s*[^\s>]*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
@@ -185,6 +188,9 @@ QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re
              '"': re.compile(r'(?:\\.|[^"\\])*"', re.DOTALL)}
 TICKED = re.compile(r"(?:\\.|[^\\`])*`", re.DOTALL)
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
+SORT_OUTPUT = re.compile(r"-[A-Za-z]*o|--o")
+READ_OUTPUT = re.compile(r"^\s*(?:tree\s(?:.*\s)?-[A-Za-z]*o|less\s(?:.*\s)?(?:-[A-Za-z]*[oO]|--(?:log|LOG)-[fF])"
+                         r"|file\s(?:.*\s)?(?:-[A-Za-z]*C|--compile))")
 PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
                          "--mirror", "--delete", "--prune")
 GLUED_OPTION = re.compile(r"^-+[A-Za-z0-9]*?(?=requirements)")
@@ -251,7 +257,7 @@ SEARCHES_CORPUS = (
 
 SEARCHES_TREE = (
     "{target} blocked: it searches the requirements corpus at {root}.\n"
-    "Search folders that do not hold the corpus, or add --exclude-dir=requirements.\n"
+    "Search folders that do not hold the corpus{exclusion}.\n"
     "Read the corpus through reqctl: `reqctl context UID`, `reqctl export`."
 )
 
@@ -345,6 +351,8 @@ JUDGED_GIT = ("push", "commit", "apply", "am", "remote", "symbolic-ref", "update
               "branch", *NO_COMMIT, *RESTORES)
 UNTRACKED = ("??", "!!")
 UNTRACKED_ONLY = ("??",)
+# @req> REQ-36282702@FNMFiPoGZnDK gupdwd
+IGNORED_ONLY = ("!!",)
 
 # @req+ REQ-30013664@ijHTWP75cTcK rmhljp
 WRITES_DEFAULT = (
@@ -554,7 +562,31 @@ SEARCH_VALUED = {
            "--sortr", "--threads", "--encoding", "--engine", "--path-separator",
            "--context-separator", "--field-match-separator", "--field-context-separator",
            "--pre", "--pre-glob", "--ignore-file", "--dfa-size-limit", "--regex-size-limit",
-           "--hostname-bin", "--hyperlink-format", "--colors", "--color")}
+           "--hostname-bin", "--hyperlink-format", "--colors", "--color"),
+    "ag": ("-A", "-B", "-C", "-G", "-g", "-m", "-p", "-W", "--after", "--before", "--context",
+           "--file-search-regex", "--max-count", "--depth", "--ignore", "--ignore-dir",
+           "--path-to-ignore", "--pager", "--workers", "--width", "--color-line-number",
+           "--color-match", "--color-path"),
+    "ack": ("-A", "-B", "-C", "-g", "-m", "--after-context", "--before-context", "--context",
+            "--max-count", "--type", "--type-set", "--type-add", "--type-del", "--ignore-dir",
+            "--noignore-dir", "--ignore-file", "--output", "--match", "--pager", "--files-from",
+            "--color-filename", "--color-match", "--color-lineno"),
+    "pcregrep": ("-A", "-B", "-C", "-d", "-D", "-e", "-f", "-m", "-N", "--after-context",
+                 "--before-context", "--context", "--directories", "--devices", "--regex", "--file",
+                 "--exclude", "--exclude-dir", "--include", "--include-dir", "--exclude-from",
+                 "--include-from", "--file-list", "--buffer-size", "--max-buffer-size", "--label",
+                 "--locale", "--newline", "--om-separator", "--max-count"),
+    "git": ("-e", "-f", "-A", "-B", "-C", "-m", "--max-count", "--max-depth", "--threads",
+            "--after-context", "--before-context", "--context")}
+SEARCH_ALIASES = {"egrep": "grep", "fgrep": "grep", "pcre2grep": "pcregrep"}
+NAMES_ONLY = {"grep": (), "pcregrep": (), "rg": ("--files", "--type-list", "--help", "-h", "--version", "-V"),
+              "ag": ("-g", "--list-file-types", "--help", "-h", "--version", "-V"),
+              "ack": ("-f", "-g", "--help", "--help-types", "--version")}
+PATTERN_GIVEN = {"grep": ("-e", "-f", "--regexp", "--file"), "pcregrep": ("-e", "-f", "--regex", "--file"),
+                 "rg": ("-e", "-f", "--regexp", "--file"), "ag": (), "ack": ("--match",)}
+# @req> REQ-54260750@MTrWbA9_HZWY g43xgl
+TREE_EXCLUSIONS = {"grep": ", or add --exclude-dir=requirements", "rg": ", or add -g '!requirements'",
+                   "git": ", or add the pathspec ':!requirements' after --"}
 EXCLUDED_BY = ("--exclude", "--exclude-dir")
 GLOBBED_BY = ("-g", "--glob", "--iglob")
 SETTERS = ("export", "declare", "typeset", "local", "readonly")
@@ -1462,34 +1494,50 @@ def short_flagged(flags, letter):
 
 
 def discarded(subcommand, rest, place, unread, alone):
-    separated = "--" in rest
-    after = rest[rest.index("--") + 1:] if separated else []
-    before = rest[:rest.index("--")] if separated else rest
-    flags, operands, valued = [], [*after], False
-    for word in before:
-        if not valued and word.startswith("-"):
+    separated, after, before, flags, operands, valued = False, [], [], [], [], False
+    for word in rest:
+        if separated:
+            after.append(word)
+            continue
+        if valued:
+            valued = False
+            before.append(word)
+            continue
+        if word == "--":
+            separated = True
+            continue
+        before.append(word)
+        if word.startswith("-"):
             flags.append(next((full for full in LONG_FLAGS if len(word) > 2
                                and full.startswith(word.split("=", 1)[0])), word))
-        elif not valued:
+        else:
             operands.append(word)
-        valued = subcommand == "clean" and not valued and word.startswith("-") and (
+        valued = subcommand == "clean" and word.startswith("-") and (
             not word.startswith("--") and word.find("e") == len(word) - 1
             or len(word) > 2 and "--exclude".startswith(word))
+    operands = [*after, *operands]
     forced = unread or any(flag in FORCE for flag in flags) or short_flagged(flags, "f")
     if unread and subcommand != "clean":
         return WHOLE_TREE, False, False, False
     if subcommand == "reset":
         return WHOLE_TREE if {"--hard", "--merge"} & set(flags) else None, False, False, False
     if subcommand == "clean":
-        if not forced or any(not f.startswith("--") and "n" in f[1:].split("e", 1)[0]
-                                for f in flags) or "--dry-run" in flags:
+        dry = False
+        for flag in flags:
+            if flag == "--dry-run" or not flag.startswith("--") and "n" in flag[1:].split("e", 1)[0]:
+                dry = True
+            elif flag.startswith("--no-d") and "--no-dry-run".startswith(flag):
+                dry = False
+        if not forced or dry:
             return None, False, False, False
         if alone and not unread and not valued and all(
                 re.fullmatch(r"-[dfxX]*[dfxXe]|--force", f) for f in flags) and (
                 git_reads(["clean", "--dry-run", *rest], place) == ""):
             return None, False, False, False
-        ignored = unread or short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (operands if after and not unread else WHOLE_TREE), True, ignored, False
+        excludes = short_flagged(flags, "e") or any(f.startswith("--e") for f in flags)
+        swept = (UNTRACKED if unread or short_flagged(flags, "x") or (excludes or not alone) and short_flagged(flags, "X")
+                 else IGNORED_ONLY if short_flagged(flags, "X") else UNTRACKED_ONLY)
+        return (operands if after and not unread else WHOLE_TREE), True, swept, False
     if subcommand == "restore":
         if ("--staged" in flags or any(not f.startswith("--") and "S" in f[1:].split("s", 1)[0]
                                        for f in flags)) and "--worktree" not in flags and (
@@ -1502,9 +1550,9 @@ def discarded(subcommand, rest, place, unread, alone):
         return WHOLE_TREE, False, False, (
             alone and subcommand == "checkout" and not flags and operands[0] == ".")
     if subcommand == "checkout" and operands:
-        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"],
-                         place)
-        return (operands[1:] if tree is not None else operands) or None, False, False, False
+        source = git_sees(["rev-parse", "--revs-only", operands[0]], place)
+        return (operands[1:] if source else operands) or None, False, False, (
+            alone and not source and not flags)
     return None, False, False, False
 
 
@@ -1520,7 +1568,8 @@ def refuse_discarding_work(words, here):
             place) != "true\n"):
         rest = ["-f", *rest]
     written = rest
-    rest = [alt for word in rest for alt in bounded(word)]
+    rest = [here + alt[2:] if alt == "~+" or alt.startswith("~+/") else alt
+            for word in rest for alt in bounded(word)]
     if found := next(filter(expands, rest), None):
         deny(UNREADABLE.format(what="the braces of " + found))
     sayings = [rest, written]
@@ -1529,8 +1578,8 @@ def refuse_discarding_work(words, here):
                     + said[said.index("--"):] for said in sayings if "--" in said[:-1]]
     unread = any(map(STDIN_ARGUMENTS.search, words)) or any(
         "$" in word or "`" in word for word in rest)
-    alone = all(text.split() == words and re.fullmatch(r"git [\w ./=:@+,%-]*", text)
-                for text in CALL_TEXT["said"])
+    alone = all(text.split() == words and re.fullmatch(r"git (?:[\w ./=:@+,%-]|~\+(?![^\s/]))*", text)
+                for text in CALL_TEXT["said"]) and not any("~" in word for word in words[:len(words) - len(written)])
     readings = [reading for said in dict.fromkeys(map(tuple, sayings))
                 if (reading := discarded(subcommand, said, place, unread, alone))[0] is not None]
     if not readings:
@@ -1543,15 +1592,15 @@ def refuse_discarding_work(words, here):
         staged = git_reads(["ls-files", "--stage", "--", top], place)
         if staged is None or any(line.startswith("160000 ") for line in staged.splitlines()):
             deny(INTO_SUBMODULES.format(source=source))
-    for paths, sweeps_untracked, sweeps_ignored, from_index in readings:
+    for paths, sweeps_untracked, swept, from_index in readings:
+        swept = swept or UNTRACKED_ONLY
         args = [*unfiltered(place), "status", "--porcelain", "--untracked-files=normal",
                 "--ignore-submodules=dirty"]
-        if sweeps_ignored:
+        if "!!" in swept:
             args.append("--ignored")
         if paths:
             args += ["--", *paths]
         said = git_sees(args, place)
-        swept = UNTRACKED if sweeps_ignored else UNTRACKED_ONLY
         at_risk = [f"  {line}" for line in said.splitlines() if line.strip()
                    and (line[:2] in swept) == sweeps_untracked
                    and not (from_index and line[1] == " ")]
@@ -2472,23 +2521,37 @@ def shell_commands(raw, file, path, text, here):
         judge_shell(text, here)
 
 
-def heredoc_writes(part):
+def written_texts(part):
     said = heading(part)
     hidden = masked(said)
+    called = invoked(argv(said)[0])
     opened = next((found for start in HEREDOC.finditer(hidden)
                    if (found := heredoc_at(said, start.start()))), None)
-    if not opened:
+    if opened:
+        delimiter, _, dash, _ = opened
+        body = "\n".join(itertools.takewhile(
+            lambda line: (line.lstrip("\t") if dash else line) != delimiter,
+            part[len(said) + 1:].split("\n")))
+    elif not (body := printed(called)):
         return []
-    delimiter, _, dash, _ = opened
-    body = "\n".join(itertools.takewhile(
-        lambda line: (line.lstrip("\t") if dash else line) != delimiter,
-        part[len(said) + 1:].split("\n")))
     targets = [said[found.start(1):found.end(1)] for found in REDIRECT_TARGET.finditer(hidden)
-               if "&" not in found.group()]
-    called = invoked(argv(said)[0])
+               if "&" not in found.group() and (opened or not hidden[:found.start()][-1:].strip("1 \t"))]
     if called[:1] == ["tee"]:
         targets += [word for word in called[1:] if not word.startswith("-")]
     return [(target.strip("'\""), body) for target in targets]
+
+
+# @req> REQ-86738891@9LNvHbeCG7Wj jlbas6
+def printed(called):
+    tool, *rest = called or [""]
+    rest = rest[1:] if tool == "printf" and rest[:1] == ["--"] else rest
+    if (tool not in ("printf", "echo") or not rest or rest[0].startswith("-")
+            or any(char in word for word in rest for char in "$`")
+            or tool == "printf" and (len(rest) > 1 or "%" in rest[0]
+                                     or "\\" in rest[0].replace("\\n", ""))
+            or tool == "echo" and any("\\" in word for word in rest)):
+        return None
+    return rest[0].replace("\\n", "\n") if tool == "printf" else " ".join(rest) + "\n"
 
 
 def function_bodies(text):
@@ -3306,8 +3369,9 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running, bound):
         deny((PLUGIN_WRITE if plain else PLUGIN_UNRESOLVED).format(target=target))
 
 
-def names_corpus(part, cwd):
-    if CORPUS_DIR.search(ESCAPE.sub("", part)):
+def names_corpus(part, cwd, piped_in):
+    if CORPUS_DIR.search(ESCAPE.sub("", part)) and not all(
+            map(SCHEMAS_CALL.fullmatch, CALL_TEXT["said"])):
         return True
     said = heading(part)
     words = [*(GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(said))),
@@ -3315,35 +3379,88 @@ def names_corpus(part, cwd):
     return any(CORPUS_DIR.search(word) or is_corpus_root(word) or reaches_corpus(word, cwd)
                or word.split() == [word] and any(map(is_corpus_root, re.split("[:,]", word)))
                and not git_split(argv(said[COMPOUND.match(masked(said)).end():])[0])
-               for word in words) or refuse_searching_corpus(said, cwd)
+               for word in words) or refuse_searching_corpus(said, cwd, piped_in)
 
 
 # @req> REQ-54260750@MTrWbA9_HZWY ib6ckc
-def refuse_searching_corpus(said, cwd):
-    called = invoked(argv(said)[0])
-    if not called or called[0] not in ("grep", "egrep", "fgrep"):
+def refuse_searching_corpus(said, cwd, piped_in):
+    words = argv(said)[0]
+    called = invoked(words)
+    tool = SEARCH_ALIASES.get(called[0], called[0]) if called else ""
+    if tool == "git":
+        return refuse_git_grep(said, words, cwd)
+    if tool not in SEARCH_VALUED:
         return
     head = list(itertools.takewhile(lambda word: word != "--", called[1:]))
-    flags, positional = options(head, SEARCH_VALUED["grep"])
+    flags, positional = options(head, SEARCH_VALUED[tool])
     positional += called[len(head) + 2:]
-    recursive = ("-d", "recurse") in flags or ("--directories", "recurse") in flags or any(
-        re.match(r"-[^-ABCDdefm]*[rR]", word) or len(name) > 2 and any(
-            full.startswith(name) for full in ("--recursive", "--dereference-recursive"))
-        for word in head if word.startswith("-") for name in [word.partition("=")[0]])
+    named = {name for name, _ in flags}
+    if named & set(NAMES_ONLY[tool]):
+        return
+    recursive = tool in ("rg", "ag") or tool == "ack" and not named & {"-n", "--no-recurse"} or (
+        ("-d", "recurse") in flags or ("--directories", "recurse") in flags or any(
+            re.match(r"-[^-ABCDdefm]*[rR]", word) or len(name) > 2 and any(
+                full.startswith(name) for full in ("--recursive", "--dereference-recursive"))
+            for word in head if word.startswith("-") for name in [word.partition("=")[0]]))
     if not recursive:
         return
-    explicit = short_flagged(head, "e") or short_flagged(head, "f") or any(
-        name in ("--regexp", "--file") for name, _ in flags)
-    glob = " ".join(f"!{value}" for name, value in flags
-                    if name == "--exclude-dir" and re.fullmatch(r"[^/\s,]+", value)
+    explicit = named & set(PATTERN_GIVEN[tool]) or tool in ("grep", "pcregrep") and (
+        short_flagged(head, "e") or short_flagged(head, "f"))
+    spoken_words, bare = tokens_of(said), tokens_of(masked(said))
+    reads_stdin = piped_in or len(bare) == len(spoken_words) and any(
+        re.match(r"0?<<", mask) or re.match(r"0?<(?![&(<])", mask) and source
+        and not source.startswith("/dev/") for at, mask in enumerate(bare)
+        for source in [spoken_words[at].lstrip("0<") or "".join(spoken_words[at + 1:at + 2])])
+    default = ["."] if tool == "grep" or tool != "pcregrep" and not reads_stdin else []
+    excluded = [value if name == "--exclude-dir" else value[1:] for name, value in flags
+                if name == "--exclude-dir" or tool == "rg" and name in GLOBBED_BY and value.startswith("!")]
+    refuse_searching(said, positional[not explicit:] or default, excluded, cwd, tool)
+
+
+def refuse_git_grep(said, words, cwd):
+    split = git_split(words)
+    if not split or split[2] != "grep" or not cwd:
+        return
+    prefix, options_given, _, rest = split
+    base = cwd
+    for at, word in enumerate(options_given):
+        name, eq, value = word.partition("=")
+        value = value if eq else "".join(options_given[at + 1:at + 2])
+        if name in ("-C", "--work-tree"):
+            base = os.path.join(base, os.path.expanduser(value))
+    if tree := next((word.split("=", 1)[1] for word in prefix if word.startswith("GIT_WORK_TREE=")), None):
+        base = os.path.join(base, os.path.expanduser(tree))
+    head = list(itertools.takewhile(lambda word: word != "--", rest))
+    flags, positional = options(head, SEARCH_VALUED["git"])
+    explicit = {name for name, _ in flags} & {"-e", "-f"}
+    specs = [word for word in positional[not explicit:]
+             if os.path.lexists(os.path.join(base, os.path.expanduser(word)))] + rest[len(head) + 1:]
+    top = None
+    paths, excluded = [], []
+    for spec in specs:
+        magic = re.match(r"(?::(?:\(([^)]*)\)|([/!^]*):?))?", spec)
+        words_of, short, path = (magic[1] or "").split(","), magic[2] or "", spec[magic.end():]
+        if "exclude" in words_of or set(short) & set("!^"):
+            excluded.append(path)
+            continue
+        if "top" in words_of or "/" in short:
+            top = top or git_sees(["rev-parse", "--show-toplevel"], (base, [], {})).strip()
+            path = os.path.join(top, path)
+        paths.append(path or ".")
+    refuse_searching(said, paths or ["."], excluded, base, "git")
+
+
+def refuse_searching(said, operands, excluded, cwd, tool):
+    glob = " ".join(f"!{value}" for value in excluded if re.fullmatch(r"[^/\s,]+", value)
                     and fnmatch.fnmatchcase(CORPUS_ROOT_NAME, value))
-    for operand in positional[not explicit:] or ["."]:
+    for operand in operands:
         for alt in bounded(os.path.expanduser(EXPANSION.sub("*", operand))):
             if not cwd and not os.path.isabs(alt):
                 continue
             for path in matches(os.path.join(cwd, alt)) if GLOB_CHAR.search(alt) else [alt]:
                 if root := searched_corpus({"path": path, "glob": glob}, cwd):
-                    deny(SEARCHES_TREE.format(target=said.strip(), root=root))
+                    deny(SEARCHES_TREE.format(target=said.strip(), root=root,
+                                              exclusion=TREE_EXCLUSIONS.get(tool, "")))
 
 
 @functools.cache
@@ -3364,7 +3481,7 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
     function_bodies(cmd)
     # @req> REQ-86738891@9LNvHbeCG7Wj ph4cui
     for pipeline, heres in zip(pipelines, places):
-        for target, body in (pair for part in pipeline for pair in heredoc_writes(part)):
+        for target, body in (pair for part in pipeline for pair in written_texts(part)):
             for here in heres:
                 CALL_TEXT["written"].setdefault(
                     os.path.realpath(os.path.join(here, os.path.expanduser(target))), set()).add(body)
@@ -3406,9 +3523,10 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
                 for alternatives in [list(itertools.islice(braced(word), 257))]) else invocation,
                 here, piped(stdin, pipeline, at), files)
             # @req> REQ-54260750@MTrWbA9_HZWY 37auve
-            if CONTENT_READ.search(invocation) and names_corpus(invocation, here):
+            if CONTENT_READ.search(invocation) and names_corpus(invocation, here, at > 0):
                 deny(DIRECT_READ.format(target=invocation.strip()))
-        naming = [part for part in pipeline if any(names_corpus(part, here) for here in heres)]
+        naming = [part for at, part in enumerate(pipeline)
+                  if any(names_corpus(part, here, at > 0) for here in heres)]
         if not naming:
             continue
         whole = " ".join(pipeline)
@@ -3419,10 +3537,11 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
         if running:
             deny(NOT_A_KNOWN_READ.format(target=running))
         for part in pipeline:
-            if READ.search(part) or GIT_READ.search(part) or TEST.match(part):
+            if (READ.search(part) and not READ_OUTPUT.search(part)) or GIT_READ.search(part) or TEST.match(part):
                 continue
-            if (part not in naming and SINK.search(part)
-                    and not SINK_WRITES.search(part)):
+            sink = SINK.search(part)
+            if (part not in naming and sink and not SINK_WRITES.search(part) and not (
+                    sink[1] == "sort" and any(map(SORT_OUTPUT.match, tokens_of(part)[1:])))):
                 continue
             deny(NOT_A_KNOWN_READ.format(target=heading(part).strip()))
     for pipeline, heres in zip(pipelines, places):
