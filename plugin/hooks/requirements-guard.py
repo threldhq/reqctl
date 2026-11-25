@@ -1541,7 +1541,7 @@ def discarded(subcommand, rest, place, unread, alone):
         return WHOLE_TREE, False, False, (
             alone and subcommand == "checkout" and not flags and operands[0] == ".")
     if subcommand == "checkout" and operands:
-        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{commit}}"],
+        tree = git_reads(["rev-parse", "--verify", "--quiet", f"{operands[0]}^{{tree}}"],
                          place)
         return (operands[1:] if tree is not None else operands) or None, False, False, (
             alone and tree is None and not flags)
