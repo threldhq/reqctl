@@ -1965,8 +1965,7 @@ def refuse_unpassed_opening(what, here):
         deny(PASS_UNCOMPARED.format(what=what))
     if all(name.startswith(CORPUS_ROOT_NAME + "/") for name in changed.split("\0") if name):
         return
-    head = git_sees(["rev-parse", "HEAD"], place).strip()
-    top = git_sees(["rev-parse", "--show-toplevel"], place).strip()
+    head, top = git_sees(["rev-parse", "HEAD", "--show-toplevel"], place).splitlines()
     if fault := pass_fault(Path(top, PASS_RECORD_PATH), head):
         deny(PASS_UNRECORDED.format(what=what, fault=fault, head=head))
 
@@ -1982,15 +1981,14 @@ def pass_fault(record, head):
     if not isinstance(held, dict):
         return f"{PASS_RECORD_PATH} does not read as a JSON object"
     named = held.get("commit")
-    if named == head:
-        return None
-    return f"{PASS_RECORD_PATH} names {named}, not HEAD" if isinstance(named, str) and named else (
-        f"{PASS_RECORD_PATH} names no commit")
+    if named != head:
+        return (f"{PASS_RECORD_PATH} names {named}, not HEAD" if isinstance(named, str) and named
+                else f"{PASS_RECORD_PATH} names no commit")
 
 
 def names_pass_record(word, here):
-    return bool(PASS_RECORD.search(word) or PASS_RECORD.search(
-        os.path.normpath(os.path.join(here, os.path.expanduser(word.strip("'\""))))))
+    return PASS_RECORD.search(word) or PASS_RECORD.search(
+        os.path.normpath(os.path.join(here, os.path.expanduser(word.strip("'\"")))))
 
 
 def writes_pass_record(said, called, here):
