@@ -36,8 +36,7 @@ CORPUS_DIR = re.compile(
 )
 CORPUS_ROOT_NAME = "requirements"
 # @req+ REQ-22704490@u7IClIQOfStA 7yczev
-SCHEMAS_CD = re.compile(r"cd\s+requirements/schemas")
-UNPLAIN = re.compile(r"[$`]|(?<![^\s/])\.\.(?![^\s/])")
+SCHEMAS_CALL = re.compile(r"\s*cd\s+requirements/schemas(?:\s*(?:&&|;)\s*[A-Za-z][\w-]*(?:\s+-[\w-]+)*)*\s*")
 # @req- 7yczev
 CORPUS_FOLDERS = (*ITEM_FOLDERS, "baselines")
 CORPUS_FILE = re.compile(rf"{_ROOT}/(?:({_ITEMS})/({_UIDS})-\d{{8}}|baselines/BASELINE-[^/]*)\.ya?ml$")
@@ -3365,9 +3364,8 @@ def judge_plugin_writes(pipelines, places, unquoted, cwd, running, bound):
 
 
 def names_corpus(part, cwd, piped_in):
-    if CORPUS_DIR.search(ESCAPE.sub("", part)) and not (
-            SCHEMAS_CD.fullmatch(heading(part).strip())
-            and not any(UNPLAIN.search(text) for text in CALL_TEXT["said"])):
+    if CORPUS_DIR.search(ESCAPE.sub("", part)) and not all(
+            map(SCHEMAS_CALL.fullmatch, CALL_TEXT["said"])):
         return True
     said = heading(part)
     words = [*(GLUED_OPTION.sub("", word) for word in search_operands(tokens_of(said))),
