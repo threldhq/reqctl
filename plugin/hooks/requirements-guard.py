@@ -1545,7 +1545,7 @@ def discarded(subcommand, rest, place, unread, alone):
         return WHOLE_TREE, False, False, (
             alone and subcommand == "checkout" and not flags and operands[0] == ".")
     if subcommand == "checkout" and operands:
-        source = git_sees(["rev-parse", "--revs-only", operands[0]], place).strip()
+        source = git_sees(["rev-parse", "--revs-only", operands[0]], place)
         return (operands[1:] if source else operands) or None, False, False, (
             alone and not source and not flags)
     return None, False, False, False
