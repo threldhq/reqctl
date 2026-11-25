@@ -189,6 +189,8 @@ QUOTED_TO = {"'": re.compile("[^']*'"), "$'": re.compile(r"(?:\\.|[^\\'])*'", re
 TICKED = re.compile(r"(?:\\.|[^\\`])*`", re.DOTALL)
 OUTPUT_FLAG = re.compile(r"--output\b|--in-place\b")
 SORT_OUTPUT = re.compile(r"-[A-Za-z]*o|--o")
+READ_OUTPUT = re.compile(r"^\s*(?:tree\s(?:.*\s)?-[A-Za-z]*o|less\s(?:.*\s)?(?:-[A-Za-z]*[oO]|--(?:log|LOG)-[fF])"
+                         r"|file\s(?:.*\s)?(?:-[A-Za-z]*C|--compile))")
 PUSH_LONG_DESTRUCTIVE = ("--force", "--force-with-lease", "--force-if-includes",
                          "--mirror", "--delete", "--prune")
 GLUED_OPTION = re.compile(r"^-+[A-Za-z0-9]*?(?=requirements)")
@@ -349,6 +351,8 @@ JUDGED_GIT = ("push", "commit", "apply", "am", "remote", "symbolic-ref", "update
               "branch", *NO_COMMIT, *RESTORES)
 UNTRACKED = ("??", "!!")
 UNTRACKED_ONLY = ("??",)
+# @req> REQ-36282702@FNMFiPoGZnDK gupdwd
+IGNORED_ONLY = ("!!",)
 
 # @req+ REQ-30013664@ijHTWP75cTcK rmhljp
 WRITES_DEFAULT = (
@@ -1530,8 +1534,9 @@ def discarded(subcommand, rest, place, unread, alone):
                 re.fullmatch(r"-[dfxX]*[dfxXe]|--force", f) for f in flags) and (
                 git_reads(["clean", "--dry-run", *rest], place) == ""):
             return None, False, False, False
-        ignored = unread or short_flagged(flags, "x") or short_flagged(flags, "X")
-        return (operands if after and not unread else WHOLE_TREE), True, ignored, False
+        swept = (UNTRACKED if unread or short_flagged(flags, "x")
+                 else IGNORED_ONLY if short_flagged(flags, "X") else UNTRACKED_ONLY)
+        return (operands if after and not unread else WHOLE_TREE), True, swept, False
     if subcommand == "restore":
         if ("--staged" in flags or any(not f.startswith("--") and "S" in f[1:].split("s", 1)[0]
                                        for f in flags)) and "--worktree" not in flags and (
@@ -1586,15 +1591,15 @@ def refuse_discarding_work(words, here):
         staged = git_reads(["ls-files", "--stage", "--", top], place)
         if staged is None or any(line.startswith("160000 ") for line in staged.splitlines()):
             deny(INTO_SUBMODULES.format(source=source))
-    for paths, sweeps_untracked, sweeps_ignored, from_index in readings:
+    for paths, sweeps_untracked, swept, from_index in readings:
+        swept = swept or UNTRACKED_ONLY
         args = [*unfiltered(place), "status", "--porcelain", "--untracked-files=normal",
                 "--ignore-submodules=dirty"]
-        if sweeps_ignored:
+        if "!!" in swept:
             args.append("--ignored")
         if paths:
             args += ["--", *paths]
         said = git_sees(args, place)
-        swept = UNTRACKED if sweeps_ignored else UNTRACKED_ONLY
         at_risk = [f"  {line}" for line in said.splitlines() if line.strip()
                    and (line[:2] in swept) == sweeps_untracked
                    and not (from_index and line[1] == " ")]
@@ -3531,7 +3536,7 @@ def judge_shell(raw, cwd, stdin=(), parents=True, inherited=None, fed=()):
         if running:
             deny(NOT_A_KNOWN_READ.format(target=running))
         for part in pipeline:
-            if READ.search(part) or GIT_READ.search(part) or TEST.match(part):
+            if (READ.search(part) and not READ_OUTPUT.search(part)) or GIT_READ.search(part) or TEST.match(part):
                 continue
             sink = SINK.search(part)
             if (part not in naming and sink and not SINK_WRITES.search(part) and not (
