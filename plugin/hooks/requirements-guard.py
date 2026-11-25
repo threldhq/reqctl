@@ -1535,7 +1535,7 @@ def discarded(subcommand, rest, place, unread, alone):
                 git_reads(["clean", "--dry-run", *rest], place) == ""):
             return None, False, False, False
         excludes = short_flagged(flags, "e") or any(f.startswith("--e") for f in flags)
-        swept = (UNTRACKED if unread or short_flagged(flags, "x") or excludes and short_flagged(flags, "X")
+        swept = (UNTRACKED if unread or short_flagged(flags, "x") or (excludes or not alone) and short_flagged(flags, "X")
                  else IGNORED_ONLY if short_flagged(flags, "X") else UNTRACKED_ONLY)
         return (operands if after and not unread else WHOLE_TREE), True, swept, False
     if subcommand == "restore":
