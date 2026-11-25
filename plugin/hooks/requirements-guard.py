@@ -35,8 +35,10 @@ CORPUS_DIR = re.compile(
     r"|\bcd\s+requirements(?![\w.-])"
 )
 CORPUS_ROOT_NAME = "requirements"
+# @req+ REQ-22704490@u7IClIQOfStA 7yczev
 SCHEMAS_CD = re.compile(r"cd\s+requirements/schemas")
 UNPLAIN = re.compile(r"[$`]|(?<![^\s/])\.\.(?![^\s/])")
+# @req- 7yczev
 CORPUS_FOLDERS = (*ITEM_FOLDERS, "baselines")
 CORPUS_FILE = re.compile(rf"{_ROOT}/(?:({_ITEMS})/({_UIDS})-\d{{8}}|baselines/BASELINE-[^/]*)\.ya?ml$")
 REDIRECT = re.compile(rf">[>|]?&?\s*[^\s>]*({_ROOT}/({_CORPUS})|{_BASELINE_FILE})")
