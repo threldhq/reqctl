@@ -1,0 +1,37 @@
+assessed: {}
+entries:
+  'false':
+    casings:
+    - capitalised
+    - upper
+  'no':
+    casings:
+    - lower
+    - capitalised
+    - upper
+  'off':
+    casings:
+    - lower
+    - capitalised
+    - upper
+  'on':
+    casings:
+    - lower
+    - capitalised
+    - upper
+  'true':
+    casings:
+    - capitalised
+    - upper
+  'yes':
+    casings:
+    - lower
+    - capitalised
+    - upper
+fields:
+- casings
+kind: data
+name: yaml_boolean_spellings
+status: draft
+text: The unquoted spellings that YAML 1.1 reads as true or false other than true
+  and false, which the product refuses in a file it loads.
