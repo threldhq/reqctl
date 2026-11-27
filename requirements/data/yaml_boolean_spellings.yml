@@ -32,7 +32,7 @@ fields:
 - casings
 kind: data
 name: yaml_boolean_spellings
-status: draft
+status: approved
 text: The words YAML 1.1 reads as true or false, each with the casings in which the
   product refuses the word unquoted in a file it loads; true and false written in
   lower case are not among them.

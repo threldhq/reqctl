@@ -1,0 +1,41 @@
+acceptance_criteria:
+- given: 'an [item](item) file holding renameable: yes'
+  then: the product refuses the command, naming the file and yes
+  when: the corpus is validated
+- given: 'a [settings file](settings_file) holding mode: off'
+  then: the product refuses the command, naming the file and off, and naming quoting
+    the word as a step that clears the refusal
+  when: a command reads the [settings file](settings_file)
+- given: 'an [item](item) file holding country: NO'
+  then: the product refuses the command rather than reading NO as false or as text
+  when: the corpus is validated
+- given: a schema file holding a mapping key yes
+  then: the product refuses the command, naming the file and yes
+  when: a command loads the schema file
+- given: 'an [item](item) file holding renameable: ''yes'''
+  then: the product refuses nothing on that ground
+  when: the corpus is validated
+- given: 'an [item](item) file holding renameable: true'
+  then: the product refuses nothing on that ground
+  when: the corpus is validated
+assessed:
+  REQ-13148397: Oh5WbBj3LiW0ygDvxwkk3FjC3dY6QxS6SKstEQfzyss
+  REQ-33359142: u8vbxFMjrV6ZEjaoq9bwThPUP1_QAfMn21fCFwgd1Lc
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
+  item: FvNNWi7MdIeN5TLzARp-qIvYrE3_lw78ZJz-adXgK-M
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+  yaml_boolean_spellings: W2jesx2feqIlnpw5MEShKwxyI_SW3-QWOCtJB_BIKkg
+  yaml_boolean_spellings.*: r4CNjtNViHSe6XL9Srvho70wP7R6tR36iv8O--3d8s0
+priority: medium
+relations:
+  REQ-13148397: constrains
+  REQ-33359142: constrains
+  REQ-40447106: constrains
+status: approved
+text: If an [item](item) file, a [settings file](settings_file) or a schema file holds,
+  unquoted, as a value or as a mapping key, a word that ${yaml_boolean_spellings}
+  lists, in a casing it lists for that word, then the product shall refuse each command
+  that loads the file, naming the file and the word, and naming writing true or false,
+  or quoting the word, as the steps that clear the refusal.
+type: functional
+verification: inspection

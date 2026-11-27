@@ -1,0 +1,19 @@
+acceptance_criteria:
+- given: a calling repository whose checkout leaves no local origin/HEAD ref
+  then: each gate reads the [settings file](settings_file) as the calling repository's
+    default branch carries it
+  when: the reusable workflow runs the corpus gates
+assessed:
+  REQ-26876750: p5bO3gEKEYCbI2dpCZq5kyu2VQfTeMUGNu-MO-Pkodg
+  corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
+  corpus_gates.*: 8A8UuRhK3YApCO-ELA4iN_lh9nBQ5loCPFYllmodN3Q
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+priority: medium
+relations:
+  REQ-26876750: constrains
+status: approved
+text: When the reusable workflow that runs the ${corpus_gates} for a calling repository
+  starts, the product shall set the local origin/HEAD ref to the default branch that
+  GitHub reports for the calling repository before any of the ${corpus_gates} runs.
+type: functional
+verification: inspection
