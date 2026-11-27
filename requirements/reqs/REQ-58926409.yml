@@ -11,7 +11,7 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   entry: cJzXnTSmNBnh6OxDVmTrX2445NU0y49PucCEKi5FWf0
 citations:
-  54mksz: 4CZ0YBUKIwJJHrogK3MA1gQcDLRt1d6sNCBNurrYlUo
+  54mksz: gTwcrbsv7aw8WG0EwCFn1pyXSaNwGXpPtqUWZI56DfM
 priority: medium
 relations:
   REQ-52544202: depends_on

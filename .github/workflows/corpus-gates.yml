@@ -25,6 +25,12 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # @req> REQ-27806237@QjTmr7JN6DgO lohedw
+      - name: Point origin/HEAD at the default branch GitHub reports
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: git remote set-head origin "$DEFAULT_BRANCH"
+
       # @req> GUARD-85664071@zrnITtEG0Lqc 6asp4d
       # @req> REQ-26876750@p5bO3gEKEYCb l73jcs
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

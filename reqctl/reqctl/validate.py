@@ -1793,7 +1793,8 @@ def _stated(root):
     where = _settings.path(root)
     if not where.is_file():
         return []
-    held = corpus.loads(corpus.read_text(where), _settings.SETTINGS)
+    # @req> REQ-68584350@s08mja7Odcar evwlvv
+    held = corpus.loads(corpus.read_text(where), _settings.SETTINGS, spellings=False)
     return [f"{_settings.SETTINGS}: {fault}" for fault in _settings.faults(held)]
 
 
@@ -1823,7 +1824,8 @@ def _settled(path):
             "settles one that falls within its pins"
         )
     # @req> REQ-49870454@KKNV-vdY6oM1 ogeofb
-    data = corpus.loads(text, path, aliases=False)
+    # @req> REQ-68584350@s08mja7Odcar iv4xhm
+    data = corpus.loads(text, path, aliases=False, spellings=False)
     if isinstance(data, dict):
         corpus.refuse_misshapen(path, data)
     return data

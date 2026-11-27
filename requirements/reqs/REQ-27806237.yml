@@ -8,6 +8,8 @@ assessed:
   corpus_gates: WW6Bi7ZQedjTCFPaxmTq96gHXL9M5EGUpkGFjdcq2xc
   corpus_gates.*: 8A8UuRhK3YApCO-ELA4iN_lh9nBQ5loCPFYllmodN3Q
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+citations:
+  lohedw: snrm-RlPhgYst2H7kct0WLVGBK2a2os6raoXrTlLcpk
 priority: medium
 relations:
   REQ-26876750: constrains

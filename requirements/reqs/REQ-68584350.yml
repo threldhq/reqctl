@@ -26,6 +26,17 @@ assessed:
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
   yaml_boolean_spellings: W2jesx2feqIlnpw5MEShKwxyI_SW3-QWOCtJB_BIKkg
   yaml_boolean_spellings.*: r4CNjtNViHSe6XL9Srvho70wP7R6tR36iv8O--3d8s0
+citations:
+  4qvm4j: gcsuDpMYkYmooD_AY2SbYc9_tkoW3gfDHaDOlbPKOJQ
+  7vf2sw: i-jaSXDq5V07BQsqHh2bPl1MBNNOllbeWkYhjg4q3R4
+  bkpowq: T_DXGWISBL6uY8q5iNlKIbO27cEBqkMsQZDu0KxNE64
+  dgx4bq: FvRa6WtGq9Xn8tdYRA9NOzrpEq_KMRGglNPfqs_yT3I
+  evwlvv: _LkkdmiSbpyy4-rUoeL7vLPVqXcylUwuTulQ0t3QOVc
+  hahfm7: YPRIMhAKkx6PEQarn8ZHrcfR_9MXD7awKu_1ihc31Po
+  iv4xhm: _BRZq8vv7mxThFFYq1YG02p-eIZP1RttKTeobwGd7iQ
+  pwzpc6: 2FH63GVLaF8krWAs514FJ5HY7502n4hNNIagu1hYfV4
+  qep4d2: SR5dfcA8U5wQgnd5TINsThlae9ODlsf-SU2tksyMbFs
+  xsaskp: B2SPCVierB3tmOoHcPadtdvjM-D7yVTg2U_wsGoJ0dE
 priority: medium
 relations:
   REQ-13148397: constrains

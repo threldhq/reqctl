@@ -5,7 +5,7 @@ acceptance_criteria:
 assessed:
   REQ-54697016: Ch9-SdvPj8vqydA9frkVdb3NoHWwxOqPv41xyFQ3wBA
 citations:
-  jjk7ud: Nf3aRbVI8pfzPxcyztvUHbxP-GIPiq_701S_KL2VcXU
+  jjk7ud: lOPQIZLRaORtLvbgiUduWJ8VGN1sE7lEuloIYmAL4nM
 priority: medium
 relations:
   REQ-54697016: constrains

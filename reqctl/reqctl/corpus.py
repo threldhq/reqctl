@@ -19,6 +19,21 @@ from referencing.jsonschema import DRAFT202012, specification_with
 
 Loader = yaml.CSafeLoader if yaml.__with_libyaml__ else yaml.SafeLoader
 NEST_LIMIT = 64
+# @req> yaml_boolean_spellings@qWrrcNitrB3v hv7gnr
+YAML_BOOLEAN_SPELLINGS = {
+    "false": {"casings": ["capitalised", "upper"]},
+    "no": {"casings": ["lower", "capitalised", "upper"]},
+    "off": {"casings": ["lower", "capitalised", "upper"]},
+    "on": {"casings": ["lower", "capitalised", "upper"]},
+    "true": {"casings": ["capitalised", "upper"]},
+    "yes": {"casings": ["lower", "capitalised", "upper"]},
+}
+# @req+ REQ-68584350@s08mja7Odcar pwzpc6
+CASINGS = {"lower": str.lower, "capitalised": str.capitalize, "upper": str.upper}
+SPELT = frozenset(CASINGS[casing](word)
+                  for word, fields in YAML_BOOLEAN_SPELLINGS.items()
+                  for casing in fields["casings"])
+# @req- pwzpc6
 
 CONFLICTED = re.compile(r"^<{7}", re.M)
 
@@ -191,7 +206,33 @@ def _folded(loader, node):
     return []
 
 
-def loads(text, where, aliases=True, reading=Loader):
+# @req> REQ-68584350@s08mja7Odcar 7vf2sw
+def _spelt(node):
+    found, walked, stack = [], set(), [node]
+    while stack:
+        held = stack.pop()
+        if held is None or id(held) in walked:
+            continue
+        walked.add(id(held))
+        if isinstance(held, yaml.ScalarNode) and not held.style and held.value in SPELT:
+            found.append(held)
+        elif isinstance(held, yaml.SequenceNode):
+            stack.extend(held.value)
+        elif isinstance(held, yaml.MappingNode):
+            stack.extend(part for pair in held.value for part in pair)
+    return sorted(found, key=lambda held: held.start_mark.index)
+
+
+# @req> REQ-68584350@s08mja7Odcar bkpowq
+def _spelling(where, found):
+    named = ", ".join(f"{held.value} on line {held.start_mark.line + 1}"
+                      for held in found)
+    return (f"{where} holds, unquoted, {named}, which YAML reads as true or "
+            f"false -- write true or false, or quote each word, as "
+            f"'{found[0].value}'")
+
+
+def loads(text, where, aliases=True, reading=Loader, spellings=True):
     loader = reading(text)
     try:
         # @req+ REQ-49870454@KKNV-vdY6oM1 ts6cfc
@@ -205,6 +246,12 @@ def loads(text, where, aliases=True, reading=Loader):
                               "-- write each value out in full in place of its alias")
         # @req- ts6cfc
         node = loader.get_single_node()
+        # @req+ REQ-68584350@s08mja7Odcar hahfm7
+        spelt = [] if spellings else _spelt(node)
+        # @req> REQ-30898926@Vu28eWaG_1mE 6f36g7
+        if spelt:
+            raise ReqctlError(_spelling(where, spelt))
+        # @req- hahfm7
         twice = _repeated(node)
         # @req> REQ-84465433@iXBRKIfkf18a pkvikc
         if twice:
@@ -372,7 +419,8 @@ def items(store):
                 # @req> REQ-30898926@Vu28eWaG_1mE tts4hh
                 raise ReqctlError(merged(path.relative_to(store.root), text))
             # @req> REQ-49870454@KKNV-vdY6oM1 4sqskc
-            data = loads(text, path, aliases=False)
+            # @req> REQ-68584350@s08mja7Odcar xsaskp
+            data = loads(text, path, aliases=False, spellings=False)
             if not isinstance(data, dict):
                 # @req> REQ-30898926@Vu28eWaG_1mE kytafn
                 raise ReqctlError(f"{path.stem}: item file is not a mapping -- edit the "
@@ -1040,8 +1088,10 @@ def _parsed_schema(path, stamped):
         loader = Loader(path.read_text())
         try:
             node = loader.get_single_node()
+            # @req> REQ-68584350@s08mja7Odcar qep4d2
+            spelt = _spelt(node)
             declared = loader.construct_document(node) if node is not None else None
-            # @req> REQ-81761490@4QFne8WaXttt 45ks43
+            # @req> REQ-81761490@yX0Z4bInvzkI 45ks43
             folded = _folded(loader, node)
         finally:
             loader.dispose()
@@ -1059,7 +1109,11 @@ def _parsed_schema(path, stamped):
                           f"{type(error).__name__}: {error} -- replace the value "
                           "with plain YAML") from error
     # @req- rnou7b
-    # @req> REQ-81761490@4QFne8WaXttt 35mtk4
+    # @req> REQ-68584350@s08mja7Odcar dgx4bq
+    if spelt:
+        # @req> REQ-30898926@Vu28eWaG_1mE dovabr
+        raise ReqctlError(_spelling(path, spelt))
+    # @req> REQ-81761490@yX0Z4bInvzkI 35mtk4
     if folded:
         # @req> REQ-30898926@Vu28eWaG_1mE 5jzbmw
         raise ReqctlError(f"{path.name} states the key {folded[0]} twice in one mapping "

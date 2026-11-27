@@ -1,10 +1,13 @@
 import re
+import sys
 from pathlib import Path
 
-from .baseline import _default_ref, _git
+from .baseline import DEFAULT_HEAD, REMOTE, _git
 from .corpus import ReqctlError, loads, mapping
 
 SETTINGS = Path("requirements") / "settings.yml"
+RESOLVE = ("run `git fetch origin`, then `git remote set-head origin --auto`, "
+           "then retry")
 PINNED = re.compile(r"claude-[a-z]+-([0-9]{1,2})(?:-([0-9]{1,2}))?(-[0-9]{8})?")
 DATELESS_FROM = (4, 6)
 AGENTS = "elucidate_agents"
@@ -61,13 +64,35 @@ def pinned(value):
     return bool(found) and ((int(found[1]), int(found[2] or 0)) >= DATELESS_FROM) != bool(found[3])
 
 
-# @req> REQ-42769459@j_YdEMFBAA1J ipg3lp
+# @req> REQ-32331515@Nn3qX9jMrAU- 3edonq
 def _default(root):
-    try:
-        # @req> REQ-32331515@Nn3qX9jMrAU- myaobz
-        return _default_ref(root)
-    except ReqctlError:
+    # @req+ REQ-59386361@F-O0-LkVImZp hrne7r
+    listed = _git(root, "remote")
+    if listed.returncode:
+        # @req> REQ-30898926@Vu28eWaG_1mE b7ra2k
+        raise ReqctlError(f"cannot read the remotes, so which branch carries "
+                          f"{SETTINGS.as_posix()} cannot be told -- repair the "
+                          "remote configuration (`git remote -v` shows it), "
+                          "then retry")
+    # @req- hrne7r
+    # @req> REQ-42769459@PEHGcJEv0iZn uudt7s
+    if REMOTE not in listed.stdout.split():
         return None
+    # @req+ REQ-90925260@TSxWId8AqeXH v6dr4q
+    named = _git(root, "symbolic-ref", "-q", DEFAULT_HEAD)
+    if named.returncode:
+        # @req> REQ-30898926@Vu28eWaG_1mE iqkqgb
+        raise ReqctlError(f"origin names no default branch, so which branch "
+                          f"carries {SETTINGS.as_posix()} cannot be told -- "
+                          f"{RESOLVE}")
+    ref = named.stdout.strip()
+    if _git(root, "rev-parse", "-q", "--verify", f"{ref}^{{commit}}").returncode:
+        # @req> REQ-30898926@Vu28eWaG_1mE tohovp
+        raise ReqctlError(f"{ref} names no commit here, so {SETTINGS.as_posix()} "
+                          f"cannot be read as the default branch carries it -- "
+                          f"{RESOLVE}")
+    return ref
+    # @req- v6dr4q
 
 
 def _leaves(held, shipped, at):
@@ -130,8 +155,11 @@ def faults(document):
 def read(root):
     # @req+ REQ-32331515@Nn3qX9jMrAU- 7jdohw
     ref = _default(root)
-    # @req> REQ-42769459@j_YdEMFBAA1J mfrzc7
+    # @req> REQ-42769459@PEHGcJEv0iZn mfrzc7
     if ref is None:
+        # @req> REQ-61913729@l83yLZOu5DOF mcv23n
+        print("reqctl uses the values it ships, because this repository has "
+              "no remote named origin", file=sys.stderr)
         return None, {}
     named = SETTINGS.as_posix()
     where = f"{ref.removeprefix('refs/remotes/')}:{named}"
@@ -153,7 +181,8 @@ def read(root):
         raise ReqctlError(f"{where} cannot be read: {shown.stderr.strip()} -- "
                           "restore the file on the default branch")
     # @req> REQ-29005932@BIHyox0VxBlI mgfbvw
-    document = loads(shown.stdout, where)
+    # @req> REQ-68584350@s08mja7Odcar 4qvm4j
+    document = loads(shown.stdout, where, spellings=False)
     # @req- 7jdohw
     found = faults(document)
     # @req> REQ-99278123@vBQXVC8aZZp3 lcnls5

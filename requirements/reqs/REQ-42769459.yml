@@ -9,8 +9,8 @@ assessed:
   data_item: R2a_21pAMA2Qfr2iFrbxGloDOODxv2ewkvL0QizPwqo
   settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
 citations:
-  ipg3lp: I4r1_AP8h-FAEWYuTrFBPz2zhenBLDK0cMjxqVx4Hls
-  mfrzc7: _O3EFdAZmqFGyCRwHFoDk_7T1VDq4dlWaUt_5PymEog
+  mfrzc7: eUBTdrmVPHREigAEo_9SPQqIGGw0_7wsb_kI6_gy8IU
+  uudt7s: ZTKi7_6bhOIE-vT6QHuyjvPwr3I-euziIX2XNnBKDcY
 priority: medium
 relations:
   REQ-32331515: derives_from
