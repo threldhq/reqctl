@@ -7,7 +7,8 @@ GONE = object()
 
 def _side(text, where):
     # @req> REQ-49870454@KKNV-vdY6oM1 ilmqvb
-    held = loads(text, where, aliases=False)
+    # @req> REQ-68584350@s08mja7Odcar h2wmgx
+    held = loads(text, where, aliases=False, spellings=False)
     if not isinstance(held, dict):
         # @req> REQ-30898926@Vu28eWaG_1mE hjcyzp
         raise ReqctlError(
