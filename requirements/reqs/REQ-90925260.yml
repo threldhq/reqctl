@@ -1,0 +1,30 @@
+acceptance_criteria:
+- given: a repository whose remote named origin names no default branch, holding a
+    [settings file](settings_file)
+  then: the product refuses the run, naming git remote set-head origin --auto and
+    git fetch origin
+  when: a run is built there
+- given: a repository whose remote named origin names a default branch that names
+    no commit here
+  then: trace fails rather than passes
+  when: trace is run
+- given: a repository whose default branch's [settings file](settings_file) states
+    changed_lines for the uncited-code mode, and whose remote named origin names no
+    default branch
+  then: trace fails rather than passes without checking uncited code
+  when: trace is run with a base branch
+assessed:
+  REQ-32331515: Nn3qX9jMrAU-mRofbCIQXy4KtAb8FPIKO37CrIthPRQ
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+priority: medium
+relations:
+  REQ-32331515: depends_on
+  REQ-40447106: constrains
+status: approved
+text: If a repository's remote named origin names no default branch, or names a default
+  branch that the product cannot resolve to a commit, then the product shall refuse
+  each command that reads the [settings file](settings_file), naming git remote set-head
+  origin --auto and git fetch origin as the steps that clear the refusal.
+type: functional
+verification: inspection

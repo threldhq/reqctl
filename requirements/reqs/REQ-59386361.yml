@@ -1,0 +1,17 @@
+acceptance_criteria:
+- given: a repository whose git remote listing fails
+  then: the product refuses the run
+  when: a run is built there
+assessed:
+  REQ-32331515: Nn3qX9jMrAU-mRofbCIQXy4KtAb8FPIKO37CrIthPRQ
+  REQ-40447106: _7d9O2HDnoPrYdkVo1NQycMkIY2lsCqAtXvikOYgUWE
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+priority: medium
+relations:
+  REQ-32331515: depends_on
+  REQ-40447106: constrains
+status: approved
+text: If the product cannot read a repository's remotes, then the product shall refuse
+  each command that reads the [settings file](settings_file).
+type: functional
+verification: inspection

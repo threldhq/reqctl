@@ -1,0 +1,18 @@
+acceptance_criteria:
+- given: a repository with no remote named origin
+  then: the product states that it uses the values it ships because the repository
+    has no remote named origin
+  when: a run is built there
+assessed:
+  REQ-42769459: PEHGcJEv0iZnG3894oeXyT3yOezToznUZsPmHCAzDb4
+  settings_file: KjsyRmydEe9cWsSjKynpmWJ89RrFe09346YVLcbOUh4
+priority: medium
+relations:
+  REQ-42769459: depends_on
+status: approved
+text: Where a repository has no remote named origin, when a command uses a value that
+  a [settings file](settings_file) can state in place of a value the product ships,
+  the product shall state that it uses the value the product ships because the repository
+  has no remote named origin.
+type: functional
+verification: inspection
