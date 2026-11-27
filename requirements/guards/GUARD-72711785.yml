@@ -4,6 +4,8 @@ acceptance_criteria:
     repository
   when: a step of the CI check job runs reqctl
 assessed: {}
+citations:
+  luul6q: snrm-RlPhgYst2H7kct0WLVGBK2a2os6raoXrTlLcpk
 relations: {}
 status: approved
 text: When the CI check job runs, the build shall set the local origin/HEAD ref to

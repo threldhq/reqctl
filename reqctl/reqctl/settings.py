@@ -6,7 +6,7 @@ from .baseline import DEFAULT_HEAD, REMOTE, _git
 from .corpus import ReqctlError, loads, mapping
 
 SETTINGS = Path("requirements") / "settings.yml"
-RESOLVE = ("run `git fetch origin`, then `git remote set-head origin --auto`, "
+RESOLVE = ("run `git fetch origin`, then `git remote set-head origin BRANCH`, "
            "then retry")
 PINNED = re.compile(r"claude-[a-z]+-([0-9]{1,2})(?:-([0-9]{1,2}))?(-[0-9]{8})?")
 DATELESS_FROM = (4, 6)
@@ -78,7 +78,7 @@ def _default(root):
     # @req> REQ-42769459@PEHGcJEv0iZn uudt7s
     if REMOTE not in listed.stdout.split():
         return None
-    # @req+ REQ-90925260@TSxWId8AqeXH v6dr4q
+    # @req+ REQ-90925260@HE5ixr7yRNYj v6dr4q
     named = _git(root, "symbolic-ref", "-q", DEFAULT_HEAD)
     if named.returncode:
         # @req> REQ-30898926@Vu28eWaG_1mE iqkqgb
