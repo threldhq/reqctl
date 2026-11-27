@@ -1,0 +1,11 @@
+acceptance_criteria:
+- given: a checkout that leaves no local origin/HEAD ref
+  then: the local origin/HEAD ref names the default branch GitHub reports for the
+    repository
+  when: a step of the CI check job runs reqctl
+assessed: {}
+relations: {}
+status: approved
+text: When the CI check job runs, the build shall set the local origin/HEAD ref to
+  the default branch that GitHub reports for the repository before any step of the
+  job that runs reqctl.
