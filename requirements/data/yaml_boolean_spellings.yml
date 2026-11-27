@@ -33,5 +33,6 @@ fields:
 kind: data
 name: yaml_boolean_spellings
 status: draft
-text: The unquoted spellings that YAML 1.1 reads as true or false other than true
-  and false, which the product refuses in a file it loads.
+text: The words YAML 1.1 reads as true or false, each with the casings in which the
+  product refuses the word unquoted in a file it loads; true and false written in
+  lower case are not among them.
